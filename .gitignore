@@ -1,4 +1,5 @@
-.pnp.*
+.eslintcache
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

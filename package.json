@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "compile": "npm-run-all 'compile:*'",
     "compile:graphql": "yarn workspace @dolt-sql-workbench/graphql-server compile"
   },
   "devDependencies": {

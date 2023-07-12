@@ -1,0 +1,41 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ColConstraint {
+  notNull: Boolean!
+}
+
+type Column {
+  name: String!
+  isPrimaryKey: Boolean!
+  type: String!
+  constraints: [ColConstraint!]
+}
+
+type ColumnValue {
+  displayValue: String!
+}
+
+type Row {
+  columnValues: [ColumnValue!]!
+}
+
+type SqlSelect {
+  queryString: ID!
+  columns: [Column!]!
+  rows: [Row!]!
+  queryExecutionStatus: QueryExecutionStatus!
+  queryExecutionMessage: String!
+}
+
+enum QueryExecutionStatus {
+  Success
+  Error
+  Timeout
+  RowLimit
+}
+
+type Query {
+  sqlSelect(queryString: String!): SqlSelect!
+}
