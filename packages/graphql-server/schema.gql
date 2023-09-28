@@ -36,6 +36,43 @@ enum QueryExecutionStatus {
   RowLimit
 }
 
+type ForeignKeyColumn {
+  referencedColumnName: String!
+  referrerColumnIndex: Float!
+}
+
+type ForeignKey {
+  tableName: String!
+  columnName: String!
+  referencedTableName: String!
+  foreignKeyColumn: [ForeignKeyColumn!]!
+}
+
+type IndexColumn {
+  name: String!
+  sqlType: String
+}
+
+type Index {
+  name: String!
+  type: String!
+  comment: String!
+  columns: [IndexColumn!]!
+}
+
+type Table {
+  tableName: ID!
+  columns: [Column!]!
+  foreignKeys: [ForeignKey!]!
+  indexes: [Index!]!
+}
+
+type TableNames {
+  list: [String!]!
+}
+
 type Query {
   sqlSelect(queryString: String!): SqlSelect!
+  table(tableName: String!): Table!
+  tableNames: TableNames!
 }

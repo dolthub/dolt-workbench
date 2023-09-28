@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "description": "",
   "author": "DoltHub",
+  "private": true,
   "scripts": {
     "build": "nest build",
     "check-server": "./ci-helper.sh ./",
