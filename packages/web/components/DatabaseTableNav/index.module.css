@@ -1,0 +1,65 @@
+.container {
+  @apply hidden;
+  @screen lg {
+    @apply bg-ld-lightpurple pt-5 flex flex-col;
+  }
+}
+
+.openContainer {
+  @apply transition-width w-96 duration-75;
+  flex-basis: 20rem;
+}
+
+.closedContainer {
+  @apply transition-width w-16 duration-75;
+  flex-basis: 3rem;
+}
+
+.showForMobile {
+  @apply flex flex-col fixed top-0 right-0 left-0 bottom-0 bg-ld-lightpurple z-50 w-full py-6;
+  ol {
+    @apply bg-ld-lightpurple;
+  }
+}
+
+.top {
+  @apply flex justify-between w-full px-4;
+  @screen lg {
+    @apply px-3 -mt-2;
+  }
+}
+
+.menuIcon {
+  @apply hidden;
+  @screen lg {
+    @apply block text-primary cursor-pointer mt-2.5 mx-1 pb-0 mb-5;
+  }
+}
+
+.openNav {
+  @apply opacity-100 transition-opacity duration-75 relative h-full overflow-hidden;
+}
+
+.closedItem {
+  @apply hidden;
+}
+
+.tabList {
+  @apply text-sm;
+
+  li {
+    @apply mx-4 px-2;
+  }
+}
+
+.tabPanel {
+  @apply px-0 absolute left-0 right-0 bottom-0 top-9 overflow-auto;
+}
+
+.tableNavTrigger {
+  @apply fixed right-5 bottom-5 z-100 w-14 h-14 rounded-full bg-acc-hoverlinkblue flex justify-center items-center;
+
+  span {
+    @apply text-white text-2xl;
+  }
+}

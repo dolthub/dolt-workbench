@@ -1,0 +1,35 @@
+{
+  "name": "@dolt-sql-workbench/web",
+  "version": "0.1.0",
+  "author": "DoltHub",
+  "private": true,
+  "scripts": {
+    "compile": "tsc -b",
+    "dev": "next dev -p 3002",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@react-icons/all-files": "^4.1.0",
+    "classnames": "^2.3.2",
+    "next": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "tailwindcss": "latest"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.0.0",
+    "@types/node": "latest",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "autoprefixer": "latest",
+    "cssnano": "^6.0.1",
+    "eslint": "latest",
+    "eslint-config-next": "latest",
+    "jest": "^29.7.0",
+    "postcss": "latest",
+    "postcss-preset-env": "^9.1.4",
+    "typescript": "latest"
+  }
+}

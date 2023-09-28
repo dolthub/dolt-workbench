@@ -1,0 +1,51 @@
+/* Fonts import should come first */
+@import url("https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400i,600,600i,700,700i|Space+Mono:400,400i,700,700i&display=swap");
+
+/* Replaces tailwind preflight to fix button transparency in local development */
+@import "./preflight.css";
+
+@tailwind base;
+
+html,
+body {
+  @apply font-sans bg-white text-primary m-0;
+}
+
+h1 {
+  @apply font-bold text-3xl;
+}
+
+h2,
+h3,
+h4 {
+  @apply font-semibold;
+}
+
+h2 {
+  @apply text-2xl;
+}
+
+h3 {
+  @apply text-xl;
+}
+
+h4 {
+  @apply text-lg;
+}
+
+p {
+  @apply text-sm leading-normal;
+}
+
+/* Overrides react-tooltip variant background colors */
+body {
+  --rt-color-white: #fff;
+  --rt-color-dark: #1e2842;
+  --rt-color-success: #5ac58d;
+  --rt-color-error: #ff9a99;
+  --rt-color-warning: #ed8936;
+  --rt-color-info: #3d91f0;
+}
+
+@tailwind components;
+@tailwind utilities;

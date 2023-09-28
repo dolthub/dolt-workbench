@@ -1,0 +1,54 @@
+.appLayout {
+  @apply outline-none overflow-visible;
+  max-height: calc(100vh - 80px);
+
+  @screen lg {
+    @apply relative h-screen overflow-hidden bg-ld-lightpurple max-h-full;
+  }
+}
+
+.layoutWrapperContainer {
+  @apply bg-ld-lightpurple;
+}
+
+.content {
+  @apply flex flex-col relative bottom-0 left-0 right-0 top-0 bg-ld-lightpurple;
+
+  @screen lg {
+    @apply flex-row absolute top-12;
+  }
+}
+
+.contentWithHeader {
+  @apply bg-white;
+}
+
+.rightContent {
+  @apply flex flex-col flex-grow min-w-0 min-h-0 border-l-0 border-ld-lightgrey;
+
+  @screen lg {
+    @apply border-l-2;
+  }
+}
+
+.main {
+  @apply flex flex-col flex-grow;
+  @screen lg {
+    @apply overflow-auto;
+  }
+}
+
+.rightContentScroller {
+  @apply outline-none bg-white h-full relative;
+  @screen lg {
+    @apply overflow-auto;
+  }
+}
+
+.maxWidth {
+  @apply max-w-7xl mx-auto w-full;
+}
+
+.noHeader {
+  min-height: calc(100vh - 11.5rem);
+}

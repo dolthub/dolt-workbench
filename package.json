@@ -6,7 +6,9 @@
   ],
   "scripts": {
     "compile": "npm-run-all 'compile:*'",
-    "compile:graphql": "yarn workspace @dolt-sql-workbench/graphql-server compile"
+    "compile:graphql": "yarn workspace @dolt-sql-workbench/graphql-server compile",
+    "lint": "npm-run-all 'lint:*'",
+    "lint:graphql": "yarn workspace @dolt-sql-workbench/graphql-server lint"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.1",

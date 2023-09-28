@@ -1,0 +1,4 @@
+.btn {
+  @apply bg-transparent;
+  background-image: none;
+}

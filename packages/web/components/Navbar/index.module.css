@@ -1,0 +1,65 @@
+.container {
+  @apply w-full bg-[#28519A] text-white pt-2 h-12 z-50 mx-auto pb-2;
+}
+
+.inner {
+  @apply flex justify-between items-center h-full;
+
+  a,
+  button {
+    @apply text-sm;
+  }
+}
+
+.left {
+  @apply flex w-1/3 ml-6;
+
+  a {
+    @apply ml-2 mr-10;
+  }
+}
+
+.right {
+  @apply flex justify-end mr-6 w-1/3;
+}
+
+.exit {
+  button {
+    @apply flex justify-center items-center px-2 text-white text-sm font-normal tracking-wider;
+
+    &:hover {
+      @apply text-blue-200;
+    }
+
+    &:focus {
+      @apply outline-none;
+    }
+  }
+}
+
+.closeIcon {
+  @apply rounded-full bg-[#4B75C1] ml-3 w-7 h-7 flex justify-center items-center;
+  svg {
+    @apply text-base font-semibold;
+  }
+}
+
+.link {
+  @apply flex ml-10 mt-0.5 font-normal text-white/90 hover:text-blue-200;
+
+  svg {
+    @apply mt-1 mr-2;
+  }
+}
+
+.logoLink {
+  img {
+    @apply w-60;
+  }
+}
+
+.workbenchLogoLink {
+  img {
+    @apply w-60;
+  }
+}

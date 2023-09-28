@@ -1,0 +1,6 @@
+.editorContainer {
+  @apply hidden;
+  @screen lg {
+    @apply block px-6 pt-4 pb-2 border-b-2 border-ld-lightgrey bg-ld-lightpurple;
+  }
+}
