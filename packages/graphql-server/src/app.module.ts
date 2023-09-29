@@ -19,11 +19,7 @@ import resolvers from "./resolvers";
       useFactory: (configService: ConfigService) => {
         return {
           type: "mysql",
-          host: configService.get("HOST"),
-          port: +configService.get("PORT"),
-          username: configService.get("USERNAME"),
-          password: configService.get("PASSWORD"),
-          database: configService.get("DATABASE"),
+          url: configService.get("DATABASE_URL"),
           ssl: {
             rejectUnauthorized: false,
           },
