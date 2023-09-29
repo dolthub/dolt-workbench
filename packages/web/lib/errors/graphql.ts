@@ -5,3 +5,4 @@ export const gqlNoRefFoundErr = "no such ref in database";
 export const gqlPullHasConflicts = "Merge conflict detected";
 export const gqlErrorPrimaryKeyChange = "primary key set change";
 export const gqlConnectionLost = "Connection lost";
+export const gqlDatabaseNotFoundErr = "Database connection not found";

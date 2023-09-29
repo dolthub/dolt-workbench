@@ -78,6 +78,7 @@ type TableNames {
 
 type Query {
   currentDatabase: String
+  hasDatabaseEnv: Boolean!
   rows(tableName: String!, offset: Int): RowList!
   sqlSelect(queryString: String!): SqlSelect!
   table(tableName: String!): Table!
@@ -86,5 +87,5 @@ type Query {
 }
 
 type Mutation {
-  addDatabaseConnection(url: String!): Boolean!
+  addDatabaseConnection(url: String, useEnv: Boolean): Boolean!
 }

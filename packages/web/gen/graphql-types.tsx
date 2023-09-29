@@ -70,12 +70,14 @@ export type Mutation = {
 
 
 export type MutationAddDatabaseConnectionArgs = {
-  url: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
+  useEnv?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   currentDatabase?: Maybe<Scalars['String']['output']>;
+  hasDatabaseEnv: Scalars['Boolean']['output'];
   rows: RowList;
   sqlSelect: SqlSelect;
   table: Table;
@@ -178,11 +180,17 @@ export type TableForBranchQueryVariables = Exact<{
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
-  url: Scalars['String']['input'];
+  url?: InputMaybe<Scalars['String']['input']>;
+  useEnv?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: boolean };
+
+export type HasDatabaseEnvQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type HasDatabaseEnvQuery = { __typename?: 'Query', hasDatabaseEnv: boolean };
 
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -464,8 +472,8 @@ export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQ
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($url: String!) {
-  addDatabaseConnection(url: $url)
+    mutation AddDatabaseConnection($url: String, $useEnv: Boolean) {
+  addDatabaseConnection(url: $url, useEnv: $useEnv)
 }
     `;
 export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
@@ -484,6 +492,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  * const [addDatabaseConnectionMutation, { data, loading, error }] = useAddDatabaseConnectionMutation({
  *   variables: {
  *      url: // value for 'url'
+ *      useEnv: // value for 'useEnv'
  *   },
  * });
  */
@@ -494,6 +503,38 @@ export function useAddDatabaseConnectionMutation(baseOptions?: Apollo.MutationHo
 export type AddDatabaseConnectionMutationHookResult = ReturnType<typeof useAddDatabaseConnectionMutation>;
 export type AddDatabaseConnectionMutationResult = Apollo.MutationResult<AddDatabaseConnectionMutation>;
 export type AddDatabaseConnectionMutationOptions = Apollo.BaseMutationOptions<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
+export const HasDatabaseEnvDocument = gql`
+    query HasDatabaseEnv {
+  hasDatabaseEnv
+}
+    `;
+
+/**
+ * __useHasDatabaseEnvQuery__
+ *
+ * To run a query within a React component, call `useHasDatabaseEnvQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHasDatabaseEnvQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHasDatabaseEnvQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useHasDatabaseEnvQuery(baseOptions?: Apollo.QueryHookOptions<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
+      }
+export function useHasDatabaseEnvLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
+        }
+export type HasDatabaseEnvQueryHookResult = ReturnType<typeof useHasDatabaseEnvQuery>;
+export type HasDatabaseEnvLazyQueryHookResult = ReturnType<typeof useHasDatabaseEnvLazyQuery>;
+export type HasDatabaseEnvQueryResult = Apollo.QueryResult<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>;
 export const DataTableQueryDocument = gql`
     query DataTableQuery($tableName: String!) {
   table(tableName: $tableName) {
