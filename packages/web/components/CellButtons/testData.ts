@@ -50,11 +50,8 @@ const lpCol2 = "type of food";
 const lpCol3 = "rating";
 
 const lpParams: TableParams = {
-  ownerName: "Liquidata",
-  deploymentName: "lunch-places",
   refName: "master",
   tableName: lpTableName,
-  databaseName: "dbname",
 };
 
 const lpCols: ColumnForDataTableFragment[] = [
@@ -165,11 +162,8 @@ const saFromCommit = "h553kbfd9li96712gv1ru2agu0a4delg";
 const saToCommit = "7e6apqcfnvs9lf9h9j6e32kc6svg27iv";
 
 const saParams: TableParams = {
-  ownerName: "Liquidata",
-  deploymentName: "corona-virus-state-action",
   refName: "master",
   tableName: saTableName,
-  databaseName: "dbname",
 };
 
 const saCols: ColumnForDataTableFragment[] = [

@@ -46,12 +46,7 @@ function Inner(props: InnerProps) {
 }
 
 export default function SchemaList(props: Props) {
-  const res = useTableNames({
-    ownerName: props.params.ownerName,
-    deploymentName: props.params.deploymentName,
-    databaseName: props.params.databaseName,
-    refName: props.params.refName,
-  });
+  const res = useTableNames();
   return (
     <Section tab={0} refetch={res.refetch}>
       <QueryHandler

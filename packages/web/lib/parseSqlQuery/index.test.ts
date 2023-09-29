@@ -181,7 +181,7 @@ describe("parse sql query", () => {
 
   it("gets query type", () => {
     expect(getQueryType("SELECT * FROM tablename")).toEqual("select");
-    expect(getQueryType("SHOW TABLES")).toEqual(undefined);
+    expect(getQueryType("SHOW TABLES")).toEqual("show");
     expect(
       getQueryType("INSERT INTO tablename (id, name) values (1, 'taylor')"),
     ).toEqual("insert");
@@ -276,7 +276,7 @@ describe("removes column from query", () => {
       query: `SELECT id, name, age FROM tablename WHERE NOT (id=1 AND name = "MCDONALD'S")`,
       colToRemove: "name",
       cols: ["id", "name", "age"],
-      expected: `SELECT \`id\`, \`age\` FROM \`tablename\` WHERE NOT(\`id\` = 1 AND \`name\` = 'MCDONALD\\'S')`,
+      expected: `SELECT \`id\`, \`age\` FROM \`tablename\` WHERE NOT(\`id\` = 1 AND \`name\` = "MCDONALD\\'S")`,
     },
     {
       desc: "select query with where clause with escaped single quote",

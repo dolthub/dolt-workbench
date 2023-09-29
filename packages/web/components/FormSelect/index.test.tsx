@@ -1,4 +1,4 @@
-import { randomArrayItem } from "@hosted/utils";
+import randomArrayItem from "@lib/randomArrayItem";
 import {
   fireEvent,
   queryByAttribute,

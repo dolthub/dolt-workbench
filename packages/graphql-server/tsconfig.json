@@ -17,7 +17,8 @@
     "incremental": true,
     "composite": true,
     "moduleResolution": "node",
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["node"],
   },
   "exclude": ["node_modules", "dist"],
   "include": ["./src/**/*", "./src/**/*.json"],

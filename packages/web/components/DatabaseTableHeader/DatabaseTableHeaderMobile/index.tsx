@@ -6,7 +6,6 @@ import {
   ColumnForDataTableFragment,
   useDataTableQuery,
 } from "@gen/graphql-types";
-import { DatabaseParams } from "@lib/params";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
 import { useEffect } from "react";
@@ -14,12 +13,12 @@ import Errors from "../Errors";
 import { getEditorString, getSqlString } from "../utils";
 import css from "./index.module.css";
 
-type Params = DatabaseParams & {
+type Params = {
   refName?: string;
   q?: string;
   tableName?: string;
 };
-type RequireParams = DatabaseParams & {
+type RequireParams = {
   refName: string;
   q?: string;
   tableName: string;
@@ -108,9 +107,6 @@ export default function DatabaseTableHeaderMobile(props: Props) {
         params={{
           refName: props.params.refName,
           tableName: props.params.tableName,
-          ownerName: props.params.ownerName,
-          deploymentName: props.params.deploymentName,
-          databaseName: props.params.databaseName,
         }}
       />
     );

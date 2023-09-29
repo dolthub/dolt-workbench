@@ -7,7 +7,7 @@
 
 .openContainer {
   @apply transition-width w-96 duration-75;
-  flex-basis: 20rem;
+  flex-basis: 24rem;
 }
 
 .closedContainer {
@@ -23,7 +23,7 @@
 }
 
 .top {
-  @apply flex justify-between w-full px-4;
+  @apply flex justify-end w-full px-4;
   @screen lg {
     @apply px-3 -mt-2;
   }

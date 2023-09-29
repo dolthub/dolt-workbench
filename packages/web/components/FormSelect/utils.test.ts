@@ -1,8 +1,10 @@
-import { fakeOrgParams } from "@hosted/fakers/src/fakeOrg";
-import { nTimes } from "@hosted/utils";
-import { OrgParams } from "@lib/params";
+import { nTimesWithIndex } from "@lib/nTimes";
 import { Option } from "./types";
 import { getValueForOptions, moveSelectedToTop } from "./utils";
+
+type OrgParams = {
+  orgName: string;
+};
 
 const stringOps: Option[] = [
   { value: "taylor", label: "Taylor" },
@@ -10,7 +12,9 @@ const stringOps: Option[] = [
   { value: "tim", label: "Tim" },
 ];
 
-const orgParams = nTimes(3, fakeOrgParams);
+const orgParams = nTimesWithIndex(3, i => {
+  return { orgName: `Org ${i}` };
+});
 const orgParamsOps: Option[] = orgParams.map(r => {
   return {
     value: r,

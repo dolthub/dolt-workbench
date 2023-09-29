@@ -1,6 +1,5 @@
 import { AiFillCaretDown } from "@react-icons/all-files/ai/AiFillCaretDown";
-import { GroupBase } from "react-select";
-import { SelectComponents } from "react-select/dist/declarations/src/components";
+import { GroupBase, SelectComponentsConfig } from "react-select";
 import css from "./index.module.css";
 
 function Dropdown() {
@@ -8,7 +7,7 @@ function Dropdown() {
 }
 
 type Components<Option, IsMulti extends boolean> =
-  | Partial<SelectComponents<Option, IsMulti, GroupBase<Option>>>
+  | Partial<SelectComponentsConfig<Option, IsMulti, GroupBase<Option>>>
   | undefined;
 
 export function getComponents<Option, IsMulti extends boolean>(
