@@ -65,6 +65,7 @@ export type IndexColumn = {
 
 export type Query = {
   __typename?: 'Query';
+  currentDatabase?: Maybe<Scalars['String']['output']>;
   rows: RowList;
   sqlSelect: SqlSelect;
   table: Table;
@@ -127,6 +128,11 @@ export type TableNames = {
   __typename?: 'TableNames';
   list: Array<Scalars['String']['output']>;
 };
+
+export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
 
 export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
 
@@ -296,6 +302,38 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
+export const CurrentDatabaseDocument = gql`
+    query CurrentDatabase {
+  currentDatabase
+}
+    `;
+
+/**
+ * __useCurrentDatabaseQuery__
+ *
+ * To run a query within a React component, call `useCurrentDatabaseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentDatabaseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentDatabaseQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentDatabaseQuery(baseOptions?: Apollo.QueryHookOptions<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>(CurrentDatabaseDocument, options);
+      }
+export function useCurrentDatabaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>(CurrentDatabaseDocument, options);
+        }
+export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabaseQuery>;
+export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
+export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas {
   tables {

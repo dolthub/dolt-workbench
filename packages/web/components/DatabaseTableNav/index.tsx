@@ -1,6 +1,7 @@
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import cx from "classnames";
 import { useState } from "react";
+import CurrentDatabase from "./Database";
 import MobileTableNavButton from "./MobileTableNavButton";
 import NavLinks from "./NavLinks";
 import css from "./index.module.css";
@@ -38,6 +39,7 @@ function Nav({ params, initiallyOpen = false, isMobile = false }: NavProps) {
       )}
     >
       <div className={css.top}>
+        {open && <CurrentDatabase />}
         <GiHamburgerMenu
           onClick={toggleMenu}
           className={css.menuIcon}

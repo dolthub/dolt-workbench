@@ -18,6 +18,7 @@ export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
       "tables",
       "table",
       "tableNames",
+      "currentDatabase",
       // "branchNames",
       // "views",
       // "docs",

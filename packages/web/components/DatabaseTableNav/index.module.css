@@ -23,7 +23,7 @@
 }
 
 .top {
-  @apply flex justify-end w-full px-4;
+  @apply flex justify-between items-start w-full px-4;
   @screen lg {
     @apply px-3 -mt-2;
   }
@@ -65,5 +65,13 @@
 
   span {
     @apply text-white text-2xl;
+  }
+}
+
+.database {
+  @apply mt-1.5 mx-2;
+
+  span {
+    @apply font-semibold;
   }
 }
