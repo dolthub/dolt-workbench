@@ -3,19 +3,27 @@
 }
 
 .inner {
-  @apply flex justify-between items-center h-full;
+  @apply flex justify-between items-center h-full ml-4;
 
   a,
   button {
     @apply text-sm;
   }
+
+  @screen lg {
+    @apply ml-0;
+  }
 }
 
 .left {
-  @apply flex w-1/3 ml-6;
+  @apply hidden;
 
-  a {
-    @apply ml-2 mr-10;
+  @screen lg {
+    @apply flex w-1/3 ml-6;
+
+    a {
+      @apply ml-2 mr-10;
+    }
   }
 }
 
@@ -60,6 +68,6 @@
 
 .workbenchLogoLink {
   img {
-    @apply w-60;
+    @apply w-44;
   }
 }

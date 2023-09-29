@@ -10,11 +10,9 @@ type Props = {
 // the card when the site is linked
 export default function Meta(props: Props) {
   const title = props.title
-    ? `${props.title} | Hosted DoltDB`
-    : `Hosted DoltDB`;
-  // const route = useActiveRoute();
-  // const url = `${hostedProd}${route}`;
-  const image = "/images/logoGreen@2x.png"; // TODO
+    ? `${props.title} | Dolt SQL Workbench`
+    : `Dolt SQL Workbench`;
+  const image = "/images/dolt-workbench.png";
   return (
     <Head>
       <title>{title}</title>
@@ -30,7 +28,7 @@ export default function Meta(props: Props) {
         <meta property="og:description" content={props.description} />
       )}
       <meta property="og:image" content={image} />
-      <meta property="og:site_name" content="Hosted DoltDB" />
+      <meta property="og:site_name" content="Dolt SQL Workbench" />
 
       <meta name="twitter:card" content="summary" />
       <meta name="twitter:site" content="@dolthub" />

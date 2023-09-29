@@ -30,7 +30,7 @@ export default React.forwardRef<HTMLInputElement, Props>(function FormInput(
     hasError = false,
     light = false,
     horizontal = false,
-    adjustForMobile = true,
+    adjustForMobile = false,
     type = "text",
     description,
     pill,
