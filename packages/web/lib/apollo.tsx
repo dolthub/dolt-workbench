@@ -9,9 +9,6 @@ import { IncomingMessage } from "http";
 import fetch from "isomorphic-unfetch";
 import { NextPage, NextPageContext } from "next";
 
-// const {
-//   publicRuntimeConfig: { graphqlApiUrl },
-// } = getConfig();
 const graphqlApiUrl = "http://localhost:9002/graphql";
 
 export function createApolloClient(
@@ -19,30 +16,9 @@ export function createApolloClient(
   initialState?: NormalizedCacheObject,
   req?: IncomingMessage,
 ): ApolloClient<NormalizedCacheObject> {
-  // const extaddress = req?.headers["x-envoy-external-address"];
-  // const useragent = req?.headers["x-hosted-external-user-agent"];
-  // const reqid = req?.headers["x-request-id"];
-
   const headers: Record<string, string> = {
-    "Apollo-Require-Preflight": "true",
+    // "Apollo-Require-Preflight": "true",
     cookie: req?.headers.cookie ?? "",
-    // ...(extaddress
-    //   ? {
-    //       "x-envoy-external-address": Array.isArray(extaddress)
-    //         ? extaddress[0]
-    //         : extaddress,
-    //     }
-    //   : {}),
-    // ...(useragent
-    //   ? {
-    //       "x-hosted-external-user-agent": Array.isArray(useragent)
-    //         ? useragent[0]
-    //         : useragent,
-    //     }
-    //   : {}),
-    // ...(reqid
-    //   ? { "x-request-id": Array.isArray(reqid) ? reqid[0] : reqid }
-    //   : {}),
   };
 
   const cache = new InMemoryCache({
@@ -87,11 +63,7 @@ export const initApolloClient = (
 
   // Reuse client on the client-side
   if (!globalApolloClient) {
-    globalApolloClient = createApolloClient(
-      graphqlApiUrl ?? "",
-      initialState,
-      req,
-    );
+    globalApolloClient = createApolloClient(graphqlApiUrl, initialState, req);
   }
 
   return globalApolloClient;
