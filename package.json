@@ -7,11 +7,17 @@
   "scripts": {
     "compile": "npm-run-all 'compile:*'",
     "compile:graphql": "yarn workspace @dolt-sql-workbench/graphql-server compile",
+    "compile:web": "tsc -b packages/web",
     "lint": "npm-run-all 'lint:*'",
-    "lint:graphql": "yarn workspace @dolt-sql-workbench/graphql-server lint"
+    "lint:graphql": "yarn workspace @dolt-sql-workbench/graphql-server lint",
+    "clean": "npm-run-all 'clean:*'",
+    "clean:web": "tsc -b packages/web --clean",
+    "clean:misc": "rimraf node_modules 'packages/*/.eslintcache' 'packages/*/*.tsbuildinfo' 'packages/*/dist' 'packages/web/.next'"
   },
   "devDependencies": {
     "@testing-library/dom": "^9.3.1",
+    "@types/jest": "^29.5.5",
+    "@types/react-loader": "^2.4.6",
     "@typescript-eslint/eslint-plugin": "^5.57.1",
     "@typescript-eslint/parser": "^5.59.8",
     "eslint": "^8.31.0",

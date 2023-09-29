@@ -1,5 +1,5 @@
-import useFocus from "@dsw/hooks/useFocus";
-import { useReactiveWidth } from "@dsw/hooks/useReactiveSize";
+import useFocus from "@hooks/useFocus";
+import { useReactiveWidth } from "@hooks/useReactiveSize";
 import { createElement, ReactHTML, ReactNode } from "react";
 
 type Props = {

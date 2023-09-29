@@ -2,6 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type ColumnValue {
+  displayValue: String!
+}
+
+type Row {
+  columnValues: [ColumnValue!]!
+}
+
+type RowList {
+  nextOffset: Int
+  list: [Row!]!
+}
+
 type ColConstraint {
   notNull: Boolean!
 }
@@ -11,14 +24,6 @@ type Column {
   isPrimaryKey: Boolean!
   type: String!
   constraints: [ColConstraint!]
-}
-
-type ColumnValue {
-  displayValue: String!
-}
-
-type Row {
-  columnValues: [ColumnValue!]!
 }
 
 type SqlSelect {
@@ -72,6 +77,7 @@ type TableNames {
 }
 
 type Query {
+  rows(tableName: String!, offset: Int): RowList!
   sqlSelect(queryString: String!): SqlSelect!
   table(tableName: String!): Table!
   tableNames: TableNames!

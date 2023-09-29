@@ -1,4 +1,4 @@
-import Link from "@dsw/components/links/Link";
+import Link from "@components/links/Link";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import Btn from "../Btn";
 import css from "./index.module.css";

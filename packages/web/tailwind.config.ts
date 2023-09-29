@@ -105,7 +105,7 @@ const oddSizesPlugin = plugin(({ addUtilities }) => {
   });
 });
 
-module.exports = {
+const config = {
   corePlugins: {
     preflight: false,
   },
@@ -138,3 +138,5 @@ module.exports = {
     },
   },
 };
+
+export default config;

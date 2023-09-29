@@ -1,3 +1,5 @@
+export const ROW_LIMIT = 50;
+
 // Gets UTC date in format YYYY-MM-DD HH:MM:SS
 export function convertDateToUTCDatetimeString(d: Date): string {
   return `${convertDateToUTCDateString(d)} ${convertDateToUTCTimeString(d)}`;
@@ -22,4 +24,21 @@ function zeroPadNumber(num: number): string {
     return `0${num}`;
   }
   return String(num);
+}
+
+export function getNextOffset(
+  rowLen: number,
+  offset: number,
+): number | undefined {
+  return rowLen > ROW_LIMIT ? offset + ROW_LIMIT : undefined;
+}
+
+// Creates ORDER BY statement with column parameters
+// i.e. ORDER BY ::col1, ::col2
+export function getOrderByFromCols(numCols: number): string {
+  if (!numCols) return "";
+  const pkCols = Array.from({ length: numCols })
+    .map(() => `? ASC`)
+    .join(", ");
+  return pkCols === "" ? "" : `ORDER BY ${pkCols} `;
 }

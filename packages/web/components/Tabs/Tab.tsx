@@ -1,6 +1,6 @@
-import Btn from "@dsw/components/Btn";
-import Link from "@dsw/components/links/Link";
-import { Route } from "@dsw/lib/urlUtils";
+import Btn from "@components/Btn";
+import Link from "@components/links/Link";
+import { Route } from "@lib/urlUtils";
 import cx from "classnames";
 import { ReactNode } from "react";
 import { useTabsContext } from "./context";

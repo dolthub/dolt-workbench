@@ -1,0 +1,117 @@
+.button {
+  @apply rounded px-8 py-1 outline-none text-white font-semibold leading-relaxed bg-acc-hoverlinkblue button-shadow;
+
+  &:hover {
+    @apply bg-acc-linkblue;
+  }
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+
+  &:disabled {
+    @apply cursor-default bg-gray-400 button-shadow-hover;
+
+    &:hover {
+      @apply bg-gray-400 button-shadow;
+    }
+  }
+}
+
+.redBg {
+  @apply bg-acc-red;
+
+  &:hover {
+    @apply bg-acc-hoverred;
+  }
+}
+
+.greenBg {
+  @apply bg-acc-green;
+
+  &:hover {
+    @apply bg-acc-hovergreen;
+  }
+}
+
+.whiteBg {
+  @apply bg-white text-acc-hoverlinkblue shadow-none;
+
+  &:hover {
+    @apply bg-white/70;
+  }
+}
+
+.buttonOutlined {
+  @apply rounded px-12 py-1 outline-none font-semibold leading-relaxed border button-shadow bg-transparent text-acc-hoverlinkblue border-acc-hoverlinkblue;
+
+  &:hover {
+    @apply border-acc-linkblue text-acc-linkblue;
+  }
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+
+  &:disabled {
+    @apply cursor-default border-gray-400 button-shadow-hover;
+
+    &:hover {
+      @apply border-gray-400 button-shadow;
+    }
+  }
+}
+
+.pill {
+  @apply rounded-full;
+}
+
+.buttonLink {
+  @apply text-acc-hoverlinkblue font-semibold leading-relaxed bg-transparent;
+
+  &:hover {
+    @apply text-acc-linkblue;
+  }
+
+  &:disabled {
+    @apply text-gray-400;
+  }
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.buttonUnderlined {
+  @apply underline px-2;
+}
+
+.redText {
+  @apply text-acc-red;
+
+  &:hover {
+    @apply text-acc-hoverred;
+  }
+}
+
+.greenText {
+  @apply text-acc-green;
+
+  &:hover {
+    @apply text-acc-hovergreen;
+  }
+}
+
+.buttonGroup {
+  button:not(:last-of-type) {
+    @apply mr-2;
+  }
+}
+
+.gradientBg {
+  background: linear-gradient(92.21deg, #6db0fc 11.79%, #5deda2 113.81%);
+
+  &:disabled {
+    background: linear-gradient(92.21deg, #6db0fc 11.79%, #5deda2 113.81%);
+  }
+}

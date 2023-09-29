@@ -1,0 +1,7 @@
+.loading {
+  @apply ml-8 italic;
+
+  > span {
+    @apply ml-5;
+  }
+}

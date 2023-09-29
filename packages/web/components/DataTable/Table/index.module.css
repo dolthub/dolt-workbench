@@ -1,0 +1,197 @@
+.desktopContainer {
+  @apply hidden;
+
+  @screen lg {
+    @apply block py-4 bg-white;
+  }
+}
+
+.containerNoTable {
+  @apply lg:px-4;
+}
+
+.mobileContainer {
+  @apply pt-6 pb-80;
+  @screen lg {
+    @apply hidden;
+  }
+}
+
+.mobileNextPageButton {
+  @apply m-6;
+}
+
+.loader {
+  @apply text-primary py-4 px-10;
+}
+
+.dataTable {
+  @apply leading-loose text-sm font-mono border-separate z-1 overflow-x-auto pr-10 relative ml-4;
+  border-spacing: 0;
+
+  th {
+    @apply font-bold max-w-full whitespace-nowrap;
+  }
+
+  th,
+  td {
+    @apply pr-10 pl-6 border-b border-ld-lightgrey relative;
+
+    &:first-of-type {
+      @apply pl-0 pr-1 border-none bg-white min-w-0;
+    }
+  }
+
+  thead {
+    @apply text-left text-primary;
+  }
+  tbody {
+    @apply whitespace-nowrap text-ld-darkergrey;
+  }
+
+  tr.addedRow:hover {
+    background-color: #ebffef;
+  }
+  tr.removedRow:hover {
+    background-color: #fff3f4;
+  }
+  td.added:hover {
+    @apply text-acc-green;
+  }
+  tr:hover {
+    @apply bg-ld-lightblue;
+  }
+
+  @screen lg {
+    @apply overflow-hidden pr-40 ml-0 pb-80;
+
+    td,
+    th {
+      @apply pl-2;
+    }
+  }
+}
+
+.key {
+  @apply inline-block ml-2 text-ld-darkgrey mb-0.5;
+}
+
+.added {
+  @apply text-acc-green;
+}
+
+.removed {
+  @apply text-acc-hoverred;
+}
+
+.addedRow {
+  @apply bg-[#defbe4];
+}
+
+.removedRow {
+  @apply bg-[#ffeaec];
+}
+
+.cell {
+  @apply align-top min-w-[130px] max-w-[400px];
+}
+
+.longContent {
+  @apply min-w-[300px];
+  span {
+    @apply whitespace-pre-wrap break-words;
+  }
+}
+
+.cellIsNull {
+  @apply text-acc-grey;
+}
+.cell:hover,
+.active {
+  @apply bg-ld-lightgrey text-primary;
+
+  @screen lg {
+    /* Applies background color to full column on hover */
+    &::after {
+      @apply bg-ld-lightblue absolute left-0 w-full h-[10000px] -top-[5000px];
+      content: "\00a0";
+      z-index: -1;
+    }
+  }
+}
+
+.createTable {
+  @apply w-full px-2 py-4 min-w-[12rem];
+  @screen lg {
+    @apply min-w-[20rem];
+  }
+  &:hover {
+    @apply bg-gray-100;
+  }
+}
+
+.menu {
+  @apply hidden;
+}
+
+.active .menu,
+.cell:hover .menu {
+  @screen lg {
+    @apply block absolute bg-white rounded-full right-2 top-[0.35rem];
+
+    &:focus {
+      @apply outline-none widget-shadow-lightblue;
+    }
+  }
+}
+
+.rowDropdown {
+  @apply hidden;
+  @screen lg {
+    @apply invisible mx-2 text-xl flex;
+  }
+}
+
+.row:hover .rowDropdown {
+  @apply visible rounded-full bg-ld-lightgrey text-ld-darkergrey;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.tableDropdown {
+  @apply relative;
+}
+
+.primaryKey {
+  @apply text-acc-hoverblue;
+}
+
+.added .cell:hover,
+.added .active {
+  @apply text-acc-green;
+}
+
+.addedRow .cell:hover,
+.addedRow .active {
+  background-color: #cef7d7;
+}
+
+.removed .cell:hover,
+.removed .active {
+  @apply text-acc-red;
+}
+
+.removedRow .cell:hover,
+.removedRow .active {
+  background-color: #ffd9dc;
+}
+
+.whitespaceToggle {
+  /* stylelint-disable-next-line no-descending-specificity */
+  th,
+  tbody {
+    @apply whitespace-pre;
+  }
+}

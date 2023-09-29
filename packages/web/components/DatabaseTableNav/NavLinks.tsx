@@ -1,5 +1,5 @@
-import { Tab, TabList, TabPanel } from "@dsw/components/Tabs";
-import { TabsProvider } from "@dsw/components/Tabs/context";
+import { Tab, TabList, TabPanel } from "@components/Tabs";
+import { TabsProvider } from "@components/Tabs/context";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 

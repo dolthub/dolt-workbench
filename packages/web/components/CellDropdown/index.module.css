@@ -1,0 +1,38 @@
+.cellDropdown {
+  @apply hidden;
+  @screen lg {
+    @apply block;
+  }
+}
+
+.icon {
+  @apply p-1 w-5 h-5 text-ld-darkgrey;
+
+  &:hover {
+    @apply text-primary;
+  }
+}
+
+.dropdown {
+  @apply absolute bg-white widget-shadow-hover z-100 rounded-b right-0 top-[1.95rem] px-3 py-1 border-b border-x border-ld-lightgrey max-w-[9rem];
+}
+
+.rowDropdown {
+  @apply -right-20;
+}
+
+.tableDropdown {
+  @apply top-11 left-7;
+}
+
+.tableButton {
+  @apply mt-3.5 mx-8 flex;
+
+  svg {
+    @apply ml-1 mt-1;
+  }
+}
+
+.padding {
+  @apply -right-[0.85rem];
+}

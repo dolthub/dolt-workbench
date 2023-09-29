@@ -1,0 +1,19 @@
+.container {
+  @apply relative w-fit min-w-full;
+
+  @screen lg {
+    @apply flex justify-between items-start;
+  }
+}
+
+.status {
+  @apply pr-4;
+}
+
+.top {
+  @apply hidden  justify-end items-center sticky right-4 z-10 lg:flex;
+}
+
+.optionsButton {
+  @apply mt-2;
+}

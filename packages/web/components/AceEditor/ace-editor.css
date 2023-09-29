@@ -1,0 +1,176 @@
+/*
+ *  Overrides Ace Editor's Monokai theme to create custom styling
+ */
+
+.ace-monokai .ace_gutter {
+  @screen lg {
+    @apply text-white bg-ld-darkerblue;
+  }
+}
+
+.ace-monokai .ace_print-margin {
+  width: 0px;
+  background: #555651;
+}
+
+.ace-monokai {
+  @apply bg-ld-lightpurple text-primary;
+  @screen lg {
+    @apply bg-ld-darkerblue text-white;
+  }
+  font-family: "Roboto Mono", Menlo, Monaco, Courier New, monospace, serif;
+}
+
+.ace-view {
+  @apply bg-transparent text-primary;
+}
+
+.ace-monokai .ace_cursor {
+  @apply text-primary;
+  @screen lg {
+    @apply text-ld-lightgrey;
+  }
+}
+
+.ace-monokai .ace_marker-layer .ace_selection {
+  @screen lg {
+    @apply bg-ld-lightgrey;
+  }
+}
+
+.ace-monokai.ace_multiselect .ace_selection.ace_start {
+  @apply shadow-none;
+}
+
+.ace-monokai .ace_marker-layer .ace_step {
+  background: rgb(102, 82, 0);
+}
+
+.ace-monokai .ace_marker-layer .ace_bracket {
+  @apply border-0;
+  margin: -1px -1px -1px -1px;
+  border-radius: 2px;
+  box-shadow: 0 0 2px 0 #020742;
+}
+
+.ace-monokai .ace_marker-layer .ace_active-line {
+  background: #e5edf2;
+}
+
+.ace-monokai .ace_gutter-active-line {
+  @apply bg-ld-darkgrey;
+}
+
+.ace-monokai .ace_marker-layer .ace_selected-word {
+  @apply border-0;
+  /* Ace can highlight all instances of a
+     * word when one is selected
+     */
+}
+
+.ace-monokai .ace_invisible {
+  color: #52524d;
+}
+
+.ace-monokai .ace_entity.ace_name.ace_tag,
+.ace-monokai .ace_keyword,
+.ace-monokai .ace_meta.ace_tag,
+.ace-monokai .ace_storage {
+  @apply text-acc-hoverlinkblue uppercase;
+}
+
+.ace-monokai .ace_punctuation,
+.ace-monokai .ace_punctuation.ace_tag {
+  @apply text-white;
+}
+
+.ace-view .ace_punctuation,
+.ace-view .ace_punctuation.ace_tag {
+  @apply text-primary;
+}
+
+.ace-monokai .ace_constant.ace_character,
+.ace-monokai .ace_constant.ace_language,
+.ace-monokai .ace_constant.ace_numeric,
+.ace-monokai .ace_constant.ace_other {
+  @apply text-acc-green;
+}
+
+.ace-monokai .ace_invalid {
+  color: #f8f8f0;
+  background-color: #f92672;
+}
+
+.ace-monokai .ace_invalid.ace_deprecated {
+  color: #f8f8f0;
+  background-color: #ae81ff;
+}
+
+.ace-monokai .ace_support.ace_constant,
+.ace-monokai .ace_constant,
+.ace-monokai .ace_support.ace_function {
+  color: #e47718;
+}
+
+.ace-monokai .ace_fold {
+  background-color: #a6e22e;
+}
+
+.ace-monokai .ace_storage.ace_type,
+.ace-monokai .ace_support.ace_class,
+.ace-monokai .ace_support.ace_type {
+  @apply italic;
+  color: #66d9ef;
+}
+
+.ace-monokai .ace_entity.ace_name.ace_function,
+.ace-monokai .ace_entity.ace_other,
+.ace-monokai .ace_entity.ace_other.ace_attribute-name,
+.ace-monokai .ace_variable {
+  color: #a6e22e;
+}
+
+.ace-monokai .ace_variable.ace_parameter {
+  @apply italic;
+  color: #fd971f;
+}
+
+.ace-monokai .ace_string {
+  @apply text-acc-red;
+}
+
+.ace-monokai .ace_comment {
+  @apply text-ld-darkgrey;
+}
+
+.ace-monokai .ace_indent-guide {
+  background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAACCAYAAACZgbYnAAAAEklEQVQImWPQ0FD0ZXBzd/wPAAjVAoxeSgNeAAAAAElFTkSuQmCC)
+    right repeat-y;
+}
+
+#AceViewer .ace_cursor {
+  @apply opacity-0;
+  @screen lg {
+    @apply opacity-20;
+  }
+}
+.noMobileEditor {
+  .ace_mobile-menu {
+    display: none;
+  }
+}
+
+.create-table-ace {
+  @apply h-full;
+  .ace_content {
+    @apply h-full;
+  }
+  .ace_scroller {
+    @apply h-full;
+    overflow-y: hidden;
+  }
+}
+
+.ace_mobile-button {
+  @apply pr-2;
+}

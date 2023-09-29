@@ -1,4 +1,4 @@
-import Btn from "@dsw/components/Btn";
+import Btn from "@components/Btn";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import css from "./index.module.css";
 

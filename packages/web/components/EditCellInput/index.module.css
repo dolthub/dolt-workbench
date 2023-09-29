@@ -1,0 +1,55 @@
+.formLoader {
+  @apply absolute top-1 right-5;
+}
+
+.right {
+  @apply right-1;
+}
+
+.altRight {
+  @apply right-px;
+}
+
+.editButtons {
+  @apply absolute top-1;
+
+  button:not(:last-child) {
+    @apply mr-0.5;
+  }
+
+  button:last-child {
+    @apply text-acc-red;
+  }
+}
+
+.textButton {
+  @apply text-ld-darkgrey;
+}
+
+.noTextIcon {
+  @apply absolute text-base top-[0.2rem] -left-[0.1rem] text-acc-hoverred;
+}
+
+.editInput {
+  @apply text-primary px-2 border border-ld-lightgrey rounded-sm bg-ld-lightblue mr-3;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.largerMarginRight {
+  @apply mr-4;
+}
+
+.editTextarea {
+  @apply resize;
+}
+
+.editSelect {
+  @apply mr-5;
+}
+
+.datetimeInput {
+  @apply mr-1;
+}

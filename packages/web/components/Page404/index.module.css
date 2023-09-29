@@ -1,0 +1,35 @@
+.page {
+  @apply text-center w-full text-primary my-16;
+
+  h1 {
+    @apply mb-6;
+  }
+}
+
+.text {
+  @apply mt-8 max-w-xl mx-auto px-4;
+
+  p {
+    @apply text-base;
+  }
+}
+
+.code {
+  @apply bg-gray-600 mx-auto font-mono pb-3 rounded-xl text-white tracking-tighter w-[350px] text-[0.3rem];
+
+  code {
+    @apply text-center;
+  }
+
+  @media (min-width: 625px) {
+    @apply tracking-widest text-xs w-[600px];
+  }
+}
+
+.error {
+  @apply text-red-400 font-semibold;
+
+  div {
+    @apply inline-block;
+  }
+}

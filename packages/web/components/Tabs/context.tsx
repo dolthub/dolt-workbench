@@ -1,5 +1,5 @@
-import useContextWithError from "@dsw/hooks/useContextWithError";
-import { createCustomContext } from "@dsw/lib/createCustomContext";
+import useContextWithError from "@hooks/useContextWithError";
+import { createCustomContext } from "@lib/createCustomContext";
 import React, { ReactNode, useState } from "react";
 
 type TabsContextType = {

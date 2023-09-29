@@ -1,0 +1,15 @@
+.horizontal {
+  @apply flex;
+}
+
+.label {
+  @apply font-semibold text-primary mb-2;
+}
+
+.horizontalLabel {
+  @apply mr-3 mt-1;
+}
+
+.dropdownIndicator {
+  @apply mr-3;
+}

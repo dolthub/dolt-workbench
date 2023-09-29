@@ -1,0 +1,30 @@
+.wrapper {
+  @apply flex justify-between relative lg:mt-8;
+
+  div {
+    @apply overflow-y-visible;
+  }
+}
+
+.top {
+  @apply flex justify-start items-center;
+}
+
+.bottom {
+  @apply flex justify-between relative;
+}
+
+.noData {
+  @apply mx-5 mb-5 text-primary;
+}
+
+.gradientOverlay {
+  @apply sticky right-0 w-12 bg-gradient-to-r from-transparent to-ld-darkgrey opacity-10;
+  @screen lg {
+    @apply hidden;
+  }
+}
+
+.colsButton {
+  @apply ml-4 h-8;
+}

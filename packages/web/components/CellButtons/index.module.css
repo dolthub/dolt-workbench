@@ -1,0 +1,57 @@
+.button {
+  @apply w-full text-left pr-2 font-sans;
+}
+
+.notTable {
+  @apply font-sans text-sm;
+}
+
+.check {
+  @apply inline-block h-5 w-5 ml-1.5 mb-1 text-acc-green;
+}
+
+.error {
+  @apply font-sans pt-0;
+}
+
+.foreignKey {
+  @apply relative;
+}
+
+.foreignKeyButton {
+  svg {
+    @apply inline-block pb-[0.1rem] w-4 h-6;
+  }
+}
+
+.foreignKeyDropdown {
+  @apply absolute -top-[0.3rem] left-[8.2rem] bg-white widget-shadow-hover z-100 rounded px-3 py-1 border border-ld-lightgrey  w-fit;
+
+  a {
+    @apply text-acc-hoverlinkblue font-semibold font-sans;
+
+    &:hover {
+      @apply text-acc-linkblue;
+    }
+  }
+}
+
+.help {
+  @apply inline-block ml-1 mb-0.5;
+}
+
+.popup {
+  @apply hidden;
+}
+
+.history {
+  @apply relative;
+}
+
+.history:hover .button:disabled ~ .popup {
+  @apply block absolute -top-0.5 left-24 bg-white widget-shadow-hover z-100 rounded px-3 py-2 border border-ld-lightgrey;
+}
+
+.loading {
+  @apply italic text-ld-darkgrey;
+}

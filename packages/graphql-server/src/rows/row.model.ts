@@ -1,6 +1,10 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { convertDateToUTCDatetimeString } from "../utils";
-import { RawRow } from "../utils/commonTypes";
+import {
+  ROW_LIMIT,
+  convertDateToUTCDatetimeString,
+  getNextOffset,
+} from "../utils";
+import { ListOffsetRes, RawRow } from "../utils/commonTypes";
 
 // Using an unprintable string for null values so we can distinguish between
 // string "null" and null
@@ -16,6 +20,19 @@ export class ColumnValue {
 export class Row {
   @Field(_type => [ColumnValue])
   columnValues: ColumnValue[];
+}
+
+@ObjectType()
+export class RowList extends ListOffsetRes {
+  @Field(_type => [Row])
+  list: Row[];
+}
+
+export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
+  return {
+    list: rows.slice(0, ROW_LIMIT).map(fromDoltRowRes),
+    nextOffset: getNextOffset(rows.length, offset),
+  };
 }
 
 export function getCellValue(value: any): string {
