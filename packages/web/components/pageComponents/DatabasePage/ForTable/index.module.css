@@ -1,0 +1,49 @@
+.editTableContainer {
+  @apply p-10 text-center;
+
+  h2 {
+    @apply mb-4;
+  }
+}
+
+.tableName {
+  @apply font-bold;
+}
+
+.sections {
+  @apply flex justify-center mt-4;
+}
+
+.drop {
+  @apply mt-16 text-lg flex justify-center w-full;
+
+  svg {
+    @apply mx-1.5 mt-1;
+  }
+}
+
+.cancel {
+  @apply mt-6 text-base text-ld-darkgrey;
+}
+
+.square {
+  @apply widget-shadow mx-4 py-8 px-4 rounded-lg text-center w-60;
+
+  svg {
+    @apply text-4xl mx-auto mb-5;
+  }
+
+  a,
+  button {
+    @apply text-lg text-acc-hoverlinkblue;
+  }
+}
+
+.disabledSquare {
+  @apply text-acc-darkgrey;
+
+  a,
+  button {
+    @apply text-acc-darkgrey;
+  }
+}
