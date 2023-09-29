@@ -16,7 +16,6 @@ type Props = {
   leftNavInitiallyOpen?: boolean;
   showSqlConsole?: boolean;
   noMobileWarnings?: boolean;
-  // routeRefChangeTo: RefUrl;
 };
 
 export default function DatabasePage({ params, children, ...props }: Props) {

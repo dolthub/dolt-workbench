@@ -1,0 +1,29 @@
+.container {
+  @apply p-10 text-center;
+
+  h2 {
+    @apply mb-8;
+  }
+}
+
+.sections {
+  @apply flex justify-center;
+}
+
+.cancel {
+  @apply mt-10 text-base text-ld-darkgrey;
+}
+
+.getStartedContainer {
+  @apply px-0;
+}
+
+.removeForGetStarted {
+  @apply hidden;
+}
+
+.forGetStarted {
+  div {
+    @apply px-2;
+  }
+}
