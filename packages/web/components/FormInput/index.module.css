@@ -1,0 +1,104 @@
+.container {
+  @apply max-w-xl w-full text-primary mb-4 border-none p-0 bg-transparent;
+
+  &:focus-within {
+    @apply bg-transparent;
+  }
+}
+
+.adjustForMobile {
+  @apply border-t border-ld-lightgrey px-4 py-3 bg-white;
+
+  &:focus-within {
+    @apply bg-ld-lightpurple;
+  }
+
+  @screen sm {
+    @apply max-w-xl w-full text-primary mb-4 border-none p-0 bg-transparent;
+
+    &:focus-within {
+      @apply bg-transparent;
+    }
+  }
+}
+
+.horizontal {
+  @apply flex;
+}
+
+.label {
+  @apply font-semibold pb-2;
+}
+
+.horizontalLabel {
+  @apply mr-3 mt-1 text-right w-20;
+}
+
+.adjustForMobile .label {
+  @apply px-3;
+
+  @screen sm {
+    @apply px-0;
+  }
+}
+
+.round {
+  @apply rounded border border-gray-300;
+  &::placeholder {
+    @apply text-gray-400;
+  }
+}
+
+.input {
+  @apply text-sm bg-ld-lightblue w-full text-primary py-2 px-3 rounded border border-gray-300;
+  &::placeholder {
+    @apply text-gray-400;
+  }
+
+  &:focus {
+    @apply bg-white outline-none;
+  }
+}
+
+.pill {
+  @apply rounded-[20px] border-transparent;
+  &::placeholder {
+    @apply text-gray-300;
+  }
+  &:focus {
+    @apply border border-gray-300;
+  }
+}
+
+.adjustForMobile .input {
+  @apply bg-white border-0;
+
+  &:focus {
+    @apply bg-ld-lightpurple;
+  }
+
+  &:disabled {
+    @apply text-gray-400;
+  }
+
+  @screen sm {
+    @apply text-sm bg-ld-lightblue border border-gray-300;
+
+    &:focus {
+      @apply bg-white;
+    }
+  }
+}
+
+.bgwhite {
+  @apply bg-white;
+}
+
+.error,
+.error:focus {
+  @apply border border-red-400 bg-white text-red-400;
+}
+
+.description {
+  @apply text-gray-400 text-lg mb-6;
+}

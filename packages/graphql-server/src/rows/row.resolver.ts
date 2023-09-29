@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
-import { DataSource } from "typeorm";
+import { DataSourceService } from "../dataSources/dataSource.service";
 import { ROW_LIMIT, getOrderByFromCols } from "../utils";
 import { RawRow } from "../utils/commonTypes";
 import { Row, RowList, fromDoltListRowRes } from "./row.model";
@@ -15,19 +15,23 @@ export class ListRowsArgs {
 
 @Resolver(_of => Row)
 export class RowResolver {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(private readonly dss: DataSourceService) {}
 
   @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {
-    const columns = await this.dataSource.query(`DESCRIBE ??`, [
-      args.tableName,
-    ]);
+    const columns = await this.dss
+      .getDS()
+      .query(`DESCRIBE ??`, [args.tableName]);
     const offset = args.offset ?? 0;
     const { cols, pkLen } = getPKColsForRowsQuery(columns);
-    const rows = await this.dataSource.query(
-      `SELECT * FROM ?? ${getOrderByFromCols(pkLen)}LIMIT ? OFFSET ?`,
-      [args.tableName, ...cols, ROW_LIMIT + 1, offset],
-    );
+    const rows = await this.dss
+      .getDS()
+      .query(`SELECT * FROM ?? ${getOrderByFromCols(pkLen)}LIMIT ? OFFSET ?`, [
+        args.tableName,
+        ...cols,
+        ROW_LIMIT + 1,
+        offset,
+      ]);
     return fromDoltListRowRes(rows, offset);
   }
 }

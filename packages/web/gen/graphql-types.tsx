@@ -63,6 +63,16 @@ export type IndexColumn = {
   sqlType?: Maybe<Scalars['String']['output']>;
 };
 
+export type Mutation = {
+  __typename?: 'Mutation';
+  addDatabaseConnection: Scalars['Boolean']['output'];
+};
+
+
+export type MutationAddDatabaseConnectionArgs = {
+  url: Scalars['String']['input'];
+};
+
 export type Query = {
   __typename?: 'Query';
   currentDatabase?: Maybe<Scalars['String']['output']>;
@@ -166,6 +176,13 @@ export type TableForBranchQueryVariables = Exact<{
 
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
+
+export type AddDatabaseConnectionMutationVariables = Exact<{
+  url: Scalars['String']['input'];
+}>;
+
+
+export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: boolean };
 
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -446,6 +463,37 @@ export function useTableForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQuery>;
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
+export const AddDatabaseConnectionDocument = gql`
+    mutation AddDatabaseConnection($url: String!) {
+  addDatabaseConnection(url: $url)
+}
+    `;
+export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
+
+/**
+ * __useAddDatabaseConnectionMutation__
+ *
+ * To run a mutation, you first call `useAddDatabaseConnectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddDatabaseConnectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addDatabaseConnectionMutation, { data, loading, error }] = useAddDatabaseConnectionMutation({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useAddDatabaseConnectionMutation(baseOptions?: Apollo.MutationHookOptions<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>(AddDatabaseConnectionDocument, options);
+      }
+export type AddDatabaseConnectionMutationHookResult = ReturnType<typeof useAddDatabaseConnectionMutation>;
+export type AddDatabaseConnectionMutationResult = Apollo.MutationResult<AddDatabaseConnectionMutation>;
+export type AddDatabaseConnectionMutationOptions = Apollo.BaseMutationOptions<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
 export const DataTableQueryDocument = gql`
     query DataTableQuery($tableName: String!) {
   table(tableName: $tableName) {

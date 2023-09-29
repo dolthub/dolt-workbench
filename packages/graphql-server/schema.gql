@@ -84,3 +84,7 @@ type Query {
   tableNames: TableNames!
   tables: [Table!]!
 }
+
+type Mutation {
+  addDatabaseConnection(url: String!): Boolean!
+}

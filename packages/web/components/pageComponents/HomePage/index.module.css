@@ -1,0 +1,15 @@
+.container {
+  @apply max-w-xl mx-auto my-40;
+
+  h1 {
+    @apply mb-6 text-center;
+  }
+
+  p {
+    @apply text-base text-center;
+  }
+
+  form {
+    @apply mt-10 max-w-lg mx-auto;
+  }
+}

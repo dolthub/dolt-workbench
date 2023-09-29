@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSource } from "typeorm";
+import { DataSourceService } from "../dataSources/dataSource.service";
 import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";
 
 @ArgsType()
@@ -10,11 +10,11 @@ export class SqlSelectArgs {
 
 @Resolver(_of => SqlSelect)
 export class SqlSelectResolver {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(private readonly dss: DataSourceService) {}
 
   @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
-    const res = await this.dataSource.query(args.queryString);
+    const res = await this.dss.getDS().query(args.queryString);
     return fromSqlSelectRow(res, args.queryString);
   }
 }

@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSource } from "typeorm";
+import { DataSourceService } from "../dataSources/dataSource.service";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
 import { mapTablesRes } from "./utils";
 
@@ -11,18 +11,17 @@ class GetTableArgs {
 
 @Resolver(_of => Table)
 export class TableResolver {
-  constructor(private readonly dataSource: DataSource) {}
+  constructor(private readonly dss: DataSourceService) {}
 
   @Query(_returns => Table)
   async table(@Args() args: GetTableArgs): Promise<Table> {
-    const columns = await this.dataSource.query(`DESCRIBE ??`, [
-      args.tableName,
-    ]);
-    const fkRows = await this.dataSource.query(
+    const ds = this.dss.getDS();
+    const columns = await ds.query(`DESCRIBE ??`, [args.tableName]);
+    const fkRows = await ds.query(
       `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_name=? AND referenced_table_schema IS NOT NULL`,
       [args.tableName],
     );
-    const idxRows = await this.dataSource.query(
+    const idxRows = await ds.query(
       `SELECT 
   table_name, index_name, comment, non_unique, GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS 
 FROM information_schema.statistics 
@@ -36,9 +35,9 @@ GROUP BY index_name;`,
 
   @Query(_returns => TableNames)
   async tableNames(): Promise<TableNames> {
-    const tables = await this.dataSource.query(
-      `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`,
-    );
+    const tables = await this.dss
+      .getDS()
+      .query(`SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`);
     const mapped = mapTablesRes(tables);
 
     return { list: mapped };
