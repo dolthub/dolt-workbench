@@ -14,8 +14,7 @@ type Props = {
 export default function SchemaDiagramButton(props: Props) {
   const router = useRouter();
   const isShowingSchemaDiagram =
-    router.pathname ===
-    "/deployments/[ownerName]/[deploymentName]/database/[databaseName]/schema/[refName]";
+    router.pathname === "/database/schema/[refName]";
 
   const url = isShowingSchemaDiagram ? ref : schemaDiagram;
 

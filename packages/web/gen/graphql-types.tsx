@@ -69,6 +69,7 @@ export type Query = {
   sqlSelect: SqlSelect;
   table: Table;
   tableNames: TableNames;
+  tables: Array<Table>;
 };
 
 
@@ -127,6 +128,17 @@ export type TableNames = {
   list: Array<Scalars['String']['output']>;
 };
 
+export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
+
+export type IndexForTableListFragment = { __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> };
+
+export type TableForSchemaListFragment = { __typename?: 'Table', tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> };
+
+export type TableListForSchemasQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
+
 export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
 export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
@@ -179,6 +191,64 @@ export type TableNamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export const ForeignKeyColumnForDataTableFragmentDoc = gql`
+    fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
+  referencedColumnName
+  referrerColumnIndex
+}
+    `;
+export const ForeignKeysForDataTableFragmentDoc = gql`
+    fragment ForeignKeysForDataTable on ForeignKey {
+  tableName
+  columnName
+  referencedTableName
+  foreignKeyColumn {
+    ...ForeignKeyColumnForDataTable
+  }
+}
+    ${ForeignKeyColumnForDataTableFragmentDoc}`;
+export const ColumnForTableListFragmentDoc = gql`
+    fragment ColumnForTableList on Column {
+  name
+  type
+  isPrimaryKey
+  constraints {
+    notNull
+  }
+}
+    `;
+export const ColumnsListForTableListFragmentDoc = gql`
+    fragment ColumnsListForTableList on IndexColumn {
+  name
+  sqlType
+}
+    `;
+export const IndexForTableListFragmentDoc = gql`
+    fragment IndexForTableList on Index {
+  name
+  type
+  comment
+  columns {
+    ...ColumnsListForTableList
+  }
+}
+    ${ColumnsListForTableListFragmentDoc}`;
+export const TableForSchemaListFragmentDoc = gql`
+    fragment TableForSchemaList on Table {
+  tableName
+  foreignKeys {
+    ...ForeignKeysForDataTable
+  }
+  columns {
+    ...ColumnForTableList
+  }
+  indexes {
+    ...IndexForTableList
+  }
+}
+    ${ForeignKeysForDataTableFragmentDoc}
+${ColumnForTableListFragmentDoc}
+${IndexForTableListFragmentDoc}`;
 export const RowForSqlDataTableFragmentDoc = gql`
     fragment RowForSqlDataTable on Row {
   columnValues {
@@ -191,16 +261,6 @@ export const ColumnForSqlDataTableFragmentDoc = gql`
   name
   isPrimaryKey
   type
-}
-    `;
-export const ColumnForTableListFragmentDoc = gql`
-    fragment ColumnForTableList on Column {
-  name
-  type
-  isPrimaryKey
-  constraints {
-    notNull
-  }
 }
     `;
 export const TableWithColumnsFragmentDoc = gql`
@@ -221,22 +281,6 @@ export const ColumnForDataTableFragmentDoc = gql`
   }
 }
     `;
-export const ForeignKeyColumnForDataTableFragmentDoc = gql`
-    fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
-  referencedColumnName
-  referrerColumnIndex
-}
-    `;
-export const ForeignKeysForDataTableFragmentDoc = gql`
-    fragment ForeignKeysForDataTable on ForeignKey {
-  tableName
-  columnName
-  referencedTableName
-  foreignKeyColumn {
-    ...ForeignKeyColumnForDataTable
-  }
-}
-    ${ForeignKeyColumnForDataTableFragmentDoc}`;
 export const RowForDataTableFragmentDoc = gql`
     fragment RowForDataTable on Row {
   columnValues {
@@ -252,6 +296,40 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
+export const TableListForSchemasDocument = gql`
+    query TableListForSchemas {
+  tables {
+    ...TableForSchemaList
+  }
+}
+    ${TableForSchemaListFragmentDoc}`;
+
+/**
+ * __useTableListForSchemasQuery__
+ *
+ * To run a query within a React component, call `useTableListForSchemasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTableListForSchemasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTableListForSchemasQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTableListForSchemasQuery(baseOptions?: Apollo.QueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TableListForSchemasQuery, TableListForSchemasQueryVariables>(TableListForSchemasDocument, options);
+      }
+export function useTableListForSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TableListForSchemasQuery, TableListForSchemasQueryVariables>(TableListForSchemasDocument, options);
+        }
+export type TableListForSchemasQueryHookResult = ReturnType<typeof useTableListForSchemasQuery>;
+export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableListForSchemasLazyQuery>;
+export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const SqlSelectForSqlDataTableDocument = gql`
     query SqlSelectForSqlDataTable($queryString: String!) {
   sqlSelect(queryString: $queryString) {

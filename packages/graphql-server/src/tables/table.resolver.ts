@@ -43,4 +43,13 @@ GROUP BY index_name;`,
 
     return { list: mapped };
   }
+
+  @Query(_returns => [Table])
+  async tables(): Promise<Table[]> {
+    const tableNames = await this.tableNames();
+    const tables = await Promise.all(
+      tableNames.list.map(async name => this.table({ tableName: name })),
+    );
+    return tables;
+  }
 }
