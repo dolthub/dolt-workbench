@@ -5,11 +5,10 @@ export function useReactiveWidth<E extends HTMLElement>(
   elem?: E | null,
   mobileBreakpoint = 768,
 ): { clientWidth: E["clientWidth"]; isMobile: boolean } {
-  const [clientWidth, setClientWidth] = useState(
-    elem?.clientWidth ?? window.innerWidth,
-  );
+  const [clientWidth, setClientWidth] = useState(elem?.clientWidth ?? 0);
 
   useEffectOnMount(() => {
+    setClientWidth(elem?.clientWidth ?? window.innerWidth);
     const handleResize = () =>
       setClientWidth(elem?.clientWidth ?? window.innerWidth);
     window.addEventListener("resize", handleResize);

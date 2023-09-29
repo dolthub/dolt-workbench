@@ -1,4 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import useEffectOnMount from "./useEffectOnMount";
 
 type ReturnType = [string, Dispatch<SetStateAction<string>>];
 
@@ -7,9 +8,12 @@ export default function useStateWithSessionStorage(
   storageKey: string,
   defaultValue?: string,
 ): ReturnType {
-  const [value, setValue] = useState(
-    sessionStorage.getItem(storageKey) ?? defaultValue ?? "",
-  );
+  const [value, setValue] = useState("");
+
+  useEffectOnMount(() => {
+    if (typeof sessionStorage === "undefined") return;
+    setValue(sessionStorage.getItem(storageKey) ?? defaultValue ?? "");
+  });
 
   useEffect(() => {
     sessionStorage.setItem(storageKey, value);

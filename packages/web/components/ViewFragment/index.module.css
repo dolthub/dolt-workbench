@@ -1,0 +1,31 @@
+.top {
+  @apply flex justify-between p-10 flex-col;
+  @screen lg {
+    @apply flex-row;
+  }
+}
+
+.buttons {
+  @apply flex;
+  button {
+    @apply h-10 w-40;
+    @screen lg {
+      @apply h-6 w-auto;
+    }
+  }
+}
+
+.play {
+  @apply text-2xl ml-2 text-primary rounded-full h-6;
+  @screen lg {
+    @apply w-auto;
+  }
+
+  &:hover {
+    @apply text-acc-hoverblue;
+  }
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}

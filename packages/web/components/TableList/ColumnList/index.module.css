@@ -1,0 +1,59 @@
+.columns {
+  @apply py-2 px-3 bg-white hidden lg:block;
+
+  ol {
+    @apply font-mono text-xs;
+  }
+}
+
+.col {
+  @apply flex justify-between max-w-[30rem];
+
+  &:not(:last-of-type) {
+    @apply pb-4;
+  }
+}
+
+.primaryKey {
+  @apply font-semibold;
+}
+
+.colName {
+  @apply flex;
+  span:first-of-type {
+    @apply -mr-1.5;
+  }
+}
+
+.colType {
+  @apply text-right whitespace-normal ml-4;
+  font-size: 0.7rem;
+}
+
+.colCon {
+  @apply ml-2;
+}
+
+.enumCol {
+  @apply flex;
+
+  svg {
+    @apply text-lg ml-1;
+  }
+}
+
+.enumPopup {
+  @apply font-mono text-xs p-2;
+}
+
+.key {
+  @apply mx-3 mt-px;
+}
+
+.tooltip {
+  @apply text-center font-sans;
+}
+
+.smallLoader {
+  @apply h-6 mx-2 text-sm;
+}

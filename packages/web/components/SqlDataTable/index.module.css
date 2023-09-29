@@ -1,0 +1,19 @@
+.workingDiff {
+  @apply mx-4 my-10;
+}
+
+.transactionCommit {
+  @apply mx-5 max-w-2xl;
+
+  p {
+    @apply mb-4;
+  }
+}
+
+.queryRunMsg {
+  @apply mx-4 mt-6;
+
+  button {
+    @apply mx-4 px-4 py-0.5;
+  }
+}

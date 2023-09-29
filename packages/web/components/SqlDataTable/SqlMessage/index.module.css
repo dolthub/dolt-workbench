@@ -1,0 +1,18 @@
+.status {
+  @apply my-3 mx-6 text-base;
+  @screen lg {
+    @apply mx-5;
+  }
+}
+
+.code {
+  @apply mx-6 mt-4 max-w-5xl text-xs;
+
+  pre {
+    @apply whitespace-pre-wrap;
+  }
+}
+
+.bold {
+  @apply font-semibold;
+}

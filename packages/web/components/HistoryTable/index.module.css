@@ -1,0 +1,7 @@
+.seeAll {
+  @apply ml-8 mb-4 px-2;
+}
+
+.err {
+  @apply mx-10;
+}

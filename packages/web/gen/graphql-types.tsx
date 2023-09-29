@@ -127,6 +127,17 @@ export type TableNames = {
   list: Array<Scalars['String']['output']>;
 };
 
+export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+
+export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
+
+export type SqlSelectForSqlDataTableQueryVariables = Exact<{
+  queryString: Scalars['String']['input'];
+}>;
+
+
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+
 export type ColumnForTableListFragment = { __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
 export type TableWithColumnsFragment = { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
@@ -168,6 +179,20 @@ export type TableNamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export const RowForSqlDataTableFragmentDoc = gql`
+    fragment RowForSqlDataTable on Row {
+  columnValues {
+    displayValue
+  }
+}
+    `;
+export const ColumnForSqlDataTableFragmentDoc = gql`
+    fragment ColumnForSqlDataTable on Column {
+  name
+  isPrimaryKey
+  type
+}
+    `;
 export const ColumnForTableListFragmentDoc = gql`
     fragment ColumnForTableList on Column {
   name
@@ -227,6 +252,49 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
+export const SqlSelectForSqlDataTableDocument = gql`
+    query SqlSelectForSqlDataTable($queryString: String!) {
+  sqlSelect(queryString: $queryString) {
+    queryExecutionStatus
+    queryExecutionMessage
+    columns {
+      ...ColumnForSqlDataTable
+    }
+    rows {
+      ...RowForSqlDataTable
+    }
+  }
+}
+    ${ColumnForSqlDataTableFragmentDoc}
+${RowForSqlDataTableFragmentDoc}`;
+
+/**
+ * __useSqlSelectForSqlDataTableQuery__
+ *
+ * To run a query within a React component, call `useSqlSelectForSqlDataTableQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSqlSelectForSqlDataTableQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSqlSelectForSqlDataTableQuery({
+ *   variables: {
+ *      queryString: // value for 'queryString'
+ *   },
+ * });
+ */
+export function useSqlSelectForSqlDataTableQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
+      }
+export function useSqlSelectForSqlDataTableLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
+        }
+export type SqlSelectForSqlDataTableQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableQuery>;
+export type SqlSelectForSqlDataTableLazyQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableLazyQuery>;
+export type SqlSelectForSqlDataTableQueryResult = Apollo.QueryResult<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>;
 export const TableForBranchDocument = gql`
     query TableForBranch($tableName: String!) {
   table(tableName: $tableName) {

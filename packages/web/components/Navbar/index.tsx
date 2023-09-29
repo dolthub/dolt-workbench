@@ -1,3 +1,4 @@
+import DocsLink from "@components/links/DocsLink";
 import Link from "@components/links/Link";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import Btn from "../Btn";
@@ -9,9 +10,7 @@ export default function Navbar() {
     <div className={css.container}>
       <div className={css.inner}>
         <div className={css.left}>
-          <Link href="https://docs.dolthub.com/" className={css.link}>
-            Dolt Documentation
-          </Link>
+          <DocsLink className={css.link}>Dolt Documentation</DocsLink>
         </div>
 
         <div>

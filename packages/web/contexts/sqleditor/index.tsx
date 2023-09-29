@@ -29,6 +29,10 @@ export function SqlEditorProvider(props: Props) {
   const router = useRouter();
   const { addQuery } = useSessionQueryHistory();
 
+  useEffect(() => {
+    setShowSqlEditor(isMobile);
+  }, [isMobile]);
+
   // Handles error modal state
   useEffect(() => {
     if (!err || modalState.errorIsOpen) {

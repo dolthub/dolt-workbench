@@ -1,0 +1,76 @@
+.item {
+  @apply text-primary;
+}
+
+.active,
+.item:hover {
+  @apply bg-white;
+
+  .buttonIcon {
+    @apply font-semibold;
+  }
+}
+
+.buttonIcon {
+  @apply text-ld-darkgrey text-2xl mr-4 h-6 rounded-full;
+
+  &:focus {
+    @apply widget-shadow-lightblue outline-none;
+  }
+}
+
+.item:hover .buttonIcon {
+  @apply text-primary;
+
+  &:hover {
+    @apply text-acc-hoverblue;
+  }
+}
+
+.isExpanded {
+  background-color: #fafbfc;
+}
+
+.table {
+  @apply flex justify-between text-sm;
+}
+
+.tableName {
+  @apply hidden;
+
+  @screen lg {
+    @apply flex p-3 text-acc-hoverlinkblue font-semibold w-full text-sm;
+
+    svg {
+      @apply inline-block text-sm mt-1 mr-2;
+    }
+
+    &:hover {
+      @apply text-acc-linkblue;
+    }
+
+    &:focus {
+      @apply outline-none;
+
+      svg {
+        @apply widget-shadow-lightblue;
+      }
+    }
+  }
+}
+
+.mobileTableLink {
+  @apply flex justify-between mx-2 p-3 text-acc-hoverlinkblue font-semibold w-full text-sm lg:hidden;
+}
+
+.right {
+  @apply flex items-center;
+
+  a {
+    @apply hidden lg:block;
+  }
+}
+
+.tableStatus {
+  @apply text-ld-orange pr-4 mr-1 font-semibold;
+}

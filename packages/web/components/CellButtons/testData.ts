@@ -109,7 +109,7 @@ export const lpCellDiffQuery = sprintf(
   diffOrderBy,
 );
 
-export const lpCellHistoryQuery = `SELECT \`${lpCellClicked}\`, ${historyCols} FROM \`dolt_history_${lpTableName}\` WHERE (\`${lpPK1}\` = '${lpPK1Val}') ${historyOrderBy}`;
+export const lpCellHistoryQuery = `SELECT \`${lpCellClicked}\`, ${historyCols} FROM \`dolt_history_${lpTableName}\` WHERE (\`${lpPK1}\` = "${lpPK1Val}") ${historyOrderBy}`;
 
 export const lpRowProps: Props = {
   cidx: 0,
@@ -137,7 +137,7 @@ export const lpRowDiffQuery = sprintf(
 );
 
 export const lpRowHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
+  `SELECT \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = "$" $`,
   lpPK1,
   lpCol2,
   lpCol3,
@@ -236,7 +236,7 @@ export const saCellDiffQuery = sprintf(
 );
 
 export const saCellHistoryQuery = sprintf(
-  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE (\`$\` = '$' AND \`$\` = '$' AND \`$\` = '$') $`,
+  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE (\`$\` = "$" AND \`$\` = "$" AND \`$\` = "$") $`,
   saClickedCell,
   historyCols,
   saTableName,
@@ -285,7 +285,7 @@ export const saRowDiffQuery = sprintf(
 );
 
 export const saRowHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE (\`$\` = '$' AND \`$\` = '$' AND \`$\` = '$') $`,
+  `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE (\`$\` = "$" AND \`$\` = "$" AND \`$\` = "$") $`,
   saPK1,
   saPK2,
   saPK3,
