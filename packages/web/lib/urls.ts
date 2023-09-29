@@ -19,3 +19,15 @@ export const table = (p: ps.TableParams): Route =>
 
 export const editTable = (p: ps.TableParams): Route =>
   table(p).withQuery({ edit: "true" });
+
+export const schemaDiagram = (p: ps.RefParams & { active?: string }): Route =>
+  database()
+    .addStatic("schema")
+    .addDynamic("refName", p.refName, ENCODE)
+    .withQuery({ active: p.active });
+
+export const createTable = (p: ps.OptionalRefParams): Route =>
+  database()
+    .addStatic("data")
+    .addStatic("create")
+    .withQuery({ refName: p.refName });

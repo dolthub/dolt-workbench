@@ -127,10 +127,16 @@ export type TableNames = {
   list: Array<Scalars['String']['output']>;
 };
 
-export type TableNamesQueryVariables = Exact<{ [key: string]: never; }>;
+export type ColumnForTableListFragment = { __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+
+export type TableWithColumnsFragment = { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
+
+export type TableForBranchQueryVariables = Exact<{
+  tableName: Scalars['String']['input'];
+}>;
 
 
-export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
+export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -157,6 +163,29 @@ export type RowsForDataTableQueryVariables = Exact<{
 
 export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
+export type TableNamesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
+
+export const ColumnForTableListFragmentDoc = gql`
+    fragment ColumnForTableList on Column {
+  name
+  type
+  isPrimaryKey
+  constraints {
+    notNull
+  }
+}
+    `;
+export const TableWithColumnsFragmentDoc = gql`
+    fragment TableWithColumns on Table {
+  tableName
+  columns {
+    ...ColumnForTableList
+  }
+}
+    ${ColumnForTableListFragmentDoc}`;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -198,40 +227,41 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
-export const TableNamesDocument = gql`
-    query TableNames {
-  tableNames {
-    list
+export const TableForBranchDocument = gql`
+    query TableForBranch($tableName: String!) {
+  table(tableName: $tableName) {
+    ...TableWithColumns
   }
 }
-    `;
+    ${TableWithColumnsFragmentDoc}`;
 
 /**
- * __useTableNamesQuery__
+ * __useTableForBranchQuery__
  *
- * To run a query within a React component, call `useTableNamesQuery` and pass it any options that fit your needs.
- * When your component renders, `useTableNamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTableForBranchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTableForBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTableNamesQuery({
+ * const { data, loading, error } = useTableForBranchQuery({
  *   variables: {
+ *      tableName: // value for 'tableName'
  *   },
  * });
  */
-export function useTableNamesQuery(baseOptions?: Apollo.QueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+export function useTableForBranchQuery(baseOptions: Apollo.QueryHookOptions<TableForBranchQuery, TableForBranchQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
+        return Apollo.useQuery<TableForBranchQuery, TableForBranchQueryVariables>(TableForBranchDocument, options);
       }
-export function useTableNamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+export function useTableForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableForBranchQuery, TableForBranchQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
+          return Apollo.useLazyQuery<TableForBranchQuery, TableForBranchQueryVariables>(TableForBranchDocument, options);
         }
-export type TableNamesQueryHookResult = ReturnType<typeof useTableNamesQuery>;
-export type TableNamesLazyQueryHookResult = ReturnType<typeof useTableNamesLazyQuery>;
-export type TableNamesQueryResult = Apollo.QueryResult<TableNamesQuery, TableNamesQueryVariables>;
+export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQuery>;
+export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
+export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
 export const DataTableQueryDocument = gql`
     query DataTableQuery($tableName: String!) {
   table(tableName: $tableName) {
@@ -309,3 +339,37 @@ export function useRowsForDataTableQueryLazyQuery(baseOptions?: Apollo.LazyQuery
 export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTableQuery>;
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
+export const TableNamesDocument = gql`
+    query TableNames {
+  tableNames {
+    list
+  }
+}
+    `;
+
+/**
+ * __useTableNamesQuery__
+ *
+ * To run a query within a React component, call `useTableNamesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTableNamesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTableNamesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTableNamesQuery(baseOptions?: Apollo.QueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
+      }
+export function useTableNamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
+        }
+export type TableNamesQueryHookResult = ReturnType<typeof useTableNamesQuery>;
+export type TableNamesLazyQueryHookResult = ReturnType<typeof useTableNamesLazyQuery>;
+export type TableNamesQueryResult = Apollo.QueryResult<TableNamesQuery, TableNamesQueryVariables>;

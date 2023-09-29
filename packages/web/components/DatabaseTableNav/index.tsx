@@ -6,6 +6,7 @@ import NavLinks from "./NavLinks";
 import css from "./index.module.css";
 
 type Params = {
+  refName?: string;
   tableName?: string;
   q?: string;
 };
@@ -37,10 +38,15 @@ function Nav({ params, initiallyOpen = false, isMobile = false }: NavProps) {
       )}
     >
       <div className={css.top}>
-        <GiHamburgerMenu onClick={toggleMenu} className={css.menuIcon} />
+        <GiHamburgerMenu
+          onClick={toggleMenu}
+          className={css.menuIcon}
+          data-cy="left-nav-toggle-icon"
+        />
       </div>
       <NavLinks
         className={cx({ [css.openNav]: open }, { [css.closedItem]: !open })}
+        params={params}
       />
     </div>
   );

@@ -2,6 +2,10 @@ export type RefParams = {
   refName: string;
 };
 
+export type OptionalRefParams = {
+  refName?: string;
+};
+
 export type DatabasePageParams = {
   refName?: string;
   tableName?: string;

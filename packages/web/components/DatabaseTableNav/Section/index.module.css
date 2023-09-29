@@ -1,0 +1,14 @@
+.section {
+  @apply border-ld-lightgrey;
+}
+
+.icon {
+  @apply mt-1;
+  svg {
+    @apply h-[0.6rem];
+  }
+}
+
+.padded {
+  @apply mx-5 my-3;
+}

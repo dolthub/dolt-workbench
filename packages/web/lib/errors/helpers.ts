@@ -1,3 +1,4 @@
+import { ApolloError } from "@apollo/client";
 import { ApolloErrorType } from "./types";
 
 export function errorMatches(
@@ -33,4 +34,21 @@ export function improveErrorMsg(message: string): string {
     default:
       return message;
   }
+}
+
+export function getCaughtApolloError(err: unknown): ApolloErrorType {
+  if (err instanceof ApolloError) {
+    return err;
+  }
+  if (err instanceof Error) {
+    return err;
+  }
+  return new Error(String(err));
+}
+
+export function handleCaughtApolloError(
+  err: unknown,
+  cb: (e: ApolloErrorType) => void,
+) {
+  cb(getCaughtApolloError(err));
 }

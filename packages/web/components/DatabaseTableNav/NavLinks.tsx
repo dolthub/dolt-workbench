@@ -1,20 +1,28 @@
+import SchemaList from "@components/SchemaList";
+import TableList from "@components/TableList";
 import { Tab, TabList, TabPanel } from "@components/Tabs";
 import { TabsProvider } from "@components/Tabs/context";
+import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 
 type Props = {
   className?: string;
+  params: {
+    refName?: string;
+    tableName?: string;
+    q?: string;
+  };
 };
 
-export default function NavLinks({ className }: Props) {
-  // const router = useRouter();
-  // const initialActiveIndex = getActiveIndexFromRouterQuery(router.query.active);
+export default function NavLinks({ className, params }: Props) {
+  const router = useRouter();
+  const initialActiveIndex = getActiveIndexFromRouterQuery(router.query.active);
   const tabs = ["Tables", "Schemas"];
 
   return (
     <div data-cy="db-page-table-nav" className={className}>
-      <TabsProvider initialActiveIndex={0}>
+      <TabsProvider initialActiveIndex={initialActiveIndex}>
         <TabList className={css.tabList}>
           {tabs.map((tab, i) => (
             <Tab key={tab} data-cy={`tab-${tab.toLowerCase()}`} index={i}>
@@ -23,10 +31,27 @@ export default function NavLinks({ className }: Props) {
           ))}
         </TabList>
         <CustomTabPanel index={0}>
-          <div>Table list</div>
+          {params.refName ? (
+            <TableList
+              params={{
+                refName: params.refName,
+                tableName: params.tableName,
+              }}
+            />
+          ) : (
+            <p className={css.empty} data-cy="db-tables-empty">
+              No tables to show
+            </p>
+          )}
         </CustomTabPanel>
         <CustomTabPanel index={1}>
-          <div>Schema list</div>
+          {params.refName ? (
+            <SchemaList params={{ ...params, refName: params.refName }} />
+          ) : (
+            <p className={css.empty} data-cy="db-schemas-empty">
+              No schemas to show
+            </p>
+          )}
         </CustomTabPanel>
       </TabsProvider>
     </div>

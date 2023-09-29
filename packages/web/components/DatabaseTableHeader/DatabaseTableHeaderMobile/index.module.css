@@ -1,0 +1,33 @@
+.editorContainer {
+  @apply block pt-4 px-6 pb-2 border-b-2 border-ld-lightgrey bg-ld-lightpurple;
+  @screen lg {
+    @apply px-6;
+  }
+}
+
+.editorHeader {
+  @apply flex justify-between;
+}
+
+.queryHeader {
+  @apply font-semibold text-lg pb-1 flex justify-between w-full;
+}
+
+.sampleQueryDir {
+  @apply text-sm text-ld-darkgrey font-normal;
+  @screen lg {
+    @apply ml-4;
+  }
+}
+
+.caret {
+  @apply text-lg text-acc-hoverlinkblue mt-0.5 mr-4 ml-8;
+}
+
+.err {
+  @apply pt-0 mb-4;
+}
+
+.empty {
+  @apply p-6 bg-acc-hoverlinkblue text-white;
+}

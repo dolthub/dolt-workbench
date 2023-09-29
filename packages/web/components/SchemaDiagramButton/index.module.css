@@ -1,0 +1,7 @@
+.diagram {
+  @apply flex text-white ml-3 mt-2 text-base;
+
+  svg {
+    @apply mt-1 mr-2 text-sm;
+  }
+}

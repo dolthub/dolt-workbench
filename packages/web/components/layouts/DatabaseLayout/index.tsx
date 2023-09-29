@@ -1,10 +1,11 @@
 import DatabaseTableHeader from "@components/DatabaseTableHeader";
+import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseTableHeaderMobile";
 import DatabaseTableNav from "@components/DatabaseTableNav";
-import Navbar from "@components/Navbar";
 import KeyNav from "@components/util/KeyNav";
 import { useReactiveWidth } from "@hooks/useReactiveSize";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import Wrapper from "./Wrapper";
 import css from "./index.module.css";
 
 type DatabaseLayoutParams = {
@@ -30,33 +31,35 @@ export default function DatabaseLayout(props: Props) {
   const useFullWidth = forDataTable || !!props.wide;
 
   return (
-    <div className={css.appLayout}>
-      <Navbar />
-      <div className={css.layoutWrapperContainer}>
-        <div className={cx(css.content, css.contentWithHeader)}>
-          <DatabaseTableNav
-            params={props.params}
-            initiallyOpen={props.leftNavInitiallyOpen}
-            showTableNav={showTableNav}
-            setShowTableNav={setShowTableNav}
-            isMobile={isMobile}
-          />
-          <div className={css.rightContent}>
-            <div className={css.main}>
-              {!!showHeader && <DatabaseTableHeader {...props} />}
-              <KeyNav
-                className={cx(css.rightContentScroller, {
-                  [css.maxWidth]: !useFullWidth,
-                  [css.noHeader]: !showHeader,
-                })}
-                mobileBreakpoint={1024}
-              >
-                {props.children}
-              </KeyNav>
-            </div>
+    <Wrapper>
+      <div className={cx(css.content, css.contentWithHeader)}>
+        <DatabaseTableNav
+          params={props.params}
+          initiallyOpen={props.leftNavInitiallyOpen}
+          showTableNav={showTableNav}
+          setShowTableNav={setShowTableNav}
+          isMobile={isMobile}
+        />
+        <div className={css.rightContent}>
+          <div className={css.main}>
+            {!!showHeader &&
+              (isMobile ? (
+                <DatabaseTableHeaderMobile {...props} />
+              ) : (
+                <DatabaseTableHeader {...props} />
+              ))}
+            <KeyNav
+              className={cx(css.rightContentScroller, {
+                [css.maxWidth]: !useFullWidth,
+                [css.noHeader]: !showHeader,
+              })}
+              mobileBreakpoint={1024}
+            >
+              {props.children}
+            </KeyNav>
           </div>
         </div>
       </div>
-    </div>
+    </Wrapper>
   );
 }

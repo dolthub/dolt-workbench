@@ -1,0 +1,25 @@
+.query {
+  @apply flex flex-col pb-6  mb-0 mx-1 rounded-sm flex-nowrap flex-grow  max-w-full relative;
+}
+
+.editor {
+  @apply overflow-hidden w-full;
+}
+
+.buttons {
+  @apply flex justify-between text-sm;
+
+  button {
+    @apply w-44 h-10;
+  }
+}
+
+.edit {
+  @apply flex items-center;
+  svg {
+    @apply mt-1 mr-3;
+  }
+}
+.editorText {
+  @apply py-6 relative pointer-events-none;
+}

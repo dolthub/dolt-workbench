@@ -4,3 +4,91 @@
     @apply block px-6 pt-4 pb-2 border-b-2 border-ld-lightgrey bg-ld-lightpurple;
   }
 }
+
+.editorHeader {
+  @apply flex justify-between;
+}
+
+.queryHeader {
+  @apply font-semibold text-lg pb-1;
+}
+
+.sampleQueryDir {
+  @apply text-sm text-ld-darkgrey ml-4 font-normal;
+
+  button {
+    @apply font-semibold;
+
+    &:hover {
+      @apply text-acc-linkblue;
+    }
+
+    &:focus {
+      @apply outline-none widget-shadow-lightblue;
+    }
+  }
+}
+
+.caret {
+  @apply text-lg text-primary mt-0.5 mr-4 ml-8;
+}
+
+.left {
+  @apply flex;
+}
+
+.chev {
+  @apply h-5 mt-1;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.buttons {
+  @apply flex text-sm;
+}
+
+.edit {
+  @apply px-3 py-0 mx-4 h-6 w-20 border;
+}
+
+.editIcon {
+  @apply hidden;
+}
+
+.editorButton {
+  @apply w-full max-w-7xl relative;
+
+  &:active {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.editorText {
+  @apply py-3 pr-10 relative;
+
+  &:hover {
+    @apply bg-white rounded widget-shadow;
+
+    .editIcon {
+      @apply absolute block right-4 top-1.5;
+
+      svg {
+        @apply w-6 h-6;
+      }
+    }
+  }
+}
+
+.modal {
+  @apply text-center;
+}
+
+.innerModal {
+  @apply text-base max-w-lg px-10;
+}
+
+.err {
+  @apply pt-0 mb-4;
+}

@@ -1,0 +1,38 @@
+.hide {
+  @apply hidden;
+}
+
+.overlay {
+  @apply fixed top-0 left-0 w-full h-full z-100;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal {
+  @apply fixed bg-white w-auto h-auto top-1/2 left-1/2 rounded -translate-x-1/2 -translate-y-1/2;
+}
+
+.inner {
+  @apply py-12 px-4 min-w-[20rem];
+
+  h2 {
+    @apply mb-4;
+  }
+  p {
+    @apply mb-4;
+  }
+  form {
+    @apply text-left;
+  }
+
+  @media md {
+    @apply px-12;
+  }
+}
+
+.close {
+  @apply float-right mt-5 mr-5;
+
+  svg {
+    @apply text-xl;
+  }
+}

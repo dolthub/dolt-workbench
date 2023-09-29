@@ -1,0 +1,18 @@
+.editor {
+  @apply fixed top-0 bottom-0 right-0 left-0 flex flex-col bg-ld-lightpurple z-100 p-6;
+}
+.bottom {
+  @apply flex mt-20;
+  button {
+    @apply py-2;
+  }
+}
+.runQuery {
+  @apply flex justify-center items-center;
+}
+.icon {
+  @apply text-white mr-2 h-3 w-3;
+}
+.cancel {
+  @apply ml-8 bg-opacity-0 border-none text-acc-hoverlinkblue shadow-none;
+}

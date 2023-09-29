@@ -1,0 +1,55 @@
+.item {
+  @apply text-primary px-3;
+  @screen lg {
+    @apply p-0;
+  }
+}
+
+.buttonIcon {
+  @apply text-ld-darkgrey text-2xl mr-4 h-6 rounded-full;
+
+  &:focus {
+    @apply widget-shadow-lightblue outline-none;
+  }
+}
+
+.active,
+.item:hover {
+  @apply bg-white;
+
+  .buttonIcon {
+    @apply font-semibold;
+  }
+}
+
+.table {
+  @apply flex justify-between text-sm;
+}
+
+.tableName {
+  @apply p-3 text-acc-hoverlinkblue font-semibold w-full;
+
+  &:hover {
+    @apply text-acc-linkblue;
+  }
+}
+
+.right {
+  @apply flex items-center;
+}
+
+.tableStatus {
+  @apply text-ld-orange pr-4 mr-1 font-semibold;
+}
+
+.item:hover .buttonIcon {
+  @apply text-primary;
+
+  &:hover {
+    @apply text-acc-hoverblue;
+  }
+}
+
+.empty {
+  @apply my-4 mx-5;
+}

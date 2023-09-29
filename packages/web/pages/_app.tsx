@@ -1,9 +1,10 @@
+import "@components/AceEditor/ace-editor.css";
 import "@components/util/KeyNav/index.css";
 import { withApollo } from "@lib/apollo";
 // import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
 import Head from "next/head";
-// import "react-tooltip/dist/react-tooltip.css";
+import "react-tooltip/dist/react-tooltip.css";
 import "../styles/global.css";
 
 export default class DoltSQLWorkbench extends App {

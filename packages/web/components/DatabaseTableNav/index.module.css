@@ -44,6 +44,10 @@
   @apply hidden;
 }
 
+.empty {
+  @apply m-4 mt-8;
+}
+
 .tabList {
   @apply text-sm;
 
