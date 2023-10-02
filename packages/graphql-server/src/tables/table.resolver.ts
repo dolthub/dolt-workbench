@@ -1,6 +1,12 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
+import {
+  columnsQuery,
+  foreignKeysQuery,
+  indexQuery,
+  listTablesQuery,
+} from "./table.queries";
 import { mapTablesRes } from "./utils";
 
 @ArgsType()
@@ -15,40 +21,39 @@ export class TableResolver {
 
   @Query(_returns => Table)
   async table(@Args() args: GetTableArgs): Promise<Table> {
-    const ds = this.dss.getDS();
-    const columns = await ds.query(`DESCRIBE ??`, [args.tableName]);
-    const fkRows = await ds.query(
-      `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_name=? AND referenced_table_schema IS NOT NULL`,
-      [args.tableName],
-    );
-    const idxRows = await ds.query(
-      `SELECT 
-  table_name, index_name, comment, non_unique, GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS 
-FROM information_schema.statistics 
-WHERE table_name=? AND index_name!="PRIMARY" 
-GROUP BY index_name;`,
-      [args.tableName],
-    );
-
-    return fromDoltRowRes(args.tableName, columns, fkRows, idxRows);
+    return this.dss.query(async q => getTableInfo(q, args.tableName));
   }
 
   @Query(_returns => TableNames)
   async tableNames(): Promise<TableNames> {
-    const tables = await this.dss
-      .getDS()
-      .query(`SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`);
-    const mapped = mapTablesRes(tables);
-
-    return { list: mapped };
+    return this.dss.query(getTableNames);
   }
 
   @Query(_returns => [Table])
   async tables(): Promise<Table[]> {
-    const tableNames = await this.tableNames();
-    const tables = await Promise.all(
-      tableNames.list.map(async name => this.table({ tableName: name })),
-    );
-    return tables;
+    return this.dss.query(async q => {
+      const tableNames = await getTableNames(q);
+      const tables = await Promise.all(
+        tableNames.list.map(async name => getTableInfo(q, name)),
+      );
+      return tables;
+    });
   }
+}
+
+async function getTableNames(query: ParQuery): Promise<TableNames> {
+  const tables = await query(listTablesQuery);
+  const mapped = mapTablesRes(tables);
+
+  return { list: mapped };
+}
+
+async function getTableInfo(
+  query: ParQuery,
+  tableName: string,
+): Promise<Table> {
+  const columns = await query(columnsQuery, [tableName]);
+  const fkRows = await query(foreignKeysQuery, [tableName]);
+  const idxRows = await query(indexQuery, [tableName]);
+  return fromDoltRowRes(tableName, columns, fkRows, idxRows);
 }

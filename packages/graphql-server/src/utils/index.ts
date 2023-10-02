@@ -32,13 +32,3 @@ export function getNextOffset(
 ): number | undefined {
   return rowLen > ROW_LIMIT ? offset + ROW_LIMIT : undefined;
 }
-
-// Creates ORDER BY statement with column parameters
-// i.e. ORDER BY ::col1, ::col2
-export function getOrderByFromCols(numCols: number): string {
-  if (!numCols) return "";
-  const pkCols = Array.from({ length: numCols })
-    .map(() => `? ASC`)
-    .join(", ");
-  return pkCols === "" ? "" : `ORDER BY ${pkCols} `;
-}

@@ -1,7 +1,9 @@
 import { Injectable } from "@nestjs/common";
-import { DataSource } from "typeorm";
+import { DataSource, QueryRunner } from "typeorm";
+import { RawRows } from "../utils/commonTypes";
 
 export const dbNotFoundErr = "Database connection not found";
+export type ParQuery = (q: string, p?: any[] | undefined) => Promise<RawRows>;
 
 @Injectable()
 export class DataSourceService {
@@ -11,6 +13,34 @@ export class DataSourceService {
     const { ds } = this;
     if (!ds) throw new Error(dbNotFoundErr);
     return ds;
+  }
+
+  getQR(): QueryRunner {
+    return this.getDS().createQueryRunner();
+  }
+
+  async handleAsyncQuery(
+    work: (qr: QueryRunner) => Promise<any>,
+  ): Promise<RawRows> {
+    const qr = this.getQR();
+    try {
+      await qr.connect();
+      const res = await work(qr);
+      return res;
+    } finally {
+      await qr.release();
+    }
+  }
+
+  async query(executeQuery: (pq: ParQuery) => any): Promise<any> {
+    return this.handleAsyncQuery(async qr => {
+      async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
+        const res = await qr.query(q, p);
+        return res;
+      }
+
+      return executeQuery(query);
+    });
   }
 
   async addDS(connUrl: string) {
