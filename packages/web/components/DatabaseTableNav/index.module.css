@@ -6,7 +6,7 @@
 }
 
 .openContainer {
-  @apply transition-width w-96 duration-75;
+  @apply transition-width w-96 min-w-[22rem] duration-75;
   flex-basis: 24rem;
 }
 
