@@ -1,34 +1,19 @@
-import QueryHandler from "@components/util/QueryHandler";
-import { useCurrentDatabaseQuery } from "@gen/graphql-types";
+import { DatabaseParams } from "@lib/params";
 import Breadcrumbs from ".";
 import { databaseBreadcrumbs } from "./breadcrumbDetails";
 
 type Props = {
   className?: string;
+  params: DatabaseParams;
 };
 
-function Inner(props: Props & { databaseName: string }) {
+export default function DatabaseBreadcrumbs(props: Props) {
   return (
     <Breadcrumbs
       {...props}
       aria-label="db-breadcrumbs"
       data-cy="db-breadcrumbs"
-      breadcrumbs={databaseBreadcrumbs(props.databaseName)}
-    />
-  );
-}
-
-export default function DatabaseBreadcrumbs(props: Props) {
-  const res = useCurrentDatabaseQuery();
-  return (
-    <QueryHandler
-      result={res}
-      render={data => (
-        <Inner
-          {...props}
-          databaseName={data.currentDatabase ?? "Database Not Found"}
-        />
-      )}
+      breadcrumbs={databaseBreadcrumbs(props.params)}
     />
   );
 }

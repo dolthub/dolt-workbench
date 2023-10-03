@@ -8,6 +8,7 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { DataSourceService } from "../dataSources/dataSource.service";
+import { DBArgs } from "../utils/commonTypes";
 
 @ArgsType()
 class AddDatabaseConnectionArgs {
@@ -37,7 +38,18 @@ export class DatabaseResolver {
 
   @Query(_returns => [String])
   async databases(): Promise<string[]> {
-    return this.dss.getQR().getDatabases();
+    return this.dss.query(async query => {
+      const dbs = await query("SHOW DATABASES");
+      return dbs
+        .map(db => db.Database)
+        .filter(
+          db =>
+            db !== "information_schema" &&
+            db !== "mysql" &&
+            db !== "dolt_cluster" &&
+            !db.includes("/"),
+        );
+    });
   }
 
   @Mutation(_returns => String)
@@ -56,5 +68,11 @@ export class DatabaseResolver {
     const db = await this.dss.getQR().getCurrentDatabase();
     if (!db) throw new Error("database not found");
     return db;
+  }
+
+  @Mutation(_returns => Boolean)
+  async createDatabase(@Args() args: DBArgs): Promise<boolean> {
+    await this.dss.getQR().createDatabase(args.databaseName);
+    return true;
   }
 }

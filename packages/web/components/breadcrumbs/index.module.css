@@ -1,5 +1,5 @@
 .crumbs {
-  @apply text-ld-darkgrey;
+  @apply text-ld-darkgrey flex items-start;
   *,
   a {
     @apply text-base;

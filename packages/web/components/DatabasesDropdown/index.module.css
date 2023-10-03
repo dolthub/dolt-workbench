@@ -1,0 +1,19 @@
+.wrapper {
+  @apply hidden lg:inline-block;
+}
+
+.dbItem {
+  @apply text-sm py-1 px-2;
+}
+
+.createDBButton {
+  @apply text-white bg-acc-hoverlinkblue px-1 w-full py-1 rounded-b-lg;
+
+  &:hover {
+    @apply text-white bg-acc-linkblue;
+  }
+}
+
+.roundTop {
+  @apply rounded-t-lg;
+}

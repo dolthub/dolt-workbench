@@ -21,7 +21,10 @@ export default function Full(props: Props) {
               className={css.icon}
             />
           </span> */}
-          <DatabaseBreadcrumbs className={css.databaseBreadcrumbs} />
+          <DatabaseBreadcrumbs
+            className={css.databaseBreadcrumbs}
+            params={props.params}
+          />
         </div>
         <div>
           <MobileHeaderSelector {...props} className={css.mobileSelector} />

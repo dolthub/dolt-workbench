@@ -2,8 +2,11 @@ import {
   ApolloCache,
   ApolloQueryResult,
   InMemoryCache,
+  PureQueryOptions,
   RefetchQueriesOptions,
 } from "@apollo/client";
+
+export type RefetchQueries = Array<string | PureQueryOptions>;
 
 type TCacheShape = ApolloCache<InMemoryCache>;
 type RefetchOptions = RefetchQueriesOptions<

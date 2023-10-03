@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 
 export enum BreadcrumbName {
   Database = "database",
+  DatabaseDrop = "database-dropdown",
 }
 
 export enum BreadcrumbType {

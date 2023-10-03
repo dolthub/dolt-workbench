@@ -93,4 +93,5 @@ type Query {
 
 type Mutation {
   addDatabaseConnection(url: String, useEnv: Boolean): String!
+  createDatabase(databaseName: String!): Boolean!
 }

@@ -66,12 +66,18 @@ export type IndexColumn = {
 export type Mutation = {
   __typename?: 'Mutation';
   addDatabaseConnection: Scalars['String']['output'];
+  createDatabase: Scalars['Boolean']['output'];
 };
 
 
 export type MutationAddDatabaseConnectionArgs = {
   url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationCreateDatabaseArgs = {
+  databaseName: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -159,10 +165,22 @@ export type TableNames = {
   list: Array<Scalars['String']['output']>;
 };
 
+export type CreateDatabaseMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
+
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
+
+export type DatabasesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DatabasesQuery = { __typename?: 'Query', databases: Array<string> };
 
 export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
 
@@ -355,6 +373,37 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
+export const CreateDatabaseDocument = gql`
+    mutation CreateDatabase($databaseName: String!) {
+  createDatabase(databaseName: $databaseName)
+}
+    `;
+export type CreateDatabaseMutationFn = Apollo.MutationFunction<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
+
+/**
+ * __useCreateDatabaseMutation__
+ *
+ * To run a mutation, you first call `useCreateDatabaseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateDatabaseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createDatabaseMutation, { data, loading, error }] = useCreateDatabaseMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useCreateDatabaseMutation(baseOptions?: Apollo.MutationHookOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateDatabaseMutation, CreateDatabaseMutationVariables>(CreateDatabaseDocument, options);
+      }
+export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDatabaseMutation>;
+export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
+export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase
@@ -387,6 +436,38 @@ export function useCurrentDatabaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabaseQuery>;
 export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
+export const DatabasesDocument = gql`
+    query Databases {
+  databases
+}
+    `;
+
+/**
+ * __useDatabasesQuery__
+ *
+ * To run a query within a React component, call `useDatabasesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatabasesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDatabasesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDatabasesQuery(baseOptions?: Apollo.QueryHookOptions<DatabasesQuery, DatabasesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DatabasesQuery, DatabasesQueryVariables>(DatabasesDocument, options);
+      }
+export function useDatabasesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatabasesQuery, DatabasesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DatabasesQuery, DatabasesQueryVariables>(DatabasesDocument, options);
+        }
+export type DatabasesQueryHookResult = ReturnType<typeof useDatabasesQuery>;
+export type DatabasesLazyQueryHookResult = ReturnType<typeof useDatabasesLazyQuery>;
+export type DatabasesQueryResult = Apollo.QueryResult<DatabasesQuery, DatabasesQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!) {
   tables(databaseName: $databaseName) {
