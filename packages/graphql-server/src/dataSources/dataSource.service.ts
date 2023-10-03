@@ -54,7 +54,7 @@ export class DataSourceService {
 
   // Queries that will work on both MySQL and Dolt
   async queryMaybeDolt(
-    executeQuery: (pq: ParQuery) => any,
+    executeQuery: (pq: ParQuery, isDolt: boolean) => any,
     dbName?: string,
     refName?: string,
   ): Promise<any> {
@@ -64,12 +64,12 @@ export class DataSourceService {
         return res;
       }
 
+      const isDolt = await getIsDolt(qr);
       if (dbName) {
-        const isDolt = await getIsDolt(qr);
         await qr.query(useDBStatement(dbName, refName, isDolt));
       }
 
-      return executeQuery(query);
+      return executeQuery(query, isDolt);
     });
   }
 
@@ -77,7 +77,6 @@ export class DataSourceService {
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
-
     this.ds = new DataSource({
       type: "mysql",
       connectorPackage: "mysql2",
@@ -111,7 +110,11 @@ function useDBStatement(
   return `USE \`${dbName}\``;
 }
 
-async function getIsDolt(qr: QueryRunner): Promise<boolean> {
-  const res = await qr.query("SELECT dolt_version()");
-  return !!res;
+export async function getIsDolt(qr: QueryRunner): Promise<boolean> {
+  try {
+    const res = await qr.query("SELECT dolt_version()");
+    return !!res;
+  } catch (_) {
+    return false;
+  }
 }

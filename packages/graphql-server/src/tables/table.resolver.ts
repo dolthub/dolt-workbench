@@ -33,7 +33,7 @@ export class TableResolver {
   @Query(_returns => TableNames)
   async tableNames(@Args() args: ListTableArgs): Promise<TableNames> {
     return this.dss.queryMaybeDolt(
-      async q => getTableNames(q, args),
+      async (q, isDolt) => getTableNames(q, args, isDolt),
       args.databaseName,
       args.refName,
     );
@@ -42,8 +42,8 @@ export class TableResolver {
   @Query(_returns => [Table])
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
     return this.dss.queryMaybeDolt(
-      async q => {
-        const tableNames = await getTableNames(q, args);
+      async (q, isDolt) => {
+        const tableNames = await getTableNames(q, args, isDolt);
         const tables = await Promise.all(
           tableNames.list.map(async name =>
             getTableInfo(q, { ...args, tableName: name }),
@@ -65,11 +65,12 @@ export class TableResolver {
 async function getTableNames(
   query: ParQuery,
   args: ListTableArgs,
+  isDolt: boolean,
 ): Promise<TableNames> {
   const tables = await query(listTablesQuery);
   const mapped = mapTablesRes(tables);
 
-  if (args.filterSystemTables) return { list: mapped };
+  if (args.filterSystemTables || !isDolt) return { list: mapped };
 
   // Add system tables if filter is false
   const systemTables = await getSystemTables(query);

@@ -27,11 +27,11 @@ export class Index {
 
 export function fromDoltRowsRes(rows: RawRow[]): Index[] {
   return rows.map(r => {
-    const cols = r.COLUMNS.split(",");
+    const cols = r.COLUMNS ? r.COLUMNS.split(",") : [];
     return {
       name: r.INDEX_NAME,
-      type: getIndexType(cols, r.NON_UNIQUE === "1"),
-      comment: r.COMMENT,
+      type: getIndexType(cols, r.NON_UNIQUES === "1"),
+      comment: r.COMMENTS,
       columns: cols.map(c => {
         return { name: c };
       }),

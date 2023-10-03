@@ -7,7 +7,10 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import {
+  DataSourceService,
+  getIsDolt,
+} from "../dataSources/dataSource.service";
 import { DBArgs } from "../utils/commonTypes";
 
 @ArgsType()
@@ -54,9 +57,7 @@ export class DatabaseResolver {
 
   @Query(_returns => Boolean)
   async isDolt(): Promise<boolean> {
-    const ds = this.dss.getDS();
-    const res = await ds.query("SELECT dolt_version()");
-    return !!res;
+    return getIsDolt(this.dss.getQR());
   }
 
   @Mutation(_returns => String)
