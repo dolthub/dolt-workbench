@@ -1,3 +1,4 @@
+import DatabaseHeaderAndNav from "@components/DatabaseHeaderAndNav";
 import DatabaseTableHeader from "@components/DatabaseTableHeader";
 import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseTableHeaderMobile";
 import DatabaseTableNav from "@components/DatabaseTableNav";
@@ -9,6 +10,7 @@ import Wrapper from "./Wrapper";
 import css from "./index.module.css";
 
 type DatabaseLayoutParams = {
+  refName?: string;
   tableName?: string;
   q?: string;
 };
@@ -19,9 +21,9 @@ type Props = {
   params: DatabaseLayoutParams;
   leftNavInitiallyOpen?: boolean;
   wide?: boolean;
-  initialTabIndex?: number;
   showSqlConsole?: boolean;
   empty?: boolean;
+  initialTabIndex: number;
 };
 
 export default function DatabaseLayout(props: Props) {
@@ -34,6 +36,11 @@ export default function DatabaseLayout(props: Props) {
 
   return (
     <Wrapper>
+      <DatabaseHeaderAndNav
+        initialTabIndex={props.initialTabIndex}
+        params={props.params}
+        title={props.title}
+      />
       <div className={cx(css.content, css.contentWithHeader)}>
         <DatabaseTableNav
           params={props.params}

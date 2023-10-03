@@ -10,18 +10,6 @@
   "compilerOptions": {
     "downlevelIteration": true,
     "incremental": true,
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
     "types": ["node"],
     "baseUrl": ".",
     "paths": {

@@ -13,7 +13,6 @@ import { getDeleteRowQuery } from "./queryHelpers";
 type Props = {
   row: RowForDataTableFragment;
   columns: ColumnForDataTableFragment[];
-  isMobile?: boolean;
   refName?: string;
 };
 

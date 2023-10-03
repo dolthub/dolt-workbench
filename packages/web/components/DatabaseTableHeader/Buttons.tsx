@@ -6,7 +6,7 @@ import css from "./index.module.css";
 
 type Props = {
   sqlString?: string;
-  params: { refName?: string };
+  // params: { refName?: string };
 };
 
 export default function Buttons(props: Props) {

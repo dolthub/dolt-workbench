@@ -81,8 +81,9 @@ export function isLongContentType(currentColType?: string): boolean {
   return (
     (colType.includes("text") && colType !== "tinytext") ||
     (colType.startsWith("varchar") &&
-      parseInt(colType.split(/\(|\)/)[1], 10) >= 255) ||
-    colType === "json"
+      parseInt(colType.split(/\(|\)/)[1], 10) >= 100) ||
+    colType === "json" ||
+    colType === "longblob"
   );
 }
 

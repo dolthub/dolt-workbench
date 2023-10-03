@@ -58,7 +58,7 @@ function Inner(props: InnerProps) {
   const msg = <SqlMessage {...props} rowsLen={props.rows?.length ?? 0} />;
   return (
     <>
-      <DataTableLayout params={props.params}>
+      <DataTableLayout>
         <InnerDataTable
           params={props.params}
           rows={props.rows}

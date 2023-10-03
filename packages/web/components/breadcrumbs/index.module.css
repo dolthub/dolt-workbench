@@ -1,0 +1,7 @@
+.crumbs {
+  @apply text-ld-darkgrey;
+  *,
+  a {
+    @apply text-base;
+  }
+}

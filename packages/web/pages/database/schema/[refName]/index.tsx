@@ -8,7 +8,7 @@ type Props = {
 };
 
 const SchemaPage: NextPage<Props> = ({ params }) => (
-  <Page title={`Schema`} noIndex>
+  <Page title="Schema" noIndex>
     <DatabasePage.ForSchema params={params} />
   </Page>
 );

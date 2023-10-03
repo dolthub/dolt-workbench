@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     node: true,
     "jest/globals": true,
@@ -66,6 +67,7 @@ module.exports = {
       },
     ],
     "@typescript-eslint/no-base-to-string": "error",
+    "@typescript-eslint/no-explicit-any": "warn",
     "@typescript-eslint/no-extra-non-null-assertion": "error",
     "@typescript-eslint/no-floating-promises": "error",
     "@typescript-eslint/no-namespace": "error",

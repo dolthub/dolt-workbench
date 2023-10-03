@@ -1,0 +1,20 @@
+.link,
+.text,
+.button {
+  @apply inline-block mr-1 text-base;
+}
+
+.text,
+.link > a {
+  @apply px-1;
+}
+
+.text span:last-of-type {
+  @apply ml-1;
+}
+
+.link {
+  a {
+    @apply leading-5 font-normal text-ld-blue;
+  }
+}

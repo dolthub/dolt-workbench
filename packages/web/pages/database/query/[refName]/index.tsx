@@ -19,7 +19,7 @@ const QueryPage: NextPage<Props> = props => {
     q: props.params.q ?? defaultQuery,
   };
   return (
-    <Page title={`Query`} noIndex>
+    <Page title="Query" noIndex>
       <DatabasePage.ForQuery params={params} />
     </Page>
   );

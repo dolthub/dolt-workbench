@@ -1,0 +1,39 @@
+.headerNav {
+  @apply hidden;
+
+  @screen lg {
+    @apply flex justify-between relative -mt-[2.55rem];
+  }
+}
+
+.tabs {
+  @apply w-full flex cursor-pointer overflow-x-scroll px-5 mt-0.5 max-w-screen-2xl;
+  /* Hide scrollbar for IE, Edge, and Firefox */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
+
+  li {
+    @apply min-w-[150px];
+  }
+
+  @screen lg {
+    @apply px-4;
+  }
+}
+
+.tab {
+  @apply flex justify-center text-white/90 ml-4 mr-12;
+}
+
+.tab:hover,
+.active {
+  @apply border-b-4 border-[#FF912B] text-[#FF912B];
+}
+
+.innerTab {
+  @apply flex justify-center mt-1 min-w-full px-0 text-sm font-normal whitespace-nowrap pb-[0.7rem];
+}

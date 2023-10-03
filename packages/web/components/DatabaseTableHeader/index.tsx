@@ -84,14 +84,10 @@ function Inner(props: InnerProps) {
             </span>
           )}
         </div>
-        <Buttons sqlString={editorString} params={props.params} />
+        <Buttons sqlString={editorString} />
       </div>
       {showSqlEditor ? (
-        <SqlEditor
-          {...props}
-          showDefaultQueryInfo={showDefaultQueryInfo}
-          data-cy="sql-editor-expanded"
-        />
+        <SqlEditor {...props} showDefaultQueryInfo={showDefaultQueryInfo} />
       ) : (
         <Btn
           data-cy="sql-editor-collapsed"

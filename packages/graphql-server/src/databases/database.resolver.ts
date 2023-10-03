@@ -27,8 +27,7 @@ export class DatabaseResolver {
 
   @Query(_returns => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
-    const database = await this.dss.getDS().query(`SELECT DATABASE()`);
-    return database[0]["DATABASE()"];
+    return this.dss.getQR().getCurrentDatabase();
   }
 
   @Query(_returns => Boolean)

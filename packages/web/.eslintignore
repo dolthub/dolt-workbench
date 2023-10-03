@@ -1,0 +1,8 @@
+.next
+coverage
+node_modules
+gen
+static
+*.config.js
+*.setup.ts
+.eslintrc.js

@@ -18,6 +18,7 @@ module.exports = {
     "plugin:jest-dom/recommended",
     "plugin:testing-library/dom",
     "plugin:react/jsx-runtime",
+    "plugin:@next/next/recommended",
   ],
   plugins: [
     "@typescript-eslint",
@@ -30,8 +31,8 @@ module.exports = {
   rules: {
     ...rules,
     "jsx-a11y/control-has-associated-label": "warn",
-    "jsx-a11y/anchor-is-valid": "warn",
-    "react-hooks/exhaustive-deps": "error",
+    "jsx-a11y/anchor-is-valid": "off",
+    "react-hooks/exhaustive-deps": "warn",
     "react-hooks/rules-of-hooks": "error",
     "react/destructuring-assignment": "off",
     "react/jsx-curly-brace-presence": [
@@ -44,6 +45,7 @@ module.exports = {
     "react/state-in-constructor": ["error", "never"],
     "react/require-default-props": "off",
     "react/no-unused-prop-types": "error",
+    "react/prop-types": "off",
     "react/function-component-definition": [
       2,
       { namedComponents: ["function-declaration", "arrow-function"] },

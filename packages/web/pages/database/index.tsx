@@ -9,7 +9,7 @@ type Props = {
 };
 
 const DefaultBranch: NextPage<Props> = ({ params }) => (
-  <Page title={`Database`}>
+  <Page title="Database">
     <DatabasePage.ForDefaultBranch params={{ ...params, refName: "main" }} />
   </Page>
 );

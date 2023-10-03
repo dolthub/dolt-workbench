@@ -10,11 +10,13 @@
     "compile:web": "tsc -b packages/web",
     "lint": "npm-run-all 'lint:*'",
     "lint:graphql": "yarn workspace @dolt-sql-workbench/graphql-server lint",
+    "lint:web": "yarn workspace @dolt-sql-workbench/web lint",
     "clean": "npm-run-all 'clean:*'",
     "clean:web": "tsc -b packages/web --clean",
     "clean:misc": "rimraf node_modules 'packages/*/.eslintcache' 'packages/*/*.tsbuildinfo' 'packages/*/dist' 'packages/web/.next'"
   },
   "devDependencies": {
+    "@next/eslint-plugin-next": "^13.5.4",
     "@testing-library/dom": "^9.3.1",
     "@types/jest": "^29.5.5",
     "@types/react-loader": "^2.4.6",

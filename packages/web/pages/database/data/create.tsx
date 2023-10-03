@@ -11,7 +11,7 @@ type Props = {
 };
 
 const CreateTablePage: NextPage<Props> = ({ params }) => (
-  <Page title={`Create table`} noIndex>
+  <Page title="Create table" noIndex>
     <DatabasePage.ForCreateTable params={params} />
   </Page>
 );
