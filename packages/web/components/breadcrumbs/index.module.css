@@ -5,3 +5,10 @@
     @apply text-base;
   }
 }
+
+.withIcon {
+  @apply flex items-center;
+  svg {
+    @apply text-lg mr-3;
+  }
+}

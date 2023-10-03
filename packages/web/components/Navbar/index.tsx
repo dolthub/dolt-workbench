@@ -13,7 +13,7 @@ export default function Navbar(props: Props) {
     <div className={css.container}>
       <div className={css.inner}>
         <div className={css.left}>
-          <DocsLink className={css.link}>Dolt Documentation</DocsLink>
+          <DocsLink className={css.link}>Documentation</DocsLink>
         </div>
 
         <div>

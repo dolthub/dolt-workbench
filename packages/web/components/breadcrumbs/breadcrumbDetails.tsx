@@ -1,3 +1,5 @@
+import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
+import css from "./index.module.css";
 import { BreadcrumbDetails, BreadcrumbName, BreadcrumbType } from "./types";
 
 // DATABASE
@@ -5,7 +7,11 @@ import { BreadcrumbDetails, BreadcrumbName, BreadcrumbType } from "./types";
 export function databaseBreadcrumbs(databaseName: string): BreadcrumbDetails[] {
   return [
     {
-      child: <span>Database: {databaseName}</span>,
+      child: (
+        <span className={css.withIcon}>
+          <FiDatabase /> {databaseName}
+        </span>
+      ),
       name: BreadcrumbName.Database,
       type: BreadcrumbType.Text,
     },
