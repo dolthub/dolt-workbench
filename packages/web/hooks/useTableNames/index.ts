@@ -13,8 +13,9 @@ type ReturnType = {
 };
 
 export default function useTableNames(params: RefParams): ReturnType {
+  const variables = { ...params, filterSystemTables: true };
   const { data, ...res } = useTableNamesQuery({
-    variables: { databaseName: params.databaseName, refName: params.refName },
+    variables,
     fetchPolicy: "cache-and-network",
   });
   const [err, setErr] = useApolloError(res.error);
@@ -22,7 +23,7 @@ export default function useTableNames(params: RefParams): ReturnType {
 
   const refetch = async () => {
     try {
-      const newRes = await res.refetch();
+      const newRes = await res.refetch(variables);
       setTables(newRes.data.tableNames.list);
     } catch (e) {
       handleCaughtApolloError(e, setErr);

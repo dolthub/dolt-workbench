@@ -13,7 +13,12 @@ import { Table } from "../tables/table.model";
 import { TableResolver } from "../tables/table.resolver";
 import { BranchArgs, DBArgs } from "../utils/commonTypes";
 import { SortBranchesBy } from "./branch.enum";
-import { Branch, BranchNamesList, fromDoltBranchesRow } from "./branch.model";
+import {
+  Branch,
+  BranchNamesList,
+  branchForNonDoltDB,
+  fromDoltBranchesRow,
+} from "./branch.model";
 import {
   branchQuery,
   callDeleteBranch,
@@ -63,7 +68,10 @@ export class BranchResolver {
 
   @Query(_returns => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
-    return this.dss.query(async query => {
+    return this.dss.queryMaybeDolt(async (query, isDolt) => {
+      if (!isDolt) {
+        return branchForNonDoltDB(args.databaseName);
+      }
       const branch = await query(branchQuery, [args.branchName]);
       if (!branch.length) return undefined;
       return fromDoltBranchesRow(args.databaseName, branch[0]);
@@ -84,7 +92,12 @@ export class BranchResolver {
 
   @Query(_returns => BranchNamesList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchNamesList> {
-    return this.dss.query(async query => {
+    return this.dss.queryMaybeDolt(async (query, isDolt) => {
+      if (!isDolt) {
+        return {
+          list: [branchForNonDoltDB(args.databaseName)],
+        };
+      }
       const branches = await query(getBranchesQuery(args.sortBy));
       return {
         list: branches.map(b => fromDoltBranchesRow(args.databaseName, b)),

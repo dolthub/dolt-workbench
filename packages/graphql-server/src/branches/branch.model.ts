@@ -47,3 +47,14 @@ export function fromDoltBranchesRow(
     tableNames: tns,
   };
 }
+
+export const branchForNonDoltDB = (databaseName: string): Branch => {
+  const branchName = "main";
+  return {
+    _id: `databases/${databaseName}/branches/${branchName}`,
+    databaseName,
+    branchName,
+    lastUpdated: new Date(),
+    tableNames: [],
+  };
+};

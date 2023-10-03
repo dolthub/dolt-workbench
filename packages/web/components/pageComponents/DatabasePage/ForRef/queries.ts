@@ -1,14 +1,17 @@
 import { gql } from "@apollo/client";
 
-export const LIST_TABLE_NAMES = gql`
-  query TableNames(
-    $databaseName: String!
+export const REF_PAGE_QUERY = gql`
+  query RefPageQuery(
     $refName: String!
+    $databaseName: String!
     $filterSystemTables: Boolean
   ) {
+    branch(databaseName: $databaseName, branchName: $refName) {
+      _id
+    }
     tableNames(
-      databaseName: $databaseName
       refName: $refName
+      databaseName: $databaseName
       filterSystemTables: $filterSystemTables
     ) {
       list

@@ -306,6 +306,23 @@ export type TableForBranchQueryVariables = Exact<{
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
+export type DefaultBranchPageQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DefaultBranchPageQuery = { __typename?: 'Query', defaultBranch?: { __typename?: 'Branch', _id: string, branchName: string, tableNames: Array<string> } | null };
+
+export type RefPageQueryVariables = Exact<{
+  refName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type RefPageQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null, tableNames: { __typename?: 'TableNames', list: Array<string> } };
+
 export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
@@ -351,6 +368,7 @@ export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?:
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -681,6 +699,88 @@ export function useTableForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQuery>;
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
+export const DefaultBranchPageQueryDocument = gql`
+    query DefaultBranchPageQuery($databaseName: String!, $filterSystemTables: Boolean) {
+  defaultBranch(databaseName: $databaseName) {
+    _id
+    branchName
+    tableNames(filterSystemTables: $filterSystemTables)
+  }
+}
+    `;
+
+/**
+ * __useDefaultBranchPageQuery__
+ *
+ * To run a query within a React component, call `useDefaultBranchPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDefaultBranchPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDefaultBranchPageQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      filterSystemTables: // value for 'filterSystemTables'
+ *   },
+ * });
+ */
+export function useDefaultBranchPageQuery(baseOptions: Apollo.QueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+      }
+export function useDefaultBranchPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+        }
+export type DefaultBranchPageQueryHookResult = ReturnType<typeof useDefaultBranchPageQuery>;
+export type DefaultBranchPageQueryLazyQueryHookResult = ReturnType<typeof useDefaultBranchPageQueryLazyQuery>;
+export type DefaultBranchPageQueryQueryResult = Apollo.QueryResult<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>;
+export const RefPageQueryDocument = gql`
+    query RefPageQuery($refName: String!, $databaseName: String!, $filterSystemTables: Boolean) {
+  branch(databaseName: $databaseName, branchName: $refName) {
+    _id
+  }
+  tableNames(
+    refName: $refName
+    databaseName: $databaseName
+    filterSystemTables: $filterSystemTables
+  ) {
+    list
+  }
+}
+    `;
+
+/**
+ * __useRefPageQuery__
+ *
+ * To run a query within a React component, call `useRefPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRefPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRefPageQuery({
+ *   variables: {
+ *      refName: // value for 'refName'
+ *      databaseName: // value for 'databaseName'
+ *      filterSystemTables: // value for 'filterSystemTables'
+ *   },
+ * });
+ */
+export function useRefPageQuery(baseOptions: Apollo.QueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+      }
+export function useRefPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+        }
+export type RefPageQueryHookResult = ReturnType<typeof useRefPageQuery>;
+export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryLazyQuery>;
+export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
     mutation AddDatabaseConnection($url: String, $useEnv: Boolean) {
   addDatabaseConnection(url: $url, useEnv: $useEnv)
@@ -833,8 +933,12 @@ export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTa
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const TableNamesDocument = gql`
-    query TableNames($databaseName: String!, $refName: String!) {
-  tableNames(databaseName: $databaseName, refName: $refName) {
+    query TableNames($databaseName: String!, $refName: String!, $filterSystemTables: Boolean) {
+  tableNames(
+    databaseName: $databaseName
+    refName: $refName
+    filterSystemTables: $filterSystemTables
+  ) {
     list
   }
 }
@@ -854,6 +958,7 @@ export const TableNamesDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
+ *      filterSystemTables: // value for 'filterSystemTables'
  *   },
  * });
  */
