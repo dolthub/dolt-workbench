@@ -2,20 +2,20 @@
   @apply text-primary;
 }
 
+.buttonIcon {
+  @apply text-ld-darkgrey text-2xl mr-4 h-6 rounded-full;
+
+  &:focus {
+    @apply widget-shadow-lightblue outline-none;
+  }
+}
+
 .active,
 .item:hover {
   @apply bg-white;
 
   .buttonIcon {
     @apply font-semibold;
-  }
-}
-
-.buttonIcon {
-  @apply text-ld-darkgrey text-2xl mr-4 h-6 rounded-full;
-
-  &:focus {
-    @apply widget-shadow-lightblue outline-none;
   }
 }
 
