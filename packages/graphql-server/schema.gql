@@ -27,7 +27,9 @@ type Column {
 }
 
 type SqlSelect {
-  queryString: ID!
+  _id: ID!
+  databaseName: String!
+  queryString: String!
   columns: [Column!]!
   rows: [Row!]!
   queryExecutionStatus: QueryExecutionStatus!
@@ -66,7 +68,9 @@ type Index {
 }
 
 type Table {
-  tableName: ID!
+  _id: ID!
+  databaseName: String!
+  tableName: String!
   columns: [Column!]!
   foreignKeys: [ForeignKey!]!
   indexes: [Index!]!
@@ -79,13 +83,14 @@ type TableNames {
 type Query {
   currentDatabase: String
   hasDatabaseEnv: Boolean!
-  rows(tableName: String!, offset: Int): RowList!
-  sqlSelect(queryString: String!): SqlSelect!
-  table(tableName: String!): Table!
-  tableNames: TableNames!
-  tables: [Table!]!
+  databases: [String!]!
+  rows(databaseName: String!, tableName: String!, offset: Int): RowList!
+  sqlSelect(databaseName: String!, queryString: String!): SqlSelect!
+  table(databaseName: String!, tableName: String!): Table!
+  tableNames(databaseName: String!): TableNames!
+  tables(databaseName: String!): [Table!]!
 }
 
 type Mutation {
-  addDatabaseConnection(url: String, useEnv: Boolean): Boolean!
+  addDatabaseConnection(url: String, useEnv: Boolean): String!
 }

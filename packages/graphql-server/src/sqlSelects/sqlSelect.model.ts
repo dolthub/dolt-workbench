@@ -6,10 +6,13 @@ import { QueryExecutionStatus } from "./sqlSelect.enums";
 
 @ObjectType()
 export class SqlSelect {
-  // @Field(_type => ID)
-  // _id: string;
-
   @Field(_type => ID)
+  _id: string;
+
+  @Field()
+  databaseName: string;
+
+  @Field()
   queryString: string;
 
   @Field(_type => [column.Column])
@@ -26,10 +29,13 @@ export class SqlSelect {
 }
 
 export function fromSqlSelectRow(
+  databaseName: string,
   doltRows: RawRow | RawRow[],
   queryString: string,
 ): SqlSelect {
   const res = {
+    _id: `/databases/${databaseName}/queries/${queryString}`,
+    databaseName,
     queryString,
     rows: [],
     columns: [],

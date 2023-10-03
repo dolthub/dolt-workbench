@@ -32,11 +32,20 @@ export class DataSourceService {
     }
   }
 
-  async query(executeQuery: (pq: ParQuery) => any): Promise<any> {
+  async query(
+    executeQuery: (pq: ParQuery) => any,
+    dbName?: string,
+  ): Promise<any> {
     return this.handleAsyncQuery(async qr => {
       async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
         const res = await qr.query(q, p);
         return res;
+      }
+
+      if (dbName) {
+        // Cannot use params here for the database revision. It will incorrectly
+        // escape refs with dots
+        await qr.query(`USE \`${dbName}\``);
       }
 
       return executeQuery(query);

@@ -35,18 +35,26 @@ export class DatabaseResolver {
     return !!this.configService.get("DATABASE_URL");
   }
 
-  @Mutation(_returns => Boolean)
+  @Query(_returns => [String])
+  async databases(): Promise<string[]> {
+    return this.dss.getQR().getDatabases();
+  }
+
+  @Mutation(_returns => String)
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
-  ): Promise<boolean> {
+  ): Promise<string> {
     if (args.useEnv) {
       const url = this.configService.get("DATABASE_URL");
       if (!url) throw new Error("DATABASE_URL not found in env");
       await this.dss.addDS(url);
-      return true;
+    } else if (args.url) {
+      await this.dss.addDS(args.url);
+    } else {
+      throw new Error("database url not provided");
     }
-    if (!args.url) throw new Error("url not provided");
-    await this.dss.addDS(args.url);
-    return true;
+    const db = await this.dss.getQR().getCurrentDatabase();
+    if (!db) throw new Error("database not found");
+    return db;
   }
 }

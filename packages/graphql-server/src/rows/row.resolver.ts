@@ -2,11 +2,12 @@ import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { DataSourceService } from "../dataSources/dataSource.service";
 import { listTablesQuery } from "../tables/table.queries";
 import { ROW_LIMIT } from "../utils";
+import { DBArgs } from "../utils/commonTypes";
 import { Row, RowList, fromDoltListRowRes } from "./row.model";
 import { getRowsQuery } from "./row.queries";
 
 @ArgsType()
-export class ListRowsArgs {
+export class ListRowsArgs extends DBArgs {
   @Field()
   tableName: string;
 
@@ -31,6 +32,6 @@ export class RowResolver {
         offset,
       ]);
       return fromDoltListRowRes(rows, offset);
-    });
+    }, args.databaseName);
   }
 }

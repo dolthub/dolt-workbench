@@ -7,6 +7,12 @@ import { RawRow } from "../utils/commonTypes";
 @ObjectType()
 export class Table {
   @Field(_type => ID)
+  _id: string;
+
+  @Field()
+  databaseName: string;
+
+  @Field()
   tableName: string;
 
   @Field(_type => [column.Column])
@@ -26,12 +32,15 @@ export class TableNames {
 }
 
 export function fromDoltRowRes(
+  databaseName: string,
   tableName: string,
   columns: RawRow[],
   fkRows: RawRow[],
   idxRows: RawRow[],
 ): Table {
   return {
+    _id: `databases/${databaseName}/tables/${tableName}`,
+    databaseName,
     tableName,
     columns: columns.map(column.fromDoltRowRes),
     foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
