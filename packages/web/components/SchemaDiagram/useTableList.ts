@@ -5,6 +5,7 @@ import {
 import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
+import { DatabaseParams } from "@lib/params";
 import { useEffect, useState } from "react";
 
 type ReturnType = {
@@ -14,8 +15,9 @@ type ReturnType = {
   refetch: () => Promise<void>;
 };
 
-export default function useTableList(): ReturnType {
+export default function useTableList(params: DatabaseParams): ReturnType {
   const { data, ...res } = useTableListForSchemasQuery({
+    variables: params,
     fetchPolicy: "cache-and-network",
   });
   const [tables, setTables] = useState(data?.tables);

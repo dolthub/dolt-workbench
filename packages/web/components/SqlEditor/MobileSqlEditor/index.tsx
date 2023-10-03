@@ -1,4 +1,5 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { OptionalRefParams } from "@lib/params";
 import { isMutation } from "@lib/parseSqlQuery";
 import { debounce } from "lodash";
 import dynamic from "next/dynamic";
@@ -11,9 +12,7 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 });
 
 type Props = {
-  params: {
-    refName?: string;
-  };
+  params: OptionalRefParams;
   setOpenSqlEditor: (s: boolean) => void;
 };
 

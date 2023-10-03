@@ -6,6 +6,7 @@ import {
   ColumnForDataTableFragment,
   useDataTableQuery,
 } from "@gen/graphql-types";
+import { OptionalRefParams, RefParams } from "@lib/params";
 import { BiPencil } from "@react-icons/all-files/bi/BiPencil";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
@@ -18,14 +19,12 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
 });
 
-type Params = {
-  refName?: string;
+type Params = OptionalRefParams & {
   q?: string;
   tableName?: string;
 };
 
-type RequireParams = {
-  refName: string;
+type RequireParams = RefParams & {
   q?: string;
   tableName: string;
 };
@@ -136,6 +135,7 @@ export default function DatabaseTableHeader(props: Props) {
       <WithQuery
         {...props}
         params={{
+          ...props.params,
           refName: props.params.refName,
           tableName: props.params.tableName,
         }}

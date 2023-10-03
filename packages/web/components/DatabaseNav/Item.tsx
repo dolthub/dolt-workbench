@@ -1,11 +1,12 @@
 import Link from "@components/links/Link";
+import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
 import css from "./index.module.css";
 import { getUrlForRefName } from "./utils";
 
 type Props = {
   name: string;
-  params: { refName?: string };
+  params: OptionalRefParams;
   hide?: boolean;
   i: number;
   initialTabIndex: number;

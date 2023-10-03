@@ -1,12 +1,12 @@
 import { ApolloErrorType } from "@lib/errors/types";
+import { OptionalRefParams } from "@lib/params";
 import { Dispatch, ReactNode } from "react";
 
 type ModalState = {
   errorIsOpen: boolean;
 };
 
-export type ExecuteProps = {
-  refName?: string;
+export type ExecuteProps = OptionalRefParams & {
   query: string;
   expandedSection?: string;
 };

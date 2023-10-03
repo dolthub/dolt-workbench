@@ -2,14 +2,14 @@ import SchemaList from "@components/SchemaList";
 import TableList from "@components/TableList";
 import { Tab, TabList, TabPanel } from "@components/Tabs";
 import { TabsProvider } from "@components/Tabs/context";
+import { OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 
 type Props = {
   className?: string;
-  params: {
-    refName?: string;
+  params: OptionalRefParams & {
     tableName?: string;
     q?: string;
   };
@@ -34,8 +34,8 @@ export default function NavLinks({ className, params }: Props) {
           {params.refName ? (
             <TableList
               params={{
+                ...params,
                 refName: params.refName,
-                tableName: params.tableName,
               }}
             />
           ) : (

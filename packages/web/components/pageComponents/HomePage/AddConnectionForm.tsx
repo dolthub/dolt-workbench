@@ -7,6 +7,7 @@ import {
   useAddDatabaseConnectionMutation,
   useHasDatabaseEnvQuery,
 } from "@gen/graphql-types";
+import { database } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 
@@ -31,9 +32,15 @@ function Inner(props: InnerProps) {
     e.preventDefault();
     const variables = useEnv ? { useEnv: true } : { url };
     try {
-      await addDb({ variables });
+      const db = await addDb({ variables });
       await res.client.clearStore();
-      router.push("/database").catch(console.error);
+      if (!db.data) {
+        return;
+      }
+      const { href, as } = database({
+        databaseName: db.data.addDatabaseConnection,
+      });
+      router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error
     }

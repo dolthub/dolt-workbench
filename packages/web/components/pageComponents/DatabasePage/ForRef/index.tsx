@@ -10,7 +10,7 @@ type Props = {
 };
 
 export default function ForRef({ params }: Props) {
-  const { tables, error, loading } = useTableNames();
+  const { tables, error, loading } = useTableNames(params);
 
   if (loading) return <Loader loaded={!loading} />;
 

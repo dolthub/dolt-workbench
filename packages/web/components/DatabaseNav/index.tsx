@@ -1,9 +1,9 @@
+import { OptionalRefParams } from "@lib/params";
 import NavItem from "./Item";
 import css from "./index.module.css";
 
 type Props = {
-  params: {
-    refName?: string;
+  params: OptionalRefParams & {
     tableName?: string;
     active?: string;
   };

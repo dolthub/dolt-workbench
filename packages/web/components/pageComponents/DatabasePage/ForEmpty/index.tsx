@@ -1,8 +1,9 @@
+import { OptionalRefParams } from "@lib/params";
 import DatabasePage from "../component";
 import EmptyDB from "./EmptyDB";
 
 type Props = {
-  params: { refName?: string };
+  params: OptionalRefParams;
   title?: string;
 };
 

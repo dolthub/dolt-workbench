@@ -295,6 +295,7 @@ describe("test getDeleteRowQuery", () => {
 describe("test getFilterByCellQuery", () => {
   const refParams = {
     refName: "master",
+    databaseName: "test",
   };
   const tests: Array<{
     desc: string;

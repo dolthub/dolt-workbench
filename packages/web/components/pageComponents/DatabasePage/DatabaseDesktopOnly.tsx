@@ -1,11 +1,12 @@
 import { useReactiveWidth } from "@hooks/useReactiveSize";
+import { DatabaseParams } from "@lib/params";
 import { ReactElement, ReactNode } from "react";
 import ForDefaultBranch from "./ForDefaultBranch";
 
 type Props = {
   children: ReactNode;
   title?: string;
-  params: {
+  params: DatabaseParams & {
     refName?: string;
     active?: string;
     edit?: boolean;

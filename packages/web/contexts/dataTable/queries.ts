@@ -21,8 +21,9 @@ export const DATA_TABLE_QUERY = gql`
       ...ForeignKeyColumnForDataTable
     }
   }
-  query DataTableQuery($tableName: String!) {
-    table(tableName: $tableName) {
+  query DataTableQuery($databaseName: String!, $tableName: String!) {
+    table(databaseName: $databaseName, tableName: $tableName) {
+      _id
       columns {
         ...ColumnForDataTable
       }
@@ -45,8 +46,12 @@ export const ROWS_FOR_DATA_TABLE = gql`
       ...RowForDataTable
     }
   }
-  query RowsForDataTableQuery($tableName: String!, $offset: Int) {
-    rows(tableName: $tableName, offset: $offset) {
+  query RowsForDataTableQuery(
+    $databaseName: String!
+    $tableName: String!
+    $offset: Int
+  ) {
+    rows(databaseName: $databaseName, tableName: $tableName, offset: $offset) {
       ...RowListRows
     }
   }

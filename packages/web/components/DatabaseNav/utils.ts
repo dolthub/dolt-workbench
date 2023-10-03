@@ -1,9 +1,9 @@
-import { RefParams } from "@lib/params";
+import { DatabaseParams, OptionalRefParams, RefParams } from "@lib/params";
 import { database, ref } from "@lib/urls";
 import { Route } from "@lib/urlUtils";
 
 export type RefUrl = (p: RefParams) => Route;
-type DatabaseUrl = () => Route;
+type DatabaseUrl = (p: DatabaseParams) => Route;
 
 function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
   switch (name) {
@@ -23,12 +23,12 @@ function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
 }
 
 export function getUrlForRefName(
-  params: { refName?: string },
+  params: OptionalRefParams,
   name: string,
 ): Route {
   const [emptyUrl, url] = getUrlFromName(name);
 
-  if (!params.refName) return emptyUrl();
-  if (url) return url({ refName: params.refName });
-  return emptyUrl();
+  if (!params.refName) return emptyUrl(params);
+  if (url) return url({ ...params, refName: params.refName });
+  return emptyUrl(params);
 }

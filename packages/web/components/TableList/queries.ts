@@ -10,13 +10,14 @@ export const GET_TABLE = gql`
     }
   }
   fragment TableWithColumns on Table {
+    _id
     tableName
     columns {
       ...ColumnForTableList
     }
   }
-  query TableForBranch($tableName: String!) {
-    table(tableName: $tableName) {
+  query TableForBranch($databaseName: String!, $tableName: String!) {
+    table(databaseName: $databaseName, tableName: $tableName) {
       ...TableWithColumns
     }
   }

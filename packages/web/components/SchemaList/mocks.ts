@@ -18,4 +18,4 @@ export const getQ = (tables: string[]) => {
 export const mocks = (
   params: RefParams,
   tables: string[],
-): MockedResponse[] => [tableNamesMock(tables)];
+): MockedResponse[] => [tableNamesMock(params, tables)];

@@ -50,6 +50,7 @@ const lpCol2 = "type of food";
 const lpCol3 = "rating";
 
 const lpParams: TableParams = {
+  databaseName: "test",
   refName: "master",
   tableName: lpTableName,
 };
@@ -162,6 +163,7 @@ const saFromCommit = "h553kbfd9li96712gv1ru2agu0a4delg";
 const saToCommit = "7e6apqcfnvs9lf9h9j6e32kc6svg27iv";
 
 const saParams: TableParams = {
+  databaseName: "test",
   refName: "master",
   tableName: saTableName,
 };

@@ -11,8 +11,12 @@ export const SQL_SELECT_QUERY = gql`
     isPrimaryKey
     type
   }
-  query SqlSelectForSqlDataTable($queryString: String!) {
-    sqlSelect(queryString: $queryString) {
+  query SqlSelectForSqlDataTable(
+    $databaseName: String!
+    $queryString: String!
+  ) {
+    sqlSelect(databaseName: $databaseName, queryString: $queryString) {
+      _id
       queryExecutionStatus
       queryExecutionMessage
       columns {

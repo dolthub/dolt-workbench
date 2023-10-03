@@ -1,10 +1,11 @@
 import DatabaseNav from "@components/DatabaseNav";
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
+import { OptionalRefParams } from "@lib/params";
 import MobileHeaderSelector from "./MobileHeaderSelector";
 import css from "./index.module.css";
 
 type Props = {
-  params: { refName?: string };
+  params: OptionalRefParams;
   title?: string;
   initialTabIndex: number;
 };

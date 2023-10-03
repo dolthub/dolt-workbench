@@ -18,6 +18,7 @@ jest.mock("next/router", () => {
 });
 
 const params: RefParams = {
+  databaseName: "test",
   refName: "main",
 };
 
@@ -26,7 +27,7 @@ const tableLists = [[], [mocks.tableOne], [mocks.tableOne, mocks.tableTwo]];
 describe("test TableList", () => {
   tableLists.forEach(tables => {
     it(`renders TableList component with ${tables.length} tables `, async () => {
-      const url = database();
+      const url = database(params);
 
       useMockRouter(jestRouter, {
         asPath: url.asPathname(),

@@ -1,6 +1,7 @@
 import Btn from "@components/Btn";
 import Button from "@components/Button";
 import CopyButton from "@components/CopyButton";
+import { OptionalRefParams } from "@lib/params";
 import { BsPencil } from "@react-icons/all-files/bs/BsPencil";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -12,8 +13,7 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 });
 
 type Props = {
-  params: {
-    refName?: string;
+  params: OptionalRefParams & {
     q?: string;
     tableName?: string;
   };

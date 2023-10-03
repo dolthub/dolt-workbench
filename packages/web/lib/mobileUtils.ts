@@ -1,3 +1,4 @@
+import { OptionalRefParams } from "./params";
 import { ref } from "./urls";
 
 export function getDatabasePageName(title?: string): string {
@@ -22,7 +23,7 @@ export function getDatabasePageName(title?: string): string {
 
 export function getDatabasePageRedirectInfo(
   pageName: string,
-  params: { refName?: string },
+  params: OptionalRefParams,
 ) {
   // if (pageName === "about") {
   //   return defaultDocDefaultBranch(params);
@@ -31,7 +32,7 @@ export function getDatabasePageRedirectInfo(
   //   return pulls(params);
   // }
   if (!pageName || pageName.includes("ref")) {
-    return ref({ refName: params.refName ?? "" });
+    return ref({ ...params, refName: params.refName ?? "" });
   }
   // if (pageName.includes("commitLog")) {
   //   return commitLog({ ...params, refName: params.refName ?? "" });
@@ -39,5 +40,5 @@ export function getDatabasePageRedirectInfo(
   // if (pageName.includes("releases")) {
   //   return releases(params);
   // }
-  return ref({ refName: params.refName ?? "" });
+  return ref({ ...params, refName: params.refName ?? "" });
 }

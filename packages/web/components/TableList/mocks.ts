@@ -3,7 +3,10 @@ import { TableWithColumnsFragment } from "@gen/graphql-types";
 import { tableNamesMock } from "@hooks/useTableNames/mocks";
 import { RefParams } from "@lib/params";
 
+const databaseName = "test";
+
 export const tableOne: TableWithColumnsFragment = {
+  _id: `databases/${databaseName}/tables/tablename`,
   __typename: "Table",
   tableName: "tablename",
   columns: [
@@ -25,6 +28,7 @@ export const tableOne: TableWithColumnsFragment = {
 };
 
 export const tableTwo: TableWithColumnsFragment = {
+  _id: `databases/${databaseName}/tables/tablenameSecond`,
   __typename: "Table",
   tableName: "tablenameSecond",
   columns: [
@@ -48,4 +52,9 @@ export const tableTwo: TableWithColumnsFragment = {
 export const mocks = (
   params: RefParams,
   tables: TableWithColumnsFragment[] = [tableOne],
-): MockedResponse[] => [tableNamesMock(tables.map(t => t.tableName))];
+): MockedResponse[] => [
+  tableNamesMock(
+    params,
+    tables.map(t => t.tableName),
+  ),
+];

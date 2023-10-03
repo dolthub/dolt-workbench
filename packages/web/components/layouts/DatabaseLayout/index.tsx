@@ -4,13 +4,13 @@ import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseT
 import DatabaseTableNav from "@components/DatabaseTableNav";
 import KeyNav from "@components/util/KeyNav";
 import { useReactiveWidth } from "@hooks/useReactiveSize";
+import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";
 
-type DatabaseLayoutParams = {
-  refName?: string;
+type DatabaseLayoutParams = OptionalRefParams & {
   tableName?: string;
   q?: string;
 };

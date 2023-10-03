@@ -14,6 +14,7 @@ export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
     }
   }
   fragment TableForSchemaList on Table {
+    _id
     tableName
     foreignKeys {
       ...ForeignKeysForDataTable
@@ -25,8 +26,8 @@ export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
       ...IndexForTableList
     }
   }
-  query TableListForSchemas {
-    tables {
+  query TableListForSchemas($databaseName: String!) {
+    tables(databaseName: $databaseName) {
       ...TableForSchemaList
     }
   }

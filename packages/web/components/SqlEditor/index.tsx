@@ -1,5 +1,6 @@
 import Popup from "@components/Popup";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { OptionalRefParams } from "@lib/params";
 import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
 import { debounce } from "lodash";
 import dynamic from "next/dynamic";
@@ -14,9 +15,7 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 });
 
 type Props = {
-  params: {
-    refName?: string;
-  };
+  params: OptionalRefParams;
   ["data-cy"]?: string;
   showDefaultQueryInfo?: boolean;
 };

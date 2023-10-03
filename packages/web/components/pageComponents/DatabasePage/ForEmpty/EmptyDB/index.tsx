@@ -1,9 +1,10 @@
 import DocsLink from "@components/links/DocsLink";
+import { OptionalRefParams } from "@lib/params";
 import CreateTableOptions from "../../CreateTableOptions";
 import css from "./index.module.css";
 
 type Props = {
-  params: { refName?: string };
+  params: OptionalRefParams;
 };
 
 export default function EmptyDB(props: Props) {

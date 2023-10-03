@@ -1,6 +1,7 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
 import useSetState from "@hooks/useSetState";
+import { OptionalRefParams } from "@lib/params";
 import { Ace } from "ace-builds";
 import { Dispatch, useCallback, useEffect } from "react";
 import { ICommand } from "react-ace";
@@ -20,9 +21,9 @@ type ReturnType = {
   commands: ICommand[];
 };
 
-export default function useSqlEditorCommands(params: {
-  refName?: string;
-}): ReturnType {
+export default function useSqlEditorCommands(
+  params: OptionalRefParams,
+): ReturnType {
   const { editorString, setEditorString, executeQuery, toggleSqlEditor } =
     useSqlEditorContext("Tables");
   const { getPrevQuery, getNextQuery, history, queryIdx } =

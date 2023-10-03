@@ -112,7 +112,7 @@ function Inner(props: InnerProps) {
 }
 
 export default function SchemaDiagram(props: Props) {
-  const res = useTableList();
+  const res = useTableList(props.params);
 
   return (
     <ReactFlowProvider>

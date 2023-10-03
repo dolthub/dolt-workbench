@@ -4,12 +4,13 @@ import {
   getDatabasePageName,
   getDatabasePageRedirectInfo,
 } from "@lib/mobileUtils";
+import { OptionalRefParams } from "@lib/params";
 import { colors } from "@lib/tailwind";
 import { useRouter } from "next/router";
 import { GroupBase, StylesConfig } from "react-select";
 
 type Props = {
-  params: { refName?: string };
+  params: OptionalRefParams;
   className?: string;
   title?: string;
 };

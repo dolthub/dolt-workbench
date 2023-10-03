@@ -1,7 +1,8 @@
+import { OptionalRefParams } from "@lib/params";
 import Full from "./Full";
 
 type Props = {
-  params: { refName?: string };
+  params: OptionalRefParams;
   title?: string;
   initialTabIndex: number;
 };

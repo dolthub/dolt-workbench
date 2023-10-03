@@ -1,3 +1,4 @@
+import { OptionalRefParams } from "@lib/params";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import cx from "classnames";
 import { useState } from "react";
@@ -5,8 +6,7 @@ import MobileTableNavButton from "./MobileTableNavButton";
 import NavLinks from "./NavLinks";
 import css from "./index.module.css";
 
-type Params = {
-  refName?: string;
+type Params = OptionalRefParams & {
   tableName?: string;
   q?: string;
 };

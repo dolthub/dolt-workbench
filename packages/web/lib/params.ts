@@ -1,13 +1,16 @@
-export type RefParams = {
+export type DatabaseParams = {
+  databaseName: string;
+};
+
+export type RefParams = DatabaseParams & {
   refName: string;
 };
 
-export type OptionalRefParams = {
+export type OptionalRefParams = DatabaseParams & {
   refName?: string;
 };
 
-export type DatabasePageParams = {
-  refName?: string;
+export type DatabasePageParams = OptionalRefParams & {
   tableName?: string;
   q?: string;
 };

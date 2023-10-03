@@ -28,7 +28,7 @@ export default function ForDefaultBranch({
   hideDefaultTable = false,
   ...props
 }: Props) {
-  const { data, loading, error } = useTableNamesQuery();
+  const { data, loading, error } = useTableNamesQuery({ variables: params });
   if (loading) return <Loader loaded={false} />;
 
   if (error) {

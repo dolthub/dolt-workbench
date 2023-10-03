@@ -2,6 +2,7 @@ import Button from "@components/Button";
 import { sampleCreateQueryForEmpty } from "@components/DatabaseTableHeader/utils";
 import Link from "@components/links/Link";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { OptionalRefParams } from "@lib/params";
 import { database } from "@lib/urls";
 import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
 import cx from "classnames";
@@ -9,7 +10,7 @@ import css from "./ForCreateTable/index.module.css";
 import OptionSquare from "./ForTable/OptionSquare";
 
 type Props = {
-  params: { refName?: string };
+  params: OptionalRefParams;
   getStarted?: boolean;
 };
 
@@ -47,7 +48,7 @@ export default function CreateTableOptions(props: Props) {
           }
         />
       </div>
-      <Link {...database()}>
+      <Link {...database(props.params)}>
         <Button.Underlined
           className={cx(css.cancel, {
             [css.removeForGetStarted]: props.getStarted,

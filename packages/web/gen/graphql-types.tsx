@@ -65,7 +65,7 @@ export type IndexColumn = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addDatabaseConnection: Scalars['Boolean']['output'];
+  addDatabaseConnection: Scalars['String']['output'];
 };
 
 
@@ -77,6 +77,7 @@ export type MutationAddDatabaseConnectionArgs = {
 export type Query = {
   __typename?: 'Query';
   currentDatabase?: Maybe<Scalars['String']['output']>;
+  databases: Array<Scalars['String']['output']>;
   hasDatabaseEnv: Scalars['Boolean']['output'];
   rows: RowList;
   sqlSelect: SqlSelect;
@@ -87,18 +88,31 @@ export type Query = {
 
 
 export type QueryRowsArgs = {
+  databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   tableName: Scalars['String']['input'];
 };
 
 
 export type QuerySqlSelectArgs = {
+  databaseName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
 };
 
 
 export type QueryTableArgs = {
+  databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
+};
+
+
+export type QueryTableNamesArgs = {
+  databaseName: Scalars['String']['input'];
+};
+
+
+export type QueryTablesArgs = {
+  databaseName: Scalars['String']['input'];
 };
 
 export enum QueryExecutionStatus {
@@ -121,19 +135,23 @@ export type RowList = {
 
 export type SqlSelect = {
   __typename?: 'SqlSelect';
+  _id: Scalars['ID']['output'];
   columns: Array<Column>;
+  databaseName: Scalars['String']['output'];
   queryExecutionMessage: Scalars['String']['output'];
   queryExecutionStatus: QueryExecutionStatus;
-  queryString: Scalars['ID']['output'];
+  queryString: Scalars['String']['output'];
   rows: Array<Row>;
 };
 
 export type Table = {
   __typename?: 'Table';
+  _id: Scalars['ID']['output'];
   columns: Array<Column>;
+  databaseName: Scalars['String']['output'];
   foreignKeys: Array<ForeignKey>;
   indexes: Array<Index>;
-  tableName: Scalars['ID']['output'];
+  tableName: Scalars['String']['output'];
 };
 
 export type TableNames = {
@@ -150,34 +168,38 @@ export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name
 
 export type IndexForTableListFragment = { __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> };
 
-export type TableForSchemaListFragment = { __typename?: 'Table', tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> };
+export type TableForSchemaListFragment = { __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> };
 
-export type TableListForSchemasQueryVariables = Exact<{ [key: string]: never; }>;
+export type TableListForSchemasQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
 
 
-export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
+export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
 
 export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
 export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
 
 export type SqlSelectForSqlDataTableQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
 }>;
 
 
-export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', _id: string, queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type ColumnForTableListFragment = { __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
-export type TableWithColumnsFragment = { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
+export type TableWithColumnsFragment = { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
 
 export type TableForBranchQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
 }>;
 
 
-export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
+export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
@@ -185,7 +207,7 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
 }>;
 
 
-export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: boolean };
+export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: string };
 
 export type HasDatabaseEnvQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -199,17 +221,19 @@ export type ForeignKeyColumnForDataTableFragment = { __typename?: 'ForeignKeyCol
 export type ForeignKeysForDataTableFragment = { __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> };
 
 export type DataTableQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
 }>;
 
 
-export type DataTableQuery = { __typename?: 'Query', table: { __typename?: 'Table', columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }> } };
+export type DataTableQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }> } };
 
 export type RowForDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
 export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> };
 
 export type RowsForDataTableQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -217,7 +241,9 @@ export type RowsForDataTableQueryVariables = Exact<{
 
 export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
-export type TableNamesQueryVariables = Exact<{ [key: string]: never; }>;
+export type TableNamesQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
 
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
@@ -266,6 +292,7 @@ export const IndexForTableListFragmentDoc = gql`
     ${ColumnsListForTableListFragmentDoc}`;
 export const TableForSchemaListFragmentDoc = gql`
     fragment TableForSchemaList on Table {
+  _id
   tableName
   foreignKeys {
     ...ForeignKeysForDataTable
@@ -296,6 +323,7 @@ export const ColumnForSqlDataTableFragmentDoc = gql`
     `;
 export const TableWithColumnsFragmentDoc = gql`
     fragment TableWithColumns on Table {
+  _id
   tableName
   columns {
     ...ColumnForTableList
@@ -360,8 +388,8 @@ export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabas
 export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
 export const TableListForSchemasDocument = gql`
-    query TableListForSchemas {
-  tables {
+    query TableListForSchemas($databaseName: String!) {
+  tables(databaseName: $databaseName) {
     ...TableForSchemaList
   }
 }
@@ -379,10 +407,11 @@ export const TableListForSchemasDocument = gql`
  * @example
  * const { data, loading, error } = useTableListForSchemasQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *   },
  * });
  */
-export function useTableListForSchemasQuery(baseOptions?: Apollo.QueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables>) {
+export function useTableListForSchemasQuery(baseOptions: Apollo.QueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TableListForSchemasQuery, TableListForSchemasQueryVariables>(TableListForSchemasDocument, options);
       }
@@ -394,8 +423,9 @@ export type TableListForSchemasQueryHookResult = ReturnType<typeof useTableListF
 export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableListForSchemasLazyQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const SqlSelectForSqlDataTableDocument = gql`
-    query SqlSelectForSqlDataTable($queryString: String!) {
-  sqlSelect(queryString: $queryString) {
+    query SqlSelectForSqlDataTable($databaseName: String!, $queryString: String!) {
+  sqlSelect(databaseName: $databaseName, queryString: $queryString) {
+    _id
     queryExecutionStatus
     queryExecutionMessage
     columns {
@@ -421,6 +451,7 @@ ${RowForSqlDataTableFragmentDoc}`;
  * @example
  * const { data, loading, error } = useSqlSelectForSqlDataTableQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *      queryString: // value for 'queryString'
  *   },
  * });
@@ -437,8 +468,8 @@ export type SqlSelectForSqlDataTableQueryHookResult = ReturnType<typeof useSqlSe
 export type SqlSelectForSqlDataTableLazyQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableLazyQuery>;
 export type SqlSelectForSqlDataTableQueryResult = Apollo.QueryResult<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>;
 export const TableForBranchDocument = gql`
-    query TableForBranch($tableName: String!) {
-  table(tableName: $tableName) {
+    query TableForBranch($databaseName: String!, $tableName: String!) {
+  table(databaseName: $databaseName, tableName: $tableName) {
     ...TableWithColumns
   }
 }
@@ -456,6 +487,7 @@ export const TableForBranchDocument = gql`
  * @example
  * const { data, loading, error } = useTableForBranchQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
  *   },
  * });
@@ -536,8 +568,9 @@ export type HasDatabaseEnvQueryHookResult = ReturnType<typeof useHasDatabaseEnvQ
 export type HasDatabaseEnvLazyQueryHookResult = ReturnType<typeof useHasDatabaseEnvLazyQuery>;
 export type HasDatabaseEnvQueryResult = Apollo.QueryResult<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>;
 export const DataTableQueryDocument = gql`
-    query DataTableQuery($tableName: String!) {
-  table(tableName: $tableName) {
+    query DataTableQuery($databaseName: String!, $tableName: String!) {
+  table(databaseName: $databaseName, tableName: $tableName) {
+    _id
     columns {
       ...ColumnForDataTable
     }
@@ -561,6 +594,7 @@ ${ForeignKeysForDataTableFragmentDoc}`;
  * @example
  * const { data, loading, error } = useDataTableQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
  *   },
  * });
@@ -577,8 +611,8 @@ export type DataTableQueryHookResult = ReturnType<typeof useDataTableQuery>;
 export type DataTableQueryLazyQueryHookResult = ReturnType<typeof useDataTableQueryLazyQuery>;
 export type DataTableQueryQueryResult = Apollo.QueryResult<DataTableQuery, DataTableQueryVariables>;
 export const RowsForDataTableQueryDocument = gql`
-    query RowsForDataTableQuery($tableName: String!, $offset: Int) {
-  rows(tableName: $tableName, offset: $offset) {
+    query RowsForDataTableQuery($databaseName: String!, $tableName: String!, $offset: Int) {
+  rows(databaseName: $databaseName, tableName: $tableName, offset: $offset) {
     ...RowListRows
   }
 }
@@ -596,6 +630,7 @@ export const RowsForDataTableQueryDocument = gql`
  * @example
  * const { data, loading, error } = useRowsForDataTableQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
  *      offset: // value for 'offset'
  *   },
@@ -613,8 +648,8 @@ export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTa
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const TableNamesDocument = gql`
-    query TableNames {
-  tableNames {
+    query TableNames($databaseName: String!) {
+  tableNames(databaseName: $databaseName) {
     list
   }
 }
@@ -632,10 +667,11 @@ export const TableNamesDocument = gql`
  * @example
  * const { data, loading, error } = useTableNamesQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *   },
  * });
  */
-export function useTableNamesQuery(baseOptions?: Apollo.QueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+export function useTableNamesQuery(baseOptions: Apollo.QueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
       }

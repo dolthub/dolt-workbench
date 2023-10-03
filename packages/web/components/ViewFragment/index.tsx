@@ -67,7 +67,7 @@ function Inner({ rows, params }: InnerProps) {
 
 export default function ViewFragment(props: Props) {
   const res = useSqlSelectForSqlDataTableQuery({
-    variables: { queryString: props.params.q },
+    variables: { ...props.params, queryString: props.params.q },
   });
   return (
     <QueryHandler
