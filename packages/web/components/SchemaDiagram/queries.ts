@@ -26,8 +26,8 @@ export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
       ...IndexForTableList
     }
   }
-  query TableListForSchemas($databaseName: String!) {
-    tables(databaseName: $databaseName) {
+  query TableListForSchemas($databaseName: String!, $refName: String!) {
+    tables(databaseName: $databaseName, refName: $refName) {
       ...TableForSchemaList
     }
   }

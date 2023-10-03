@@ -2,7 +2,7 @@ import { useTableNamesQuery } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
-import { DatabaseParams } from "@lib/params";
+import { RefParams } from "@lib/params";
 import { useEffect, useState } from "react";
 
 type ReturnType = {
@@ -12,9 +12,9 @@ type ReturnType = {
   refetch: () => Promise<void>;
 };
 
-export default function useTableNames(params: DatabaseParams): ReturnType {
+export default function useTableNames(params: RefParams): ReturnType {
   const { data, ...res } = useTableNamesQuery({
-    variables: { databaseName: params.databaseName },
+    variables: { databaseName: params.databaseName, refName: params.refName },
     fetchPolicy: "cache-and-network",
   });
   const [err, setErr] = useApolloError(res.error);

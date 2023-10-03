@@ -11,6 +11,7 @@ export const tableNamesMock = (
       query: TableNamesDocument,
       variables: {
         databaseName: params.databaseName,
+        refName: params.refName,
       },
     },
     result: { data: { tableNames: { list: tables } } },

@@ -28,14 +28,16 @@ export default function ForDefaultBranch({
   hideDefaultTable = false,
   ...props
 }: Props) {
-  const { data, loading, error } = useTableNamesQuery({ variables: params });
+  const branchName = "main";
+  const { data, loading, error } = useTableNamesQuery({
+    variables: { ...params, refName: branchName },
+  });
   if (loading) return <Loader loaded={false} />;
 
   if (error) {
     return <ForError {...props} error={error} params={params} />;
   }
 
-  const branchName = "main";
   const defaultTableName =
     data?.tableNames &&
     data.tableNames.list.length > 0 &&
