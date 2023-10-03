@@ -13,6 +13,9 @@ export class SqlSelect {
   databaseName: string;
 
   @Field()
+  refName: string;
+
+  @Field()
   queryString: string;
 
   @Field(_type => [column.Column])
@@ -30,12 +33,14 @@ export class SqlSelect {
 
 export function fromSqlSelectRow(
   databaseName: string,
+  refName: string,
   doltRows: RawRow | RawRow[],
   queryString: string,
 ): SqlSelect {
   const res = {
-    _id: `/databases/${databaseName}/queries/${queryString}`,
+    _id: `/databases/${databaseName}/refs/${refName}/queries/${queryString}`,
     databaseName,
+    refName,
     queryString,
     rows: [],
     columns: [],

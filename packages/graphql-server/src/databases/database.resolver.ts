@@ -52,6 +52,13 @@ export class DatabaseResolver {
     });
   }
 
+  @Query(_returns => Boolean)
+  async isDolt(): Promise<boolean> {
+    const ds = this.dss.getDS();
+    const res = await ds.query("SELECT dolt_version()");
+    return !!res;
+  }
+
   @Mutation(_returns => String)
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,

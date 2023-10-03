@@ -2,19 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type ColumnValue {
-  displayValue: String!
-}
-
-type Row {
-  columnValues: [ColumnValue!]!
-}
-
-type RowList {
-  nextOffset: Int
-  list: [Row!]!
-}
-
 type ColConstraint {
   notNull: Boolean!
 }
@@ -24,23 +11,6 @@ type Column {
   isPrimaryKey: Boolean!
   type: String!
   constraints: [ColConstraint!]
-}
-
-type SqlSelect {
-  _id: ID!
-  databaseName: String!
-  queryString: String!
-  columns: [Column!]!
-  rows: [Row!]!
-  queryExecutionStatus: QueryExecutionStatus!
-  queryExecutionMessage: String!
-}
-
-enum QueryExecutionStatus {
-  Success
-  Error
-  Timeout
-  RowLimit
 }
 
 type ForeignKeyColumn {
@@ -70,6 +40,7 @@ type Index {
 type Table {
   _id: ID!
   databaseName: String!
+  refName: String!
   tableName: String!
   columns: [Column!]!
   foreignKeys: [ForeignKey!]!
@@ -80,18 +51,80 @@ type TableNames {
   list: [String!]!
 }
 
+type Branch {
+  _id: ID!
+  databaseName: String!
+  branchName: String!
+  lastUpdated: Timestamp!
+  table(tableName: String!): Table
+  tableNames(filterSystemTables: Boolean): [String!]!
+  head: String
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type BranchNamesList {
+  list: [Branch!]!
+}
+
+type ColumnValue {
+  displayValue: String!
+}
+
+type Row {
+  columnValues: [ColumnValue!]!
+}
+
+type RowList {
+  nextOffset: Int
+  list: [Row!]!
+}
+
+type SqlSelect {
+  _id: ID!
+  databaseName: String!
+  refName: String!
+  queryString: String!
+  columns: [Column!]!
+  rows: [Row!]!
+  queryExecutionStatus: QueryExecutionStatus!
+  queryExecutionMessage: String!
+}
+
+enum QueryExecutionStatus {
+  Success
+  Error
+  Timeout
+  RowLimit
+}
+
 type Query {
+  branch(databaseName: String!, branchName: String!): Branch
+  branchOrDefault(databaseName: String!, branchName: String): Branch
+  branches(databaseName: String!, sortBy: SortBranchesBy): BranchNamesList!
+  defaultBranch(databaseName: String!): Branch
   currentDatabase: String
   hasDatabaseEnv: Boolean!
   databases: [String!]!
-  rows(databaseName: String!, tableName: String!, offset: Int): RowList!
-  sqlSelect(databaseName: String!, queryString: String!): SqlSelect!
-  table(databaseName: String!, tableName: String!): Table!
-  tableNames(databaseName: String!): TableNames!
-  tables(databaseName: String!): [Table!]!
+  isDolt: Boolean!
+  rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
+  table(refName: String!, databaseName: String!, tableName: String!): Table!
+  tableNames(refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
+  tables(refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
+}
+
+enum SortBranchesBy {
+  Unspecified
+  LastUpdated
 }
 
 type Mutation {
+  createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): Branch!
+  deleteBranch(databaseName: String!, branchName: String!): Boolean!
   addDatabaseConnection(url: String, useEnv: Boolean): String!
   createDatabase(databaseName: String!): Boolean!
 }

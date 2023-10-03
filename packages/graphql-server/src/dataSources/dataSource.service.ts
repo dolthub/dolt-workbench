@@ -32,9 +32,11 @@ export class DataSourceService {
     }
   }
 
+  // Assumes Dolt database
   async query(
     executeQuery: (pq: ParQuery) => any,
     dbName?: string,
+    refName?: string,
   ): Promise<any> {
     return this.handleAsyncQuery(async qr => {
       async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
@@ -43,9 +45,28 @@ export class DataSourceService {
       }
 
       if (dbName) {
-        // Cannot use params here for the database revision. It will incorrectly
-        // escape refs with dots
-        await qr.query(`USE \`${dbName}\``);
+        await qr.query(useDBStatement(dbName, refName));
+      }
+
+      return executeQuery(query);
+    });
+  }
+
+  // Queries that will work on both MySQL and Dolt
+  async queryMaybeDolt(
+    executeQuery: (pq: ParQuery) => any,
+    dbName?: string,
+    refName?: string,
+  ): Promise<any> {
+    return this.handleAsyncQuery(async qr => {
+      async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
+        const res = await qr.query(q, p);
+        return res;
+      }
+
+      if (dbName) {
+        const isDolt = await getIsDolt(qr);
+        await qr.query(useDBStatement(dbName, refName, isDolt));
       }
 
       return executeQuery(query);
@@ -75,4 +96,22 @@ export class DataSourceService {
 
     await this.ds.initialize();
   }
+}
+
+// Cannot use params here for the database revision. It will incorrectly
+// escape refs with dots
+function useDBStatement(
+  dbName?: string,
+  refName?: string,
+  isDolt = true,
+): string {
+  if (refName && isDolt) {
+    return `USE \`${dbName}/${refName}\``;
+  }
+  return `USE \`${dbName}\``;
+}
+
+async function getIsDolt(qr: QueryRunner): Promise<boolean> {
+  const res = await qr.query("SELECT dolt_version()");
+  return !!res;
 }

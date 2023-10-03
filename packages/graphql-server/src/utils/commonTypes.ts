@@ -16,7 +16,19 @@ export class DBArgs {
 }
 
 @ArgsType()
-export class TableArgs extends DBArgs {
+export class BranchArgs extends DBArgs {
+  @Field()
+  branchName: string;
+}
+
+@ArgsType()
+export class RefArgs extends DBArgs {
+  @Field()
+  refName: string;
+}
+
+@ArgsType()
+export class TableArgs extends RefArgs {
   @Field()
   tableName: string;
 }
