@@ -19,6 +19,7 @@ export type BaseFormSelectorProps = {
   placeholder?: string;
   useValueAsSingleValue?: boolean;
   loading?: boolean;
+  doltDisabled?: boolean;
 };
 
 export type FooterProps = {

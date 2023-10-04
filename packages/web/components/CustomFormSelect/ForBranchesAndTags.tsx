@@ -2,6 +2,7 @@ import { OptionalRefParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { useState } from "react";
 import { BranchSelector } from "./BranchSelector";
+import { BranchSelectorForRepoProps } from "./BranchSelector/types";
 import TabWrapper from "./TabWrapper";
 
 type Props = {
@@ -9,6 +10,7 @@ type Props = {
   selectedValue?: string;
   routeRefChangeTo: RefUrl;
   className?: string;
+  doltDisabled?: boolean;
 };
 
 export default function ForBranchesAndTags(props: Props) {
@@ -27,7 +29,7 @@ export default function ForBranchesAndTags(props: Props) {
   //   }
   // }, [tagRes.data?.tags, props.selectedValue, setShowFirstTab]);
 
-  const formSelectProps = {
+  const formSelectProps: Partial<BranchSelectorForRepoProps> = {
     tabs: [
       {
         label: "Branches",
@@ -49,6 +51,7 @@ export default function ForBranchesAndTags(props: Props) {
     selectedValue: props.selectedValue,
     routeRefChangeTo: props.routeRefChangeTo,
     useValueAsSingleValue: true,
+    doltDisabled: props.doltDisabled,
   };
 
   return (

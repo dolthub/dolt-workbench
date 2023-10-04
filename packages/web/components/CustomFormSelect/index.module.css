@@ -97,3 +97,7 @@
     @apply w-auto;
   }
 }
+
+.doltDisabled {
+  @apply bg-ld-lightblue border border-ld-darkgrey px-2.5 py-2 rounded text-sm;
+}

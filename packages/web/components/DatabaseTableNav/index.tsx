@@ -1,4 +1,5 @@
 import CustomFormSelect from "@components/CustomFormSelect";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
@@ -46,12 +47,14 @@ function Nav({
       )}
     >
       <div className={css.top}>
-        <CustomFormSelect.ForBranchesAndTags
-          routeRefChangeTo={routeRefChangeTo}
-          params={params}
-          selectedValue={params.refName}
-          className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
-        />
+        <NotDoltWrapper>
+          <CustomFormSelect.ForBranchesAndTags
+            routeRefChangeTo={routeRefChangeTo}
+            params={params}
+            selectedValue={params.refName}
+            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
+          />
+        </NotDoltWrapper>
         <GiHamburgerMenu
           onClick={toggleMenu}
           className={css.menuIcon}

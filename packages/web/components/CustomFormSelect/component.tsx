@@ -1,5 +1,6 @@
 import FormSelect from "@components/FormSelect";
 import cx from "classnames";
+import DoltDisabledSelector from "./DoltDisabledSelector";
 import css from "./index.module.css";
 import { getComponents } from "./selectorComponents";
 import { FormSelectorProps } from "./types";
@@ -13,19 +14,21 @@ export default function Selector(props: FormSelectorProps) {
         className={cx(css.dropdown, {
           [css.customDropdown]: props.customDropdown,
         })}
-        data-cy="selector-id-show-tabs"
       >
         <div className={css.splitByWord}>
-          <FormSelect
-            {...props}
-            data-cy={`selector${dataCy}`}
-            val={props.val}
-            selectedOptionFirst
-            openMenuOnFocus={props.autoFocus}
-            components={getComponents(props)}
-            label={undefined}
-            noOptionsMessage={getNoOptions(dataCy, props.noneFoundMsg)}
-          />
+          {props.doltDisabled ? (
+            <DoltDisabledSelector {...props} />
+          ) : (
+            <FormSelect
+              {...props}
+              val={props.val}
+              selectedOptionFirst
+              openMenuOnFocus={props.autoFocus}
+              components={getComponents(props)}
+              label={undefined}
+              noOptionsMessage={getNoOptions(dataCy, props.noneFoundMsg)}
+            />
+          )}
         </div>
       </div>
     </div>
