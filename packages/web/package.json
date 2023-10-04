@@ -14,6 +14,8 @@
     "lint-css": "stylelint \"**/*.css\"",
     "lint-fix": "eslint --quiet --fix --ext .ts,.js,.tsx,.jsx .",
     "generate-types": "graphql-codegen --config codegen.yml",
+    "prettier": "prettier --check '{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'",
+    "prettier-fix": "prettier --write '{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'",
     "test": "jest --env=jest-environment-jsdom"
   },
   "dependencies": {
