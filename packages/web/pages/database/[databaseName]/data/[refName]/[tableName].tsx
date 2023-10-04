@@ -11,7 +11,10 @@ type Props = {
 };
 
 const TablePage: NextPage<Props> = props => (
-  <Page title={`Data ${props.params.tableName}`} noIndex>
+  <Page
+    title={`${props.params.databaseName} ${props.params.tableName}`}
+    noIndex
+  >
     <DatabasePage.ForTable {...props} />
   </Page>
 );

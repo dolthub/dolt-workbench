@@ -5,6 +5,7 @@ import DatabaseTableNav from "@components/DatabaseTableNav";
 import KeyNav from "@components/util/KeyNav";
 import { useReactiveWidth } from "@hooks/useReactiveSize";
 import { OptionalRefParams } from "@lib/params";
+import { RefUrl, database } from "@lib/urls";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import Wrapper from "./Wrapper";
@@ -24,6 +25,7 @@ type Props = {
   showSqlConsole?: boolean;
   empty?: boolean;
   initialTabIndex: number;
+  routeRefChangeTo?: RefUrl;
 };
 
 export default function DatabaseLayout(props: Props) {
@@ -48,6 +50,7 @@ export default function DatabaseLayout(props: Props) {
           showTableNav={showTableNav}
           setShowTableNav={setShowTableNav}
           isMobile={isMobile}
+          routeRefChangeTo={props.routeRefChangeTo ?? database}
         />
         <div className={css.rightContent}>
           <div className={css.main}>

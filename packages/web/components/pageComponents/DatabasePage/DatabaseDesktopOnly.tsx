@@ -1,16 +1,17 @@
 import { useReactiveWidth } from "@hooks/useReactiveSize";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
+import { RefUrl, database } from "@lib/urls";
 import { ReactElement, ReactNode } from "react";
 import ForDefaultBranch from "./ForDefaultBranch";
 
 type Props = {
   children: ReactNode;
   title?: string;
-  params: DatabaseParams & {
-    refName?: string;
+  params: OptionalRefParams & {
     active?: string;
     edit?: boolean;
   };
+  routeRefChangeTo?: RefUrl;
 };
 
 export default function DatabaseDesktopOnly(props: Props): ReactElement {
@@ -21,7 +22,11 @@ export default function DatabaseDesktopOnly(props: Props): ReactElement {
       {!isMobile ? (
         props.children
       ) : (
-        <ForDefaultBranch params={props.params} title={props.title} />
+        <ForDefaultBranch
+          params={props.params}
+          title={props.title}
+          routeRefChangeTo={props.routeRefChangeTo ?? database}
+        />
       )}
     </div>
   );

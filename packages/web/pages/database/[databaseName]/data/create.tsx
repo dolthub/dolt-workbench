@@ -1,18 +1,17 @@
 import Page from "@components/util/Page";
-import { DatabaseParams } from "@lib/params";
+import { DatabaseParams, MaybeRefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: DatabaseParams & {
-    refName?: string | null;
+  params: MaybeRefParams & {
     active?: string;
     edit?: boolean;
   };
 };
 
 const CreateTablePage: NextPage<Props> = ({ params }) => (
-  <Page title="Create table" noIndex>
+  <Page title={`${params.databaseName} - Create table`} noIndex>
     <DatabasePage.ForCreateTable params={params} />
   </Page>
 );

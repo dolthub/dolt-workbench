@@ -14,6 +14,9 @@ export class Branch {
   @Field()
   branchName: string;
 
+  @Field()
+  lastCommitter: string;
+
   @Field(_type => GraphQLTimestamp)
   lastUpdated: Date;
 
@@ -44,6 +47,7 @@ export function fromDoltBranchesRow(
     branchName: b.name,
     head: b.head,
     lastUpdated: convertToUTCDate(b.latest_commit_date),
+    lastCommitter: b.latest_committer,
     tableNames: tns,
   };
 }
@@ -55,6 +59,7 @@ export const branchForNonDoltDB = (databaseName: string): Branch => {
     databaseName,
     branchName,
     lastUpdated: new Date(),
+    lastCommitter: "",
     tableNames: [],
   };
 };

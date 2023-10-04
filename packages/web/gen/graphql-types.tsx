@@ -24,6 +24,7 @@ export type Branch = {
   branchName: Scalars['String']['output'];
   databaseName: Scalars['String']['output'];
   head?: Maybe<Scalars['String']['output']>;
+  lastCommitter: Scalars['String']['output'];
   lastUpdated: Scalars['Timestamp']['output'];
   table?: Maybe<Table>;
   tableNames: Array<Scalars['String']['output']>;
@@ -60,6 +61,12 @@ export type Column = {
 export type ColumnValue = {
   __typename?: 'ColumnValue';
   displayValue: Scalars['String']['output'];
+};
+
+export type DoltDatabaseDetails = {
+  __typename?: 'DoltDatabaseDetails';
+  hideDoltFeatures: Scalars['Boolean']['output'];
+  isDolt: Scalars['Boolean']['output'];
 };
 
 export type ForeignKey = {
@@ -130,8 +137,8 @@ export type Query = {
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
+  doltDatabaseDetails: DoltDatabaseDetails;
   hasDatabaseEnv: Scalars['Boolean']['output'];
-  isDolt: Scalars['Boolean']['output'];
   rows: RowList;
   sqlSelect: SqlSelect;
   table: Table;
@@ -256,6 +263,15 @@ export type CreateDatabaseMutationVariables = Exact<{
 
 export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
 
+export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
+
+export type BranchesForSelectorQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type BranchesForSelectorQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> } };
+
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -306,6 +322,35 @@ export type TableForBranchQueryVariables = Exact<{
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
+export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
+
+export type BranchListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  sortBy?: InputMaybe<SortBranchesBy>;
+}>;
+
+
+export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+
+export type DeleteBranchMutationVariables = Exact<{
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteBranchMutation = { __typename?: 'Mutation', deleteBranch: boolean };
+
+export type BranchForCreateBranchFragment = { __typename?: 'Branch', databaseName: string, branchName: string };
+
+export type CreateBranchMutationVariables = Exact<{
+  newBranchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: { __typename?: 'Branch', databaseName: string, branchName: string } };
+
 export type DefaultBranchPageQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
@@ -335,6 +380,11 @@ export type HasDatabaseEnvQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type HasDatabaseEnvQuery = { __typename?: 'Query', hasDatabaseEnv: boolean };
+
+export type DoltDatabaseDetailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean } };
 
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -374,6 +424,12 @@ export type TableNamesQueryVariables = Exact<{
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export const BranchForBranchSelectorFragmentDoc = gql`
+    fragment BranchForBranchSelector on Branch {
+  branchName
+  databaseName
+}
+    `;
 export const ForeignKeyColumnForDataTableFragmentDoc = gql`
     fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
   referencedColumnName
@@ -456,6 +512,21 @@ export const TableWithColumnsFragmentDoc = gql`
   }
 }
     ${ColumnForTableListFragmentDoc}`;
+export const BranchFragmentDoc = gql`
+    fragment Branch on Branch {
+  _id
+  branchName
+  databaseName
+  lastUpdated
+  lastCommitter
+}
+    `;
+export const BranchForCreateBranchFragmentDoc = gql`
+    fragment BranchForCreateBranch on Branch {
+  databaseName
+  branchName
+}
+    `;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -512,6 +583,43 @@ export function useCreateDatabaseMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDatabaseMutation>;
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
+export const BranchesForSelectorDocument = gql`
+    query BranchesForSelector($databaseName: String!) {
+  branches(databaseName: $databaseName) {
+    list {
+      ...BranchForBranchSelector
+    }
+  }
+}
+    ${BranchForBranchSelectorFragmentDoc}`;
+
+/**
+ * __useBranchesForSelectorQuery__
+ *
+ * To run a query within a React component, call `useBranchesForSelectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchesForSelectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchesForSelectorQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useBranchesForSelectorQuery(baseOptions: Apollo.QueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+      }
+export function useBranchesForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+        }
+export type BranchesForSelectorQueryHookResult = ReturnType<typeof useBranchesForSelectorQuery>;
+export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranchesForSelectorLazyQuery>;
+export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase
@@ -699,6 +807,115 @@ export function useTableForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQuery>;
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
+export const BranchListDocument = gql`
+    query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
+  branches(databaseName: $databaseName, sortBy: $sortBy) {
+    list {
+      ...Branch
+    }
+  }
+}
+    ${BranchFragmentDoc}`;
+
+/**
+ * __useBranchListQuery__
+ *
+ * To run a query within a React component, call `useBranchListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      sortBy: // value for 'sortBy'
+ *   },
+ * });
+ */
+export function useBranchListQuery(baseOptions: Apollo.QueryHookOptions<BranchListQuery, BranchListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
+      }
+export function useBranchListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchListQuery, BranchListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
+        }
+export type BranchListQueryHookResult = ReturnType<typeof useBranchListQuery>;
+export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQuery>;
+export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
+export const DeleteBranchDocument = gql`
+    mutation DeleteBranch($branchName: String!, $databaseName: String!) {
+  deleteBranch(branchName: $branchName, databaseName: $databaseName)
+}
+    `;
+export type DeleteBranchMutationFn = Apollo.MutationFunction<DeleteBranchMutation, DeleteBranchMutationVariables>;
+
+/**
+ * __useDeleteBranchMutation__
+ *
+ * To run a mutation, you first call `useDeleteBranchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBranchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBranchMutation, { data, loading, error }] = useDeleteBranchMutation({
+ *   variables: {
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDeleteBranchMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBranchMutation, DeleteBranchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBranchMutation, DeleteBranchMutationVariables>(DeleteBranchDocument, options);
+      }
+export type DeleteBranchMutationHookResult = ReturnType<typeof useDeleteBranchMutation>;
+export type DeleteBranchMutationResult = Apollo.MutationResult<DeleteBranchMutation>;
+export type DeleteBranchMutationOptions = Apollo.BaseMutationOptions<DeleteBranchMutation, DeleteBranchMutationVariables>;
+export const CreateBranchDocument = gql`
+    mutation CreateBranch($newBranchName: String!, $databaseName: String!, $fromRefName: String!) {
+  createBranch(
+    newBranchName: $newBranchName
+    databaseName: $databaseName
+    fromRefName: $fromRefName
+  ) {
+    ...BranchForCreateBranch
+  }
+}
+    ${BranchForCreateBranchFragmentDoc}`;
+export type CreateBranchMutationFn = Apollo.MutationFunction<CreateBranchMutation, CreateBranchMutationVariables>;
+
+/**
+ * __useCreateBranchMutation__
+ *
+ * To run a mutation, you first call `useCreateBranchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBranchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBranchMutation, { data, loading, error }] = useCreateBranchMutation({
+ *   variables: {
+ *      newBranchName: // value for 'newBranchName'
+ *      databaseName: // value for 'databaseName'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions<CreateBranchMutation, CreateBranchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBranchMutation, CreateBranchMutationVariables>(CreateBranchDocument, options);
+      }
+export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
+export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
+export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
 export const DefaultBranchPageQueryDocument = gql`
     query DefaultBranchPageQuery($databaseName: String!, $filterSystemTables: Boolean) {
   defaultBranch(databaseName: $databaseName) {
@@ -845,6 +1062,41 @@ export function useHasDatabaseEnvLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type HasDatabaseEnvQueryHookResult = ReturnType<typeof useHasDatabaseEnvQuery>;
 export type HasDatabaseEnvLazyQueryHookResult = ReturnType<typeof useHasDatabaseEnvLazyQuery>;
 export type HasDatabaseEnvQueryResult = Apollo.QueryResult<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>;
+export const DoltDatabaseDetailsDocument = gql`
+    query DoltDatabaseDetails {
+  doltDatabaseDetails {
+    isDolt
+    hideDoltFeatures
+  }
+}
+    `;
+
+/**
+ * __useDoltDatabaseDetailsQuery__
+ *
+ * To run a query within a React component, call `useDoltDatabaseDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDoltDatabaseDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDoltDatabaseDetailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDoltDatabaseDetailsQuery(baseOptions?: Apollo.QueryHookOptions<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>(DoltDatabaseDetailsDocument, options);
+      }
+export function useDoltDatabaseDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>(DoltDatabaseDetailsDocument, options);
+        }
+export type DoltDatabaseDetailsQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsQuery>;
+export type DoltDatabaseDetailsLazyQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsLazyQuery>;
+export type DoltDatabaseDetailsQueryResult = Apollo.QueryResult<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>;
 export const DataTableQueryDocument = gql`
     query DataTableQuery($databaseName: String!, $refName: String!, $tableName: String!) {
   table(databaseName: $databaseName, refName: $refName, tableName: $tableName) {

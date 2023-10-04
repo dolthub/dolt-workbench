@@ -1,9 +1,6 @@
-import { DatabaseParams, OptionalRefParams, RefParams } from "@lib/params";
-import { database, ref } from "@lib/urls";
+import { OptionalRefParams } from "@lib/params";
+import { database, DatabaseUrl, ref, RefUrl } from "@lib/urls";
 import { Route } from "@lib/urlUtils";
-
-export type RefUrl = (p: RefParams) => Route;
-type DatabaseUrl = (p: DatabaseParams) => Route;
 
 function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
   switch (name) {

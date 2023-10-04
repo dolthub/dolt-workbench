@@ -55,6 +55,7 @@ type Branch {
   _id: ID!
   databaseName: String!
   branchName: String!
+  lastCommitter: String!
   lastUpdated: Timestamp!
   table(tableName: String!): Table
   tableNames(filterSystemTables: Boolean): [String!]!
@@ -68,6 +69,11 @@ scalar Timestamp
 
 type BranchNamesList {
   list: [Branch!]!
+}
+
+type DoltDatabaseDetails {
+  isDolt: Boolean!
+  hideDoltFeatures: Boolean!
 }
 
 type ColumnValue {
@@ -109,7 +115,7 @@ type Query {
   currentDatabase: String
   hasDatabaseEnv: Boolean!
   databases: [String!]!
-  isDolt: Boolean!
+  doltDatabaseDetails: DoltDatabaseDetails!
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
   table(refName: String!, databaseName: String!, tableName: String!): Table!

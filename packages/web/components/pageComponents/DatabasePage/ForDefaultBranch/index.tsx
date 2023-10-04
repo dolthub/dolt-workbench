@@ -1,6 +1,7 @@
 import Loader from "@components/Loader";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import { DatabasePageParams, RefParams } from "@lib/params";
+import { RefUrl } from "@lib/urls";
 import { ReactNode, cloneElement } from "react";
 import ForEmpty from "../ForEmpty";
 import ForError from "../ForError";
@@ -21,6 +22,7 @@ type Props = {
   leftNavInitiallyOpen?: boolean;
   showSqlConsole?: boolean;
   noMobileWarnings?: boolean;
+  routeRefChangeTo: RefUrl;
 };
 
 export default function ForDefaultBranch({

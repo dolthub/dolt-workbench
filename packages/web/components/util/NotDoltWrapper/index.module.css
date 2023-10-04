@@ -1,0 +1,3 @@
+.container {
+  @apply max-w-xl mx-auto text-lg my-10;
+}

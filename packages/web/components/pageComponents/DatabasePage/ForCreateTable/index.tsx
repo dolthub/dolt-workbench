@@ -1,4 +1,5 @@
 import { DatabaseParams } from "@lib/params";
+import { createTable } from "@lib/urls";
 import CreateTableOptions from "../CreateTableOptions";
 import DatabaseDesktopOnly from "../DatabaseDesktopOnly";
 import ForDefaultBranch from "../ForDefaultBranch";
@@ -17,9 +18,14 @@ export default function CreateTableButtons(props: Props) {
     refName: props.params.refName ?? undefined,
   };
   return (
-    <DatabaseDesktopOnly params={params} title="create table">
+    <DatabaseDesktopOnly
+      params={params}
+      title="create table"
+      routeRefChangeTo={createTable}
+    >
       <ForDefaultBranch
         params={params}
+        routeRefChangeTo={createTable}
         hideDefaultTable
         showSqlConsole
         leftNavInitiallyOpen

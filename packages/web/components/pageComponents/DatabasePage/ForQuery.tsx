@@ -6,7 +6,9 @@ import {
   isDoltDiffTableQuery,
   isShowViewFragmentQuery,
 } from "@lib/doltSystemTables";
-import { SqlQueryParams } from "@lib/params";
+import { RefParams, SqlQueryParams } from "@lib/params";
+import { isMutation } from "@lib/parseSqlQuery";
+import { ref, sqlQuery } from "@lib/urls";
 import DatabasePage from "./component";
 
 type Props = {
@@ -14,9 +16,14 @@ type Props = {
 };
 
 function Inner({ params }: Props) {
+  const routeRefChangeTo = (p: RefParams) =>
+    isMutation(params.q)
+      ? ref(p)
+      : sqlQuery({ ...p, q: params.q, active: params.active });
   const commonProps = {
     initialTabIndex: 0,
     params,
+    routeRefChangeTo,
   };
 
   if (isDoltDiffTableQuery(params.q)) {

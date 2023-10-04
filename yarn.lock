@@ -1613,6 +1613,7 @@ __metadata:
     "@testing-library/jest-dom": ^6.1.3
     "@testing-library/react": ^14.0.0
     "@testing-library/user-event": ^14.5.1
+    "@types/chance": ^1.1.4
     "@types/jest": ^29.5.5
     "@types/lodash": ^4.14.199
     "@types/node": latest
@@ -1620,10 +1621,12 @@ __metadata:
     "@types/react-copy-to-clipboard": ^5.0.5
     "@types/react-dom": latest
     "@types/react-infinite-scroller": ^1.2.3
+    "@types/react-timeago": ^4.1.4
     "@types/testing-library__jest-dom": ^6.0.0
     ace-builds: ^1.28.0
     autoprefixer: latest
     babel-jest: ^29.7.0
+    chance: ^1.1.11
     classnames: ^2.3.2
     cssnano: ^6.0.1
     eslint: latest
@@ -1648,6 +1651,7 @@ __metadata:
     react-loader: ^2.4.7
     react-select: ^5.7.5
     react-select-event: ^5.5.1
+    react-timeago: ^7.2.0
     react-tooltip: ^5.21.5
     reactjs-popup: ^2.0.6
     stylelint: ^15.10.3
@@ -3661,6 +3665,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/chance@npm:^1.1.4":
+  version: 1.1.4
+  resolution: "@types/chance@npm:1.1.4"
+  checksum: 0ce6a654e6702237800b01ae7889209a98752ed4792d810b5007c27c046972988ac6fcc36063bdc7ede37d3ab1d0fd0a7bb3e405d4566c80debd9e663a90bbb0
+  languageName: node
+  linkType: hard
+
 "@types/connect@npm:*":
   version: 3.4.35
   resolution: "@types/connect@npm:3.4.35"
@@ -4235,6 +4246,15 @@ __metadata:
   dependencies:
     "@types/react": "*"
   checksum: 9226fe93ea41b14c856ea4de231480d268f2d5609650eacaa9319be88de6a6ded46868ab4a558d9a9e3b9bdaa5fe8b38d7505a71cedcd87d30b2118fe5a42f5f
+  languageName: node
+  linkType: hard
+
+"@types/react-timeago@npm:^4.1.4":
+  version: 4.1.4
+  resolution: "@types/react-timeago@npm:4.1.4"
+  dependencies:
+    "@types/react": "*"
+  checksum: acd97a5290f21477fb8b23c9cfb3e4bdfa4690f43a42ebd4d5bec89542ecac0d943f80fabe76032da263315cb42d90868b6b25be4eeef9ebf554d645437a9681
   languageName: node
   linkType: hard
 
@@ -5824,6 +5844,13 @@ __metadata:
     ansi-styles: ^4.1.0
     supports-color: ^7.1.0
   checksum: 8e3ddf3981c4da405ddbd7d9c8d91944ddf6e33d6837756979f7840a29272a69a5189ecae0ff84006750d6d1e92368d413335eab4db5476db6e6703a1d1e0505
+  languageName: node
+  linkType: hard
+
+"chance@npm:^1.1.11":
+  version: 1.1.11
+  resolution: "chance@npm:1.1.11"
+  checksum: 2e871fcc76584d274f860f0f25380b6ab547caf0d22d8b043a313be73d5c3db38941373241f83aeba049e7511f752f9746dc722a0f2b0182020d493c4e11da84
   languageName: node
   linkType: hard
 
@@ -13326,6 +13353,15 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 88f2d94c4a6778df525a9fb5d7acac1bf34821f6efcfdc5927ec608f5f933cf3f47e1c4e4fd3b92d7b2ba1d91e44595d45ac4e2fd7528ba420086008ac5a81cf
+  languageName: node
+  linkType: hard
+
+"react-timeago@npm:^7.2.0":
+  version: 7.2.0
+  resolution: "react-timeago@npm:7.2.0"
+  peerDependencies:
+    react: ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: 1d6b4df11e7c2964f3a89ac8f9f2bc486afd3491c284f24d53c1497b0361e4b4e224facccd2dea6515ab264ddce99dd47a801f191a562110462f84aacbcb4c7e
   languageName: node
   linkType: hard
 
