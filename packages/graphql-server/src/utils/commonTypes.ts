@@ -32,3 +32,9 @@ export class TableArgs extends RefArgs {
   @Field()
   tableName: string;
 }
+
+@ArgsType()
+export class DBArgsWithOffset extends DBArgs {
+  @Field(_type => Int, { nullable: true })
+  offset?: number;
+}

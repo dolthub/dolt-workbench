@@ -63,6 +63,23 @@ export type ColumnValue = {
   displayValue: Scalars['String']['output'];
 };
 
+export type Commit = {
+  __typename?: 'Commit';
+  _id: Scalars['ID']['output'];
+  commitId: Scalars['String']['output'];
+  committedAt: Scalars['Timestamp']['output'];
+  committer: DoltWriter;
+  databaseName: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  parents: Array<Scalars['String']['output']>;
+};
+
+export type CommitList = {
+  __typename?: 'CommitList';
+  list: Array<Commit>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
+};
+
 export type DoltDatabaseDetails = {
   __typename?: 'DoltDatabaseDetails';
   hideDoltFeatures: Scalars['Boolean']['output'];
@@ -142,6 +159,7 @@ export type Query = {
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
   branches: BranchNamesList;
+  commits: CommitList;
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
@@ -171,6 +189,13 @@ export type QueryBranchOrDefaultArgs = {
 export type QueryBranchesArgs = {
   databaseName: Scalars['String']['input'];
   sortBy?: InputMaybe<SortBranchesBy>;
+};
+
+
+export type QueryCommitsArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  refName: Scalars['String']['input'];
 };
 
 
@@ -302,8 +327,6 @@ export type BranchesForSelectorQueryVariables = Exact<{
 
 export type BranchesForSelectorQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> } };
 
-export type DoltWriterForHistoryFragment = { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string };
-
 export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
 
 export type TagListForTagListFragment = { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
@@ -314,6 +337,21 @@ export type TagListQueryVariables = Exact<{
 
 
 export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
+
+export type DoltWriterForHistoryFragment = { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string };
+
+export type CommitForHistoryFragment = { __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
+
+export type CommitListForHistoryFragment = { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
+
+export type HistoryForBranchQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type HistoryForBranchQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
 
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -500,6 +538,26 @@ export const TagListForTagListFragmentDoc = gql`
   }
 }
     ${TagForListFragmentDoc}`;
+export const CommitForHistoryFragmentDoc = gql`
+    fragment CommitForHistory on Commit {
+  _id
+  committer {
+    ...DoltWriterForHistory
+  }
+  message
+  commitId
+  committedAt
+  parents
+}
+    ${DoltWriterForHistoryFragmentDoc}`;
+export const CommitListForHistoryFragmentDoc = gql`
+    fragment CommitListForHistory on CommitList {
+  list {
+    ...CommitForHistory
+  }
+  nextOffset
+}
+    ${CommitForHistoryFragmentDoc}`;
 export const ForeignKeyColumnForDataTableFragmentDoc = gql`
     fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
   referencedColumnName
@@ -725,6 +783,43 @@ export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ta
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
+export const HistoryForBranchDocument = gql`
+    query HistoryForBranch($databaseName: String!, $refName: String!, $offset: Int) {
+  commits(databaseName: $databaseName, refName: $refName, offset: $offset) {
+    ...CommitListForHistory
+  }
+}
+    ${CommitListForHistoryFragmentDoc}`;
+
+/**
+ * __useHistoryForBranchQuery__
+ *
+ * To run a query within a React component, call `useHistoryForBranchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryForBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryForBranchQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useHistoryForBranchQuery(baseOptions: Apollo.QueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
+      }
+export function useHistoryForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
+        }
+export type HistoryForBranchQueryHookResult = ReturnType<typeof useHistoryForBranchQuery>;
+export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryForBranchLazyQuery>;
+export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase

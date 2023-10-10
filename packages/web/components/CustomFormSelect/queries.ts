@@ -15,12 +15,6 @@ export const BRANCH_SELECTOR_QUERY = gql`
 `;
 
 export const TAG_LIST_QUERY = gql`
-  fragment DoltWriterForHistory on DoltWriter {
-    _id
-    username
-    displayName
-    emailAddress
-  }
   fragment TagForList on Tag {
     _id
     tagName

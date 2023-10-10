@@ -71,6 +71,28 @@ type BranchNamesList {
   list: [Branch!]!
 }
 
+type DoltWriter {
+  _id: ID!
+  displayName: String!
+  emailAddress: String!
+  username: String
+}
+
+type Commit {
+  _id: ID!
+  commitId: String!
+  databaseName: String!
+  message: String!
+  committedAt: Timestamp!
+  committer: DoltWriter!
+  parents: [String!]!
+}
+
+type CommitList {
+  nextOffset: Int
+  list: [Commit!]!
+}
+
 type DoltDatabaseDetails {
   isDolt: Boolean!
   hideDoltFeatures: Boolean!
@@ -107,13 +129,6 @@ enum QueryExecutionStatus {
   RowLimit
 }
 
-type DoltWriter {
-  _id: ID!
-  displayName: String!
-  emailAddress: String!
-  username: String
-}
-
 type Tag {
   _id: ID!
   tagName: String!
@@ -133,6 +148,7 @@ type Query {
   branchOrDefault(databaseName: String!, branchName: String): Branch
   branches(databaseName: String!, sortBy: SortBranchesBy): BranchNamesList!
   defaultBranch(databaseName: String!): Branch
+  commits(offset: Int, databaseName: String!, refName: String!): CommitList!
   currentDatabase: String
   hasDatabaseEnv: Boolean!
   databases: [String!]!
