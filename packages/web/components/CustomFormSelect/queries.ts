@@ -13,3 +13,32 @@ export const BRANCH_SELECTOR_QUERY = gql`
     }
   }
 `;
+
+export const TAG_LIST_QUERY = gql`
+  fragment DoltWriterForHistory on DoltWriter {
+    _id
+    username
+    displayName
+    emailAddress
+  }
+  fragment TagForList on Tag {
+    _id
+    tagName
+    message
+    taggedAt
+    tagger {
+      ...DoltWriterForHistory
+    }
+    commitId
+  }
+  fragment TagListForTagList on TagList {
+    list {
+      ...TagForList
+    }
+  }
+  query TagList($databaseName: String!) {
+    tags(databaseName: $databaseName) {
+      ...TagListForTagList
+    }
+  }
+`;

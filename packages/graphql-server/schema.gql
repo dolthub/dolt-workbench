@@ -107,6 +107,27 @@ enum QueryExecutionStatus {
   RowLimit
 }
 
+type DoltWriter {
+  _id: ID!
+  displayName: String!
+  emailAddress: String!
+  username: String
+}
+
+type Tag {
+  _id: ID!
+  tagName: String!
+  databaseName: String!
+  message: String!
+  taggedAt: Timestamp!
+  tagger: DoltWriter!
+  commitId: String!
+}
+
+type TagList {
+  list: [Tag!]!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -121,6 +142,7 @@ type Query {
   table(refName: String!, databaseName: String!, tableName: String!): Table!
   tableNames(refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
   tables(refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
+  tags(databaseName: String!): TagList!
 }
 
 enum SortBranchesBy {

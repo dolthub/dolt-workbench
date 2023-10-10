@@ -69,6 +69,14 @@ export type DoltDatabaseDetails = {
   isDolt: Scalars['Boolean']['output'];
 };
 
+export type DoltWriter = {
+  __typename?: 'DoltWriter';
+  _id: Scalars['ID']['output'];
+  displayName: Scalars['String']['output'];
+  emailAddress: Scalars['String']['output'];
+  username?: Maybe<Scalars['String']['output']>;
+};
+
 export type ForeignKey = {
   __typename?: 'ForeignKey';
   columnName: Scalars['String']['output'];
@@ -144,6 +152,7 @@ export type Query = {
   table: Table;
   tableNames: TableNames;
   tables: Array<Table>;
+  tags: TagList;
 };
 
 
@@ -205,6 +214,11 @@ export type QueryTablesArgs = {
   refName: Scalars['String']['input'];
 };
 
+
+export type QueryTagsArgs = {
+  databaseName: Scalars['String']['input'];
+};
+
 export enum QueryExecutionStatus {
   Error = 'Error',
   RowLimit = 'RowLimit',
@@ -256,6 +270,22 @@ export type TableNames = {
   list: Array<Scalars['String']['output']>;
 };
 
+export type Tag = {
+  __typename?: 'Tag';
+  _id: Scalars['ID']['output'];
+  commitId: Scalars['String']['output'];
+  databaseName: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  tagName: Scalars['String']['output'];
+  taggedAt: Scalars['Timestamp']['output'];
+  tagger: DoltWriter;
+};
+
+export type TagList = {
+  __typename?: 'TagList';
+  list: Array<Tag>;
+};
+
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
 }>;
@@ -271,6 +301,19 @@ export type BranchesForSelectorQueryVariables = Exact<{
 
 
 export type BranchesForSelectorQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> } };
+
+export type DoltWriterForHistoryFragment = { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string };
+
+export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
+
+export type TagListForTagListFragment = { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
+
+export type TagListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
 
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -430,6 +473,33 @@ export const BranchForBranchSelectorFragmentDoc = gql`
   databaseName
 }
     `;
+export const DoltWriterForHistoryFragmentDoc = gql`
+    fragment DoltWriterForHistory on DoltWriter {
+  _id
+  username
+  displayName
+  emailAddress
+}
+    `;
+export const TagForListFragmentDoc = gql`
+    fragment TagForList on Tag {
+  _id
+  tagName
+  message
+  taggedAt
+  tagger {
+    ...DoltWriterForHistory
+  }
+  commitId
+}
+    ${DoltWriterForHistoryFragmentDoc}`;
+export const TagListForTagListFragmentDoc = gql`
+    fragment TagListForTagList on TagList {
+  list {
+    ...TagForList
+  }
+}
+    ${TagForListFragmentDoc}`;
 export const ForeignKeyColumnForDataTableFragmentDoc = gql`
     fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
   referencedColumnName
@@ -620,6 +690,41 @@ export function useBranchesForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type BranchesForSelectorQueryHookResult = ReturnType<typeof useBranchesForSelectorQuery>;
 export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranchesForSelectorLazyQuery>;
 export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
+export const TagListDocument = gql`
+    query TagList($databaseName: String!) {
+  tags(databaseName: $databaseName) {
+    ...TagListForTagList
+  }
+}
+    ${TagListForTagListFragmentDoc}`;
+
+/**
+ * __useTagListQuery__
+ *
+ * To run a query within a React component, call `useTagListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTagListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTagListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useTagListQuery(baseOptions: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+      }
+export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        }
+export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
+export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
+export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase
