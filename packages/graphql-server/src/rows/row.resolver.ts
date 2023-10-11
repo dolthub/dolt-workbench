@@ -1,5 +1,6 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { DataSourceService } from "../dataSources/dataSource.service";
+import { DoltSystemTable } from "../systemTables/systemTable.enums";
 import { listTablesQuery } from "../tables/table.queries";
 import { ROW_LIMIT } from "../utils";
 import { RefArgs } from "../utils/commonTypes";
@@ -37,5 +38,13 @@ export class RowResolver {
       args.databaseName,
       args.refName,
     );
+  }
+
+  @Query(_returns => RowList)
+  async views(@Args() args: RefArgs): Promise<RowList | undefined> {
+    return this.rows({
+      ...args,
+      tableName: DoltSystemTable.SCHEMAS,
+    });
   }
 }

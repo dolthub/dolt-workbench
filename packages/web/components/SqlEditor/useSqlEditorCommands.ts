@@ -26,7 +26,7 @@ export default function useSqlEditorCommands(
 ): ReturnType {
   const { editorString, setEditorString, executeQuery, toggleSqlEditor } =
     useSqlEditorContext("Tables");
-  const { getPrevQuery, getNextQuery, history, queryIdx } =
+  const { getPrevQuery, getNextQuery, queryIdx, getLastQuery } =
     useSessionQueryHistory();
   const [state, setState] = useSetState(defaultState);
   const keyBindingCommands = getKeyBindingCommands(setState, toggleSqlEditor);
@@ -42,7 +42,8 @@ export default function useSqlEditorCommands(
   }, [state.gettingNextQuery]);
 
   const executePrevQuery = useCallback(() => {
-    if (!queryIdx && history.length && history[0] !== editorString) {
+    const last = getLastQuery();
+    if (!queryIdx && last && last !== editorString) {
       setState({ queryDraft: editorString });
     }
     const shouldSkipFirst = (prev: string): boolean =>

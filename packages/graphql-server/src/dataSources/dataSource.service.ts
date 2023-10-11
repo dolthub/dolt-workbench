@@ -85,6 +85,7 @@ export class DataSourceService {
         rejectUnauthorized: false,
       },
       synchronize: false,
+      logging: "all",
 
       extra: {
         connectionLimit: 6,

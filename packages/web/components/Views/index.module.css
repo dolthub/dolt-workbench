@@ -1,0 +1,51 @@
+.views {
+  @apply text-primary my-1;
+}
+
+.text {
+  @apply my-4 mx-5;
+}
+
+.icon {
+  @apply text-2xl mr-3 text-primary rounded-full opacity-25;
+
+  &:hover {
+    @apply opacity-100;
+  }
+}
+
+.book {
+  @apply mr-0 text-xl;
+}
+
+.bookActive {
+  @apply text-ld-orange opacity-60;
+}
+
+.item {
+  @apply flex w-full pt-3 pb-2 px-6;
+  @screen lg {
+    @apply pr-2;
+  }
+}
+
+.button {
+  @apply flex justify-between w-full;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.selected,
+.item:hover {
+  @apply bg-white text-acc-linkblue;
+}
+
+.name {
+  @apply text-acc-hoverlinkblue text-sm font-semibold;
+}
+
+.viewing {
+  @apply py-0 mr-4 text-ld-orange font-semibold text-sm;
+}

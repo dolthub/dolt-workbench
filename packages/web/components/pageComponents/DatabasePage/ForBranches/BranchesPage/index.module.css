@@ -3,7 +3,7 @@
 }
 
 .top {
-  @apply flex justify-between pt-6;
+  @apply flex flex-wrap justify-between pt-6;
 }
 
 .topRight {

@@ -1,9 +1,8 @@
-import { staticConfig } from "../static.config";
 import Maybe from "./Maybe";
 import { getTableName } from "./parseSqlQuery";
 
 export function isDoltSystemTable(t: Maybe<string>): boolean {
-  return !!t?.startsWith(staticConfig.doltNamespace);
+  return !!t?.startsWith("dolt_");
 }
 
 const editableSystemTables = [
