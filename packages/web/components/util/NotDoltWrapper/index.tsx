@@ -1,6 +1,7 @@
-import { useDoltDatabaseDetailsQuery } from "@gen/graphql-types";
+import ErrorMsg from "@components/ErrorMsg";
+import Loader from "@components/Loader";
+import useIsDolt from "@hooks/useIsDolt";
 import React, { ReactElement } from "react";
-import QueryHandler from "../QueryHandler";
 import NotDoltMsg from "./NotDoltMsg";
 
 type Props = {
@@ -10,22 +11,17 @@ type Props = {
 };
 
 export default function NotDoltWrapper(props: Props) {
-  const res = useDoltDatabaseDetailsQuery();
-  return (
-    <QueryHandler
-      result={res}
-      render={data => {
-        if (data.doltDatabaseDetails.isDolt) {
-          return props.children;
-        }
-        if (props.showNotDoltMsg) {
-          return <NotDoltMsg feature={props.feature} />;
-        }
-        if (!data.doltDatabaseDetails.hideDoltFeatures) {
-          return React.cloneElement(props.children, { doltDisabled: true });
-        }
-        return <div />;
-      }}
-    />
-  );
+  const res = useIsDolt();
+  if (res.loading) return <Loader loaded={false} />;
+  if (res.error) return <ErrorMsg err={res.error} />;
+  if (res.isDolt) {
+    return props.children;
+  }
+  if (props.showNotDoltMsg) {
+    return <NotDoltMsg feature={props.feature} />;
+  }
+  if (res.disableDoltFeature) {
+    return React.cloneElement(props.children, { doltDisabled: true });
+  }
+  return <div />;
 }
