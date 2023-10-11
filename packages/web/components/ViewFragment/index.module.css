@@ -6,7 +6,7 @@
 }
 
 .buttons {
-  @apply flex;
+  @apply flex text-sm;
   button {
     @apply h-10 w-40;
     @screen lg {

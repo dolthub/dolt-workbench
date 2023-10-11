@@ -154,6 +154,7 @@ type Query {
   databases: [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  views(databaseName: String!, refName: String!): RowList!
   sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
   table(refName: String!, databaseName: String!, tableName: String!): Table!
   tableNames(refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!

@@ -41,7 +41,13 @@ export class DatabaseResolver {
 
   @Query(_returns => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
-    return this.dss.getQR().getCurrentDatabase();
+    const qr = this.dss.getQR();
+    try {
+      const res = await qr.getCurrentDatabase();
+      return res;
+    } finally {
+      await qr.release();
+    }
   }
 
   @Query(_returns => Boolean)
