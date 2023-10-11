@@ -18,10 +18,6 @@ export const defaultBranchMock = (params: BranchParams): MockedResponse => {
           _id: `databases/${params.databaseName}/branches/${params.branchName}`,
           branchName: params.branchName,
           tableNames: { list: ["tablename"] },
-          // defaultDoc: {
-          //   __typename: "Doc",
-          //   docType: DocType.Readme,
-          // },
         },
       },
     },
