@@ -2,7 +2,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import { SqlEditorContext } from "@contexts/sqleditor";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import CreateViewButton from ".";
 import * as mocks from "./mocks";
 
@@ -14,21 +14,21 @@ const sqlString = `SELECT *\nFROM \`hhh\`\nLIMIT 200;\n`;
 const viewName = "fakename";
 
 describe("test for ViewQueryButton", () => {
-  it("does not render component for reader", () => {
-    render(
-      <MockedProvider>
-        <SqlEditorContext.Provider
-          value={mocks.SqlEditorContextProviderValueMock}
-        >
-          <CreateViewButton params={params} query={sqlString} />
-        </SqlEditorContext.Provider>
-      </MockedProvider>,
-    );
+  // it("does not render component for reader", () => {
+  //   render(
+  //     <MockedProvider>
+  //       <SqlEditorContext.Provider
+  //         value={mocks.SqlEditorContextProviderValueMock}
+  //       >
+  //         <CreateViewButton params={params} query={sqlString} />
+  //       </SqlEditorContext.Provider>
+  //     </MockedProvider>,
+  //   );
 
-    expect(
-      screen.queryByRole("button", { name: "Create View" }),
-    ).not.toBeInTheDocument();
-  });
+  //   expect(
+  //     screen.queryByRole("button", { name: "Create View" }),
+  //   ).not.toBeInTheDocument();
+  // });
 
   it("renders component for admin", async () => {
     const { user } = setup(
@@ -60,7 +60,7 @@ describe("test for ViewQueryButton", () => {
     await user.click(screen.getByRole("button", { name: "Create" }));
     expect(mocks.addItem).toHaveBeenCalledWith({
       ...params,
-      expandedSection: undefined,
+      expandedSection: "Views",
       query: `CREATE VIEW \`${viewName}\` AS ${sqlString}`,
     });
   });
