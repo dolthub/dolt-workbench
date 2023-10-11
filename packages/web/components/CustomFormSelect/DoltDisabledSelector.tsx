@@ -13,7 +13,7 @@ export default function DoltDisabledSelector(props: Props) {
         className={css.doltDisabled}
         data-tooltip-content="Use Dolt to enable branches"
         data-tooltip-id="branch-selector-no-dolt"
-        data-tooltip-place="right"
+        data-tooltip-place="top"
       >
         {props.val}
       </div>

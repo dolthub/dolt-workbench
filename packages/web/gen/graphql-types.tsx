@@ -171,6 +171,7 @@ export type Query = {
   table: Table;
   tableNames: TableNames;
   tables: Array<Table>;
+  tag?: Maybe<Tag>;
   tags: TagList;
   views: RowList;
 };
@@ -246,6 +247,12 @@ export type QueryTablesArgs = {
   databaseName: Scalars['String']['input'];
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
   refName: Scalars['String']['input'];
+};
+
+
+export type QueryTagArgs = {
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
 };
 
 
@@ -357,6 +364,22 @@ export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
+
+export type GetTagQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
+}>;
+
+
+export type GetTagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } } | null };
+
+export type GetBranchQueryVariables = Exact<{
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type GetBranchQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null };
 
 export type SqlSelectForCsvDownloadQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -856,6 +879,78 @@ export function useCurrentDatabaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabaseQuery>;
 export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
+export const GetTagDocument = gql`
+    query GetTag($databaseName: String!, $tagName: String!) {
+  tag(databaseName: $databaseName, tagName: $tagName) {
+    ...TagForList
+  }
+}
+    ${TagForListFragmentDoc}`;
+
+/**
+ * __useGetTagQuery__
+ *
+ * To run a query within a React component, call `useGetTagQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTagQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTagQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tagName: // value for 'tagName'
+ *   },
+ * });
+ */
+export function useGetTagQuery(baseOptions: Apollo.QueryHookOptions<GetTagQuery, GetTagQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
+      }
+export function useGetTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTagQuery, GetTagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
+        }
+export type GetTagQueryHookResult = ReturnType<typeof useGetTagQuery>;
+export type GetTagLazyQueryHookResult = ReturnType<typeof useGetTagLazyQuery>;
+export type GetTagQueryResult = Apollo.QueryResult<GetTagQuery, GetTagQueryVariables>;
+export const GetBranchDocument = gql`
+    query GetBranch($branchName: String!, $databaseName: String!) {
+  branch(branchName: $branchName, databaseName: $databaseName) {
+    _id
+  }
+}
+    `;
+
+/**
+ * __useGetBranchQuery__
+ *
+ * To run a query within a React component, call `useGetBranchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBranchQuery({
+ *   variables: {
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useGetBranchQuery(baseOptions: Apollo.QueryHookOptions<GetBranchQuery, GetBranchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBranchQuery, GetBranchQueryVariables>(GetBranchDocument, options);
+      }
+export function useGetBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBranchQuery, GetBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBranchQuery, GetBranchQueryVariables>(GetBranchDocument, options);
+        }
+export type GetBranchQueryHookResult = ReturnType<typeof useGetBranchQuery>;
+export type GetBranchLazyQueryHookResult = ReturnType<typeof useGetBranchLazyQuery>;
+export type GetBranchQueryResult = Apollo.QueryResult<GetBranchQuery, GetBranchQueryVariables>;
 export const SqlSelectForCsvDownloadDocument = gql`
     query SqlSelectForCsvDownload($databaseName: String!, $refName: String!, $queryString: String!) {
   sqlSelectForCsvDownload(

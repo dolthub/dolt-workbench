@@ -161,6 +161,7 @@ type Query {
   tableNames(refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
   tables(refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
   tags(databaseName: String!): TagList!
+  tag(databaseName: String!, tagName: String!): Tag
 }
 
 enum SortBranchesBy {

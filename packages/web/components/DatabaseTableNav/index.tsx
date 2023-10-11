@@ -108,12 +108,9 @@ function NewBranchLink(props: {
         {...newBranch(props.params)}
         data-tooltip-id="create-branch"
         data-tooltip-content={
-          props.doltDisabled
-            ? "Must use Dolt to create branch"
-            : "Create new branch"
+          props.doltDisabled ? "Use Dolt to create branch" : "Create new branch"
         }
         data-tooltip-place="bottom"
-        data-tooltip-variant={props.doltDisabled ? "warning" : "dark"}
       >
         <IoAddOutline
           className={cx(css.createBranchIcon, {
