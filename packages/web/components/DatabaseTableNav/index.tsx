@@ -1,8 +1,11 @@
 import CustomFormSelect from "@components/CustomFormSelect";
+import Tooltip from "@components/Tooltip";
+import Link from "@components/links/Link";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { OptionalRefParams } from "@lib/params";
-import { RefUrl } from "@lib/urls";
+import { RefUrl, newBranch } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
+import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
 import cx from "classnames";
 import { useState } from "react";
 import MobileTableNavButton from "./MobileTableNavButton";
@@ -55,6 +58,9 @@ function Nav({
             className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
           />
         </NotDoltWrapper>
+        <NotDoltWrapper>
+          <NewBranchLink params={params} open={open} />
+        </NotDoltWrapper>
         <GiHamburgerMenu
           onClick={toggleMenu}
           className={css.menuIcon}
@@ -85,4 +91,37 @@ export default function DatabaseTableNav(props: Props) {
 
 function isInitiallyOpen(params: Params): boolean {
   return !!params.tableName || !!params.q;
+}
+
+function NewBranchLink(props: {
+  params: Params;
+  open: boolean;
+  doltDisabled?: boolean;
+}) {
+  return (
+    <div
+      className={cx(css.createBranch, {
+        [css.createBranchDisabled]: !!props.doltDisabled,
+      })}
+    >
+      <Link
+        {...newBranch(props.params)}
+        data-tooltip-id="create-branch"
+        data-tooltip-content={
+          props.doltDisabled
+            ? "Must use Dolt to create branch"
+            : "Create new branch"
+        }
+        data-tooltip-place="bottom"
+        data-tooltip-variant={props.doltDisabled ? "warning" : "dark"}
+      >
+        <IoAddOutline
+          className={cx(css.createBranchIcon, {
+            [css.closedItem]: !props.open,
+          })}
+        />
+      </Link>
+      <Tooltip id="create-branch" />
+    </div>
+  );
 }

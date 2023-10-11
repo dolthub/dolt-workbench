@@ -44,6 +44,29 @@
   @apply opacity-100 transition-opacity duration-75 relative h-full overflow-hidden;
 }
 
+.createBranch {
+  @apply relative text-base;
+}
+
+.createBranchDisabled a {
+  @apply text-acc-darkgrey;
+
+  &:hover {
+    @apply text-acc-darkgrey;
+  }
+}
+
+.createBranchIcon {
+  @apply hidden;
+
+  @screen lg {
+    @apply block font-bold text-2xl cursor-pointer mt-1.5 mx-1 pb-0 mb-3;
+    path {
+      @apply stroke-[3.5rem];
+    }
+  }
+}
+
 .closedItem {
   @apply hidden;
 }
