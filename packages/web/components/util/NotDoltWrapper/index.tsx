@@ -9,6 +9,7 @@ type Props = {
   showNotDoltMsg?: boolean;
   feature?: string;
   className?: string;
+  bigMsg?: boolean;
 };
 
 export default function NotDoltWrapper(props: Props) {
@@ -19,7 +20,13 @@ export default function NotDoltWrapper(props: Props) {
     return props.children;
   }
   if (props.showNotDoltMsg) {
-    return <NotDoltMsg feature={props.feature} className={props.className} />;
+    return (
+      <NotDoltMsg
+        feature={props.feature}
+        className={props.className}
+        big={props.bigMsg}
+      />
+    );
   }
   if (res.disableDoltFeature) {
     return React.cloneElement(props.children, { doltDisabled: true });

@@ -80,6 +80,24 @@ export type CommitList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
+export type Doc = {
+  __typename?: 'Doc';
+  branchName: Scalars['String']['output'];
+  docRow?: Maybe<Row>;
+  docType: Scalars['String']['output'];
+};
+
+export type DocList = {
+  __typename?: 'DocList';
+  list: Array<Doc>;
+};
+
+export enum DocType {
+  License = 'License',
+  Readme = 'Readme',
+  Unspecified = 'Unspecified'
+}
+
 export type DoltDatabaseDetails = {
   __typename?: 'DoltDatabaseDetails';
   hideDoltFeatures: Scalars['Boolean']['output'];
@@ -163,6 +181,9 @@ export type Query = {
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
+  doc?: Maybe<Doc>;
+  docOrDefaultDoc?: Maybe<Doc>;
+  docs: DocList;
   doltDatabaseDetails: DoltDatabaseDetails;
   hasDatabaseEnv: Scalars['Boolean']['output'];
   rows: RowList;
@@ -204,6 +225,26 @@ export type QueryCommitsArgs = {
 
 export type QueryDefaultBranchArgs = {
   databaseName: Scalars['String']['input'];
+};
+
+
+export type QueryDocArgs = {
+  databaseName: Scalars['String']['input'];
+  docType: DocType;
+  refName: Scalars['String']['input'];
+};
+
+
+export type QueryDocOrDefaultDocArgs = {
+  databaseName: Scalars['String']['input'];
+  docType?: InputMaybe<DocType>;
+  refName: Scalars['String']['input'];
+};
+
+
+export type QueryDocsArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 };
 
 
@@ -482,6 +523,38 @@ export type DefaultBranchPageQueryVariables = Exact<{
 
 export type DefaultBranchPageQuery = { __typename?: 'Query', defaultBranch?: { __typename?: 'Branch', _id: string, branchName: string, tableNames: Array<string> } | null };
 
+export type DocRowForDocPageFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+
+export type DocForDocPageFragment = { __typename?: 'Doc', docRow?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type DocListForDocPageFragment = { __typename?: 'DocList', list: Array<{ __typename?: 'Doc', docRow?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> };
+
+export type DocsRowsForDocPageQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type DocsRowsForDocPageQuery = { __typename?: 'Query', docs: { __typename?: 'DocList', list: Array<{ __typename?: 'Doc', docRow?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+
+export type DocColumnValuesForDocPageFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+
+export type DocDataForDocPageQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  docType?: InputMaybe<DocType>;
+}>;
+
+
+export type DocDataForDocPageQuery = { __typename?: 'Query', docOrDefaultDoc?: { __typename?: 'Doc', docRow?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null } | null };
+
+export type DocPageQueryNoBranchQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?: { __typename?: 'Branch', _id: string, branchName: string } | null };
+
 export type RefPageQueryVariables = Exact<{
   refName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -697,6 +770,34 @@ export const BranchForCreateBranchFragmentDoc = gql`
     fragment BranchForCreateBranch on Branch {
   databaseName
   branchName
+}
+    `;
+export const DocRowForDocPageFragmentDoc = gql`
+    fragment DocRowForDocPage on Row {
+  columnValues {
+    displayValue
+  }
+}
+    `;
+export const DocForDocPageFragmentDoc = gql`
+    fragment DocForDocPage on Doc {
+  docRow {
+    ...DocRowForDocPage
+  }
+}
+    ${DocRowForDocPageFragmentDoc}`;
+export const DocListForDocPageFragmentDoc = gql`
+    fragment DocListForDocPage on DocList {
+  list {
+    ...DocForDocPage
+  }
+}
+    ${DocForDocPageFragmentDoc}`;
+export const DocColumnValuesForDocPageFragmentDoc = gql`
+    fragment DocColumnValuesForDocPage on Row {
+  columnValues {
+    displayValue
+  }
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -1330,6 +1431,121 @@ export function useDefaultBranchPageQueryLazyQuery(baseOptions?: Apollo.LazyQuer
 export type DefaultBranchPageQueryHookResult = ReturnType<typeof useDefaultBranchPageQuery>;
 export type DefaultBranchPageQueryLazyQueryHookResult = ReturnType<typeof useDefaultBranchPageQueryLazyQuery>;
 export type DefaultBranchPageQueryQueryResult = Apollo.QueryResult<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>;
+export const DocsRowsForDocPageQueryDocument = gql`
+    query DocsRowsForDocPageQuery($databaseName: String!, $refName: String!) {
+  docs(databaseName: $databaseName, refName: $refName) {
+    ...DocListForDocPage
+  }
+}
+    ${DocListForDocPageFragmentDoc}`;
+
+/**
+ * __useDocsRowsForDocPageQuery__
+ *
+ * To run a query within a React component, call `useDocsRowsForDocPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDocsRowsForDocPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDocsRowsForDocPageQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useDocsRowsForDocPageQuery(baseOptions: Apollo.QueryHookOptions<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>(DocsRowsForDocPageQueryDocument, options);
+      }
+export function useDocsRowsForDocPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>(DocsRowsForDocPageQueryDocument, options);
+        }
+export type DocsRowsForDocPageQueryHookResult = ReturnType<typeof useDocsRowsForDocPageQuery>;
+export type DocsRowsForDocPageQueryLazyQueryHookResult = ReturnType<typeof useDocsRowsForDocPageQueryLazyQuery>;
+export type DocsRowsForDocPageQueryQueryResult = Apollo.QueryResult<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>;
+export const DocDataForDocPageDocument = gql`
+    query DocDataForDocPage($databaseName: String!, $refName: String!, $docType: DocType) {
+  docOrDefaultDoc(
+    databaseName: $databaseName
+    refName: $refName
+    docType: $docType
+  ) {
+    docRow {
+      ...DocColumnValuesForDocPage
+    }
+  }
+}
+    ${DocColumnValuesForDocPageFragmentDoc}`;
+
+/**
+ * __useDocDataForDocPageQuery__
+ *
+ * To run a query within a React component, call `useDocDataForDocPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDocDataForDocPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDocDataForDocPageQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      docType: // value for 'docType'
+ *   },
+ * });
+ */
+export function useDocDataForDocPageQuery(baseOptions: Apollo.QueryHookOptions<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>(DocDataForDocPageDocument, options);
+      }
+export function useDocDataForDocPageLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>(DocDataForDocPageDocument, options);
+        }
+export type DocDataForDocPageQueryHookResult = ReturnType<typeof useDocDataForDocPageQuery>;
+export type DocDataForDocPageLazyQueryHookResult = ReturnType<typeof useDocDataForDocPageLazyQuery>;
+export type DocDataForDocPageQueryResult = Apollo.QueryResult<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>;
+export const DocPageQueryNoBranchDocument = gql`
+    query DocPageQueryNoBranch($databaseName: String!) {
+  branchOrDefault(databaseName: $databaseName) {
+    _id
+    branchName
+  }
+}
+    `;
+
+/**
+ * __useDocPageQueryNoBranch__
+ *
+ * To run a query within a React component, call `useDocPageQueryNoBranch` and pass it any options that fit your needs.
+ * When your component renders, `useDocPageQueryNoBranch` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDocPageQueryNoBranch({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDocPageQueryNoBranch(baseOptions: Apollo.QueryHookOptions<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>(DocPageQueryNoBranchDocument, options);
+      }
+export function useDocPageQueryNoBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>(DocPageQueryNoBranchDocument, options);
+        }
+export type DocPageQueryNoBranchHookResult = ReturnType<typeof useDocPageQueryNoBranch>;
+export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchLazyQuery>;
+export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
 export const RefPageQueryDocument = gql`
     query RefPageQuery($refName: String!, $databaseName: String!, $filterSystemTables: Boolean) {
   branch(databaseName: $databaseName, branchName: $refName) {

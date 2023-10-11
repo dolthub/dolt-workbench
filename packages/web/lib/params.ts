@@ -33,3 +33,7 @@ export type SqlQueryParams = RefParams & {
 export type TableParams = RefParams & {
   tableName: string;
 };
+
+export type DocParams = RefParams & {
+  docName: string;
+};

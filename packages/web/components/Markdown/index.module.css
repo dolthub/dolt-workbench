@@ -1,0 +1,39 @@
+.preview {
+  @apply p-6 whitespace-pre-wrap font-sans text-primary;
+  text-align: -webkit-auto;
+  > * {
+    @apply text-primary font-sans;
+  }
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-semibold;
+  }
+  h1 {
+    @apply font-semibold text-3xl;
+  }
+  ol {
+    @apply list-decimal;
+  }
+  ul {
+    @apply list-disc;
+  }
+  li {
+    @apply text-sm;
+  }
+  @media (max-width: 767px) {
+    @apply p-4;
+  }
+}
+
+.baseText {
+  p,
+  li {
+    @apply text-base;
+  }
+}
+
+.forModal {
+  @apply overflow-y-scroll max-h-[12.5rem];
+}

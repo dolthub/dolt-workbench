@@ -1,0 +1,54 @@
+.container {
+  @apply mb-20;
+}
+
+.title {
+  @apply mx-6 mt-6;
+}
+
+.header {
+  @apply px-8 py-5 border-b;
+  span {
+    @apply break-words;
+  }
+  button {
+    @apply hidden;
+    @screen lg {
+      @apply inline-block ml-6 px-4 text-base;
+    }
+  }
+}
+
+.bold {
+  @apply font-semibold;
+}
+
+.bottom {
+  @apply m-8 max-w-3xl leading-relaxed;
+
+  h3 {
+    @apply mt-6;
+  }
+
+  ol {
+    @apply mt-4 list-decimal px-8;
+
+    li {
+      @apply py-2;
+    }
+  }
+
+  p {
+    @apply text-base py-2;
+  }
+}
+
+.code {
+  @apply bg-ld-lightblue p-1 m-1 rounded;
+}
+
+.addDocOnDesktop {
+  @screen lg {
+    @apply hidden;
+  }
+}

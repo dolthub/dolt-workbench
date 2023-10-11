@@ -1,0 +1,53 @@
+.markdown {
+  @apply font-sans z-0;
+
+  button {
+    @apply text-base;
+  }
+}
+
+.bodyContainer {
+  @screen lg {
+    @apply px-8;
+  }
+  @apply px-4;
+}
+
+.body {
+  @apply m-0 p-8 border-t;
+}
+
+.titleGroup {
+  @apply p-2 pt-8 pl-8 text-primary max-h-[6rem];
+
+  @media (max-width: 767px) {
+    @apply p-4;
+  }
+}
+
+.title {
+  @apply font-semibold text-2xl pb-6;
+}
+
+.titleTop {
+  @apply flex justify-between;
+}
+
+.description {
+  @apply text-sm font-normal min-w-[11.25rem];
+}
+
+.buttons {
+  @apply mx-6;
+}
+
+.edit {
+  @apply py-0 px-4 w-24;
+}
+.hiddenForMobile {
+  @apply hidden;
+
+  @screen lg {
+    @apply block;
+  }
+}
