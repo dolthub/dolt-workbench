@@ -1,9 +1,11 @@
+import DatabaseOptionsDropdown from "@components/DatabaseOptionsDropdown";
+import { SqlQueryParams } from "@lib/params";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 
 type Props = {
   children: ReactNode;
-  // params: SqlQueryParams;
+  params: SqlQueryParams;
   // tableName?: string;
 };
 
@@ -13,10 +15,10 @@ export default function DataTableLayout(props: Props) {
       {props.children}
       <div className={css.top}>
         {/* <StatusWithOptions {...props} className={css.status} /> */}
-        {/* <DatabaseOptionsDropdown
+        <DatabaseOptionsDropdown
           className={css.optionsButton}
           params={props.params}
-        /> */}
+        />
       </div>
     </div>
   );
