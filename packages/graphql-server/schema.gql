@@ -111,6 +111,16 @@ type RowList {
   list: [Row!]!
 }
 
+type Doc {
+  docType: String!
+  docRow: Row
+  branchName: String!
+}
+
+type DocList {
+  list: [Doc!]!
+}
+
 type SqlSelect {
   _id: ID!
   databaseName: String!
@@ -153,6 +163,9 @@ type Query {
   hasDatabaseEnv: Boolean!
   databases: [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
+  docs(databaseName: String!, refName: String!): DocList!
+  doc(refName: String!, databaseName: String!, docType: DocType!): Doc
+  docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   views(databaseName: String!, refName: String!): RowList!
   sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
@@ -167,6 +180,12 @@ type Query {
 enum SortBranchesBy {
   Unspecified
   LastUpdated
+}
+
+enum DocType {
+  Unspecified
+  Readme
+  License
 }
 
 type Mutation {
