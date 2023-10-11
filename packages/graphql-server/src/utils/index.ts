@@ -32,3 +32,16 @@ export function getNextOffset(
 ): number | undefined {
   return rowLen > ROW_LIMIT ? offset + ROW_LIMIT : undefined;
 }
+
+// Commit dates come in UTC but javascript thinks it's local. Must manually
+// convert to UTC.
+export function convertToUTCDate(d: Date): Date {
+  const utcDate = new Date(d);
+  utcDate.setUTCFullYear(d.getFullYear());
+  utcDate.setUTCMonth(d.getMonth());
+  utcDate.setUTCDate(d.getDate());
+  utcDate.setUTCHours(d.getHours());
+  utcDate.setUTCMinutes(d.getMinutes());
+  utcDate.setUTCSeconds(d.getSeconds());
+  return utcDate;
+}

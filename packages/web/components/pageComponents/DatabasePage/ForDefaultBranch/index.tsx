@@ -1,6 +1,7 @@
 import Loader from "@components/Loader";
-import { useTableNamesQuery } from "@gen/graphql-types";
+import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import { DatabasePageParams, RefParams } from "@lib/params";
+import { RefUrl } from "@lib/urls";
 import { ReactNode, cloneElement } from "react";
 import ForEmpty from "../ForEmpty";
 import ForError from "../ForError";
@@ -21,6 +22,7 @@ type Props = {
   leftNavInitiallyOpen?: boolean;
   showSqlConsole?: boolean;
   noMobileWarnings?: boolean;
+  routeRefChangeTo: RefUrl;
 };
 
 export default function ForDefaultBranch({
@@ -28,20 +30,22 @@ export default function ForDefaultBranch({
   hideDefaultTable = false,
   ...props
 }: Props) {
-  const { data, loading, error } = useTableNamesQuery({ variables: params });
+  const { data, loading, error } = useDefaultBranchPageQuery({
+    variables: { ...params, filterSystemTables: true },
+  });
   if (loading) return <Loader loaded={false} />;
 
   if (error) {
     return <ForError {...props} error={error} params={params} />;
   }
-
-  const branchName = "main";
+  const defaultBranch = data?.defaultBranch;
+  const branchName = defaultBranch?.branchName;
   const defaultTableName =
-    data?.tableNames &&
-    data.tableNames.list.length > 0 &&
-    data.tableNames.list[0];
+    defaultBranch?.tableNames &&
+    defaultBranch.tableNames.length > 0 &&
+    defaultBranch.tableNames[0];
 
-  if (!defaultTableName) {
+  if (!branchName || !defaultTableName) {
     return props.children ? (
       <DatabasePage
         {...props}

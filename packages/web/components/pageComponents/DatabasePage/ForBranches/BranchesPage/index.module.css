@@ -1,0 +1,95 @@
+.container {
+  @apply mx-6;
+}
+
+.top {
+  @apply flex justify-between pt-6;
+}
+
+.topRight {
+  @apply flex items-center;
+}
+
+.sortSelect {
+  @apply min-w-[150px] mr-6;
+}
+
+.white {
+  @apply text-white;
+}
+
+.table {
+  @apply border border-ld-lightgrey border-separate rounded-lg text-primary mx-auto my-10 overflow-x-auto block;
+  border-spacing: 0;
+
+  @screen lg {
+    @apply min-w-[40rem] overflow-x-visible;
+    display: table;
+  }
+
+  td,
+  th {
+    @apply px-6 text-left;
+  }
+
+  th {
+    @apply pt-6 pb-2 bg-ld-lightblue;
+  }
+
+  td {
+    @apply border-t border-ld-lightgrey py-3;
+  }
+
+  tr:first-child {
+    th:first-child {
+      @apply rounded-tl-lg;
+    }
+    th:last-child {
+      @apply rounded-tr-lg;
+    }
+  }
+}
+
+.loader {
+  @apply text-primary my-4 text-center;
+}
+
+.noBranches {
+  @apply text-center text-lg m-6;
+}
+
+.trashColumn {
+  @apply flex justify-end;
+}
+
+.icon {
+  @apply text-lg m-4;
+}
+
+.iconGray {
+  @apply fill-ld-darkgrey;
+}
+
+.pull {
+  @apply w-48;
+}
+
+.pullRequest {
+  @apply flex justify-start;
+}
+
+.pullLink {
+  @apply w-10;
+}
+
+.pullState {
+  @apply w-[4.5rem];
+}
+
+.createPullRequest {
+  @apply px-3 bg-ld-blue/25 text-acc-linkblue text-sm;
+
+  &:hover {
+    @apply bg-ld-blue text-white;
+  }
+}

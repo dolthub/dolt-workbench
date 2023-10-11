@@ -32,9 +32,11 @@ export class DataSourceService {
     }
   }
 
+  // Assumes Dolt database
   async query(
     executeQuery: (pq: ParQuery) => any,
     dbName?: string,
+    refName?: string,
   ): Promise<any> {
     return this.handleAsyncQuery(async qr => {
       async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
@@ -43,12 +45,31 @@ export class DataSourceService {
       }
 
       if (dbName) {
-        // Cannot use params here for the database revision. It will incorrectly
-        // escape refs with dots
-        await qr.query(`USE \`${dbName}\``);
+        await qr.query(useDBStatement(dbName, refName));
       }
 
       return executeQuery(query);
+    });
+  }
+
+  // Queries that will work on both MySQL and Dolt
+  async queryMaybeDolt(
+    executeQuery: (pq: ParQuery, isDolt: boolean) => any,
+    dbName?: string,
+    refName?: string,
+  ): Promise<any> {
+    return this.handleAsyncQuery(async qr => {
+      async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
+        const res = await qr.query(q, p);
+        return res;
+      }
+
+      const isDolt = await getIsDolt(qr);
+      if (dbName) {
+        await qr.query(useDBStatement(dbName, refName, isDolt));
+      }
+
+      return executeQuery(query, isDolt);
     });
   }
 
@@ -56,7 +77,6 @@ export class DataSourceService {
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
-
     this.ds = new DataSource({
       type: "mysql",
       connectorPackage: "mysql2",
@@ -74,5 +94,27 @@ export class DataSourceService {
     });
 
     await this.ds.initialize();
+  }
+}
+
+// Cannot use params here for the database revision. It will incorrectly
+// escape refs with dots
+function useDBStatement(
+  dbName?: string,
+  refName?: string,
+  isDolt = true,
+): string {
+  if (refName && isDolt) {
+    return `USE \`${dbName}/${refName}\``;
+  }
+  return `USE \`${dbName}\``;
+}
+
+export async function getIsDolt(qr: QueryRunner): Promise<boolean> {
+  try {
+    const res = await qr.query("SELECT dolt_version()");
+    return !!res;
+  } catch (_) {
+    return false;
   }
 }

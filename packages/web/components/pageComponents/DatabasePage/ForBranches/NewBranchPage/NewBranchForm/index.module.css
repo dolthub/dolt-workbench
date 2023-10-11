@@ -1,0 +1,22 @@
+.container {
+  @apply max-w-2xl mx-auto;
+}
+
+.label {
+  @apply font-semibold text-primary mt-4 mb-2;
+}
+
+.input {
+  @apply mt-4 px-0;
+  input {
+    @apply text-sm rounded bg-ld-lightblue border border-acc-lightgrey;
+
+    &:focus {
+      @apply bg-white;
+    }
+  }
+}
+
+.error {
+  @apply text-center max-w-xs;
+}

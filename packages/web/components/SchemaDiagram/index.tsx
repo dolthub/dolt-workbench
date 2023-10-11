@@ -15,7 +15,6 @@ import ReactFlow, {
   useReactFlow,
   useStore,
 } from "react-flow-renderer";
-import ERDNotation from "../../public/images/ERDNotation.png";
 import RelationMarker from "./RelationMarker";
 import TableNode from "./TableNode";
 import css from "./index.module.css";
@@ -103,7 +102,12 @@ function Inner(props: InnerProps) {
           </ControlButton>
         </Controls>
         <div className={css.notation} data-cy="er-diagram-notation">
-          <Image src={ERDNotation} alt="ERDNotation" height={62} width={100} />
+          <Image
+            src="/images/ERDNotation.png"
+            alt="ERDNotation"
+            height={62}
+            width={100}
+          />
         </div>
       </ReactFlow>
       <RelationMarker />

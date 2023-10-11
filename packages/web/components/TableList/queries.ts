@@ -16,8 +16,16 @@ export const GET_TABLE = gql`
       ...ColumnForTableList
     }
   }
-  query TableForBranch($databaseName: String!, $tableName: String!) {
-    table(databaseName: $databaseName, tableName: $tableName) {
+  query TableForBranch(
+    $databaseName: String!
+    $refName: String!
+    $tableName: String!
+  ) {
+    table(
+      databaseName: $databaseName
+      refName: $refName
+      tableName: $tableName
+    ) {
       ...TableWithColumns
     }
   }

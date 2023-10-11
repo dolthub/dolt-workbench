@@ -1,5 +1,5 @@
 import Loader from "@components/Loader";
-import useTableNames from "@hooks/useTableNames";
+import { useRefPageQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import ForEmpty from "../ForEmpty";
 import ForError from "../ForError";
@@ -10,13 +10,17 @@ type Props = {
 };
 
 export default function ForRef({ params }: Props) {
-  const { tables, error, loading } = useTableNames(params);
+  const { data, error, loading } = useRefPageQuery({
+    variables: { ...params, filterSystemTables: true },
+  });
 
   if (loading) return <Loader loaded={!loading} />;
 
   if (error) return <ForError error={error} params={params} />;
 
-  if (!tables?.length) return <ForEmpty params={params} />;
+  if (!data?.tableNames.list.length) return <ForEmpty params={params} />;
 
-  return <ForTable params={{ ...params, tableName: tables[0] }} />;
+  return (
+    <ForTable params={{ ...params, tableName: data.tableNames.list[0] }} />
+  );
 }

@@ -17,7 +17,7 @@
     "prettier-fix": "prettier --write 'src/**/*.{js,ts}'",
     "lint": "eslint --cache --ext .ts,.js,.tsx,.jsx .",
     "lint-errors": "eslint --quiet --cache --ext .ts,.js,.tsx,.jsx .",
-    "test": "jest"
+    "test": "jest --passWithNoTests"
   },
   "engines": {
     "node": ">=10.3.0"

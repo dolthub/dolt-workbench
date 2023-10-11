@@ -10,7 +10,7 @@ type Props = {
 };
 
 const RefPage: NextPage<Props> = ({ params }) => (
-  <Page title={`${params.refName}`} noIndex>
+  <Page title={`${params.databaseName} - ${params.refName}`} noIndex>
     <DatabasePage.ForRef params={params} />
   </Page>
 );

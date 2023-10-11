@@ -13,9 +13,14 @@ export const SQL_SELECT_QUERY = gql`
   }
   query SqlSelectForSqlDataTable(
     $databaseName: String!
+    $refName: String!
     $queryString: String!
   ) {
-    sqlSelect(databaseName: $databaseName, queryString: $queryString) {
+    sqlSelect(
+      databaseName: $databaseName
+      refName: $refName
+      queryString: $queryString
+    ) {
       _id
       queryExecutionStatus
       queryExecutionMessage

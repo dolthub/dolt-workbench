@@ -1,13 +1,12 @@
 import { MockedProvider } from "@apollo/client/testing";
+import { RefParams } from "@lib/params";
 import { render, screen } from "@testing-library/react";
 import SchemaList from ".";
 import * as mocks from "./mocks";
 
-const params = {
-  deploymentName: "test-dep",
-  ownerName: "dolthub",
-  refName: "main",
+const params: RefParams = {
   databaseName: "dbname",
+  refName: "main",
 };
 
 const tableList = [[], [mocks.tableOne], [mocks.tableOne, mocks.tableTwo]];

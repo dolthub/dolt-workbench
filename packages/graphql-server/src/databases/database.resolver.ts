@@ -4,10 +4,14 @@ import {
   ArgsType,
   Field,
   Mutation,
+  ObjectType,
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import {
+  DataSourceService,
+  getIsDolt,
+} from "../dataSources/dataSource.service";
 import { DBArgs } from "../utils/commonTypes";
 
 @ArgsType()
@@ -17,6 +21,15 @@ class AddDatabaseConnectionArgs {
 
   @Field({ nullable: true })
   useEnv?: boolean;
+}
+
+@ObjectType()
+class DoltDatabaseDetails {
+  @Field()
+  isDolt: boolean;
+
+  @Field()
+  hideDoltFeatures: boolean;
 }
 
 @Resolver()
@@ -50,6 +63,16 @@ export class DatabaseResolver {
             !db.includes("/"),
         );
     });
+  }
+
+  @Query(_returns => DoltDatabaseDetails)
+  async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
+    const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
+    const isDolt = await getIsDolt(this.dss.getQR());
+    return {
+      isDolt,
+      hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
+    };
   }
 
   @Mutation(_returns => String)

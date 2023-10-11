@@ -1,0 +1,103 @@
+.container {
+  @apply flex whitespace-pre-line;
+}
+
+.linkContainer {
+  @apply hidden;
+  @screen md {
+    @apply border-t flex justify-center;
+  }
+}
+
+.input {
+  @apply mt-4 mb-2 px-0 font-semibold;
+}
+
+.link {
+  @apply text-sm py-2;
+}
+
+.singleValue {
+  @apply mx-0.5 max-w-full box-border z-1 overflow-hidden text-ellipsis whitespace-nowrap select-all;
+  grid-area: 1 / 1 / 2 / 3;
+}
+
+.optionBorder {
+  @apply border-t;
+}
+
+.optionClear {
+  @apply border-t-white;
+}
+
+.option {
+  grid-area: 1 / 3;
+}
+
+.splitByWhiteSpace {
+  @apply max-w-full whitespace-pre-line mr-5;
+}
+
+.splitByWord {
+  @apply break-words;
+}
+
+.check {
+  @apply mr-2 max-w-[20px] min-w-[20px] text-green-500;
+}
+
+.checkInvisible {
+  @apply invisible;
+}
+
+.buttonContainer {
+  @apply flex border-b;
+}
+
+.button {
+  @apply border-b-3 ml-4 font-semibold px-2 mt-1;
+}
+
+.buttonDisabled {
+  @apply text-acc-hoverlinkblue border-transparent;
+}
+
+.buttonDisabled:hover,
+.activeButton {
+  @apply border-ld-orange text-ld-orange;
+}
+
+.label {
+  @apply font-normal text-sm mt-2 mr-3;
+}
+
+.optionLabel {
+  @apply w-[85%];
+}
+
+.openItem {
+  @apply opacity-100 transition-opacity duration-75;
+}
+
+.dropdown {
+  @apply min-w-[250px] max-w-[250px] w-full;
+}
+
+.customDropdown {
+  @apply min-w-[350px] max-w-[350px] w-full;
+
+  @screen md {
+    @apply w-auto block;
+  }
+}
+
+.selector {
+  @apply w-[80%];
+  @screen md {
+    @apply w-auto;
+  }
+}
+
+.doltDisabled {
+  @apply bg-ld-lightblue border border-ld-darkgrey px-2.5 py-2 rounded text-sm;
+}

@@ -15,6 +15,6 @@ test("withIndex collects results of doing an operation a given number of times w
     "string 1",
     "string 2",
     "string 3",
-    "string 4"
+    "string 4",
   ]);
 });

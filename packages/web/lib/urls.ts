@@ -2,6 +2,8 @@ import * as ps from "./params";
 import { Route } from "./urlUtils";
 
 const ENCODE = true;
+export type DatabaseUrl = (p: ps.DatabaseParams) => Route;
+export type RefUrl = (p: ps.RefParams) => Route;
 
 export const database = (p: ps.DatabaseParams): Route => {
   const d = new Route("/database");
@@ -34,3 +36,9 @@ export const createTable = (p: ps.OptionalRefParams): Route =>
     .addStatic("data")
     .addStatic("create")
     .withQuery({ refName: p.refName });
+
+export const branches = (p: ps.MaybeRefParams): Route =>
+  database(p).addStatic("branches").withQuery({ refName: p.refName });
+
+export const newBranch = (p: ps.OptionalRefParams): Route =>
+  branches(p).addStatic("new").withQuery({ refName: p.refName });

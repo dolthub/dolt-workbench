@@ -23,7 +23,7 @@
 }
 
 .top {
-  @apply flex justify-between items-start w-full px-4;
+  @apply flex justify-between items-start w-full pb-4 px-4;
   @screen lg {
     @apply px-3 -mt-2;
   }
@@ -34,6 +34,10 @@
   @screen lg {
     @apply block text-primary cursor-pointer mt-2.5 mx-1 pb-0 mb-5;
   }
+}
+
+.openBranchSelector {
+  @apply opacity-100 transition-opacity duration-75 min-w-[200px];
 }
 
 .openNav {

@@ -1,6 +1,7 @@
 import DatabasePage from "@components/pageComponents/DatabasePage";
 import Page from "@components/util/Page";
 import { DatabaseParams } from "@lib/params";
+import { database } from "@lib/urls";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
@@ -10,8 +11,11 @@ type Props = {
 };
 
 const DefaultBranch: NextPage<Props> = ({ params }) => (
-  <Page title="Database">
-    <DatabasePage.ForDefaultBranch params={{ ...params, refName: "main" }} />
+  <Page title={`Database - ${params.databaseName}`}>
+    <DatabasePage.ForDefaultBranch
+      params={params}
+      routeRefChangeTo={database}
+    />
   </Page>
 );
 

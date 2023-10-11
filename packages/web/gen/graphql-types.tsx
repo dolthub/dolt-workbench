@@ -15,6 +15,34 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
+  Timestamp: { input: any; output: any; }
+};
+
+export type Branch = {
+  __typename?: 'Branch';
+  _id: Scalars['ID']['output'];
+  branchName: Scalars['String']['output'];
+  databaseName: Scalars['String']['output'];
+  head?: Maybe<Scalars['String']['output']>;
+  lastCommitter: Scalars['String']['output'];
+  lastUpdated: Scalars['Timestamp']['output'];
+  table?: Maybe<Table>;
+  tableNames: Array<Scalars['String']['output']>;
+};
+
+
+export type BranchTableArgs = {
+  tableName: Scalars['String']['input'];
+};
+
+
+export type BranchTableNamesArgs = {
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+export type BranchNamesList = {
+  __typename?: 'BranchNamesList';
+  list: Array<Branch>;
 };
 
 export type ColConstraint = {
@@ -33,6 +61,37 @@ export type Column = {
 export type ColumnValue = {
   __typename?: 'ColumnValue';
   displayValue: Scalars['String']['output'];
+};
+
+export type Commit = {
+  __typename?: 'Commit';
+  _id: Scalars['ID']['output'];
+  commitId: Scalars['String']['output'];
+  committedAt: Scalars['Timestamp']['output'];
+  committer: DoltWriter;
+  databaseName: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  parents: Array<Scalars['String']['output']>;
+};
+
+export type CommitList = {
+  __typename?: 'CommitList';
+  list: Array<Commit>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
+};
+
+export type DoltDatabaseDetails = {
+  __typename?: 'DoltDatabaseDetails';
+  hideDoltFeatures: Scalars['Boolean']['output'];
+  isDolt: Scalars['Boolean']['output'];
+};
+
+export type DoltWriter = {
+  __typename?: 'DoltWriter';
+  _id: Scalars['ID']['output'];
+  displayName: Scalars['String']['output'];
+  emailAddress: Scalars['String']['output'];
+  username?: Maybe<Scalars['String']['output']>;
 };
 
 export type ForeignKey = {
@@ -66,7 +125,9 @@ export type IndexColumn = {
 export type Mutation = {
   __typename?: 'Mutation';
   addDatabaseConnection: Scalars['String']['output'];
+  createBranch: Branch;
   createDatabase: Scalars['Boolean']['output'];
+  deleteBranch: Scalars['Boolean']['output'];
 };
 
 
@@ -76,26 +137,77 @@ export type MutationAddDatabaseConnectionArgs = {
 };
 
 
+export type MutationCreateBranchArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  newBranchName: Scalars['String']['input'];
+};
+
+
 export type MutationCreateDatabaseArgs = {
+  databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteBranchArgs = {
+  branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 };
 
 export type Query = {
   __typename?: 'Query';
+  branch?: Maybe<Branch>;
+  branchOrDefault?: Maybe<Branch>;
+  branches: BranchNamesList;
+  commits: CommitList;
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
+  defaultBranch?: Maybe<Branch>;
+  doltDatabaseDetails: DoltDatabaseDetails;
   hasDatabaseEnv: Scalars['Boolean']['output'];
   rows: RowList;
   sqlSelect: SqlSelect;
   table: Table;
   tableNames: TableNames;
   tables: Array<Table>;
+  tags: TagList;
+};
+
+
+export type QueryBranchArgs = {
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+};
+
+
+export type QueryBranchOrDefaultArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+};
+
+
+export type QueryBranchesArgs = {
+  databaseName: Scalars['String']['input'];
+  sortBy?: InputMaybe<SortBranchesBy>;
+};
+
+
+export type QueryCommitsArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  refName: Scalars['String']['input'];
+};
+
+
+export type QueryDefaultBranchArgs = {
+  databaseName: Scalars['String']['input'];
 };
 
 
 export type QueryRowsArgs = {
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
+  refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
 };
 
@@ -103,21 +215,32 @@ export type QueryRowsArgs = {
 export type QuerySqlSelectArgs = {
   databaseName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 };
 
 
 export type QueryTableArgs = {
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
 };
 
 
 export type QueryTableNamesArgs = {
   databaseName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+  refName: Scalars['String']['input'];
 };
 
 
 export type QueryTablesArgs = {
+  databaseName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+  refName: Scalars['String']['input'];
+};
+
+
+export type QueryTagsArgs = {
   databaseName: Scalars['String']['input'];
 };
 
@@ -139,6 +262,11 @@ export type RowList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
+export enum SortBranchesBy {
+  LastUpdated = 'LastUpdated',
+  Unspecified = 'Unspecified'
+}
+
 export type SqlSelect = {
   __typename?: 'SqlSelect';
   _id: Scalars['ID']['output'];
@@ -147,6 +275,7 @@ export type SqlSelect = {
   queryExecutionMessage: Scalars['String']['output'];
   queryExecutionStatus: QueryExecutionStatus;
   queryString: Scalars['String']['output'];
+  refName: Scalars['String']['output'];
   rows: Array<Row>;
 };
 
@@ -157,6 +286,7 @@ export type Table = {
   databaseName: Scalars['String']['output'];
   foreignKeys: Array<ForeignKey>;
   indexes: Array<Index>;
+  refName: Scalars['String']['output'];
   tableName: Scalars['String']['output'];
 };
 
@@ -165,12 +295,63 @@ export type TableNames = {
   list: Array<Scalars['String']['output']>;
 };
 
+export type Tag = {
+  __typename?: 'Tag';
+  _id: Scalars['ID']['output'];
+  commitId: Scalars['String']['output'];
+  databaseName: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+  tagName: Scalars['String']['output'];
+  taggedAt: Scalars['Timestamp']['output'];
+  tagger: DoltWriter;
+};
+
+export type TagList = {
+  __typename?: 'TagList';
+  list: Array<Tag>;
+};
+
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
 }>;
 
 
 export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
+
+export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
+
+export type BranchesForSelectorQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type BranchesForSelectorQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> } };
+
+export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
+
+export type TagListForTagListFragment = { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
+
+export type TagListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
+
+export type DoltWriterForHistoryFragment = { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string };
+
+export type CommitForHistoryFragment = { __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
+
+export type CommitListForHistoryFragment = { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
+
+export type HistoryForBranchQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type HistoryForBranchQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
 
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -190,6 +371,7 @@ export type TableForSchemaListFragment = { __typename?: 'Table', _id: string, ta
 
 export type TableListForSchemasQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -201,6 +383,7 @@ export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: strin
 
 export type SqlSelectForSqlDataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
 }>;
 
@@ -213,11 +396,58 @@ export type TableWithColumnsFragment = { __typename?: 'Table', _id: string, tabl
 
 export type TableForBranchQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
 }>;
 
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
+
+export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
+
+export type BranchListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  sortBy?: InputMaybe<SortBranchesBy>;
+}>;
+
+
+export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+
+export type DeleteBranchMutationVariables = Exact<{
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteBranchMutation = { __typename?: 'Mutation', deleteBranch: boolean };
+
+export type BranchForCreateBranchFragment = { __typename?: 'Branch', databaseName: string, branchName: string };
+
+export type CreateBranchMutationVariables = Exact<{
+  newBranchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: { __typename?: 'Branch', databaseName: string, branchName: string } };
+
+export type DefaultBranchPageQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DefaultBranchPageQuery = { __typename?: 'Query', defaultBranch?: { __typename?: 'Branch', _id: string, branchName: string, tableNames: Array<string> } | null };
+
+export type RefPageQueryVariables = Exact<{
+  refName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type RefPageQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null, tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
@@ -232,6 +462,11 @@ export type HasDatabaseEnvQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type HasDatabaseEnvQuery = { __typename?: 'Query', hasDatabaseEnv: boolean };
 
+export type DoltDatabaseDetailsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean } };
+
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
 export type ForeignKeyColumnForDataTableFragment = { __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number };
@@ -240,6 +475,7 @@ export type ForeignKeysForDataTableFragment = { __typename?: 'ForeignKey', table
 
 export type DataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
 }>;
 
@@ -252,6 +488,7 @@ export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number 
 
 export type RowsForDataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -261,11 +498,66 @@ export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?:
 
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export const BranchForBranchSelectorFragmentDoc = gql`
+    fragment BranchForBranchSelector on Branch {
+  branchName
+  databaseName
+}
+    `;
+export const DoltWriterForHistoryFragmentDoc = gql`
+    fragment DoltWriterForHistory on DoltWriter {
+  _id
+  username
+  displayName
+  emailAddress
+}
+    `;
+export const TagForListFragmentDoc = gql`
+    fragment TagForList on Tag {
+  _id
+  tagName
+  message
+  taggedAt
+  tagger {
+    ...DoltWriterForHistory
+  }
+  commitId
+}
+    ${DoltWriterForHistoryFragmentDoc}`;
+export const TagListForTagListFragmentDoc = gql`
+    fragment TagListForTagList on TagList {
+  list {
+    ...TagForList
+  }
+}
+    ${TagForListFragmentDoc}`;
+export const CommitForHistoryFragmentDoc = gql`
+    fragment CommitForHistory on Commit {
+  _id
+  committer {
+    ...DoltWriterForHistory
+  }
+  message
+  commitId
+  committedAt
+  parents
+}
+    ${DoltWriterForHistoryFragmentDoc}`;
+export const CommitListForHistoryFragmentDoc = gql`
+    fragment CommitListForHistory on CommitList {
+  list {
+    ...CommitForHistory
+  }
+  nextOffset
+}
+    ${CommitForHistoryFragmentDoc}`;
 export const ForeignKeyColumnForDataTableFragmentDoc = gql`
     fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
   referencedColumnName
@@ -348,6 +640,21 @@ export const TableWithColumnsFragmentDoc = gql`
   }
 }
     ${ColumnForTableListFragmentDoc}`;
+export const BranchFragmentDoc = gql`
+    fragment Branch on Branch {
+  _id
+  branchName
+  databaseName
+  lastUpdated
+  lastCommitter
+}
+    `;
+export const BranchForCreateBranchFragmentDoc = gql`
+    fragment BranchForCreateBranch on Branch {
+  databaseName
+  branchName
+}
+    `;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -404,6 +711,115 @@ export function useCreateDatabaseMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDatabaseMutation>;
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
+export const BranchesForSelectorDocument = gql`
+    query BranchesForSelector($databaseName: String!) {
+  branches(databaseName: $databaseName) {
+    list {
+      ...BranchForBranchSelector
+    }
+  }
+}
+    ${BranchForBranchSelectorFragmentDoc}`;
+
+/**
+ * __useBranchesForSelectorQuery__
+ *
+ * To run a query within a React component, call `useBranchesForSelectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchesForSelectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchesForSelectorQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useBranchesForSelectorQuery(baseOptions: Apollo.QueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+      }
+export function useBranchesForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+        }
+export type BranchesForSelectorQueryHookResult = ReturnType<typeof useBranchesForSelectorQuery>;
+export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranchesForSelectorLazyQuery>;
+export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
+export const TagListDocument = gql`
+    query TagList($databaseName: String!) {
+  tags(databaseName: $databaseName) {
+    ...TagListForTagList
+  }
+}
+    ${TagListForTagListFragmentDoc}`;
+
+/**
+ * __useTagListQuery__
+ *
+ * To run a query within a React component, call `useTagListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTagListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTagListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useTagListQuery(baseOptions: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+      }
+export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        }
+export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
+export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
+export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
+export const HistoryForBranchDocument = gql`
+    query HistoryForBranch($databaseName: String!, $refName: String!, $offset: Int) {
+  commits(databaseName: $databaseName, refName: $refName, offset: $offset) {
+    ...CommitListForHistory
+  }
+}
+    ${CommitListForHistoryFragmentDoc}`;
+
+/**
+ * __useHistoryForBranchQuery__
+ *
+ * To run a query within a React component, call `useHistoryForBranchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryForBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryForBranchQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useHistoryForBranchQuery(baseOptions: Apollo.QueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
+      }
+export function useHistoryForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
+        }
+export type HistoryForBranchQueryHookResult = ReturnType<typeof useHistoryForBranchQuery>;
+export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryForBranchLazyQuery>;
+export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase
@@ -469,8 +885,8 @@ export type DatabasesQueryHookResult = ReturnType<typeof useDatabasesQuery>;
 export type DatabasesLazyQueryHookResult = ReturnType<typeof useDatabasesLazyQuery>;
 export type DatabasesQueryResult = Apollo.QueryResult<DatabasesQuery, DatabasesQueryVariables>;
 export const TableListForSchemasDocument = gql`
-    query TableListForSchemas($databaseName: String!) {
-  tables(databaseName: $databaseName) {
+    query TableListForSchemas($databaseName: String!, $refName: String!) {
+  tables(databaseName: $databaseName, refName: $refName) {
     ...TableForSchemaList
   }
 }
@@ -489,6 +905,7 @@ export const TableListForSchemasDocument = gql`
  * const { data, loading, error } = useTableListForSchemasQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */
@@ -504,8 +921,12 @@ export type TableListForSchemasQueryHookResult = ReturnType<typeof useTableListF
 export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableListForSchemasLazyQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const SqlSelectForSqlDataTableDocument = gql`
-    query SqlSelectForSqlDataTable($databaseName: String!, $queryString: String!) {
-  sqlSelect(databaseName: $databaseName, queryString: $queryString) {
+    query SqlSelectForSqlDataTable($databaseName: String!, $refName: String!, $queryString: String!) {
+  sqlSelect(
+    databaseName: $databaseName
+    refName: $refName
+    queryString: $queryString
+  ) {
     _id
     queryExecutionStatus
     queryExecutionMessage
@@ -533,6 +954,7 @@ ${RowForSqlDataTableFragmentDoc}`;
  * const { data, loading, error } = useSqlSelectForSqlDataTableQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *      queryString: // value for 'queryString'
  *   },
  * });
@@ -549,8 +971,8 @@ export type SqlSelectForSqlDataTableQueryHookResult = ReturnType<typeof useSqlSe
 export type SqlSelectForSqlDataTableLazyQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableLazyQuery>;
 export type SqlSelectForSqlDataTableQueryResult = Apollo.QueryResult<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>;
 export const TableForBranchDocument = gql`
-    query TableForBranch($databaseName: String!, $tableName: String!) {
-  table(databaseName: $databaseName, tableName: $tableName) {
+    query TableForBranch($databaseName: String!, $refName: String!, $tableName: String!) {
+  table(databaseName: $databaseName, refName: $refName, tableName: $tableName) {
     ...TableWithColumns
   }
 }
@@ -569,6 +991,7 @@ export const TableForBranchDocument = gql`
  * const { data, loading, error } = useTableForBranchQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *      tableName: // value for 'tableName'
  *   },
  * });
@@ -584,6 +1007,197 @@ export function useTableForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQuery>;
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
+export const BranchListDocument = gql`
+    query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
+  branches(databaseName: $databaseName, sortBy: $sortBy) {
+    list {
+      ...Branch
+    }
+  }
+}
+    ${BranchFragmentDoc}`;
+
+/**
+ * __useBranchListQuery__
+ *
+ * To run a query within a React component, call `useBranchListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      sortBy: // value for 'sortBy'
+ *   },
+ * });
+ */
+export function useBranchListQuery(baseOptions: Apollo.QueryHookOptions<BranchListQuery, BranchListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
+      }
+export function useBranchListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchListQuery, BranchListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
+        }
+export type BranchListQueryHookResult = ReturnType<typeof useBranchListQuery>;
+export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQuery>;
+export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
+export const DeleteBranchDocument = gql`
+    mutation DeleteBranch($branchName: String!, $databaseName: String!) {
+  deleteBranch(branchName: $branchName, databaseName: $databaseName)
+}
+    `;
+export type DeleteBranchMutationFn = Apollo.MutationFunction<DeleteBranchMutation, DeleteBranchMutationVariables>;
+
+/**
+ * __useDeleteBranchMutation__
+ *
+ * To run a mutation, you first call `useDeleteBranchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBranchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBranchMutation, { data, loading, error }] = useDeleteBranchMutation({
+ *   variables: {
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDeleteBranchMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBranchMutation, DeleteBranchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBranchMutation, DeleteBranchMutationVariables>(DeleteBranchDocument, options);
+      }
+export type DeleteBranchMutationHookResult = ReturnType<typeof useDeleteBranchMutation>;
+export type DeleteBranchMutationResult = Apollo.MutationResult<DeleteBranchMutation>;
+export type DeleteBranchMutationOptions = Apollo.BaseMutationOptions<DeleteBranchMutation, DeleteBranchMutationVariables>;
+export const CreateBranchDocument = gql`
+    mutation CreateBranch($newBranchName: String!, $databaseName: String!, $fromRefName: String!) {
+  createBranch(
+    newBranchName: $newBranchName
+    databaseName: $databaseName
+    fromRefName: $fromRefName
+  ) {
+    ...BranchForCreateBranch
+  }
+}
+    ${BranchForCreateBranchFragmentDoc}`;
+export type CreateBranchMutationFn = Apollo.MutationFunction<CreateBranchMutation, CreateBranchMutationVariables>;
+
+/**
+ * __useCreateBranchMutation__
+ *
+ * To run a mutation, you first call `useCreateBranchMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBranchMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBranchMutation, { data, loading, error }] = useCreateBranchMutation({
+ *   variables: {
+ *      newBranchName: // value for 'newBranchName'
+ *      databaseName: // value for 'databaseName'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions<CreateBranchMutation, CreateBranchMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBranchMutation, CreateBranchMutationVariables>(CreateBranchDocument, options);
+      }
+export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
+export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
+export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
+export const DefaultBranchPageQueryDocument = gql`
+    query DefaultBranchPageQuery($databaseName: String!, $filterSystemTables: Boolean) {
+  defaultBranch(databaseName: $databaseName) {
+    _id
+    branchName
+    tableNames(filterSystemTables: $filterSystemTables)
+  }
+}
+    `;
+
+/**
+ * __useDefaultBranchPageQuery__
+ *
+ * To run a query within a React component, call `useDefaultBranchPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDefaultBranchPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDefaultBranchPageQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      filterSystemTables: // value for 'filterSystemTables'
+ *   },
+ * });
+ */
+export function useDefaultBranchPageQuery(baseOptions: Apollo.QueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+      }
+export function useDefaultBranchPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+        }
+export type DefaultBranchPageQueryHookResult = ReturnType<typeof useDefaultBranchPageQuery>;
+export type DefaultBranchPageQueryLazyQueryHookResult = ReturnType<typeof useDefaultBranchPageQueryLazyQuery>;
+export type DefaultBranchPageQueryQueryResult = Apollo.QueryResult<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>;
+export const RefPageQueryDocument = gql`
+    query RefPageQuery($refName: String!, $databaseName: String!, $filterSystemTables: Boolean) {
+  branch(databaseName: $databaseName, branchName: $refName) {
+    _id
+  }
+  tableNames(
+    refName: $refName
+    databaseName: $databaseName
+    filterSystemTables: $filterSystemTables
+  ) {
+    list
+  }
+}
+    `;
+
+/**
+ * __useRefPageQuery__
+ *
+ * To run a query within a React component, call `useRefPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRefPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRefPageQuery({
+ *   variables: {
+ *      refName: // value for 'refName'
+ *      databaseName: // value for 'databaseName'
+ *      filterSystemTables: // value for 'filterSystemTables'
+ *   },
+ * });
+ */
+export function useRefPageQuery(baseOptions: Apollo.QueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+      }
+export function useRefPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+        }
+export type RefPageQueryHookResult = ReturnType<typeof useRefPageQuery>;
+export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryLazyQuery>;
+export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
     mutation AddDatabaseConnection($url: String, $useEnv: Boolean) {
   addDatabaseConnection(url: $url, useEnv: $useEnv)
@@ -648,9 +1262,44 @@ export function useHasDatabaseEnvLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type HasDatabaseEnvQueryHookResult = ReturnType<typeof useHasDatabaseEnvQuery>;
 export type HasDatabaseEnvLazyQueryHookResult = ReturnType<typeof useHasDatabaseEnvLazyQuery>;
 export type HasDatabaseEnvQueryResult = Apollo.QueryResult<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>;
+export const DoltDatabaseDetailsDocument = gql`
+    query DoltDatabaseDetails {
+  doltDatabaseDetails {
+    isDolt
+    hideDoltFeatures
+  }
+}
+    `;
+
+/**
+ * __useDoltDatabaseDetailsQuery__
+ *
+ * To run a query within a React component, call `useDoltDatabaseDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDoltDatabaseDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDoltDatabaseDetailsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDoltDatabaseDetailsQuery(baseOptions?: Apollo.QueryHookOptions<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>(DoltDatabaseDetailsDocument, options);
+      }
+export function useDoltDatabaseDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>(DoltDatabaseDetailsDocument, options);
+        }
+export type DoltDatabaseDetailsQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsQuery>;
+export type DoltDatabaseDetailsLazyQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsLazyQuery>;
+export type DoltDatabaseDetailsQueryResult = Apollo.QueryResult<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>;
 export const DataTableQueryDocument = gql`
-    query DataTableQuery($databaseName: String!, $tableName: String!) {
-  table(databaseName: $databaseName, tableName: $tableName) {
+    query DataTableQuery($databaseName: String!, $refName: String!, $tableName: String!) {
+  table(databaseName: $databaseName, refName: $refName, tableName: $tableName) {
     _id
     columns {
       ...ColumnForDataTable
@@ -676,6 +1325,7 @@ ${ForeignKeysForDataTableFragmentDoc}`;
  * const { data, loading, error } = useDataTableQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *      tableName: // value for 'tableName'
  *   },
  * });
@@ -692,8 +1342,13 @@ export type DataTableQueryHookResult = ReturnType<typeof useDataTableQuery>;
 export type DataTableQueryLazyQueryHookResult = ReturnType<typeof useDataTableQueryLazyQuery>;
 export type DataTableQueryQueryResult = Apollo.QueryResult<DataTableQuery, DataTableQueryVariables>;
 export const RowsForDataTableQueryDocument = gql`
-    query RowsForDataTableQuery($databaseName: String!, $tableName: String!, $offset: Int) {
-  rows(databaseName: $databaseName, tableName: $tableName, offset: $offset) {
+    query RowsForDataTableQuery($databaseName: String!, $refName: String!, $tableName: String!, $offset: Int) {
+  rows(
+    databaseName: $databaseName
+    refName: $refName
+    tableName: $tableName
+    offset: $offset
+  ) {
     ...RowListRows
   }
 }
@@ -712,6 +1367,7 @@ export const RowsForDataTableQueryDocument = gql`
  * const { data, loading, error } = useRowsForDataTableQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *      tableName: // value for 'tableName'
  *      offset: // value for 'offset'
  *   },
@@ -729,8 +1385,12 @@ export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTa
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const TableNamesDocument = gql`
-    query TableNames($databaseName: String!) {
-  tableNames(databaseName: $databaseName) {
+    query TableNames($databaseName: String!, $refName: String!, $filterSystemTables: Boolean) {
+  tableNames(
+    databaseName: $databaseName
+    refName: $refName
+    filterSystemTables: $filterSystemTables
+  ) {
     list
   }
 }
@@ -749,6 +1409,8 @@ export const TableNamesDocument = gql`
  * const { data, loading, error } = useTableNamesQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      filterSystemTables: // value for 'filterSystemTables'
  *   },
  * });
  */

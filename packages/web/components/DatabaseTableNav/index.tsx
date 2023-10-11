@@ -1,4 +1,7 @@
+import CustomFormSelect from "@components/CustomFormSelect";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { OptionalRefParams } from "@lib/params";
+import { RefUrl } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import cx from "classnames";
 import { useState } from "react";
@@ -15,6 +18,7 @@ type NavProps = {
   params: Params;
   initiallyOpen?: boolean;
   isMobile?: boolean;
+  routeRefChangeTo: RefUrl;
 };
 
 type Props = NavProps & {
@@ -22,7 +26,12 @@ type Props = NavProps & {
   setShowTableNav: (s: boolean) => void;
 };
 
-function Nav({ params, initiallyOpen = false, isMobile = false }: NavProps) {
+function Nav({
+  params,
+  routeRefChangeTo,
+  initiallyOpen = false,
+  isMobile = false,
+}: NavProps) {
   const [open, setOpen] = useState(initiallyOpen || isInitiallyOpen(params));
   const toggleMenu = () => {
     setOpen(!open);
@@ -38,7 +47,14 @@ function Nav({ params, initiallyOpen = false, isMobile = false }: NavProps) {
       )}
     >
       <div className={css.top}>
-        <div />
+        <NotDoltWrapper>
+          <CustomFormSelect.ForBranchesAndTags
+            routeRefChangeTo={routeRefChangeTo}
+            params={params}
+            selectedValue={params.refName}
+            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
+          />
+        </NotDoltWrapper>
         <GiHamburgerMenu
           onClick={toggleMenu}
           className={css.menuIcon}

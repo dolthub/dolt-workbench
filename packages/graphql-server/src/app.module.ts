@@ -15,21 +15,6 @@ import resolvers from "./resolvers";
       driver: ApolloDriver,
     }),
     DataSourceModule,
-    // TypeOrmModule.forRootAsync({
-    //   imports: [ConfigModule],
-    //   useFactory: (configService: ConfigService) => {
-    //     return {
-    //       type: "mysql",
-    //       url: configService.get("DATABASE_URL"),
-    //       ssl: {
-    //         rejectUnauthorized: false,
-    //       },
-    //       autoLoadEntities: true,
-    //       synchronize: false,
-    //     };
-    //   },
-    //   inject: [ConfigService],
-    // }),
     TerminusModule,
   ],
   providers: resolvers,

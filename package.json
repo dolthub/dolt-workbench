@@ -5,6 +5,13 @@
     "packages/*"
   ],
   "scripts": {
+    "ci": "npm-run-all prettier compile lint test build check",
+    "build": "npm-run-all 'build:*'",
+    "build:graphql": "yarn workspace @dolt-sql-workbench/graphql-server build",
+    "build:web": "yarn workspace @dolt-sql-workbench/web build",
+    "check": "npm-run-all 'check:*'",
+    "check:graphql": "yarn workspace @dolt-sql-workbench/graphql-server run check-server",
+    "check:status": "./check-status.sh",
     "compile": "npm-run-all 'compile:*'",
     "compile:graphql": "yarn workspace @dolt-sql-workbench/graphql-server compile",
     "compile:web": "tsc -b packages/web",
@@ -13,7 +20,16 @@
     "lint:web": "yarn workspace @dolt-sql-workbench/web lint",
     "clean": "npm-run-all 'clean:*'",
     "clean:web": "tsc -b packages/web --clean",
-    "clean:misc": "rimraf node_modules 'packages/*/.eslintcache' 'packages/*/*.tsbuildinfo' 'packages/*/dist' 'packages/web/.next'"
+    "clean:misc": "rimraf node_modules 'packages/*/.eslintcache' 'packages/*/*.tsbuildinfo' 'packages/*/dist' 'packages/web/.next'",
+    "prettier": "npm-run-all 'prettier:*'",
+    "prettier-fix": "npm-run-all 'prettier-fix:*'",
+    "prettier:web": "yarn workspace @dolt-sql-workbench/web prettier",
+    "prettier-fix:web": "yarn workspace @dolt-sql-workbench/web prettier-fix",
+    "prettier:graphql": "yarn workspace @dolt-sql-workbench/graphql-server prettier",
+    "prettier-fix:graphql": "yarn workspace @dolt-sql-workbench/graphql-server prettier-fix",
+    "test": "npm-run-all 'test:*'",
+    "test:graphql": "yarn workspace @dolt-sql-workbench/graphql-server test",
+    "test:web": "yarn workspace @dolt-sql-workbench/web test"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "^13.5.4",

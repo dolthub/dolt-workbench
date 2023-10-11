@@ -1,3 +1,5 @@
+import Maybe from "./Maybe";
+
 export type DatabaseParams = {
   databaseName: string;
 };
@@ -6,8 +8,16 @@ export type RefParams = DatabaseParams & {
   refName: string;
 };
 
+export type BranchParams = DatabaseParams & {
+  branchName: string;
+};
+
 export type OptionalRefParams = DatabaseParams & {
   refName?: string;
+};
+
+export type MaybeRefParams = DatabaseParams & {
+  refName?: Maybe<string>;
 };
 
 export type DatabasePageParams = OptionalRefParams & {

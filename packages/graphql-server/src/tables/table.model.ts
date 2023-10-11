@@ -13,6 +13,9 @@ export class Table {
   databaseName: string;
 
   @Field()
+  refName: string;
+
+  @Field()
   tableName: string;
 
   @Field(_type => [column.Column])
@@ -33,14 +36,16 @@ export class TableNames {
 
 export function fromDoltRowRes(
   databaseName: string,
+  refName: string,
   tableName: string,
   columns: RawRow[],
   fkRows: RawRow[],
   idxRows: RawRow[],
 ): Table {
   return {
-    _id: `databases/${databaseName}/tables/${tableName}`,
+    _id: `databases/${databaseName}/refs/${refName}/tables/${tableName}`,
     databaseName,
+    refName,
     tableName,
     columns: columns.map(column.fromDoltRowRes),
     foreignKeys: foreignKey.fromDoltRowsRes(fkRows),

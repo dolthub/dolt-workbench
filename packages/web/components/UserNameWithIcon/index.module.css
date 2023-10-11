@@ -1,0 +1,60 @@
+.icon {
+  @apply inline-block rounded-full px-2 mr-3 bg-amber-200 text-white font-bold text-lg leading-[1.688rem];
+}
+
+.username {
+  @apply font-semibold;
+}
+
+.A,
+.B,
+.C {
+  @apply bg-red-200;
+}
+
+.D,
+.E,
+.F {
+  @apply bg-orange-200;
+}
+
+.G,
+.H,
+.I {
+  @apply bg-yellow-200;
+}
+
+.J,
+.K,
+.L {
+  @apply bg-green-200;
+}
+
+.M,
+.N,
+.O {
+  @apply bg-blue-200;
+}
+
+.P,
+.Q,
+.R {
+  @apply bg-purple-200;
+}
+
+.S,
+.T,
+.U {
+  @apply bg-pink-200;
+}
+
+.V,
+.W,
+.X {
+  @apply bg-indigo-200;
+}
+
+.Y,
+.Z {
+  @apply bg-teal-200;
+}
