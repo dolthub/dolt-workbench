@@ -70,7 +70,7 @@ export function SqlEditorProvider(props: Props) {
       addQuery(executeProps.query);
       setLoading(false);
     },
-    [addQuery, handleQuery],
+    [handleQuery, addQuery],
   );
 
   const toggleSqlEditor = useCallback(

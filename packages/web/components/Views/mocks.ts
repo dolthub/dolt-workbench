@@ -1,10 +1,8 @@
 import { MockedResponse } from "@apollo/client/testing";
 import { RowForViewsFragment, RowsForViewsDocument } from "@gen/graphql-types";
-import { chance } from "@hosted/fakers";
+import chance from "@lib/chance";
 
 const databaseParams = {
-  deploymentName: "test-dep",
-  ownerName: "dolthub",
   databaseName: "dbname",
 };
 const refName = "main";

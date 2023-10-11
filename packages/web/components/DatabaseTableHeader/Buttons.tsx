@@ -1,12 +1,14 @@
 import CopyButton from "@components/CopyButton";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { OptionalRefParams } from "@lib/params";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
+import CreateViewButton from "./CreateViewButton";
 import css from "./index.module.css";
 
 type Props = {
   sqlString?: string;
-  // params: { refName?: string };
+  params: OptionalRefParams;
 };
 
 export default function Buttons(props: Props) {
@@ -16,11 +18,10 @@ export default function Buttons(props: Props) {
       <div className={css.buttons}>
         {props.sqlString && (
           <>
-            {/* <SaveQueryButton {...props} query={props.sqlString} /> */}
-            {/* <CreateViewButton {...props} query={props.sqlString} /> */}
+            <CreateViewButton {...props} query={props.sqlString} />
+            <CopyButton text={props.sqlString} />
           </>
         )}
-        {props.sqlString && <CopyButton text={props.sqlString} />}
       </div>
       {showSqlEditor ? (
         <FaChevronDown

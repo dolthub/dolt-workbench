@@ -1,3 +1,5 @@
+"use client";
+
 import HistoryTable from "@components/HistoryTable";
 import SqlDataTable from "@components/SqlDataTable";
 import ViewFragment from "@components/ViewFragment";

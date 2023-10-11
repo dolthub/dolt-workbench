@@ -74,11 +74,16 @@ export class DatabaseResolver {
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
-    const isDolt = await getIsDolt(this.dss.getQR());
-    return {
-      isDolt,
-      hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
-    };
+    const qr = this.dss.getQR();
+    try {
+      const isDolt = await getIsDolt(qr);
+      return {
+        isDolt,
+        hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
+      };
+    } finally {
+      await qr.release();
+    }
   }
 
   @Mutation(_returns => String)
@@ -94,14 +99,20 @@ export class DatabaseResolver {
     } else {
       throw new Error("database url not provided");
     }
-    const db = await this.dss.getQR().getCurrentDatabase();
+
+    const db = await this.currentDatabase();
     if (!db) throw new Error("database not found");
     return db;
   }
 
   @Mutation(_returns => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
-    await this.dss.getQR().createDatabase(args.databaseName);
-    return true;
+    const qr = this.dss.getQR();
+    try {
+      await qr.createDatabase(args.databaseName);
+      return true;
+    } finally {
+      await qr.release();
+    }
   }
 }
