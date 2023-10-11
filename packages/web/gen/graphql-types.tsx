@@ -167,6 +167,7 @@ export type Query = {
   hasDatabaseEnv: Scalars['Boolean']['output'];
   rows: RowList;
   sqlSelect: SqlSelect;
+  sqlSelectForCsvDownload: Scalars['String']['output'];
   table: Table;
   tableNames: TableNames;
   tables: Array<Table>;
@@ -214,6 +215,13 @@ export type QueryRowsArgs = {
 
 
 export type QuerySqlSelectArgs = {
+  databaseName: Scalars['String']['input'];
+  queryString: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+};
+
+
+export type QuerySqlSelectForCsvDownloadArgs = {
   databaseName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -349,6 +357,15 @@ export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
+
+export type SqlSelectForCsvDownloadQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  queryString: Scalars['String']['input'];
+}>;
+
+
+export type SqlSelectForCsvDownloadQuery = { __typename?: 'Query', sqlSelectForCsvDownload: string };
 
 export type DatabasesQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -839,6 +856,45 @@ export function useCurrentDatabaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabaseQuery>;
 export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
+export const SqlSelectForCsvDownloadDocument = gql`
+    query SqlSelectForCsvDownload($databaseName: String!, $refName: String!, $queryString: String!) {
+  sqlSelectForCsvDownload(
+    databaseName: $databaseName
+    refName: $refName
+    queryString: $queryString
+  )
+}
+    `;
+
+/**
+ * __useSqlSelectForCsvDownloadQuery__
+ *
+ * To run a query within a React component, call `useSqlSelectForCsvDownloadQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSqlSelectForCsvDownloadQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSqlSelectForCsvDownloadQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      queryString: // value for 'queryString'
+ *   },
+ * });
+ */
+export function useSqlSelectForCsvDownloadQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>(SqlSelectForCsvDownloadDocument, options);
+      }
+export function useSqlSelectForCsvDownloadLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>(SqlSelectForCsvDownloadDocument, options);
+        }
+export type SqlSelectForCsvDownloadQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadQuery>;
+export type SqlSelectForCsvDownloadLazyQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadLazyQuery>;
+export type SqlSelectForCsvDownloadQueryResult = Apollo.QueryResult<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>;
 export const DatabasesDocument = gql`
     query Databases {
   databases
