@@ -1,3 +1,7 @@
 .container {
   @apply max-w-xl mx-auto p-3;
 }
+
+.big {
+  @apply text-lg my-10;
+}

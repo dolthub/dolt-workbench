@@ -4,7 +4,6 @@ import { branches } from "@lib/urls";
 import ForDefaultBranch from "../ForDefaultBranch";
 import BranchesPage from "./BranchesPage";
 import NewBranchPage from "./NewBranchPage";
-import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
@@ -21,7 +20,7 @@ export default function ForBranches({ params, newBranch }: Props): JSX.Element {
       // smallHeaderBreadcrumbs={<BranchesBreadcrumbs params={params} />}
       routeRefChangeTo={urlParams => branches(urlParams)}
     >
-      <NotDoltWrapper showNotDoltMsg feature={feature} className={css.notDolt}>
+      <NotDoltWrapper showNotDoltMsg feature={feature} bigMsg>
         {newBranch ? (
           <NewBranchPage params={params} />
         ) : (

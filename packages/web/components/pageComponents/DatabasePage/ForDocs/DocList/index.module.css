@@ -1,0 +1,45 @@
+.docsContainer {
+  @apply flex my-4 mx-8;
+}
+
+.docs {
+  @apply flex text-primary mb-0 mr-8;
+
+  > li {
+    @apply mr-8;
+  }
+}
+
+.link {
+  @apply font-semibold text-sm mb-5;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+
+  svg {
+    @apply inline-block mr-3 text-lg;
+  }
+
+  @screen lg {
+    @apply text-base;
+  }
+}
+
+.active {
+  @apply underline;
+}
+
+.newDoc {
+  @apply hidden;
+  @screen lg {
+    @apply block font-semibold -mt-1;
+
+    button {
+      @apply pl-2 pr-3 py-0.5 border-none;
+    }
+    svg {
+      @apply inline-block mr-1 text-base mb-1;
+    }
+  }
+}

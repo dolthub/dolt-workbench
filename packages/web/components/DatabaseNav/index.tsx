@@ -1,4 +1,9 @@
-import { OptionalRefParams } from "@lib/params";
+import SmallLoader from "@components/SmallLoader";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
+import useDefaultBranch from "@hooks/useDefaultBranch";
+import useIsDolt from "@hooks/useIsDolt";
+import { OptionalRefParams, RefParams } from "@lib/params";
 import NavItem from "./Item";
 import css from "./index.module.css";
 
@@ -10,57 +15,74 @@ type Props = {
   initialTabIndex: number;
 };
 
-const tabs = ["Database"];
+type QueryProps = Props & {
+  params: RefParams & {
+    tableName?: string;
+    active?: string;
+  };
+};
+
+const tabs = ["Database", "About"];
 
 export default function DatabaseNav(props: Props) {
+  const { isDolt } = useIsDolt();
+  if (props.params.refName && isDolt) {
+    return (
+      <Query
+        {...props}
+        params={{ ...props.params, refName: props.params.refName }}
+      />
+    );
+  }
+
   return <Inner {...props} />;
 }
 
-// function Query(props: QueryProps) {
-//   const { defaultBranchName } = useDefaultBranch(props.params);
+function Query(props: QueryProps) {
+  const { defaultBranchName } = useDefaultBranch(props.params);
 
-//   const checkBranchExistRes = useGetBranchForPullQuery({
-//     variables: {
-//       ownerName: props.params.ownerName,
-//       deploymentName: props.params.deploymentName,
-//       databaseName: props.params.databaseName,
-//       branchName: props.params.refName,
-//     },
-//   });
+  const checkBranchExistRes = useGetBranchQuery({
+    variables: {
+      databaseName: props.params.databaseName,
+      branchName: props.params.refName,
+    },
+  });
 
-//   const tagRes = useGetTagQuery({
-//     variables: {
-//       ownerName: props.params.ownerName,
-//       deploymentName: props.params.deploymentName,
-//       databaseName: props.params.databaseName,
-//       tagName: props.params.refName,
-//     },
-//   });
+  const tagRes = useGetTagQuery({
+    variables: {
+      databaseName: props.params.databaseName,
+      tagName: props.params.refName,
+    },
+  });
 
-//   if (tagRes.loading || checkBranchExistRes.loading) {
-//     return (
-//       <SmallLoader loaded={!tagRes.loading || !checkBranchExistRes.loading} />
-//     );
-//   }
+  if (tagRes.loading || checkBranchExistRes.loading) {
+    return (
+      <SmallLoader loaded={!tagRes.loading || !checkBranchExistRes.loading} />
+    );
+  }
 
-//   const params = {
-//     ...props.params,
-//     refName:
-//       checkBranchExistRes.data?.branch || tagRes.data?.tag
-//         ? props.params.refName
-//         : defaultBranchName,
-//   };
+  const params = {
+    ...props.params,
+    refName:
+      checkBranchExistRes.data?.branch || tagRes.data?.tag
+        ? props.params.refName
+        : defaultBranchName,
+  };
 
-//   return <Inner {...props} params={params} />;
-// }
+  return <Inner {...props} params={params} />;
+}
 
 function Inner(props: Props) {
   return (
     <div data-cy="db-page-header-nav" className={css.headerNav}>
       <ul className={css.tabs}>
-        {tabs.map((tab, i) => (
-          <NavItem {...props} key={tab} name={tab} i={i} />
-        ))}
+        {tabs.map((tab, i) => {
+          const item = <NavItem {...props} key={tab} name={tab} i={i} />;
+          if (tab === "Database") {
+            return item;
+          }
+          return <NotDoltWrapper key={tab}>{item}</NotDoltWrapper>;
+        })}
       </ul>
     </div>
   );

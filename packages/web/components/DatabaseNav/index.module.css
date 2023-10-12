@@ -34,6 +34,10 @@
   @apply border-b-4 border-[#FF912B] text-[#FF912B];
 }
 
+.disabledTab {
+  @apply flex justify-center ml-4 mr-12 text-acc-lightgrey;
+}
+
 .innerTab {
   @apply flex justify-center mt-1 min-w-full px-0 text-sm font-normal whitespace-nowrap pb-[0.7rem];
 }

@@ -38,3 +38,9 @@ export class DBArgsWithOffset extends DBArgs {
   @Field(_type => Int, { nullable: true })
   offset?: number;
 }
+
+@ArgsType()
+export class TagArgs extends DBArgs {
+  @Field()
+  tagName: string;
+}

@@ -1,0 +1,23 @@
+.title {
+  @apply font-semibold text-2xl pb-6 pt-8 pl-8 text-primary;
+}
+
+.body {
+  @apply m-0 p-8 border-t;
+}
+
+.label {
+  @apply font-semibold mb-2;
+}
+
+.selectContainer {
+  @apply max-w-lg;
+}
+
+.markdownContainer {
+  @apply mt-8;
+}
+
+.marTop {
+  @apply mt-6;
+}

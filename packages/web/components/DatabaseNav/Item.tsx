@@ -1,3 +1,4 @@
+import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
@@ -10,23 +11,38 @@ type Props = {
   hide?: boolean;
   i: number;
   initialTabIndex: number;
+  doltDisabled?: boolean;
 };
 
 export default function NavItem(props: Props) {
-  const tabNameLowerCase = props.name.toLowerCase();
+  const lower = props.name.toLowerCase();
   if (props.hide) return null;
+  if (props.doltDisabled) {
+    const tooltipId = `disabled-tab-${lower}`;
+    return (
+      <li className={css.disabledTab}>
+        <span
+          className={css.innerTab}
+          data-tooltip-position="top"
+          data-tooltip-id={tooltipId}
+          data-tooltip-content={`${props.name} tab is only available for Dolt databases`}
+        >
+          {props.name}
+        </span>
+        <Tooltip id={tooltipId} />
+      </li>
+    );
+  }
   const url = getUrlForRefName(props.params, props.name);
   return (
-    <li data-cy={`db-${tabNameLowerCase.replace(/\s/g, "-")}-tab`}>
+    <li>
       <Link
         className={cx(css.tab, {
           [css.active]: props.i === props.initialTabIndex,
         })}
         {...url}
       >
-        <span className={cx(css.innerTab, css[tabNameLowerCase])}>
-          {props.name}
-        </span>
+        <span className={css.innerTab}>{props.name}</span>
       </Link>
     </li>
   );

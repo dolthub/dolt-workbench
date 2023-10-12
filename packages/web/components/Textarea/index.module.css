@@ -1,0 +1,72 @@
+.container {
+  @apply border-t border-ld-lightgrey px-4 py-3 bg-white;
+
+  &:focus-within {
+    @apply bg-white;
+  }
+
+  @screen sm {
+    @apply max-w-xl w-full text-primary mb-4 border-none p-0 bg-transparent;
+
+    &:focus-within {
+      @apply bg-transparent;
+    }
+  }
+}
+
+.horizontal {
+  @screen sm {
+    @apply flex;
+
+    div {
+      @apply mr-3 mt-1 text-right w-20;
+    }
+  }
+}
+
+.textarea {
+  @apply py-2 px-3 w-full bg-white text-primary;
+
+  &:focus-within {
+    @apply bg-white;
+  }
+
+  @screen md {
+    &:focus {
+      @apply bg-ld-lightpurple outline-none;
+    }
+  }
+
+  &:disabled {
+    @apply text-gray-400;
+  }
+
+  @screen sm {
+    @apply text-sm rounded bg-ld-lightblue border border-gray-300;
+
+    &:focus {
+      @apply bg-white;
+    }
+  }
+}
+
+.textarea::placeholder {
+  @apply text-gray-400;
+}
+
+.bgwhite {
+  @apply bg-white;
+}
+
+.label {
+  @apply font-semibold pb-2 px-3;
+
+  @screen sm {
+    @apply px-0;
+  }
+}
+
+.error,
+.error:focus {
+  @apply border border-red-400 bg-white text-red-400;
+}
