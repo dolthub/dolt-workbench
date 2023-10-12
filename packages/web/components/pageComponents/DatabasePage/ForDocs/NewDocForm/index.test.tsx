@@ -1,6 +1,4 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { DocType } from "@gen/graphql-types";
-import { getDocsQuery } from "@hooks/useEditDoc/utils";
 import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
@@ -50,7 +48,7 @@ describe("test NewDocForm", () => {
 
     const { href, as } = sqlQuery({
       ...params,
-      q: getDocsQuery(DocType.License, markdown),
+      q: `INSERT INTO dolt_docs VALUES ("LICENSE.md", "${markdown}") ON DUPLICATE KEY UPDATE doc_text="${markdown}"`,
     });
     await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });

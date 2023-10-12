@@ -1,10 +1,11 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { DocType } from "@gen/graphql-types";
-import useMockRouter from "@hooks/useMockRouter";
+import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
+import { sqlQuery } from "@lib/urls";
 import { getDoc } from "@pageComponents/DatabasePage/ForDocs/DocList/mocks";
-import { render, screen } from "@testing-library/react";
+import { render, screen, waitFor } from "@testing-library/react";
 import DocMarkdown from ".";
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");
@@ -122,6 +123,10 @@ describe("test DocMarkdown", () => {
     expect(screen.getByLabelText("markdown-editor")).toBeVisible();
 
     await user.click(screen.getByText("delete"));
-    expect(screen.getByText(`Delete ${docName}`)).toBeVisible();
+    const { href, as } = sqlQuery({
+      ...params,
+      q: `DELETE FROM dolt_docs WHERE doc_name="${docName}"`,
+    });
+    await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });
 });
