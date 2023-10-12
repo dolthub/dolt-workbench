@@ -28,10 +28,7 @@ export default function DeleteModal(props: Props) {
       title={`Delete ${props.params.docName}`}
     >
       <Loader loaded={!loading} />
-      <p>
-        Are you sure you want to delete {props.params.docName}? This cannot be
-        undone.
-      </p>
+      <p>Are you sure you want to delete {props.params.docName}?</p>
       <ButtonsWithError onCancel={onClose} error={error}>
         <Button onClick={onSubmit} red data-cy="confirm-delete-docs-button">
           Delete

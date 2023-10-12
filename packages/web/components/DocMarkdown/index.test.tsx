@@ -44,6 +44,9 @@ describe("test DocMarkdown", () => {
 
     expect(screen.getByText(docName)).toBeVisible();
     expect(screen.getByText(`${docName} not found`)).toBeVisible();
+    expect(screen.getByText(`Add ${docName}`)).toBeVisible();
+    expect(screen.queryByText("delete")).not.toBeInTheDocument();
+    expect(screen.queryByText("edit")).not.toBeInTheDocument();
   });
 
   it("renders for existing default doc (README) and no docName param", () => {
@@ -57,6 +60,8 @@ describe("test DocMarkdown", () => {
     expect(screen.getByText(docName)).toBeVisible();
     expect(screen.getByLabelText("markdown")).toBeVisible();
     expect(screen.getByText(/Header/)).toBeVisible();
+    expect(screen.getByText("delete")).toBeInTheDocument();
+    expect(screen.getByText("edit")).toBeInTheDocument();
   });
 
   it("renders for existing default doc (LICENSE) and no docName param", () => {
@@ -73,11 +78,11 @@ describe("test DocMarkdown", () => {
     expect(
       screen.getByText("Terms under which this data is made available."),
     ).toBeVisible();
-    expect(screen.queryByText("delete")).not.toBeInTheDocument();
-    expect(screen.queryByText("edit")).not.toBeInTheDocument();
+    expect(screen.getByText("delete")).toBeInTheDocument();
+    expect(screen.getByText("edit")).toBeInTheDocument();
   });
 
-  it("renders for existing default doc (README) and docName param (README)", () => {
+  it("renders for existing default doc (README) and docName param (LICENSE)", () => {
     const docName = "LICENSE.md";
     render(
       <MockedProvider>
@@ -90,6 +95,7 @@ describe("test DocMarkdown", () => {
 
     expect(screen.getByText(docName)).toBeVisible();
     expect(screen.getByText(`${docName} not found`)).toBeVisible();
+    expect(screen.getByText(`Add ${docName}`)).toBeVisible();
     expect(screen.queryByText("delete")).not.toBeInTheDocument();
     expect(screen.queryByText("edit")).not.toBeInTheDocument();
   });

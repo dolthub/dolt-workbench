@@ -39,6 +39,7 @@ export default function DocMarkdown({
         >
           <Buttons
             params={{ ...params, docName }}
+            doltDocsQueryDocName={doltDocsQueryDocName}
             setShowEditor={setShowEditor}
             showEditor={showEditor}
           />

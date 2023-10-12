@@ -2,6 +2,7 @@ import Markdown from "@components/Markdown";
 import { RefParams } from "@lib/params";
 import Editor from "./Editor";
 import css from "./index.module.css";
+import { isDefaultDocOrDocNamesMatch } from "./utils";
 
 type Props = {
   params: RefParams & { docName?: string };
@@ -51,16 +52,4 @@ export default function MarkdownBody(props: Props) {
       isDoc={props.isDoc}
     />
   );
-}
-
-function isDefaultDocOrDocNamesMatch(
-  docName?: string,
-  doltDocsQueryDocName?: string,
-): boolean {
-  // If no doc from default doc query, doc does not exist
-  if (!doltDocsQueryDocName) return false;
-  // If no docName url param, use default doc query doc name
-  if (!docName) return true;
-  // If docName url param exists it must match default doc query doc name
-  return docName.toLowerCase() === doltDocsQueryDocName.toLowerCase();
 }
