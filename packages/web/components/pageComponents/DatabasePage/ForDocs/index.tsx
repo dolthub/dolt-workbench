@@ -1,13 +1,10 @@
 import DocMarkdown from "@components/DocMarkdown";
 import Loader from "@components/Loader";
-import {
-  useDocDataForDocPageQuery,
-  useDocPageQueryNoBranch,
-} from "@gen/graphql-types";
+import { useDocDataForDocPageQuery } from "@gen/graphql-types";
 import useIsDolt from "@hooks/useIsDolt";
 import { gqlTableNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
-import { OptionalRefParams, RefParams } from "@lib/params";
+import { RefParams } from "@lib/params";
 import toDocType from "@lib/toDocType";
 import { defaultDoc } from "@lib/urls";
 import ForError from "../ForError";
@@ -17,17 +14,13 @@ import DocList from "./DocList";
 import NoDocsMsg from "./NoDocsMsg";
 import css from "./index.module.css";
 
-type Props = {
-  params: OptionalRefParams & {
-    docName?: string;
-  };
-  title?: string;
-  new?: boolean;
-};
-
 type InnerProps = {
   params: RefParams & { docName?: string };
   title?: string;
+};
+
+type Props = InnerProps & {
+  new?: boolean;
 };
 
 function Inner({ params, title }: InnerProps) {
@@ -80,37 +73,16 @@ function Inner({ params, title }: InnerProps) {
   );
 }
 
-function DefaultBranch({ params, title }: Props) {
-  const { data, error, loading } = useDocPageQueryNoBranch({
-    variables: params,
-  });
-  const branchName = data?.branchOrDefault?.branchName;
-
-  if (loading) return <Loader loaded={!loading} />;
-
-  if (error) {
-    return <ForError error={error} params={params} initialTabIndex={1} />;
-  }
-
-  if (!branchName) {
-    return <NoDocsMsg params={params} />;
-  }
-
-  return <ForDocs params={{ ...params, refName: branchName }} title={title} />;
-}
-
 export default function ForDocs(props: Props) {
   const { isDolt } = useIsDolt();
   if (!isDolt) {
     return <ForNotDolt {...props} feature="Viewing and editing docs" />;
   }
 
-  return props.params.refName ? (
+  return (
     <Inner
       {...props}
       params={{ ...props.params, refName: props.params.refName }}
     />
-  ) : (
-    <DefaultBranch {...props} />
   );
 }
