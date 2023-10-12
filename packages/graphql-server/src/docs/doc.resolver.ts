@@ -17,21 +17,6 @@ export class GetDefaultDocArgs extends RefArgs {
   docType?: DocType;
 }
 
-// @ArgsType()
-// export class EditDocArgs extends DBArgs {
-//   @Field()
-//   branchName: string;
-
-//   @Field(_type => DocType)
-//   docType: DocType;
-
-//   @Field(_type => Boolean)
-//   commitDirectly: boolean;
-
-//   @Field({ nullable: true })
-//   markdown?: string;
-// }
-
 @Resolver(_of => Doc)
 export class DocsResolver {
   constructor(private readonly dss: DataSourceService) {}
@@ -95,26 +80,4 @@ export class DocsResolver {
       args.refName,
     );
   }
-
-  // @Mutation(_returns => EditDocRes)
-  // async editDoc(
-  //   @Context() context,
-  //   @Args() args: EditDocArgs,
-  // ): Promise<EditDocRes> {
-  //   const conn = await this.dbConnect.connection(context, args);
-
-  //   const currentUser = await this.userResolver.currentUser(context);
-  //   const newBranchName = await conn.editDoc({
-  //     ...args,
-  //     refName: args.branchName,
-  //     commitAuthor: {
-  //       name: currentUser.displayName || currentUser.username,
-  //       email: currentUser.emailAddressesList[0].address,
-  //     },
-  //   });
-
-  //   const doc = await this.doc(context, { ...args, refName: newBranchName });
-
-  //   return { newBranchName, doc };
-  // }
 }

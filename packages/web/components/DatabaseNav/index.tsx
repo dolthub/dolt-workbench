@@ -3,13 +3,12 @@ import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import useIsDolt from "@hooks/useIsDolt";
-import { DatabaseParams, RefParams } from "@lib/params";
+import { OptionalRefParams, RefParams } from "@lib/params";
 import NavItem from "./Item";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams & {
-    refName?: string;
+  params: OptionalRefParams & {
     tableName?: string;
     active?: string;
   };

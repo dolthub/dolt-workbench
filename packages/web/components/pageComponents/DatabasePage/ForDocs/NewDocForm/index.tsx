@@ -1,5 +1,4 @@
 import Button from "@components/Button";
-import ErrorMsg from "@components/ErrorMsg";
 import FormSelect, { Option } from "@components/FormSelect";
 import Loader from "@components/Loader";
 import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
@@ -22,7 +21,7 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   const options = getOptions(props.docRows);
-  const { state, setState, onSubmit, loading, error } = useEditDoc(
+  const { state, setState, onSubmit } = useEditDoc(
     props.params,
     !options[0].isDisabled ? options[0].value : undefined,
   );
@@ -32,7 +31,7 @@ function Inner(props: InnerProps) {
 
   return (
     <div>
-      <Loader loaded={!loading} />
+      <Loader loaded={!state.loading} />
       <div className={css.title}>Add a README or LICENSE</div>
       <div className={css.body}>
         <form onSubmit={onSubmit}>
@@ -69,7 +68,6 @@ function Inner(props: InnerProps) {
             Create
           </Button>
         </form>
-        <ErrorMsg err={error} />
       </div>
     </div>
   );

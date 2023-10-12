@@ -1,9 +1,10 @@
 import Button from "@components/Button";
+import Loader from "@components/Loader";
 import Link from "@components/links/Link";
-import { RefParams } from "@lib/params";
+import useEditDoc from "@hooks/useEditDoc";
+import { DocParams, RefParams } from "@lib/params";
+import toDocType from "@lib/toDocType";
 import { newDoc } from "@lib/urls";
-import { useState } from "react";
-import DeleteModal from "./DeleteModal";
 import css from "./index.module.css";
 import { isDefaultDocOrDocNamesMatch } from "./utils";
 
@@ -14,9 +15,37 @@ type Props = {
   setShowEditor: (s: boolean) => void;
 };
 
-export default function Buttons(props: Props) {
-  const [showModal, setShowModal] = useState(false);
+type InnerProps = {
+  params: DocParams;
+  showEditor: boolean;
+  setShowEditor: (s: boolean) => void;
+};
 
+function Inner(props: InnerProps) {
+  const { onSubmit, state } = useEditDoc(
+    props.params,
+    toDocType(props.params.docName),
+  );
+
+  return (
+    <div>
+      <Loader loaded={!state.loading} />
+      <Button.Group className={css.buttons}>
+        <Button
+          onClick={() => props.setShowEditor(!props.showEditor)}
+          className={css.edit}
+        >
+          edit
+        </Button>
+        <Button.Underlined onClick={onSubmit} red>
+          delete
+        </Button.Underlined>
+      </Button.Group>
+    </div>
+  );
+}
+
+export default function Buttons(props: Props) {
   if (!props.params.docName) return null;
 
   if (
@@ -35,23 +64,9 @@ export default function Buttons(props: Props) {
   }
 
   return (
-    <div>
-      <Button.Group className={css.buttons}>
-        <Button
-          onClick={() => props.setShowEditor(!props.showEditor)}
-          className={css.edit}
-        >
-          edit
-        </Button>
-        <Button.Underlined onClick={() => setShowModal(true)} red>
-          delete
-        </Button.Underlined>
-      </Button.Group>
-      <DeleteModal
-        isOpen={showModal}
-        setIsOpen={setShowModal}
-        params={{ ...props.params, docName: props.params.docName }}
-      />
-    </div>
+    <Inner
+      {...props}
+      params={{ ...props.params, docName: props.params.docName }}
+    />
   );
 }

@@ -1,10 +1,10 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import Loader from "@components/Loader";
+import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
 import useEditDoc from "@hooks/useEditDoc";
 import { DocParams } from "@lib/params";
 import toDocType from "@lib/toDocType";
-import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
 
 type Props = {
   markdown: string;
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function Editor(props: Props) {
-  const { onSubmit, state, setState, loading, error } = useEditDoc(
+  const { onSubmit, state, setState } = useEditDoc(
     props.params,
     toDocType(props.params.docName),
     props.markdown,
@@ -29,14 +29,14 @@ export default function Editor(props: Props) {
 
   return (
     <form onSubmit={onSubmit} aria-label="markdown-editor">
-      <Loader loaded={!loading} />
+      <Loader loaded={!state.loading} />
       <TextareaWithMarkdown
         rows={15}
         value={state.markdown}
         onChange={setMarkdown}
         isDoc={props.isDoc}
       />
-      <ButtonsWithError onCancel={onCancel} error={error}>
+      <ButtonsWithError onCancel={onCancel}>
         <Button type="submit" data-cy="submit-edit-docs-button">
           Save
         </Button>
