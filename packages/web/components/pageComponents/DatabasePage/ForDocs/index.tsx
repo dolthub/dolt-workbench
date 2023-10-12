@@ -6,11 +6,12 @@ import { gqlTableNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { RefParams } from "@lib/params";
 import toDocType from "@lib/toDocType";
-import { defaultDoc } from "@lib/urls";
+import { defaultDoc, newDoc } from "@lib/urls";
 import ForError from "../ForError";
 import ForNotDolt from "../ForNotDolt";
 import DatabasePage from "../component";
 import DocList from "./DocList";
+import NewDoc from "./NewDocForm";
 import NoDocsMsg from "./NoDocsMsg";
 import css from "./index.module.css";
 
@@ -77,6 +78,19 @@ export default function ForDocs(props: Props) {
   const { isDolt } = useIsDolt();
   if (!isDolt) {
     return <ForNotDolt {...props} feature="Viewing and editing docs" />;
+  }
+
+  if (props.new) {
+    return (
+      <DatabasePage
+        params={props.params}
+        routeRefChangeTo={newDoc}
+        initialTabIndex={1}
+        // smallHeaderBreadcrumbs={<NewDocBreadcrumbs params={params} />}
+      >
+        <NewDoc {...props} />
+      </DatabasePage>
+    );
   }
 
   return (
