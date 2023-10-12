@@ -3,6 +3,7 @@ import Maybe from "@lib/Maybe";
 import { RefParams } from "@lib/params";
 import cx from "classnames";
 import { useState } from "react";
+import Buttons from "./Buttons";
 import MarkdownBody from "./MarkdownBody";
 import Title from "./Title";
 import css from "./index.module.css";
@@ -20,7 +21,7 @@ export default function DocMarkdown({
 }: Props) {
   const doltDocsQueryDocName = rowData?.docRow?.columnValues[0].displayValue;
   const markdown = rowData?.docRow?.columnValues[1].displayValue;
-  // const docName = params.docName ?? doltDocsQueryDocName;
+  const docName = params.docName ?? doltDocsQueryDocName;
 
   const [showEditor, setShowEditor] = useState(false);
 
@@ -35,7 +36,13 @@ export default function DocMarkdown({
         <Title
           doltDocsQueryDocName={doltDocsQueryDocName}
           docName={params.docName}
-        />
+        >
+          <Buttons
+            params={{ ...params, docName }}
+            setShowEditor={setShowEditor}
+            showEditor={showEditor}
+          />
+        </Title>
       </div>
       <div className={css.bodyContainer}>
         <MarkdownBody

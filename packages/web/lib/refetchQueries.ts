@@ -38,7 +38,7 @@ export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
       "currentDatabase",
       "branchNames",
       "views",
-      // "docs",
+      "docs",
       "commits",
       // "status",
       // "diffSummaries",

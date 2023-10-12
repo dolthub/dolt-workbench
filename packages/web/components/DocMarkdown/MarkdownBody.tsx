@@ -1,5 +1,6 @@
 import Markdown from "@components/Markdown";
 import { RefParams } from "@lib/params";
+import Editor from "./Editor";
 import css from "./index.module.css";
 
 type Props = {
@@ -25,21 +26,21 @@ export default function MarkdownBody(props: Props) {
     );
   }
 
-  // if (props.showEditor) {
-  //   return (
-  //     <div className={css.body}>
-  //       <Editor
-  //         setShowEditor={props.setShowEditor}
-  //         markdown={props.markdown ?? ""}
-  //         params={{
-  //           ...props.params,
-  //           docName: props.doltDocsQueryDocName || props.params.docName || "",
-  //         }}
-  //         isDoc={props.isDoc}
-  //       />
-  //     </div>
-  //   );
-  // }
+  if (props.showEditor) {
+    return (
+      <div className={css.body}>
+        <Editor
+          setShowEditor={props.setShowEditor}
+          markdown={props.markdown ?? ""}
+          params={{
+            ...props.params,
+            docName: props.doltDocsQueryDocName || props.params.docName || "",
+          }}
+          isDoc={props.isDoc}
+        />
+      </div>
+    );
+  }
 
   return (
     <Markdown
