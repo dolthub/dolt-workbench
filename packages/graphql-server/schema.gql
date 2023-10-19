@@ -164,7 +164,6 @@ type Query {
   databases: [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   docs(databaseName: String!, refName: String!): DocList!
-  doc(refName: String!, databaseName: String!, docType: DocType!): Doc
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   views(databaseName: String!, refName: String!): RowList!

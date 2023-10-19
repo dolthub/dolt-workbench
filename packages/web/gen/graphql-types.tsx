@@ -181,7 +181,6 @@ export type Query = {
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
-  doc?: Maybe<Doc>;
   docOrDefaultDoc?: Maybe<Doc>;
   docs: DocList;
   doltDatabaseDetails: DoltDatabaseDetails;
@@ -225,13 +224,6 @@ export type QueryCommitsArgs = {
 
 export type QueryDefaultBranchArgs = {
   databaseName: Scalars['String']['input'];
-};
-
-
-export type QueryDocArgs = {
-  databaseName: Scalars['String']['input'];
-  docType: DocType;
-  refName: Scalars['String']['input'];
 };
 
 
