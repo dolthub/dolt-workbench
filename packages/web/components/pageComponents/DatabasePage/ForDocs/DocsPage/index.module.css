@@ -1,0 +1,7 @@
+.container {
+  @apply mb-20;
+}
+
+.title {
+  @apply mx-6 mt-6;
+}

@@ -2,7 +2,7 @@ import Page404 from "@components/Page404";
 import DatabaseLayout from "@components/layouts/DatabaseLayout";
 import { ApolloErrorType } from "@lib/errors/types";
 import { DatabasePageParams } from "@lib/params";
-import { database } from "@lib/urls";
+import { RefUrl, database } from "@lib/urls";
 import { ReactNode } from "react";
 
 type Props = {
@@ -11,6 +11,7 @@ type Props = {
   initialTabIndex?: number;
   smallHeaderBreadcrumbs?: ReactNode;
   leftTableNav?: ReactNode;
+  routeRefChangeTo?: RefUrl;
 };
 
 export default function ForError(props: Props) {
@@ -18,7 +19,7 @@ export default function ForError(props: Props) {
     <DatabaseLayout
       {...props}
       initialTabIndex={props.initialTabIndex ?? 0}
-      routeRefChangeTo={database}
+      routeRefChangeTo={props.routeRefChangeTo ?? database}
     >
       <Page404 error={props.error} title="Error fetching database" />
     </DatabaseLayout>

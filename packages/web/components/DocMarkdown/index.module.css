@@ -8,9 +8,8 @@
 
 .bodyContainer {
   @screen lg {
-    @apply px-8;
+    @apply mx-8;
   }
-  @apply px-4;
 }
 
 .body {
@@ -18,36 +17,27 @@
 }
 
 .titleGroup {
-  @apply p-2 pt-8 pl-8 text-primary max-h-[6rem];
+  @apply mx-4 mt-12 text-primary;
 
-  @media (max-width: 767px) {
-    @apply p-4;
+  @screen lg {
+    @apply m-2 mt-8 ml-8;
   }
 }
 
 .title {
-  @apply font-semibold text-2xl pb-6;
+  @apply font-semibold text-2xl pb-4;
 }
 
 .titleTop {
-  @apply flex justify-between;
+  @apply flex justify-between flex-wrap;
 }
 
 .description {
   @apply text-sm font-normal min-w-[11.25rem];
 }
-
 .buttons {
   @apply mx-6;
 }
-
 .edit {
   @apply py-0 px-4 w-24;
-}
-.hiddenForMobile {
-  @apply hidden;
-
-  @screen lg {
-    @apply block;
-  }
 }

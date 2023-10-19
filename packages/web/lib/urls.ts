@@ -43,9 +43,6 @@ export const branches = (p: ps.MaybeRefParams): Route =>
 export const newBranch = (p: ps.OptionalRefParams): Route =>
   branches(p).addStatic("new").withQuery({ refName: p.refName });
 
-export const defaultDocDefaultBranch = (p: ps.DatabaseParams): Route =>
-  database(p).addStatic("doc");
-
 export const defaultDoc = (p: ps.RefParams): Route =>
   defaultDocDefaultBranch(p).addDynamic("refName", p.refName, ENCODE);
 

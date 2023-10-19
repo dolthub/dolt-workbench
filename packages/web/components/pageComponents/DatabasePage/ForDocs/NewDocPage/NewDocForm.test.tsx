@@ -4,11 +4,11 @@ import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
 import { sqlQuery } from "@lib/urls";
 import { screen, waitFor } from "@testing-library/react";
-import NewDocForm from ".";
-import { docsMock, markdown } from "../DocList/mocks";
+import { docsMock, markdown } from "../DocsPage/DocList/mocks";
+import NewDocForm from "./NewDocForm";
 
-export const dbParams = { databaseName: "test" };
-export const params: RefParams = { ...dbParams, refName: "master" };
+const dbParams = { databaseName: "test" };
+const params: RefParams = { ...dbParams, refName: "master" };
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");
 
@@ -48,7 +48,7 @@ describe("test NewDocForm", () => {
 
     const { href, as } = sqlQuery({
       ...params,
-      q: `INSERT INTO dolt_docs VALUES ("LICENSE.md", "${markdown}") ON DUPLICATE KEY UPDATE doc_text="${markdown}"`,
+      q: `REPLACE INTO dolt_docs VALUES ("LICENSE.md", "${markdown}")`,
     });
     await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });

@@ -47,6 +47,8 @@ export const mutationExamples = [
   "TRUNCATE TABLE table_name",
   "INSERT INTO table_name (column1, column2) VALUES ('value1', 'value2')",
   "INSERT INTO table_name (column1, column2) SELECT column1, column2 FROM table2 WHERE column1 = 'value'",
+  "REPLACE INTO table_name (column1, column2) VALUES ('value1', 'value2 with \"quotes\"')",
+  "REPLACE INTO table_name (column1, column2) SELECT column1, column2 FROM table2 WHERE column1 = 'value'",
   "UPDATE table_name SET column1 = 'new_value' WHERE column2 = 'value'",
   "UPDATE table_name SET column1 = column1 + 10 WHERE column2 = 'value'",
   "DELETE FROM table_name WHERE column1 = 'value'",

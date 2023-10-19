@@ -1,5 +1,13 @@
+.container {
+  @apply mt-6 mb-20;
+}
+
 .title {
-  @apply font-semibold text-2xl pb-6 pt-8 pl-8 text-primary;
+  @apply font-semibold text-2xl my-6 mx-8 text-primary;
+}
+
+.goBack {
+  @apply mb-8 mx-8;
 }
 
 .body {
