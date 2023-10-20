@@ -644,6 +644,15 @@ export type HistoryForBranchQueryVariables = Exact<{
 
 export type HistoryForBranchQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
 
+export type BranchForCommitGraphFragment = { __typename?: 'Branch', branchName: string, head?: string | null };
+
+export type BranchListForCommitGraphQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type BranchListForCommitGraphQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, head?: string | null }> } };
+
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -872,6 +881,12 @@ export const CommitListForHistoryFragmentDoc = gql`
   nextOffset
 }
     ${CommitForHistoryFragmentDoc}`;
+export const BranchForCommitGraphFragmentDoc = gql`
+    fragment BranchForCommitGraph on Branch {
+  branchName
+  head
+}
+    `;
 export const CreateDatabaseDocument = gql`
     mutation CreateDatabase($databaseName: String!) {
   createDatabase(databaseName: $databaseName)
@@ -1876,6 +1891,43 @@ export function useHistoryForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type HistoryForBranchQueryHookResult = ReturnType<typeof useHistoryForBranchQuery>;
 export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryForBranchLazyQuery>;
 export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
+export const BranchListForCommitGraphDocument = gql`
+    query BranchListForCommitGraph($databaseName: String!) {
+  branches(databaseName: $databaseName) {
+    list {
+      ...BranchForCommitGraph
+    }
+  }
+}
+    ${BranchForCommitGraphFragmentDoc}`;
+
+/**
+ * __useBranchListForCommitGraphQuery__
+ *
+ * To run a query within a React component, call `useBranchListForCommitGraphQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchListForCommitGraphQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchListForCommitGraphQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useBranchListForCommitGraphQuery(baseOptions: Apollo.QueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
+      }
+export function useBranchListForCommitGraphLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
+        }
+export type BranchListForCommitGraphQueryHookResult = ReturnType<typeof useBranchListForCommitGraphQuery>;
+export type BranchListForCommitGraphLazyQueryHookResult = ReturnType<typeof useBranchListForCommitGraphLazyQuery>;
+export type BranchListForCommitGraphQueryResult = Apollo.QueryResult<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>;
 export const TableNamesDocument = gql`
     query TableNames($databaseName: String!, $refName: String!, $filterSystemTables: Boolean) {
   tableNames(

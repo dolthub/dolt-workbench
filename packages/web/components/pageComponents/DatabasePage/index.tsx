@@ -1,4 +1,5 @@
 import ForBranches from "./ForBranches";
+import ForCommitGraph from "./ForCommitGraph";
 import ForCommits from "./ForCommits";
 import ForCreateTable from "./ForCreateTable";
 import ForDefaultBranch from "./ForDefaultBranch";
@@ -11,6 +12,7 @@ import DatabasePage from "./component";
 
 export default Object.assign(DatabasePage, {
   ForBranches,
+  ForCommitGraph,
   ForCommits,
   ForCreateTable,
   ForDefaultBranch,
