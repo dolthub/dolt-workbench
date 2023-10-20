@@ -1,5 +1,6 @@
 import DocLink from "@components/links/DocLink";
-import { DocForDocPageFragment, Maybe } from "@gen/graphql-types";
+import { DocForDocPageFragment } from "@gen/graphql-types";
+import Maybe from "@lib/Maybe";
 import { RefParams } from "@lib/params";
 import { GiScales } from "@react-icons/all-files/gi/GiScales";
 import { IoBookOutline } from "@react-icons/all-files/io5/IoBookOutline";

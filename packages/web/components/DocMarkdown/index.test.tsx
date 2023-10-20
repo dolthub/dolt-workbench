@@ -4,7 +4,7 @@ import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
 import { sqlQuery } from "@lib/urls";
-import { getDoc } from "@pageComponents/DatabasePage/ForDocs/DocList/mocks";
+import { getDoc } from "@pageComponents/DatabasePage/ForDocs/DocsPage/DocList/mocks";
 import { render, screen, waitFor } from "@testing-library/react";
 import DocMarkdown from ".";
 

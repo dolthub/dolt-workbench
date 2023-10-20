@@ -9,6 +9,7 @@ import {
 } from "@gen/graphql-types";
 import useEditDoc from "@hooks/useEditDoc";
 import { RefParams } from "@lib/params";
+import Header from "./Header";
 import css from "./index.module.css";
 
 type Props = {
@@ -30,9 +31,8 @@ function Inner(props: InnerProps) {
   const disabled = invalidDocType || !state.markdown;
 
   return (
-    <div>
-      <Loader loaded={!state.loading} />
-      <div className={css.title}>Add a README or LICENSE</div>
+    <div className={css.container}>
+      <Header params={props.params} />
       <div className={css.body}>
         <form onSubmit={onSubmit}>
           <div className={css.selectContainer}>

@@ -1,0 +1,12 @@
+.goback {
+  @apply mb-8 font-semibold text-base;
+  svg {
+    @apply mb-[0.2rem] mr-1 inline-block;
+  }
+}
+
+.isMobile {
+  @screen md {
+    @apply hidden;
+  }
+}

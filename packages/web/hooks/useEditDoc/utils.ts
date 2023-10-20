@@ -8,5 +8,5 @@ export function getDocsQuery(docType: DocType, markdown: string): string {
     return `DELETE FROM dolt_docs WHERE doc_name="${docName}"`;
   }
   const escaped = escapeDoubleQuotes(markdown);
-  return `INSERT INTO dolt_docs VALUES ("${docName}", "${escaped}") ON DUPLICATE KEY UPDATE doc_text="${escaped}"`;
+  return `REPLACE INTO dolt_docs VALUES ("${docName}", "${escaped}")`;
 }

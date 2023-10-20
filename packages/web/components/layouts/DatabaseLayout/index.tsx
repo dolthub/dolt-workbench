@@ -29,7 +29,7 @@ type Props = {
 };
 
 export default function DatabaseLayout(props: Props) {
-  const { q, tableName } = props.params;
+  const { q, tableName, ...refParams } = props.params;
   const forDataTable = !!(q || tableName);
   const showHeader = forDataTable || props.showSqlConsole || props.empty;
   const useFullWidth = forDataTable || !!props.wide;
@@ -40,10 +40,18 @@ export default function DatabaseLayout(props: Props) {
     <Wrapper>
       <DatabaseHeaderAndNav
         initialTabIndex={props.initialTabIndex}
-        params={props.params}
+        params={refParams}
+        // breadcrumbs={props.smallHeaderBreadcrumbs}
         title={props.title}
+        // showSmall={showSmallHeader}
+        // setShowSmall={setShowSmallHeader}
       />
-      <div className={cx(css.content, css.contentWithHeader)}>
+      <div
+        className={cx(css.content, {
+          [css.contentWithHeader]: !!showHeader,
+          // [css.contentWithSmallHeader]: showSmallHeader,
+        })}
+      >
         <DatabaseTableNav
           params={props.params}
           initiallyOpen={props.leftNavInitiallyOpen}
@@ -65,6 +73,7 @@ export default function DatabaseLayout(props: Props) {
                 [css.maxWidth]: !useFullWidth,
                 [css.noHeader]: !showHeader,
               })}
+              // onScroll={props.onScroll}
               mobileBreakpoint={1024}
             >
               {props.children}

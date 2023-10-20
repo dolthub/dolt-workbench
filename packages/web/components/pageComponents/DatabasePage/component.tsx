@@ -16,7 +16,6 @@ type Props = {
   leftTableNav?: ReactNode;
   leftNavInitiallyOpen?: boolean;
   showSqlConsole?: boolean;
-  noMobileWarnings?: boolean;
   routeRefChangeTo: RefUrl;
 };
 
