@@ -37,3 +37,16 @@ export type TableParams = RefParams & {
 export type DocParams = RefParams & {
   docName: string;
 };
+
+export type CommitParams = RefParams & {
+  commitId: string;
+};
+
+export type CommitsParams = {
+  fromCommitId?: string;
+  toCommitId?: string;
+};
+
+export type RequiredCommitsParams = DatabaseParams & Required<CommitsParams>;
+
+export type DiffParams = RefParams & CommitsParams;

@@ -1,0 +1,118 @@
+.container {
+  @apply pb-4 pt-6 text-primary outline-none;
+}
+
+.top {
+  @apply flex justify-between;
+}
+
+.title {
+  @apply mx-6;
+}
+
+.scrollContainer {
+  @apply mt-10;
+}
+
+.list {
+  @apply pl-6 border-ld-lightgrey border-l-[1.5px] mr-4 ml-6 py-2;
+
+  @screen lg {
+    @apply ml-32 mr-10 px-10;
+  }
+}
+
+.uncommittedList {
+  @apply border-none bg-[length:1.5px_10px] bg-left bg-repeat-y;
+  background-image: linear-gradient(to bottom, #e1e5e7 50%, white 50%);
+  padding-left: calc(1.5rem + 1.5px);
+
+  @screen lg {
+    padding-left: calc(2.5rem + 1.5px);
+  }
+}
+
+.item {
+  @apply relative rounded-lg my-3 py-4 text-sm;
+
+  @screen lg {
+    @apply border border-ld-lightblue px-6;
+  }
+}
+
+.activeItem {
+  @apply border-ld-orange;
+}
+
+.header {
+  @apply relative font-semibold pb-2 text-lg;
+  @screen lg {
+    @apply text-base;
+  }
+}
+
+.bullet {
+  @apply border-ld-lightgrey h-3 w-3 absolute bg-white rounded-full -left-[1.9rem] border-[1.5px] top-[0.4rem];
+  @screen lg {
+    @apply -left-[2.9rem];
+  }
+}
+
+.commitId {
+  @apply font-semibold text-ld-darkgrey;
+  @screen lg {
+    &:hover {
+      @apply text-acc-lightgrey;
+    }
+  }
+}
+
+.user {
+  @apply font-semibold;
+}
+
+.showForMobile {
+  @apply block mb-3;
+  @screen lg {
+    @apply hidden;
+  }
+}
+
+.message {
+  @apply pb-3 flex max-w-4xl items-end justify-between;
+  width: calc(100% - 30px);
+
+  .showForMobile {
+    @apply text-acc-hoverblue break-words font-semibold mb-0;
+  }
+}
+
+.itemBottom {
+  @apply flex justify-between;
+}
+
+.timeago {
+  @apply text-ld-darkgrey;
+}
+
+.loading {
+  @apply mx-12 my-4;
+}
+
+.noCommits {
+  @apply text-center text-lg m-6;
+}
+
+.showForDesktop {
+  @apply hidden;
+  @screen lg {
+    @apply block;
+  }
+}
+
+.graphButton {
+  @apply items-center px-4 mr-10 hidden md:flex;
+  svg {
+    @apply mr-2;
+  }
+}
