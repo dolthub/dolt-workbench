@@ -6,6 +6,7 @@ import {
   defaultDoc,
   ref,
   RefUrl,
+  releases,
 } from "@lib/urls";
 import { Route } from "@lib/urlUtils";
 
@@ -17,8 +18,8 @@ function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
       return [database, defaultDoc];
     case "Commit Log":
       return [database, commitLog];
-    // case "Releases":
-    //   return [releases];
+    case "Releases":
+      return [releases];
     // case "Pull Requests":
     //   return [pulls];
     default:

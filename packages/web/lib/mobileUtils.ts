@@ -1,5 +1,5 @@
 import { OptionalRefParams } from "./params";
-import { commitLog, defaultDoc, ref } from "./urls";
+import { commitLog, defaultDoc, ref, releases } from "./urls";
 
 export function getDatabasePageName(title?: string): string {
   if (!title) {
@@ -37,8 +37,8 @@ export function getDatabasePageRedirectInfo(
   if (pageName.includes("commitLog")) {
     return commitLog({ ...params, refName: params.refName ?? "" });
   }
-  // if (pageName.includes("releases")) {
-  //   return releases(params);
-  // }
+  if (pageName.includes("releases")) {
+    return releases(params);
+  }
   return ref({ ...params, refName: params.refName ?? "" });
 }

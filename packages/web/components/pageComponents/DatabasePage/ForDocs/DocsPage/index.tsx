@@ -1,5 +1,6 @@
 import DocMarkdown from "@components/DocMarkdown";
 import Page404 from "@components/Page404";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import QueryHandler from "@components/util/QueryHandler";
 import {
   DocForDocPageFragment,
@@ -57,17 +58,19 @@ export default function DocsPage({ params, title }: Props) {
       leftNavInitiallyOpen
       title={title}
     >
-      <QueryHandler
-        result={res}
-        errComponent={<Page404 title="Error fetching database" />}
-        render={data =>
-          data.docOrDefaultDoc ? (
-            <Inner params={params} rowData={data.docOrDefaultDoc} />
-          ) : (
-            <NoDocsMsg params={params} />
-          )
-        }
-      />
+      <NotDoltWrapper showNotDoltMsg feature="Viewing docs" bigMsg>
+        <QueryHandler
+          result={res}
+          errComponent={<Page404 title="Error fetching database" />}
+          render={data =>
+            data.docOrDefaultDoc ? (
+              <Inner params={params} rowData={data.docOrDefaultDoc} />
+            ) : (
+              <NoDocsMsg params={params} />
+            )
+          }
+        />
+      </NotDoltWrapper>
     </DatabasePage>
   );
 }

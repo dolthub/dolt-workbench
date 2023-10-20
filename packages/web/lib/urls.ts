@@ -75,3 +75,9 @@ function getDiffRange(p: ps.DiffParams): string {
   if (!p.toCommitId) return p.fromCommitId ?? "";
   return `${p.fromCommitId ?? ""}..${p.toCommitId}`;
 }
+
+export const releases = (p: ps.OptionalRefParams): Route =>
+  database(p).addStatic("releases").withQuery({ refName: p.refName });
+
+export const newRelease = (p: ps.OptionalRefParams): Route =>
+  releases(p).addStatic("new").withQuery({ refName: p.refName });

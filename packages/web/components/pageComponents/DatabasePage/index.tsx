@@ -6,6 +6,7 @@ import ForDefaultBranch from "./ForDefaultBranch";
 import ForDocs from "./ForDocs";
 import ForQuery from "./ForQuery";
 import ForRef from "./ForRef";
+import ForReleases from "./ForReleases";
 import ForSchema from "./ForSchema";
 import ForTable from "./ForTable";
 import DatabasePage from "./component";
@@ -19,6 +20,7 @@ export default Object.assign(DatabasePage, {
   ForDocs,
   ForQuery,
   ForRef,
+  ForReleases,
   ForSchema,
   ForTable,
 });

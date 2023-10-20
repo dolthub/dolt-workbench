@@ -22,7 +22,7 @@ const getTabOptions = (isDolt: boolean, hideDoltFeature: boolean): Option[] => {
     { value: "ref", label: "Database" },
     { value: "about", label: "About", isDisabled: !isDolt },
     { value: "commitLog", label: "Commit Log", isDisabled: !isDolt },
-    // { value: "releases", label: "Releases", isDisabled: !isDolt },
+    { value: "releases", label: "Releases", isDisabled: !isDolt },
     // { value: "pulls", label: "Pull Requests", isDisabled: !isDolt },
   ];
 };
