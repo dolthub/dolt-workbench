@@ -3208,12 +3208,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/eslint-plugin-next@npm:^13.5.4":
-  version: 13.5.4
-  resolution: "@next/eslint-plugin-next@npm:13.5.4"
+"@next/eslint-plugin-next@npm:^13.5.6":
+  version: 13.5.6
+  resolution: "@next/eslint-plugin-next@npm:13.5.6"
   dependencies:
     glob: 7.1.7
-  checksum: 17a502cec987768bfa99ee42d9072a9a3bdd32b32bde04bd97a04868b56252352a5c38b571ee5ee8f86ff4c27844984a3c737461ebd91d6ca32a2ce2bd5b8af2
+  checksum: 58b5ef15d8298c112c72bbbc34a7a5f63637b5a02af7937d86f26223d370c6bd7c8de0eab737851a17dff52c620068a72179eb72b565add071841b720110490f
   languageName: node
   linkType: hard
 
@@ -7246,7 +7246,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "dolt-sql-workbench@workspace:."
   dependencies:
-    "@next/eslint-plugin-next": ^13.5.4
+    "@next/eslint-plugin-next": ^13.5.6
     "@testing-library/dom": ^9.3.1
     "@types/jest": ^29.5.5
     "@types/react-loader": ^2.4.6
