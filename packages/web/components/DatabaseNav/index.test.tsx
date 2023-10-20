@@ -16,7 +16,7 @@ describe("test for DatabaseNav", () => {
     );
     expect(await screen.findByText(/database/i)).toBeInTheDocument();
     expect(screen.getByText(/about/i)).toBeInTheDocument();
-    // expect(screen.getByText(/commit log/i)).toBeInTheDocument();
+    expect(screen.getByText(/commit log/i)).toBeInTheDocument();
     // expect(screen.getByText(/releases/i)).toBeInTheDocument();
     // expect(screen.getByText(/pull requests/i)).toBeInTheDocument();
   });
@@ -31,7 +31,7 @@ describe("test for DatabaseNav", () => {
     );
     expect(await screen.findByText(/database/i)).toBeInTheDocument();
     expect(screen.queryByText(/about/i)).not.toBeInTheDocument();
-    // expect(screen.getByText(/commit log/i)).toBeInTheDocument();
+    expect(screen.queryByText(/commit log/i)).not.toBeInTheDocument();
     // expect(screen.getByText(/releases/i)).toBeInTheDocument();
     // expect(screen.getByText(/pull requests/i)).toBeInTheDocument();
   });
