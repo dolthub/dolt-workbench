@@ -10,7 +10,7 @@ import css from "./index.module.css";
 
 type Props = {
   hasMore?: boolean;
-  nextPage: () => void;
+  loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];
   columns: ColumnForDataTableFragment[];
   columnStatus: ColumnStatus;
@@ -35,14 +35,8 @@ export default function MobileTable({ columns, rows, ...props }: Props) {
         />
       </table>
       {props.hasMore && (
-        <Button
-          onClick={() => {
-            props.nextPage();
-            window.scrollTo(0, 0);
-          }}
-          className={css.mobileNextPageButton}
-        >
-          next
+        <Button onClick={props.loadMore} className={css.mobileNextPageButton}>
+          load more
         </Button>
       )}
     </div>
