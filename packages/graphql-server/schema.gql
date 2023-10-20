@@ -139,6 +139,14 @@ enum QueryExecutionStatus {
   RowLimit
 }
 
+type Status {
+  _id: ID!
+  refName: String!
+  tableName: String!
+  staged: Boolean!
+  status: String!
+}
+
 type Tag {
   _id: ID!
   tagName: String!
@@ -169,6 +177,7 @@ type Query {
   views(databaseName: String!, refName: String!): RowList!
   sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
   sqlSelectForCsvDownload(refName: String!, databaseName: String!, queryString: String!): String!
+  status(databaseName: String!, refName: String!): [Status!]!
   table(refName: String!, databaseName: String!, tableName: String!): Table!
   tableNames(refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
   tables(refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!

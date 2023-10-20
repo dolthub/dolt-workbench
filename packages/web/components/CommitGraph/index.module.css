@@ -1,0 +1,38 @@
+.container {
+  @apply pb-4 pt-6 outline-none;
+}
+
+.top {
+  @apply flex justify-between;
+}
+
+.title {
+  @apply mx-6;
+}
+
+.graphContainer {
+  @apply px-12 mt-8;
+}
+
+.message {
+  @apply text-sm text-primary mt-4;
+}
+
+.backToPositionButton {
+  @apply my-2;
+}
+
+.loader {
+  @apply text-primary py-4 px-10;
+}
+
+.graph {
+  @apply mb-8;
+}
+
+.button {
+  @apply flex items-center px-4 mr-10;
+  svg {
+    @apply mr-2;
+  }
+}

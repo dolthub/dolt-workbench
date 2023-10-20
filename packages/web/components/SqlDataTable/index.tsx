@@ -63,8 +63,7 @@ function Inner(props: InnerProps) {
           params={props.params}
           rows={props.rows}
           columns={props.columns}
-          loadMore={() => []}
-          nextPage={() => []}
+          loadMore={async () => {}}
           message={msg}
         />
       </DataTableLayout>
