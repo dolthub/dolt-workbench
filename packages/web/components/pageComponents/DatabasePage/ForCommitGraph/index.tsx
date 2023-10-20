@@ -1,4 +1,5 @@
 import CommitGraph from "@components/CommitGraph";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { RefParams } from "@lib/params";
 import { commitGraph } from "@lib/urls";
 import DatabaseDesktopOnly from "../DatabaseDesktopOnly";
@@ -21,7 +22,9 @@ export default function ForCommitGraph({ params }: Props) {
         initialTabIndex={2}
         // smallHeaderBreadcrumbs={<CommitGraphBreadcrumbs params={params} />}
       >
-        <CommitGraph params={params} />
+        <NotDoltWrapper showNotDoltMsg feature="Viewing commit graph" bigMsg>
+          <CommitGraph params={params} />
+        </NotDoltWrapper>
       </DatabasePage>
     </DatabaseDesktopOnly>
   );

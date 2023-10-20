@@ -1,3 +1,4 @@
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { RefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
 import DatabasePage from "../component";
@@ -40,7 +41,9 @@ export default function ForCommits(props: Props) {
       title="commitLog"
       routeRefChangeTo={commitLog}
     >
-      <CommitLog params={props.params} />
+      <NotDoltWrapper showNotDoltMsg feature="Viewing commit log" bigMsg>
+        <CommitLog params={props.params} />
+      </NotDoltWrapper>
     </DatabasePage>
   );
 }
