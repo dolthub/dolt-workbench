@@ -16,6 +16,11 @@ export default function Meta(props: Props) {
   return (
     <Head>
       <title>{title}</title>
+      {/* this disables the auto zoom/page shift on mobile when clicking on selectors */}
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
       <meta name="title" content={title} />
       {props.description && (
         <meta name="description" content={props.description} />

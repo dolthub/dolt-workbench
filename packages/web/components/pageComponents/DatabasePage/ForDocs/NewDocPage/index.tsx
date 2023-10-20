@@ -1,3 +1,4 @@
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
 import DatabasePage from "../../component";
@@ -15,7 +16,9 @@ export default function NewDocPage({ params }: Props) {
       initialTabIndex={1}
       // smallHeaderBreadcrumbs={<NewDocBreadcrumbs params={params} />}
     >
-      <NewDocForm params={params} />
+      <NotDoltWrapper showNotDoltMsg feature="Creating docs" bigMsg>
+        <NewDocForm params={params} />
+      </NotDoltWrapper>
     </DatabasePage>
   );
 }

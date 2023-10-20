@@ -145,7 +145,9 @@ export type Mutation = {
   addDatabaseConnection: Scalars['String']['output'];
   createBranch: Branch;
   createDatabase: Scalars['Boolean']['output'];
+  createTag: Tag;
   deleteBranch: Scalars['Boolean']['output'];
+  deleteTag: Scalars['Boolean']['output'];
 };
 
 
@@ -167,9 +169,23 @@ export type MutationCreateDatabaseArgs = {
 };
 
 
+export type MutationCreateTagArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  tagName: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteTagArgs = {
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -581,6 +597,24 @@ export type RefPageQueryVariables = Exact<{
 
 
 export type RefPageQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null, tableNames: { __typename?: 'TableNames', list: Array<string> } };
+
+export type CreateTagMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } } };
+
+export type DeleteTagMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
@@ -1668,6 +1702,79 @@ export function useRefPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type RefPageQueryHookResult = ReturnType<typeof useRefPageQuery>;
 export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryLazyQuery>;
 export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
+export const CreateTagDocument = gql`
+    mutation CreateTag($databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!) {
+  createTag(
+    databaseName: $databaseName
+    tagName: $tagName
+    message: $message
+    fromRefName: $fromRefName
+  ) {
+    ...TagForList
+  }
+}
+    ${TagForListFragmentDoc}`;
+export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
+
+/**
+ * __useCreateTagMutation__
+ *
+ * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tagName: // value for 'tagName'
+ *      message: // value for 'message'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+      }
+export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
+export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
+export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const DeleteTagDocument = gql`
+    mutation DeleteTag($databaseName: String!, $tagName: String!) {
+  deleteTag(databaseName: $databaseName, tagName: $tagName)
+}
+    `;
+export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, DeleteTagMutationVariables>;
+
+/**
+ * __useDeleteTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTagMutation, { data, loading, error }] = useDeleteTagMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tagName: // value for 'tagName'
+ *   },
+ * });
+ */
+export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
+      }
+export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
+export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
+export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const AddDatabaseConnectionDocument = gql`
     mutation AddDatabaseConnection($url: String, $useEnv: Boolean) {
   addDatabaseConnection(url: $url, useEnv: $useEnv)

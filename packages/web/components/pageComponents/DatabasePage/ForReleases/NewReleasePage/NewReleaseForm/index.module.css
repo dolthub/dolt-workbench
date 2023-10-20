@@ -1,0 +1,24 @@
+.container {
+  @apply max-w-2xl mx-auto;
+}
+
+.label {
+  @apply font-semibold text-primary mt-4 mb-2;
+}
+
+.input {
+  @apply mt-4;
+  @apply max-w-md;
+}
+
+.error {
+  @apply text-center max-w-xs;
+}
+
+.textarea {
+  @apply max-w-none;
+}
+
+.textarea > textarea {
+  @apply bg-white;
+}

@@ -201,4 +201,6 @@ type Mutation {
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
   addDatabaseConnection(url: String, useEnv: Boolean): String!
   createDatabase(databaseName: String!): Boolean!
+  createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!): Tag!
+  deleteTag(databaseName: String!, tagName: String!): Boolean!
 }

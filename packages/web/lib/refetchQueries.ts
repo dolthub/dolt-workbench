@@ -16,6 +16,16 @@ type RefetchOptions = RefetchQueriesOptions<
   Promise<ApolloQueryResult<any>>
 >;
 
+// Refetch tags
+export const refetchTagQueries = (
+  variables: DatabaseParams,
+): RefetchQueries => [
+  {
+    query: gen.TagListDocument,
+    variables,
+  },
+];
+
 export const refetchBranchQueries = (
   variables: DatabaseParams,
 ): RefetchQueries => [
