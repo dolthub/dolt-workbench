@@ -1,15 +1,13 @@
 import DocMarkdown from "@components/DocMarkdown";
-import Loader from "@components/Loader";
+import Page404 from "@components/Page404";
+import QueryHandler from "@components/util/QueryHandler";
 import {
   DocForDocPageFragment,
   useDocDataForDocPageQuery,
 } from "@gen/graphql-types";
-import { gqlTableNotFound } from "@lib/errors/graphql";
-import { errorMatches } from "@lib/errors/helpers";
 import { RefParams } from "@lib/params";
 import toDocType from "@lib/toDocType";
-import { defaultDoc } from "@lib/urls";
-import ForError from "../../ForError";
+import { defaultDoc, doc } from "@lib/urls";
 import DatabasePage from "../../component";
 import NoDocsMsg from "../NoDocsMsg";
 import DocList from "./DocList";
@@ -18,29 +16,15 @@ import css from "./index.module.css";
 type InnerProps = {
   params: RefParams & { docName?: string };
   rowData?: DocForDocPageFragment;
-  title?: string;
 };
 
-export function Inner({ params, rowData, title }: InnerProps) {
+export function Inner({ params, rowData }: InnerProps) {
   return (
-    <DatabasePage
-      initialTabIndex={1}
-      params={params}
-      routeRefChangeTo={defaultDoc}
-      // smallHeaderBreadcrumbs={
-      //   params.docName && (
-      //     <DocBreadcrumbs params={{ ...params, docName: params.docName }} />
-      //   )
-      // }
-      leftNavInitiallyOpen
-      title={title}
-    >
-      <div className={css.container}>
-        <h1 className={css.title}>About</h1>
-        <DocList params={params} />
-        <DocMarkdown params={params} rowData={rowData} />
-      </div>
-    </DatabasePage>
+    <div className={css.container}>
+      <h1 className={css.title}>About</h1>
+      <DocList params={params} />
+      <DocMarkdown params={params} rowData={rowData} />
+    </div>
   );
 }
 
@@ -52,38 +36,38 @@ type Props = {
 };
 
 export default function DocsPage({ params, title }: Props) {
-  const { data, error, loading } = useDocDataForDocPageQuery({
+  const res = useDocDataForDocPageQuery({
     variables: { ...params, docType: toDocType(params.docName) },
   });
 
-  if (loading) {
-    return (
-      <DatabasePage
-        title={title}
-        initialTabIndex={1}
-        params={params}
-        leftNavInitiallyOpen
-        routeRefChangeTo={defaultDoc}
-      >
-        <Loader loaded={false} />
-      </DatabasePage>
-    );
-  }
-
-  if (error && !errorMatches(gqlTableNotFound, error)) {
-    return (
-      <ForError
-        error={error}
-        params={params}
-        initialTabIndex={1}
-        routeRefChangeTo={defaultDoc}
+  return (
+    <DatabasePage
+      initialTabIndex={1}
+      params={params}
+      routeRefChangeTo={p =>
+        params.docName
+          ? doc({ ...params, docName: params.docName })
+          : defaultDoc(p)
+      }
+      // smallHeaderBreadcrumbs={
+      //   params.docName && (
+      //     <DocBreadcrumbs params={{ ...params, docName: params.docName }} />
+      //   )
+      // }
+      leftNavInitiallyOpen
+      title={title}
+    >
+      <QueryHandler
+        result={res}
+        errComponent={<Page404 title="Error fetching database" />}
+        render={data =>
+          data.docOrDefaultDoc ? (
+            <Inner params={params} rowData={data.docOrDefaultDoc} />
+          ) : (
+            <NoDocsMsg params={params} />
+          )
+        }
       />
-    );
-  }
-
-  if (errorMatches(gqlTableNotFound, error) || !data?.docOrDefaultDoc) {
-    return <NoDocsMsg params={params} />;
-  }
-
-  return <Inner params={params} rowData={data.docOrDefaultDoc} />;
+    </DatabasePage>
+  );
 }

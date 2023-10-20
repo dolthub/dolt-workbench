@@ -3,8 +3,7 @@ import CodeBlock from "@components/CodeBlock";
 import DocsLink from "@components/links/DocsLink";
 import Link from "@components/links/Link";
 import { RefParams } from "@lib/params";
-import { defaultDoc, newDoc } from "@lib/urls";
-import DatabasePage from "../../component";
+import { newDoc } from "@lib/urls";
 import css from "./index.module.css";
 
 type Props = {
@@ -16,29 +15,20 @@ type Props = {
 
 export default function NoDocsMsg(props: Props) {
   return (
-    <DatabasePage
-      {...props}
-      title="doc"
-      initialTabIndex={1}
-      leftNavInitiallyOpen
-      routeRefChangeTo={defaultDoc}
-    >
-      <div>
-        <h1 className={css.title}>About</h1>
-        <h2 className={css.header}>
-          {props.params.docName ? `${props.params.docName} not` : "No docs"}{" "}
-          found for{" "}
-          <span className={css.bold}>{props.params.databaseName}.</span>
-          <Link {...newDoc(props.params)}>
-            <Button>Add doc</Button>
-          </Link>
-        </h2>
-        <div className={css.bottom}>
-          <AddFromWorkbench {...props} />
-          <AddFromSQL />
-        </div>
+    <div>
+      <h1 className={css.title}>About</h1>
+      <h2 className={css.header}>
+        {props.params.docName ? `${props.params.docName} not` : "No docs"} found
+        for <span className={css.bold}>{props.params.databaseName}.</span>
+        <Link {...newDoc(props.params)}>
+          <Button>Add doc</Button>
+        </Link>
+      </h2>
+      <div className={css.bottom}>
+        <AddFromWorkbench {...props} />
+        <AddFromSQL />
       </div>
-    </DatabasePage>
+    </div>
   );
 }
 
