@@ -11,7 +11,7 @@
 }
 
 .top {
-  @apply hidden  justify-end items-center sticky right-4 z-10 lg:flex;
+  @apply hidden justify-end items-center sticky right-4 z-10 lg:flex;
 }
 
 .optionsButton {

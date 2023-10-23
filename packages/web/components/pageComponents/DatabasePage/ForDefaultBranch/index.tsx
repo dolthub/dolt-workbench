@@ -1,6 +1,6 @@
 import Loader from "@components/Loader";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
-import { DatabasePageParams, RefParams } from "@lib/params";
+import { OptionalRefParams, RefParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { ReactNode, cloneElement } from "react";
 import ForEmpty from "../ForEmpty";
@@ -9,7 +9,7 @@ import ForTable from "../ForTable";
 import DatabasePage from "../component";
 
 type Props = {
-  params: DatabasePageParams;
+  params: OptionalRefParams;
   title?: string;
   hideDefaultTable?: boolean;
   initialTabIndex?: number;

@@ -1,3 +1,4 @@
+import CommitsBreadcrumbs from "@components/breadcrumbs/CommitsBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { RefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
@@ -37,7 +38,7 @@ export default function ForCommits(props: Props) {
   return (
     <DatabasePage
       {...commonProps}
-      // smallHeaderBreadcrumbs={<CommitsBreadcrumbs params={refParams} />}
+      smallHeaderBreadcrumbs={<CommitsBreadcrumbs params={props.params} />}
       title="commitLog"
       routeRefChangeTo={commitLog}
     >

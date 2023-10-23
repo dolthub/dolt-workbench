@@ -1,4 +1,6 @@
 import DatabaseOptionsDropdown from "@components/DatabaseOptionsDropdown";
+import StatusWithOptions from "@components/StatusWithOptions";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { SqlQueryParams } from "@lib/params";
 import { ReactNode } from "react";
 import css from "./index.module.css";
@@ -14,7 +16,9 @@ export default function DataTableLayout(props: Props) {
     <div className={css.container}>
       {props.children}
       <div className={css.top}>
-        {/* <StatusWithOptions {...props} className={css.status} /> */}
+        <NotDoltWrapper hideNotDolt>
+          <StatusWithOptions {...props} className={css.status} />
+        </NotDoltWrapper>
         <DatabaseOptionsDropdown
           className={css.optionsButton}
           params={props.params}

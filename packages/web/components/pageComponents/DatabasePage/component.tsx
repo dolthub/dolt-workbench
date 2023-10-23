@@ -11,6 +11,7 @@ type Props = {
   initialTabIndex: number;
   empty?: boolean;
   wide?: boolean;
+  smallHeaderBreadcrumbs?: ReactNode;
   initialSmallHeader?: boolean;
   onScroll?: () => void;
   leftTableNav?: ReactNode;
