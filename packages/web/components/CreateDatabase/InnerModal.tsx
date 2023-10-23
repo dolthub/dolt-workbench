@@ -1,6 +1,7 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import FormInput from "@components/FormInput";
+import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent } from "react";
 
@@ -13,6 +14,26 @@ type InnerProps = {
 };
 
 export default function InnerModal(props: InnerProps) {
+  const { userHasWritePerms, writesEnabled } = useRole();
+
+  if (!userHasWritePerms) {
+    return (
+      <div>
+        <p>You must have write permissions to create a new database.</p>
+        <Button onClick={props.onClose}>OK</Button>
+      </div>
+    );
+  }
+
+  if (!writesEnabled) {
+    return (
+      <div>
+        <p>You must enable writes to create a new database.</p>
+        <Button onClick={props.onClose}>OK</Button>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={props.onSubmit}>
       <FormInput

@@ -1,5 +1,6 @@
 import Popup from "@components/Popup";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import useRole from "@hooks/useRole";
 import { DatabaseParams } from "@lib/params";
 import { newRelease } from "@lib/urls";
 import { AiOutlineTag } from "@react-icons/all-files/ai/AiOutlineTag";
@@ -15,6 +16,10 @@ type Props = {
 };
 
 export default function AddItemDropdown(props: Props) {
+  const { userHasWritePerms, canWriteToDB } = useRole();
+
+  if (!canWriteToDB) return null;
+
   return (
     <div className={css.addDropdown} data-cy="add-dropdown-database-nav">
       <Popup
@@ -45,6 +50,7 @@ export default function AddItemDropdown(props: Props) {
                 url={newRelease(props.params)}
                 icon={<AiOutlineTag />}
                 data-cy="add-dropdown-new-release-link"
+                hide={!userHasWritePerms}
               >
                 New release
               </DropdownItem>
@@ -53,6 +59,7 @@ export default function AddItemDropdown(props: Props) {
               <NotDoltWrapper>
                 <DocsDropdownItem
                   params={{ ...props.params, refName: props.params.refName }}
+                  userHasWritePerms={userHasWritePerms}
                 />
               </NotDoltWrapper>
             )}

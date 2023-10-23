@@ -70,6 +70,13 @@
   }
 }
 
+.permission {
+  @apply hidden;
+  @screen lg {
+    @apply flex mt-0.5 ml-3;
+  }
+}
+
 .mobileSelector {
   @screen lg {
     @apply hidden;

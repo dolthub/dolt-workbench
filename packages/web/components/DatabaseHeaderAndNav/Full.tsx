@@ -1,4 +1,5 @@
 import DatabaseNav from "@components/DatabaseNav";
+import PermissionLabel from "@components/PermissionLabel";
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
 import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
@@ -32,6 +33,7 @@ export default function Full(props: Props) {
             className={css.databaseBreadcrumbs}
             params={props.params}
           />
+          <PermissionLabel className={css.permission} />
         </div>
         <div>
           <RightHeaderButtons

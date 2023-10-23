@@ -7,6 +7,7 @@ import DropdownItem from "./Item";
 
 type InnerProps = {
   params: RefParams;
+  userHasWritePerms: boolean;
 };
 
 type Props = InnerProps & {
@@ -20,33 +21,42 @@ function Inner(props: InnerProps) {
 
   if (res.loading) return <SmallLoader loaded={false} />;
 
-  const canCreateNewDoc = !res.data?.docs || res.data?.docs.list.length < 2;
+  const canCreateNewDoc =
+    !props.userHasWritePerms ||
+    !res.data?.docs ||
+    res.data?.docs.list.length < 2;
 
-  return (
-    <DropdownItem
-      url={newDoc(props.params)}
-      icon={<HiOutlineDocumentAdd />}
-      hide={!canCreateNewDoc}
-      data-cy="add-dropdown-new-docs-link"
-    >
-      New README/LICENSE
-    </DropdownItem>
-  );
+  return <NewDocLink params={props.params} hide={!canCreateNewDoc} />;
 }
 
 export default function DocsDropdownItem(props: Props) {
   if (props.doltDisabled) {
     return (
-      <DropdownItem
-        url={newDoc(props.params)}
-        icon={<HiOutlineDocumentAdd />}
-        data-cy="add-dropdown-new-docs-link"
+      <NewDocLink
+        params={props.params}
         doltDisabled={props.doltDisabled}
-      >
-        New README/LICENSE
-      </DropdownItem>
+        hide={!props.userHasWritePerms}
+      />
     );
   }
 
   return <Inner {...props} />;
+}
+
+function NewDocLink(props: {
+  params: RefParams;
+  doltDisabled?: boolean;
+  hide?: boolean;
+}) {
+  return (
+    <DropdownItem
+      url={newDoc(props.params)}
+      icon={<HiOutlineDocumentAdd />}
+      data-cy="add-dropdown-new-docs-link"
+      doltDisabled={props.doltDisabled}
+      hide={props.hide}
+    >
+      New README/LICENSE
+    </DropdownItem>
+  );
 }
