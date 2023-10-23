@@ -19,7 +19,7 @@
     "test": "jest --env=jest-environment-jsdom"
   },
   "dependencies": {
-    "@apollo/client": "^3.8.4",
+    "@apollo/client": "^3.7.0",
     "@react-icons/all-files": "^4.1.0",
     "ace-builds": "^1.28.0",
     "apollo-upload-client": "^17.0.0",
