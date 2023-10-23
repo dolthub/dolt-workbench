@@ -1,4 +1,5 @@
 import CommitGraph from "@components/CommitGraph";
+import CommitGraphBreadcrumbs from "@components/breadcrumbs/CommitGraphBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { RefParams } from "@lib/params";
 import { commitGraph } from "@lib/urls";
@@ -20,7 +21,7 @@ export default function ForCommitGraph({ params }: Props) {
         params={params}
         routeRefChangeTo={commitGraph}
         initialTabIndex={2}
-        // smallHeaderBreadcrumbs={<CommitGraphBreadcrumbs params={params} />}
+        smallHeaderBreadcrumbs={<CommitGraphBreadcrumbs params={params} />}
       >
         <NotDoltWrapper showNotDoltMsg feature="Viewing commit graph" bigMsg>
           <CommitGraph params={params} />

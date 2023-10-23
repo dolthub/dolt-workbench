@@ -1,3 +1,4 @@
+import ReleasesBreadcrumbs from "@components/breadcrumbs/ReleasesBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { OptionalRefParams } from "@lib/params";
 import { releases } from "@lib/urls";
@@ -20,7 +21,9 @@ export default function ForReleases(props: Props): JSX.Element {
       }}
       initialTabIndex={3}
       hideDefaultTable
-      // smallHeaderBreadcrumbs={<ReleasesBreadcrumbs params={props.params} />}
+      smallHeaderBreadcrumbs={
+        <ReleasesBreadcrumbs params={props.params} new={props.newRelease} />
+      }
       title="releases"
       routeRefChangeTo={releases}
     >

@@ -1,4 +1,5 @@
 import DataTable from "@components/DataTable";
+import TableBreadcrumbs from "@components/breadcrumbs/TableBreadcrumbs";
 import { DataTableProvider } from "@contexts/dataTable";
 import { TableParams } from "@lib/params";
 import { editTable, table } from "@lib/urls";
@@ -17,6 +18,7 @@ export default function ForTable(props: Props) {
         initialTabIndex={0}
         params={props.params}
         title="ref"
+        smallHeaderBreadcrumbs={<TableBreadcrumbs params={props.params} />}
         routeRefChangeTo={p =>
           props.edit
             ? editTable({ ...p, tableName: props.params.tableName })

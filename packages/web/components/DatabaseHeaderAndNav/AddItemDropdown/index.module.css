@@ -1,0 +1,39 @@
+.addDropdown {
+  @apply hidden;
+
+  @screen lg {
+    @apply font-semibold block mr-10;
+  }
+}
+
+.popup {
+  @apply text-primary;
+}
+
+.popupItem {
+  @apply mx-2 my-3 text-sm;
+
+  svg {
+    @apply inline-block mr-2.5 mb-0.5 text-lg;
+  }
+}
+
+.button {
+  @apply flex justify-center items-center pl-2 pr-1 h-8 text-white text-sm font-normal border-opaque-rounded bg-[#4B75C1] w-20 mr-3;
+
+  &:hover {
+    @apply button-shadow;
+  }
+
+  &:focus {
+    @apply outline-none;
+  }
+}
+
+.plus {
+  @apply pr-1.5;
+}
+
+.caret {
+  @apply pl-1.5;
+}
