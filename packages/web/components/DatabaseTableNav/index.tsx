@@ -1,6 +1,7 @@
 import CustomFormSelect from "@components/CustomFormSelect";
 import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl, newBranch } from "@lib/urls";
@@ -59,7 +60,9 @@ function Nav({
           />
         </NotDoltWrapper>
         <NotDoltWrapper>
-          <NewBranchLink params={params} open={open} />
+          <HideForNoWritesWrapper params={params}>
+            <NewBranchLink params={params} open={open} />
+          </HideForNoWritesWrapper>
         </NotDoltWrapper>
         <GiHamburgerMenu
           onClick={toggleMenu}

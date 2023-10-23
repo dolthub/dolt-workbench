@@ -4,6 +4,7 @@ import DeleteModal from "@components/DeleteModal";
 import Loader from "@components/Loader";
 import Page404 from "@components/Page404";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { TagForListFragment, useDeleteTagMutation } from "@gen/graphql-types";
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
@@ -38,17 +39,19 @@ function Inner({ tags, ...props }: InnerProps) {
     <div className={css.container}>
       <div className={css.top}>
         <h1>Releases</h1>
-        <Link
-          {...newRelease({
-            ...props.params,
-            refName:
-              tagNameToDelete === props.params.refName
-                ? undefined
-                : props.params.refName,
-          })}
-        >
-          <Button>Create Release</Button>
-        </Link>
+        <HideForNoWritesWrapper params={props.params}>
+          <Link
+            {...newRelease({
+              ...props.params,
+              refName:
+                tagNameToDelete === props.params.refName
+                  ? undefined
+                  : props.params.refName,
+            })}
+          >
+            <Button>Create Release</Button>
+          </Link>
+        </HideForNoWritesWrapper>
       </div>
       {tags?.length ? (
         <List {...props} tags={tags} openDeleteModal={openDeleteModal} />

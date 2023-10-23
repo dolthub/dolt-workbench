@@ -1,4 +1,5 @@
 import Button from "@components/Button";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
@@ -21,13 +22,15 @@ export default function EditCell(props: Props) {
   }
 
   return (
-    <div>
-      <Button.Link
-        onClick={() => props.setEditing(true)}
-        className={css.button}
-      >
-        Edit Cell Value
-      </Button.Link>
-    </div>
+    <HideForNoWritesWrapper params={params}>
+      <div>
+        <Button.Link
+          onClick={() => props.setEditing(true)}
+          className={css.button}
+        >
+          Edit Cell Value
+        </Button.Link>
+      </div>
+    </HideForNoWritesWrapper>
   );
 }

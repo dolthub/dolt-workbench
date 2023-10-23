@@ -1,4 +1,5 @@
 import Button from "@components/Button";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import {
@@ -38,10 +39,12 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        Delete row
-      </Button.Link>
-    </div>
+    <HideForNoWritesWrapper params={params}>
+      <div>
+        <Button.Link onClick={onClick} className={css.button}>
+          Delete row
+        </Button.Link>
+      </div>
+    </HideForNoWritesWrapper>
   );
 }

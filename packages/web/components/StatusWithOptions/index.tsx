@@ -2,7 +2,9 @@ import Button from "@components/Button";
 import Loader from "@components/Loader";
 import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
+import useRole from "@hooks/useRole";
 import { RefParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import { IoArrowUndoOutline } from "@react-icons/all-files/io5/IoArrowUndoOutline";
@@ -25,53 +27,60 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   const [commitIsOpen, setCommitIsOpen] = useState(false);
   const [resetIsOpen, setResetIsOpen] = useState(false);
+  const { canWriteToDB } = useRole();
 
   return (
-    <>
-      <div
-        className={cx(
-          css.uncommitted,
-          {
-            [css.smallMinWidth]: props.forDiffPage,
-          },
-          props.className,
-        )}
-        data-cy="uncommitted-changes"
-      >
-        {!props.forDiffPage && (
-          <Link
-            {...diff({
-              ...props.params,
-              toCommitId: "WORKING",
-              fromCommitId: "HEAD",
-            })}
+    <div
+      className={cx(
+        css.uncommitted,
+        {
+          [css.smallMinWidth]: props.forDiffPage || !canWriteToDB,
+        },
+        props.className,
+      )}
+      data-cy="uncommitted-changes"
+    >
+      {!props.forDiffPage && (
+        <Link
+          {...diff({
+            ...props.params,
+            toCommitId: "WORKING",
+            fromCommitId: "HEAD",
+          })}
+        >
+          Uncommitted changes.
+        </Link>
+      )}
+      <HideForNoWritesWrapper params={props.params}>
+        <>
+          <Button.Outlined
+            onClick={() => setCommitIsOpen(true)}
+            className={css.commitButton}
           >
-            Uncommitted changes.
-          </Link>
-        )}
-        <Button.Outlined
-          onClick={() => setCommitIsOpen(true)}
-          className={css.commitButton}
-        >
-          Create commit
-        </Button.Outlined>
-        <Button.Link
-          onClick={() => setResetIsOpen(true)}
-          className={css.resetButton}
-          data-tooltip-id="reset-changes"
-          data-tooltip-content="Reset uncommitted changes"
-        >
-          <IoArrowUndoOutline />
-          <Tooltip id="reset-changes" />
-        </Button.Link>
-      </div>
-      <ResetModal {...props} isOpen={resetIsOpen} setIsOpen={setResetIsOpen} />
-      <CommitModal
-        {...props}
-        isOpen={commitIsOpen}
-        setIsOpen={setCommitIsOpen}
-      />
-    </>
+            Create commit
+          </Button.Outlined>
+          <Button.Link
+            onClick={() => setResetIsOpen(true)}
+            className={css.resetButton}
+            data-tooltip-id="reset-changes"
+            data-tooltip-content="Reset uncommitted changes"
+          >
+            <IoArrowUndoOutline />
+            <Tooltip id="reset-changes" />
+          </Button.Link>
+          <ResetModal
+            {...props}
+            isOpen={resetIsOpen}
+            setIsOpen={setResetIsOpen}
+          />
+          <CommitModal
+            {...props}
+            isOpen={commitIsOpen}
+            setIsOpen={setCommitIsOpen}
+          />
+        </>
+      </HideForNoWritesWrapper>
+    </div>
   );
 }
 

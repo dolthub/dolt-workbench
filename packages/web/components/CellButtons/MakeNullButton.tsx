@@ -1,4 +1,5 @@
 import Button from "@components/Button";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import {
@@ -57,14 +58,16 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
   };
 
   return (
-    <div>
-      <Button.Link
-        onClick={onClick}
-        className={css.button}
-        disabled={notNullConstraint || props.isNull}
-      >
-        Make NULL
-      </Button.Link>
-    </div>
+    <HideForNoWritesWrapper params={params}>
+      <div>
+        <Button.Link
+          onClick={onClick}
+          className={css.button}
+          disabled={notNullConstraint || props.isNull}
+        >
+          Make NULL
+        </Button.Link>
+      </div>
+    </HideForNoWritesWrapper>
   );
 }

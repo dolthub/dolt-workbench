@@ -1,4 +1,5 @@
 import Button from "@components/Button";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
@@ -29,10 +30,12 @@ export default function DropColumnButton({ col, refName }: Props) {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        Drop column
-      </Button.Link>
-    </div>
+    <HideForNoWritesWrapper params={params}>
+      <div>
+        <Button.Link onClick={onClick} className={css.button}>
+          Drop column
+        </Button.Link>
+      </div>
+    </HideForNoWritesWrapper>
   );
 }

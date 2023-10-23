@@ -1,6 +1,7 @@
 import Button from "@components/Button";
 import CommitLink from "@components/links/CommitLink";
 import RefLink from "@components/links/RefLink";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { TagForListFragment } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
@@ -35,14 +36,16 @@ export default function ReleaseListItem({
             </div>
           )}
         </span>
-        <Button.Link
-          onClick={onDeleteClicked}
-          red
-          className={css.delete}
-          aria-label="delete"
-        >
-          <FaRegTrashAlt />
-        </Button.Link>
+        <HideForNoWritesWrapper params={props.params}>
+          <Button.Link
+            onClick={onDeleteClicked}
+            red
+            className={css.delete}
+            aria-label="delete"
+          >
+            <FaRegTrashAlt />
+          </Button.Link>
+        </HideForNoWritesWrapper>
       </div>
       {tag.message && (
         <span className={css.releaseNotes}>

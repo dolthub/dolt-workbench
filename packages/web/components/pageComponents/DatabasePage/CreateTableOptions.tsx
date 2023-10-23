@@ -1,6 +1,7 @@
 import Button from "@components/Button";
 import { sampleCreateQueryForEmpty } from "@components/DatabaseTableHeader/utils";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { OptionalRefParams } from "@lib/params";
 import { database } from "@lib/urls";
@@ -31,23 +32,28 @@ export default function CreateTableOptions(props: Props) {
       <h2 className={cx({ [css.removeForGetStarted]: props.getStarted })}>
         Create a new table
       </h2>
-      <div
-        className={cx(css.sections, {
-          [css.forGetStarted]: props.getStarted,
-        })}
+      <HideForNoWritesWrapper
+        params={props.params}
+        noWritesAction="update data using the workbench"
       >
-        <OptionSquare
-          icon={<AiOutlineCode />}
-          link={
-            <Button.Link
-              onClick={onWriteQuery}
-              data-cy="sql-query-create-table"
-            >
-              SQL Query
-            </Button.Link>
-          }
-        />
-      </div>
+        <div
+          className={cx(css.sections, {
+            [css.forGetStarted]: props.getStarted,
+          })}
+        >
+          <OptionSquare
+            icon={<AiOutlineCode />}
+            link={
+              <Button.Link
+                onClick={onWriteQuery}
+                data-cy="sql-query-create-table"
+              >
+                SQL Query
+              </Button.Link>
+            }
+          />
+        </div>
+      </HideForNoWritesWrapper>
       <Link {...database(props.params)}>
         <Button.Underlined
           className={cx(css.cancel, {

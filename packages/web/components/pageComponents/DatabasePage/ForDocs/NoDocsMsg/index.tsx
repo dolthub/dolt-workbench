@@ -2,6 +2,7 @@ import Button from "@components/Button";
 import CodeBlock from "@components/CodeBlock";
 import DocsLink from "@components/links/DocsLink";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
 import css from "./index.module.css";
@@ -20,9 +21,11 @@ export default function NoDocsMsg(props: Props) {
       <h2 className={css.header}>
         {props.params.docName ? `${props.params.docName} not` : "No docs"} found
         for <span className={css.bold}>{props.params.databaseName}.</span>
-        <Link {...newDoc(props.params)}>
-          <Button>Add doc</Button>
-        </Link>
+        <HideForNoWritesWrapper params={props.params}>
+          <Link {...newDoc(props.params)}>
+            <Button>Add doc</Button>
+          </Link>
+        </HideForNoWritesWrapper>
       </h2>
       <div className={css.bottom}>
         <AddFromWorkbench {...props} />
@@ -41,7 +44,14 @@ function AddFromWorkbench(props: Props) {
     <>
       <h3>Adding a doc through the Workbench</h3>
       <p>
-        <Link {...newDoc(props.params)}>Click here</Link> to add a doc.
+        <HideForNoWritesWrapper
+          params={props.params}
+          noWritesAction="add a doc from the workbench"
+        >
+          <>
+            <Link {...newDoc(props.params)}>Click here</Link> to add a doc.
+          </>
+        </HideForNoWritesWrapper>
       </p>
     </>
   );

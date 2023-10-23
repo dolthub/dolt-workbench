@@ -1,6 +1,7 @@
 import Section from "@components/DatabaseTableNav/Section";
 import SchemaDiagramButton from "@components/SchemaDiagramButton";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import QueryHandler from "@components/util/QueryHandler";
 import useTableNames from "@hooks/useTableNames";
 import Maybe from "@lib/Maybe";
@@ -42,10 +43,12 @@ function Inner(props: InnerProps) {
           No tables found for <code>{props.params.refName}</code>
         </p>
       )}
-      <Link {...createTable(props.params)} className={css.addTable}>
-        <AiOutlinePlus />
-        Add new table
-      </Link>
+      <HideForNoWritesWrapper params={props.params}>
+        <Link {...createTable(props.params)} className={css.addTable}>
+          <AiOutlinePlus />
+          Add new table
+        </Link>
+      </HideForNoWritesWrapper>
     </div>
   );
 }
