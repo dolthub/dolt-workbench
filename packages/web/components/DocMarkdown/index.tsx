@@ -1,3 +1,4 @@
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { DocForDocPageFragment } from "@gen/graphql-types";
 import Maybe from "@lib/Maybe";
 import { RefParams } from "@lib/params";
@@ -26,12 +27,14 @@ export default function DocMarkdown({ params, rowData }: Props) {
           doltDocsQueryDocName={doltDocsQueryDocName}
           docName={params.docName}
         >
-          <Buttons
-            params={{ ...params, docName }}
-            doltDocsQueryDocName={doltDocsQueryDocName}
-            setShowEditor={setShowEditor}
-            showEditor={showEditor}
-          />
+          <HideForNoWritesWrapper params={params}>
+            <Buttons
+              params={{ ...params, docName }}
+              doltDocsQueryDocName={doltDocsQueryDocName}
+              setShowEditor={setShowEditor}
+              showEditor={showEditor}
+            />
+          </HideForNoWritesWrapper>
         </Title>
       </div>
       <div className={css.bodyContainer}>

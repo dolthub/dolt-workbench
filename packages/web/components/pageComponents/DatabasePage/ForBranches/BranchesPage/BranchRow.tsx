@@ -2,6 +2,7 @@ import Button from "@components/Button";
 import Tooltip from "@components/Tooltip";
 import UserNameWithIcon from "@components/UserNameWithIcon";
 import RefLink from "@components/links/RefLink";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { BranchFragment } from "@gen/graphql-types";
 import excerpt from "@lib/excerpt";
 import { FaLock } from "@react-icons/all-files/fa/FaLock";
@@ -46,14 +47,16 @@ export default function BranchRow({
         {branch.branchName === "master" || branch.branchName === "main" ? (
           <FaLock className={cx(css.icon, css.iconGray)} />
         ) : (
-          <Button.Link
-            onClick={onDeleteClicked}
-            red
-            className={css.icon}
-            aria-label="delete"
-          >
-            <FaRegTrashAlt />
-          </Button.Link>
+          <HideForNoWritesWrapper params={branch}>
+            <Button.Link
+              onClick={onDeleteClicked}
+              red
+              className={css.icon}
+              aria-label="delete"
+            >
+              <FaRegTrashAlt />
+            </Button.Link>
+          </HideForNoWritesWrapper>
         )}
       </td>
     </tr>

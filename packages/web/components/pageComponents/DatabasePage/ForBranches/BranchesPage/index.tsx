@@ -4,6 +4,7 @@ import DeleteModal from "@components/DeleteModal";
 import FormSelect from "@components/FormSelect";
 import Loader from "@components/Loader";
 import Link from "@components/links/Link";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import QueryHandler from "@components/util/QueryHandler";
 import {
   BranchFragment,
@@ -65,9 +66,11 @@ function Inner(props: InnerProps): JSX.Element {
             isClearable
             horizontal
           />
-          <Link {...createUrl} className={css.white}>
-            <Button>Create Branch</Button>
-          </Link>
+          <HideForNoWritesWrapper params={props.params}>
+            <Link {...createUrl} className={css.white}>
+              <Button>Create Branch</Button>
+            </Link>
+          </HideForNoWritesWrapper>
         </div>
       </div>
       <div>

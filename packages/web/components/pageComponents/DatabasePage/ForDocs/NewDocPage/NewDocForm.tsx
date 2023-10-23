@@ -2,6 +2,7 @@ import Button from "@components/Button";
 import FormSelect, { Option } from "@components/FormSelect";
 import Loader from "@components/Loader";
 import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import {
   DocForDocPageFragment,
   DocType,
@@ -34,40 +35,45 @@ function Inner(props: InnerProps) {
     <div className={css.container}>
       <Header params={props.params} />
       <div className={css.body}>
-        <form onSubmit={onSubmit}>
-          <div className={css.selectContainer}>
-            <div className={css.label}>Type</div>
-            <FormSelect
-              options={options}
-              val={state.docType}
-              onChangeValue={d => setState({ docType: d })}
-            />
-          </div>
-          {!invalidDocType ? (
-            <div className={css.markdownContainer}>
-              <TextareaWithMarkdown
-                label="Markdown"
-                rows={12}
-                value={state.markdown}
-                onChange={m => setState({ markdown: m })}
-                placeholder="Add markdown here"
+        <HideForNoWritesWrapper
+          params={props.params}
+          noWritesAction="add LICENSE or README"
+        >
+          <form onSubmit={onSubmit}>
+            <div className={css.selectContainer}>
+              <div className={css.label}>Type</div>
+              <FormSelect
+                options={options}
+                val={state.docType}
+                onChangeValue={d => setState({ docType: d })}
               />
             </div>
-          ) : (
-            <p className={css.marTop}>
-              Both README and LICENSE exist. Click on an individual document in
-              the About section to edit.
-            </p>
-          )}
-          <Button
-            className={css.marTop}
-            disabled={disabled}
-            type="submit"
-            data-cy="new-doc-create-button"
-          >
-            Create
-          </Button>
-        </form>
+            {!invalidDocType ? (
+              <div className={css.markdownContainer}>
+                <TextareaWithMarkdown
+                  label="Markdown"
+                  rows={12}
+                  value={state.markdown}
+                  onChange={m => setState({ markdown: m })}
+                  placeholder="Add markdown here"
+                />
+              </div>
+            ) : (
+              <p className={css.marTop}>
+                Both README and LICENSE exist. Click on an individual document
+                in the About section to edit.
+              </p>
+            )}
+            <Button
+              className={css.marTop}
+              disabled={disabled}
+              type="submit"
+              data-cy="new-doc-create-button"
+            >
+              Create
+            </Button>
+          </form>
+        </HideForNoWritesWrapper>
       </div>
     </div>
   );
