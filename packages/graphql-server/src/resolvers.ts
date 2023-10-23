@@ -6,6 +6,7 @@ import { RowResolver } from "./rows/row.resolver";
 import { SqlSelectResolver } from "./sqlSelects/sqlSelect.resolver";
 import { StatusResolver } from "./status/status.resolver";
 import { TableResolver } from "./tables/table.resolver";
+import { FileUploadResolver } from "./tables/upload.resolver";
 import { TagResolver } from "./tags/tag.resolver";
 
 const resolvers = [
@@ -13,6 +14,7 @@ const resolvers = [
   CommitResolver,
   DatabaseResolver,
   DocsResolver,
+  FileUploadResolver,
   RowResolver,
   SqlSelectResolver,
   StatusResolver,

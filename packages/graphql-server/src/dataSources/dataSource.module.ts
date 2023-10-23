@@ -5,7 +5,7 @@ import { DataSourceService } from "./dataSource.service";
   providers: [
     {
       provide: DataSourceService,
-      useValue: new DataSourceService(undefined),
+      useValue: new DataSourceService(undefined, undefined),
     },
   ],
   exports: [DataSourceService],
