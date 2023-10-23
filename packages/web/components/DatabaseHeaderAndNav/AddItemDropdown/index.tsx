@@ -1,4 +1,5 @@
 import Popup from "@components/Popup";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DatabaseParams } from "@lib/params";
 import { newRelease } from "@lib/urls";
 import { AiOutlineTag } from "@react-icons/all-files/ai/AiOutlineTag";
@@ -39,17 +40,21 @@ export default function AddItemDropdown(props: Props) {
             >
               New pull request
             </DropdownItem> */}
-            <DropdownItem
-              url={newRelease(props.params)}
-              icon={<AiOutlineTag />}
-              data-cy="add-dropdown-new-release-link"
-            >
-              New release
-            </DropdownItem>
+            <NotDoltWrapper>
+              <DropdownItem
+                url={newRelease(props.params)}
+                icon={<AiOutlineTag />}
+                data-cy="add-dropdown-new-release-link"
+              >
+                New release
+              </DropdownItem>
+            </NotDoltWrapper>
             {props.params.refName && (
-              <DocsDropdownItem
-                params={{ ...props.params, refName: props.params.refName }}
-              />
+              <NotDoltWrapper>
+                <DocsDropdownItem
+                  params={{ ...props.params, refName: props.params.refName }}
+                />
+              </NotDoltWrapper>
             )}
           </ul>
         </div>

@@ -18,6 +18,10 @@
   }
 }
 
+.disabledItem {
+  @apply text-ld-darkgrey font-semibold;
+}
+
 .button {
   @apply flex justify-center items-center pl-2 pr-1 h-8 text-white text-sm font-normal border-opaque-rounded bg-[#4B75C1] w-20 mr-3;
 

@@ -10,6 +10,7 @@ import DropdownItem from "./Item";
 
 type Props = {
   params: RefParams;
+  doltDisabled?: boolean;
 };
 
 type InnerProps = Props & {
@@ -25,6 +26,7 @@ function Inner(props: InnerProps) {
       icon={<HiOutlineDocumentAdd />}
       hide={!canCreateNewDoc}
       data-cy="add-dropdown-new-docs-link"
+      doltDisabled={props.doltDisabled}
     >
       New README/LICENSE
     </DropdownItem>
