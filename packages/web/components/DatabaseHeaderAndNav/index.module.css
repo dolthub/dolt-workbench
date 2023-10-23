@@ -44,13 +44,6 @@
   }
 }
 
-/* .permission {
-  @apply hidden;
-  @screen lg {
-    @apply flex mt-0.5 ml-3;
-  }
-} */
-
 .databaseBreadcrumbs {
   @apply text-white;
 
@@ -71,13 +64,6 @@
   }
 }
 
-.smallBreadcrumbs {
-  a,
-  span {
-    /* @apply text-base; */
-  }
-}
-
 .databaseBreadcrumbs div:first-of-type {
   span:first-of-type {
     @apply text-white/80;
@@ -89,18 +75,6 @@
     @apply hidden;
   }
 }
-
-/* .visibility {
-  @apply inline-block relative mr-2 pt-2 w-4;
-
-  @screen lg {
-    @apply pt-1.5;
-  }
-} */
-
-/* .icon {
-  @apply opacity-50;
-} */
 
 .menu {
   @apply hidden;

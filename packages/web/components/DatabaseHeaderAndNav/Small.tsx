@@ -27,7 +27,7 @@ export default function SmallDBHeader(props: Props) {
                 className={css.icon}
               />
             </span> */}
-            <span className={cx(css.databaseBreadcrumbs, css.smallBreadcrumbs)}>
+            <span className={css.databaseBreadcrumbs}>
               {props.breadcrumbs ?? (
                 <DatabaseBreadcrumbs params={props.params} />
               )}
