@@ -1,0 +1,114 @@
+.container {
+  @apply mx-6;
+}
+
+.top {
+  @apply flex justify-between pt-6;
+}
+
+.tagContainer {
+  @apply mr-4 pb-4 text-primary border-ld-lightgrey border-l-[1.5px];
+
+  @screen lg {
+    @apply ml-16;
+  }
+}
+
+.list {
+  @apply mt-10 pl-6 pr-2;
+
+  @screen lg {
+    @apply px-10;
+  }
+}
+
+.item {
+  @apply border border-ld-lightblue rounded-lg my-3 py-4 px-6 text-sm relative;
+}
+
+.header {
+  @apply relative font-semibold pb-2;
+}
+
+.bullet {
+  @apply border-ld-lightgrey h-3 w-3 absolute bg-white rounded-full border-[1.5px] -left-[1.9rem] top-[0.4rem];
+
+  @screen lg {
+    @apply -left-[2.9rem];
+  }
+}
+
+.latest {
+  @apply inline-block px-4 mx-4 rounded-full bg-white border-2 border-acc-green text-acc-green text-sm font-semibold py-[0.05rem];
+}
+
+.itemTop {
+  @apply flex justify-between items-center;
+}
+
+.timeago {
+  @apply text-ld-darkgrey;
+}
+
+.commitId {
+  @apply font-semibold text-ld-darkgrey mb-1.5;
+
+  &:hover {
+    @apply text-acc-lightgrey;
+  }
+
+  @screen lg {
+    @apply mx-4 mb-0;
+  }
+}
+
+.commitIcon {
+  @apply hidden;
+
+  @screen lg {
+    @apply inline;
+  }
+}
+
+.releaseName {
+  @apply pb-2 max-w-4xl text-base;
+}
+
+.releaseNotes > p {
+  @apply py-4;
+}
+
+.loading {
+  @apply mx-12 my-4;
+}
+
+.noReleases {
+  @apply text-center text-lg m-6;
+}
+
+.itemBottom {
+  @apply text-ld-darkgrey font-normal flex flex-col-reverse;
+  a {
+    @apply font-normal;
+  }
+
+  @screen lg {
+    @apply block;
+  }
+}
+
+.bold {
+  @apply font-semibold;
+}
+
+.releaseToDelete {
+  @apply font-bold;
+}
+
+.delete {
+  @apply hidden;
+
+  @screen lg {
+    @apply block ml-2;
+  }
+}

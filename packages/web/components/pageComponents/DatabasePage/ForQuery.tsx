@@ -3,6 +3,7 @@
 import HistoryTable from "@components/HistoryTable";
 import SqlDataTable from "@components/SqlDataTable";
 import ViewFragment from "@components/ViewFragment";
+import QueryBreadcrumbs from "@components/breadcrumbs/QueryBreadcrumbs";
 import { DataTableProvider } from "@contexts/dataTable";
 import {
   isDoltDiffTableQuery,
@@ -22,7 +23,9 @@ function Inner({ params }: Props) {
     isMutation(params.q)
       ? ref(p)
       : sqlQuery({ ...p, q: params.q, active: params.active });
+
   const commonProps = {
+    smallHeaderBreadcrumbs: <QueryBreadcrumbs params={params} />,
     initialTabIndex: 0,
     params,
     routeRefChangeTo,

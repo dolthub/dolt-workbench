@@ -145,7 +145,9 @@ export type Mutation = {
   addDatabaseConnection: Scalars['String']['output'];
   createBranch: Branch;
   createDatabase: Scalars['Boolean']['output'];
+  createTag: Tag;
   deleteBranch: Scalars['Boolean']['output'];
+  deleteTag: Scalars['Boolean']['output'];
 };
 
 
@@ -167,9 +169,23 @@ export type MutationCreateDatabaseArgs = {
 };
 
 
+export type MutationCreateTagArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  tagName: Scalars['String']['input'];
+};
+
+
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteTagArgs = {
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -188,6 +204,7 @@ export type Query = {
   rows: RowList;
   sqlSelect: SqlSelect;
   sqlSelectForCsvDownload: Scalars['String']['output'];
+  status: Array<Status>;
   table: Table;
   tableNames: TableNames;
   tables: Array<Table>;
@@ -262,6 +279,12 @@ export type QuerySqlSelectForCsvDownloadArgs = {
 };
 
 
+export type QueryStatusArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+};
+
+
 export type QueryTableArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -332,6 +355,15 @@ export type SqlSelect = {
   queryString: Scalars['String']['output'];
   refName: Scalars['String']['output'];
   rows: Array<Row>;
+};
+
+export type Status = {
+  __typename?: 'Status';
+  _id: Scalars['ID']['output'];
+  refName: Scalars['String']['output'];
+  staged: Scalars['Boolean']['output'];
+  status: Scalars['String']['output'];
+  tableName: Scalars['String']['output'];
 };
 
 export type Table = {
@@ -455,6 +487,16 @@ export type SqlSelectForSqlDataTableQueryVariables = Exact<{
 
 export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', _id: string, queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
+export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
+
+export type GetStatusQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type GetStatusQuery = { __typename?: 'Query', status: Array<{ __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string }> };
+
 export type ColumnForTableListFragment = { __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
 export type TableWithColumnsFragment = { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
@@ -556,6 +598,24 @@ export type RefPageQueryVariables = Exact<{
 
 export type RefPageQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null, tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export type CreateTagMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
+  message?: InputMaybe<Scalars['String']['input']>;
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } } };
+
+export type DeleteTagMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
+
 export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
@@ -617,6 +677,15 @@ export type HistoryForBranchQueryVariables = Exact<{
 
 
 export type HistoryForBranchQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
+
+export type BranchForCommitGraphFragment = { __typename?: 'Branch', branchName: string, head?: string | null };
+
+export type BranchListForCommitGraphQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type BranchListForCommitGraphQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, head?: string | null }> } };
 
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -733,6 +802,15 @@ export const ColumnForSqlDataTableFragmentDoc = gql`
   type
 }
     `;
+export const StatusFragmentDoc = gql`
+    fragment Status on Status {
+  _id
+  refName
+  tableName
+  staged
+  status
+}
+    `;
 export const TableWithColumnsFragmentDoc = gql`
     fragment TableWithColumns on Table {
   _id
@@ -837,6 +915,12 @@ export const CommitListForHistoryFragmentDoc = gql`
   nextOffset
 }
     ${CommitForHistoryFragmentDoc}`;
+export const BranchForCommitGraphFragmentDoc = gql`
+    fragment BranchForCommitGraph on Branch {
+  branchName
+  head
+}
+    `;
 export const CreateDatabaseDocument = gql`
     mutation CreateDatabase($databaseName: String!) {
   createDatabase(databaseName: $databaseName)
@@ -1201,6 +1285,42 @@ export function useSqlSelectForSqlDataTableLazyQuery(baseOptions?: Apollo.LazyQu
 export type SqlSelectForSqlDataTableQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableQuery>;
 export type SqlSelectForSqlDataTableLazyQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableLazyQuery>;
 export type SqlSelectForSqlDataTableQueryResult = Apollo.QueryResult<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>;
+export const GetStatusDocument = gql`
+    query GetStatus($databaseName: String!, $refName: String!) {
+  status(databaseName: $databaseName, refName: $refName) {
+    ...Status
+  }
+}
+    ${StatusFragmentDoc}`;
+
+/**
+ * __useGetStatusQuery__
+ *
+ * To run a query within a React component, call `useGetStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatusQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useGetStatusQuery(baseOptions: Apollo.QueryHookOptions<GetStatusQuery, GetStatusQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
+      }
+export function useGetStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatusQuery, GetStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
+        }
+export type GetStatusQueryHookResult = ReturnType<typeof useGetStatusQuery>;
+export type GetStatusLazyQueryHookResult = ReturnType<typeof useGetStatusLazyQuery>;
+export type GetStatusQueryResult = Apollo.QueryResult<GetStatusQuery, GetStatusQueryVariables>;
 export const TableForBranchDocument = gql`
     query TableForBranch($databaseName: String!, $refName: String!, $tableName: String!) {
   table(databaseName: $databaseName, refName: $refName, tableName: $tableName) {
@@ -1582,6 +1702,79 @@ export function useRefPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type RefPageQueryHookResult = ReturnType<typeof useRefPageQuery>;
 export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryLazyQuery>;
 export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
+export const CreateTagDocument = gql`
+    mutation CreateTag($databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!) {
+  createTag(
+    databaseName: $databaseName
+    tagName: $tagName
+    message: $message
+    fromRefName: $fromRefName
+  ) {
+    ...TagForList
+  }
+}
+    ${TagForListFragmentDoc}`;
+export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
+
+/**
+ * __useCreateTagMutation__
+ *
+ * To run a mutation, you first call `useCreateTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tagName: // value for 'tagName'
+ *      message: // value for 'message'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<CreateTagMutation, CreateTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateTagMutation, CreateTagMutationVariables>(CreateTagDocument, options);
+      }
+export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
+export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
+export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const DeleteTagDocument = gql`
+    mutation DeleteTag($databaseName: String!, $tagName: String!) {
+  deleteTag(databaseName: $databaseName, tagName: $tagName)
+}
+    `;
+export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, DeleteTagMutationVariables>;
+
+/**
+ * __useDeleteTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTagMutation, { data, loading, error }] = useDeleteTagMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tagName: // value for 'tagName'
+ *   },
+ * });
+ */
+export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
+      }
+export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
+export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
+export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const AddDatabaseConnectionDocument = gql`
     mutation AddDatabaseConnection($url: String, $useEnv: Boolean) {
   addDatabaseConnection(url: $url, useEnv: $useEnv)
@@ -1805,6 +1998,43 @@ export function useHistoryForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookO
 export type HistoryForBranchQueryHookResult = ReturnType<typeof useHistoryForBranchQuery>;
 export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryForBranchLazyQuery>;
 export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
+export const BranchListForCommitGraphDocument = gql`
+    query BranchListForCommitGraph($databaseName: String!) {
+  branches(databaseName: $databaseName) {
+    list {
+      ...BranchForCommitGraph
+    }
+  }
+}
+    ${BranchForCommitGraphFragmentDoc}`;
+
+/**
+ * __useBranchListForCommitGraphQuery__
+ *
+ * To run a query within a React component, call `useBranchListForCommitGraphQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchListForCommitGraphQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchListForCommitGraphQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useBranchListForCommitGraphQuery(baseOptions: Apollo.QueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
+      }
+export function useBranchListForCommitGraphLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
+        }
+export type BranchListForCommitGraphQueryHookResult = ReturnType<typeof useBranchListForCommitGraphQuery>;
+export type BranchListForCommitGraphLazyQueryHookResult = ReturnType<typeof useBranchListForCommitGraphLazyQuery>;
+export type BranchListForCommitGraphQueryResult = Apollo.QueryResult<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>;
 export const TableNamesDocument = gql`
     query TableNames($databaseName: String!, $refName: String!, $filterSystemTables: Boolean) {
   tableNames(

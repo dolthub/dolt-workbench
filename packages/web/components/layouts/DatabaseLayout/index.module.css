@@ -23,6 +23,10 @@
   @apply bg-white;
 }
 
+.contentWithSmallHeader {
+  @apply lg:top-28;
+}
+
 .rightContent {
   @apply flex flex-col flex-grow min-w-0 min-h-0 border-l-0 border-ld-lightgrey;
 

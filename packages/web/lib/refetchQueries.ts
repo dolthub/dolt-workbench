@@ -16,6 +16,16 @@ type RefetchOptions = RefetchQueriesOptions<
   Promise<ApolloQueryResult<any>>
 >;
 
+// Refetch tags
+export const refetchTagQueries = (
+  variables: DatabaseParams,
+): RefetchQueries => [
+  {
+    query: gen.TagListDocument,
+    variables,
+  },
+];
+
 export const refetchBranchQueries = (
   variables: DatabaseParams,
 ): RefetchQueries => [
@@ -23,7 +33,7 @@ export const refetchBranchQueries = (
     query: gen.DefaultBranchPageQueryDocument,
     variables: { ...variables, filterSystemTables: true },
   },
-  // { query: gen.BranchesForSelectorDocument, variables },
+  { query: gen.BranchesForSelectorDocument, variables },
   // { query: gen.GetBranchForPullDocument, variables },
   { query: gen.BranchListDocument, variables },
 ];
@@ -40,7 +50,7 @@ export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
       "views",
       "docs",
       "commits",
-      // "status",
+      "status",
       // "diffSummaries",
       // "diffStat",
       // "rowDiffs",

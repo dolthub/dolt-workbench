@@ -1,5 +1,13 @@
 import { OptionalRefParams } from "@lib/params";
-import { database, DatabaseUrl, defaultDoc, ref, RefUrl } from "@lib/urls";
+import {
+  commitLog,
+  database,
+  DatabaseUrl,
+  defaultDoc,
+  ref,
+  RefUrl,
+  releases,
+} from "@lib/urls";
 import { Route } from "@lib/urlUtils";
 
 function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
@@ -8,10 +16,10 @@ function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
       return [database, ref];
     case "About":
       return [database, defaultDoc];
-    // case "Commit Log":
-    //   return [database, commitLog];
-    // case "Releases":
-    //   return [releases];
+    case "Commit Log":
+      return [database, commitLog];
+    case "Releases":
+      return [releases];
     // case "Pull Requests":
     //   return [pulls];
     default:

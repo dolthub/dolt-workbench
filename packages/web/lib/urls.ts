@@ -51,3 +51,33 @@ export const doc = (p: ps.DocParams): Route =>
 
 export const newDoc = (p: ps.RefParams): Route =>
   defaultDoc(p).addStatic("new");
+
+export const commitLog = (p: ps.RefParams & { commitId?: string }): Route =>
+  database(p)
+    .addStatic("commits")
+    .addDynamic("refName", p.refName, ENCODE)
+    .withHash(p.commitId);
+
+export const commitGraph = (p: ps.RefParams): Route =>
+  commitLog(p).addStatic("graph");
+
+export const commit = (p: ps.CommitParams): Route =>
+  database(p)
+    .addStatic("compare")
+    .addDynamic("refName", p.refName, ENCODE)
+    .addDynamic("diffRange", p.commitId);
+
+export const diff = (p: ps.DiffParams): Route =>
+  commit({ ...p, commitId: getDiffRange(p) });
+
+function getDiffRange(p: ps.DiffParams): string {
+  if (!p.fromCommitId && !p.toCommitId) return "";
+  if (!p.toCommitId) return p.fromCommitId ?? "";
+  return `${p.fromCommitId ?? ""}..${p.toCommitId}`;
+}
+
+export const releases = (p: ps.OptionalRefParams): Route =>
+  database(p).addStatic("releases").withQuery({ refName: p.refName });
+
+export const newRelease = (p: ps.OptionalRefParams): Route =>
+  releases(p).addStatic("new").withQuery({ refName: p.refName });

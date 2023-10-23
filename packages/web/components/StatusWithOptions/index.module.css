@@ -1,0 +1,36 @@
+.uncommitted {
+  @apply hidden lg:flex items-center sticky right-6 mt-2 z-10 min-w-[20rem];
+
+  a {
+    @apply mr-3 text-sm;
+  }
+}
+
+.smallMinWidth {
+  @apply min-w-[11rem];
+}
+
+.commitButton {
+  @apply text-sm px-4;
+}
+
+.bold {
+  @apply font-semibold;
+}
+
+.resetButton {
+  @apply ml-3;
+}
+
+.resetModal {
+  @apply px-4 py-2 max-w-lg;
+}
+
+.resetTable {
+  @apply mb-6;
+
+  td,
+  th {
+    @apply pr-6 text-left pb-1;
+  }
+}

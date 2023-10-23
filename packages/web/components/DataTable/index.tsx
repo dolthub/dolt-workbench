@@ -17,8 +17,7 @@ import css from "./index.module.css";
 
 type Props = {
   hasMore?: boolean;
-  loadMore: () => void;
-  nextPage: () => void;
+  loadMore: () => Promise<void>;
   rows?: RowForDataTableFragment[];
   columns?: ColumnForDataTableFragment[];
   message?: ReactNode | null;
@@ -57,7 +56,7 @@ type TableProps = {
 };
 
 function WithContext(props: TableProps) {
-  const { loading, hasMore, loadMore, nextPage, rows, columns, error } =
+  const { loading, hasMore, loadMore, rows, columns, error } =
     useDataTableContext();
 
   if (loading) return <Loader loaded={false} />;
@@ -66,7 +65,6 @@ function WithContext(props: TableProps) {
     <Inner
       params={props.params}
       loadMore={loadMore}
-      nextPage={nextPage}
       rows={rows}
       columns={columns}
       hasMore={hasMore}

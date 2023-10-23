@@ -1,5 +1,6 @@
 import FormSelect from "@components/FormSelect";
 import { Option } from "@components/FormSelect/types";
+import useIsDolt from "@hooks/useIsDolt";
 import {
   getDatabasePageName,
   getDatabasePageRedirectInfo,
@@ -15,13 +16,16 @@ type Props = {
   title?: string;
 };
 
-const options: Option[] = [
-  { value: "ref", label: "Database" },
-  // { value: "about", label: "About" },
-  // { value: "commitLog", label: "Commit Log" },
-  // { value: "releases", label: "Releases" },
-  // { value: "pulls", label: "Pull Requests" },
-];
+const getTabOptions = (isDolt: boolean, hideDoltFeature: boolean): Option[] => {
+  if (hideDoltFeature) return [{ value: "ref", label: "Database" }];
+  return [
+    { value: "ref", label: "Database" },
+    { value: "about", label: "About", isDisabled: !isDolt },
+    { value: "commitLog", label: "Commit Log", isDisabled: !isDolt },
+    { value: "releases", label: "Releases", isDisabled: !isDolt },
+    // { value: "pulls", label: "Pull Requests", isDisabled: !isDolt },
+  ];
+};
 
 const mobileSelectorStyle: StylesConfig<Option, boolean, GroupBase<Option>> = {
   placeholder: styles => {
@@ -58,7 +62,9 @@ const mobileSelectorStyle: StylesConfig<Option, boolean, GroupBase<Option>> = {
 };
 
 export default function MobileHeaderSelector(props: Props) {
+  const res = useIsDolt();
   const router = useRouter();
+
   const handleChangeTab = (pageName: string) => {
     const { href, as } = getDatabasePageRedirectInfo(pageName, props.params);
     router.push(href, as).catch(console.error);
@@ -68,7 +74,7 @@ export default function MobileHeaderSelector(props: Props) {
   return (
     <FormSelect
       onChangeValue={handleChangeTab}
-      options={options}
+      options={getTabOptions(res.isDolt, res.hideDoltFeature)}
       val={pageName}
       hideSelectedOptions
       styles={mobileSelectorStyle}

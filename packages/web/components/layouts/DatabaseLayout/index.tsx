@@ -26,9 +26,14 @@ type Props = {
   empty?: boolean;
   initialTabIndex: number;
   routeRefChangeTo?: RefUrl;
+  initialSmallHeader?: boolean;
+  smallHeaderBreadcrumbs?: ReactNode;
 };
 
 export default function DatabaseLayout(props: Props) {
+  const [showSmallHeader, setShowSmallHeader] = useState(
+    !!props.initialSmallHeader,
+  );
   const { q, tableName, ...refParams } = props.params;
   const forDataTable = !!(q || tableName);
   const showHeader = forDataTable || props.showSqlConsole || props.empty;
@@ -41,15 +46,15 @@ export default function DatabaseLayout(props: Props) {
       <DatabaseHeaderAndNav
         initialTabIndex={props.initialTabIndex}
         params={refParams}
-        // breadcrumbs={props.smallHeaderBreadcrumbs}
+        breadcrumbs={props.smallHeaderBreadcrumbs}
         title={props.title}
-        // showSmall={showSmallHeader}
-        // setShowSmall={setShowSmallHeader}
+        showSmall={showSmallHeader}
+        setShowSmall={setShowSmallHeader}
       />
       <div
         className={cx(css.content, {
           [css.contentWithHeader]: !!showHeader,
-          // [css.contentWithSmallHeader]: showSmallHeader,
+          [css.contentWithSmallHeader]: showSmallHeader,
         })}
       >
         <DatabaseTableNav

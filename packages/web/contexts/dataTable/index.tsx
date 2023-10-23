@@ -23,7 +23,6 @@ type DataTableContextType = {
   params: RefParams & { tableName?: string; q?: string };
   loading: boolean;
   loadMore: () => Promise<void>;
-  nextPage: () => Promise<void>;
   rows?: RowForDataTableFragment[];
   hasMore: boolean;
   columns?: ColumnForDataTableFragment[];
@@ -82,33 +81,11 @@ function ProviderForTableName(props: TableProps) {
     setOffset(newOffset);
   }, [offset, props.params, rowRes.client, rows]);
 
-  const nextPage = useCallback(async () => {
-    if (offset === undefined) {
-      return;
-    }
-    setLastOffset(offset);
-    const res = await rowRes.client.query<
-      RowsForDataTableQuery,
-      RowsForDataTableQueryVariables
-    >({
-      query: RowsForDataTableQueryDocument,
-      variables: {
-        ...props.params,
-        offset,
-      },
-    });
-    const newRows = res.data.rows.list;
-    const newOffset = res.data.rows.nextOffset;
-    setRows(newRows);
-    setOffset(newOffset);
-  }, [offset, props.params, rowRes.client]);
-
   const value = useMemo(() => {
     return {
       params: props.params,
       loading: tableRes.loading || rowRes.loading,
       loadMore,
-      nextPage,
       rows,
       hasMore: offset !== undefined && offset !== null && offset !== lastOffset,
       columns: tableRes.data?.table.columns,
@@ -119,7 +96,6 @@ function ProviderForTableName(props: TableProps) {
     loadMore,
     offset,
     lastOffset,
-    nextPage,
     props.params,
     rowRes.error,
     rowRes.loading,
@@ -147,7 +123,6 @@ export function DataTableProvider({ params, children }: Props) {
       params,
       loading: false,
       loadMore: async () => {},
-      nextPage: async () => {},
       hasMore: false,
     };
   }, [params]);

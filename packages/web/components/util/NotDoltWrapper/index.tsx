@@ -10,6 +10,7 @@ type Props = {
   feature?: string;
   className?: string;
   bigMsg?: boolean;
+  hideNotDolt?: boolean;
 };
 
 export default function NotDoltWrapper(props: Props) {
@@ -18,6 +19,9 @@ export default function NotDoltWrapper(props: Props) {
   if (res.error) return <ErrorMsg err={res.error} />;
   if (res.isDolt) {
     return props.children;
+  }
+  if (props.hideNotDolt) {
+    return null;
   }
   if (props.showNotDoltMsg) {
     return (

@@ -22,7 +22,7 @@ type QueryProps = Props & {
   };
 };
 
-const tabs = ["Database", "About"];
+const tabs = ["Database", "About", "Commit Log", "Releases"];
 
 export default function DatabaseNav(props: Props) {
   const { isDolt } = useIsDolt();

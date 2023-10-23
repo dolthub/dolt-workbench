@@ -1,4 +1,5 @@
 import SchemaDiagram from "@components/SchemaDiagram";
+import SchemaDiagramBreadcrumbs from "@components/breadcrumbs/SchemaDiagramBreadcrumbs";
 import { RefParams } from "@lib/params";
 import { schemaDiagram } from "@lib/urls";
 import DatabaseDesktopOnly from "../DatabaseDesktopOnly";
@@ -18,6 +19,7 @@ export default function ForSchema({ params }: Props) {
       <DatabasePage
         params={params}
         initialTabIndex={0}
+        smallHeaderBreadcrumbs={<SchemaDiagramBreadcrumbs params={params} />}
         wide
         routeRefChangeTo={schemaDiagram}
       >

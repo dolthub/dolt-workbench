@@ -1,3 +1,4 @@
+import BranchesBreadcrumbs from "@components/breadcrumbs/BranchesBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { OptionalRefParams } from "@lib/params";
 import { branches } from "@lib/urls";
@@ -17,7 +18,9 @@ export default function ForBranches({ params, newBranch }: Props): JSX.Element {
       initialTabIndex={0}
       params={params}
       hideDefaultTable
-      // smallHeaderBreadcrumbs={<BranchesBreadcrumbs params={params} />}
+      smallHeaderBreadcrumbs={
+        <BranchesBreadcrumbs params={params} new={newBranch} />
+      }
       routeRefChangeTo={urlParams => branches(urlParams)}
     >
       <NotDoltWrapper showNotDoltMsg feature={feature} bigMsg>

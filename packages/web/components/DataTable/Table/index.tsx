@@ -9,8 +9,7 @@ import { getInitialColumnStatus } from "./utils";
 
 type Props = {
   hasMore?: boolean;
-  loadMore: () => void;
-  nextPage: () => void;
+  loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];
   columns: ColumnForDataTableFragment[];
 };
