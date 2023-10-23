@@ -1,0 +1,27 @@
+.container {
+  @apply widget-shadow mt-10 rounded-lg text-left;
+}
+
+.title {
+  @apply mx-1 px-6 py-4 border-b border-ld-lightgrey flex;
+}
+
+.inner {
+  @apply bg-ld-lightblue px-16 py-8 border-b border-ld-lightgrey;
+}
+
+.closed {
+  @apply hidden;
+}
+
+/* .radio {
+  @apply mr-10 font-normal;
+}*/
+
+.bold {
+  @apply font-semibold;
+}
+
+.questionIcon {
+  @apply mx-5;
+}

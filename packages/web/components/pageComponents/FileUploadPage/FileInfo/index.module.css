@@ -1,0 +1,23 @@
+.fileInfoContainer {
+  @apply flex justify-center my-5 font-semibold flex-wrap;
+}
+
+.between {
+  @apply justify-between;
+}
+
+.fileInfo {
+  @apply flex justify-center flex-wrap;
+}
+
+.fileIcon {
+  @apply pr-2 w-6 h-6;
+}
+
+.fileSize {
+  @apply mx-3 text-ld-darkgrey;
+}
+
+.buttons {
+  @apply w-full mt-3;
+}

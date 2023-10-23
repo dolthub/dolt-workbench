@@ -1,0 +1,37 @@
+.noPerms {
+  @apply max-w-xl mx-auto;
+
+  button {
+    @apply mt-6;
+  }
+}
+
+.loadData {
+  @apply flex justify-center mt-5;
+
+  p {
+    @apply mr-2;
+  }
+}
+
+.loadHelp {
+  ul {
+    @apply mt-2 mx-4;
+  }
+
+  li {
+    @apply list-disc;
+  }
+}
+
+.modifierOptions {
+  @apply flex justify-center;
+}
+
+.radioHelp {
+  @apply ml-3;
+
+  &:first-of-type {
+    @apply mr-14;
+  }
+}

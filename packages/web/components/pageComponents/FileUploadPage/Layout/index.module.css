@@ -1,0 +1,56 @@
+.header {
+  @apply w-full bg-ld-mediumblue text-center p-4 justify-between hidden lg:flex;
+
+  h1 {
+    @apply text-white text-2xl font-normal;
+  }
+
+  > * {
+    @apply lg:w-[100rem];
+  }
+}
+
+.left {
+  @apply flex justify-start items-center ml-3 mt-0.5;
+
+  svg {
+    @apply text-white hover:text-ld-blue;
+  }
+}
+
+.chevron {
+  @apply mr-3 text-xl;
+}
+
+.breadcrumbs {
+  span {
+    @apply text-white;
+  }
+  a {
+    @apply text-blue-300;
+
+    &:hover {
+      @apply text-blue-200;
+    }
+  }
+}
+
+.right {
+  @apply flex justify-end mr-3;
+
+  button {
+    @apply text-white bg-transparent border border-white text-sm;
+
+    &:hover {
+      @apply border-ld-blue text-ld-blue bg-transparent;
+    }
+  }
+}
+
+.outer {
+  @apply absolute bottom-0 left-0 right-0 top-28 hidden lg:flex;
+}
+
+.main {
+  @apply outline-none max-w-7xl mx-auto w-full bg-white h-full overflow-auto;
+}

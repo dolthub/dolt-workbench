@@ -50,3 +50,7 @@ export type CommitsParams = {
 export type RequiredCommitsParams = DatabaseParams & Required<CommitsParams>;
 
 export type DiffParams = RefParams & CommitsParams;
+
+export type UploadParams = DatabaseParams & {
+  uploadId: string;
+};

@@ -1,5 +1,5 @@
 import { ApolloError } from "@apollo/client";
-import { ApolloErrorType } from "./types";
+import { ApolloErrorType, ErrorType } from "./types";
 
 export function errorMatches(
   errString: string,
@@ -33,6 +33,14 @@ export function improveErrorMsg(message: string): string {
       return "Error message empty";
     default:
       return message;
+  }
+}
+
+export function handleCaughtError(err: unknown, cb: (e: ErrorType) => void) {
+  if (err instanceof Error) {
+    cb(err);
+  } else {
+    cb(new Error(String(err)));
   }
 }
 

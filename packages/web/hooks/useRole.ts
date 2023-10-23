@@ -1,5 +1,6 @@
 type ReturnType = {
   // depRole: DeploymentRole | undefined;
+  loading: boolean;
   userIsAdmin: boolean;
   userHasReadPerms: boolean;
   userHasWritePerms: boolean;
@@ -54,6 +55,7 @@ export default function useRole(): ReturnType {
   return {
     // ...res,
     // depRole,
+    loading: false,
     userIsAdmin,
     userHasWritePerms,
     userHasReadPerms,

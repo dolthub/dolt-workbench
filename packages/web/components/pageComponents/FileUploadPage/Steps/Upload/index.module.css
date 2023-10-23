@@ -1,0 +1,86 @@
+.container {
+  @apply max-w-2xl mx-auto mt-8 mb-2;
+}
+
+.dropContainer,
+.editableTable {
+  @apply px-3 rounded-xl border border-dashed border-ld-darkgrey bg-ld-lightpurple h-56 pt-8;
+  min-width: 250px;
+}
+
+.editableTable {
+  @apply mt-8 mb-8 px-6 pt-10 text-lg text-center;
+
+  h4 {
+    @apply pt-1;
+  }
+}
+
+.hover {
+  @apply border-acc-hoverlinkblue;
+  background: rgba(61, 145, 240, 0.1);
+}
+
+.dropped {
+  @apply bg-acc-hovergreen bg-opacity-20 border-acc-hoverblue;
+}
+
+.faded {
+  @apply opacity-30;
+}
+
+.message {
+  @apply text-center font-semibold;
+}
+
+.uploadText {
+  @apply text-lg;
+}
+
+.uploadIcon {
+  @apply text-5xl mb-6 mx-auto;
+}
+
+.uploadBottom {
+  @apply flex justify-center;
+}
+
+.browseButton {
+  @apply text-lg;
+}
+
+.uploadContainer {
+  @apply flex justify-between;
+}
+
+.or {
+  @apply mx-8 mt-28 pt-4;
+}
+
+.tableIcon {
+  @apply text-4xl mb-6 mx-auto;
+}
+
+.openButton {
+  @apply mt-6 px-4;
+}
+
+.helpPopup {
+  @apply mx-2 opacity-60;
+}
+
+.fileTypes {
+  @apply text-sm flex text-ld-darkgrey mt-1 mx-3;
+}
+
+.success {
+  @apply text-acc-green font-semibold text-base flex mt-6 ml-7;
+
+  svg {
+    @apply text-lg mr-2 mt-1;
+  }
+}
+
+.editBtn {
+  @apply mx-4;
+}
