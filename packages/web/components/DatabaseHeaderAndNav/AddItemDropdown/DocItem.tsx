@@ -22,9 +22,8 @@ function Inner(props: InnerProps) {
   if (res.loading) return <SmallLoader loaded={false} />;
 
   const canCreateNewDoc =
-    !props.userHasWritePerms ||
-    !res.data?.docs ||
-    res.data?.docs.list.length < 2;
+    props.userHasWritePerms &&
+    (!res.data?.docs || res.data.docs.list.length < 2);
 
   return <NewDocLink params={props.params} hide={!canCreateNewDoc} />;
 }
