@@ -33,7 +33,7 @@ export const refetchBranchQueries = (
     query: gen.DefaultBranchPageQueryDocument,
     variables: { ...variables, filterSystemTables: true },
   },
-  // { query: gen.BranchesForSelectorDocument, variables },
+  { query: gen.BranchesForSelectorDocument, variables },
   // { query: gen.GetBranchForPullDocument, variables },
   { query: gen.BranchListDocument, variables },
 ];
@@ -50,7 +50,7 @@ export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
       "views",
       "docs",
       "commits",
-      // "status",
+      "status",
       // "diffSummaries",
       // "diffStat",
       // "rowDiffs",
