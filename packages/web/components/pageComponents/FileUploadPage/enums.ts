@@ -4,7 +4,7 @@ export enum UploadStage {
   Upload = 3,
 }
 
-export function getUploadStage(s?: string): UploadStage {
+export function getUploadStage(s?: string, isDolt?: boolean): UploadStage {
   switch (s) {
     case "branch":
       return UploadStage.Branch;
@@ -13,6 +13,6 @@ export function getUploadStage(s?: string): UploadStage {
     case "upload":
       return UploadStage.Upload;
     default:
-      return UploadStage.Branch;
+      return isDolt ? UploadStage.Branch : UploadStage.Table;
   }
 }

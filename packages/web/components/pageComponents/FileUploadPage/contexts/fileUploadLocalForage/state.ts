@@ -24,9 +24,6 @@ export function getDefaultState(p: {
   tableName?: string;
   branchName?: string;
 }): FileUploadState {
-  if (p.tableName && p.branchName) {
-    return { ...defaultState, ...p, importOp: ImportOperation.Update };
-  }
   return { ...defaultState, ...p };
 }
 
@@ -40,4 +37,5 @@ export type FileUploadLocalForageContextType = {
   clear: () => Promise<void>;
   dbParams: DatabaseParams;
   getUploadUrl: (s: string) => Route;
+  isDolt: boolean;
 };

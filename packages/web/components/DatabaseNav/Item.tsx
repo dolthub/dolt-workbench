@@ -18,7 +18,7 @@ export default function NavItem(props: Props) {
   const lower = props.name.toLowerCase();
   if (props.hide) return null;
   if (props.doltDisabled) {
-    const tooltipId = `disabled-tab-${lower}`;
+    const tooltipId = `disabled-tab-${lower.replace(" ", "-")}`;
     return (
       <li className={css.disabledTab}>
         <span

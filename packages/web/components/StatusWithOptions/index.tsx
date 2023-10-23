@@ -85,6 +85,7 @@ function Inner(props: InnerProps) {
 }
 
 export default function StatusWithOptions(props: Props) {
+  console.log("in status");
   const res = useGetStatusQuery({ variables: props.params });
   if (res.loading) return <Loader loaded={false} />;
   if (res.error || !res.data || res.data.status.length === 0) {

@@ -4,6 +4,7 @@ import { GraphQLUpload } from "graphql-upload";
 import * as mysql from "mysql2/promise";
 import {
   DataSourceService,
+  getIsDolt,
   useDBStatement,
 } from "../dataSources/dataSource.service";
 import { TableArgs } from "../utils/commonTypes";
@@ -41,8 +42,8 @@ export class FileUploadResolver {
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
     const conn = await mysql.createConnection(this.dss.getMySQLConfig());
 
-    const isDolt = conn.query("SELECT dolt_version()");
-    await conn.query(useDBStatement(args.databaseName, args.refName, !!isDolt));
+    const isDolt = await getIsDolt(conn.query);
+    await conn.query(useDBStatement(args.databaseName, args.refName, isDolt));
     await conn.query("SET GLOBAL local_infile=ON;");
 
     const { createReadStream, filename } = await args.file;

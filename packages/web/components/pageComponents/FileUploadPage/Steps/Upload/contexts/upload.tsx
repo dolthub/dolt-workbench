@@ -1,6 +1,7 @@
 import { ApolloError } from "@apollo/client";
 import { useLoadDataMutation } from "@gen/graphql-types";
 import useContextWithError from "@hooks/useContextWithError";
+import useIsDolt from "@hooks/useIsDolt";
 import useMutation from "@hooks/useMutation";
 import useSetState from "@hooks/useSetState";
 import { createCustomContext } from "@lib/createCustomContext";
@@ -35,6 +36,7 @@ type Props = {
 };
 
 export function UploadProvider(props: Props) {
+  const { isDolt } = useIsDolt();
   const router = useRouter();
   const {
     state: fuState,
@@ -59,7 +61,7 @@ export function UploadProvider(props: Props) {
     setErr,
   } = useMutation({
     hook: useLoadDataMutation,
-    refetchQueries: refetchTableUploadQueries(tableParams),
+    refetchQueries: refetchTableUploadQueries(tableParams, isDolt),
   });
 
   useEffect(() => {

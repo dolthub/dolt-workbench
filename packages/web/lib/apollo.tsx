@@ -1,10 +1,10 @@
 import {
   ApolloClient,
   ApolloProvider,
-  HttpLink,
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
+import { createUploadLink } from "apollo-upload-client";
 import { IncomingMessage } from "http";
 import fetch from "isomorphic-unfetch";
 import { NextPage, NextPageContext } from "next";
@@ -17,7 +17,7 @@ export function createApolloClient(
   req?: IncomingMessage,
 ): ApolloClient<NormalizedCacheObject> {
   const headers: Record<string, string> = {
-    // "Apollo-Require-Preflight": "true",
+    "Apollo-Require-Preflight": "true",
     cookie: req?.headers.cookie ?? "",
   };
 
@@ -27,7 +27,7 @@ export function createApolloClient(
 
   return new ApolloClient({
     cache,
-    link: new HttpLink({
+    link: createUploadLink({
       fetch,
       credentials: "include",
       uri,

@@ -40,6 +40,7 @@ export const refetchBranchQueries = (
 
 export const refetchResetChangesQueries = (
   variables: RefParams,
+  isDolt = false,
 ): RefetchQueries =>
   // const diffVariables: RequiredCommitsParams = {
   //   ...variables,
@@ -47,7 +48,7 @@ export const refetchResetChangesQueries = (
   //   toCommitId: "WORKING",
   // };
   [
-    { query: gen.GetStatusDocument, variables },
+    ...(isDolt ? [{ query: gen.GetStatusDocument, variables }] : []),
     // {
     //   query: gen.DiffStatDocument,
     //   variables: {
@@ -74,8 +75,11 @@ export const refetchTableQueries = (variables: TableParams) => [
   },
 ];
 
-export const refetchTableUploadQueries = (variables: TableParams) => [
-  ...refetchResetChangesQueries(variables),
+export const refetchTableUploadQueries = (
+  variables: TableParams,
+  isDolt = false,
+) => [
+  ...refetchResetChangesQueries(variables, isDolt),
   ...refetchTableQueries(variables),
 ];
 

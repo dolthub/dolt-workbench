@@ -1,4 +1,5 @@
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
+import useIsDolt from "@hooks/useIsDolt";
 import useRole from "@hooks/useRole";
 import { DatabaseParams, UploadParams } from "@lib/params";
 import { ReactNode } from "react";
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export default function PageWrapper(props: Props) {
+  const doltRes = useIsDolt();
   const { userHasWritePerms, loading } = useRole();
   const res = useDefaultBranchPageQuery({
     variables: { ...props.params, filterSystemTables: true },
@@ -26,7 +28,7 @@ export default function PageWrapper(props: Props) {
     databaseName: props.params.databaseName,
   };
 
-  if (loading) return <Loader loaded={false} />;
+  if (loading || doltRes.loading) return <Loader loaded={false} />;
   if (!userHasWritePerms) return <PermsError params={dbParams} />;
 
   return (
@@ -34,7 +36,10 @@ export default function PageWrapper(props: Props) {
       <QueryHandler
         result={res}
         render={() => (
-          <FileUploadLocalForageProvider params={props.params}>
+          <FileUploadLocalForageProvider
+            params={props.params}
+            isDolt={doltRes.isDolt}
+          >
             {props.children}
           </FileUploadLocalForageProvider>
         )}

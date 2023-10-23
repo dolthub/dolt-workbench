@@ -20,8 +20,8 @@ type Props = InnerProps & {
 };
 
 function Inner(props: InnerProps) {
-  const activeStage = getUploadStage(props.stage);
-  const { clear } = useFileUploadContext();
+  const { clear, isDolt } = useFileUploadContext();
+  const activeStage = getUploadStage(props.stage, isDolt);
 
   useOnRouteChange(url => {
     if (!url.includes("/upload")) {
@@ -50,7 +50,7 @@ function Stage(props: { activeStage: UploadStage }) {
   }
 }
 
-export default function ForFileUpload(props: Props) {
+export default function FileUploadPage(props: Props) {
   return (
     <PageWrapper {...props}>
       <Inner stage={props.stage} />

@@ -31,6 +31,7 @@ type Props = {
     branchName?: string;
   };
   children: ReactNode;
+  isDolt: boolean;
 };
 
 export function FileUploadLocalForageProvider(props: Props) {
@@ -78,6 +79,9 @@ export function FileUploadLocalForageProvider(props: Props) {
         importOp: ImportOperation.Update,
       });
     }
+    if (!props.isDolt) {
+      setState({ branchName: "main" });
+    }
   });
 
   // Get local forage items on mount
@@ -110,6 +114,7 @@ export function FileUploadLocalForageProvider(props: Props) {
         setItem,
         dbParams,
         getUploadUrl,
+        isDolt: props.isDolt,
       }}
     >
       {props.children}

@@ -29,10 +29,18 @@ function Inner(props: Props) {
 export default function DatabaseLayoutWrapper(props: Props) {
   const { keyMap, handlers } = useHotKeys();
   return (
+    <DatabaseLayoutWrapperOuter>
+      <GlobalHotKeys keyMap={keyMap} handlers={handlers} />
+      {props.children}
+    </DatabaseLayoutWrapperOuter>
+  );
+}
+
+export function DatabaseLayoutWrapperOuter(props: Props) {
+  return (
     <div className={css.appLayout}>
       <Navbar />
-      <GlobalHotKeys keyMap={keyMap} handlers={handlers} />
-      <div className={css.layoutWrapperContainer}>
+      <div className={css.layoutWrapperContainer} data-cy="db-layout-container">
         <Inner>{props.children}</Inner>
       </div>
     </div>

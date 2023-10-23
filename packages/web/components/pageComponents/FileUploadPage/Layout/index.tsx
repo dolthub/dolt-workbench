@@ -1,6 +1,6 @@
 import Button from "@components/Button";
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
-import DatabaseLayoutWrapper from "@components/layouts/DatabaseLayout/Wrapper";
+import { DatabaseLayoutWrapperOuter } from "@components/layouts/DatabaseLayout/Wrapper";
 import DatabaseLink from "@components/links/DatabaseLink";
 import KeyNav from "@components/util/KeyNav";
 import { DatabaseParams } from "@lib/params";
@@ -15,7 +15,7 @@ type Props = {
 
 export default function Layout(props: Props) {
   return (
-    <DatabaseLayoutWrapper>
+    <DatabaseLayoutWrapperOuter>
       {/* <MobileWarning {...props} pageCrumb="file-upload" title="File uploads" /> */}
       <header className={css.header}>
         <div className={css.left}>
@@ -37,6 +37,6 @@ export default function Layout(props: Props) {
       <div className={css.outer}>
         <KeyNav className={css.main}>{props.children}</KeyNav>
       </div>
-    </DatabaseLayoutWrapper>
+    </DatabaseLayoutWrapperOuter>
   );
 }

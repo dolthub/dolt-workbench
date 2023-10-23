@@ -74,7 +74,7 @@ export class DataSourceService {
         return res;
       }
 
-      const isDolt = await getIsDolt(qr);
+      const isDolt = await getIsDolt(qr.query);
       if (dbName) {
         await qr.query(useDBStatement(dbName, refName, isDolt));
       }
@@ -133,9 +133,11 @@ export function useDBStatement(
   return `USE \`${dbName}\``;
 }
 
-export async function getIsDolt(qr: QueryRunner): Promise<boolean> {
+export async function getIsDolt(
+  query: (q: string) => Promise<RawRows>,
+): Promise<boolean> {
   try {
-    const res = await qr.query("SELECT dolt_version()");
+    const res = await query("SELECT dolt_version()");
     return !!res;
   } catch (_) {
     return false;
