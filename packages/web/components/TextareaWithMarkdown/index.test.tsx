@@ -60,7 +60,7 @@ describe("test TextareaWithMarkdown", () => {
 
     const lists = screen.getAllByRole("list");
     const markdownList = lists[1];
-    expect(markdownList.childElementCount).toEqual(3);
+    expect(markdownList.childNodes).toHaveLength(3);
 
     markdownList.childNodes.forEach(mdChild => {
       expect(mdChild).toHaveTextContent("Bulletpoint");

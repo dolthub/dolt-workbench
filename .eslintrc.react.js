@@ -30,6 +30,10 @@ module.exports = {
   ],
   rules: {
     ...rules,
+    "testing-library/no-node-access": [
+      "error",
+      { allowContainerFirstChild: true },
+    ],
     "jsx-a11y/control-has-associated-label": "warn",
     "jsx-a11y/anchor-is-valid": "off",
     "react-hooks/exhaustive-deps": "warn",

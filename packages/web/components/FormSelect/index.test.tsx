@@ -66,7 +66,7 @@ describe("test FormSelect", () => {
       if (!menuList) {
         throw Error("MenuList not found");
       }
-      expect(menuList.firstElementChild).toHaveTextContent(selected.value);
+      expect(menuList.firstChild).toHaveTextContent(selected.value);
     });
   });
 });
