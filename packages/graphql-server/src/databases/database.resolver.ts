@@ -76,7 +76,7 @@ export class DatabaseResolver {
     const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
     const qr = this.dss.getQR();
     try {
-      const isDolt = await getIsDolt(qr.query);
+      const isDolt = await getIsDolt(qr);
       return {
         isDolt,
         hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",

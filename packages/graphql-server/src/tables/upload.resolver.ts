@@ -4,7 +4,6 @@ import { GraphQLUpload } from "graphql-upload";
 import * as mysql from "mysql2/promise";
 import {
   DataSourceService,
-  getIsDolt,
   useDBStatement,
 } from "../dataSources/dataSource.service";
 import { TableArgs } from "../utils/commonTypes";
@@ -42,7 +41,14 @@ export class FileUploadResolver {
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
     const conn = await mysql.createConnection(this.dss.getMySQLConfig());
 
-    const isDolt = await getIsDolt(conn.query);
+    let isDolt = false;
+    try {
+      const res = await conn.query("SELECT dolt_version()");
+      isDolt = !!res;
+    } catch (_) {
+      // ignore
+    }
+
     await conn.query(useDBStatement(args.databaseName, args.refName, isDolt));
     await conn.query("SET GLOBAL local_infile=ON;");
 
