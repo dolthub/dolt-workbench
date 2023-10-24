@@ -22,16 +22,11 @@
   @apply mr-3 text-xl;
 }
 
-.breadcrumbs {
-  span {
-    @apply text-white;
-  }
-  a {
-    @apply text-blue-300;
+.databaseLink {
+  @apply text-white font-normal;
 
-    &:hover {
-      @apply text-blue-200;
-    }
+  &:hover {
+    @apply text-blue-200;
   }
 }
 

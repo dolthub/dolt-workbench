@@ -1,5 +1,4 @@
 import Button from "@components/Button";
-import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
 import { DatabaseLayoutWrapperOuter } from "@components/layouts/DatabaseLayout/Wrapper";
 import DatabaseLink from "@components/links/DatabaseLink";
 import KeyNav from "@components/util/KeyNav";
@@ -22,10 +21,9 @@ export default function Layout(props: Props) {
           <DatabaseLink params={props.params}>
             <GoChevronLeft className={css.chevron} />
           </DatabaseLink>
-          <DatabaseBreadcrumbs
-            params={props.params}
-            className={css.breadcrumbs}
-          />
+          <DatabaseLink params={props.params} className={css.databaseLink}>
+            {props.params.databaseName}
+          </DatabaseLink>
         </div>
         <h1>File Importer</h1>
         <div className={css.right}>
