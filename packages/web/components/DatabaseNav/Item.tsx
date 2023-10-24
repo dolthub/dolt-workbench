@@ -1,4 +1,3 @@
-import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
@@ -15,21 +14,18 @@ type Props = {
 };
 
 export default function NavItem(props: Props) {
-  const lower = props.name.toLowerCase();
   if (props.hide) return null;
   if (props.doltDisabled) {
-    const tooltipId = `disabled-tab-${lower.replace(" ", "-")}`;
     return (
       <li className={css.disabledTab}>
         <span
           className={css.innerTab}
           data-tooltip-position="top"
-          data-tooltip-id={tooltipId}
+          data-tooltip-id="disabled-database-nav-item"
           data-tooltip-content={`${props.name} tab is only available for Dolt databases`}
         >
           {props.name}
         </span>
-        <Tooltip id={tooltipId} />
       </li>
     );
   }

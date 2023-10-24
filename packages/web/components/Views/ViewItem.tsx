@@ -1,5 +1,4 @@
 import Btn from "@components/Btn";
-import Tooltip from "@components/Tooltip";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { RowForViewsFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
@@ -45,16 +44,14 @@ export default function ViewItem(props: Props) {
       </Btn>
       <Btn
         onClick={executeShowView}
-        data-tooltip-id={id}
+        data-tooltip-id="view-icon-tip"
         data-tooltip-content={`show${viewingDef ? "ing" : ""} definition`}
-        data-tooltip-place="left"
       >
         <div
           className={cx(css.icon, css.book, { [css.bookActive]: viewingDef })}
         >
           <RiBookOpenLine />
         </div>
-        <Tooltip id={id} />
       </Btn>
     </li>
   );

@@ -1,7 +1,6 @@
 import Btn from "@components/Btn";
 import Popup from "@components/Popup";
 import SmallLoader from "@components/SmallLoader";
-import Tooltip from "@components/Tooltip";
 import QueryHandler from "@components/util/QueryHandler";
 import {
   Column,
@@ -57,14 +56,8 @@ function ColumnItem({ col }: { col: ColumnForTableListFragment }) {
       <div className={css.colName} title={col.name}>
         <span>{excerpt(col.name, 24)}</span>
         {col.isPrimaryKey && (
-          <span
-            data-cy={id}
-            data-tooltip-place="left"
-            data-tooltip-content="primary key"
-            data-tooltip-id={id}
-          >
+          <span data-cy={id} data-tooltip-id="primary-key-tip">
             <FiKey className={css.key} />
-            <Tooltip id={id} />
           </span>
         )}
       </div>
