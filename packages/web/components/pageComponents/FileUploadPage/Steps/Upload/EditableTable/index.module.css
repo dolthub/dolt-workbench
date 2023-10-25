@@ -1,0 +1,42 @@
+.overlay {
+  @apply block fixed w-full h-full top-0 bottom-0 left-0 right-0 z-100;
+  background-color: rgba(0, 0, 0, 0.3);
+}
+
+.container {
+  @apply flex relative bg-white justify-center mx-auto mt-5 rounded-lg overflow-hidden;
+  height: 95vh;
+  width: 95vw;
+}
+
+.inner {
+  @apply w-full p-10 relative text-left;
+
+  h1 {
+    @apply text-center mb-4;
+  }
+
+  p {
+    @apply text-sm text-center;
+  }
+}
+
+.reopenButton {
+  @apply px-0 mt-6;
+}
+
+.closeTop {
+  @apply absolute right-5 top-5 text-primary;
+
+  svg {
+    @apply text-2xl;
+  }
+}
+
+.importInfo {
+  @apply flex justify-center;
+
+  svg {
+    @apply ml-2;
+  }
+}

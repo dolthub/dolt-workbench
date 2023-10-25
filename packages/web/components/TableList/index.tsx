@@ -1,5 +1,6 @@
 import Section from "@components/DatabaseTableNav/Section";
 import SchemaDiagramButton from "@components/SchemaDiagramButton";
+import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import QueryHandler from "@components/util/QueryHandler";
@@ -29,6 +30,7 @@ function Inner(props: InnerProps) {
 
   return (
     <div>
+      <Tooltip id="primary-key-tip" content="primary key" place="left" />
       {props.tables.length ? (
         <>
           <ol>

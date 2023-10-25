@@ -1,0 +1,74 @@
+.contextMenu {
+  @apply bg-white text-primary border border-ld-darkgrey rounded;
+
+  div[role="menuitem"] {
+    @apply py-1.5 px-3 text-sm;
+
+    &:hover {
+      @apply text-acc-hoverblue cursor-auto;
+    }
+  }
+  div[role="menuitem"]:not(:last-child) {
+    @apply border-b border-ld-darkgrey;
+  }
+}
+
+.dataGrid {
+  @apply text-primary m-4 mx-auto;
+  height: 75vh;
+
+  :global(.rdg-cell-dragged-over) {
+    @apply bg-blue-100;
+  }
+
+  :global(.index-cell > .rdg-cell-drag-handle) {
+    @apply hidden;
+  }
+
+  :global(.index-cell[aria-selected="true"]),
+  :global(.rdg-cell[role="columnheader"][aria-selected="true"]) {
+    @apply bg-gray-300;
+    box-shadow: 2px 0 5px -2px rgb(136 136 136 / 30%);
+  }
+}
+
+.top {
+  @apply flex justify-between mt-1;
+}
+
+.msg {
+  @apply text-xs italic mt-1;
+}
+
+.rowIndex {
+  @apply font-semibold text-center bg-[#f9f9f9];
+}
+
+.loading {
+  @apply absolute -bottom-3 right-4 text-white px-2 bg-ld-darkgrey bg-opacity-50;
+}
+
+.cellError {
+  @apply bg-acc-hoverred relative;
+
+  &:hover::before {
+    @apply absolute top-1.5 right-1.5 bg-acc-hoverred text-white opacity-90 text-xs;
+    content: attr(data-text);
+  }
+}
+
+.menu {
+  @apply absolute bg-white border rounded;
+
+  > li {
+    @apply px-2 py-1;
+
+    &:not(:last-child) {
+      @apply border-b;
+    }
+
+    > button {
+      @apply bg-white text-sm;
+    }
+  }
+}

@@ -16,6 +16,7 @@ export type Scalars = {
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
   Timestamp: { input: any; output: any; }
+  Upload: { input: any; output: any; }
 };
 
 export type Branch = {
@@ -112,6 +113,11 @@ export type DoltWriter = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
+export enum FileType {
+  Csv = 'Csv',
+  Psv = 'Psv'
+}
+
 export type ForeignKey = {
   __typename?: 'ForeignKey';
   columnName: Scalars['String']['output'];
@@ -125,6 +131,10 @@ export type ForeignKeyColumn = {
   referencedColumnName: Scalars['String']['output'];
   referrerColumnIndex: Scalars['Float']['output'];
 };
+
+export enum ImportOperation {
+  Update = 'Update'
+}
 
 export type Index = {
   __typename?: 'Index';
@@ -140,6 +150,11 @@ export type IndexColumn = {
   sqlType?: Maybe<Scalars['String']['output']>;
 };
 
+export enum LoadDataModifier {
+  Ignore = 'Ignore',
+  Replace = 'Replace'
+}
+
 export type Mutation = {
   __typename?: 'Mutation';
   addDatabaseConnection: Scalars['String']['output'];
@@ -148,6 +163,7 @@ export type Mutation = {
   createTag: Tag;
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
+  loadDataFile: Scalars['Boolean']['output'];
 };
 
 
@@ -186,6 +202,17 @@ export type MutationDeleteBranchArgs = {
 export type MutationDeleteTagArgs = {
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
+};
+
+
+export type MutationLoadDataFileArgs = {
+  databaseName: Scalars['String']['input'];
+  file: Scalars['Upload']['input'];
+  fileType: FileType;
+  importOp: ImportOperation;
+  modifier?: InputMaybe<LoadDataModifier>;
+  refName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
 };
 
 export type Query = {
@@ -615,6 +642,19 @@ export type DeleteTagMutationVariables = Exact<{
 
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
+
+export type LoadDataMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
+  importOp: ImportOperation;
+  fileType: FileType;
+  file: Scalars['Upload']['input'];
+  modifier?: InputMaybe<LoadDataModifier>;
+}>;
+
+
+export type LoadDataMutation = { __typename?: 'Mutation', loadDataFile: boolean };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
@@ -1775,6 +1815,51 @@ export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<De
 export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
 export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
+export const LoadDataDocument = gql`
+    mutation LoadData($databaseName: String!, $refName: String!, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
+  loadDataFile(
+    databaseName: $databaseName
+    refName: $refName
+    tableName: $tableName
+    importOp: $importOp
+    fileType: $fileType
+    file: $file
+    modifier: $modifier
+  )
+}
+    `;
+export type LoadDataMutationFn = Apollo.MutationFunction<LoadDataMutation, LoadDataMutationVariables>;
+
+/**
+ * __useLoadDataMutation__
+ *
+ * To run a mutation, you first call `useLoadDataMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoadDataMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loadDataMutation, { data, loading, error }] = useLoadDataMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      tableName: // value for 'tableName'
+ *      importOp: // value for 'importOp'
+ *      fileType: // value for 'fileType'
+ *      file: // value for 'file'
+ *      modifier: // value for 'modifier'
+ *   },
+ * });
+ */
+export function useLoadDataMutation(baseOptions?: Apollo.MutationHookOptions<LoadDataMutation, LoadDataMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoadDataMutation, LoadDataMutationVariables>(LoadDataDocument, options);
+      }
+export type LoadDataMutationHookResult = ReturnType<typeof useLoadDataMutation>;
+export type LoadDataMutationResult = Apollo.MutationResult<LoadDataMutation>;
+export type LoadDataMutationOptions = Apollo.BaseMutationOptions<LoadDataMutation, LoadDataMutationVariables>;
 export const AddDatabaseConnectionDocument = gql`
     mutation AddDatabaseConnection($url: String, $useEnv: Boolean) {
   addDatabaseConnection(url: $url, useEnv: $useEnv)

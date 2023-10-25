@@ -1,0 +1,40 @@
+.nav {
+  @apply relative bg-ld-lightpurple w-full mx-auto text-center flex pt-6 border-b border-ld-lightgrey;
+
+  ol {
+    @apply flex mx-auto;
+  }
+}
+
+.navItem {
+  @apply relative px-6 mx-10 pb-2;
+
+  a {
+    @apply text-ld-darkgrey;
+  }
+
+  button {
+    @apply font-semibold bg-transparent;
+
+    &:focus {
+      @apply outline-none widget-shadow-lightblue;
+    }
+
+    &:disabled {
+      @apply cursor-default text-ld-darkgrey;
+    }
+  }
+}
+
+.active {
+  @apply border-b-4 border-acc-hoverlinkblue;
+
+  button:disabled,
+  a {
+    @apply text-acc-hoverlinkblue;
+  }
+}
+
+.complete a {
+  @apply text-acc-green;
+}

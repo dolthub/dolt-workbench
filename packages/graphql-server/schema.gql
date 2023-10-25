@@ -201,6 +201,24 @@ type Mutation {
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
   addDatabaseConnection(url: String, useEnv: Boolean): String!
   createDatabase(databaseName: String!): Boolean!
+  loadDataFile(tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!): Tag!
   deleteTag(databaseName: String!, tagName: String!): Boolean!
+}
+
+enum ImportOperation {
+  Update
+}
+
+enum FileType {
+  Csv
+  Psv
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+enum LoadDataModifier {
+  Ignore
+  Replace
 }

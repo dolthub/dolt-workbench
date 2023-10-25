@@ -81,3 +81,27 @@ export const releases = (p: ps.OptionalRefParams): Route =>
 
 export const newRelease = (p: ps.OptionalRefParams): Route =>
   releases(p).addStatic("new").withQuery({ refName: p.refName });
+
+export const upload = (p: ps.DatabaseParams): Route =>
+  database(p).addStatic("upload");
+
+export const uploadStage = (
+  p: ps.UploadParams & {
+    refName?: string;
+    tableName?: string;
+    spreadsheet?: boolean;
+    stage: string;
+  },
+): Route => {
+  const q = p.refName
+    ? {
+        branchName: p.refName,
+        tableName: p.tableName,
+        spreadsheet: p.spreadsheet ? "true" : undefined,
+      }
+    : {};
+  return upload(p)
+    .addDynamic("uploadId", p.uploadId)
+    .addDynamic("stage", p.stage)
+    .withQuery(q);
+};

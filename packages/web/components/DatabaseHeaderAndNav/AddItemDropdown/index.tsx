@@ -2,8 +2,9 @@ import Popup from "@components/Popup";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import useRole from "@hooks/useRole";
 import { DatabaseParams } from "@lib/params";
-import { newRelease } from "@lib/urls";
+import { newRelease, upload } from "@lib/urls";
 import { AiOutlineTag } from "@react-icons/all-files/ai/AiOutlineTag";
+import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
@@ -31,13 +32,14 @@ export default function AddItemDropdown(props: Props) {
       >
         <div className={css.popup}>
           <ul>
-            {/* <DropdownItem
+            <DropdownItem
               url={upload(props.params)}
               icon={<AiOutlineUpload />}
+              hide={!userHasWritePerms}
               data-cy="add-dropdown-upload-a-file-link"
             >
               Upload a file
-            </DropdownItem> */}
+            </DropdownItem>
             {/* <DropdownItem
               url={newPull(props.params)}
               icon={<AiOutlinePullRequest />}

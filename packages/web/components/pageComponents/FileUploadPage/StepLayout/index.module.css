@@ -1,0 +1,35 @@
+.container {
+  @apply w-full mx-auto px-24 text-center mt-12 text-primary max-w-3xl relative;
+
+  h2 {
+    @apply mb-10;
+  }
+
+  p {
+    @apply text-base mb-3;
+  }
+}
+
+.buttons {
+  @apply my-12 text-center;
+}
+
+.next {
+  @apply w-40;
+}
+
+.back {
+  @apply absolute -left-48 top-1;
+
+  button {
+    @apply flex font-semibold;
+
+    svg {
+      @apply mr-2 mt-1;
+    }
+  }
+}
+
+.modal {
+  @apply max-w-md;
+}

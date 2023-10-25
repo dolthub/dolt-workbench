@@ -12,12 +12,12 @@ export default function DoltDisabledSelector(props: Props) {
       <div
         className={css.doltDisabled}
         data-tooltip-content="Use Dolt to enable branches"
-        data-tooltip-id="branch-selector-no-dolt"
+        data-tooltip-id="selector-no-dolt"
         data-tooltip-place="top"
       >
         {props.val}
       </div>
-      <Tooltip id="branch-selector-no-dolt" />
+      <Tooltip id="selector-no-dolt" />
     </>
   );
 }

@@ -1,5 +1,6 @@
 import Section from "@components/DatabaseTableNav/Section";
 import Loader from "@components/Loader";
+import Tooltip from "@components/Tooltip";
 import { RowForViewsFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import NoViews from "./NoViews";
@@ -18,6 +19,7 @@ type Props = ViewsProps & {
 function Inner({ rows, params }: Props) {
   return (
     <div className={css.views}>
+      <Tooltip id="view-icon-tip" place="left" />
       {rows?.length ? (
         <ol data-cy="db-views-list">
           {rows.map(r => (

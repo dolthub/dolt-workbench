@@ -1,4 +1,5 @@
 import SmallLoader from "@components/SmallLoader";
+import Tooltip from "@components/Tooltip";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
 import useDefaultBranch from "@hooks/useDefaultBranch";
@@ -75,6 +76,7 @@ function Query(props: QueryProps) {
 function Inner(props: Props) {
   return (
     <div data-cy="db-page-header-nav" className={css.headerNav}>
+      <Tooltip id="disabled-database-nav-item" />
       <ul className={css.tabs}>
         {tabs.map((tab, i) => {
           const item = <NavItem {...props} key={tab} name={tab} i={i} />;

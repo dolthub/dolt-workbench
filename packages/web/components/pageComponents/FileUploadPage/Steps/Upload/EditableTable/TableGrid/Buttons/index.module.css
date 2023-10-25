@@ -1,0 +1,27 @@
+.gridButtons {
+  @apply flex items-center mx-4 relative;
+}
+
+.insertButton {
+  @apply flex items-center mr-4;
+
+  svg {
+    @apply ml-1.5;
+  }
+}
+
+.popup {
+  @apply absolute top-8 -left-12 bg-white rounded z-10 widget-shadow p-3 w-28;
+
+  button {
+    @apply w-full text-left;
+  }
+
+  button:not(:last-of-type) {
+    @apply mb-1.5;
+  }
+}
+
+.exportButton {
+  @apply text-center ml-4;
+}

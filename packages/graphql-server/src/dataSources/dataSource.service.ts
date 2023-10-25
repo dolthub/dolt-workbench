@@ -1,4 +1,5 @@
 import { Injectable } from "@nestjs/common";
+import * as mysql from "mysql2/promise";
 import { DataSource, QueryRunner } from "typeorm";
 import { RawRows } from "../utils/commonTypes";
 
@@ -7,12 +8,21 @@ export type ParQuery = (q: string, p?: any[] | undefined) => Promise<RawRows>;
 
 @Injectable()
 export class DataSourceService {
-  constructor(private ds: DataSource | undefined) {}
+  constructor(
+    private ds: DataSource | undefined,
+    private mysqlConfig: mysql.ConnectionOptions | undefined, // Used for file upload
+  ) {}
 
   getDS(): DataSource {
     const { ds } = this;
     if (!ds) throw new Error(dbNotFoundErr);
     return ds;
+  }
+
+  getMySQLConfig(): mysql.ConnectionOptions {
+    const { mysqlConfig } = this;
+    if (!mysqlConfig) throw new Error("MySQL config not found");
+    return mysqlConfig;
   }
 
   getQR(): QueryRunner {
@@ -94,13 +104,25 @@ export class DataSourceService {
       },
     });
 
+    this.mysqlConfig = {
+      uri: connUrl,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+      connectionLimit: 1,
+      dateStrings: ["DATE"],
+
+      // Allows file upload via LOAD DATA
+      flags: ["+LOCAL_FILES"],
+    };
+
     await this.ds.initialize();
   }
 }
 
 // Cannot use params here for the database revision. It will incorrectly
 // escape refs with dots
-function useDBStatement(
+export function useDBStatement(
   dbName?: string,
   refName?: string,
   isDolt = true,
