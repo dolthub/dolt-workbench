@@ -6,6 +6,7 @@ import ForeignKeyButton from "@components/CellButtons/ForeignKeyButton";
 import HistoryButton from "@components/CellButtons/HistoryButton";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
 import Dropdown from "@components/CellDropdown";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
@@ -54,7 +55,9 @@ export default function CellDropdown(props: Props) {
         currCol={props.currentCol}
         isNull={isNull}
       />
-      <HistoryButton {...props} />
+      <NotDoltWrapper>
+        <HistoryButton {...props} />
+      </NotDoltWrapper>
       <FilterButton value={props.rawVal} col={props.currentCol} />
       <ForeignKeyButton {...props} colName={props.currentCol.name} />
       {showCollapseCellButton && (

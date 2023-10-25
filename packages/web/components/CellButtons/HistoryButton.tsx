@@ -22,9 +22,10 @@ type Props = {
   cidx: number;
   row: RowForDataTableFragment;
   columns: ColumnForDataTableFragment[];
+  doltDisabled?: boolean;
 };
 
-type InnerProps = Props & {
+type InnerProps = Omit<Props, "doltDisabled"> & {
   disabled?: boolean;
   disabledPopup?: ReactNode;
   params: TableParams;
@@ -81,6 +82,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const isJoin = queryHasMultipleTables(params.q);
 
   const disabled =
+    props.doltDisabled ||
     keyless ||
     isView ||
     isSystemTable ||
@@ -106,6 +108,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
               pksShowing={pksShowing}
               isJoin={isJoin}
               keyless={keyless}
+              doltDisabled={props.doltDisabled}
             />
           </Button.Link>
         </div>
@@ -135,9 +138,11 @@ type ReasonProps = {
   pksShowing: boolean;
   isJoin: boolean;
   keyless: boolean;
+  doltDisabled?: boolean;
 };
 
 function HistoryNotAvailableReason(props: ReasonProps) {
+  if (props.doltDisabled) return <span>for non-Dolt databases.</span>;
   if (props.keyless) return <span>for keyless tables.</span>;
   if (props.isJoin) return <span>for multiple tables.</span>;
   if (!props.pksShowing) return <span>for partial primary keys.</span>;

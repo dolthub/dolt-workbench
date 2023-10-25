@@ -2,6 +2,7 @@ import DiffTable from "@components/DiffTable";
 import DiffTableNav from "@components/DiffTableNav";
 import ErrorMsg from "@components/ErrorMsg";
 import Loader from "@components/Loader";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DiffProvider, useDiffContext } from "@contexts/diff";
 import { RefParams } from "@lib/params";
 import css from "./index.module.css";
@@ -28,8 +29,10 @@ export default function WorkingDiff(props: Props) {
   const toCommitId = "WORKING";
   const params = { ...props.params, toCommitId, fromCommitId };
   return (
-    <DiffProvider params={params} stayWithinPage>
-      <Inner />
-    </DiffProvider>
+    <NotDoltWrapper hideNotDolt>
+      <DiffProvider params={params} stayWithinPage>
+        <Inner />
+      </DiffProvider>
+    </NotDoltWrapper>
   );
 }
