@@ -1,7 +1,9 @@
 import DatabasesDropdown from "@components/DatabasesDropdown";
+import CommitLogLink from "@components/links/CommitLogLink";
 import Link from "@components/links/Link";
 import {
   DatabaseParams,
+  DiffRangeParams,
   RefParams,
   SqlQueryParams,
   TableParams,
@@ -197,6 +199,26 @@ export function docBreadcrumbsDetails(
     {
       child: <span>docs</span>,
       name: BreadcrumbName.DBDocs,
+      type: BreadcrumbType.Text,
+    },
+  ];
+}
+
+export function commitDiffBreadcrumbDetails(
+  params: DiffRangeParams,
+): BreadcrumbDetails[] {
+  const commitLogLink = <CommitLogLink params={params}>commits</CommitLogLink>;
+  const commitDiffText = <span>{params.diffRange}</span>;
+  return [
+    ...databaseBreadcrumbs(params),
+    {
+      child: commitLogLink,
+      name: BreadcrumbName.DBCommitLog,
+      type: BreadcrumbType.Link,
+    },
+    {
+      child: commitDiffText,
+      name: BreadcrumbName.DBCommitDiff,
       type: BreadcrumbType.Text,
     },
   ];

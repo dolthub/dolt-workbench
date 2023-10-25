@@ -1,0 +1,7 @@
+.patch {
+  @apply max-w-7xl;
+
+  tr > td:first-of-type {
+    @apply hidden;
+  }
+}

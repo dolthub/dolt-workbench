@@ -45,8 +45,6 @@ export function buildFakeData(list: TagForListFragment[]): TagListQuery {
 // QUERY MOCKS
 
 export const databaseParams = {
-  deploymentName: "test",
-  ownerName: "dolthub",
   databaseName: "dbname",
 };
 

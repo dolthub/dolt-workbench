@@ -1,0 +1,36 @@
+.summary {
+  @apply relative text-sm text-primary overflow-x-auto whitespace-nowrap border-b border-ld-lightgrey mx-3 pb-5 px-2 lg:px-0;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
+}
+
+.forPull {
+  @apply border-t-0;
+}
+
+.stats {
+  @apply mt-3 flex flex-col relative;
+
+  @screen sm {
+    @apply flex-row;
+  }
+}
+
+.loading {
+  @apply pr-4 ml-3 pt-2;
+}
+
+.bold {
+  @apply font-semibold;
+}
+
+.marTop {
+  @apply mt-5;
+}
+
+.primaryKeyChange {
+  @apply text-primary font-normal;
+}

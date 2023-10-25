@@ -1,0 +1,68 @@
+import DiffTable from "@components/DiffTable";
+import DiffTableNav from "@components/DiffTableNav";
+import Loader from "@components/Loader";
+import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { DiffProvider, useDiffContext } from "@contexts/diff";
+import { RefParams } from "@lib/params";
+import { commitLog } from "@lib/urls";
+import { ReactNode } from "react";
+import ForError from "../../ForError";
+import DatabasePage from "../../component";
+import css from "./index.module.css";
+
+type InnerProps = {
+  params: RefParams;
+  smallHeaderBreadcrumbs?: ReactNode;
+};
+
+function Inner(props: InnerProps) {
+  const { loading, error } = useDiffContext();
+  if (loading) return <Loader loaded={false} />;
+  if (error) return <ForError {...props} error={error} />;
+  return (
+    <DatabasePage
+      params={props.params}
+      initialTabIndex={2}
+      leftTableNav={
+        <NotDoltWrapper hideNotDolt>
+          <DiffTableNav.ForCommits params={props.params} />
+        </NotDoltWrapper>
+      }
+      smallHeaderBreadcrumbs={props.smallHeaderBreadcrumbs}
+      initialSmallHeader
+      wide
+      routeRefChangeTo={commitLog}
+      title="commitDiff"
+    >
+      <NotDoltWrapper showNotDoltMsg feature="Viewing diffs" bigMsg>
+        <div className={css.container}>
+          <DiffTable params={props.params} />
+        </div>
+      </NotDoltWrapper>
+    </DatabasePage>
+  );
+}
+
+type Props = {
+  initialFromCommitId: string;
+  initialToCommitId: string;
+  params: RefParams;
+  smallHeaderBreadcrumbs?: ReactNode;
+  tableName?: string;
+};
+
+export default function DiffPage(props: Props) {
+  return (
+    <DiffProvider
+      {...props}
+      params={{
+        ...props.params,
+        fromCommitId: props.initialFromCommitId,
+        toCommitId: props.initialToCommitId,
+      }}
+      initialTableName={props.tableName}
+    >
+      <Inner {...props} />
+    </DiffProvider>
+  );
+}

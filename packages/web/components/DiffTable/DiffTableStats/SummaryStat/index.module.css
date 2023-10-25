@@ -1,0 +1,24 @@
+.stat {
+  @apply mr-10;
+}
+
+.smallStat {
+  @apply ml-5;
+  font-size: 0.82rem;
+}
+
+.num {
+  @apply mr-1 font-semibold text-ld-darkgrey;
+}
+
+.green {
+  @apply text-acc-green;
+}
+
+.red {
+  @apply text-acc-red;
+}
+
+.percent {
+  @apply text-ld-darkgrey pl-1;
+}

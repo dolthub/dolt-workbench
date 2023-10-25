@@ -1,0 +1,51 @@
+.container {
+  @apply mt-3 mb-5 px-2 lg:px-0;
+}
+
+.top {
+  @apply mx-3 mb-3;
+}
+
+.hash {
+  @apply font-mono font-semibold text-sm;
+}
+
+.browse {
+  @apply px-0 mb-2 mt-1;
+}
+
+.infoContainer {
+  @apply border-y-2 text-sm py-4 px-3;
+}
+
+.commitMsg {
+  @apply break-words;
+}
+
+.committer {
+  @apply mt-0.5 mb-2.5 text-ld-darkgrey;
+}
+
+.userLink {
+  @apply text-ld-darkgrey;
+
+  &:hover {
+    @apply text-ld-darkergrey;
+  }
+}
+
+.parentHash {
+  @apply font-mono text-xs;
+
+  a {
+    @apply text-primary;
+
+    &:hover {
+      @apply text-acc-hoverblue;
+    }
+  }
+}
+
+.plus {
+  @apply mx-1;
+}

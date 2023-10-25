@@ -1,0 +1,43 @@
+.container {
+  @apply my-8;
+}
+
+.header {
+  @apply mx-4 mb-4 flex items-center justify-between;
+
+  h1 {
+    @apply mr-4;
+  }
+}
+
+.diffStat {
+  @apply mx-4 mb-12 lg:mb-4;
+}
+
+.schemaSection {
+  @apply mx-6 pt-7 border-t border-ld-lightgrey overflow-x-auto lg:overflow-x-visible;
+
+  h2 {
+    @apply mb-2;
+  }
+}
+
+.buttons {
+  @apply w-full mx-2 text-acc-hoverlinkblue;
+
+  button {
+    @apply pb-2 mr-4 px-6 font-semibold;
+
+    &:focus {
+      @apply outline-none widget-shadow-lightblue;
+    }
+
+    &:disabled {
+      @apply text-ld-darkgrey cursor-default;
+    }
+  }
+}
+
+.active {
+  @apply text-ld-orange border-b-3 border-ld-orange;
+}
