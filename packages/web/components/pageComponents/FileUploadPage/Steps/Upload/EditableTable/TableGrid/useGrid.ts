@@ -8,11 +8,8 @@ import { ReactElement, useReducer, useState } from "react";
 import { DataGridProps, FillEvent } from "react-data-grid";
 import { useFileUploadContext } from "../../../../contexts/fileUploadLocalForage";
 import useUploadContext from "../../contexts/upload";
-import { Columns, HeadObj, ReturnType, Row, RowObj } from "./types";
+import { Columns, ReturnType, Row } from "./types";
 import {
-  getColumn,
-  getColumnLetterFromAlphabet,
-  getColumnsFromPastedData,
   getDefaultState,
   getGridAsCsv,
   getRow,
@@ -25,9 +22,7 @@ export default function useGrid(
   const { onUpload, setState: setUcState } = useUploadContext();
   const { state: fState, setState: setForageState } = useFileUploadContext();
 
-  const [state, setState] = useSetState(
-    getDefaultState(fState.spreadsheetRows, existingCols),
-  );
+  const [state, setState] = useSetState(getDefaultState(existingCols));
 
   const [nextId, setNextId] = useReducer(
     (id: number) => id + 1,
@@ -76,7 +71,6 @@ export default function useGrid(
       const file = new File([contents], "editor.csv", { type: "text/csv" });
       setForageState({
         selectedFile: file,
-        spreadsheetRows: rows,
         fileType: FileType.Csv,
         colNames: firstRow,
       });
@@ -97,10 +91,7 @@ export default function useGrid(
     setNextId();
   };
 
-  const onRowDelete = (
-    _: React.MouseEvent<HTMLDivElement>,
-    { rowIdx }: RowObj,
-  ) => {
+  const onRowDelete = (rowIdx: number) => {
     const mappedIdxs = state.rows.slice(rowIdx + 1).map(r => {
       return { ...r, _idx: r._idx - 1 };
     });
@@ -109,113 +100,17 @@ export default function useGrid(
     });
   };
 
-  const onRowInsertAbove = (
-    _: React.MouseEvent<HTMLDivElement>,
-    { rowIdx }: RowObj,
-  ) => {
+  const onRowInsertAbove = (rowIdx: number) => {
     insertRow(rowIdx);
   };
 
-  const onRowInsertBelow = (
-    _: React.MouseEvent<HTMLDivElement>,
-    { rowIdx }: RowObj,
-  ) => {
+  const onRowInsertBelow = (rowIdx: number) => {
     insertRow(rowIdx + 1);
   };
 
-  const onAddColumn = (insertColIdx: number) => {
-    const newCol = getColumn(insertColIdx, insertColIdx);
-    const mapped = state.columns.slice(insertColIdx).map(c => {
-      const newIdx = c._idx + 1;
-      return {
-        ...c,
-        _idx: newIdx,
-        key: `${Number(c.key) + 1}`,
-        name: getColumnLetterFromAlphabet(newIdx),
-      };
-    });
-    const newCols = [
-      ...state.columns.slice(0, insertColIdx),
-      newCol,
-      ...mapped,
-    ];
-    const mappedRows = state.rows.map(row => {
-      const keys = Object.keys(row);
-      const newRow: Row = { [newCol.key]: "", _id: row._id, _idx: row._idx };
-      keys.forEach(key => {
-        const num = Number(key);
-        if (num >= insertColIdx) {
-          newRow[`${num + 1}`] = row[key];
-        } else {
-          newRow[key] = row[key];
-        }
-      });
-      return newRow;
-    });
-    setState({ columns: newCols, rows: mappedRows });
-  };
-
-  const onDeleteColumn = (
-    _: React.MouseEvent<HTMLDivElement>,
-    { column }: HeadObj,
-  ) => {
-    const mappedNames = state.columns.slice(column._idx + 1).map(c => {
-      return {
-        ...c,
-        name: getColumnLetterFromAlphabet(Number(c._idx) - 1),
-        _idx: c._idx - 1,
-      };
-    });
-    const newCols = [...state.columns.slice(0, column._idx), ...mappedNames];
-    const newRows = state.rows.map(row => {
-      const newRow = row;
-      delete newRow[column.key];
-      return newRow;
-    });
-    setState({ columns: newCols, rows: newRows });
-  };
-
-  function onFill({ columnKey, sourceRow, targetRows }: FillEvent<Row>): Row[] {
-    return targetRows.map(targetRow => {
-      return { ...targetRow, [columnKey]: sourceRow[columnKey as keyof Row] };
-    });
+  function onFill({ columnKey, sourceRow, targetRow }: FillEvent<Row>): Row {
+    return { ...targetRow, [columnKey]: sourceRow[columnKey as keyof Row] };
   }
-
-  // async function handleScroll(event: React.UIEvent<HTMLDivElement>) {
-  // if (
-  //   state.loading ||
-  //   fState.spreadsheetRows ||
-  //   !state.pageToken ||
-  //   // !existingTable ||
-  //   !isAtBottom(event)
-  // ) {
-  //   return;
-  // }
-
-  // setState({ loading: true });
-
-  // const res = await existingTable.loadMore(state.pageToken);
-  // let next = nextId;
-  // const newRows = res?.rows.list.map((row, i) => {
-  //   const newRow: Row = { _id: next, _idx: state.rows.length + i };
-  //   state.columns.forEach((col, colI) => {
-  //     const val =
-  //       colI < row.columnValues.length
-  //         ? getExistingRowValue(row.columnValues[colI].displayValue)
-  //         : "";
-  //     newRow[col.key] = val;
-  //   });
-  //   next += 1;
-  //   setNextId();
-  //   return newRow;
-  // });
-
-  // setState({
-  //   rows: [...state.rows, ...(newRows ?? [])],
-  //   loading: false,
-  //   pageToken: res?.rows.nextPageToken ?? undefined,
-  // });
-  // }
 
   const handlePaste = (e: ClipboardEvent) => {
     e.preventDefault();
@@ -224,19 +119,19 @@ export default function useGrid(
     const pasteDataRows = defaultParsePaste(
       e.clipboardData?.getData("text/plain"),
     );
-    const newCols = getColumnsFromPastedData(pasteDataRows, idx, state.columns);
-    const allRows = addEmptyRowsForPastedRows(pasteDataRows, rowIdx, newCols);
+    const allRows = addEmptyRowsForPastedRows(
+      pasteDataRows,
+      rowIdx,
+      state.columns,
+    );
     const newRows = mergePastedRowsIntoExistingRows(
       pasteDataRows,
       allRows,
-      newCols,
+      state.columns,
       idx,
       rowIdx,
     );
-    setState({
-      columns: newCols,
-      rows: newRows,
-    });
+    setState({ rows: newRows });
   };
 
   // If pasted rows go beyond row boundary, add more empty rows
@@ -264,11 +159,8 @@ export default function useGrid(
       onRowDelete,
       onRowInsertAbove,
       onRowInsertBelow,
-      onAddColumn,
-      onDeleteColumn,
       insertRow,
       onFill,
-      // handleScroll,
       handlePaste,
     },
   };
@@ -276,5 +168,5 @@ export default function useGrid(
 
 // Splits strings copied from spreadsheet
 export function defaultParsePaste(str?: string): string[][] {
-  return str?.split(/\r\n|\n|\r/).map(row => row.split("\t")) ?? [];
+  return str?.split(/\r\n|\n|\r/).map(row => row.split(/\t|,/)) ?? [];
 }

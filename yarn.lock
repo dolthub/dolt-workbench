@@ -1651,7 +1651,7 @@ __metadata:
     react: latest
     react-ace: ^10.1.0
     react-copy-to-clipboard: ^5.1.0
-    react-data-grid: ^7.0.0-beta.31
+    react-data-grid: 7.0.0-beta.40
     react-dom: latest
     react-flow-renderer: ^10.3.17
     react-hotkeys: ^2.0.0
@@ -6318,10 +6318,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"clsx@npm:^1.1.1":
-  version: 1.2.1
-  resolution: "clsx@npm:1.2.1"
-  checksum: 30befca8019b2eb7dbad38cff6266cf543091dae2825c856a62a8ccf2c3ab9c2907c4d12b288b73101196767f66812365400a227581484a05f968b0307cfaf12
+"clsx@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "clsx@npm:2.0.0"
+  checksum: a2cfb2351b254611acf92faa0daf15220f4cd648bdf96ce369d729813b85336993871a4bf6978ddea2b81b5a130478339c20d9d0b5c6fc287e5147f0c059276e
   languageName: node
   linkType: hard
 
@@ -13780,15 +13780,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-data-grid@npm:^7.0.0-beta.31":
-  version: 7.0.0-canary.49
-  resolution: "react-data-grid@npm:7.0.0-canary.49"
+"react-data-grid@npm:7.0.0-beta.40":
+  version: 7.0.0-beta.40
+  resolution: "react-data-grid@npm:7.0.0-beta.40"
   dependencies:
-    clsx: ^1.1.1
+    clsx: ^2.0.0
   peerDependencies:
-    react: ^16.14 || ^17.0
-    react-dom: ^16.14 || ^17.0
-  checksum: fe57d441a5e56dac39a0f7e06979a27d5606515653ead31fc06f9c2fe08ebaf88ff4ab70f1565dd356b343cf4612137dea2d188a40a7e246b85dd5aa2589da04
+    react: ^18.0
+    react-dom: ^18.0
+  checksum: 2fcc640e16c33b6893e3716dbe786f79316aae1dcc89e624c929e9cd14a329f02a76e2ab4c3b7866b106ffc0f315691f870d83c1c5f708ff568d6144ad610bca
   languageName: node
   linkType: hard
 

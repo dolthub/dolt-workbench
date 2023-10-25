@@ -7,12 +7,8 @@ const dateRegex = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/; // YYYY-MM
 const datetimeRegex =
   /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\s(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)/; // YYYY-MM-DD HH:MM:SS
 
-export function getValidationClass(
-  rowIdx: number,
-  value: string,
-  type?: string,
-): string {
-  if (rowIdx === 0 || !type || value === "") return "";
+export function getValidationClass(value: string, type?: string): string {
+  if (!type || value === "") return "";
   const lower = type.toLowerCase();
   if (
     lower.includes("int") ||

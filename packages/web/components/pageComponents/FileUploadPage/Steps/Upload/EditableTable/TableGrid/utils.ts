@@ -1,11 +1,6 @@
-import {
-  ColumnForDataTableFragment,
-  RowForDataTableFragment,
-} from "@gen/graphql-types";
-import { nTimesWithIndex } from "@lib/nTimes";
-import { isNullValue } from "@lib/null";
-import { KeyboardEvent, ReactElement, cloneElement } from "react";
-import { DataGridProps, TextEditor } from "react-data-grid";
+import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { ReactElement, cloneElement } from "react";
+import { DataGridProps, textEditor } from "react-data-grid";
 import { Column, Columns, GridState, Row } from "./types";
 import { getValidationClass, handleErrorClasses } from "./validate";
 
@@ -23,8 +18,8 @@ const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 export async function getGridAsCsv<R, SR>(
   gridElement: ReactElement<DataGridProps<R, SR>>,
 ): Promise<Grid> {
-  const { body, foot } = await getGridContent(gridElement);
-  const rows = [...body, ...foot];
+  const { head, body } = await getGridContent(gridElement);
+  const rows = [...head, ...body];
   const filtered = filterOutEmptyRowsAndCols(rows);
   const csv = filtered
     .map(cells => cells.map(serializeCellValue).join(","))
@@ -35,7 +30,6 @@ export async function getGridAsCsv<R, SR>(
 type GridContent = {
   head: string[][];
   body: string[][];
-  foot: string[][];
 };
 
 async function getGridContent<R, SR>(
@@ -51,13 +45,12 @@ async function getGridContent<R, SR>(
     );
 
     return {
-      head: getRows(grid, ".rdg-header-row"),
+      head: getRows(grid, ".rdg-summary-row"),
       body: getRows(grid, ".rdg-row:not(.rdg-summary-row)"),
-      foot: getRows(grid, ".rdg-summary-row"),
     };
   } catch (err) {
     console.error(err);
-    return { head: [], body: [], foot: [] };
+    return { head: [], body: [] };
   }
 
   function getRows(grid: HTMLDivElement, selector: string): string[][] {
@@ -101,37 +94,44 @@ function serializeCellValue(value: string): string {
 // DEFAULT STATE
 
 export function getDefaultState(
-  rows: string[][] | undefined,
-  existingCols?: ColumnForDataTableFragment[],
+  existingCols: ColumnForDataTableFragment[],
 ): GridState {
-  const numDefaultCols = getNumCols(rows, existingCols);
+  const numDefaultCols = getNumCols(existingCols);
   const columns: Column[] = [];
   for (let i = 0; i < numDefaultCols; i++) {
-    const existing = existingCols ? existingCols[i] : undefined;
-    columns.push(getColumn(i, i, existing?.type));
+    const existing = existingCols[i];
+    columns.push(getColumn(i, i, existing.type, existing.name));
   }
   return {
     columns,
-    rows: getDefaultRows(rows, columns, existingCols),
-    loading: false,
+    rows: getEmptyRows(columns, defaultNumRows),
+    contextMenuProps: null,
   };
 }
 
 // GET COLUMNS
 
-export function getColumn(id: number, index: number, type?: string): Column {
+export function getColumn(
+  id: number,
+  index: number,
+  type: string,
+  name: string,
+): Column {
   return {
     _idx: index,
     name: getColumnLetterFromAlphabet(index),
     key: `${id}`,
     editable: true,
     resizable: true,
-    editor: TextEditor,
+    renderEditCell: textEditor,
     width: 215,
     cellClass: (row: Row) => {
-      const cl = getValidationClass(row._idx, row[id], type);
+      const cl = getValidationClass(row[id], type);
       handleErrorClasses();
       return cl;
+    },
+    renderSummaryCell() {
+      return name;
     },
   };
 }
@@ -147,68 +147,21 @@ export function getColumnLetterFromAlphabet(index: number): string {
   return alphabet[index];
 }
 
-function getNumCols(
-  rows: string[][] | undefined,
-  existingCols?: ColumnForDataTableFragment[],
-): number {
-  if (rows?.length) {
-    return rows[0].length;
-  }
+function getNumCols(existingCols?: ColumnForDataTableFragment[]): number {
   if (existingCols) {
     return existingCols.length;
   }
   return defaultNumCols;
 }
 
-// If pasted rows go beyond columns boundary, add more empty columns
-export function getColumnsFromPastedData(
-  pastedRows: string[][],
-  colIdx: number,
-  existingCols: Columns,
-): Columns {
-  if (pastedRows.length === 0) return existingCols;
-  const numMoreCols = colIdx + pastedRows[0].length - existingCols.length - 1;
-  return numMoreCols > 0
-    ? [
-        ...existingCols,
-        ...nTimesWithIndex(numMoreCols, num => {
-          const newColIdx = num + existingCols.length;
-          return getColumn(newColIdx, newColIdx);
-        }),
-      ]
-    : existingCols;
-}
-
 // GET ROWS
 
-function getEmptyRows(
-  cols: Columns,
-  numRows: number,
-  startingFrom: number,
-  existingCols?: ColumnForDataTableFragment[],
-): Row[] {
+function getEmptyRows(cols: Columns, numRows: number): Row[] {
   const rows = [];
-  const start = existingCols ? startingFrom + 1 : startingFrom;
-  if (existingCols) {
-    rows.push(getRowFromExistingColumns(0, cols, existingCols));
-  }
-  for (let i = start; i < numRows; i++) {
+  for (let i = 0; i < numRows; i++) {
     rows.push(getRow(i, i, cols));
   }
   return rows;
-}
-
-function getRowFromExistingColumns(
-  i: number,
-  cols: Columns,
-  existingCols: ColumnForDataTableFragment[],
-): Row {
-  const row: Row = { _id: i, _idx: i };
-  cols.forEach((col, idx) => {
-    const name = idx < existingCols.length ? existingCols[idx].name : "";
-    row[col.key] = name;
-  });
-  return row;
 }
 
 export function getRow(i: number, idx: number, cols: Columns): Row {
@@ -217,54 +170,6 @@ export function getRow(i: number, idx: number, cols: Columns): Row {
     row[col.key] = "";
   });
   return row;
-}
-
-function getDefaultRows(
-  rows: string[][] | undefined,
-  columns: Column[],
-  existingCols?: ColumnForDataTableFragment[],
-  existingRows?: RowForDataTableFragment[],
-): Row[] {
-  if (rows) {
-    return getRowsFromExistingCsv(columns, rows);
-  }
-  if (existingRows) {
-    const mappedRows = existingRows.map(r =>
-      r.columnValues.map(v => getExistingRowValue(v.displayValue)),
-    );
-    return getRowsFromExistingCsv(columns, mappedRows, existingCols);
-  }
-  return getEmptyRows(columns, defaultNumRows, 0, existingCols);
-}
-
-export function getExistingRowValue(dv: string): string {
-  return isNullValue(dv) ? "" : dv;
-}
-
-function getRowsFromExistingCsv(
-  cols: Column[],
-  rows: string[][],
-  existingCols?: ColumnForDataTableFragment[],
-): Row[] {
-  const existingRows: Row[] = [];
-  if (existingCols) {
-    existingRows.push(getRowFromExistingColumns(0, cols, existingCols));
-  }
-  rows.forEach((row, i) => {
-    const rIdx = existingCols ? i + 1 : i;
-    const newRow: Row = { _id: rIdx, _idx: rIdx };
-    cols.forEach((col, colI) => {
-      newRow[col.key] = row[colI];
-    });
-    existingRows.push(newRow);
-  });
-
-  const numExisting = existingRows.length;
-  const emptyRows =
-    numExisting < defaultNumRows
-      ? getEmptyRows(cols, defaultNumRows - numExisting, numExisting)
-      : [];
-  return [...existingRows, ...emptyRows];
 }
 
 export function mergePastedRowsIntoExistingRows(
@@ -287,39 +192,4 @@ export function mergePastedRowsIntoExistingRows(
     ...newRows,
     ...existingRows.slice(rowIdx + newRows.length),
   ];
-}
-
-// NAVIGATION
-
-// Default onEditorNavigation, which is overridden for arrow keys in columns array
-function onEditorNavigation({
-  key,
-  target,
-}: React.KeyboardEvent<HTMLDivElement>): boolean {
-  if (
-    key === "Tab" &&
-    (target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target instanceof HTMLSelectElement)
-  ) {
-    return target.matches(
-      ".rdg-editor-container > :only-child, .rdg-editor-container > label:only-child > :only-child",
-    );
-  }
-  return false;
-}
-
-export function customOnNavigation(
-  event: KeyboardEvent<HTMLDivElement>,
-): boolean {
-  return onEditorNavigation(event) || event.key.startsWith("Arrow");
-}
-
-export function isAtBottom({
-  currentTarget,
-}: React.UIEvent<HTMLDivElement>): boolean {
-  return (
-    currentTarget.scrollTop + 10 >=
-    currentTarget.scrollHeight - currentTarget.clientHeight
-  );
 }

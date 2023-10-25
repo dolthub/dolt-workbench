@@ -40,17 +40,8 @@
   @apply text-xs italic mt-1;
 }
 
-.headerRow {
-  @apply border-b-4 border-ld-lightgrey;
-
-  div[role="gridcell"] {
-    @apply mb-1;
-  }
-}
-
 .rowIndex {
-  @apply font-semibold text-center;
-  background-color: #f9f9f9;
+  @apply font-semibold text-center bg-[#f9f9f9];
 }
 
 .loading {
@@ -63,5 +54,21 @@
   &:hover::before {
     @apply absolute top-1.5 right-1.5 bg-acc-hoverred text-white opacity-90 text-xs;
     content: attr(data-text);
+  }
+}
+
+.menu {
+  @apply absolute bg-white border rounded;
+
+  > li {
+    @apply px-2 py-1;
+
+    &:not(:last-child) {
+      @apply border-b;
+    }
+
+    > button {
+      @apply bg-white text-sm;
+    }
   }
 }

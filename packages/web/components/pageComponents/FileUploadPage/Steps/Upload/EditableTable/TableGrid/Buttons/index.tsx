@@ -31,26 +31,13 @@ function Inner(props: InnerProps) {
     setInsertOpen(false);
   };
 
-  function rowButton(position: string, insertAt: number, disabled?: boolean) {
+  function rowButton(position: string, insertAt: number) {
     return (
-      <Button.Link
-        onClick={() => onPopupClick(insertAt, insertRow)}
-        disabled={disabled}
-      >
+      <Button.Link onClick={() => onPopupClick(insertAt, insertRow)}>
         Row {position}
       </Button.Link>
     );
   }
-
-  // function colButton(position: string, insertAt: number) {
-  //   return (
-  //     <Button.Link
-  //       onClick={() => onPopupClick(insertAt, onAddColumn)}
-  //     >
-  //       Column {position}
-  //     </Button.Link>
-  //   );
-  // }
 
   return (
     <div className={css.gridButtons}>
@@ -70,26 +57,10 @@ function Inner(props: InnerProps) {
               </>
             ) : (
               <>
-                {rowButton(
-                  "above",
-                  props.state.selectedCell.rowIdx,
-                  props.state.selectedCell.rowIdx === 0,
-                )}
+                {rowButton("above", props.state.selectedCell.rowIdx)}
                 {rowButton("below", props.state.selectedCell.rowIdx + 1)}
               </>
             )}
-            {/* <div className={css.rowLine} />
-            {!props.state.selectedCell ? (
-              <>
-                {colButton("start", 0)}
-                {colButton("end", props.state.columns.length)}
-              </>
-            ) : (
-              <>
-                {colButton("left", props.state.selectedCell.idx - 1)}
-                {colButton("right", props.state.selectedCell.idx)}
-              </>
-            )} */}
           </div>
         )}
       </div>

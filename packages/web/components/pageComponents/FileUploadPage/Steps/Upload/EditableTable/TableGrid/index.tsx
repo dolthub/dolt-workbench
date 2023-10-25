@@ -3,10 +3,13 @@ import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import cx from "classnames";
 import { useEffect } from "react";
 import DataGrid from "react-data-grid";
+import "react-data-grid/lib/styles.css";
+import { createPortal } from "react-dom";
 import Buttons from "./Buttons";
+import CellMenu from "./CellMenu";
 import { indexColumn } from "./IndexColumn";
 import css from "./index.module.css";
-import { GridDispatch, GridFunctions, GridState, Row } from "./types";
+import { GridDispatch, GridFunctions, GridState } from "./types";
 import useGrid from "./useGrid";
 
 type Props = {
@@ -36,33 +39,38 @@ function Inner(props: InnerProps) {
           };
         }),
       ]}
+      topSummaryRows={[{ _id: -1 }]}
       rows={props.state.rows}
       rowKeyGetter={row => row._id}
       onRowsChange={rows => props.setState({ rows })}
-      // onScroll={props.gf.handleScroll}
       onFill={props.gf.onFill}
-      // rowRenderer={RowRenderer}
       className={cx("rdg-light", css.dataGrid)}
       style={{ resize: "both" }}
-      rowHeight={({ row }) => ((row as Row)._id === 0 ? 35 : 30)}
-      rowClass={row => (row._id === 0 ? css.headerRow : undefined)}
-      onSelectedCellChange={c => props.setState({ selectedCell: c })}
+      rowHeight={r => (r.type === "ROW" && r.row._id === 0 ? 35 : 30)}
+      onCellClick={cell => {
+        props.setState({
+          selectedCell: { rowIdx: cell.row._idx, idx: cell.column.idx },
+        });
+      }}
+      onCellKeyDown={cell => {
+        props.setState({
+          selectedCell: { rowIdx: cell.row._idx, idx: cell.column.idx },
+        });
+      }}
+      onCellContextMenu={({ row }, e) => {
+        e.preventGridDefault();
+        // Do not show the default context menu
+        e.preventDefault();
+        props.setState({
+          contextMenuProps: {
+            rowIdx: props.state.rows.indexOf(row),
+            top: e.clientY,
+            left: e.clientX,
+          },
+        });
+      }}
     />
   );
-
-  // const rowMenu = (
-  //   <ContextMenu id="grid-row-context-menu" className={css.contextMenu}>
-  //     <MenuItem onClick={props.gf.onRowDelete}>Delete Row</MenuItem>
-  //     <MenuItem onClick={props.gf.onRowInsertAbove}>Insert Row Above</MenuItem>
-  //     <MenuItem onClick={props.gf.onRowInsertBelow}>Insert Row Below</MenuItem>
-  //   </ContextMenu>
-  // );
-
-  // const headerMenu = (
-  //   <ContextMenu id="grid-header-context-menu" className={css.contextMenu}>
-  //     <MenuItem onClick={props.gf.onDeleteColumn}>Delete Column</MenuItem>
-  //   </ContextMenu>
-  // );
 
   return (
     <div>
@@ -77,11 +85,15 @@ function Inner(props: InnerProps) {
       </div>
       <ErrorMsg err={props.state.error} />
       {gridElement}
-      {/* {createPortal(rowMenu, document.body)}
-      {createPortal(headerMenu, document.body)} */}
-      {props.state.loading && (
-        <div className={css.loading}>Loading more rows</div>
-      )}
+
+      {props.state.contextMenuProps !== null &&
+        createPortal(
+          <CellMenu
+            {...props}
+            contextMenuProps={props.state.contextMenuProps}
+          />,
+          document.body,
+        )}
     </div>
   );
 }

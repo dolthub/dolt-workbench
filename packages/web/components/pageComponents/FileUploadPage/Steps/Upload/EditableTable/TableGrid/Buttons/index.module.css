@@ -25,7 +25,3 @@
 .exportButton {
   @apply text-center ml-4;
 }
-
-.rowLine {
-  @apply w-full border-b border-ld-lightgrey mb-1.5;
-}
