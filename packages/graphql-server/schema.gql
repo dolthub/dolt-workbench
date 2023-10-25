@@ -98,6 +98,33 @@ type DoltDatabaseDetails {
   hideDoltFeatures: Boolean!
 }
 
+type DiffStat {
+  rowsUnmodified: Float!
+  rowsAdded: Float!
+  rowsDeleted: Float!
+  rowsModified: Float!
+  cellsModified: Float!
+  rowCount: Float!
+  cellCount: Float!
+}
+
+type DiffSummary {
+  _id: ID!
+  fromTableName: String!
+  toTableName: String!
+  tableName: String!
+  tableType: TableDiffType!
+  hasDataChanges: Boolean!
+  hasSchemaChanges: Boolean!
+}
+
+enum TableDiffType {
+  Added
+  Dropped
+  Modified
+  Renamed
+}
+
 type ColumnValue {
   displayValue: String!
 }
@@ -119,6 +146,28 @@ type Doc {
 
 type DocList {
   list: [Doc!]!
+}
+
+type RowDiff {
+  added: Row
+  deleted: Row
+}
+
+type RowDiffList {
+  nextOffset: Int
+  list: [RowDiff!]!
+  columns: [Column!]!
+}
+
+type TextDiff {
+  leftLines: String!
+  rightLines: String!
+}
+
+type SchemaDiff {
+  schemaDiff: TextDiff
+  schemaPatch: [String!]
+  numChangedSchemas: Int
 }
 
 type SqlSelect {
@@ -166,15 +215,19 @@ type Query {
   branchOrDefault(databaseName: String!, branchName: String): Branch
   branches(databaseName: String!, sortBy: SortBranchesBy): BranchNamesList!
   defaultBranch(databaseName: String!): Branch
-  commits(offset: Int, databaseName: String!, refName: String!): CommitList!
+  commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String): CommitList!
   currentDatabase: String
   hasDatabaseEnv: Boolean!
   databases: [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
+  diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
+  diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
   docs(databaseName: String!, refName: String!): DocList!
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
+  rowDiffs(offset: Int, databaseName: String!, fromCommitId: String!, toCommitId: String!, refName: String, tableName: String!, filterByRowType: DiffRowType): RowDiffList!
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   views(databaseName: String!, refName: String!): RowList!
+  schemaDiff(databaseName: String!, fromCommitId: String!, toCommitId: String!, refName: String, tableName: String!): SchemaDiff
   sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
   sqlSelectForCsvDownload(refName: String!, databaseName: String!, queryString: String!): String!
   status(databaseName: String!, refName: String!): [Status!]!
@@ -190,10 +243,23 @@ enum SortBranchesBy {
   LastUpdated
 }
 
+enum CommitDiffType {
+  TwoDot
+  ThreeDot
+  Unspecified
+}
+
 enum DocType {
   Unspecified
   Readme
   License
+}
+
+enum DiffRowType {
+  Added
+  Removed
+  Modified
+  All
 }
 
 type Mutation {

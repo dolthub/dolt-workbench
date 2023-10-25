@@ -10,7 +10,7 @@ export const getRowsQuery = (
   };
 };
 
-function getPKColsForRowsQuery(cs: RawRows): string[] {
+export function getPKColsForRowsQuery(cs: RawRows): string[] {
   const pkCols = cs.filter(col => col.Key === "PRI");
   const cols = pkCols.map(c => c.Field);
   return cols;
@@ -18,7 +18,7 @@ function getPKColsForRowsQuery(cs: RawRows): string[] {
 
 // Creates ORDER BY statement with column parameters
 // i.e. ORDER BY ::col1, ::col2
-function getOrderByFromCols(numCols: number): string {
+export function getOrderByFromCols(numCols: number): string {
   if (!numCols) return "";
   const pkCols = Array.from({ length: numCols })
     .map(() => `? ASC`)
