@@ -1,0 +1,43 @@
+.list {
+  @apply mb-8 lg:mb-20;
+}
+
+.tableInfo {
+  @apply py-2 pr-3 flex justify-between whitespace-nowrap overflow-x-auto;
+
+  > div {
+    @apply flex flex-row;
+  }
+}
+
+.name {
+  @apply ml-2 text-sm font-semibold text-ld-darkgrey flex items-center;
+}
+
+.icon {
+  @apply text-lg mr-3;
+}
+
+.marLeft {
+  @apply ml-4;
+}
+
+.err {
+  @apply inline-block pt-0 ml-4 text-sm;
+}
+
+.loading {
+  @apply text-sm;
+}
+
+.iconAdded {
+  @apply text-acc-green;
+}
+
+.iconDropped {
+  @apply text-acc-red;
+}
+
+.iconModified {
+  @apply text-yellow-500;
+}

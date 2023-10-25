@@ -1,4 +1,8 @@
-import { isKeyless, queryShowingPKs } from "@components/CellButtons/utils";
+import {
+  getTableColsFromQueryCols,
+  isKeyless,
+  queryShowingPKs,
+} from "@components/CellButtons/utils";
 import { useDataTableContext } from "@contexts/dataTable";
 import {
   ColumnForDataTableFragment,
@@ -18,11 +22,22 @@ export default function Body(props: Props) {
   const { columns } = useDataTableContext();
   const showRowDropdown =
     !isKeyless(columns) && queryShowingPKs(props.columns, columns);
+  const cols = getTableColsFromQueryCols(props.columns, columns);
   return (
-    <tbody>
+    <tbody
+      data-cy={`${
+        props.isMobile ? "mobile-" : "desktop-"
+      }db-data-table-table-body`}
+    >
       {props.rows.map((r, ridx) => (
         // eslint-disable-next-line react/jsx-key
-        <Row {...props} row={r} ridx={ridx} showRowDropdown={showRowDropdown} />
+        <Row
+          {...props}
+          columns={cols}
+          row={r}
+          ridx={ridx}
+          showRowDropdown={showRowDropdown}
+        />
       ))}
     </tbody>
   );

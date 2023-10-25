@@ -39,6 +39,9 @@ export default function HeadCell({
       className={cx(css.cell, {
         [css.active]: showDropdown,
       })}
+      data-cy={`${isMobile ? "mobile-" : "desktop-"}db-data-table-column-${
+        col.name
+      }`}
     >
       {col.name}
       {col.isPrimaryKey && <FiKey className={css.key} />}
@@ -46,6 +49,7 @@ export default function HeadCell({
         showDropdown={showDropdown}
         setShowDropdown={setShowDropdown}
         buttonClassName={css.menu}
+        data-cy={`${col.name}-column-button-dropdown`}
         isMobile={isMobile}
       >
         <SortButton dir="ASC" col={col} />

@@ -24,10 +24,13 @@ type Props = TimeoutProps & {
 
 export default function SqlMessage(props: Props) {
   if (props.gqlError) {
-    return isTimeoutError(props.gqlError.message) ||
-      props.gqlError.message === "" ? (
-      <TimeoutMessage {...props} />
-    ) : (
+    if (
+      isTimeoutError(props.gqlError.message) ||
+      props.gqlError.message === ""
+    ) {
+      return <TimeoutMessage {...props} />;
+    }
+    return (
       <ErrorMsg
         className={css.status}
         errString={

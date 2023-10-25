@@ -4,6 +4,8 @@ import useEffectOnMount from "@hooks/useEffectOnMount";
 import fakeEscapePress from "@lib/fakeEscapePress";
 import { SqlQueryParams } from "@lib/params";
 import { isMutation } from "@lib/parseSqlQuery";
+import { CgArrowsH } from "@react-icons//all-files/cg/CgArrowsH";
+import { CgCompress } from "@react-icons//all-files/cg/CgCompress";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { RiFileDownloadLine } from "@react-icons/all-files/ri/RiFileDownloadLine";
@@ -13,15 +15,15 @@ import CsvModal from "./CsvModal";
 import css from "./index.module.css";
 
 type Props = {
-  // onClickHideUnchangedCol?: () => void;
-  // showingHideUnchangedCol?: boolean;
+  onClickHideUnchangedCol?: () => void;
+  showingHideUnchangedCol?: boolean;
   children?: JSX.Element | null;
   className?: string;
   params?: SqlQueryParams;
 };
 
 export default function DatabaseOptionsDropdown({
-  // onClickHideUnchangedCol,
+  onClickHideUnchangedCol,
   ...props
 }: Props): JSX.Element | null {
   const [modalOpen, setModalOpen] = useState(false);
@@ -32,7 +34,7 @@ export default function DatabaseOptionsDropdown({
     return () => document.removeEventListener("wheel", fakeEscapePress);
   });
 
-  if (!props.children && !props.params) return null;
+  if (!onClickHideUnchangedCol && !props.children && !props.params) return null;
   if (props.params && isMutation(props.params.q)) return null;
 
   return (
@@ -64,7 +66,7 @@ export default function DatabaseOptionsDropdown({
       >
         <div>
           <ul>
-            {/* {onClickHideUnchangedCol && (
+            {onClickHideUnchangedCol && (
               <DropdownItem
                 data-cy="toggle-trim-button"
                 onClick={() => {
@@ -86,7 +88,7 @@ export default function DatabaseOptionsDropdown({
                   columns
                 </>
               </DropdownItem>
-            )} */}
+            )}
             {props.params && (
               <DropdownItem
                 data-cy="open-download-csv-modal-button"

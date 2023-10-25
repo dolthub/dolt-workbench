@@ -33,7 +33,8 @@ export default function useCellDisplayValue(
   }, [columnStatus]);
 
   useEffect(() => {
-    setDisplayCellVal(getCellValue(value, colType, cellStatus));
+    const val = getCellValue(value, colType, cellStatus);
+    setDisplayCellVal(val);
   }, [cellStatus]);
 
   return { displayCellVal, setDisplayCellVal, cellStatus, setCellStatus };
@@ -58,6 +59,7 @@ function getCellValue(
       return value;
     }
   }
+
   if (colType === "bit(1)") {
     return getBitDisplayValue(value);
   }

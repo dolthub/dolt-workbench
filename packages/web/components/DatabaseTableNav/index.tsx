@@ -59,11 +59,11 @@ function Nav({
             className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
           />
         </NotDoltWrapper>
-        <NotDoltWrapper>
-          <HideForNoWritesWrapper params={params}>
+        <HideForNoWritesWrapper params={params}>
+          <NotDoltWrapper>
             <NewBranchLink params={params} open={open} />
-          </HideForNoWritesWrapper>
-        </NotDoltWrapper>
+          </NotDoltWrapper>
+        </HideForNoWritesWrapper>
         <GiHamburgerMenu
           onClick={toggleMenu}
           className={css.menuIcon}

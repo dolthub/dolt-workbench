@@ -28,6 +28,7 @@ type Props = {
   routeRefChangeTo?: RefUrl;
   initialSmallHeader?: boolean;
   smallHeaderBreadcrumbs?: ReactNode;
+  leftTableNav?: ReactNode;
 };
 
 export default function DatabaseLayout(props: Props) {
@@ -40,7 +41,6 @@ export default function DatabaseLayout(props: Props) {
   const useFullWidth = forDataTable || !!props.wide;
   const { isMobile } = useReactiveWidth(null, 1024);
   const [showTableNav, setShowTableNav] = useState(false);
-
   return (
     <Wrapper>
       <DatabaseHeaderAndNav
@@ -57,14 +57,16 @@ export default function DatabaseLayout(props: Props) {
           [css.contentWithSmallHeader]: showSmallHeader,
         })}
       >
-        <DatabaseTableNav
-          params={props.params}
-          initiallyOpen={props.leftNavInitiallyOpen}
-          showTableNav={showTableNav}
-          setShowTableNav={setShowTableNav}
-          isMobile={isMobile}
-          routeRefChangeTo={props.routeRefChangeTo ?? database}
-        />
+        {props.leftTableNav || (
+          <DatabaseTableNav
+            params={props.params}
+            initiallyOpen={props.leftNavInitiallyOpen}
+            showTableNav={showTableNav}
+            setShowTableNav={setShowTableNav}
+            isMobile={isMobile}
+            routeRefChangeTo={props.routeRefChangeTo ?? database}
+          />
+        )}
         <div className={css.rightContent}>
           <div className={css.main}>
             {!!showHeader &&

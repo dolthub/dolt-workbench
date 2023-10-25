@@ -75,10 +75,45 @@ export type Commit = {
   parents: Array<Scalars['String']['output']>;
 };
 
+export enum CommitDiffType {
+  ThreeDot = 'ThreeDot',
+  TwoDot = 'TwoDot',
+  Unspecified = 'Unspecified'
+}
+
 export type CommitList = {
   __typename?: 'CommitList';
   list: Array<Commit>;
   nextOffset?: Maybe<Scalars['Int']['output']>;
+};
+
+export enum DiffRowType {
+  Added = 'Added',
+  All = 'All',
+  Modified = 'Modified',
+  Removed = 'Removed'
+}
+
+export type DiffStat = {
+  __typename?: 'DiffStat';
+  cellCount: Scalars['Float']['output'];
+  cellsModified: Scalars['Float']['output'];
+  rowCount: Scalars['Float']['output'];
+  rowsAdded: Scalars['Float']['output'];
+  rowsDeleted: Scalars['Float']['output'];
+  rowsModified: Scalars['Float']['output'];
+  rowsUnmodified: Scalars['Float']['output'];
+};
+
+export type DiffSummary = {
+  __typename?: 'DiffSummary';
+  _id: Scalars['ID']['output'];
+  fromTableName: Scalars['String']['output'];
+  hasDataChanges: Scalars['Boolean']['output'];
+  hasSchemaChanges: Scalars['Boolean']['output'];
+  tableName: Scalars['String']['output'];
+  tableType: TableDiffType;
+  toTableName: Scalars['String']['output'];
 };
 
 export type Doc = {
@@ -224,11 +259,15 @@ export type Query = {
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
+  diffStat: DiffStat;
+  diffSummaries: Array<DiffSummary>;
   docOrDefaultDoc?: Maybe<Doc>;
   docs: DocList;
   doltDatabaseDetails: DoltDatabaseDetails;
   hasDatabaseEnv: Scalars['Boolean']['output'];
+  rowDiffs: RowDiffList;
   rows: RowList;
+  schemaDiff?: Maybe<SchemaDiff>;
   sqlSelect: SqlSelect;
   sqlSelectForCsvDownload: Scalars['String']['output'];
   status: Array<Status>;
@@ -260,14 +299,35 @@ export type QueryBranchesArgs = {
 
 
 export type QueryCommitsArgs = {
+  afterCommitId?: InputMaybe<Scalars['String']['input']>;
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
-  refName: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryDefaultBranchArgs = {
   databaseName: Scalars['String']['input'];
+};
+
+
+export type QueryDiffStatArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+  tableName?: InputMaybe<Scalars['String']['input']>;
+  toRefName: Scalars['String']['input'];
+  type?: InputMaybe<CommitDiffType>;
+};
+
+
+export type QueryDiffSummariesArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+  tableName?: InputMaybe<Scalars['String']['input']>;
+  toRefName: Scalars['String']['input'];
+  type?: InputMaybe<CommitDiffType>;
 };
 
 
@@ -284,11 +344,31 @@ export type QueryDocsArgs = {
 };
 
 
+export type QueryRowDiffsArgs = {
+  databaseName: Scalars['String']['input'];
+  filterByRowType?: InputMaybe<DiffRowType>;
+  fromCommitId: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  refName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  toCommitId: Scalars['String']['input'];
+};
+
+
 export type QueryRowsArgs = {
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
+};
+
+
+export type QuerySchemaDiffArgs = {
+  databaseName: Scalars['String']['input'];
+  fromCommitId: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  toCommitId: Scalars['String']['input'];
 };
 
 
@@ -361,10 +441,30 @@ export type Row = {
   columnValues: Array<ColumnValue>;
 };
 
+export type RowDiff = {
+  __typename?: 'RowDiff';
+  added?: Maybe<Row>;
+  deleted?: Maybe<Row>;
+};
+
+export type RowDiffList = {
+  __typename?: 'RowDiffList';
+  columns: Array<Column>;
+  list: Array<RowDiff>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
+};
+
 export type RowList = {
   __typename?: 'RowList';
   list: Array<Row>;
   nextOffset?: Maybe<Scalars['Int']['output']>;
+};
+
+export type SchemaDiff = {
+  __typename?: 'SchemaDiff';
+  numChangedSchemas?: Maybe<Scalars['Int']['output']>;
+  schemaDiff?: Maybe<TextDiff>;
+  schemaPatch?: Maybe<Array<Scalars['String']['output']>>;
 };
 
 export enum SortBranchesBy {
@@ -404,6 +504,13 @@ export type Table = {
   tableName: Scalars['String']['output'];
 };
 
+export enum TableDiffType {
+  Added = 'Added',
+  Dropped = 'Dropped',
+  Modified = 'Modified',
+  Renamed = 'Renamed'
+}
+
 export type TableNames = {
   __typename?: 'TableNames';
   list: Array<Scalars['String']['output']>;
@@ -423,6 +530,12 @@ export type Tag = {
 export type TagList = {
   __typename?: 'TagList';
   list: Array<Tag>;
+};
+
+export type TextDiff = {
+  __typename?: 'TextDiff';
+  leftLines: Scalars['String']['output'];
+  rightLines: Scalars['String']['output'];
 };
 
 export type CreateDatabaseMutationVariables = Exact<{
@@ -486,6 +599,70 @@ export type DatabasesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type DatabasesQuery = { __typename?: 'Query', databases: Array<string> };
+
+export type CommitForDiffSelectorFragment = { __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
+
+export type CommitListForDiffSelectorFragment = { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } }> };
+
+export type CommitsForDiffSelectorQueryVariables = Exact<{
+  refName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type CommitsForDiffSelectorQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } }> } };
+
+export type DiffStatForDiffsFragment = { __typename?: 'DiffStat', rowsUnmodified: number, rowsAdded: number, rowsDeleted: number, rowsModified: number, cellsModified: number, rowCount: number, cellCount: number };
+
+export type DiffStatQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<CommitDiffType>;
+  tableName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DiffStatQuery = { __typename?: 'Query', diffStat: { __typename?: 'DiffStat', rowsUnmodified: number, rowsAdded: number, rowsDeleted: number, rowsModified: number, cellsModified: number, rowCount: number, cellCount: number } };
+
+export type ColumnForDiffTableListFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+
+export type ColumnValueForTableListFragment = { __typename?: 'ColumnValue', displayValue: string };
+
+export type RowForTableListFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+
+export type RowDiffForTableListFragment = { __typename?: 'RowDiff', added?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, deleted?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type RowDiffListWithColsFragment = { __typename?: 'RowDiffList', nextOffset?: number | null, list: Array<{ __typename?: 'RowDiff', added?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, deleted?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }>, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
+
+export type RowDiffsQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
+  fromCommitId: Scalars['String']['input'];
+  toCommitId: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  filterByRowType?: InputMaybe<DiffRowType>;
+}>;
+
+
+export type RowDiffsQuery = { __typename?: 'Query', rowDiffs: { __typename?: 'RowDiffList', nextOffset?: number | null, list: Array<{ __typename?: 'RowDiff', added?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, deleted?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }>, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
+
+export type SchemaDiffForTableListFragment = { __typename?: 'TextDiff', leftLines: string, rightLines: string };
+
+export type SchemaDiffFragment = { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null };
+
+export type SchemaDiffQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
+  fromCommitId: Scalars['String']['input'];
+  toCommitId: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SchemaDiffQuery = { __typename?: 'Query', schemaDiff?: { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null } | null };
 
 export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
 
@@ -575,6 +752,16 @@ export type CreateBranchMutationVariables = Exact<{
 
 
 export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: { __typename?: 'Branch', databaseName: string, branchName: string } };
+
+export type CommitForAfterCommitHistoryFragment = { __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
+
+export type HistoryForCommitQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  afterCommitId: Scalars['String']['input'];
+}>;
+
+
+export type HistoryForCommitQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } }> } };
 
 export type DefaultBranchPageQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -703,6 +890,18 @@ export type RowsForDataTableQueryVariables = Exact<{
 
 export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
+export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean };
+
+export type DiffSummariesQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromCommitId: Scalars['String']['input'];
+  toCommitId: Scalars['String']['input'];
+  refName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type DiffSummariesQuery = { __typename?: 'Query', diffSummaries: Array<{ __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean }> };
+
 export type DoltWriterForHistoryFragment = { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string };
 
 export type CommitForHistoryFragment = { __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
@@ -769,6 +968,96 @@ export const TagListForTagListFragmentDoc = gql`
   }
 }
     ${TagForListFragmentDoc}`;
+export const CommitForDiffSelectorFragmentDoc = gql`
+    fragment CommitForDiffSelector on Commit {
+  _id
+  commitId
+  message
+  committedAt
+  parents
+  committer {
+    _id
+    displayName
+    username
+  }
+}
+    `;
+export const CommitListForDiffSelectorFragmentDoc = gql`
+    fragment CommitListForDiffSelector on CommitList {
+  list {
+    ...CommitForDiffSelector
+  }
+}
+    ${CommitForDiffSelectorFragmentDoc}`;
+export const DiffStatForDiffsFragmentDoc = gql`
+    fragment DiffStatForDiffs on DiffStat {
+  rowsUnmodified
+  rowsAdded
+  rowsDeleted
+  rowsModified
+  cellsModified
+  rowCount
+  cellCount
+}
+    `;
+export const ColumnValueForTableListFragmentDoc = gql`
+    fragment ColumnValueForTableList on ColumnValue {
+  displayValue
+}
+    `;
+export const RowForTableListFragmentDoc = gql`
+    fragment RowForTableList on Row {
+  columnValues {
+    ...ColumnValueForTableList
+  }
+}
+    ${ColumnValueForTableListFragmentDoc}`;
+export const RowDiffForTableListFragmentDoc = gql`
+    fragment RowDiffForTableList on RowDiff {
+  added {
+    ...RowForTableList
+  }
+  deleted {
+    ...RowForTableList
+  }
+}
+    ${RowForTableListFragmentDoc}`;
+export const ColumnForDiffTableListFragmentDoc = gql`
+    fragment ColumnForDiffTableList on Column {
+  name
+  isPrimaryKey
+  type
+  constraints {
+    notNull
+  }
+}
+    `;
+export const RowDiffListWithColsFragmentDoc = gql`
+    fragment RowDiffListWithCols on RowDiffList {
+  list {
+    ...RowDiffForTableList
+  }
+  columns {
+    ...ColumnForDiffTableList
+  }
+  nextOffset
+}
+    ${RowDiffForTableListFragmentDoc}
+${ColumnForDiffTableListFragmentDoc}`;
+export const SchemaDiffForTableListFragmentDoc = gql`
+    fragment SchemaDiffForTableList on TextDiff {
+  leftLines
+  rightLines
+}
+    `;
+export const SchemaDiffFragmentDoc = gql`
+    fragment SchemaDiff on SchemaDiff {
+  schemaDiff {
+    ...SchemaDiffForTableList
+  }
+  schemaPatch
+}
+    ${SchemaDiffForTableListFragmentDoc}`;
 export const ForeignKeyColumnForDataTableFragmentDoc = gql`
     fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
   referencedColumnName
@@ -882,6 +1171,20 @@ export const BranchForCreateBranchFragmentDoc = gql`
   branchName
 }
     `;
+export const CommitForAfterCommitHistoryFragmentDoc = gql`
+    fragment CommitForAfterCommitHistory on Commit {
+  _id
+  commitId
+  parents
+  message
+  committedAt
+  committer {
+    _id
+    displayName
+    username
+  }
+}
+    `;
 export const DocRowForDocPageFragmentDoc = gql`
     fragment DocRowForDocPage on Row {
   columnValues {
@@ -935,6 +1238,17 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
+export const DiffSummaryFragmentDoc = gql`
+    fragment DiffSummary on DiffSummary {
+  _id
+  fromTableName
+  toTableName
+  tableName
+  tableType
+  hasDataChanges
+  hasSchemaChanges
+}
+    `;
 export const CommitForHistoryFragmentDoc = gql`
     fragment CommitForHistory on Commit {
   _id
@@ -1239,6 +1553,183 @@ export function useDatabasesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
 export type DatabasesQueryHookResult = ReturnType<typeof useDatabasesQuery>;
 export type DatabasesLazyQueryHookResult = ReturnType<typeof useDatabasesLazyQuery>;
 export type DatabasesQueryResult = Apollo.QueryResult<DatabasesQuery, DatabasesQueryVariables>;
+export const CommitsForDiffSelectorDocument = gql`
+    query CommitsForDiffSelector($refName: String!, $databaseName: String!) {
+  commits(refName: $refName, databaseName: $databaseName) {
+    ...CommitListForDiffSelector
+  }
+}
+    ${CommitListForDiffSelectorFragmentDoc}`;
+
+/**
+ * __useCommitsForDiffSelectorQuery__
+ *
+ * To run a query within a React component, call `useCommitsForDiffSelectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommitsForDiffSelectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommitsForDiffSelectorQuery({
+ *   variables: {
+ *      refName: // value for 'refName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useCommitsForDiffSelectorQuery(baseOptions: Apollo.QueryHookOptions<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>(CommitsForDiffSelectorDocument, options);
+      }
+export function useCommitsForDiffSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>(CommitsForDiffSelectorDocument, options);
+        }
+export type CommitsForDiffSelectorQueryHookResult = ReturnType<typeof useCommitsForDiffSelectorQuery>;
+export type CommitsForDiffSelectorLazyQueryHookResult = ReturnType<typeof useCommitsForDiffSelectorLazyQuery>;
+export type CommitsForDiffSelectorQueryResult = Apollo.QueryResult<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>;
+export const DiffStatDocument = gql`
+    query DiffStat($databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType, $tableName: String) {
+  diffStat(
+    databaseName: $databaseName
+    fromRefName: $fromRefName
+    toRefName: $toRefName
+    refName: $refName
+    type: $type
+    tableName: $tableName
+  ) {
+    ...DiffStatForDiffs
+  }
+}
+    ${DiffStatForDiffsFragmentDoc}`;
+
+/**
+ * __useDiffStatQuery__
+ *
+ * To run a query within a React component, call `useDiffStatQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDiffStatQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDiffStatQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
+ *      refName: // value for 'refName'
+ *      type: // value for 'type'
+ *      tableName: // value for 'tableName'
+ *   },
+ * });
+ */
+export function useDiffStatQuery(baseOptions: Apollo.QueryHookOptions<DiffStatQuery, DiffStatQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DiffStatQuery, DiffStatQueryVariables>(DiffStatDocument, options);
+      }
+export function useDiffStatLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiffStatQuery, DiffStatQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DiffStatQuery, DiffStatQueryVariables>(DiffStatDocument, options);
+        }
+export type DiffStatQueryHookResult = ReturnType<typeof useDiffStatQuery>;
+export type DiffStatLazyQueryHookResult = ReturnType<typeof useDiffStatLazyQuery>;
+export type DiffStatQueryResult = Apollo.QueryResult<DiffStatQuery, DiffStatQueryVariables>;
+export const RowDiffsDocument = gql`
+    query RowDiffs($databaseName: String!, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType) {
+  rowDiffs(
+    databaseName: $databaseName
+    tableName: $tableName
+    fromCommitId: $fromCommitId
+    toCommitId: $toCommitId
+    refName: $refName
+    offset: $offset
+    filterByRowType: $filterByRowType
+  ) {
+    ...RowDiffListWithCols
+  }
+}
+    ${RowDiffListWithColsFragmentDoc}`;
+
+/**
+ * __useRowDiffsQuery__
+ *
+ * To run a query within a React component, call `useRowDiffsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRowDiffsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRowDiffsQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tableName: // value for 'tableName'
+ *      fromCommitId: // value for 'fromCommitId'
+ *      toCommitId: // value for 'toCommitId'
+ *      refName: // value for 'refName'
+ *      offset: // value for 'offset'
+ *      filterByRowType: // value for 'filterByRowType'
+ *   },
+ * });
+ */
+export function useRowDiffsQuery(baseOptions: Apollo.QueryHookOptions<RowDiffsQuery, RowDiffsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RowDiffsQuery, RowDiffsQueryVariables>(RowDiffsDocument, options);
+      }
+export function useRowDiffsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowDiffsQuery, RowDiffsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RowDiffsQuery, RowDiffsQueryVariables>(RowDiffsDocument, options);
+        }
+export type RowDiffsQueryHookResult = ReturnType<typeof useRowDiffsQuery>;
+export type RowDiffsLazyQueryHookResult = ReturnType<typeof useRowDiffsLazyQuery>;
+export type RowDiffsQueryResult = Apollo.QueryResult<RowDiffsQuery, RowDiffsQueryVariables>;
+export const SchemaDiffDocument = gql`
+    query SchemaDiff($databaseName: String!, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String) {
+  schemaDiff(
+    databaseName: $databaseName
+    tableName: $tableName
+    fromCommitId: $fromCommitId
+    toCommitId: $toCommitId
+    refName: $refName
+  ) {
+    ...SchemaDiff
+  }
+}
+    ${SchemaDiffFragmentDoc}`;
+
+/**
+ * __useSchemaDiffQuery__
+ *
+ * To run a query within a React component, call `useSchemaDiffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSchemaDiffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSchemaDiffQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      tableName: // value for 'tableName'
+ *      fromCommitId: // value for 'fromCommitId'
+ *      toCommitId: // value for 'toCommitId'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useSchemaDiffQuery(baseOptions: Apollo.QueryHookOptions<SchemaDiffQuery, SchemaDiffQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SchemaDiffQuery, SchemaDiffQueryVariables>(SchemaDiffDocument, options);
+      }
+export function useSchemaDiffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SchemaDiffQuery, SchemaDiffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SchemaDiffQuery, SchemaDiffQueryVariables>(SchemaDiffDocument, options);
+        }
+export type SchemaDiffQueryHookResult = ReturnType<typeof useSchemaDiffQuery>;
+export type SchemaDiffLazyQueryHookResult = ReturnType<typeof useSchemaDiffLazyQuery>;
+export type SchemaDiffQueryResult = Apollo.QueryResult<SchemaDiffQuery, SchemaDiffQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!, $refName: String!) {
   tables(databaseName: $databaseName, refName: $refName) {
@@ -1545,6 +2036,44 @@ export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
 export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
 export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
+export const HistoryForCommitDocument = gql`
+    query HistoryForCommit($databaseName: String!, $afterCommitId: String!) {
+  commits(afterCommitId: $afterCommitId, databaseName: $databaseName) {
+    list {
+      ...CommitForAfterCommitHistory
+    }
+  }
+}
+    ${CommitForAfterCommitHistoryFragmentDoc}`;
+
+/**
+ * __useHistoryForCommitQuery__
+ *
+ * To run a query within a React component, call `useHistoryForCommitQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryForCommitQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryForCommitQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      afterCommitId: // value for 'afterCommitId'
+ *   },
+ * });
+ */
+export function useHistoryForCommitQuery(baseOptions: Apollo.QueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
+      }
+export function useHistoryForCommitLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
+        }
+export type HistoryForCommitQueryHookResult = ReturnType<typeof useHistoryForCommitQuery>;
+export type HistoryForCommitLazyQueryHookResult = ReturnType<typeof useHistoryForCommitLazyQuery>;
+export type HistoryForCommitQueryResult = Apollo.QueryResult<HistoryForCommitQuery, HistoryForCommitQueryVariables>;
 export const DefaultBranchPageQueryDocument = gql`
     query DefaultBranchPageQuery($databaseName: String!, $filterSystemTables: Boolean) {
   defaultBranch(databaseName: $databaseName) {
@@ -2046,6 +2575,49 @@ export function useRowsForDataTableQueryLazyQuery(baseOptions?: Apollo.LazyQuery
 export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTableQuery>;
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
+export const DiffSummariesDocument = gql`
+    query DiffSummaries($databaseName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String) {
+  diffSummaries(
+    databaseName: $databaseName
+    fromRefName: $fromCommitId
+    toRefName: $toCommitId
+    refName: $refName
+  ) {
+    ...DiffSummary
+  }
+}
+    ${DiffSummaryFragmentDoc}`;
+
+/**
+ * __useDiffSummariesQuery__
+ *
+ * To run a query within a React component, call `useDiffSummariesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDiffSummariesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDiffSummariesQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromCommitId: // value for 'fromCommitId'
+ *      toCommitId: // value for 'toCommitId'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useDiffSummariesQuery(baseOptions: Apollo.QueryHookOptions<DiffSummariesQuery, DiffSummariesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DiffSummariesQuery, DiffSummariesQueryVariables>(DiffSummariesDocument, options);
+      }
+export function useDiffSummariesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DiffSummariesQuery, DiffSummariesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DiffSummariesQuery, DiffSummariesQueryVariables>(DiffSummariesDocument, options);
+        }
+export type DiffSummariesQueryHookResult = ReturnType<typeof useDiffSummariesQuery>;
+export type DiffSummariesLazyQueryHookResult = ReturnType<typeof useDiffSummariesLazyQuery>;
+export type DiffSummariesQueryResult = Apollo.QueryResult<DiffSummariesQuery, DiffSummariesQueryVariables>;
 export const HistoryForBranchDocument = gql`
     query HistoryForBranch($databaseName: String!, $refName: String!, $offset: Int) {
   commits(databaseName: $databaseName, refName: $refName, offset: $offset) {

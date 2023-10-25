@@ -1,0 +1,288 @@
+.container {
+  @apply relative overflow-x-auto lg:overflow-x-visible;
+}
+
+.line {
+  @apply absolute top-0 w-full border-t border-ld-lightgrey h-2;
+}
+
+.topPadding {
+  @apply pt-4;
+}
+
+.infiniteScrollContainer {
+  @apply overflow-auto lg:overflow-visible hidden lg:block;
+}
+
+.mobileTable {
+  @apply overflow-x-auto pb-4;
+
+  @screen lg {
+    @apply hidden;
+  }
+}
+
+.diffTable {
+  @apply leading-loose text-sm font-mono border-separate z-1 pt-2 pr-10 border-ld-lightgrey overflow-hidden pb-4 lg:pb-40;
+  border-spacing: 0;
+
+  th {
+    @apply font-bold max-w-full whitespace-nowrap;
+  }
+  th,
+  td {
+    @apply pr-8 pl-2 border-b border-ld-lightgrey relative;
+
+    &:first-of-type {
+      @apply min-w-0;
+    }
+  }
+  thead {
+    @apply text-left text-primary;
+  }
+  tbody {
+    @apply whitespace-nowrap text-ld-darkgrey relative;
+
+    &::after {
+      @apply bg-white absolute left-0 w-[10000px] h-40 -bottom-40;
+      content: "\00a0";
+      z-index: -1;
+    }
+  }
+}
+
+.noChanges {
+  @apply pt-5;
+}
+
+.forDocs {
+  @apply relative;
+}
+
+.key {
+  @apply inline-block ml-2 text-ld-darkgrey mb-0.5;
+}
+
+.diffTableColsHidden {
+  @apply pt-[4.5rem];
+}
+
+.cell {
+  @apply text-ld-darkgrey min-w-[130px] max-w-[400px];
+}
+
+.longContent {
+  @apply min-w-[300px];
+  span {
+    @apply whitespace-pre-wrap break-words;
+  }
+}
+
+.isNull {
+  @apply text-acc-grey;
+}
+
+.menu {
+  @apply hidden;
+}
+@screen lg {
+  .clicked .menu,
+  .cell:hover .menu,
+  .added:hover .menu {
+    @apply block absolute bg-white rounded-full right-2 top-[0.35rem];
+
+    &:focus {
+      @apply outline-none widget-shadow-lightblue;
+    }
+  }
+}
+
+.headCell:hover,
+.cell:hover,
+.clicked {
+  @screen lg {
+    /* Applies background color to full column on hover */
+    &::after {
+      @apply bg-ld-lightblue absolute left-0 w-full h-[10000px] -top-[5000px];
+      content: "\00a0";
+      z-index: -5;
+    }
+  }
+}
+
+.clicked:hover,
+.headCell:hover,
+.clicked:focus-within {
+  .menu {
+    @apply block absolute bg-white rounded-full right-2 top-[0.35rem];
+
+    &:focus {
+      @apply outline-none widget-shadow-lightblue;
+    }
+  }
+}
+
+.minus {
+  @apply text-acc-red text-right;
+}
+.deleted {
+  @apply text-acc-red;
+}
+
+.added {
+  @apply text-acc-green;
+}
+
+.toTop {
+  @apply fixed bottom-4 right-8 px-2;
+}
+
+.noBorder {
+  @apply border-b-0;
+}
+
+.rowDeleted {
+  background-color: #ffeaec;
+}
+
+.rowAdded {
+  background-color: #defbe4;
+}
+
+.hiddenContainer {
+  @apply mb-3 pt-3 absolute w-full inline-flex	items-center;
+
+  ol {
+    @apply flex overflow-x-scroll mx-1 h-[3.5rem] px-2;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      @apply hidden;
+    }
+  }
+}
+
+.hiddenLabel {
+  @apply inline-block whitespace-nowrap text-sm;
+}
+
+.hiddenCol {
+  @apply bg-ld-lightpurple rounded mx-[.2rem] my-[.6rem] pl-2 border border-ld-lightgrey inline-flex items-center;
+
+  &:hover {
+    @apply bg-ld-lightblue;
+  }
+
+  button {
+    @apply mx-2;
+
+    svg {
+      @apply inline-block mb-0.5;
+    }
+  }
+}
+
+.topContainer {
+  @apply absolute mb-6 right-2 ml-14 hidden -top-20;
+
+  @screen lg {
+    @apply flex -top-10;
+  }
+
+  a {
+    @apply mt-0.5;
+  }
+}
+
+.filterContainer {
+  @apply flex ml-4;
+
+  > span {
+    @apply mr-4 mt-0.5;
+  }
+}
+
+.filterSelect {
+  @apply w-40;
+}
+
+.err {
+  @apply pt-0 mb-4;
+}
+
+.dot {
+  @apply px-1 pt-1;
+}
+
+.icon {
+  @apply inline-block opacity-50;
+}
+
+.space {
+  @apply mt-1.5;
+}
+
+.marX {
+  @apply mx-0.5;
+}
+
+.optionButton {
+  @apply hidden;
+  @media (min-width: 850px) {
+    @apply flex justify-end mt-0.5;
+  }
+}
+
+.whitespaceToggle {
+  /* stylelint-disable-next-line no-descending-specificity */
+  th,
+  tbody {
+    @apply whitespace-pre;
+  }
+}
+
+.sqlIcon {
+  @apply text-lg font-normal;
+}
+
+.sqlLink {
+  @apply font-thin text-primary hover:text-primary;
+}
+
+.rowDropdown {
+  @apply hidden;
+  @screen lg {
+    @apply invisible mx-2 text-xl flex;
+  }
+}
+
+.clicked .rowDropdown,
+.addedRow:hover .rowDropdown {
+  @apply visible rounded-full bg-ld-lightgrey text-ld-darkergrey;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.deletedRow:hover {
+  @apply visible rounded-full text-ld-darkergrey bg-opacity-50;
+  background-color: #ffeaec;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.addedRow:hover {
+  @apply visible rounded-full bg-opacity-50 text-ld-darkergrey;
+  background-color: #defbe4;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.flexCenter {
+  @apply flex items-center;
+}

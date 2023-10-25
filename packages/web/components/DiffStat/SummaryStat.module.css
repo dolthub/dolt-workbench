@@ -1,0 +1,31 @@
+.stat {
+  @apply mr-4 text-base flex;
+
+  @screen sm {
+    @apply flex-col text-sm;
+  }
+}
+
+.flat {
+  @apply block mt-1 md:mt-3.5;
+}
+
+.statNoText {
+  @apply mr-3 text-sm;
+}
+
+.num {
+  @apply mr-1 font-semibold text-ld-darkgrey;
+}
+
+.green {
+  @apply text-acc-green;
+}
+
+.red {
+  @apply text-acc-red;
+}
+
+.blue {
+  @apply text-ld-mediumblue;
+}

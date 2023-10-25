@@ -1,0 +1,15 @@
+.tableInfo {
+  @apply py-3 whitespace-nowrap overflow-x-auto flex flex-wrap;
+}
+
+.err {
+  @apply inline-block pt-0 ml-4;
+}
+
+.loader {
+  @apply py-3 ml-3;
+}
+
+.primaryKeyChange {
+  @apply text-primary font-normal;
+}

@@ -56,7 +56,10 @@ function Inner({ params }: Props) {
 
 export default function ForQuery(props: Props) {
   return (
-    <DataTableProvider {...props}>
+    <DataTableProvider
+      {...props}
+      showingWorkingDiff={isMutation(props.params.q)}
+    >
       <Inner {...props} />
     </DataTableProvider>
   );

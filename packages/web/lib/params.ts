@@ -54,3 +54,12 @@ export type DiffParams = RefParams & CommitsParams;
 export type UploadParams = DatabaseParams & {
   uploadId: string;
 };
+
+export type DiffRangeParams = RefParams & {
+  diffRange: string;
+};
+
+export type DiffParamsWithRefs = DatabaseParams & {
+  fromRefName: string;
+  toRefName: string;
+};

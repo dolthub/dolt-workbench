@@ -6,7 +6,12 @@ import {
   RefetchQueriesOptions,
 } from "@apollo/client";
 import * as gen from "@gen/graphql-types";
-import { DatabaseParams, RefParams, TableParams } from "./params";
+import {
+  DatabaseParams,
+  RefParams,
+  RequiredCommitsParams,
+  TableParams,
+} from "./params";
 
 export type RefetchQueries = Array<string | PureQueryOptions>;
 
@@ -41,31 +46,32 @@ export const refetchBranchQueries = (
 export const refetchResetChangesQueries = (
   variables: RefParams,
   isDolt = false,
-): RefetchQueries =>
-  // const diffVariables: RequiredCommitsParams = {
-  //   ...variables,
-  //   fromCommitId: "HEAD",
-  //   toCommitId: "WORKING",
-  // };
-  [
+): RefetchQueries => {
+  const diffVariables: RequiredCommitsParams = {
+    ...variables,
+    fromCommitId: "HEAD",
+    toCommitId: "WORKING",
+  };
+  return [
     ...(isDolt ? [{ query: gen.GetStatusDocument, variables }] : []),
-    // {
-    //   query: gen.DiffStatDocument,
-    //   variables: {
-    //     ...variables,
-    //     fromRefName: diffVariables.fromCommitId,
-    //     toRefName: diffVariables.toCommitId,
-    //   },
-    // },
-    // {
-    //   query: gen.DiffSummariesDocument,
-    //   variables: diffVariables,
-    // },
+    {
+      query: gen.DiffStatDocument,
+      variables: {
+        ...variables,
+        fromRefName: diffVariables.fromCommitId,
+        toRefName: diffVariables.toCommitId,
+      },
+    },
+    {
+      query: gen.DiffSummariesDocument,
+      variables: diffVariables,
+    },
     {
       query: gen.TableNamesDocument,
       variables: { ...variables, filterSystemTables: true },
     },
   ];
+};
 
 export const refetchTableQueries = (variables: TableParams) => [
   { query: gen.DataTableQueryDocument, variables },

@@ -29,13 +29,17 @@
   @apply leading-loose text-sm font-mono border-separate z-1 overflow-x-auto pr-10 relative ml-4;
   border-spacing: 0;
 
+  @screen lg {
+    @apply overflow-hidden pr-80 ml-0 pb-80;
+  }
+
   th {
     @apply font-bold max-w-full whitespace-nowrap;
   }
 
   th,
   td {
-    @apply pr-10 pl-6 border-b border-ld-lightgrey relative;
+    @apply border-b border-ld-lightgrey relative pr-10 pl-6 lg:pl-2;
 
     &:first-of-type {
       @apply pl-0 pr-1 border-none bg-white min-w-0;
@@ -49,17 +53,17 @@
     @apply whitespace-nowrap text-ld-darkergrey;
 
     &::after {
-      @apply bg-white absolute left-0 w-[10000px] h-80 bottom-0;
+      @apply bg-white absolute left-0  h-80 bottom-0 lg:w-[10000px];
       content: "\00a0";
       z-index: -1;
     }
   }
 
   tr.addedRow:hover {
-    background-color: #ebffef;
+    @apply bg-[#ebffef];
   }
   tr.removedRow:hover {
-    background-color: #fff3f4;
+    @apply bg-[#fff3f4];
   }
   td.added:hover {
     @apply text-acc-green;
@@ -67,15 +71,10 @@
   tr:hover {
     @apply bg-ld-lightblue;
   }
+}
 
-  @screen lg {
-    @apply overflow-hidden pr-40 ml-0 pb-80;
-
-    td,
-    th {
-      @apply pl-2;
-    }
-  }
+.tableWithDiff {
+  @apply pb-0;
 }
 
 .key {

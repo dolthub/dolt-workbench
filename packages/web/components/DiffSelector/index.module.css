@@ -1,0 +1,7 @@
+.selector {
+  @apply mx-3 py-3 text-primary;
+}
+
+.branch {
+  @apply mb-6;
+}

@@ -1,5 +1,6 @@
 .status {
   @apply my-3 mx-6 text-base;
+
   @screen lg {
     @apply mx-5;
   }

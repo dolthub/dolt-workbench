@@ -1,0 +1,91 @@
+.container {
+  @apply bg-ld-lightpurple pt-3 flex flex-col;
+}
+
+.whiteBg {
+  @apply bg-white;
+}
+
+.openContainer {
+  @apply transition-width duration-75 basis-80 mx-4;
+
+  @screen lg {
+    @apply w-96 mx-0;
+  }
+}
+
+.closedContainer {
+  @apply transition-width w-16 duration-75 basis-12;
+}
+
+.top {
+  @apply flex justify-between w-full px-3;
+}
+
+.openItem {
+  @apply opacity-100 transition-opacity duration-75 overflow-y-auto;
+}
+
+.closedItem {
+  @apply hidden;
+}
+
+.menuIcon {
+  @apply text-ld-blue cursor-pointer mt-2.5 ml-2 mr-2 pb-0 mb-5 hidden sm:block;
+}
+
+.backButton {
+  @apply mr-4 mt-1;
+
+  button {
+    @apply px-1 bg-opacity-0 shadow-none border-none text-acc-hoverlinkblue;
+
+    &:hover,
+    &:focus {
+      @apply bg-opacity-0 shadow-none border-none text-acc-linkblue;
+    }
+
+    @screen lg {
+      @apply w-48 rounded py-1 outline-none text-white text-sm font-semibold leading-relaxed button-shadow bg-acc-hoverlinkblue;
+
+      &:hover {
+        @apply button-shadow-hover bg-acc-linkblue text-white;
+      }
+
+      &:focus {
+        @apply outline-none widget-shadow-lightblue bg-acc-linkblue text-white;
+      }
+    }
+  }
+}
+
+.chevron {
+  @apply inline-block mr-2 mb-1;
+}
+
+.overview {
+  h1,
+  h4 {
+    @apply mx-3 mt-4;
+  }
+}
+
+.wkOverview {
+  @apply flex flex-wrap border-b border-ld-lightgrey mb-2;
+
+  h1 {
+    @apply mt-4 mr-12;
+  }
+}
+
+.noDiff {
+  @apply m-4 pb-60 text-center;
+}
+
+.wkSummary {
+  @apply border-none;
+}
+
+.wkTables {
+  @apply max-w-lg mb-0;
+}
