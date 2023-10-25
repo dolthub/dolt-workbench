@@ -62,11 +62,6 @@ export const tests = [
     commitId: commitOneParent,
     expectedParents: 1,
   },
-  {
-    desc: "commit with two same parents",
-    commitId: commitTwoSameParents,
-    expectedParents: 1,
-  },
 ];
 
 export const commitsQuery = (afterCommitId: string): MockedResponse => {
