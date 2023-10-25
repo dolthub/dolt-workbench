@@ -21,9 +21,6 @@ export function getOpVerb(op: ImportOperation): string {
 }
 
 export function getUploadMethod(state: FileUploadState): string {
-  if (state.spreadsheetRows) {
-    return " using new spreadsheet";
-  }
   if (state.selectedFile) {
     return " using uploaded file";
   }

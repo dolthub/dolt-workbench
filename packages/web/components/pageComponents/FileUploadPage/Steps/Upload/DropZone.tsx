@@ -28,7 +28,6 @@ export default function DropZone() {
         className={cx(css.dropContainer, {
           [css.hover]: dz.hover,
           [css.dropped]: state.selectedFile,
-          [css.faded]: !!state.spreadsheetRows,
         })}
         onDragOver={dz.dragOver}
         onDragLeave={dz.dragLeave}
@@ -53,11 +52,7 @@ export default function DropZone() {
               <div>Drag a file here</div>
               <div>or</div>
               <div className={css.uploadBottom}>
-                <Button.Link
-                  onClick={onBrowse}
-                  className={css.browseButton}
-                  disabled={!!state.spreadsheetRows}
-                >
+                <Button.Link onClick={onBrowse} className={css.browseButton}>
                   Browse files
                 </Button.Link>
 
@@ -73,7 +68,7 @@ export default function DropZone() {
         </div>
       </div>
       <ErrorMsg errString={dz.err} />
-      {!state.selectedFile && !state.spreadsheetRows && (
+      {!state.selectedFile && (
         <div className={css.fileTypes}>File types: {fileTypes}</div>
       )}
     </div>

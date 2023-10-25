@@ -17,13 +17,12 @@ export default function FileInfo(props: Props) {
   const removeFile = () => {
     setState({
       selectedFile: undefined,
-      spreadsheetRows: undefined,
       colNames: "",
     });
     if (props.onRemove) props.onRemove();
   };
 
-  if (!state.selectedFile && !state.spreadsheetRows) return null;
+  if (!state.selectedFile) return null;
 
   return (
     <div>
@@ -32,14 +31,10 @@ export default function FileInfo(props: Props) {
       >
         <span className={css.fileInfo}>
           <FiFile className={css.fileIcon} />
-          <span data-cy="file-name">
-            {state.selectedFile?.name ?? "editor.csv"}
+          <span data-cy="file-name">{state.selectedFile.name}</span>
+          <span className={css.fileSize}>
+            {fileSize(state.selectedFile.size)}
           </span>
-          {state.selectedFile && (
-            <span className={css.fileSize}>
-              {fileSize(state.selectedFile.size)}
-            </span>
-          )}
         </span>
         <div className={cx({ [css.buttons]: props.upload })}>
           {props.editButton}

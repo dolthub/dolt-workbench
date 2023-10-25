@@ -12,7 +12,6 @@ const defaultState = {
   tableName: "",
   importOp: ImportOperation.Update,
   selectedFile: undefined as File | undefined, // file upload only
-  spreadsheetRows: undefined as string[][] | undefined, // spreadsheet only
   fileType: FileType.Csv,
   modifier: undefined as LoadDataModifier | undefined,
   colNames: "",

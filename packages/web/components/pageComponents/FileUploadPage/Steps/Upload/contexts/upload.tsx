@@ -25,7 +25,6 @@ type UploadContextType = {
   state: UploadState;
   setState: UploadDispatch;
   onUpload: () => Promise<void>;
-  removeSpreadsheet: () => void;
 };
 
 export const UploadContext =
@@ -38,11 +37,7 @@ type Props = {
 export function UploadProvider(props: Props) {
   const { isDolt } = useIsDolt();
   const router = useRouter();
-  const {
-    state: fuState,
-    dbParams,
-    setState: setForageState,
-  } = useFileUploadContext();
+  const { state: fuState, dbParams } = useFileUploadContext();
   const [state, setState] = useSetState({
     ...defaultState,
     spreadsheetOverlayOpen:
@@ -94,22 +89,12 @@ export function UploadProvider(props: Props) {
     }
   };
 
-  const removeSpreadsheet = () => {
-    setForageState({
-      spreadsheetRows: undefined,
-      selectedFile: undefined,
-      colNames: "",
-    });
-    setState({ error: undefined });
-  };
-
   return (
     <UploadContext.Provider
       value={{
         state,
         setState,
         onUpload,
-        removeSpreadsheet,
       }}
     >
       {props.children}

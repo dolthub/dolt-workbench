@@ -33,10 +33,7 @@ function Inner() {
       title="Upload file"
       stage={UploadStage.Upload}
       disabled={
-        !!uState.error ||
-        (!state.spreadsheetRows && !state.selectedFile) ||
-        updateLoad ||
-        uState.loading
+        !!uState.error || !state.selectedFile || updateLoad || uState.loading
       }
       onNext={onUpload}
       backUrl={getUploadUrl("table")}

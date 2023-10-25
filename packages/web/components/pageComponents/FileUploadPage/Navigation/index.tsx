@@ -75,7 +75,7 @@ function getComplete(
     case UploadStage.Table:
       return !!state.tableName;
     case UploadStage.Upload:
-      return !!(state.selectedFile ?? state.spreadsheetRows);
+      return !!state.selectedFile;
     default:
       return false;
   }
