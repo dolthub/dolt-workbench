@@ -1,7 +1,7 @@
-import { getTableColsFromQueryCols } from "@components/CellButtons/utils";
 import { useDataTableContext } from "@contexts/dataTable";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { ColumnStatus, SetColumnStatus } from "@lib/tableTypes";
+import { getTableColsFromQueryCols } from "@components/CellButtons/utils";
 import HeadCell from "./HeadCell";
 
 type Props = {
@@ -16,7 +16,11 @@ export default function Head(props: Props) {
   const cols = getTableColsFromQueryCols(props.columns, columns);
   return (
     <thead>
-      <tr>
+      <tr
+        data-cy={`${
+          props.isMobile ? "mobile-" : "desktop-"
+        }db-data-table-columns`}
+      >
         <th />
         {cols.map((c, i) => (
           <HeadCell {...props} key={c.name} col={c} idx={i} />

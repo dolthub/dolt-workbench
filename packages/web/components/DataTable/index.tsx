@@ -4,10 +4,10 @@ import Loader from "@components/Loader";
 import { useDataTableContext } from "@contexts/dataTable";
 import {
   ColumnForDataTableFragment,
-  Maybe,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import DataTableLayout from "@layouts/DataTableLayout";
+import Maybe from "@lib/Maybe";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
 import { ReactNode } from "react";
 import AddRowsButton from "./AddRowsButton";

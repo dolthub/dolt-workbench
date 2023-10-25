@@ -28,6 +28,7 @@ type DataTableContextType = {
   columns?: ColumnForDataTableFragment[];
   foreignKeys?: ForeignKeysForDataTableFragment[];
   error?: ApolloError;
+  showingWorkingDiff: boolean;
 };
 
 export const DataTableContext =
@@ -36,6 +37,7 @@ export const DataTableContext =
 type Props = {
   params: DataTableParams | SqlQueryParams;
   children: ReactNode;
+  showingWorkingDiff?: boolean;
 };
 
 type TableProps = Props & {
@@ -91,6 +93,7 @@ function ProviderForTableName(props: TableProps) {
       columns: tableRes.data?.table.columns,
       foreignKeys: tableRes.data?.table.foreignKeys,
       error: tableRes.error ?? rowRes.error,
+      showingWorkingDiff: !!props.showingWorkingDiff,
     };
   }, [
     loadMore,
@@ -104,6 +107,7 @@ function ProviderForTableName(props: TableProps) {
     tableRes.data?.table.foreignKeys,
     tableRes.error,
     tableRes.loading,
+    props.showingWorkingDiff,
   ]);
 
   return (
@@ -114,7 +118,11 @@ function ProviderForTableName(props: TableProps) {
 }
 
 // DataTableProvider should only wrap DatabasePage.ForTable and DatabasePage.ForQueries
-export function DataTableProvider({ params, children }: Props) {
+export function DataTableProvider({
+  params,
+  children,
+  showingWorkingDiff,
+}: Props) {
   const tableName =
     "tableName" in params ? params.tableName : tryTableNameForSelect(params.q);
 
@@ -124,8 +132,9 @@ export function DataTableProvider({ params, children }: Props) {
       loading: false,
       loadMore: async () => {},
       hasMore: false,
+      showingWorkingDiff: !!showingWorkingDiff,
     };
-  }, [params]);
+  }, [params, showingWorkingDiff]);
 
   const isMut = "q" in params && isMutation(params.q);
   if (isMut || !tableName) {

@@ -19,6 +19,8 @@ import { isMutation } from "@lib/parseSqlQuery";
 import { refetchSqlUpdateQueriesCacheEvict } from "@lib/refetchQueries";
 import { useEffect, useState } from "react";
 import SqlMessage from "./SqlMessage";
+import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
+import WorkingDiff from "./WorkingDiff";
 import css from "./index.module.css";
 
 type Props = {
@@ -67,12 +69,9 @@ function Inner(props: InnerProps) {
           message={msg}
         />
       </DataTableLayout>
-      {/* {isMut && !isReadOnlyDatabaseRevisionError(props.gqlError) && (
-        <>
-          <TransactionCommitMsg {...props} />
-          <WorkingDiff {...props} />
-        </>
-      )} */}
+      {isMut && !isReadOnlyDatabaseRevisionError(props.gqlError) && (
+        <WorkingDiff {...props} />
+      )}
     </>
   );
 }
@@ -80,7 +79,8 @@ function Inner(props: InnerProps) {
 function Query(props: Props) {
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
     variables: {
-      ...props.params,
+      databaseName: props.params.databaseName,
+      refName: props.params.refName,
       queryString: props.params.q,
     },
     fetchPolicy: "cache-and-network",
@@ -112,7 +112,7 @@ export default function SqlDataTable(props: Props) {
           Warning: You recently ran this query. Are you sure you want to run it
           again? <Button onClick={() => setRunQueryAnyway(true)}>Yes</Button>
         </div>
-        {/* <WorkingDiff {...props} /> */}
+        <WorkingDiff {...props} />
       </div>
     );
   }

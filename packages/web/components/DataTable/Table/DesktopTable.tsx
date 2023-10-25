@@ -12,7 +12,7 @@ import css from "./index.module.css";
 
 type Props = {
   hasMore?: boolean;
-  loadMore: () => void;
+  loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];
   columns: ColumnForDataTableFragment[];
   columnStatus: ColumnStatus;
@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function DesktopTable({ columns, rows, ...props }: Props) {
-  const { params } = useDataTableContext();
+  const { params, showingWorkingDiff } = useDataTableContext();
   return (
     <InfiniteScroll
       className={cx(css.desktopContainer, {
@@ -38,7 +38,12 @@ export default function DesktopTable({ columns, rows, ...props }: Props) {
       initialLoad
       getScrollParent={() => document.getElementById("main-content")}
     >
-      <table className={css.dataTable}>
+      <table
+        className={cx(css.dataTable, {
+          [css.tableWithDiff]: showingWorkingDiff,
+        })}
+        data-cy="desktop-db-data-table"
+      >
         <Head
           columns={columns}
           columnStatus={props.columnStatus}

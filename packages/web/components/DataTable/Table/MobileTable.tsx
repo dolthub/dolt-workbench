@@ -20,7 +20,7 @@ type Props = {
 export default function MobileTable({ columns, rows, ...props }: Props) {
   return (
     <div className={css.mobileContainer}>
-      <table className={css.dataTable}>
+      <table className={css.dataTable} data-cy="mobile-db-data-table">
         <Head
           columns={columns}
           isMobile

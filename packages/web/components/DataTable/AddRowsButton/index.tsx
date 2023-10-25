@@ -1,5 +1,4 @@
 import Link from "@components/links/Link";
-
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { TableParams } from "@lib/params";
 import { editTable } from "@lib/urls";

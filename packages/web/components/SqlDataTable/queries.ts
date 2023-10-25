@@ -21,7 +21,6 @@ export const SQL_SELECT_QUERY = gql`
       refName: $refName
       queryString: $queryString
     ) {
-      _id
       queryExecutionStatus
       queryExecutionMessage
       columns {

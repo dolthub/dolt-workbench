@@ -5,7 +5,7 @@ import { render, screen } from "@testing-library/react";
 import SqlMessage from ".";
 
 const params: SqlQueryParams = {
-  databaseName: "test",
+  databaseName: "dbname",
   refName: "master",
   q: "SELECT * FROM tablename",
 };

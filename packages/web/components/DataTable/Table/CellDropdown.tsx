@@ -3,6 +3,7 @@ import CopyButton from "@components/CellButtons/CopyButton";
 import EditCell from "@components/CellButtons/EditCell";
 import FilterButton from "@components/CellButtons/FilterButton";
 import ForeignKeyButton from "@components/CellButtons/ForeignKeyButton";
+import HistoryButton from "@components/CellButtons/HistoryButton";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
 import Dropdown from "@components/CellDropdown";
 import {
@@ -53,12 +54,9 @@ export default function CellDropdown(props: Props) {
         currCol={props.currentCol}
         isNull={isNull}
       />
+      <HistoryButton {...props} />
       <FilterButton value={props.rawVal} col={props.currentCol} />
-      <ForeignKeyButton
-        row={props.row}
-        cidx={props.cidx}
-        colName={props.currentCol.name}
-      />
+      <ForeignKeyButton {...props} colName={props.currentCol.name} />
       {showCollapseCellButton && (
         <ChangeCellStatusButton
           setCellStatus={props.setCellStatus}

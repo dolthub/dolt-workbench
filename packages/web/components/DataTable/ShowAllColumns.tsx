@@ -12,9 +12,9 @@ export default function ShowAllColumns() {
   if (!tableName) return null;
 
   const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
-  const cols = getColumns(q);
+  const col = getColumns(q);
 
-  if (!cols?.length || cols[0].expr.column === "*") return null;
+  if (!col || col === "*") return null;
 
   const onClick = async () => {
     const query = convertToSqlWithNewCols(q, "*", tableName);
