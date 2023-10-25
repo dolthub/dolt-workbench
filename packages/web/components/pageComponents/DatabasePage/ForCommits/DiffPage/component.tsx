@@ -1,7 +1,6 @@
 import DiffTable from "@components/DiffTable";
 import DiffTableNav from "@components/DiffTableNav";
 import Loader from "@components/Loader";
-import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DiffProvider, useDiffContext } from "@contexts/diff";
 import { RefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
@@ -23,22 +22,16 @@ function Inner(props: InnerProps) {
     <DatabasePage
       params={props.params}
       initialTabIndex={2}
-      leftTableNav={
-        <NotDoltWrapper hideNotDolt>
-          <DiffTableNav.ForCommits params={props.params} />
-        </NotDoltWrapper>
-      }
+      leftTableNav={<DiffTableNav.ForCommits params={props.params} />}
       smallHeaderBreadcrumbs={props.smallHeaderBreadcrumbs}
       initialSmallHeader
       wide
       routeRefChangeTo={commitLog}
       title="commitDiff"
     >
-      <NotDoltWrapper showNotDoltMsg feature="Viewing diffs" bigMsg>
-        <div className={css.container}>
-          <DiffTable params={props.params} />
-        </div>
-      </NotDoltWrapper>
+      <div className={css.container}>
+        <DiffTable params={props.params} />
+      </div>
     </DatabasePage>
   );
 }

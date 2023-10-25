@@ -21,7 +21,7 @@ export default function NotDoltWrapper(props: Props) {
     return props.children;
   }
   if (props.hideNotDolt) {
-    return null;
+    return false;
   }
   if (props.showNotDoltMsg) {
     return (

@@ -41,7 +41,6 @@ export default function DatabaseLayout(props: Props) {
   const useFullWidth = forDataTable || !!props.wide;
   const { isMobile } = useReactiveWidth(null, 1024);
   const [showTableNav, setShowTableNav] = useState(false);
-
   return (
     <Wrapper>
       <DatabaseHeaderAndNav
