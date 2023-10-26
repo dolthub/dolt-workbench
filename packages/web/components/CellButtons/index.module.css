@@ -4,6 +4,9 @@
 
 .notTable {
   @apply font-sans text-sm;
+  button {
+    @apply flex flex-wrap;
+  }
 }
 
 .check {
@@ -25,7 +28,7 @@
 }
 
 .foreignKeyDropdown {
-  @apply absolute -top-[0.3rem] left-[8.2rem] bg-white widget-shadow-hover z-100 rounded px-3 py-1 border border-ld-lightgrey  w-fit;
+  @apply absolute -top-[0.3rem] left-[8.2rem] bg-white widget-shadow-hover z-100 rounded px-3 py-1 border border-ld-lightgrey w-fit;
 
   a {
     @apply text-acc-hoverlinkblue font-semibold font-sans;
@@ -49,7 +52,7 @@
 }
 
 .history:hover .button:disabled ~ .popup {
-  @apply block absolute -top-0.5 left-24 bg-white widget-shadow-hover z-100 rounded px-3 py-2 border border-ld-lightgrey;
+  @apply block absolute -top-0.5 left-24 bg-white widget-shadow-hover z-100 rounded px-3 py-2 border border-ld-lightgrey max-w-[12rem];
 }
 
 .loading {
