@@ -27,7 +27,11 @@ export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
     }
   }
   query TableListForSchemas($databaseName: String!, $refName: String!) {
-    tables(databaseName: $databaseName, refName: $refName) {
+    tables(
+      databaseName: $databaseName
+      refName: $refName
+      filterSystemTables: true
+    ) {
       ...TableForSchemaList
     }
   }

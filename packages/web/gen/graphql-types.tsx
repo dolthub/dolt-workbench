@@ -689,7 +689,7 @@ export type SqlSelectForSqlDataTableQueryVariables = Exact<{
 }>;
 
 
-export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', _id: string, queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
 
@@ -1732,7 +1732,7 @@ export type SchemaDiffLazyQueryHookResult = ReturnType<typeof useSchemaDiffLazyQ
 export type SchemaDiffQueryResult = Apollo.QueryResult<SchemaDiffQuery, SchemaDiffQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!, $refName: String!) {
-  tables(databaseName: $databaseName, refName: $refName) {
+  tables(databaseName: $databaseName, refName: $refName, filterSystemTables: true) {
     ...TableForSchemaList
   }
 }
@@ -1773,7 +1773,6 @@ export const SqlSelectForSqlDataTableDocument = gql`
     refName: $refName
     queryString: $queryString
   ) {
-    _id
     queryExecutionStatus
     queryExecutionMessage
     columns {

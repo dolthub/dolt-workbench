@@ -24,7 +24,7 @@ export class TableResolver {
   @Query(_returns => Table)
   async table(@Args() args: TableArgs): Promise<Table> {
     return this.dss.queryMaybeDolt(
-      async q => getTableInfo(q, args),
+      async (q, isDolt) => getTableInfo(q, args, isDolt),
       args.databaseName,
       args.refName,
     );
@@ -46,7 +46,7 @@ export class TableResolver {
         const tableNames = await getTableNames(q, args, isDolt);
         const tables = await Promise.all(
           tableNames.list.map(async name =>
-            getTableInfo(q, { ...args, tableName: name }),
+            getTableInfo(q, { ...args, tableName: name }, isDolt),
           ),
         );
         return tables;
@@ -77,9 +77,16 @@ async function getTableNames(
   return { list: [...mapped, ...systemTables] };
 }
 
-async function getTableInfo(query: ParQuery, args: TableArgs): Promise<Table> {
+async function getTableInfo(
+  query: ParQuery,
+  args: TableArgs,
+  isDolt: boolean,
+): Promise<Table> {
   const columns = await query(columnsQuery, [args.tableName]);
-  const fkRows = await query(foreignKeysQuery, [args.tableName]);
+  const fkRows = await query(foreignKeysQuery, [
+    args.tableName,
+    isDolt ? `${args.databaseName}/${args.refName}` : args.databaseName,
+  ]);
   const idxRows = await query(indexQuery, [args.tableName]);
   return fromDoltRowRes(
     args.databaseName,

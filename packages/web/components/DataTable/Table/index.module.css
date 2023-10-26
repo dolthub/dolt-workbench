@@ -30,7 +30,7 @@
   border-spacing: 0;
 
   @screen lg {
-    @apply overflow-hidden pr-80 ml-0 pb-80;
+    @apply overflow-hidden pr-40 ml-0 pb-80;
   }
 
   th {
