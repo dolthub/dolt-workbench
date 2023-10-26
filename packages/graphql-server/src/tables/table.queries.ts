@@ -10,7 +10,7 @@ FROM information_schema.statistics
 WHERE table_name=? AND index_name!="PRIMARY" 
 GROUP BY index_name;`;
 
-export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_name=? AND referenced_table_schema IS NOT NULL`;
+export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE table_name=? AND table_schema=? AND referenced_table_schema IS NOT NULL`;
 
 export const columnsQuery = `DESCRIBE ??`;
 
