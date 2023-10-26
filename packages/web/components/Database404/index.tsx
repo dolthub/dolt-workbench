@@ -1,6 +1,6 @@
 import Page404 from "@components/Page404";
 import Page from "@components/util/Page";
-import DatabaseLayoutWrapper from "@layouts/DatabaseLayout/Wrapper";
+import { DatabaseLayoutWrapperOuter } from "@layouts/DatabaseLayout/Wrapper";
 import { DatabaseParams } from "@lib/params";
 import css from "./index.module.css";
 
@@ -18,11 +18,11 @@ export default function Database404Page(props: Props) {
 
 export function Database404(props: Props) {
   return (
-    <DatabaseLayoutWrapper>
+    <DatabaseLayoutWrapperOuter>
       <Page404 title="Database not found">
         <Database404Inner {...props} />
       </Page404>
-    </DatabaseLayoutWrapper>
+    </DatabaseLayoutWrapperOuter>
   );
 }
 
