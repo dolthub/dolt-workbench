@@ -13,7 +13,7 @@ export default function ShowAllColumns() {
   const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
   const col = getColumns(q);
 
-  if (!col || col === "*") return null;
+  if (!col?.length || col[0].expr.column === "*") return null;
 
   const onClick = async () => {
     const query = convertToSqlWithNewCols(q, "*", tableNames);
