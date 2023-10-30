@@ -54,7 +54,7 @@ function ColumnItem({ col }: { col: ColumnForTableListFragment }) {
       data-cy={`db-tables-table-column-${col.name}`}
     >
       <div className={css.colName} title={col.name}>
-        <span>{excerpt(col.name, 24)}</span>
+        <span>{excerpt(col.name, 30)}</span>
         {col.isPrimaryKey && (
           <span data-cy={id} data-tooltip-id="primary-key-tip">
             <FiKey className={css.key} />

@@ -10,6 +10,7 @@ export const SQL_SELECT_QUERY = gql`
     name
     isPrimaryKey
     type
+    sourceTable
   }
   query SqlSelectForSqlDataTable(
     $databaseName: String!

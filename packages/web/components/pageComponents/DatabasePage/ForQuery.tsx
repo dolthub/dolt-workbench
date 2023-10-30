@@ -1,13 +1,11 @@
-"use client";
-
 import HistoryTable from "@components/HistoryTable";
+import SchemaFragment from "@components/SchemaFragment";
 import SqlDataTable from "@components/SqlDataTable";
-import ViewFragment from "@components/ViewFragment";
 import QueryBreadcrumbs from "@components/breadcrumbs/QueryBreadcrumbs";
 import { DataTableProvider } from "@contexts/dataTable";
 import {
   isDoltDiffTableQuery,
-  isShowViewFragmentQuery,
+  isShowSchemaFragmentQuery,
 } from "@lib/doltSystemTables";
 import { RefParams, SqlQueryParams } from "@lib/params";
 import { isMutation } from "@lib/parseSqlQuery";
@@ -39,10 +37,10 @@ function Inner({ params }: Props) {
     );
   }
 
-  if (isShowViewFragmentQuery(params.q)) {
+  if (isShowSchemaFragmentQuery(params.q)) {
     return (
       <DatabasePage {...commonProps}>
-        <ViewFragment params={params} />
+        <SchemaFragment params={params} />
       </DatabasePage>
     );
   }

@@ -1,7 +1,6 @@
 import Section from "@components/DatabaseTableNav/Section";
 import Loader from "@components/Loader";
-import Tooltip from "@components/Tooltip";
-import { RowForViewsFragment } from "@gen/graphql-types";
+import { RowForSchemasFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import NoViews from "./NoViews";
 import ViewItem from "./ViewItem";
@@ -13,13 +12,12 @@ type ViewsProps = {
 };
 
 type Props = ViewsProps & {
-  rows?: RowForViewsFragment[];
+  rows?: RowForSchemasFragment[];
 };
 
 function Inner({ rows, params }: Props) {
   return (
     <div className={css.views}>
-      <Tooltip id="view-icon-tip" place="left" />
       {rows?.length ? (
         <ol data-cy="db-views-list">
           {rows.map(r => (
@@ -43,9 +41,11 @@ export default function Views(props: ViewsProps) {
   const res = useViewList(props.params);
   return (
     <Section tab={1} refetch={res.refetch}>
-      <Loader loaded={!res.loading}>
+      {res.loading ? (
+        <Loader loaded={false} />
+      ) : (
         <Inner params={props.params} rows={res.views} />
-      </Loader>
+      )}
     </Section>
   );
 }

@@ -14,10 +14,9 @@ export default function HideColumnButton({ col, columns }: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
-  const colNames = columns.map(c => c.name);
 
   const onClick = async () => {
-    const query = removeColumnFromQuery(q, col.name, colNames);
+    const query = removeColumnFromQuery(q, col.name, columns);
     await executeQuery({ ...params, query });
   };
 

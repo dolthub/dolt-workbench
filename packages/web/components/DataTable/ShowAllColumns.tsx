@@ -6,21 +6,19 @@ import css from "./index.module.css";
 
 export default function ShowAllColumns() {
   const { executeQuery } = useSqlEditorContext();
-  const { params } = useDataTableContext();
-  const { tableName } = params;
+  const { params, tableNames } = useDataTableContext();
 
-  if (!tableName) return null;
+  if (!params.tableName || tableNames.length > 1) return null;
 
   const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
-  const cols = getColumns(q);
+  const col = getColumns(q);
 
-  if (!cols?.length || cols[0].expr.column === "*") return null;
+  if (!col || col === "*") return null;
 
   const onClick = async () => {
-    const query = convertToSqlWithNewCols(q, "*", tableName);
+    const query = convertToSqlWithNewCols(q, "*", tableNames);
     await executeQuery({ ...params, query });
   };
-
   return (
     <Button.Underlined className={css.colsButton} onClick={onClick}>
       Show all columns

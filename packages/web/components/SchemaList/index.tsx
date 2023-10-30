@@ -1,61 +1,53 @@
 import Section from "@components/DatabaseTableNav/Section";
-import SchemaDiagramButton from "@components/SchemaDiagramButton";
-import QueryHandler from "@components/util/QueryHandler";
-import useTableNames from "@hooks/useTableNames";
+import { useRowsForDoltSchemasQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
-import { useEffect } from "react";
-import Item from "./Item";
+import List from "./List";
+import Procedures from "./Procedures";
+import Tables from "./Tables";
 import css from "./index.module.css";
-import { getActiveTable } from "./utils";
+import { getSchemaItemsFromRows } from "./utils";
 
 type Props = {
   params: RefParams & { q?: string };
 };
 
-type InnerProps = Props & {
-  tables: string[];
-};
-
-function Inner(props: InnerProps) {
-  const activeTable = getActiveTable(props.params.q);
-
-  useEffect(() => {
-    if (!activeTable) return;
-    const el = document.getElementById(activeTable);
-    el?.scrollIntoView();
-  });
-
+function Inner(props: Props) {
+  const res = useRowsForDoltSchemasQuery({ variables: props.params });
   return (
-    <div data-cy="db-tables-schema-list">
-      {props.tables.length ? (
-        <>
-          <ol>
-            {props.tables.map(t => (
-              <Item key={t} tableName={t} params={props.params} />
-            ))}
-          </ol>
-          <SchemaDiagramButton {...props} />
-        </>
-      ) : (
-        <p className={css.empty} data-cy="db-tables-empty">
-          No tables found for <code>{props.params.refName}</code>
-        </p>
-      )}
+    <div className={css.container}>
+      <h4>Tables</h4>
+      <Tables params={props.params} />
+      <h4>Views</h4>
+      <List
+        params={props.params}
+        kind="view"
+        items={getSchemaItemsFromRows("view", res.data?.doltSchemas.list)}
+        loading={res.loading}
+      />
+      <h4>Triggers</h4>
+      <List
+        params={props.params}
+        kind="trigger"
+        items={getSchemaItemsFromRows("trigger", res.data?.doltSchemas.list)}
+        loading={res.loading}
+      />
+      <h4>Events</h4>
+      <List
+        params={props.params}
+        kind="event"
+        items={getSchemaItemsFromRows("event", res.data?.doltSchemas.list)}
+        loading={res.loading}
+      />
+      <h4>Procedures</h4>
+      <Procedures params={props.params} />
     </div>
   );
 }
 
 export default function SchemaList(props: Props) {
-  const res = useTableNames({
-    databaseName: props.params.databaseName,
-    refName: props.params.refName,
-  });
   return (
-    <Section tab={0} refetch={res.refetch}>
-      <QueryHandler
-        result={{ ...res, data: res.tables }}
-        render={data => <Inner {...props} tables={data} />}
-      />
+    <Section tab={0}>
+      <Inner {...props} />
     </Section>
   );
 }

@@ -102,10 +102,12 @@ export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
       "docs",
       "commits",
       "status",
-      // "diffSummaries",
-      // "diffStat",
-      // "rowDiffs",
-      // "schemaDiff",
+      "diffSummaries",
+      "diffStat",
+      "rowDiffs",
+      "schemaDiff",
+      "doltProcedures",
+      "doltSchemas",
     ].forEach(fieldName => {
       cache.evict({ fieldName });
     });

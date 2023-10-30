@@ -1,6 +1,6 @@
 import { removeClauses } from "@lib/doltSystemTables";
 import {
-  convertToSqlWithNewCols,
+  convertToSqlWithNewColNames,
   getColumns,
   getTableName,
 } from "@lib/parseSqlQuery";
@@ -26,7 +26,7 @@ export function getDoltHistoryQuery(q: string): string {
 
   // SELECT [cols] FROM dolt_history_[tableName] WHERE [conditions];
   const query = formatQuery(q);
-  return convertToSqlWithNewCols(query, cols, historyTableName);
+  return convertToSqlWithNewColNames(query, cols, historyTableName);
 }
 
 function formatQuery(q: string): string {

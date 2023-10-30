@@ -3,7 +3,7 @@
 }
 
 .buttonIcon {
-  @apply text-ld-darkgrey text-2xl mr-4 h-6 rounded-full;
+  @apply text-primary opacity-25 text-2xl mr-4 h-6 rounded-full;
 
   &:focus {
     @apply widget-shadow-lightblue outline-none;
@@ -20,7 +20,7 @@
 }
 
 .item:hover .buttonIcon {
-  @apply text-primary;
+  @apply opacity-100;
 
   &:hover {
     @apply text-acc-hoverblue;
@@ -64,7 +64,7 @@
 }
 
 .right {
-  @apply flex items-center;
+  @apply flex items-center mt-1;
 
   a {
     @apply hidden lg:block;

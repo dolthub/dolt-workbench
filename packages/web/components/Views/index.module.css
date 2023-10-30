@@ -1,5 +1,5 @@
 .views {
-  @apply text-primary my-1;
+  @apply text-primary mb-10;
 }
 
 .text {
@@ -7,30 +7,27 @@
 }
 
 .icon {
-  @apply text-2xl mr-3 text-primary rounded-full opacity-25;
-
-  &:hover {
-    @apply opacity-100;
-  }
-}
-
-.book {
-  @apply mr-0 text-xl;
-}
-
-.bookActive {
-  @apply text-ld-orange opacity-60;
+  @apply text-2xl mr-2 text-primary rounded-full opacity-25;
 }
 
 .item {
-  @apply flex w-full pt-3 pb-2 px-6;
+  @apply flex w-full py-2.5 px-6;
+
   @screen lg {
     @apply pr-2;
   }
 }
 
+.item:hover .icon {
+  @apply opacity-100;
+
+  &:hover {
+    @apply text-acc-hoverblue;
+  }
+}
+
 .button {
-  @apply flex justify-between w-full;
+  @apply flex justify-between items-center w-full;
 
   &:focus {
     @apply outline-none widget-shadow-lightblue;
@@ -47,5 +44,5 @@
 }
 
 .viewing {
-  @apply py-0 mr-4 text-ld-orange font-semibold text-sm;
+  @apply py-0.5 mr-4 text-ld-orange font-semibold text-sm;
 }
