@@ -1,11 +1,11 @@
 import { registerEnumType } from "@nestjs/graphql";
 
 export enum SchemaType {
-  View,
-  Procedure,
-  Event,
-  Trigger,
-  Table,
+  View = "view",
+  Procedure = "procedure",
+  Event = "event",
+  Trigger = "trigger",
+  Table = "table",
 }
 
 registerEnumType(SchemaType, { name: "SchemaType" });

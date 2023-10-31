@@ -94,15 +94,18 @@ export class DatabaseResolver {
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string> {
     if (args.useEnv) {
-      const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
       const url = this.configService.get("DATABASE_URL");
       if (!url) throw new Error("DATABASE_URL not found in env");
-      await this.dss.addDS(
-        url,
-        !!hideDoltFeatures && hideDoltFeatures === "true",
-      );
+      const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
+      await this.dss.addDS({
+        connectionUrl: url,
+        hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
+      });
     } else if (args.url) {
-      await this.dss.addDS(args.url, args.hideDoltFeatures);
+      await this.dss.addDS({
+        connectionUrl: args.url,
+        hideDoltFeatures: !!args.hideDoltFeatures,
+      });
     } else {
       throw new Error("database url not provided");
     }
@@ -121,5 +124,11 @@ export class DatabaseResolver {
     } finally {
       await qr.release();
     }
+  }
+
+  @Mutation(_returns => Boolean)
+  async resetDatabase(): Promise<boolean> {
+    await this.dss.resetDS();
+    return true;
   }
 }

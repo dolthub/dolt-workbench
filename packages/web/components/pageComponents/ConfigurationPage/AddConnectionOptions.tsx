@@ -9,6 +9,7 @@ import { database } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import Form from "./Form";
+import css from "./index.module.css";
 
 type InnerProps = {
   hasDatabaseEnv: boolean;
@@ -38,18 +39,20 @@ function Inner(props: InnerProps) {
 
   if (!showForm) {
     return (
-      <form onSubmit={onSubmit}>
+      <div className={css.top}>
         <p>
           A database connection URL was found in the environment. You can use
           this connection or create a new one.
         </p>
-        <ButtonsWithError error={res.error}>
-          <Button type="submit">Use connection URL from env</Button>
-          <Button onClick={() => setShowForm(true)}>
-            Change connection URL
-          </Button>
-        </ButtonsWithError>
-      </form>
+        <form onSubmit={onSubmit}>
+          <ButtonsWithError error={res.error}>
+            <Button type="submit">Use connection URL from env</Button>
+            <Button onClick={() => setShowForm(true)}>
+              Change connection URL
+            </Button>
+          </ButtonsWithError>
+        </form>
+      </div>
     );
   }
 

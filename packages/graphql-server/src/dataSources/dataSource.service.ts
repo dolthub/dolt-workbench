@@ -8,13 +8,14 @@ export type ParQuery = (q: string, p?: any[] | undefined) => Promise<RawRows>;
 
 class WorkbenchConfig {
   hideDoltFeatures: boolean;
+
+  connectionUrl: string;
 }
 
 @Injectable()
 export class DataSourceService {
   constructor(
     private ds: DataSource | undefined,
-    private mysqlConfig: mysql.ConnectionOptions | undefined, // Used for file upload
     private workbenchConfig: WorkbenchConfig | undefined,
   ) {}
 
@@ -24,10 +25,24 @@ export class DataSourceService {
     return ds;
   }
 
+  // Used for file upload only
   getMySQLConfig(): mysql.ConnectionOptions {
-    const { mysqlConfig } = this;
-    if (!mysqlConfig) throw new Error("MySQL config not found");
-    return mysqlConfig;
+    const { workbenchConfig } = this;
+    if (!workbenchConfig) {
+      throw new Error("Workbench config not found for MySQL connection");
+    }
+
+    return {
+      uri: workbenchConfig.connectionUrl,
+      ssl: {
+        rejectUnauthorized: false,
+      },
+      connectionLimit: 1,
+      dateStrings: ["DATE"],
+
+      // Allows file upload via LOAD DATA
+      flags: ["+LOCAL_FILES"],
+    };
   }
 
   getQR(): QueryRunner {
@@ -92,14 +107,17 @@ export class DataSourceService {
     return this.workbenchConfig;
   }
 
-  async addDS(connUrl: string, hideDoltFeatures?: boolean) {
+  async addDS(config: WorkbenchConfig) {
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
+
+    this.workbenchConfig = config;
+
     this.ds = new DataSource({
       type: "mysql",
       connectorPackage: "mysql2",
-      url: connUrl,
+      url: config.connectionUrl,
       ssl: {
         rejectUnauthorized: false,
       },
@@ -113,21 +131,16 @@ export class DataSourceService {
       },
     });
 
-    this.mysqlConfig = {
-      uri: connUrl,
-      ssl: {
-        rejectUnauthorized: false,
-      },
-      connectionLimit: 1,
-      dateStrings: ["DATE"],
-
-      // Allows file upload via LOAD DATA
-      flags: ["+LOCAL_FILES"],
-    };
-
-    this.workbenchConfig = { hideDoltFeatures: !!hideDoltFeatures };
-
     await this.ds.initialize();
+  }
+
+  async resetDS() {
+    if (!this.workbenchConfig) {
+      throw new Error(
+        "Workbench config not found. Please add connectivity information.",
+      );
+    }
+    await this.addDS(this.workbenchConfig);
   }
 }
 

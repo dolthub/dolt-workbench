@@ -200,6 +200,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
+  resetDatabase: Scalars['Boolean']['output'];
 };
 
 
@@ -599,6 +600,11 @@ export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
+
+export type ResetDatabaseMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ResetDatabaseMutation = { __typename?: 'Mutation', resetDatabase: boolean };
 
 export type GetTagQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1458,6 +1464,36 @@ export function useCurrentDatabaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabaseQuery>;
 export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
+export const ResetDatabaseDocument = gql`
+    mutation ResetDatabase {
+  resetDatabase
+}
+    `;
+export type ResetDatabaseMutationFn = Apollo.MutationFunction<ResetDatabaseMutation, ResetDatabaseMutationVariables>;
+
+/**
+ * __useResetDatabaseMutation__
+ *
+ * To run a mutation, you first call `useResetDatabaseMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useResetDatabaseMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [resetDatabaseMutation, { data, loading, error }] = useResetDatabaseMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useResetDatabaseMutation(baseOptions?: Apollo.MutationHookOptions<ResetDatabaseMutation, ResetDatabaseMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ResetDatabaseMutation, ResetDatabaseMutationVariables>(ResetDatabaseDocument, options);
+      }
+export type ResetDatabaseMutationHookResult = ReturnType<typeof useResetDatabaseMutation>;
+export type ResetDatabaseMutationResult = Apollo.MutationResult<ResetDatabaseMutation>;
+export type ResetDatabaseMutationOptions = Apollo.BaseMutationOptions<ResetDatabaseMutation, ResetDatabaseMutationVariables>;
 export const GetTagDocument = gql`
     query GetTag($databaseName: String!, $tagName: String!) {
   tag(databaseName: $databaseName, tagName: $tagName) {

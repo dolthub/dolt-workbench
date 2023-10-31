@@ -5,3 +5,9 @@ export const CURRENT_DATABASE = gql`
     currentDatabase
   }
 `;
+
+export const RESET_DATABASE = gql`
+  mutation ResetDatabase {
+    resetDatabase
+  }
+`;
