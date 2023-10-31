@@ -1,6 +1,6 @@
-# dolt-sql-workbench
+# dolt-workbench
 
-A workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) to unlock
+A SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) to unlock
 powerful version control features, such as branches, commits, and merge.
 
 ## Getting Started
