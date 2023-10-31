@@ -1,9 +1,16 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
-import { handleTableNotFound } from "src/tables/table.resolver";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
+import { handleTableNotFound } from "../tables/table.resolver";
 import { RefArgs } from "../utils/commonTypes";
 import { SchemaItem } from "./schema.model";
-import { doltProceduresQuery, getDoltSchemasQuery } from "./schema.queries";
+import {
+  doltProceduresQuery,
+  getDoltSchemasQuery,
+  getEventsQuery,
+  getProceduresQuery,
+  getTriggersQuery,
+  getViewsQuery,
+} from "./schema.queries";
 
 @Resolver(_of => SchemaItem)
 export class SchemaResolver {
@@ -16,6 +23,10 @@ export class SchemaResolver {
   ): Promise<SchemaItem[]> {
     return this.dss.queryMaybeDolt(
       async (query, isDolt) => {
+        if (!isDolt) {
+          return getSchemasForNonDolt(query, args.databaseName, type);
+        }
+
         const res = await handleTableNotFound(async () =>
           query(getDoltSchemasQuery(!!type), [type]),
         );
@@ -38,6 +49,13 @@ export class SchemaResolver {
   async doltProcedures(@Args() args: RefArgs): Promise<[SchemaItem]> {
     return this.dss.queryMaybeDolt(
       async (query, isDolt) => {
+        if (!isDolt) {
+          const res = await query(getProceduresQuery, [args.databaseName]);
+          return res.map(r => {
+            return { name: r.Name, type: "procedure" };
+          });
+        }
+
         const res = await handleTableNotFound(async () =>
           query(doltProceduresQuery),
         );
@@ -50,4 +68,30 @@ export class SchemaResolver {
       args.refName,
     );
   }
+}
+
+async function getSchemasForNonDolt(
+  query: ParQuery,
+  dbName: string,
+  type?: string,
+): Promise<SchemaItem[]> {
+  const vRes = await query(getViewsQuery, [dbName]);
+  const views = vRes.map(v => {
+    return { name: v.TABLE_NAME, type: "view" };
+  });
+  if (type === "view") {
+    return views;
+  }
+
+  const tRes = await query(getTriggersQuery);
+  const triggers = tRes.map(t => {
+    return { name: t.Trigger, type: "trigger" };
+  });
+
+  const eRes = await query(getEventsQuery);
+  const events = eRes.map(e => {
+    return { name: e.Name, type: "event" };
+  });
+
+  return [...views, ...triggers, ...events];
 }
