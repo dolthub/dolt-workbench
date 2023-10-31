@@ -1,3 +1,4 @@
+import DoltLink from "@components/links/DoltLink";
 import Link from "@components/links/Link";
 import useIsDolt from "@hooks/useIsDolt";
 import { SqlQueryParams } from "@lib/params";
@@ -14,7 +15,6 @@ type Props = {
 };
 
 export default function SuccessMsg(props: Props) {
-  const { isDolt } = useIsDolt();
   const lower = props.params.q.toLowerCase();
   if (isMutation(props.params.q)) {
     return (
@@ -34,6 +34,18 @@ export default function SuccessMsg(props: Props) {
       </div>
     );
   }
+
+  return <ExecutionMessage {...props} />;
+}
+
+type ExecutionProps = {
+  rowsLen: number;
+  params: SqlQueryParams;
+  hitRowLimit?: boolean;
+};
+
+export function ExecutionMessage(props: ExecutionProps) {
+  const { isDolt } = useIsDolt();
   return (
     <p className={css.status}>
       {props.rowsLen} {pluralize(props.rowsLen, "row")} selected
@@ -41,6 +53,12 @@ export default function SuccessMsg(props: Props) {
         <span>
           {" "}
           on <span className={css.bold}>{props.params.refName}</span>
+        </span>
+      )}
+      {props.hitRowLimit && (
+        <span>
+          {" "}
+          (for unlimited query results download <DoltLink />)
         </span>
       )}
     </p>

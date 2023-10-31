@@ -27,7 +27,7 @@ describe("tests Views", () => {
       </MockedProvider>,
     );
 
-    const words = screen.getByText(/no saved views\. \?/i);
+    const words = screen.getByText(/no views\. \?/i);
     const link = screen.getByRole("link");
     expect(words).toBeVisible();
     expect(link).toBeVisible();

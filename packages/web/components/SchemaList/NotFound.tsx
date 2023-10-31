@@ -9,13 +9,14 @@ type Props = {
 
 export default function NotFound(props: Props) {
   const { isDolt } = useIsDolt();
+  const label = `db-${props.name}-empty`;
   return (
-    <p className={css.text} data-cy={`db-${props.name}-empty`}>
+    <p className={css.text} data-cy={label}>
       No {props.name} found
       {isDolt && (
         <span>
           {" "}
-          on <code>{props.params.refName}</code>
+          on <code aria-label={`${label}-ref`}>{props.params.refName}</code>
         </span>
       )}
     </p>
