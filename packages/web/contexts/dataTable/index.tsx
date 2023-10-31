@@ -13,7 +13,7 @@ import useContextWithError from "@hooks/useContextWithError";
 import Maybe from "@lib/Maybe";
 import { createCustomContext } from "@lib/createCustomContext";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
-import { isMutation, tryTableNameForSelect } from "@lib/parseSqlQuery";
+import { isMutation, requireTableNamesForSelect } from "@lib/parseSqlQuery";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
 type DataTableParams = TableParams & { offset?: number };
@@ -29,6 +29,7 @@ type DataTableContextType = {
   foreignKeys?: ForeignKeysForDataTableFragment[];
   error?: ApolloError;
   showingWorkingDiff: boolean;
+  tableNames: string[];
 };
 
 export const DataTableContext =
@@ -42,6 +43,7 @@ type Props = {
 
 type TableProps = Props & {
   params: DataTableParams;
+  tableNames: string[];
 };
 
 function ProviderForTableName(props: TableProps) {
@@ -49,6 +51,7 @@ function ProviderForTableName(props: TableProps) {
   const tableRes = useDataTableQuery({
     variables: props.params,
   });
+
   const rowRes = useRowsForDataTableQuery({
     variables: props.params,
   });
@@ -94,6 +97,7 @@ function ProviderForTableName(props: TableProps) {
       foreignKeys: tableRes.data?.table.foreignKeys,
       error: tableRes.error ?? rowRes.error,
       showingWorkingDiff: !!props.showingWorkingDiff,
+      tableNames: props.tableNames,
     };
   }, [
     loadMore,
@@ -108,6 +112,7 @@ function ProviderForTableName(props: TableProps) {
     tableRes.error,
     tableRes.loading,
     props.showingWorkingDiff,
+    props.tableNames,
   ]);
 
   return (
@@ -123,8 +128,13 @@ export function DataTableProvider({
   children,
   showingWorkingDiff,
 }: Props) {
-  const tableName =
-    "tableName" in params ? params.tableName : tryTableNameForSelect(params.q);
+  const tableNames = useMemo(
+    () =>
+      "tableName" in params
+        ? [params.tableName]
+        : requireTableNamesForSelect(params.q),
+    [params],
+  );
 
   const value = useMemo(() => {
     return {
@@ -133,11 +143,12 @@ export function DataTableProvider({
       loadMore: async () => {},
       hasMore: false,
       showingWorkingDiff: !!showingWorkingDiff,
+      tableNames,
     };
-  }, [params, showingWorkingDiff]);
+  }, [params, showingWorkingDiff, tableNames]);
 
   const isMut = "q" in params && isMutation(params.q);
-  if (isMut || !tableName) {
+  if (isMut || !tableNames.length) {
     return (
       <DataTableContext.Provider value={value}>
         {children}
@@ -146,7 +157,10 @@ export function DataTableProvider({
   }
 
   return (
-    <ProviderForTableName params={{ ...params, tableName }}>
+    <ProviderForTableName
+      params={{ ...params, tableName: tableNames[0] }}
+      tableNames={tableNames}
+    >
       {children}
     </ProviderForTableName>
   );

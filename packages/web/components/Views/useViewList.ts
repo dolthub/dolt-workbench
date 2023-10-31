@@ -1,12 +1,15 @@
 import { ApolloError } from "@apollo/client";
-import { RowForViewsFragment, useRowsForViewsQuery } from "@gen/graphql-types";
+import {
+  RowForSchemasFragment,
+  useRowsForViewsQuery,
+} from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { useEffect, useState } from "react";
 
 type ReturnType = {
   loading: boolean;
   error?: ApolloError;
-  views?: RowForViewsFragment[];
+  views?: RowForSchemasFragment[];
   refetch: () => Promise<void>;
 };
 

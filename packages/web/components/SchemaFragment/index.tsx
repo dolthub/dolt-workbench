@@ -12,6 +12,7 @@ import { SqlQueryParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import dynamic from "next/dynamic";
 import css from "./index.module.css";
+import { getSchemaInfo } from "./util";
 
 const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
@@ -26,6 +27,7 @@ type InnerProps = Props & {
 };
 
 function Inner({ rows, params }: InnerProps) {
+  const { isView, fragIdx } = getSchemaInfo(params.q);
   const { queryClickHandler } = useSqlEditorContext("Views");
   const { isMobile } = useReactiveWidth(null, 1024);
 
@@ -40,7 +42,7 @@ function Inner({ rows, params }: InnerProps) {
   }
 
   const name = rows[0].columnValues[0].displayValue;
-  const fragment = rows[0].columnValues[1].displayValue;
+  const fragment = rows[0].columnValues[fragIdx].displayValue;
 
   return (
     <div className={css.top}>
@@ -56,16 +58,18 @@ function Inner({ rows, params }: InnerProps) {
         height={isMobile ? "calc(100vh - 38rem)" : "calc(100vh - 28rem)"}
       />
       <div className={css.buttons}>
-        <Btn className={css.play} onClick={async () => executeView(name)}>
-          <MdPlayCircleOutline />
-        </Btn>
+        {isView && (
+          <Btn className={css.play} onClick={async () => executeView(name)}>
+            <MdPlayCircleOutline />
+          </Btn>
+        )}
         <CopyButton text={fragment} />
       </div>
     </div>
   );
 }
 
-export default function ViewFragment(props: Props) {
+export default function SchemaFragment(props: Props) {
   const res = useSqlSelectForSqlDataTableQuery({
     variables: { ...props.params, queryString: props.params.q },
   });

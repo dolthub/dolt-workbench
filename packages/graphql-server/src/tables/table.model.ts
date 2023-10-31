@@ -47,7 +47,7 @@ export function fromDoltRowRes(
     databaseName,
     refName,
     tableName,
-    columns: columns.map(column.fromDoltRowRes),
+    columns: columns.map(c => column.fromDoltRowRes(c, tableName)),
     foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
     indexes: index.fromDoltRowsRes(idxRows),
   };

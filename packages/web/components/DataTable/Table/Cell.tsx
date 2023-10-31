@@ -85,7 +85,7 @@ export default function Cell(props: Props): JSX.Element {
           }}
         />
       ) : (
-        <span>{displayCellVal}</span>
+        <span onDoubleClick={() => setEditing(true)}>{displayCellVal}</span>
       )}
       {!editing && (
         <CellDropdown

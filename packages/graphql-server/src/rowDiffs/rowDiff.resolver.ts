@@ -93,8 +93,8 @@ export class RowDiffResolver {
         ]);
 
         const colsUnion = unionCols(
-          oldCols.map(column.fromDoltRowRes),
-          newCols.map(column.fromDoltRowRes),
+          oldCols.map(c => column.fromDoltRowRes(c, fromTableName)),
+          newCols.map(c => column.fromDoltRowRes(c, toTableName)),
         );
 
         const diffType = convertToStringForQuery(args.filterByRowType);
@@ -129,5 +129,5 @@ async function getRowsForDiff(query: ParQuery, args: ListRowsArgs) {
     ROW_LIMIT + 1,
     offset,
   ]);
-  return fromDoltListRowWithColsRes(rows, columns, offset);
+  return fromDoltListRowWithColsRes(rows, columns, offset, args.tableName);
 }

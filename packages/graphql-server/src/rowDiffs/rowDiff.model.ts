@@ -58,11 +58,12 @@ export function fromDoltListRowWithColsRes(
   rows: RawRow[],
   cols: RawRow[],
   offset: number,
+  tableName: string,
 ): RowListWithCols {
   return {
     list: rows.slice(0, ROW_LIMIT).map(row.fromDoltRowRes),
     nextOffset: getNextOffset(rows.length, offset),
-    columns: cols.map(columns.fromDoltRowRes),
+    columns: cols.map(c => columns.fromDoltRowRes(c, tableName)),
   };
 }
 

@@ -16,8 +16,8 @@ export function isUneditableDoltSystemTable(t: Maybe<string>): boolean {
   return !editableSystemTables.includes(t);
 }
 
-export function isShowViewFragmentQuery(q: string): boolean {
-  return q.toLowerCase().startsWith("show create view");
+export function isShowSchemaFragmentQuery(q: string): boolean {
+  return !!q.match(/show create (view|event|trigger|procedure)/gi);
 }
 
 export function isDoltDiffTableQuery(q: string): boolean | undefined {

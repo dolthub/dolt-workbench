@@ -1,3 +1,4 @@
+import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import Maybe from "@lib/Maybe";
 import { AST, ColumnRef, OrderBy, Parser, Select } from "node-sql-parser";
 import { isNullValue } from "../null";
@@ -33,7 +34,11 @@ export function getTableNames(q: string): string[] | undefined {
 }
 
 export function tryTableNameForSelect(q: string): Maybe<string> {
-  return getTableName(q) ?? fallbackGetTableNameForSelect(q);
+  return getTableName(q) ?? fallbackGetTableNamesForSelect(q)[0];
+}
+
+export function requireTableNamesForSelect(q: string): string[] {
+  return getTableNames(q) ?? fallbackGetTableNamesForSelect(q);
 }
 
 // Extracts tableName from query
@@ -44,14 +49,14 @@ export function getTableName(q?: string): Maybe<string> {
   return tns[0];
 }
 
-// Uses index of "FROM" in query "SELECT [columns] FROM [tableName] ..." to extract table name
-function fallbackGetTableNameForSelect(q: string): Maybe<string> {
-  const splitLower = q.toLowerCase().split(/\s/);
-  const fromIndex = splitLower.indexOf("from");
-  if (fromIndex === -1) return undefined;
-  const tableNameIndex = fromIndex + 1;
-  const tableName = q.split(/\s/)[tableNameIndex];
-  return tableName.replace(/`/g, "");
+// Uses regex to match table names in query "SELECT [columns] FROM [tableName] ..."
+// does not work on more than 2 tables. but better than just extract 1 table
+export function fallbackGetTableNamesForSelect(query: string): string[] {
+  const tableNameRegex =
+    /\b(?:from|join)\s+`?(\w+)`?(?:\s*(?:join|,)\s+`?(\w+)`?)*\b/gi;
+  const matches = [...query.matchAll(tableNameRegex)];
+  const tableNames = matches.flatMap(match => match.slice(1).filter(Boolean));
+  return tableNames;
 }
 
 type Column = {
@@ -67,7 +72,7 @@ export function getColumns(q: string): Columns | undefined {
   return ast?.columns;
 }
 
-function mapColsToColumnRef(cols: string[]): Column[] {
+function mapColsToColumnNames(cols: string[]): Column[] {
   return cols.map(c => {
     return {
       expr: {
@@ -80,23 +85,70 @@ function mapColsToColumnRef(cols: string[]): Column[] {
   });
 }
 
+function mapColsToColumnRef(
+  cols: ColumnForDataTableFragment[],
+  isJoinClause: boolean,
+): Column[] {
+  return cols.map(c => {
+    return {
+      expr: {
+        type: "column_ref",
+        table: isJoinClause && c.sourceTable ? c.sourceTable : null,
+        column: c.name,
+      },
+      as: null,
+    };
+  });
+}
+
 export function convertToSql(select: Select): string {
   return parser.sqlify(select, opt);
 }
 
 // Converts query string to sql with new table name and columns
-export function convertToSqlWithNewCols(
+export function convertToSqlWithNewColNames(
   q: string,
   cols: string[] | "*",
   tableName: string,
 ): string {
   const ast = parseSelectQuery(q);
-  const columns = cols === "*" ? cols : mapColsToColumnRef(cols);
+  const columns = cols === "*" ? cols : mapColsToColumnNames(cols);
   if (!ast) return "";
   const newAst: Select = {
     ...ast,
     columns,
     from: [{ db: null, table: tableName, as: null }],
+    where: escapeSingleQuotesInWhereObj(ast.where),
+  };
+  return convertToSql(newAst);
+}
+
+// Converts query string to sql with new table name and columns
+export function convertToSqlWithNewCols(
+  q: string,
+  cols: ColumnForDataTableFragment[] | "*",
+  tableNames?: string[],
+): string {
+  const ast = parseSelectQuery(q);
+  const isJoinClause = tableNames && tableNames.length > 1;
+  const columns =
+    cols === "*" ? cols : mapColsToColumnRef(cols, !!isJoinClause);
+
+  if (!ast) return "";
+  if (!tableNames || tableNames.length === 0) {
+    return convertToSql({
+      ...ast,
+      columns,
+      from: [{ db: null, table: null, as: null }],
+      where: escapeSingleQuotesInWhereObj(ast.where),
+    });
+  }
+  const newAst: Select = {
+    ...ast,
+    columns,
+    from: tableNames.map(table => {
+      return { db: null, table, as: null };
+    }),
     where: escapeSingleQuotesInWhereObj(ast.where),
   };
   return convertToSql(newAst);
@@ -286,11 +338,10 @@ export function isMutation(q?: string): boolean {
 export function removeColumnFromQuery(
   q: string,
   colNameToRemove: string,
-  cols: string[],
+  cols: ColumnForDataTableFragment[],
 ): string {
-  const tableName = tryTableNameForSelect(q);
-  if (!tableName) return "";
-  const newCols = cols.filter(c => c !== colNameToRemove);
+  const newCols = cols.filter(c => c.name !== colNameToRemove);
+  const tableName = getTableNames(q);
   return convertToSqlWithNewCols(q, newCols, tableName);
 }
 

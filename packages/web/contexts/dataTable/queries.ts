@@ -5,6 +5,7 @@ export const DATA_TABLE_QUERY = gql`
     name
     isPrimaryKey
     type
+    sourceTable
     constraints {
       notNull
     }

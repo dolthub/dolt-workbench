@@ -1,8 +1,8 @@
 import {
-  isDoltSystemTable,
-  isShowViewFragmentQuery,
-  isUneditableDoltSystemTable,
   isDoltDiffTableQuery,
+  isDoltSystemTable,
+  isShowSchemaFragmentQuery,
+  isUneditableDoltSystemTable,
 } from "./doltSystemTables";
 
 describe("test doltSystemTables util functions", () => {
@@ -24,16 +24,24 @@ describe("test doltSystemTables util functions", () => {
     expect(isUneditableDoltSystemTable("dolttable")).toBeFalsy();
   });
 
-  it("checks isShowViewFragmentQuery", () => {
+  it("checks isShowSchemaFragmentQuery", () => {
     expect(
-      isShowViewFragmentQuery("SHOW CREATE VIEW cases_by_age_range"),
+      isShowSchemaFragmentQuery("SHOW CREATE VIEW cases_by_age_range"),
     ).toBeTruthy();
     expect(
-      isShowViewFragmentQuery("show create view `cases_by_age_range`"),
+      isShowSchemaFragmentQuery("show create view `cases_by_age_range`"),
     ).toBeTruthy();
-    expect(isShowViewFragmentQuery("show view cases")).toBeFalsy();
+    expect(
+      isShowSchemaFragmentQuery("show create event `cases_by_age_range`"),
+    ).toBeTruthy();
+    expect(
+      isShowSchemaFragmentQuery("show create trigger `cases_by_age_range`"),
+    ).toBeTruthy();
+    expect(
+      isShowSchemaFragmentQuery("show create table `cases_by_age_range`"),
+    ).toBeFalsy();
+    expect(isShowSchemaFragmentQuery("show view cases")).toBeFalsy();
   });
-
   it("checks isDoltDiffTableQuery", () => {
     expect(
       isDoltDiffTableQuery("select * from dolt_diff_tablename"),

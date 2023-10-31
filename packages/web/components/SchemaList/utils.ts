@@ -1,13 +1,22 @@
-export function tableIsActive(tableName: string, q?: string): boolean {
-  if (!q) return false;
-  const qf = q.toLowerCase().trim();
-  const text = "show create table";
-  const tn = tableName.toLowerCase();
-  return qf === `${text} ${tn}` || qf === `${text} \`${tn}\``;
+import { RowForSchemasFragment } from "@gen/graphql-types";
+
+export type SchemaKind = "table" | "view" | "trigger" | "event" | "procedure";
+
+export function getActiveItem(
+  kind: SchemaKind,
+  q?: string,
+): string | undefined {
+  if (!q) return undefined;
+  const item = q.toLowerCase().replace(`show create ${kind} `, "");
+  return item.replaceAll("`", "");
 }
 
-export function getActiveTable(q?: string): string | undefined {
-  if (!q) return undefined;
-  const table = q.replace(/show create table /gi, "");
-  return table.replaceAll("`", "");
+export function getSchemaItemsFromRows(
+  kind: SchemaKind,
+  rows?: RowForSchemasFragment[],
+): string[] {
+  if (!rows) return [];
+  return rows
+    .filter(v => v.columnValues[0].displayValue === kind)
+    .map(e => e.columnValues[1].displayValue);
 }

@@ -17,10 +17,12 @@ export default function DropColumnButton({ col, refName }: Props) {
   const { params } = useDataTableContext();
   const { tableName } = params;
 
-  if (!tableName || isDoltSystemTable(tableName)) return null;
+  if (!tableName || !col.sourceTable || isDoltSystemTable(tableName)) {
+    return null;
+  }
 
   const onClick = async () => {
-    const query = dropColumnQuery(tableName, col.name);
+    const query = dropColumnQuery(col.sourceTable ?? tableName, col.name);
     setEditorString(query);
     await executeQuery({
       ...params,

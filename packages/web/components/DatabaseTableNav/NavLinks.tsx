@@ -23,7 +23,7 @@ export default function NavLinks({ className, params }: Props) {
   const router = useRouter();
   const initialActiveIndex = getActiveIndexFromRouterQuery(router.query.active);
   const { hideDoltFeature, loading } = useIsDolt();
-  const tabs = ["Tables", "Schemas", "Views"];
+  const tabs = ["Tables", "Views", "Schemas"];
 
   return (
     <div data-cy="db-page-table-nav" className={className}>
@@ -56,21 +56,21 @@ export default function NavLinks({ className, params }: Props) {
         </CustomTabPanel>
         <CustomTabPanel index={1}>
           {params.refName ? (
-            <SchemaList params={{ ...params, refName: params.refName }} />
-          ) : (
-            <p className={css.empty} data-cy="db-schemas-empty">
-              No schemas to show
-            </p>
-          )}
-        </CustomTabPanel>
-        <CustomTabPanel index={2}>
-          {params.refName ? (
             <NotDoltWrapper showNotDoltMsg feature="Listing views">
               <Views params={{ ...params, refName: params.refName }} />
             </NotDoltWrapper>
           ) : (
             <p className={css.empty} data-cy="db-views-empty">
               No views to show
+            </p>
+          )}
+        </CustomTabPanel>
+        <CustomTabPanel index={2}>
+          {params.refName ? (
+            <SchemaList params={{ ...params, refName: params.refName }} />
+          ) : (
+            <p className={css.empty} data-cy="db-schemas-empty">
+              No schemas to show
             </p>
           )}
         </CustomTabPanel>
@@ -93,9 +93,9 @@ function getActiveIndexFromRouterQuery(
   switch (activeQuery) {
     case "Tables":
       return 0;
-    case "Schemas":
-      return 1;
     case "Views":
+      return 1;
+    case "Schemas":
       return 2;
     default:
       return 0;

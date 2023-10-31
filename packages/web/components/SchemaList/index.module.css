@@ -1,55 +1,56 @@
+.container {
+  @apply mb-10;
+
+  h4 {
+    @apply mx-3 mb-1.5 mt-3 text-base;
+  }
+}
+
+.text {
+  @apply mb-5 mt-2 mx-5;
+}
+
+.icon {
+  @apply text-xl mr-2 text-primary rounded-full opacity-25;
+}
+
 .item {
-  @apply text-primary px-3;
+  @apply w-full py-2.5 px-6;
+
   @screen lg {
-    @apply p-0;
+    @apply pr-2;
   }
 }
 
-.buttonIcon {
-  @apply text-ld-darkgrey text-2xl mr-4 h-6 rounded-full;
-
-  &:focus {
-    @apply widget-shadow-lightblue outline-none;
-  }
-}
-
-.active,
-.item:hover {
-  @apply bg-white;
-
-  .buttonIcon {
-    @apply font-semibold;
-  }
-}
-
-.table {
-  @apply flex justify-between text-sm;
-}
-
-.tableName {
-  @apply p-3 text-acc-hoverlinkblue font-semibold w-full;
-
-  &:hover {
-    @apply text-acc-linkblue;
-  }
-}
-
-.right {
-  @apply flex items-center;
-}
-
-.tableStatus {
-  @apply text-ld-orange pr-4 mr-1 font-semibold;
-}
-
-.item:hover .buttonIcon {
-  @apply text-primary;
+.item:hover .icon {
+  @apply opacity-100;
 
   &:hover {
     @apply text-acc-hoverblue;
   }
 }
 
-.empty {
-  @apply my-4 mx-5;
+.button {
+  @apply flex justify-between items-center w-full;
+
+  &:focus {
+    @apply outline-none widget-shadow-lightblue;
+  }
+}
+
+.selected,
+.item:hover {
+  @apply bg-white text-acc-linkblue;
+}
+
+.name {
+  @apply text-acc-hoverlinkblue text-sm font-semibold;
+}
+
+.viewing {
+  @apply py-0.5 mr-4 text-ld-orange font-semibold text-sm;
+}
+
+.smallLoader {
+  @apply text-sm;
 }

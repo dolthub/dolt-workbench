@@ -18,15 +18,19 @@ export class Column {
   @Field()
   type: string;
 
+  @Field({ nullable: true })
+  sourceTable?: string;
+
   @Field(_type => [ColConstraint], { nullable: true })
   constraints?: ColConstraint[];
 }
 
-export function fromDoltRowRes(col: RawRow): Column {
+export function fromDoltRowRes(col: RawRow, tableName: string): Column {
   return {
     name: col.Field,
     isPrimaryKey: col.Key === "PRI",
     type: col.Type,
     constraints: [{ notNull: col.Null === "NO" }],
+    sourceTable: tableName,
   };
 }

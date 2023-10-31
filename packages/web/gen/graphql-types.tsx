@@ -56,6 +56,7 @@ export type Column = {
   constraints?: Maybe<Array<ColConstraint>>;
   isPrimaryKey: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
+  sourceTable?: Maybe<Scalars['String']['output']>;
   type: Scalars['String']['output'];
 };
 
@@ -264,6 +265,8 @@ export type Query = {
   docOrDefaultDoc?: Maybe<Doc>;
   docs: DocList;
   doltDatabaseDetails: DoltDatabaseDetails;
+  doltProcedures?: Maybe<RowList>;
+  doltSchemas: RowList;
   hasDatabaseEnv: Scalars['Boolean']['output'];
   rowDiffs: RowDiffList;
   rows: RowList;
@@ -339,6 +342,18 @@ export type QueryDocOrDefaultDocArgs = {
 
 
 export type QueryDocsArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+};
+
+
+export type QueryDoltProceduresArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+};
+
+
+export type QueryDoltSchemasArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
@@ -678,9 +693,25 @@ export type TableListForSchemasQueryVariables = Exact<{
 
 export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
 
+export type RowsForDoltSchemasQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+
+export type RowsForDoltProceduresQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures?: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } | null };
+
 export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
-export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
+export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null };
 
 export type SqlSelectForSqlDataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -689,7 +720,7 @@ export type SqlSelectForSqlDataTableQueryVariables = Exact<{
 }>;
 
 
-export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
 
@@ -714,7 +745,7 @@ export type TableForBranchQueryVariables = Exact<{
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
-export type RowForViewsFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+export type RowForSchemasFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
 export type RowsForViewsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -861,7 +892,7 @@ export type DoltDatabaseDetailsQueryVariables = Exact<{ [key: string]: never; }>
 
 export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean } };
 
-export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
 export type ForeignKeyColumnForDataTableFragment = { __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number };
 
@@ -874,7 +905,7 @@ export type DataTableQueryVariables = Exact<{
 }>;
 
 
-export type DataTableQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }> } };
+export type DataTableQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }> } };
 
 export type RowForDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
@@ -1129,6 +1160,7 @@ export const ColumnForSqlDataTableFragmentDoc = gql`
   name
   isPrimaryKey
   type
+  sourceTable
 }
     `;
 export const StatusFragmentDoc = gql`
@@ -1149,8 +1181,8 @@ export const TableWithColumnsFragmentDoc = gql`
   }
 }
     ${ColumnForTableListFragmentDoc}`;
-export const RowForViewsFragmentDoc = gql`
-    fragment RowForViews on Row {
+export const RowForSchemasFragmentDoc = gql`
+    fragment RowForSchemas on Row {
   columnValues {
     displayValue
   }
@@ -1218,6 +1250,7 @@ export const ColumnForDataTableFragmentDoc = gql`
   name
   isPrimaryKey
   type
+  sourceTable
   constraints {
     notNull
   }
@@ -1766,6 +1799,82 @@ export function useTableListForSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHo
 export type TableListForSchemasQueryHookResult = ReturnType<typeof useTableListForSchemasQuery>;
 export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableListForSchemasLazyQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
+export const RowsForDoltSchemasDocument = gql`
+    query RowsForDoltSchemas($databaseName: String!, $refName: String!) {
+  doltSchemas(databaseName: $databaseName, refName: $refName) {
+    list {
+      ...RowForSchemas
+    }
+  }
+}
+    ${RowForSchemasFragmentDoc}`;
+
+/**
+ * __useRowsForDoltSchemasQuery__
+ *
+ * To run a query within a React component, call `useRowsForDoltSchemasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRowsForDoltSchemasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRowsForDoltSchemasQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useRowsForDoltSchemasQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
+      }
+export function useRowsForDoltSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
+        }
+export type RowsForDoltSchemasQueryHookResult = ReturnType<typeof useRowsForDoltSchemasQuery>;
+export type RowsForDoltSchemasLazyQueryHookResult = ReturnType<typeof useRowsForDoltSchemasLazyQuery>;
+export type RowsForDoltSchemasQueryResult = Apollo.QueryResult<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>;
+export const RowsForDoltProceduresDocument = gql`
+    query RowsForDoltProcedures($databaseName: String!, $refName: String!) {
+  doltProcedures(databaseName: $databaseName, refName: $refName) {
+    list {
+      ...RowForSchemas
+    }
+  }
+}
+    ${RowForSchemasFragmentDoc}`;
+
+/**
+ * __useRowsForDoltProceduresQuery__
+ *
+ * To run a query within a React component, call `useRowsForDoltProceduresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRowsForDoltProceduresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRowsForDoltProceduresQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useRowsForDoltProceduresQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
+      }
+export function useRowsForDoltProceduresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
+        }
+export type RowsForDoltProceduresQueryHookResult = ReturnType<typeof useRowsForDoltProceduresQuery>;
+export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRowsForDoltProceduresLazyQuery>;
+export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
 export const SqlSelectForSqlDataTableDocument = gql`
     query SqlSelectForSqlDataTable($databaseName: String!, $refName: String!, $queryString: String!) {
   sqlSelect(
@@ -1892,11 +2001,11 @@ export const RowsForViewsDocument = gql`
     query RowsForViews($databaseName: String!, $refName: String!) {
   views(databaseName: $databaseName, refName: $refName) {
     list {
-      ...RowForViews
+      ...RowForSchemas
     }
   }
 }
-    ${RowForViewsFragmentDoc}`;
+    ${RowForSchemasFragmentDoc}`;
 
 /**
  * __useRowsForViewsQuery__

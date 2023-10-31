@@ -1,12 +1,11 @@
 import { MockedProvider } from "@apollo/client/testing";
-import { RefParams } from "@lib/params";
 import { render, screen } from "@testing-library/react";
 import SchemaList from ".";
 import * as mocks from "./mocks";
 
-const params: RefParams = {
-  databaseName: "dbname",
+const params = {
   refName: "main",
+  databaseName: "dbname",
 };
 
 const tableList = [[], [mocks.tableOne], [mocks.tableOne, mocks.tableTwo]];
@@ -26,7 +25,7 @@ describe("test SchemaList", () => {
       );
 
       if (tables.length === 0) {
-        expect(await screen.findByText("No tables found for")).toBeVisible();
+        expect(await screen.findByText("No tables found on")).toBeVisible();
       } else {
         tables.forEach(async table => {
           expect(await screen.findByText(table)).toBeVisible();

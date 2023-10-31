@@ -2,47 +2,37 @@ import Btn from "@components/Btn";
 import Link from "@components/links/Link";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
-import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
+import { RiBookOpenLine } from "@react-icons/all-files/ri/RiBookOpenLine";
 import cx from "classnames";
 import css from "./index.module.css";
-import { tableIsActive } from "./utils";
 
 type Props = {
-  tableName: string;
-  params: RefParams & { q?: string };
+  name: string;
+  params: RefParams;
+  isActive: boolean;
+  query: string;
 };
 
-export default function Item({ tableName, params }: Props) {
-  const active = tableIsActive(tableName, params.q);
+export default function Item({ name, params, isActive, query }: Props) {
   return (
     <li
       className={cx(css.item, {
-        [css.active]: active,
+        [css.selected]: isActive,
       })}
-      data-cy={`db-tables-schema-${tableName}`}
-      id={tableName}
+      data-cy={`db-schemas-${name}`}
+      id={name}
     >
-      <div className={css.table}>
-        <span className={css.tableName}>{tableName}</span>
-        <span className={css.right}>
-          {active ? (
-            <span className={css.tableStatus}>Viewing</span>
-          ) : (
-            <Link
-              {...sqlQuery({
-                ...params,
-                q: `SHOW CREATE TABLE \`${tableName}\``,
-                active: "Schemas",
-              })}
-              data-cy={`db-tables-schema-${tableName}-play`}
-            >
-              <Btn className={css.buttonIcon}>
-                <MdPlayCircleOutline />
-              </Btn>
-            </Link>
-          )}
-        </span>
-      </div>
+      <Link
+        {...sqlQuery({ ...params, q: query, active: "Schemas" })}
+        data-cy={`db-schemas-${name}-play`}
+      >
+        <Btn className={css.button}>
+          <span className={css.name}>{name}</span>
+          <span className={isActive ? css.viewing : css.icon}>
+            {isActive ? "Viewing" : <RiBookOpenLine />}
+          </span>
+        </Btn>
+      </Link>
     </li>
   );
 }

@@ -1,5 +1,8 @@
 import { MockedResponse } from "@apollo/client/testing";
-import { RowForViewsFragment, RowsForViewsDocument } from "@gen/graphql-types";
+import {
+  RowForSchemasFragment,
+  RowsForViewsDocument,
+} from "@gen/graphql-types";
 import chance from "@lib/chance";
 
 const databaseParams = {
@@ -12,7 +15,7 @@ export const params = {
   refName,
 };
 
-export const rowsForViewsFragmentMock: RowForViewsFragment[] = [
+export const rowsForViewsFragmentMock: RowForSchemasFragment[] = [
   ...Array(5).keys(),
 ].map(() => {
   return {

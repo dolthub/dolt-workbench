@@ -1,6 +1,10 @@
+import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import compareArray from "@lib/compareArray";
+import { NULL_VALUE } from "@lib/null";
 import {
   convertToSqlWithNewCondition,
   convertToSqlWithOrderBy,
+  fallbackGetTableNamesForSelect,
   getQueryType,
   getTableName,
   isMultipleQueries,
@@ -8,7 +12,6 @@ import {
   makeQueryExecutable,
   removeColumnFromQuery,
 } from ".";
-import { NULL_VALUE } from "../null";
 import { mutationExamples } from "./mutationExamples";
 
 const invalidQuery = `this is not a valid query`;
@@ -249,48 +252,112 @@ describe("test isMutation", () => {
   });
 });
 
+const columns = [
+  {
+    name: "id",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename",
+  },
+  {
+    name: "name",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename",
+  },
+  {
+    name: "age",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename",
+  },
+];
+
+const joinedColumns = [
+  {
+    name: "id",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename",
+  },
+  {
+    name: "name",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename",
+  },
+  {
+    name: "age",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename",
+  },
+  {
+    name: "id",
+    constraintsList: [],
+    isPrimaryKey: true,
+    type: "VARCHAR(16383)",
+    sourceTable: "tablename2",
+  },
+];
+
 describe("removes column from query", () => {
   const tests: Array<{
     desc: string;
     query: string;
     colToRemove: string;
-    cols: string[];
+    cols: ColumnForDataTableFragment[];
     expected: string;
   }> = [
     {
       desc: "select query",
       query: "SELECT * FROM tablename",
       colToRemove: "name",
-      cols: ["id", "name"],
+      cols: columns.slice(0, 2),
       expected: "SELECT `id` FROM `tablename`",
     },
     {
       desc: "select query with where clause",
       query: "SELECT id, name, age FROM tablename WHERE id=1",
       colToRemove: "id",
-      cols: ["id", "name", "age"],
+      cols: columns,
       expected: "SELECT `name`, `age` FROM `tablename` WHERE `id` = 1",
     },
     {
       desc: "select query with where not clause with double quoted single quote",
       query: `SELECT id, name, age FROM tablename WHERE NOT (id=1 AND name = "MCDONALD'S")`,
       colToRemove: "name",
-      cols: ["id", "name", "age"],
+      cols: columns,
       expected: `SELECT \`id\`, \`age\` FROM \`tablename\` WHERE NOT(\`id\` = 1 AND \`name\` = "MCDONALD\\'S")`,
     },
     {
       desc: "select query with where clause with escaped single quote",
       query: `SELECT * FROM tablename WHERE name = 'MCDONALD\\'S'`,
       colToRemove: "age",
-      cols: ["id", "name", "age"],
+      cols: columns,
       expected: `SELECT \`id\`, \`name\` FROM \`tablename\` WHERE \`name\` = 'MCDONALD\\'S'`,
     },
     {
       desc: "select query with where clause with two escaped single quotes",
       query: `SELECT * FROM tablename WHERE name = 'MCDONALD\\'S' OR name = 'Jinky\\'s Cafe'`,
       colToRemove: "age",
-      cols: ["id", "name", "age"],
+      cols: columns,
       expected: `SELECT \`id\`, \`name\` FROM \`tablename\` WHERE \`name\` = 'MCDONALD\\'S' OR \`name\` = 'Jinky\\'s Cafe'`,
+    },
+    {
+      desc: "select query with join clause",
+      query:
+        "SELECT * FROM tablename, tablename2 where tablename.id = tablename2.id",
+      colToRemove: "name",
+      cols: joinedColumns,
+      expected:
+        "SELECT `tablename`.`id`, `tablename`.`age`, `tablename2`.`id` FROM `tablename`, `tablename2` WHERE `tablename`.`id` = `tablename2`.`id`",
     },
   ];
 
@@ -303,7 +370,7 @@ describe("removes column from query", () => {
   });
 
   expect(() =>
-    removeColumnFromQuery(invalidQuery, "age", ["id", "age"]),
+    removeColumnFromQuery(invalidQuery, "age", columns.slice(0, 2)),
   ).not.toThrowError();
 });
 
@@ -318,7 +385,7 @@ describe("test executable query", () => {
       query: ` select *
 from tablename
 where col='name'
-      
+
       `,
     },
   ];
@@ -327,6 +394,56 @@ where col='name'
       expect(makeQueryExecutable(test.query)).toEqual(
         "select * from tablename where col=\\'name\\'",
       );
+    });
+  });
+});
+
+describe("test use regex to get table names from query", () => {
+  const tests = [
+    {
+      desc: "single table",
+      query: "select * from tablename where col='name'",
+      expected: ["tablename"],
+    },
+    {
+      desc: "single table with where clause",
+      query: "select * from tablename where col='name'",
+      expected: ["tablename"],
+    },
+    {
+      desc: "multiple tables using , to join",
+      query: "select * from table1, table2 where table1.id = table2.id",
+      expected: ["table1", "table2"],
+    },
+    {
+      desc: "multiple tables using join clause",
+      query: "select * from table1 join table2 on table1.id = table2.id",
+      expected: ["table1", "table2"],
+    },
+    {
+      desc: "multiple tables with table names in backticks",
+      query:
+        "select * from `table1` join `table2` on `table1`.id = `table2`.id",
+      expected: ["table1", "table2"],
+    },
+    {
+      desc: "multiple tables with column name includes from",
+      query:
+        "select * from table1 join table2 on table1.from_commit = table2.from_commit",
+      expected: ["table1", "table2"],
+    },
+    // {
+    //   desc: "more than 2 tables",
+    //   query:
+    //     "select * from table1, table2, table3 where table1.id = table2.id and table2.id = table3.id",
+    //   expected: ["table1", "table2", "table3"],
+    // },
+  ];
+  tests.forEach(test => {
+    it(test.desc, () => {
+      expect(
+        compareArray(fallbackGetTableNamesForSelect(test.query), test.expected),
+      ).toBe(true);
     });
   });
 });
