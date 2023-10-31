@@ -8,12 +8,14 @@ export default function ConfigurationPage() {
     <div>
       <Navbar home />
       <main className={css.container}>
-        <h1>Configure Database</h1>
-        <p>
-          Connect to the workbench using any MySQL-compatible database. Use{" "}
-          <DoltLink>Dolt</DoltLink> to unlock version control features, like
-          branch, commits, and merge.
-        </p>
+        <div className={css.top}>
+          <h1>Configure Database</h1>
+          <p>
+            Connect to the workbench using any MySQL-compatible database. Use{" "}
+            <DoltLink>Dolt</DoltLink> to unlock version control features, like
+            branch, commits, and merge.
+          </p>
+        </div>
         <AddConnectionForm />
       </main>
     </div>

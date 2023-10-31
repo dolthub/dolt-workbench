@@ -1,5 +1,6 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
+import CustomCheckbox from "@components/CustomCheckbox";
 import FormInput from "@components/FormInput";
 import Loader from "@components/Loader";
 import QueryHandler from "@components/util/QueryHandler";
@@ -10,6 +11,7 @@ import {
 import { database } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
+import css from "./index.module.css";
 
 type InnerProps = {
   hasDatabaseEnv: boolean;
@@ -18,6 +20,7 @@ type InnerProps = {
 function Inner(props: InnerProps) {
   const router = useRouter();
   const [url, setUrl] = useState("");
+  const [hideDoltFeatures, setHideDoltFeatures] = useState(false);
   const [showForm, setShowForm] = useState(!props.hasDatabaseEnv);
   const [addDb, res] = useAddDatabaseConnectionMutation();
 
@@ -30,7 +33,7 @@ function Inner(props: InnerProps) {
 
   const onSubmit = async (e: SyntheticEvent, useEnv = false) => {
     e.preventDefault();
-    const variables = useEnv ? { useEnv: true } : { url };
+    const variables = useEnv ? { useEnv: true } : { url, hideDoltFeatures };
     try {
       const db = await addDb({ variables });
       await res.client.clearStore();
@@ -71,6 +74,14 @@ function Inner(props: InnerProps) {
         onChangeString={setUrl}
         label="Connection string"
         placeholder="mysql://[username]:[password]@[host]/[database]"
+      />
+      <CustomCheckbox
+        checked={hideDoltFeatures}
+        onChange={() => setHideDoltFeatures(!hideDoltFeatures)}
+        name="hide-dolt-features"
+        label="Hide Dolt features"
+        description="Hides Dolt features like branches, logs, and commits for non-Dolt MySQL databases. Will otherwise be disabled."
+        className={css.checkbox}
       />
       <ButtonsWithError error={res.error} onCancel={onCancel}>
         <Button type="submit">Launch Workbench</Button>

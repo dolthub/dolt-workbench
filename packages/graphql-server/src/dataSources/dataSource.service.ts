@@ -6,11 +6,16 @@ import { RawRows } from "../utils/commonTypes";
 export const dbNotFoundErr = "Database connection not found";
 export type ParQuery = (q: string, p?: any[] | undefined) => Promise<RawRows>;
 
+class WorkbenchConfig {
+  hideDoltFeatures: boolean;
+}
+
 @Injectable()
 export class DataSourceService {
   constructor(
     private ds: DataSource | undefined,
     private mysqlConfig: mysql.ConnectionOptions | undefined, // Used for file upload
+    private workbenchConfig: WorkbenchConfig | undefined,
   ) {}
 
   getDS(): DataSource {
@@ -83,7 +88,11 @@ export class DataSourceService {
     });
   }
 
-  async addDS(connUrl: string) {
+  getWorkbenchConfig(): WorkbenchConfig | undefined {
+    return this.workbenchConfig;
+  }
+
+  async addDS(connUrl: string, hideDoltFeatures?: boolean) {
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
@@ -115,6 +124,8 @@ export class DataSourceService {
       // Allows file upload via LOAD DATA
       flags: ["+LOCAL_FILES"],
     };
+
+    this.workbenchConfig = { hideDoltFeatures: !!hideDoltFeatures };
 
     await this.ds.initialize();
   }

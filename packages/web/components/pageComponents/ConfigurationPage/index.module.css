@@ -1,13 +1,5 @@
 .container {
-  @apply max-w-xl mx-auto my-40 px-4;
-
-  h1 {
-    @apply mb-6 text-center;
-  }
-
-  p {
-    @apply text-base text-center;
-  }
+  @apply max-w-2xl mx-auto my-40 px-4;
 
   form {
     @apply mt-10 max-w-lg mx-auto;
@@ -16,4 +8,18 @@
       @apply my-2;
     }
   }
+}
+
+.top {
+  h1 {
+    @apply mb-6 text-center;
+  }
+
+  p {
+    @apply text-lg text-center;
+  }
+}
+
+.checkbox {
+  @apply mt-7 mb-10 text-sm;
 }

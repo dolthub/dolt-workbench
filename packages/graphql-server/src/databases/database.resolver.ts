@@ -21,6 +21,9 @@ class AddDatabaseConnectionArgs {
 
   @Field({ nullable: true })
   useEnv?: boolean;
+
+  @Field({ nullable: true })
+  hideDoltFeatures?: boolean;
 }
 
 @ObjectType()
@@ -73,13 +76,13 @@ export class DatabaseResolver {
 
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
-    const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
+    const workbenchConfig = this.dss.getWorkbenchConfig();
     const qr = this.dss.getQR();
     try {
       const isDolt = await getIsDolt(qr);
       return {
         isDolt,
-        hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
+        hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
       };
     } finally {
       await qr.release();
@@ -91,11 +94,15 @@ export class DatabaseResolver {
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string> {
     if (args.useEnv) {
+      const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
       const url = this.configService.get("DATABASE_URL");
       if (!url) throw new Error("DATABASE_URL not found in env");
-      await this.dss.addDS(url);
+      await this.dss.addDS(
+        url,
+        !!hideDoltFeatures && hideDoltFeatures === "true",
+      );
     } else if (args.url) {
-      await this.dss.addDS(args.url);
+      await this.dss.addDS(args.url, args.hideDoltFeatures);
     } else {
       throw new Error("database url not provided");
     }
