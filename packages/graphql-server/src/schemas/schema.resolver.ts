@@ -74,7 +74,7 @@ export class SchemaResolver {
 async function getSchemasForNonDolt(
   query: ParQuery,
   dbName: string,
-  type?: string,
+  type?: SchemaType,
 ): Promise<SchemaItem[]> {
   const vRes = await query(getViewsQuery, [dbName]);
   const views = vRes.map(v => {
