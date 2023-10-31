@@ -1,6 +1,7 @@
 import Btn from "@components/Btn";
 import Link from "@components/links/Link";
 import { Maybe } from "@gen/graphql-types";
+import excerpt from "@lib/excerpt";
 import { RefParams } from "@lib/params";
 import { table } from "@lib/urls";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
@@ -33,7 +34,7 @@ export default function Item({ tableName, params }: Props) {
         <span>
           <Btn onClick={() => setExpanded(!expanded)} className={css.tableName}>
             {expanded ? <FaChevronUp /> : <FaChevronDown />}
-            {tableName}
+            {excerpt(tableName, 33)}
           </Btn>
           <Link
             {...table({ ...params, tableName })}

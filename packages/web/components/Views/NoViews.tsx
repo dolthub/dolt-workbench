@@ -4,7 +4,7 @@ import css from "./index.module.css";
 export default function NoViews() {
   return (
     <p className={css.text} data-cy="db-no-views">
-      No saved views. <SchemasDocLink />?
+      No views. <SchemasDocLink />?
     </p>
   );
 }

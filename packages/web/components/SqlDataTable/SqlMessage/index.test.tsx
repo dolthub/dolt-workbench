@@ -1,4 +1,6 @@
 import { ApolloError } from "@apollo/client";
+import { MockedProvider } from "@apollo/client/testing";
+import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import { QueryExecutionStatus } from "@gen/graphql-types";
 import { SqlQueryParams } from "@lib/params";
 import { render, screen } from "@testing-library/react";
@@ -77,28 +79,33 @@ describe("test SqlMessage", () => {
     expect(screen.getByText(/before query timed out./)).toBeVisible();
   });
 
-  it("renders success message", () => {
+  it("renders success message", async () => {
     render(
-      <SqlMessage
-        params={params}
-        rowsLen={1}
-        executionStatus={QueryExecutionStatus.Success}
-      />,
+      <MockedProvider mocks={[databaseDetailsMock(true, false)]}>
+        <SqlMessage
+          params={params}
+          rowsLen={1}
+          executionStatus={QueryExecutionStatus.Success}
+        />
+      </MockedProvider>,
     );
-    expect(screen.getByText("1 row selected on")).toBeVisible();
-    expect(screen.getByText("master")).toBeVisible();
+    expect(await screen.findByText("master")).toBeVisible();
+    expect(screen.getByText("1 row selected")).toBeVisible();
   });
 
-  it("renders row limit message", () => {
+  it("renders row limit message", async () => {
     render(
-      <SqlMessage
-        params={params}
-        rowsLen={200}
-        executionStatus={QueryExecutionStatus.RowLimit}
-      />,
+      <MockedProvider mocks={[databaseDetailsMock(true, false)]}>
+        <SqlMessage
+          params={params}
+          rowsLen={200}
+          executionStatus={QueryExecutionStatus.RowLimit}
+        />
+      </MockedProvider>,
     );
-    expect(screen.getByText(/200 rows selected on/)).toBeVisible();
-    expect(screen.getByText("master")).toBeVisible();
+
+    expect(await screen.findByText("master")).toBeVisible();
+    expect(screen.getByText(/200 rows selected/)).toBeVisible();
     expect(
       screen.getByText(/\(for unlimited query results download /),
     ).toBeVisible();

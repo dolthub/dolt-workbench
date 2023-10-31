@@ -25,7 +25,10 @@ describe("test SchemaList", () => {
       );
 
       if (tables.length === 0) {
-        expect(await screen.findByText("No tables found on")).toBeVisible();
+        expect(
+          await screen.findByLabelText("db-tables-empty-ref"),
+        ).toHaveTextContent(params.refName);
+        expect(screen.getByText("No tables found")).toBeVisible();
       } else {
         tables.forEach(async table => {
           expect(await screen.findByText(table)).toBeVisible();

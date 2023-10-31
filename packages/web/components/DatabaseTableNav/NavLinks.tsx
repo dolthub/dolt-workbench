@@ -1,11 +1,8 @@
-import Loader from "@components/Loader";
 import SchemaList from "@components/SchemaList";
 import TableList from "@components/TableList";
 import { Tab, TabList, TabPanel } from "@components/Tabs";
 import { TabsProvider } from "@components/Tabs/context";
 import Views from "@components/Views";
-import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import useIsDolt from "@hooks/useIsDolt";
 import { OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
@@ -22,24 +19,18 @@ type Props = {
 export default function NavLinks({ className, params }: Props) {
   const router = useRouter();
   const initialActiveIndex = getActiveIndexFromRouterQuery(router.query.active);
-  const { hideDoltFeature, loading } = useIsDolt();
   const tabs = ["Tables", "Views", "Schemas"];
 
   return (
     <div data-cy="db-page-table-nav" className={className}>
       <TabsProvider initialActiveIndex={initialActiveIndex}>
-        <Loader loaded={!loading}>
-          <TabList className={css.tabList}>
-            {tabs.map((tab, i) => {
-              if (hideDoltFeature && tab === "Views") return null;
-              return (
-                <Tab key={tab} data-cy={`tab-${tab.toLowerCase()}`} index={i}>
-                  {tab}
-                </Tab>
-              );
-            })}
-          </TabList>
-        </Loader>
+        <TabList className={css.tabList}>
+          {tabs.map((tab, i) => (
+            <Tab key={tab} data-cy={`tab-${tab.toLowerCase()}`} index={i}>
+              {tab}
+            </Tab>
+          ))}
+        </TabList>
         <CustomTabPanel index={0}>
           {params.refName ? (
             <TableList
@@ -56,9 +47,7 @@ export default function NavLinks({ className, params }: Props) {
         </CustomTabPanel>
         <CustomTabPanel index={1}>
           {params.refName ? (
-            <NotDoltWrapper showNotDoltMsg feature="Listing views">
-              <Views params={{ ...params, refName: params.refName }} />
-            </NotDoltWrapper>
+            <Views params={{ ...params, refName: params.refName }} />
           ) : (
             <p className={css.empty} data-cy="db-views-empty">
               No views to show

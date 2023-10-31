@@ -1,6 +1,7 @@
 import Btn from "@components/Btn";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { RowForSchemasFragment } from "@gen/graphql-types";
+import { SchemaItemFragment } from "@gen/graphql-types";
+import excerpt from "@lib/excerpt";
 import { RefParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import cx from "classnames";
@@ -8,11 +9,11 @@ import css from "./index.module.css";
 
 type Props = {
   params: RefParams & { q?: string };
-  view: RowForSchemasFragment;
+  view: SchemaItemFragment;
 };
 
 export default function ViewItem(props: Props) {
-  const name = props.view.columnValues[1].displayValue;
+  const { name } = props.view;
   const { queryClickHandler } = useSqlEditorContext("Views");
   const viewingQuery = isActive(name, props.params.q);
   const id = `view-${name}`;
@@ -28,7 +29,7 @@ export default function ViewItem(props: Props) {
       className={cx(css.item, { [css.selected]: viewingQuery })}
     >
       <Btn onClick={executeView} className={css.button}>
-        <span className={css.name}>{name}</span>
+        <span className={css.name}>{excerpt(name, 47)}</span>
         <span
           className={viewingQuery ? css.viewing : css.icon}
           data-cy={`db-views-view-button-${name}`}

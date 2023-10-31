@@ -1,6 +1,5 @@
 import Section from "@components/DatabaseTableNav/Section";
-import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import { useRowsForDoltSchemasQuery } from "@gen/graphql-types";
+import { SchemaType, useRowsForDoltSchemasQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import List from "./List";
 import Procedures from "./Procedures";
@@ -12,49 +11,38 @@ type Props = {
   params: RefParams & { q?: string };
 };
 
-function DoltFeatures(props: Props) {
+function Inner(props: Props) {
   const res = useRowsForDoltSchemasQuery({ variables: props.params });
   return (
-    <>
+    <div className={css.container}>
+      <h4>Tables</h4>
+      <Tables params={props.params} />
       <h4>Views</h4>
       <List
         params={props.params}
-        kind="view"
-        items={getSchemaItemsFromRows("view", res.data?.doltSchemas.list)}
+        kind={SchemaType.View}
+        items={getSchemaItemsFromRows(SchemaType.View, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Triggers</h4>
       <List
         params={props.params}
-        kind="trigger"
-        items={getSchemaItemsFromRows("trigger", res.data?.doltSchemas.list)}
+        kind={SchemaType.Trigger}
+        items={getSchemaItemsFromRows(
+          SchemaType.Trigger,
+          res.data?.doltSchemas,
+        )}
         loading={res.loading}
       />
       <h4>Events</h4>
       <List
         params={props.params}
-        kind="event"
-        items={getSchemaItemsFromRows("event", res.data?.doltSchemas.list)}
+        kind={SchemaType.Event}
+        items={getSchemaItemsFromRows(SchemaType.Event, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Procedures</h4>
       <Procedures params={props.params} />
-    </>
-  );
-}
-
-function Inner(props: Props) {
-  return (
-    <div className={css.container}>
-      <h4>Tables</h4>
-      <Tables params={props.params} />
-      {/* TODO: Make this work for non-Dolt */}
-      <NotDoltWrapper
-        showNotDoltMsg
-        feature="Viewing schemas for views, triggers, events, and procedures"
-      >
-        <DoltFeatures {...props} />
-      </NotDoltWrapper>
     </div>
   );
 }
