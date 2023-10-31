@@ -1,6 +1,7 @@
 import "@components/AceEditor/ace-editor.css";
 import "@components/util/KeyNav/index.css";
 import { withApollo } from "@lib/apollo";
+import { colors } from "@lib/tailwind";
 import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
 import Head from "next/head";
@@ -22,9 +23,9 @@ export default class DoltSQLWorkbench extends App {
     return (
       <>
         <Head>
-          {/* <link
+          <link
             rel="apple-touch-icon"
-            sizes="180x180"
+            sizes="76x76"
             href="/favicon/apple-touch-icon.png"
           />
           <link
@@ -43,11 +44,18 @@ export default class DoltSQLWorkbench extends App {
           <link
             rel="mask-icon"
             href="/favicon/safari-pinned-tab.svg"
-            color="#5bbad5"
-          /> */}
-          <link rel="icon" href="/favicon.ico" />
-          <meta name="msapplication-TileColor" content="#2b5797" />
-          <meta name="theme-color" content="#182134" />
+            color={colors["ld-mediumblue"]}
+          />
+          <link rel="shortcut icon" href="/favicon/favicon.ico" />
+          <meta
+            name="msapplication-TileColor"
+            content={colors["ld-mediumblue"]}
+          />
+          <meta
+            name="msapplication-config"
+            content="/favicon/browserconfig.xml"
+          />
+          <meta name="theme-color" content={colors["ld-mediumblue"]} />
         </Head>
         <WrappedPage {...pageProps} />
       </>
