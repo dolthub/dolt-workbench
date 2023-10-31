@@ -1,6 +1,6 @@
 import Navbar from "@components/Navbar";
 import DoltLink from "@components/links/DoltLink";
-import AddConnectionForm from "./AddConnectionForm";
+import AddConnectionOptions from "./AddConnectionOptions";
 import css from "./index.module.css";
 
 export default function ConfigurationPage() {
@@ -16,7 +16,7 @@ export default function ConfigurationPage() {
             branch, commits, and merge.
           </p>
         </div>
-        <AddConnectionForm />
+        <AddConnectionOptions />
       </main>
     </div>
   );

@@ -1,8 +1,5 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
-import CustomCheckbox from "@components/CustomCheckbox";
-import FormInput from "@components/FormInput";
-import Loader from "@components/Loader";
 import QueryHandler from "@components/util/QueryHandler";
 import {
   useAddDatabaseConnectionMutation,
@@ -11,7 +8,7 @@ import {
 import { database } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
-import css from "./index.module.css";
+import Form from "./Form";
 
 type InnerProps = {
   hasDatabaseEnv: boolean;
@@ -19,23 +16,13 @@ type InnerProps = {
 
 function Inner(props: InnerProps) {
   const router = useRouter();
-  const [url, setUrl] = useState("");
-  const [hideDoltFeatures, setHideDoltFeatures] = useState(false);
   const [showForm, setShowForm] = useState(!props.hasDatabaseEnv);
   const [addDb, res] = useAddDatabaseConnectionMutation();
 
-  const onCancel = props.hasDatabaseEnv
-    ? () => {
-        setShowForm(false);
-        setUrl("");
-      }
-    : undefined;
-
-  const onSubmit = async (e: SyntheticEvent, useEnv = false) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const variables = useEnv ? { useEnv: true } : { url, hideDoltFeatures };
     try {
-      const db = await addDb({ variables });
+      const db = await addDb({ variables: { useEnv: true } });
       await res.client.clearStore();
       if (!db.data) {
         return;
@@ -51,7 +38,7 @@ function Inner(props: InnerProps) {
 
   if (!showForm) {
     return (
-      <form onSubmit={async e => onSubmit(e, true)}>
+      <form onSubmit={onSubmit}>
         <p>
           A database connection URL was found in the environment. You can use
           this connection or create a new one.
@@ -66,31 +53,10 @@ function Inner(props: InnerProps) {
     );
   }
 
-  return (
-    <form onSubmit={onSubmit}>
-      <Loader loaded={!res.loading} />
-      <FormInput
-        value={url}
-        onChangeString={setUrl}
-        label="Connection string"
-        placeholder="mysql://[username]:[password]@[host]/[database]"
-      />
-      <CustomCheckbox
-        checked={hideDoltFeatures}
-        onChange={() => setHideDoltFeatures(!hideDoltFeatures)}
-        name="hide-dolt-features"
-        label="Hide Dolt features"
-        description="Hides Dolt features like branches, logs, and commits for non-Dolt MySQL databases. Will otherwise be disabled."
-        className={css.checkbox}
-      />
-      <ButtonsWithError error={res.error} onCancel={onCancel}>
-        <Button type="submit">Launch Workbench</Button>
-      </ButtonsWithError>
-    </form>
-  );
+  return <Form {...props} setShowForm={setShowForm} />;
 }
 
-export default function AddConnectionForm() {
+export default function AddConnectionOptions() {
   const res = useHasDatabaseEnvQuery();
   return (
     <QueryHandler

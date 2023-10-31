@@ -1,13 +1,5 @@
 .container {
-  @apply max-w-2xl mx-auto my-40 px-4;
-
-  form {
-    @apply mt-10 max-w-lg mx-auto;
-
-    button {
-      @apply my-2;
-    }
-  }
+  @apply max-w-6xl mx-auto my-24 px-4;
 }
 
 .top {
@@ -16,10 +8,38 @@
   }
 
   p {
-    @apply text-lg text-center;
+    @apply text-lg text-center max-w-xl mx-auto;
   }
+}
+
+.databaseForm {
+  @apply flex items-start justify-between;
+
+  h3 {
+    @apply mb-4;
+  }
+}
+
+.quickStart {
+  @apply bg-ld-lightblue border rounded p-6 m-10 max-w-lg w-full;
+}
+
+.or {
+  @apply font-semibold mt-32 text-lg;
+}
+
+.databaseConfig {
+  @apply m-10 max-w-xl w-full border rounded p-6;
 }
 
 .checkbox {
   @apply mt-7 mb-10 text-sm;
+}
+
+.advancedSettings {
+  @apply my-5 flex items-center;
+
+  svg {
+    @apply mr-2;
+  }
 }
