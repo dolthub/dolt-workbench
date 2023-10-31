@@ -171,6 +171,11 @@ type SchemaDiff {
   numChangedSchemas: Int
 }
 
+type SchemaItem {
+  name: String!
+  type: String!
+}
+
 type SqlSelect {
   _id: ID!
   databaseName: String!
@@ -227,10 +232,10 @@ type Query {
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   rowDiffs(offset: Int, databaseName: String!, fromCommitId: String!, toCommitId: String!, refName: String, tableName: String!, filterByRowType: DiffRowType): RowDiffList!
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
-  doltSchemas(databaseName: String!, refName: String!): RowList!
-  views(databaseName: String!, refName: String!): RowList!
-  doltProcedures(databaseName: String!, refName: String!): RowList
   schemaDiff(databaseName: String!, fromCommitId: String!, toCommitId: String!, refName: String, tableName: String!): SchemaDiff
+  doltSchemas(databaseName: String!, refName: String!): [SchemaItem!]!
+  views(databaseName: String!, refName: String!): [SchemaItem!]!
+  doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
   sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
   sqlSelectForCsvDownload(refName: String!, databaseName: String!, queryString: String!): String!
   status(databaseName: String!, refName: String!): [Status!]!

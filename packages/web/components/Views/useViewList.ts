@@ -1,15 +1,12 @@
 import { ApolloError } from "@apollo/client";
-import {
-  RowForSchemasFragment,
-  useRowsForViewsQuery,
-} from "@gen/graphql-types";
+import { SchemaItemFragment, useRowsForViewsQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { useEffect, useState } from "react";
 
 type ReturnType = {
   loading: boolean;
   error?: ApolloError;
-  views?: RowForSchemasFragment[];
+  views?: SchemaItemFragment[];
   refetch: () => Promise<void>;
 };
 
@@ -17,16 +14,16 @@ export default function useViewList(params: RefParams): ReturnType {
   const { data, ...res } = useRowsForViewsQuery({
     variables: params,
   });
-  const [views, setViews] = useState(data?.views.list);
+  const [views, setViews] = useState(data?.views);
 
   useEffect(() => {
-    setViews(data?.views.list);
+    setViews(data?.views);
   }, [data, setViews]);
 
   const refetch = async () => {
     try {
       const newRes = await res.refetch(params);
-      setViews(newRes.data.views.list);
+      setViews(newRes.data.views);
     } catch (_) {
       // Do not want to error if the dolt_schemas system table does not exist
     }

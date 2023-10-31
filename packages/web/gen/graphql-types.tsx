@@ -265,8 +265,8 @@ export type Query = {
   docOrDefaultDoc?: Maybe<Doc>;
   docs: DocList;
   doltDatabaseDetails: DoltDatabaseDetails;
-  doltProcedures?: Maybe<RowList>;
-  doltSchemas: RowList;
+  doltProcedures: Array<SchemaItem>;
+  doltSchemas: Array<SchemaItem>;
   hasDatabaseEnv: Scalars['Boolean']['output'];
   rowDiffs: RowDiffList;
   rows: RowList;
@@ -279,7 +279,7 @@ export type Query = {
   tables: Array<Table>;
   tag?: Maybe<Tag>;
   tags: TagList;
-  views: RowList;
+  views: Array<SchemaItem>;
 };
 
 
@@ -480,6 +480,12 @@ export type SchemaDiff = {
   numChangedSchemas?: Maybe<Scalars['Int']['output']>;
   schemaDiff?: Maybe<TextDiff>;
   schemaPatch?: Maybe<Array<Scalars['String']['output']>>;
+};
+
+export type SchemaItem = {
+  __typename?: 'SchemaItem';
+  name: Scalars['String']['output'];
+  type: Scalars['String']['output'];
 };
 
 export enum SortBranchesBy {
@@ -693,13 +699,15 @@ export type TableListForSchemasQueryVariables = Exact<{
 
 export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
 
+export type SchemaItemFragment = { __typename?: 'SchemaItem', name: string, type: string };
+
 export type RowsForDoltSchemasQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
 
 
-export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: Array<{ __typename?: 'SchemaItem', name: string, type: string }> };
 
 export type RowsForDoltProceduresQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -707,7 +715,7 @@ export type RowsForDoltProceduresQueryVariables = Exact<{
 }>;
 
 
-export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures?: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } | null };
+export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: string }> };
 
 export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
@@ -745,15 +753,13 @@ export type TableForBranchQueryVariables = Exact<{
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
-export type RowForSchemasFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
-
 export type RowsForViewsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
 
 
-export type RowsForViewsQuery = { __typename?: 'Query', views: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type RowsForViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'SchemaItem', name: string, type: string }> };
 
 export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
 
@@ -1148,6 +1154,12 @@ export const TableForSchemaListFragmentDoc = gql`
     ${ForeignKeysForDataTableFragmentDoc}
 ${ColumnForTableListFragmentDoc}
 ${IndexForTableListFragmentDoc}`;
+export const SchemaItemFragmentDoc = gql`
+    fragment SchemaItem on SchemaItem {
+  name
+  type
+}
+    `;
 export const RowForSqlDataTableFragmentDoc = gql`
     fragment RowForSqlDataTable on Row {
   columnValues {
@@ -1181,13 +1193,6 @@ export const TableWithColumnsFragmentDoc = gql`
   }
 }
     ${ColumnForTableListFragmentDoc}`;
-export const RowForSchemasFragmentDoc = gql`
-    fragment RowForSchemas on Row {
-  columnValues {
-    displayValue
-  }
-}
-    `;
 export const BranchFragmentDoc = gql`
     fragment Branch on Branch {
   _id
@@ -1802,12 +1807,10 @@ export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSche
 export const RowsForDoltSchemasDocument = gql`
     query RowsForDoltSchemas($databaseName: String!, $refName: String!) {
   doltSchemas(databaseName: $databaseName, refName: $refName) {
-    list {
-      ...RowForSchemas
-    }
+    ...SchemaItem
   }
 }
-    ${RowForSchemasFragmentDoc}`;
+    ${SchemaItemFragmentDoc}`;
 
 /**
  * __useRowsForDoltSchemasQuery__
@@ -1840,12 +1843,10 @@ export type RowsForDoltSchemasQueryResult = Apollo.QueryResult<RowsForDoltSchema
 export const RowsForDoltProceduresDocument = gql`
     query RowsForDoltProcedures($databaseName: String!, $refName: String!) {
   doltProcedures(databaseName: $databaseName, refName: $refName) {
-    list {
-      ...RowForSchemas
-    }
+    ...SchemaItem
   }
 }
-    ${RowForSchemasFragmentDoc}`;
+    ${SchemaItemFragmentDoc}`;
 
 /**
  * __useRowsForDoltProceduresQuery__
@@ -2000,12 +2001,10 @@ export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, 
 export const RowsForViewsDocument = gql`
     query RowsForViews($databaseName: String!, $refName: String!) {
   views(databaseName: $databaseName, refName: $refName) {
-    list {
-      ...RowForSchemas
-    }
+    ...SchemaItem
   }
 }
-    ${RowForSchemasFragmentDoc}`;
+    ${SchemaItemFragmentDoc}`;
 
 /**
  * __useRowsForViewsQuery__

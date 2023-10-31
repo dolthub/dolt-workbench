@@ -6,6 +6,7 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
+  SchemaItemFragment,
 } from "@gen/graphql-types";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableParams } from "@lib/params";
@@ -117,12 +118,9 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   );
 }
 
-function getIsView(
-  tableName: string,
-  views?: RowForDataTableFragment[],
-): boolean {
+function getIsView(tableName: string, views?: SchemaItemFragment[]): boolean {
   if (!views) return false;
-  return views.some(v => v.columnValues[1].displayValue === tableName);
+  return views.some(v => v.name === tableName);
 }
 
 function queryHasMultipleTables(q?: string): boolean {

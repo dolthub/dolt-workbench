@@ -1,6 +1,6 @@
 import Section from "@components/DatabaseTableNav/Section";
 import Loader from "@components/Loader";
-import { RowForSchemasFragment } from "@gen/graphql-types";
+import { SchemaItemFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import NoViews from "./NoViews";
 import ViewItem from "./ViewItem";
@@ -12,20 +12,16 @@ type ViewsProps = {
 };
 
 type Props = ViewsProps & {
-  rows?: RowForSchemasFragment[];
+  views?: SchemaItemFragment[];
 };
 
-function Inner({ rows, params }: Props) {
+function Inner({ views, params }: Props) {
   return (
     <div className={css.views}>
-      {rows?.length ? (
+      {views?.length ? (
         <ol data-cy="db-views-list">
-          {rows.map(r => (
-            <ViewItem
-              key={r.columnValues[1].displayValue}
-              view={r}
-              params={params}
-            />
+          {views.map(v => (
+            <ViewItem key={v.name} view={v} params={params} />
           ))}
         </ol>
       ) : (
@@ -44,7 +40,7 @@ export default function Views(props: ViewsProps) {
       {res.loading ? (
         <Loader loaded={false} />
       ) : (
-        <Inner params={props.params} rows={res.views} />
+        <Inner params={props.params} views={res.views} />
       )}
     </Section>
   );

@@ -7,6 +7,7 @@ import { DocsResolver } from "./docs/doc.resolver";
 import { RowDiffResolver } from "./rowDiffs/rowDiff.resolver";
 import { RowResolver } from "./rows/row.resolver";
 import { SchemaDiffResolver } from "./schemaDiffs/schemaDiff.resolver";
+import { SchemaResolver } from "./schemas/schema.resolver";
 import { SqlSelectResolver } from "./sqlSelects/sqlSelect.resolver";
 import { StatusResolver } from "./status/status.resolver";
 import { TableResolver } from "./tables/table.resolver";
@@ -24,6 +25,7 @@ const resolvers = [
   RowDiffResolver,
   RowResolver,
   SchemaDiffResolver,
+  SchemaResolver,
   SqlSelectResolver,
   StatusResolver,
   TableResolver,

@@ -30,11 +30,7 @@ export default function Procedures(props: Props) {
       render={data => (
         <List
           {...props}
-          items={
-            data.doltProcedures?.list.map(
-              e => e.columnValues[0].displayValue,
-            ) ?? []
-          }
+          items={data.doltProcedures?.map(e => e.name) ?? []}
           kind="procedure"
         />
       )}

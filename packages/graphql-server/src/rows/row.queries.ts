@@ -2,13 +2,10 @@ import { RawRows } from "../utils/commonTypes";
 
 export const getRowsQuery = (
   columns: RawRows,
-  hasWhereCause = false,
 ): { q: string; cols: string[] } => {
   const cols = getPKColsForRowsQuery(columns);
   return {
-    q: `SELECT * FROM ?? ${
-      hasWhereCause ? "WHERE type = ? " : ""
-    }${getOrderByFromCols(cols.length)}LIMIT ? OFFSET ?`,
+    q: `SELECT * FROM ?? ${getOrderByFromCols(cols.length)}LIMIT ? OFFSET ?`,
     cols,
   };
 };
