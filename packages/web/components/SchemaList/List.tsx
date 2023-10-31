@@ -1,22 +1,23 @@
 import SmallLoader from "@components/SmallLoader";
+import { SchemaType } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { pluralize } from "@lib/pluralize";
 import { useEffect } from "react";
 import Item from "./Item";
 import NotFound from "./NotFound";
 import css from "./index.module.css";
-import { SchemaKind, getActiveItem } from "./utils";
+import { getActiveItem } from "./utils";
 
 type InnerProps = {
   params: RefParams & { q?: string };
   items: string[];
-  kind: SchemaKind;
+  kind: SchemaType;
   loading?: boolean;
 };
 
 export default function List(props: InnerProps) {
   const activeItem = getActiveItem(props.kind, props.params.q);
-  const pluralKind = pluralize(2, props.kind);
+  const pluralKind = pluralize(2, props.kind.toLowerCase());
 
   useEffect(() => {
     if (!activeItem) return;

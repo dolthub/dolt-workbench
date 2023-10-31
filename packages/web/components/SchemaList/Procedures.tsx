@@ -1,6 +1,6 @@
 import SmallLoader from "@components/SmallLoader";
 import QueryHandler from "@components/util/QueryHandler";
-import { useRowsForDoltProceduresQuery } from "@gen/graphql-types";
+import { SchemaType, useRowsForDoltProceduresQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import List from "./List";
 import css from "./index.module.css";
@@ -31,7 +31,7 @@ export default function Procedures(props: Props) {
         <List
           {...props}
           items={data.doltProcedures?.map(e => e.name) ?? []}
-          kind="procedure"
+          kind={SchemaType.Procedure}
         />
       )}
     />

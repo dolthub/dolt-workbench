@@ -1,5 +1,5 @@
 import Section from "@components/DatabaseTableNav/Section";
-import { useRowsForDoltSchemasQuery } from "@gen/graphql-types";
+import { SchemaType, useRowsForDoltSchemasQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import List from "./List";
 import Procedures from "./Procedures";
@@ -20,22 +20,25 @@ function Inner(props: Props) {
       <h4>Views</h4>
       <List
         params={props.params}
-        kind="view"
-        items={getSchemaItemsFromRows("view", res.data?.doltSchemas)}
+        kind={SchemaType.View}
+        items={getSchemaItemsFromRows(SchemaType.View, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Triggers</h4>
       <List
         params={props.params}
-        kind="trigger"
-        items={getSchemaItemsFromRows("trigger", res.data?.doltSchemas)}
+        kind={SchemaType.Trigger}
+        items={getSchemaItemsFromRows(
+          SchemaType.Trigger,
+          res.data?.doltSchemas,
+        )}
         loading={res.loading}
       />
       <h4>Events</h4>
       <List
         params={props.params}
-        kind="event"
-        items={getSchemaItemsFromRows("event", res.data?.doltSchemas)}
+        kind={SchemaType.Event}
+        items={getSchemaItemsFromRows(SchemaType.Event, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Procedures</h4>

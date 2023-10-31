@@ -3,9 +3,7 @@ import { tableNamesMock } from "@hooks/useTableNames/mocks";
 import { RefParams } from "@lib/params";
 
 export const tableOne = "tableName";
-
 export const tableTwo = "tableNameSecond";
-
 export const activeTableName = tableOne;
 
 export const getQ = (tables: string[]) => {

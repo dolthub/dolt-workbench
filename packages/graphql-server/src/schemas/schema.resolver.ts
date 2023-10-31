@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from "@nestjs/graphql";
 import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
 import { handleTableNotFound } from "../tables/table.resolver";
 import { RefArgs } from "../utils/commonTypes";
+import { SchemaType } from "./schema.enums";
 import { SchemaItem } from "./schema.model";
 import {
   doltProceduresQuery,
@@ -19,7 +20,7 @@ export class SchemaResolver {
   @Query(_returns => [SchemaItem])
   async doltSchemas(
     @Args() args: RefArgs,
-    type?: string,
+    type?: SchemaType,
   ): Promise<SchemaItem[]> {
     return this.dss.queryMaybeDolt(
       async (query, isDolt) => {
@@ -42,7 +43,7 @@ export class SchemaResolver {
 
   @Query(_returns => [SchemaItem])
   async views(@Args() args: RefArgs): Promise<SchemaItem[]> {
-    return this.doltSchemas(args, "view");
+    return this.doltSchemas(args, SchemaType.View);
   }
 
   @Query(_returns => [SchemaItem])
@@ -52,7 +53,7 @@ export class SchemaResolver {
         if (!isDolt) {
           const res = await query(getProceduresQuery, [args.databaseName]);
           return res.map(r => {
-            return { name: r.Name, type: "procedure" };
+            return { name: r.Name, type: SchemaType.Procedure };
           });
         }
 
@@ -61,7 +62,7 @@ export class SchemaResolver {
         );
         if (!res) return [];
         return res.map(r => {
-          return { name: r.name, type: "procedure" };
+          return { name: r.name, type: SchemaType.Procedure };
         });
       },
       args.databaseName,
@@ -77,20 +78,20 @@ async function getSchemasForNonDolt(
 ): Promise<SchemaItem[]> {
   const vRes = await query(getViewsQuery, [dbName]);
   const views = vRes.map(v => {
-    return { name: v.TABLE_NAME, type: "view" };
+    return { name: v.TABLE_NAME, type: SchemaType.View };
   });
-  if (type === "view") {
+  if (type === SchemaType.View) {
     return views;
   }
 
   const tRes = await query(getTriggersQuery);
   const triggers = tRes.map(t => {
-    return { name: t.Trigger, type: "trigger" };
+    return { name: t.Trigger, type: SchemaType.Trigger };
   });
 
   const eRes = await query(getEventsQuery);
   const events = eRes.map(e => {
-    return { name: e.Name, type: "event" };
+    return { name: e.Name, type: SchemaType.Event };
   });
 
   return [...views, ...triggers, ...events];

@@ -1,5 +1,6 @@
 import SmallLoader from "@components/SmallLoader";
 import QueryHandler from "@components/util/QueryHandler";
+import { SchemaType } from "@gen/graphql-types";
 import useTableNames from "@hooks/useTableNames";
 import { RefParams } from "@lib/params";
 import List from "./List";
@@ -25,7 +26,7 @@ export default function Tables(props: Props) {
           outerClassName={css.smallLoader}
         />
       }
-      render={data => <List {...props} items={data} kind="table" />}
+      render={data => <List {...props} items={data} kind={SchemaType.Table} />}
     />
   );
 }

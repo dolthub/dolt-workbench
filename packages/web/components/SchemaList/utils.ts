@@ -1,18 +1,18 @@
-import { SchemaItemFragment } from "@gen/graphql-types";
-
-export type SchemaKind = "table" | "view" | "trigger" | "event" | "procedure";
+import { SchemaItemFragment, SchemaType } from "@gen/graphql-types";
 
 export function getActiveItem(
-  kind: SchemaKind,
+  kind: SchemaType,
   q?: string,
 ): string | undefined {
   if (!q) return undefined;
-  const item = q.toLowerCase().replace(`show create ${kind} `, "");
+  const item = q
+    .toLowerCase()
+    .replace(`show create ${kind.toLowerCase()} `, "");
   return item.replaceAll("`", "");
 }
 
 export function getSchemaItemsFromRows(
-  kind: SchemaKind,
+  kind: SchemaType,
   items?: SchemaItemFragment[],
 ): string[] {
   if (!items) return [];

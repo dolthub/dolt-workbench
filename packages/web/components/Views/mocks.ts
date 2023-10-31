@@ -1,7 +1,8 @@
 import { MockedResponse } from "@apollo/client/testing";
 import {
-  RowForSchemasFragment,
   RowsForViewsDocument,
+  SchemaItemFragment,
+  SchemaType,
 } from "@gen/graphql-types";
 import chance from "@lib/chance";
 
@@ -15,21 +16,13 @@ export const params = {
   refName,
 };
 
-export const rowsForViewsFragmentMock: RowForSchemasFragment[] = [
+export const rowsForViewsFragmentMock: SchemaItemFragment[] = [
   ...Array(5).keys(),
 ].map(() => {
   return {
-    __typename: "Row",
-    columnValues: [
-      {
-        __typename: "ColumnValue",
-        displayValue: "view",
-      },
-      {
-        __typename: "ColumnValue",
-        displayValue: chance.word(),
-      },
-    ],
+    __typename: "SchemaItem",
+    type: SchemaType.View,
+    name: chance.word(),
   };
 });
 
@@ -40,11 +33,7 @@ export const rowsForViewsMock: MockedResponse = {
   },
   result: {
     data: {
-      views: {
-        __typename: "RowList",
-        list: rowsForViewsFragmentMock,
-        nextPageToken: "",
-      },
+      views: rowsForViewsFragmentMock,
     },
   },
 };
@@ -56,11 +45,7 @@ export const rowsForEmptyViewsMock: MockedResponse = {
   },
   result: {
     data: {
-      views: {
-        __typename: "RowList",
-        list: null,
-        nextPageToken: "",
-      },
+      views: [],
     },
   },
 };

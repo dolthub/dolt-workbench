@@ -173,7 +173,15 @@ type SchemaDiff {
 
 type SchemaItem {
   name: String!
-  type: String!
+  type: SchemaType!
+}
+
+enum SchemaType {
+  View
+  Procedure
+  Event
+  Trigger
+  Table
 }
 
 type SqlSelect {

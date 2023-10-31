@@ -485,8 +485,16 @@ export type SchemaDiff = {
 export type SchemaItem = {
   __typename?: 'SchemaItem';
   name: Scalars['String']['output'];
-  type: Scalars['String']['output'];
+  type: SchemaType;
 };
+
+export enum SchemaType {
+  Event = 'Event',
+  Procedure = 'Procedure',
+  Table = 'Table',
+  Trigger = 'Trigger',
+  View = 'View'
+}
 
 export enum SortBranchesBy {
   LastUpdated = 'LastUpdated',
@@ -699,7 +707,7 @@ export type TableListForSchemasQueryVariables = Exact<{
 
 export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
 
-export type SchemaItemFragment = { __typename?: 'SchemaItem', name: string, type: string };
+export type SchemaItemFragment = { __typename?: 'SchemaItem', name: string, type: SchemaType };
 
 export type RowsForDoltSchemasQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -707,7 +715,7 @@ export type RowsForDoltSchemasQueryVariables = Exact<{
 }>;
 
 
-export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: Array<{ __typename?: 'SchemaItem', name: string, type: string }> };
+export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type RowsForDoltProceduresQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -715,7 +723,7 @@ export type RowsForDoltProceduresQueryVariables = Exact<{
 }>;
 
 
-export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: string }> };
+export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
@@ -759,7 +767,7 @@ export type RowsForViewsQueryVariables = Exact<{
 }>;
 
 
-export type RowsForViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'SchemaItem', name: string, type: string }> };
+export type RowsForViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
 

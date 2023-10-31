@@ -51,12 +51,11 @@ describe("tests Views", () => {
     expect(await screen.findByRole("list")).toBeInTheDocument();
 
     mocks.rowsForViewsFragmentMock.forEach(mock => {
-      const { displayValue } = mock.columnValues[1];
-      const button = screen.getByText(displayValue);
+      const button = screen.getByText(mock.name);
       fireEvent.click(button);
       const { href, as } = sqlQuery({
         ...mocks.params,
-        q: `SELECT * FROM \`${displayValue}\``,
+        q: `SELECT * FROM \`${mock.name}\``,
         active: "Views",
       });
       expect(actions.push).toHaveBeenCalledWith(href, as);
