@@ -1,5 +1,6 @@
 import Btn from "@components/Btn";
 import Link from "@components/links/Link";
+import excerpt from "@lib/excerpt";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { RiBookOpenLine } from "@react-icons/all-files/ri/RiBookOpenLine";
@@ -27,7 +28,7 @@ export default function Item({ name, params, isActive, query }: Props) {
         data-cy={`db-schemas-${name}-play`}
       >
         <Btn className={css.button}>
-          <span className={css.name}>{name}</span>
+          <span className={css.name}>{excerpt(name, 45)}</span>
           <span className={isActive ? css.viewing : css.icon}>
             {isActive ? "Viewing" : <RiBookOpenLine />}
           </span>
