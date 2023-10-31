@@ -30,7 +30,7 @@ export default function Procedures(props: Props) {
       render={data => (
         <List
           {...props}
-          items={data.doltProcedures?.map(e => e.name) ?? []}
+          items={data.doltProcedures.map(e => e.name)}
           kind={SchemaType.Procedure}
         />
       )}
