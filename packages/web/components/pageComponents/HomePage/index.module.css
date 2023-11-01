@@ -1,19 +1,15 @@
 .container {
-  @apply max-w-xl mx-auto my-40 px-4;
+  @apply max-w-2xl mx-auto my-40 px-4;
 
   h1 {
     @apply mb-6 text-center;
   }
 
   p {
-    @apply text-base text-center;
+    @apply text-lg text-center;
   }
 
-  form {
-    @apply mt-10 max-w-lg mx-auto;
-
-    button {
-      @apply my-2;
-    }
+  button {
+    @apply my-6 text-center mx-auto;
   }
 }

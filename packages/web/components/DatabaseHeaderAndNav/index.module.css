@@ -90,3 +90,7 @@
     @apply mt-1 ml-3 block;
   }
 }
+
+.resetButton {
+  @apply mr-5 text-xl text-white hover:text-ld-lightblue;
+}

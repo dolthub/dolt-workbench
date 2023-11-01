@@ -1,4 +1,5 @@
 import cx from "classnames";
+import { ReactNode } from "react";
 import ReactLoader from "react-loader";
 import css from "./index.module.css";
 
@@ -28,6 +29,7 @@ type Props = {
   loaded: boolean;
   className?: string;
   options?: Partial<typeof smallLoaderDefaultOptions>;
+  children?: ReactNode;
 };
 
 export default function SmallLoader(props: Props) {
