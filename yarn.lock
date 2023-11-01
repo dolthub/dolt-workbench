@@ -3897,11 +3897,11 @@ __metadata:
   linkType: hard
 
 "@types/cookie-parser@npm:^1":
-  version: 1.4.3
-  resolution: "@types/cookie-parser@npm:1.4.3"
+  version: 1.4.5
+  resolution: "@types/cookie-parser@npm:1.4.5"
   dependencies:
     "@types/express": "*"
-  checksum: f390f3af1b1711190dee2c2ecd9af33af81fbde8d81ee820dadb6fe1e0d80c3faba40af37c6ed36fb88b04b64870f6a021f7e9edceecd17c42fe22abe0af5005
+  checksum: 45855721706d6a57bb0441db11fb59db407414ea83a0000a0df80d19230447cc3bcc43c436397bfb8998ec78db222265fa8083456b00c5b5054a0c03d06f0086
   languageName: node
   linkType: hard
 
