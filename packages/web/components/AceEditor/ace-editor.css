@@ -18,7 +18,13 @@
   @screen lg {
     @apply bg-ld-darkerblue text-white;
   }
-  font-family: "Roboto Mono", Menlo, Monaco, Courier New, monospace, serif;
+  font-family:
+    "Roboto Mono",
+    Menlo,
+    Monaco,
+    Courier New,
+    monospace,
+    serif;
 }
 
 .ace-view {
