@@ -78,7 +78,7 @@
     "babel-jest": "^29.7.0",
     "cssnano": "^6.0.1",
     "eslint": "^8.52.0",
-    "eslint-config-next": "latest",
+    "eslint-config-next": "^14.0.1",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.31",
@@ -87,6 +87,6 @@
     "stylelint": "^15.11.0",
     "stylelint-config-recommended": "^13.0.0",
     "ts-jest": "^29.1.1",
-    "typescript": "latest"
+    "typescript": "^5.2.2"
   }
 }
