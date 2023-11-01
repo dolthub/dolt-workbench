@@ -84,7 +84,7 @@
     "postcss": "latest",
     "postcss-preset-env": "^9.1.4",
     "react-select-event": "^5.5.1",
-    "stylelint": "^15.10.3",
+    "stylelint": "^15.11.0",
     "stylelint-config-recommended": "^13.0.0",
     "ts-jest": "^29.1.1",
     "typescript": "latest"
