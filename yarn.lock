@@ -7532,7 +7532,7 @@ __metadata:
     eslint-config-airbnb-typescript: ^16.2.0
     eslint-config-prettier: ^8.8.0
     eslint-import-resolver-node: ^0.3.7
-    eslint-plugin-css-modules: ^2.11.0
+    eslint-plugin-css-modules: ^2.12.0
     eslint-plugin-import: ^2.25.4
     eslint-plugin-jest: ^27.2.2
     eslint-plugin-jest-dom: ^5.0.1
@@ -8058,15 +8058,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint-plugin-css-modules@npm:^2.11.0":
-  version: 2.11.0
-  resolution: "eslint-plugin-css-modules@npm:2.11.0"
+"eslint-plugin-css-modules@npm:^2.12.0":
+  version: 2.12.0
+  resolution: "eslint-plugin-css-modules@npm:2.12.0"
   dependencies:
-    gonzales-pe: ^4.0.3
+    gonzales-pe: ^4.3.0
     lodash: ^4.17.2
   peerDependencies:
     eslint: ">=2.0.0"
-  checksum: 839450525be27c264567d046c84cede19221b736c44bf34704114be7a6bf215851c49d54d09e7d4f6a64378f057d826a577f9862945073ba61ef2cf5e652845b
+  checksum: c34445512f3f69b436446a3057eb17e661218fd616e14ada428a83ecb08197092e82ba66454949a8b8eb3fe552527bb8e84cef1a2d3dc2be1b43740246a7d4a9
   languageName: node
   linkType: hard
 
@@ -9222,7 +9222,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"gonzales-pe@npm:^4.0.3":
+"gonzales-pe@npm:^4.3.0":
   version: 4.3.0
   resolution: "gonzales-pe@npm:4.3.0"
   dependencies:
