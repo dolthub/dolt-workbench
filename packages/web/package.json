@@ -16,7 +16,8 @@
     "generate-types": "graphql-codegen --config codegen.yml",
     "prettier": "prettier --check '{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'",
     "prettier-fix": "prettier --write '{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'",
-    "test": "jest --env=jest-environment-jsdom"
+    "test": "jest --env=jest-environment-jsdom",
+    "find:unused": "npx unimported"
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
