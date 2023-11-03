@@ -1,0 +1,24 @@
+FROM --platform=linux/arm64/v8 node:18.18.0 as builder
+
+RUN mkdir build
+WORKDIR build
+
+COPY . .
+
+WORKDIR packages/web
+RUN yarn install --frozen-lockfile
+# RUN yarn compile
+RUN yarn build
+
+FROM --platform=linux/arm64/v8 node:18.18.0-alpine3.18
+
+RUN mkdir -p /usr/dolt-workbench
+WORKDIR /usr/dolt-workbench
+COPY --from=builder /build/. .
+
+WORKDIR /usr/dolt-workbench/packages/web
+ENV NODE_ENV=production
+# ARG BUILD_SCM_REVISION
+# ENV HOSTED_VERSION=${BUILD_SCM_REVISION}
+EXPOSE 3000
+CMD [ "npm", "start" ]

@@ -5,6 +5,16 @@ powerful version control features, such as branches, commits, and merge.
 
 ## Getting Started
 
+### Using Docker
+
+```
+% docker compose up -d
+```
+
+Navigate to http://localhost:3002 to enter database information.
+
+### From source
+
 Clone this repository and install/compile the code:
 
 ```
