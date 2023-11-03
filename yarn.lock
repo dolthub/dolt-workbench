@@ -1624,8 +1624,8 @@ __metadata:
     "@types/react-copy-to-clipboard": ^5.0.6
     "@types/react-dom": ^18.2.14
     "@types/react-infinite-scroller": ^1.2.3
+    "@types/react-loader": ^2.4.7
     "@types/react-timeago": ^4.1.4
-    "@types/testing-library__jest-dom": ^6.0.0
     ace-builds: ^1.28.0
     apollo-upload-client: ^17.0.0
     autoprefixer: ^10.4.16
@@ -3678,7 +3678,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@testing-library/jest-dom@npm:*, @testing-library/jest-dom@npm:^6.1.4":
+"@testing-library/jest-dom@npm:^6.1.4":
   version: 6.1.4
   resolution: "@testing-library/jest-dom@npm:6.1.4"
   dependencies:
@@ -4444,6 +4444,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-loader@npm:^2.4.7":
+  version: 2.4.7
+  resolution: "@types/react-loader@npm:2.4.7"
+  dependencies:
+    "@types/react": "*"
+  checksum: 5c9e92163ca733bf6c0dc1ece7bf9904908c2ee14892760410ec81d60eadbcbc10cc113eaa367398b0259ba3ee4a2879176d99ba6342669f77c1f5d539f793fd
+  languageName: node
+  linkType: hard
+
 "@types/react-timeago@npm:^4.1.4":
   version: 4.1.4
   resolution: "@types/react-timeago@npm:4.1.4"
@@ -4519,15 +4528,6 @@ __metadata:
   version: 2.0.1
   resolution: "@types/stack-utils@npm:2.0.1"
   checksum: 205fdbe3326b7046d7eaf5e494d8084f2659086a266f3f9cf00bccc549c8e36e407f88168ad4383c8b07099957ad669f75f2532ed4bc70be2b037330f7bae019
-  languageName: node
-  linkType: hard
-
-"@types/testing-library__jest-dom@npm:^6.0.0":
-  version: 6.0.0
-  resolution: "@types/testing-library__jest-dom@npm:6.0.0"
-  dependencies:
-    "@testing-library/jest-dom": "*"
-  checksum: 1b4db1aa3c4225524203b4d1c3b36c7129e9d1e0547e46d2e5283c3ece226a3c16f5f20387cc71b33ab0eecd99d0cf91111bb327e8adb240388d99fb94af7a4d
   languageName: node
   linkType: hard
 

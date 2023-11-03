@@ -6,12 +6,11 @@
 **/.eslintcache
 **/dist
 **/*.tsbuildinfo
-# packages/*/yarn.lock
+packages/*/yarn.lock
 packages/*/.rts2_cache*
 WebDockerfile
 GraphQLDockerfile
 *.env
-Dockerfile
 
 .yarn/*
 !.yarn/patches
