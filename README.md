@@ -8,7 +8,7 @@ powerful version control features, such as branches, commits, and merge.
 ### Using Docker
 
 ```
-% docker compose up -d
+% docker compose up --build
 ```
 
 Navigate to http://localhost:3002 to enter database information.

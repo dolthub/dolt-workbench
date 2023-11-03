@@ -3,13 +3,13 @@ services:
     build:
       dockerfile: GraphQLDockerfile
       context: .
-    command: npm run start
     ports:
       - 9002:9002
+    image:  docker.io/taylorbantle1/dolt-workbench:graphql
   web:
     build:
       dockerfile: WebDockerfile
       context: .
-    command: npm run start
     ports:
       - 3002:3000
+    image:  docker.io/taylorbantle1/dolt-workbench:web  
