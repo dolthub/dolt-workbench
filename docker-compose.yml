@@ -3,37 +3,13 @@ services:
     build:
       dockerfile: GraphQLDockerfile
       context: .
-    # command: npm run start
+    command: npm run start
     ports:
-      - 9002:9000
+      - 9002:9002
   web:
     build:
       dockerfile: WebDockerfile
       context: .
-    # command: npm run start
+    command: npm run start
     ports:
       - 3002:3000
-
-# version: '3'
-
-# services:
-#   graphql-server:
-#     container_name: graphql-server
-#     build:
-#       context: .
-#       dockerfile: GraphQLDockerfile
-#       args:
-#         - BUILD_CONTEXT=graphql-server
-#     # command: npm run start    
-#     ports:
-#       - '9002:80'
-#   web:
-#     container_name: web
-#     build:
-#       context: .
-#       dockerfile: WebDockerfile
-#       args:
-#         - BUILD_CONTEXT=web
-#     # command: npm run start    
-#     ports:
-#       - '3002:80'
