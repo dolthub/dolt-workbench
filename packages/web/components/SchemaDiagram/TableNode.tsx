@@ -1,6 +1,6 @@
 import excerpt from "@lib/excerpt";
 import { FiKey } from "@react-icons/all-files/fi/FiKey";
-import { Handle, Position } from "react-flow-renderer";
+import { Handle, Position } from "reactflow";
 import css from "./index.module.css";
 import { NodeData } from "./types";
 import { getColType } from "./utils";

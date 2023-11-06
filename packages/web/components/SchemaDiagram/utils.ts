@@ -2,7 +2,7 @@ import {
   ForeignKeyColumn,
   TableForSchemaListFragment,
 } from "@gen/graphql-types";
-import { Node, NodeInternals } from "react-flow-renderer";
+import { Node, NodeInternals } from "reactflow";
 import {
   CalculatePositionReturnType,
   Edge,
