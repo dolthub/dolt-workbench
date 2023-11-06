@@ -52,6 +52,7 @@
     "react-tooltip": "5.8.3",
     "reactflow": "^11.9.4",
     "reactjs-popup": "^2.0.6",
+    "sharp": "^0.32.6",
     "tailwindcss": "^3.3.5",
     "timeago.js": "^4.0.2"
   },
@@ -73,8 +74,8 @@
     "@types/react-copy-to-clipboard": "^5.0.6",
     "@types/react-dom": "^18.2.14",
     "@types/react-infinite-scroller": "^1.2.3",
+    "@types/react-loader": "^2.4.7",
     "@types/react-timeago": "^4.1.4",
-    "@types/testing-library__jest-dom": "^6.0.0",
     "autoprefixer": "^10.4.16",
     "babel-jest": "^29.7.0",
     "cssnano": "^6.0.1",

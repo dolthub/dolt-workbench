@@ -1,0 +1,22 @@
+FROM --platform=linux/arm64/v8 node:18.18.0 as builder
+
+ENV YARN_VERSION=3.6.1
+
+RUN mkdir build
+WORKDIR build
+
+COPY ./packages/graphql-server/package.json .
+RUN yarn install
+
+COPY ./packages/graphql-server .
+RUN yarn build
+
+FROM --platform=linux/arm64/v8 node:18.18.0-alpine3.18
+
+RUN mkdir -p /usr/dolt-workbench
+WORKDIR /usr/dolt-workbench
+COPY --from=builder /build/. .
+
+ENV NODE_ENV development
+EXPOSE 9002
+CMD [ "npm", "start" ]
