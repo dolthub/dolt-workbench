@@ -13,8 +13,9 @@ import ReactFlow, {
   useEdgesState,
   useNodesState,
   useReactFlow,
-  useStore,
-} from "react-flow-renderer";
+  useStoreApi,
+} from "reactflow";
+import "reactflow/dist/style.css";
 import RelationMarker from "./RelationMarker";
 import TableNode from "./TableNode";
 import css from "./index.module.css";
@@ -53,12 +54,12 @@ function Inner(props: InnerProps) {
     router.push(href, as).catch(() => {});
   };
 
-  const { nodeInternals } = useStore();
+  const store = useStoreApi();
   const { setViewport } = useReactFlow();
 
   // the automatically painted width might exceed the outer container width, rescale the canvas when onload
   const onload = () => {
-    const newNodes = getLayout(graph, nodeInternals);
+    const newNodes = getLayout(graph, store.getState().nodeInternals);
     setNodes(newNodes);
     const { width: paintedWidth, height: paintedHeight } =
       getPaintedWidthAndHeight(newNodes);

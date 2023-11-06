@@ -1,5 +1,5 @@
 import { Column } from "@gen/graphql-types";
-import { Node } from "react-flow-renderer";
+import { Node } from "reactflow";
 
 export type Position = {
   x: number;
