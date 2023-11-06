@@ -1,12 +1,8 @@
 .container {
-  @apply max-w-6xl mx-auto my-24 px-4;
+  @apply max-w-6xl py-24 bg-ld-grey;
 }
 
 .top {
-  h1 {
-    @apply mb-6 text-center;
-  }
-
   p {
     @apply text-lg text-center max-w-xl mx-auto my-10;
   }
@@ -21,7 +17,7 @@
 }
 
 .quickStart {
-  @apply bg-ld-lightblue border rounded p-6 m-10 max-w-lg w-full;
+  @apply bg-white border rounded p-6 m-10 max-w-lg w-full;
 }
 
 .or {
@@ -29,7 +25,7 @@
 }
 
 .databaseConfig {
-  @apply m-10 max-w-xl w-full border rounded p-6;
+  @apply m-10 max-w-xl w-full border rounded p-6 bg-white;
 }
 
 .checkbox {

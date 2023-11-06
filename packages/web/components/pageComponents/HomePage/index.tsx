@@ -1,6 +1,6 @@
 import Button from "@components/Button";
 import Loader from "@components/Loader";
-import Navbar from "@components/Navbar";
+import MainLayout from "@components/layouts/MainLayout";
 import DoltLink from "@components/links/DoltLink";
 import Link from "@components/links/Link";
 import {
@@ -8,7 +8,7 @@ import {
   useHasDatabaseEnvQuery,
 } from "@gen/graphql-types";
 import useEffectAsync from "@hooks/useEffectAsync";
-import { database } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
 import css from "./index.module.css";
 
@@ -25,9 +25,7 @@ export default function HomePage() {
       if (!db.data) {
         return;
       }
-      const { href, as } = database({
-        databaseName: db.data.addDatabaseConnection,
-      });
+      const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
       router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error
@@ -35,10 +33,9 @@ export default function HomePage() {
   }, [res.data?.hasDatabaseEnv]);
 
   return (
-    <div>
-      <Navbar home />
+    <MainLayout>
       <Loader loaded={!res.loading && !addRes.loading} />
-      <main className={css.container}>
+      <div className={css.inner}>
         <h1>Welcome to the Dolt Workbench</h1>
         <p>
           Connect to the workbench using any MySQL-compatible database. Use{" "}
@@ -50,7 +47,7 @@ export default function HomePage() {
             <Button>Get Started</Button>
           </Link>
         </p>
-      </main>
-    </div>
+      </div>
+    </MainLayout>
   );
 }

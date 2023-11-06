@@ -89,10 +89,10 @@ export class DatabaseResolver {
     }
   }
 
-  @Mutation(_returns => String)
+  @Mutation(_returns => String, { nullable: true })
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
-  ): Promise<string> {
+  ): Promise<string | undefined> {
     if (args.useEnv) {
       const url = this.configService.get("DATABASE_URL");
       if (!url) throw new Error("DATABASE_URL not found in env");
@@ -111,7 +111,7 @@ export class DatabaseResolver {
     }
 
     const db = await this.currentDatabase();
-    if (!db) throw new Error("database not found");
+    if (!db) return undefined;
     return db;
   }
 

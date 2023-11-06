@@ -75,7 +75,7 @@ export class BranchResolver {
       const branch = await query(branchQuery, [args.branchName]);
       if (!branch.length) return undefined;
       return fromDoltBranchesRow(args.databaseName, branch[0]);
-    });
+    }, args.databaseName);
   }
 
   @Query(_returns => Branch, { nullable: true })
@@ -102,7 +102,7 @@ export class BranchResolver {
       return {
         list: branches.map(b => fromDoltBranchesRow(args.databaseName, b)),
       };
-    });
+    }, args.databaseName);
   }
 
   @Query(_returns => Branch, { nullable: true })
@@ -118,7 +118,7 @@ export class BranchResolver {
       const branch = await query(branchQuery, [args.newBranchName]);
       if (!branch.length) throw new Error("Created branch not found");
       return fromDoltBranchesRow(args.databaseName, branch[0]);
-    });
+    }, args.databaseName);
   }
 
   @Mutation(_returns => Boolean)
@@ -126,7 +126,7 @@ export class BranchResolver {
     return this.dss.query(async query => {
       await query(callDeleteBranch, [args.branchName]);
       return true;
-    });
+    }, args.databaseName);
   }
 
   @ResolveField(_returns => Table, { nullable: true })

@@ -1,10 +1,4 @@
-.container {
-  @apply max-w-2xl mx-auto my-40 px-4;
-
-  h1 {
-    @apply mb-6 text-center;
-  }
-
+.inner {
   p {
     @apply text-lg text-center;
   }

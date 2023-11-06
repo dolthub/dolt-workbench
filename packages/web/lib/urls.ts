@@ -1,3 +1,4 @@
+import Maybe from "./Maybe";
 import * as ps from "./params";
 import { Route } from "./urlUtils";
 
@@ -5,10 +6,11 @@ const ENCODE = true;
 export type DatabaseUrl = (p: ps.DatabaseParams) => Route;
 export type RefUrl = (p: ps.RefParams) => Route;
 
-export const database = (p: ps.DatabaseParams): Route => {
-  const d = new Route("/database");
-  return d.addDynamic("databaseName", p.databaseName);
-};
+export const databases = new Route("/database");
+
+export const database = (p: ps.DatabaseParams): Route => databases.addDynamic("databaseName", p.databaseName);
+
+export const maybeDatabase = (databaseName?: Maybe<string>): Route => databaseName ? database({ databaseName }) : databases;
 
 export const query = (p: ps.RefParams): Route =>
   database(p).addStatic("query").addDynamic("refName", p.refName, ENCODE);
