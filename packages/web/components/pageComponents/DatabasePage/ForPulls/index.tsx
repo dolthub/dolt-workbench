@@ -10,9 +10,11 @@ import {
 } from "@gen/graphql-types";
 import { PullDiffParams, PullParams } from "@lib/params";
 import { pullDiff, pulls } from "@lib/urls";
+import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { useEffect, useState } from "react";
 import ForDefaultBranch from "../ForDefaultBranch";
 import BranchSelectForm from "./BranchSelectForm";
+import PullActions from "./PullActions";
 import PullDetailsList from "./PullDetailsList";
 import css from "./index.module.css";
 
@@ -28,8 +30,6 @@ type BranchesProps = {
 function ForBranches(props: BranchesProps) {
   const res = usePullDetailsForPullDetailsQuery({ variables: props.params });
 
-  console.log(res);
-
   useEffect(() => {
     if (!res.data) return;
     props.setPullState(res.data.pullWithDetails.state);
@@ -39,10 +39,16 @@ function ForBranches(props: BranchesProps) {
     <QueryHandler
       result={res}
       render={data => (
-        <PullDetailsList
-          params={props.params}
-          pullDetails={data.pullWithDetails}
-        />
+        <div className={css.inner}>
+          <PullDetailsList
+            params={props.params}
+            pullDetails={data.pullWithDetails}
+          />
+          <PullActions
+            params={props.params}
+            pullDetails={data.pullWithDetails}
+          />
+        </div>
       )}
     />
   );
@@ -56,17 +62,22 @@ function Inner(props: Props) {
         <BranchSelectForm params={props.params} />
         <div>
           <PullStateLabel state={pullState} />
-          {props.params.fromBranchName && props.params.toBranchName && (
-            <Link
-              {...pullDiff({
-                ...props.params,
-                fromBranchName: props.params.fromBranchName,
-                toBranchName: props.params.toBranchName,
-              })}
-            >
-              <Button>View Diff</Button>
-            </Link>
-          )}
+          {props.params.fromBranchName &&
+            props.params.toBranchName &&
+            pullState === PullState.Open && (
+              <Link
+                {...pullDiff({
+                  ...props.params,
+                  fromBranchName: props.params.fromBranchName,
+                  toBranchName: props.params.toBranchName,
+                })}
+                className={css.viewDiffButton}
+              >
+                <Button>
+                  View Diff <FaChevronRight />
+                </Button>
+              </Link>
+            )}
         </div>
       </div>
 
@@ -80,7 +91,9 @@ function Inner(props: Props) {
           setPullState={setPullState}
         />
       ) : (
-        <p>Select branches</p>
+        <p className={css.selectBranches}>
+          Select branches to view pull request
+        </p>
       )}
     </div>
   );

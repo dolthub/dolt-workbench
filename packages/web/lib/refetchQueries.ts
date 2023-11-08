@@ -8,6 +8,7 @@ import {
 import * as gen from "@gen/graphql-types";
 import {
   DatabaseParams,
+  PullDiffParams,
   RefParams,
   RequiredRefsParams,
   TableParams,
@@ -83,6 +84,23 @@ export const refetchTableUploadQueries = (
 ) => [
   ...refetchResetChangesQueries(variables, isDolt),
   ...refetchTableQueries(variables),
+];
+
+export const refetchDeletedBranch = (
+  params: PullDiffParams,
+): RefetchQueries => [
+  {
+    query: gen.GetBranchForPullDocument,
+    variables: {
+      databaseName: params.databaseName,
+      branchName: params.fromBranchName,
+    },
+  },
+  {
+    query: gen.PullDetailsForPullDetailsDocument,
+    variables: params,
+  },
+  ...refetchBranchQueries(params),
 ];
 
 export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {

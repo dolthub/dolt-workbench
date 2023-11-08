@@ -1,0 +1,105 @@
+.outer {
+  @apply mx-auto max-w-3xl flex flex-col;
+
+  h3 {
+    @apply text-center mt-4 mb-4;
+  }
+
+  @screen lg {
+    @apply mt-6 flex-row;
+  }
+}
+
+.container {
+  @apply w-full mb-4 rounded-xl min-w-[15rem];
+  @screen lg {
+    @apply mx-3 mb-0;
+  }
+}
+
+.top {
+  @apply bg-[#E6F6EE] pl-4 pr-4 py-2 border border-acc-green flex justify-between items-start rounded-t-xl flex-wrap w-full;
+
+  @screen lg {
+    @apply items-center pl-6;
+  }
+}
+
+.picContainer {
+  @apply w-7 h-7 mb-4 mr-1 text-white relative rounded-full bg-acc-green flex-shrink-0;
+
+  @screen lg {
+    @apply mb-0 mt-3 ml-2;
+  }
+  svg {
+    @apply text-white mt-1 ml-1 w-5 h-5;
+  }
+}
+
+.redIcon {
+  @apply bg-acc-red;
+}
+
+.merge {
+  @apply mx-2;
+  @screen lg {
+    @apply mx-0;
+  }
+}
+
+.msg {
+  @apply px-6 py-2 border-x border-b rounded-b-xl  bg-white border-acc-green;
+}
+
+.note {
+  @apply font-normal text-ld-darkgrey mt-0.5 py-1 block;
+}
+
+.icon {
+  @apply mr-2 mt-0.5;
+}
+
+.green {
+  @apply text-acc-green;
+}
+
+.mergeStatusIcon {
+  @apply inline-block mr-2 text-2xl;
+}
+
+.red {
+  @apply text-acc-red flex border-acc-red bg-[#FDEEED];
+}
+
+.msgRed {
+  @apply border-acc-red;
+}
+
+.popup {
+  @apply p-4 text-primary;
+
+  h4,
+  p {
+    @apply text-sm mb-2;
+  }
+
+  code {
+    @apply text-xs;
+  }
+}
+
+.conflicts {
+  @apply min-w-[500px];
+}
+
+.button {
+  @apply text-acc-hoverlinkblue px-0 no-underline;
+}
+
+.down {
+  @apply w-2 h-2 p-0 bg-white absolute rounded-sm top-[-3.68rem] left-4 border-r-0 border-b-0 border-l border-t border-ld-lightgrey rotate-45;
+}
+
+.toggle {
+  @apply font-normal text-ld-darkgrey border-none px-3 text-sm hidden lg:contents;
+}

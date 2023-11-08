@@ -1,6 +1,6 @@
 import DiffTable from "@components/DiffTable";
 import DiffTableNav from "@components/DiffTableNav";
-import PullsBreadcrumbs from "@components/breadcrumbs/PullsBreadcrumbs";
+import PullDiffBreadcrumbs from "@components/breadcrumbs/PullDiffBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DiffProvider } from "@contexts/diff";
 import { RequiredPullDiffParams } from "@lib/params";
@@ -28,7 +28,7 @@ export default function ForPullDiff(props: Props) {
         params={props.params}
         routeRefChangeTo={pulls}
         title="pulls"
-        smallHeaderBreadcrumbs={<PullsBreadcrumbs params={props.params} />}
+        smallHeaderBreadcrumbs={<PullDiffBreadcrumbs params={props.params} />}
         initialSmallHeader
         leftTableNav={<DiffTableNav.ForPull {...props} />}
         wide

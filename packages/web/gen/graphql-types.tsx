@@ -200,6 +200,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
+  mergePull: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
 };
 
@@ -251,6 +252,13 @@ export type MutationLoadDataFileArgs = {
   modifier?: InputMaybe<LoadDataModifier>;
   refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
+};
+
+
+export type MutationMergePullArgs = {
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
 };
 
 export type PullDetailCommit = {
@@ -931,6 +939,23 @@ export type DocPageQueryNoBranchQueryVariables = Exact<{
 
 
 export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?: { __typename?: 'Branch', _id: string, branchName: string } | null };
+
+export type GetBranchForPullQueryVariables = Exact<{
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type GetBranchForPullQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null };
+
+export type MergePullMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+}>;
+
+
+export type MergePullMutation = { __typename?: 'Mutation', mergePull: boolean };
 
 export type PullDetailCommitFragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
 
@@ -2620,6 +2645,79 @@ export function useDocPageQueryNoBranchLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type DocPageQueryNoBranchHookResult = ReturnType<typeof useDocPageQueryNoBranch>;
 export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchLazyQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
+export const GetBranchForPullDocument = gql`
+    query GetBranchForPull($branchName: String!, $databaseName: String!) {
+  branch(branchName: $branchName, databaseName: $databaseName) {
+    _id
+  }
+}
+    `;
+
+/**
+ * __useGetBranchForPullQuery__
+ *
+ * To run a query within a React component, call `useGetBranchForPullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBranchForPullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBranchForPullQuery({
+ *   variables: {
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useGetBranchForPullQuery(baseOptions: Apollo.QueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
+      }
+export function useGetBranchForPullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
+        }
+export type GetBranchForPullQueryHookResult = ReturnType<typeof useGetBranchForPullQuery>;
+export type GetBranchForPullLazyQueryHookResult = ReturnType<typeof useGetBranchForPullLazyQuery>;
+export type GetBranchForPullQueryResult = Apollo.QueryResult<GetBranchForPullQuery, GetBranchForPullQueryVariables>;
+export const MergePullDocument = gql`
+    mutation MergePull($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+  mergePull(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+  )
+}
+    `;
+export type MergePullMutationFn = Apollo.MutationFunction<MergePullMutation, MergePullMutationVariables>;
+
+/**
+ * __useMergePullMutation__
+ *
+ * To run a mutation, you first call `useMergePullMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergePullMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergePullMutation, { data, loading, error }] = useMergePullMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *   },
+ * });
+ */
+export function useMergePullMutation(baseOptions?: Apollo.MutationHookOptions<MergePullMutation, MergePullMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MergePullMutation, MergePullMutationVariables>(MergePullDocument, options);
+      }
+export type MergePullMutationHookResult = ReturnType<typeof useMergePullMutation>;
+export type MergePullMutationResult = Apollo.MutationResult<MergePullMutation>;
+export type MergePullMutationOptions = Apollo.BaseMutationOptions<MergePullMutation, MergePullMutationVariables>;
 export const PullDetailsForPullDetailsDocument = gql`
     query PullDetailsForPullDetails($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
   pullWithDetails(

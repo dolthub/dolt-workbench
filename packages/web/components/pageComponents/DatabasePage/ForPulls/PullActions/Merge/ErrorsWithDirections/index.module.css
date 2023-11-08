@@ -1,0 +1,23 @@
+.errContainer {
+  @apply block w-full mt-2;
+}
+
+.red {
+  @apply text-acc-red;
+}
+
+.err {
+  @apply max-w-2xl pt-0 mx-6 font-semibold;
+}
+
+.innerModal {
+  @apply max-w-2xl mx-auto pb-4;
+
+  p {
+    @apply text-left text-base mb-2;
+  }
+}
+
+.bold {
+  @apply font-semibold;
+}

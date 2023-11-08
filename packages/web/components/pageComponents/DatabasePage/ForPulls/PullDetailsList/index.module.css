@@ -1,5 +1,5 @@
 .list {
-  @apply max-w-3xl mx-0 break-words;
+  @apply max-w-4xl mx-0 break-words;
 
   li {
     @apply my-0;
@@ -11,7 +11,7 @@
 }
 
 .empty {
-  @apply text-center font-semibold;
+  @apply text-center font-semibold my-10;
 }
 
 .verticalLine {

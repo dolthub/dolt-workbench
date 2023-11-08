@@ -30,7 +30,7 @@ export default function PullDetailsList({ pullDetails, params }: InnerProps) {
       <div className={css.verticalLine} />
     </ul>
   ) : (
-    <p className={css.empty}>No details to display</p>
+    <p className={css.empty}>Branches are up to date. No details to display.</p>
   );
 }
 

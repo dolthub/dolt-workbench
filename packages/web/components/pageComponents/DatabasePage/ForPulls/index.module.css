@@ -5,3 +5,21 @@
     @apply ml-6;
   }
 }
+
+.inner {
+  @apply mb-20;
+}
+
+.selectBranches {
+  @apply text-center font-semibold my-10;
+}
+
+.viewDiffButton {
+  button {
+    @apply w-32 px-3 mt-2 mb-4 lg:my-0;
+  }
+
+  svg {
+    @apply inline-block ml-2 mb-1;
+  }
+}
