@@ -3,6 +3,7 @@ import SmallLoader from "@components/SmallLoader";
 import Link from "@components/links/Link";
 import {
   ColumnForDataTableFragment,
+  CommitDiffType,
   useDataTableQuery,
 } from "@gen/graphql-types";
 import { RequiredRefsParams } from "@lib/params";
@@ -18,7 +19,7 @@ type Props = {
     tableName: string;
   };
   hiddenColIndexes: HiddenColIndexes;
-  forPull?: boolean;
+  type?: CommitDiffType;
 };
 
 type InnerProps = Props & {

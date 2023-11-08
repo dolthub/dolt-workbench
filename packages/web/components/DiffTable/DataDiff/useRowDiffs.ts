@@ -31,9 +31,8 @@ type Params = RequiredRefsParams & {
 
 export default function useRowDiffs(
   params: Params,
-  forPull = false,
+  type: CommitDiffType,
 ): ReturnType {
-  const type = forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot;
   const { data, client, loading, error } = useRowDiffsQuery({
     variables: { ...params, type },
   });

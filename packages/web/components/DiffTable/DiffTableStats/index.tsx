@@ -1,11 +1,7 @@
 import ErrorMsg from "@components/ErrorMsg";
 import SmallLoader from "@components/SmallLoader";
 import { useDiffContext } from "@contexts/diff";
-import {
-  CommitDiffType,
-  DiffSummaryFragment,
-  useDiffStatQuery,
-} from "@gen/graphql-types";
+import { DiffSummaryFragment, useDiffStatQuery } from "@gen/graphql-types";
 import { gqlErrorPrimaryKeyChange } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import cx from "classnames";
@@ -18,13 +14,13 @@ type Props = {
 };
 
 export default function DiffTableStats(props: Props) {
-  const { params, refName, forPull } = useDiffContext();
+  const { params, refName, type } = useDiffContext();
   const { data, loading, error } = useDiffStatQuery({
     variables: {
       ...params,
       refName,
       tableName: props.diffSummary.tableName,
-      type: forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot,
+      type,
     },
   });
 

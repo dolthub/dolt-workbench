@@ -28,7 +28,7 @@ type DiffContextType = {
   refName: string;
   setRefName: (r: string) => void;
   stayWithinPage: boolean; // Changing tables within diff doesn't change URL
-  forPull: boolean;
+  type: CommitDiffType;
 };
 
 export const DiffContext = createCustomContext<DiffContextType>("DiffContext");
@@ -41,15 +41,13 @@ export function DiffProvider({
   stayWithinPage = false,
   forPull = false,
 }: Props): JSX.Element {
+  const type = forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot;
   const [activeTableName, setActiveTableName] = useState(
     initialTableName ?? "",
   );
   const [refName, setRefName] = useState(params.refName ?? "");
   const { data, error, loading } = useDiffSummariesQuery({
-    variables: {
-      ...params,
-      type: forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot,
-    },
+    variables: { ...params, type },
   });
 
   useEffect(() => {
@@ -69,7 +67,7 @@ export function DiffProvider({
       refName,
       setRefName,
       stayWithinPage,
-      forPull,
+      type,
     };
   }, [
     data,
@@ -81,7 +79,7 @@ export function DiffProvider({
     refName,
     setRefName,
     stayWithinPage,
-    forPull,
+    type,
   ]);
 
   return <DiffContext.Provider value={value}>{children}</DiffContext.Provider>;

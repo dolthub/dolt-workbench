@@ -30,9 +30,7 @@ function Inner(props: InnerProps) {
                 label="Base branch"
                 onChange={b => {
                   const p = pulls({ ...props.params, toBranchName: b });
-                  router
-                    .push(p.href, p.as, { shallow: true })
-                    .catch(console.error);
+                  router.push(p.href, p.as).catch(console.error);
                 }}
               />
             </div>
@@ -46,9 +44,7 @@ function Inner(props: InnerProps) {
                 label="From branch"
                 onChange={b => {
                   const p = pulls({ ...props.params, fromBranchName: b });
-                  router
-                    .push(p.href, p.as, { shallow: true })
-                    .catch(console.error);
+                  router.push(p.href, p.as).catch(console.error);
                 }}
               />
             </div>

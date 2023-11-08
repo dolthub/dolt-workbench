@@ -1,5 +1,5 @@
 import { getAllSelectColumns } from "@components/CellButtons/queryHelpers";
-import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { ColumnForDataTableFragment, CommitDiffType } from "@gen/graphql-types";
 import { RefsParams, RequiredRefsParams } from "@lib/params";
 import { isHiddenColumn } from "../DataDiff/utils";
 
@@ -8,7 +8,7 @@ type Props = {
     refName: string;
     tableName: string;
   };
-  forPull?: boolean;
+  type?: CommitDiffType;
   columns: ColumnForDataTableFragment[];
   hiddenColIndexes: number[];
 };
@@ -25,14 +25,19 @@ export function getDoltCommitDiffQuery(props: Props): string {
   const cols = getAllSelectColumns(colsWithNamesAndVals);
   return `SELECT ${cols} FROM \`dolt_commit_diff_${
     props.params.tableName
-  }\`${getWhereClause(props.params, props.forPull)}`;
+  }\`${getWhereClause(props.params, props.type)}`;
 }
 
-function getWhereClause(params: RefsParams, forPull = false): string {
-  const toCommit = forPull
-    ? `DOLT_MERGE_BASE("${params.toRefName}", "${params.fromRefName}")`
-    : `"${params.toRefName}"`;
-  return ` WHERE from_commit="${params.fromRefName}" AND to_commit=${toCommit}`;
+function getWhereClause(params: RefsParams, type?: CommitDiffType): string {
+  const fromCommit =
+    type === CommitDiffType.ThreeDot
+      ? `DOLT_MERGE_BASE("${params.toRefName}", "${params.fromRefName}")`
+      : `"${params.fromRefName}"`;
+  const toCommit =
+    type === CommitDiffType.ThreeDot
+      ? `HASHOF("${params.fromRefName}")`
+      : `"${params.toRefName}"`;
+  return ` WHERE from_commit=${fromCommit} AND to_commit=${toCommit}`;
 }
 
 // Get names and values for every column based on row value and dolt_commit_diff table

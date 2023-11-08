@@ -55,7 +55,7 @@ function Inner(props: InnerProps) {
 
   // For diff tables we want to use `refName` from `useDiffContext`, which is either the `fromBranchName`
   // for PR diffs or the current ref for commit diffs
-  const { refName, forPull } = useDiffContext();
+  const { refName, type } = useDiffContext();
   const res = useDataTableContext();
 
   return (
@@ -66,7 +66,7 @@ function Inner(props: InnerProps) {
           showingHideUnchangedCol={hideUnchangedCols}
           className={css.optionButton}
         >
-          <ViewSqlLink {...props} forPull={forPull} />
+          <ViewSqlLink {...props} type={type} />
         </DatabaseOptionsDropdown>
         <FilterByType filter={state.filter} setFilter={setFilter} />
       </div>
@@ -124,10 +124,10 @@ function Inner(props: InnerProps) {
 }
 
 export default function DataDiff(props: Props) {
-  const { forPull } = useDiffContext();
+  const { type } = useDiffContext();
   const { state, fetchMore, setFilter, hasMore, loading } = useRowDiffs(
     props.params,
-    forPull,
+    type,
   );
 
   if (loading) return <Loader loaded={false} />;
