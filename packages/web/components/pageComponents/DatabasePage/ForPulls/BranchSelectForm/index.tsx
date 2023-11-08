@@ -19,7 +19,7 @@ function Inner(props: InnerProps) {
   const router = useRouter();
 
   return (
-    <div className={css.container}>
+    <div>
       {props.branches.length ? (
         <form>
           <div className={css.selectors}>

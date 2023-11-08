@@ -9,10 +9,9 @@ type Props = {
     from?: Maybe<string>;
     to?: Maybe<string>;
   };
-  tableName?: Maybe<string>;
 };
 
-const PullsPage: NextPage<Props> = ({ params, tableName }) => (
+const PullsPage: NextPage<Props> = ({ params }) => (
   <Page title={`Viewing pulls for ${params.databaseName}`} noIndex>
     <DatabasePage.ForPulls
       params={{
@@ -21,7 +20,6 @@ const PullsPage: NextPage<Props> = ({ params, tableName }) => (
         fromBranchName: params.from ?? undefined,
         toBranchName: params.to ?? undefined,
       }}
-      tableName={tableName ?? undefined}
     />
   </Page>
 );
@@ -38,7 +36,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         from: query.from ? String(query.from) : null,
         to: query.to ? String(query.to) : null,
       },
-      tableName: query.tableName ? String(query.tableName) : null,
     },
   };
 };

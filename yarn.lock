@@ -1591,6 +1591,7 @@ __metadata:
     reflect-metadata: ^0.1.13
     rxjs: ^7.5.4
     supertest: ^6.3.3
+    timeago.js: ^4.0.2
     ts-jest: ^29.1.1
     ts-loader: ^9.4.2
     ts-node: ^10.5.0
@@ -1607,6 +1608,7 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.7.0
     "@graphql-codegen/cli": ^5.0.0
+    "@graphql-codegen/fragment-matcher": ^5.0.0
     "@graphql-codegen/typescript-operations": ^4.0.1
     "@graphql-codegen/typescript-react-apollo": ^4.0.0
     "@react-icons/all-files": ^4.1.0
@@ -2008,6 +2010,18 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 9824a5ec26fe25379f64e4ea94402487acde2a880d6bfcbd55ac9f0681c887a814fd9093cc789e09273108b7ea6df0c04fc8acc8dd55eab3918d0d07af62dffd
+  languageName: node
+  linkType: hard
+
+"@graphql-codegen/fragment-matcher@npm:^5.0.0":
+  version: 5.0.0
+  resolution: "@graphql-codegen/fragment-matcher@npm:5.0.0"
+  dependencies:
+    "@graphql-codegen/plugin-helpers": ^5.0.0
+    tslib: ~2.5.0
+  peerDependencies:
+    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
+  checksum: 897781e44697f769c34dbbc738192723e5c2cafc6883c0a30ac44d0c7cdaa327a2824c7d6a315aa865809c49b3f33c8600b3ebcd0f7c6bb342120740b0caebac
   languageName: node
   linkType: hard
 

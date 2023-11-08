@@ -1,0 +1,83 @@
+.commit {
+  @apply text-sm flex flex-col;
+  @screen lg {
+    @apply pl-14 justify-between pr-2 flex-row;
+  }
+  svg {
+    @apply min-w-[1.5rem]  w-4 h-4 text-ld-darkgrey;
+  }
+}
+
+.left {
+  @apply flex ml-4 lg:ml-0;
+  div {
+    @apply lg:my-0;
+  }
+}
+
+.commitIcon {
+  @screen lg {
+    @apply hidden;
+  }
+}
+
+.bull {
+  @apply text-acc-grey text-lg  leading-tight;
+  @screen lg {
+    @apply hidden ml-[0.65rem];
+  }
+  svg {
+    @apply inline w-6 h-5 mr-4;
+  }
+}
+
+.desktopBull {
+  @apply hidden relative;
+  @screen lg {
+    @apply flex flex-col text-lg mr-4 leading-tight;
+    svg {
+      @apply inline   h-12;
+    }
+  }
+}
+
+.verticalLine {
+  @apply ml-3 border-l w-0 h-full;
+}
+
+.mobileVerticalLine {
+  @apply -ml-1 mr-7 border-l w-0;
+  @screen lg {
+    @apply hidden;
+  }
+}
+
+.message {
+  @apply font-mono text-xs mt-2 lg:mt-0;
+  /* break long line such as urls without breaking words*/
+  -ms-word-break: break-all;
+  word-break: break-all;
+  /* Non standard for webkit */
+  word-break: break-word;
+}
+
+.date {
+  @apply block mt-2 text-ld-darkgrey font-mono text-xs whitespace-nowrap;
+}
+
+.hash {
+  @apply text-ld-darkgrey font-normal text-xs font-mono;
+  @screen lg {
+    @apply ml-6 min-w-[4rem];
+  }
+  &:hover {
+    @apply text-acc-linkblue;
+  }
+}
+
+.desktop {
+  @apply hidden;
+  @screen lg {
+    @apply block;
+  }
+}

@@ -1,10 +1,15 @@
-import { PullParams } from "@lib/params";
-import BranchSelectForm from "./BranchSelectForm";
+import { PullDiffParams } from "@lib/params";
+import DiffSelector from "./component";
 
 type Props = {
-  params: PullParams;
+  params: PullDiffParams;
 };
 
 export default function ForPull(props: Props) {
-  return <BranchSelectForm params={props.params} />;
+  return (
+    <DiffSelector>
+      Viewing changes between <code>{props.params.fromBranchName}</code> and{" "}
+      <code>{props.params.toBranchName}</code>
+    </DiffSelector>
+  );
 }

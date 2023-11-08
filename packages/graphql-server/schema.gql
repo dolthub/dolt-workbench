@@ -149,6 +149,42 @@ type DocList {
   list: [Doc!]!
 }
 
+type PullSummary {
+  _id: ID!
+  commits: CommitList!
+}
+
+type PullWithDetails {
+  _id: ID!
+  state: PullState!
+  summary: PullSummary
+  details: [PullDetails!]
+}
+
+enum PullState {
+  Open
+  Merged
+  Unspecified
+}
+
+union PullDetails = PullDetailSummary | PullDetailCommit
+
+type PullDetailSummary {
+  _id: ID!
+  username: String!
+  createdAt: Timestamp!
+  numCommits: Float!
+}
+
+type PullDetailCommit {
+  _id: ID!
+  username: String!
+  message: String!
+  createdAt: Timestamp!
+  commitId: String!
+  parentCommitId: String
+}
+
 type RowDiff {
   added: Row
   deleted: Row
@@ -238,6 +274,7 @@ type Query {
   diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
   docs(databaseName: String!, refName: String!): DocList!
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
+  pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff

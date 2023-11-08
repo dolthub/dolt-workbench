@@ -1,0 +1,8 @@
+{
+  "possibleTypes": {
+    "PullDetails": [
+      "PullDetailCommit",
+      "PullDetailSummary"
+    ]
+  }
+}

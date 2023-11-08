@@ -16,7 +16,6 @@ type Props = {
   diffTables?: ReactNode;
   white?: boolean;
   forPull?: boolean;
-  diffCommits?: ReactNode;
 };
 
 export default function DiffTableNav({ white = false, ...props }: Props) {
@@ -54,7 +53,6 @@ export default function DiffTableNav({ white = false, ...props }: Props) {
           {props.diffStat}
         </div>
         {props.diffTables}
-        {props.diffCommits}
       </div>
     </div>
   );

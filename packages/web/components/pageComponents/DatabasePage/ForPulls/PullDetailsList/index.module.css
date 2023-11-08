@@ -1,0 +1,19 @@
+.list {
+  @apply max-w-3xl mx-0 break-words;
+
+  li {
+    @apply my-0;
+  }
+
+  @screen lg {
+    @apply mb-0 mx-auto border-b;
+  }
+}
+
+.empty {
+  @apply text-center font-semibold;
+}
+
+.verticalLine {
+  @apply border-l w-0 h-8 ml-3 lg:ml-[4.25rem];
+}

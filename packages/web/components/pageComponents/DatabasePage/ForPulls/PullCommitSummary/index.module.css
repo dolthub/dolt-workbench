@@ -1,0 +1,28 @@
+.summary {
+  @apply relative flex items-start text-sm text-ld-darkgrey pr-4;
+  @screen lg {
+    @apply ml-[3.25rem] pr-12;
+  }
+}
+
+.right {
+  @apply inline-block leading-7 ml-4;
+}
+
+.icon {
+  @apply w-7 h-7 inline-block rounded-full text-lg bg-ld-lightgrey flex-shrink-0 p-[0.35rem] md:p-[0.4rem];
+  svg {
+    @apply w-4 h-4 text-ld-darkgrey;
+  }
+}
+
+.user {
+  @apply mr-1 font-semibold;
+}
+
+.mobileVerticalLine {
+  @apply left-3 h-full border-l w-0 -z-10 absolute;
+  @screen lg {
+    @apply hidden;
+  }
+}

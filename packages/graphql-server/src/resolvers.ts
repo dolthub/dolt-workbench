@@ -4,6 +4,7 @@ import { DatabaseResolver } from "./databases/database.resolver";
 import { DiffStatResolver } from "./diffStats/diffStat.resolver";
 import { DiffSummaryResolver } from "./diffSummaries/diffSummary.resolver";
 import { DocsResolver } from "./docs/doc.resolver";
+import { PullResolver } from "./pulls/pull.resolver";
 import { RowDiffResolver } from "./rowDiffs/rowDiff.resolver";
 import { RowResolver } from "./rows/row.resolver";
 import { SchemaDiffResolver } from "./schemaDiffs/schemaDiff.resolver";
@@ -22,6 +23,7 @@ const resolvers = [
   DiffSummaryResolver,
   DocsResolver,
   FileUploadResolver,
+  PullResolver,
   RowDiffResolver,
   RowResolver,
   SchemaDiffResolver,

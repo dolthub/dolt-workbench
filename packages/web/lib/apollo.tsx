@@ -4,6 +4,7 @@ import {
   InMemoryCache,
   NormalizedCacheObject,
 } from "@apollo/client";
+import fragmentTypes from "@gen/fragmentTypes.json";
 import { createUploadLink } from "apollo-upload-client";
 import { IncomingMessage } from "http";
 import fetch from "isomorphic-unfetch";
@@ -22,7 +23,7 @@ export function createApolloClient(
   };
 
   const cache = new InMemoryCache({
-    // possibleTypes: fragmentTypes.possibleTypes,
+    possibleTypes: fragmentTypes.possibleTypes,
   }).restore(initialState || {});
 
   return new ApolloClient({

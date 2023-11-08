@@ -23,7 +23,6 @@ export default function BranchSelect(props: Props) {
       hideSelectedOptions
       className={css.selector}
       label={props.label}
-      small
       horizontal
     />
   );

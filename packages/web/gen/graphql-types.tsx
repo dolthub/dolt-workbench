@@ -253,6 +253,46 @@ export type MutationLoadDataFileArgs = {
   tableName: Scalars['String']['input'];
 };
 
+export type PullDetailCommit = {
+  __typename?: 'PullDetailCommit';
+  _id: Scalars['ID']['output'];
+  commitId: Scalars['String']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  message: Scalars['String']['output'];
+  parentCommitId?: Maybe<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
+};
+
+export type PullDetailSummary = {
+  __typename?: 'PullDetailSummary';
+  _id: Scalars['ID']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  numCommits: Scalars['Float']['output'];
+  username: Scalars['String']['output'];
+};
+
+export type PullDetails = PullDetailCommit | PullDetailSummary;
+
+export enum PullState {
+  Merged = 'Merged',
+  Open = 'Open',
+  Unspecified = 'Unspecified'
+}
+
+export type PullSummary = {
+  __typename?: 'PullSummary';
+  _id: Scalars['ID']['output'];
+  commits: CommitList;
+};
+
+export type PullWithDetails = {
+  __typename?: 'PullWithDetails';
+  _id: Scalars['ID']['output'];
+  details?: Maybe<Array<PullDetails>>;
+  state: PullState;
+  summary?: Maybe<PullSummary>;
+};
+
 export type Query = {
   __typename?: 'Query';
   branch?: Maybe<Branch>;
@@ -270,6 +310,7 @@ export type Query = {
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
   hasDatabaseEnv: Scalars['Boolean']['output'];
+  pullWithDetails: PullWithDetails;
   rowDiffs: RowDiffList;
   rows: RowList;
   schemaDiff?: Maybe<SchemaDiff>;
@@ -360,6 +401,13 @@ export type QueryDoltProceduresArgs = {
 export type QueryDoltSchemasArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
+};
+
+
+export type QueryPullWithDetailsArgs = {
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
 };
 
 
@@ -884,6 +932,27 @@ export type DocPageQueryNoBranchQueryVariables = Exact<{
 
 export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?: { __typename?: 'Branch', _id: string, branchName: string } | null };
 
+export type PullDetailCommitFragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
+
+export type PullDetailSummaryFragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
+
+type PullDetailsForPullDetails_PullDetailCommit_Fragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
+
+type PullDetailsForPullDetails_PullDetailSummary_Fragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
+
+export type PullDetailsForPullDetailsFragment = PullDetailsForPullDetails_PullDetailCommit_Fragment | PullDetailsForPullDetails_PullDetailSummary_Fragment;
+
+export type PullDetailsFragment = { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null };
+
+export type PullDetailsForPullDetailsQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+}>;
+
+
+export type PullDetailsForPullDetailsQuery = { __typename?: 'Query', pullWithDetails: { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null } };
+
 export type RefPageQueryVariables = Exact<{
   refName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -1282,6 +1351,44 @@ export const DocColumnValuesForDocPageFragmentDoc = gql`
   }
 }
     `;
+export const PullDetailCommitFragmentDoc = gql`
+    fragment PullDetailCommit on PullDetailCommit {
+  _id
+  username
+  message
+  createdAt
+  commitId
+  parentCommitId
+}
+    `;
+export const PullDetailSummaryFragmentDoc = gql`
+    fragment PullDetailSummary on PullDetailSummary {
+  _id
+  username
+  createdAt
+  numCommits
+}
+    `;
+export const PullDetailsForPullDetailsFragmentDoc = gql`
+    fragment PullDetailsForPullDetails on PullDetails {
+  ... on PullDetailCommit {
+    ...PullDetailCommit
+  }
+  ... on PullDetailSummary {
+    ...PullDetailSummary
+  }
+}
+    ${PullDetailCommitFragmentDoc}
+${PullDetailSummaryFragmentDoc}`;
+export const PullDetailsFragmentDoc = gql`
+    fragment PullDetails on PullWithDetails {
+  _id
+  state
+  details {
+    ...PullDetailsForPullDetails
+  }
+}
+    ${PullDetailsForPullDetailsFragmentDoc}`;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -2513,6 +2620,47 @@ export function useDocPageQueryNoBranchLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type DocPageQueryNoBranchHookResult = ReturnType<typeof useDocPageQueryNoBranch>;
 export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchLazyQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
+export const PullDetailsForPullDetailsDocument = gql`
+    query PullDetailsForPullDetails($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+  pullWithDetails(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+  ) {
+    ...PullDetails
+  }
+}
+    ${PullDetailsFragmentDoc}`;
+
+/**
+ * __usePullDetailsForPullDetailsQuery__
+ *
+ * To run a query within a React component, call `usePullDetailsForPullDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePullDetailsForPullDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePullDetailsForPullDetailsQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *   },
+ * });
+ */
+export function usePullDetailsForPullDetailsQuery(baseOptions: Apollo.QueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+      }
+export function usePullDetailsForPullDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+        }
+export type PullDetailsForPullDetailsQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsQuery>;
+export type PullDetailsForPullDetailsLazyQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsLazyQuery>;
+export type PullDetailsForPullDetailsQueryResult = Apollo.QueryResult<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>;
 export const RefPageQueryDocument = gql`
     query RefPageQuery($refName: String!, $databaseName: String!, $filterSystemTables: Boolean) {
   branch(databaseName: $databaseName, branchName: $refName) {

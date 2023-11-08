@@ -1,0 +1,7 @@
+.top {
+  @apply flex justify-between items-center py-10 ml-6 mr-10 border-b;
+
+  button {
+    @apply ml-6;
+  }
+}
