@@ -229,7 +229,7 @@ type Query {
   branchOrDefault(databaseName: String!, branchName: String): Branch
   branches(databaseName: String!, sortBy: SortBranchesBy): BranchNamesList!
   defaultBranch(databaseName: String!): Branch
-  commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String): CommitList!
+  commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
   currentDatabase: String
   hasDatabaseEnv: Boolean!
   databases: [String!]!

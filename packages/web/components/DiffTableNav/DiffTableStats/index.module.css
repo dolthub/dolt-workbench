@@ -1,5 +1,5 @@
 .list {
-  @apply mb-8 lg:mb-40;
+  @apply mb-8 lg:mb-16;
 }
 
 .tableInfo {
@@ -40,4 +40,8 @@
 
 .iconModified {
   @apply text-yellow-500;
+}
+
+.noChanges {
+  @apply mx-3 mt-4 mb-8 lg:mb-16;
 }

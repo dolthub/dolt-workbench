@@ -3,7 +3,7 @@ import { DataSourceService } from "../dataSources/dataSource.service";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { DBArgsWithOffset, RawRow } from "../utils/commonTypes";
 import { Commit, CommitList, fromDoltLogRow } from "./commit.model";
-import { doltLogsQuery } from "./commit.queries";
+import { doltLogsQuery, twoDotDoltLogsQuery } from "./commit.queries";
 
 @ArgsType()
 export class ListCommitsArgs extends DBArgsWithOffset {
@@ -14,14 +14,11 @@ export class ListCommitsArgs extends DBArgsWithOffset {
   @Field({ nullable: true })
   afterCommitId?: string;
 
-  // @Field(_type => Boolean, { nullable: true })
-  // twoDot?: boolean;
+  @Field(_type => Boolean, { nullable: true })
+  twoDot?: boolean;
 
-  // @Field({ nullable: true })
-  // excludingCommitsFromRefName?: string;
-
-  // @Field(_type => Boolean, { nullable: true })
-  // resolveBranchNames?: boolean;
+  @Field({ nullable: true })
+  excludingCommitsFromRefName?: string;
 }
 
 @Resolver(_of => Commit)
@@ -38,6 +35,12 @@ export class CommitResolver {
     const refName = args.refName ?? args.afterCommitId ?? "";
     const offset = args.offset ?? 0;
     return this.dss.query(async query => {
+      if (args.twoDot && args.excludingCommitsFromRefName) {
+        const logs = await query(twoDotDoltLogsQuery, [
+          `${args.excludingCommitsFromRefName}..${refName}`,
+        ]);
+        return getCommitListRes(logs, args);
+      }
       const logs = await query(doltLogsQuery, [refName, ROW_LIMIT + 1, offset]);
       return getCommitListRes(logs, args);
     }, args.databaseName);
@@ -64,15 +67,15 @@ function handleArgsErr(args: ListCommitsArgs): Error | undefined {
       "cannot supply both `refName` and `afterCommitId` when listing commits",
     );
   }
-  // if (args.twoDot && !args.excludingCommitsFromRefName) {
-  //   return new Error(
-  //     "must supply `excludingCommitsFromRefName` if twoDot is true",
-  //   );
-  // }
-  // if (!args.twoDot && args.excludingCommitsFromRefName) {
-  //   return new Error(
-  //     "cannot supply `excludingCommitsFromRefName` if twoDot is not provided or false",
-  //   );
-  // }
+  if (args.twoDot && !args.excludingCommitsFromRefName) {
+    return new Error(
+      "must supply `excludingCommitsFromRefName` if twoDot is true",
+    );
+  }
+  if (!args.twoDot && args.excludingCommitsFromRefName) {
+    return new Error(
+      "cannot supply `excludingCommitsFromRefName` if twoDot is not provided or false",
+    );
+  }
   return undefined;
 }

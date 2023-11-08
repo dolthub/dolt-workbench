@@ -3,7 +3,7 @@
 }
 
 .selectors {
-  @apply flex flex-col items-start mb-10;
+  @apply flex flex-col items-start mb-12;
 }
 
 .selector {

@@ -2,6 +2,7 @@ import DiffSelector from "@components/DiffSelector";
 import DiffStat from "@components/DiffStat";
 import { PullParams } from "@lib/params";
 import DiffTableStats from "./DiffTableStats";
+import PullCommits from "./PullCommits";
 import DiffTableNav from "./component";
 import css from "./index.module.css";
 
@@ -27,20 +28,19 @@ export default function ForPull(props: Props) {
       />
     );
   }
+
+  const params = {
+    ...props.params,
+    fromRefName: props.params.fromBranchName,
+    toRefName: props.params.toBranchName,
+  };
   return (
     <DiffTableNav
       {...props}
       diffSelector={selector}
-      diffStat={
-        <DiffStat
-          params={{
-            ...props.params,
-            fromRefName: props.params.fromBranchName,
-            toRefName: props.params.toBranchName,
-          }}
-        />
-      }
+      diffStat={<DiffStat params={params} />}
       diffTables={<DiffTableStats />}
+      diffCommits={<PullCommits params={params} />}
       forPull
     />
   );
