@@ -8,9 +8,11 @@ export type RefUrl = (p: ps.RefParams) => Route;
 
 export const databases = new Route("/database");
 
-export const database = (p: ps.DatabaseParams): Route => databases.addDynamic("databaseName", p.databaseName);
+export const database = (p: ps.DatabaseParams): Route =>
+  databases.addDynamic("databaseName", p.databaseName);
 
-export const maybeDatabase = (databaseName?: Maybe<string>): Route => databaseName ? database({ databaseName }) : databases;
+export const maybeDatabase = (databaseName?: Maybe<string>): Route =>
+  databaseName ? database({ databaseName }) : databases;
 
 export const query = (p: ps.RefParams): Route =>
   database(p).addStatic("query").addDynamic("refName", p.refName, ENCODE);
