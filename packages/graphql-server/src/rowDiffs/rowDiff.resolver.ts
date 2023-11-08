@@ -80,14 +80,11 @@ export class RowDiffResolver {
         );
 
         const { tableType, fromTableName, toTableName } = ds[0];
-        console.log("from", args.fromRefName, "to", args.toRefName);
-        console.log("DIFF TYPE", ds[0]);
         if (tableType === TableDiffType.Dropped) {
-          // console.log("dropped", tableName, args.fromRefName);
           const rows = await getRowsForDiff(query, {
             ...dbArgs,
             tableName,
-            refName: args.toRefName,
+            refName: toCommitId,
           });
           return fromOneSidedTable(rows, "dropped", args.filterByRowType);
         }
@@ -95,7 +92,7 @@ export class RowDiffResolver {
           const rows = await getRowsForDiff(query, {
             ...dbArgs,
             tableName,
-            refName: args.fromRefName,
+            refName: fromCommitId,
           });
           return fromOneSidedTable(rows, "added", args.filterByRowType);
         }

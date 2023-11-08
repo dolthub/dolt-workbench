@@ -1,6 +1,7 @@
 import QueryHandler from "@components/util/QueryHandler";
 import { useDiffContext } from "@contexts/diff";
 import {
+  CommitDiffType,
   DiffSummaryFragment,
   SchemaDiffFragment,
   useSchemaDiffQuery,
@@ -36,11 +37,12 @@ function Inner({ schemaDiff }: InnerProps) {
 }
 
 export default function SchemaSection(props: Props) {
-  const { params } = useDiffContext();
+  const { params, forPull } = useDiffContext();
   const res = useSchemaDiffQuery({
     variables: {
       ...params,
       tableName: props.diffSummary.tableName,
+      type: forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot,
     },
   });
   return (

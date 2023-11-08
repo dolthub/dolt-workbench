@@ -76,6 +76,7 @@ export const SCHEMA_DIFF = gql`
     $fromRefName: String!
     $toRefName: String!
     $refName: String
+    $type: CommitDiffType
   ) {
     schemaDiff(
       databaseName: $databaseName
@@ -83,6 +84,7 @@ export const SCHEMA_DIFF = gql`
       fromRefName: $fromRefName
       toRefName: $toRefName
       refName: $refName
+      type: $type
     ) {
       ...SchemaDiff
     }

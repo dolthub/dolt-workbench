@@ -698,6 +698,7 @@ export type SchemaDiffQueryVariables = Exact<{
   fromRefName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<CommitDiffType>;
 }>;
 
 
@@ -1776,13 +1777,14 @@ export type RowDiffsQueryHookResult = ReturnType<typeof useRowDiffsQuery>;
 export type RowDiffsLazyQueryHookResult = ReturnType<typeof useRowDiffsLazyQuery>;
 export type RowDiffsQueryResult = Apollo.QueryResult<RowDiffsQuery, RowDiffsQueryVariables>;
 export const SchemaDiffDocument = gql`
-    query SchemaDiff($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String) {
+    query SchemaDiff($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   schemaDiff(
     databaseName: $databaseName
     tableName: $tableName
     fromRefName: $fromRefName
     toRefName: $toRefName
     refName: $refName
+    type: $type
   ) {
     ...SchemaDiff
   }
@@ -1806,6 +1808,7 @@ export const SchemaDiffDocument = gql`
  *      fromRefName: // value for 'fromRefName'
  *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
+ *      type: // value for 'type'
  *   },
  * });
  */

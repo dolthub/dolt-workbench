@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
+import { RawRows } from "../utils/commonTypes";
 
 @ObjectType()
 export class TextDiff {
@@ -19,4 +20,26 @@ export class SchemaDiff {
 
   @Field(_type => Int, { nullable: true })
   numChangedSchemas?: number;
+}
+
+function fromSchemaPatchRows(res: RawRows): string[] {
+  return res.map(r => r.statement);
+}
+
+function fromSchemaDiffRows(res: RawRows): TextDiff | undefined {
+  if (!res.length) return undefined;
+  return {
+    leftLines: res[0].from_create_statement,
+    rightLines: res[0].to_create_statement,
+  };
+}
+
+export function fromDoltSchemaDiffRows(
+  patch: RawRows,
+  diff: RawRows,
+): SchemaDiff {
+  return {
+    schemaDiff: fromSchemaDiffRows(diff),
+    schemaPatch: fromSchemaPatchRows(patch),
+  };
 }
