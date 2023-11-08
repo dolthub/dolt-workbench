@@ -84,7 +84,7 @@ export class RowDiffResolver {
           const rows = await getRowsForDiff(query, {
             ...dbArgs,
             tableName,
-            refName: toCommitId,
+            refName: fromCommitId,
           });
           return fromOneSidedTable(rows, "dropped", args.filterByRowType);
         }
@@ -92,7 +92,7 @@ export class RowDiffResolver {
           const rows = await getRowsForDiff(query, {
             ...dbArgs,
             tableName,
-            refName: fromCommitId,
+            refName: toCommitId,
           });
           return fromOneSidedTable(rows, "added", args.filterByRowType);
         }
@@ -153,10 +153,10 @@ async function resolveRefs(
   type?: CommitDiffType,
 ): Promise<{ fromCommitId: string; toCommitId: string }> {
   if (type === CommitDiffType.ThreeDot) {
-    const fromCommitId = await query(hashOf, [fromRefName]);
-    const toCommitId = await query(mergeBase, [toRefName, fromRefName]);
+    const toCommitId = await query(hashOf, [fromRefName]);
+    const mergeBaseCommit = await query(mergeBase, [toRefName, fromRefName]);
     return {
-      fromCommitId: Object.values(fromCommitId[0])[0],
+      fromCommitId: Object.values(mergeBaseCommit[0])[0],
       toCommitId: Object.values(toCommitId[0])[0],
     };
   }

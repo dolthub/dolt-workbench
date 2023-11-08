@@ -84,13 +84,11 @@ export const releases = (p: ps.OptionalRefParams): Route =>
   database(p).addStatic("releases").withQuery({ refName: p.refName });
 
 export const pulls = (p: ps.PullParams): Route =>
-  database(p)
-    .addStatic("pulls")
-    .withQuery({
-      refName: p.refName,
-      from: p.fromBranchName,
-      to: p.toBranchName,
-    });
+  database(p).addStatic("pulls").withQuery({
+    refName: p.refName,
+    from: p.fromBranchName,
+    to: p.toBranchName,
+  });
 
 export const newRelease = (p: ps.OptionalRefParams): Route =>
   releases(p).addStatic("new").withQuery({ refName: p.refName });
