@@ -1,7 +1,11 @@
 import { ApolloError } from "@apollo/client";
 import ErrorMsg from "@components/ErrorMsg";
 import { useDiffContext } from "@contexts/diff";
-import { DiffStatForDiffsFragment, useDiffStatQuery } from "@gen/graphql-types";
+import {
+  CommitDiffType,
+  DiffStatForDiffsFragment,
+  useDiffStatQuery,
+} from "@gen/graphql-types";
 import { gqlErrorPrimaryKeyChange } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { DiffParamsWithRefs } from "@lib/params";
@@ -44,8 +48,12 @@ function Inner(props: InnerProps) {
 }
 
 export default function DiffStat(props: Props) {
+  const { forPull } = useDiffContext();
   const { data, loading, error } = useDiffStatQuery({
-    variables: props.params,
+    variables: {
+      ...props.params,
+      type: forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot,
+    },
   });
 
   return (

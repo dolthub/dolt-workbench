@@ -364,11 +364,12 @@ export type QueryDoltSchemasArgs = {
 export type QueryRowDiffsArgs = {
   databaseName: Scalars['String']['input'];
   filterByRowType?: InputMaybe<DiffRowType>;
-  fromCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  type?: InputMaybe<CommitDiffType>;
 };
 
 
@@ -382,10 +383,11 @@ export type QueryRowsArgs = {
 
 export type QuerySchemaDiffArgs = {
   databaseName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  type?: InputMaybe<CommitDiffType>;
 };
 
 
@@ -675,11 +677,12 @@ export type RowDiffListWithColsFragment = { __typename?: 'RowDiffList', nextOffs
 export type RowDiffsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   filterByRowType?: InputMaybe<DiffRowType>;
+  type?: InputMaybe<CommitDiffType>;
 }>;
 
 
@@ -692,8 +695,8 @@ export type SchemaDiffFragment = { __typename?: 'SchemaDiff', schemaPatch?: Arra
 export type SchemaDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
 }>;
 
@@ -947,9 +950,10 @@ export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fro
 
 export type DiffSummariesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<CommitDiffType>;
 }>;
 
 
@@ -1721,15 +1725,16 @@ export type DiffStatQueryHookResult = ReturnType<typeof useDiffStatQuery>;
 export type DiffStatLazyQueryHookResult = ReturnType<typeof useDiffStatLazyQuery>;
 export type DiffStatQueryResult = Apollo.QueryResult<DiffStatQuery, DiffStatQueryVariables>;
 export const RowDiffsDocument = gql`
-    query RowDiffs($databaseName: String!, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType) {
+    query RowDiffs($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType, $type: CommitDiffType) {
   rowDiffs(
     databaseName: $databaseName
     tableName: $tableName
-    fromCommitId: $fromCommitId
-    toCommitId: $toCommitId
+    fromRefName: $fromRefName
+    toRefName: $toRefName
     refName: $refName
     offset: $offset
     filterByRowType: $filterByRowType
+    type: $type
   ) {
     ...RowDiffListWithCols
   }
@@ -1750,11 +1755,12 @@ export const RowDiffsDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
  *      offset: // value for 'offset'
  *      filterByRowType: // value for 'filterByRowType'
+ *      type: // value for 'type'
  *   },
  * });
  */
@@ -1770,12 +1776,12 @@ export type RowDiffsQueryHookResult = ReturnType<typeof useRowDiffsQuery>;
 export type RowDiffsLazyQueryHookResult = ReturnType<typeof useRowDiffsLazyQuery>;
 export type RowDiffsQueryResult = Apollo.QueryResult<RowDiffsQuery, RowDiffsQueryVariables>;
 export const SchemaDiffDocument = gql`
-    query SchemaDiff($databaseName: String!, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String) {
+    query SchemaDiff($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String) {
   schemaDiff(
     databaseName: $databaseName
     tableName: $tableName
-    fromCommitId: $fromCommitId
-    toCommitId: $toCommitId
+    fromRefName: $fromRefName
+    toRefName: $toRefName
     refName: $refName
   ) {
     ...SchemaDiff
@@ -1797,8 +1803,8 @@ export const SchemaDiffDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
  *   },
  * });
@@ -2734,12 +2740,13 @@ export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTa
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const DiffSummariesDocument = gql`
-    query DiffSummaries($databaseName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String) {
+    query DiffSummaries($databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   diffSummaries(
     databaseName: $databaseName
-    fromRefName: $fromCommitId
-    toRefName: $toCommitId
+    fromRefName: $fromRefName
+    toRefName: $toRefName
     refName: $refName
+    type: $type
   ) {
     ...DiffSummary
   }
@@ -2759,9 +2766,10 @@ export const DiffSummariesDocument = gql`
  * const { data, loading, error } = useDiffSummariesQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
+ *      type: // value for 'type'
  *   },
  * });
  */

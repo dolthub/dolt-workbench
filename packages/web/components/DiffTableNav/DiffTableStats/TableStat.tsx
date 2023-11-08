@@ -1,7 +1,9 @@
 import SummaryStat from "@components/DiffStat/SummaryStat";
 import ErrorMsg from "@components/ErrorMsg";
 import SmallLoader from "@components/SmallLoader";
+import { useDiffContext } from "@contexts/diff";
 import {
+  CommitDiffType,
   DiffStatForDiffsFragment,
   DiffSummaryFragment,
   TableDiffType,
@@ -76,8 +78,13 @@ function Inner({ diffStat, diffSummary, loading, error }: InnerProps) {
 }
 
 export default function TableStat(props: Props) {
+  const { forPull } = useDiffContext();
   const res = useDiffStatQuery({
-    variables: { ...props.params, tableName: props.diffSummary.tableName },
+    variables: {
+      ...props.params,
+      tableName: props.diffSummary.tableName,
+      type: forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot,
+    },
   });
   return (
     <div className={css.marLeft}>

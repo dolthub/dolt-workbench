@@ -14,16 +14,15 @@ type Params = DatabaseParams & {
 type Props = {
   params: Params;
   open: boolean;
+  forPull?: boolean;
 };
 
 export default function BackButton(props: Props) {
   const { defaultBranchName, loading } = useDefaultBranch(props.params);
+  if (props.forPull) return <div />;
   return (
     <div
-      className={cx(
-        css.backButton,
-        css[props.open ? "openItem" : "closedItem"],
-      )}
+      className={cx(css.backButton, props.open ? css.openItem : css.closedItem)}
       data-cy="back-to-commits"
     >
       <Loader loaded={!loading} />

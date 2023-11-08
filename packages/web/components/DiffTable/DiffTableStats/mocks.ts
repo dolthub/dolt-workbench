@@ -1,8 +1,8 @@
 import { fakeCommitId } from "@components/CustomFormSelect/mocks";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { DiffParams, TableParams } from "@lib/params";
+import { RequiredRefsParams, TableParams } from "@lib/params";
 
-type Params = Required<DiffParams> & { tableName: string };
+type Params = RequiredRefsParams & { tableName: string; refName: string };
 
 const tableParams: TableParams = {
   databaseName: "dbname",
@@ -12,8 +12,8 @@ const tableParams: TableParams = {
 
 export const params: Params = {
   ...tableParams,
-  fromCommitId: fakeCommitId(),
-  toCommitId: fakeCommitId(),
+  fromRefName: fakeCommitId(),
+  toRefName: fakeCommitId(),
 };
 
 export const tableCols: ColumnForDataTableFragment[] = [

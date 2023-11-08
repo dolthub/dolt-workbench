@@ -1,0 +1,15 @@
+.container {
+  @apply mx-4;
+}
+
+.selectors {
+  @apply flex flex-col items-start mb-10;
+}
+
+.selector {
+  @apply min-w-[225px];
+}
+
+.arrow {
+  @apply text-2xl mx-6 my-3 rotate-90;
+}

@@ -1,4 +1,5 @@
 import {
+  CommitDiffType,
   DiffRowType,
   RowDiffForTableListFragment,
   RowDiffsDocument,
@@ -11,7 +12,7 @@ import useSetState from "@hooks/useSetState";
 import Maybe from "@lib/Maybe";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
-import { RequiredCommitsParams } from "@lib/params";
+import { RequiredRefsParams } from "@lib/params";
 import { useEffect, useState } from "react";
 import { RowDiffState, getDefaultState } from "./state";
 
@@ -24,13 +25,17 @@ type ReturnType = {
   error?: ApolloErrorType;
 };
 
-type Params = RequiredCommitsParams & {
+type Params = RequiredRefsParams & {
   tableName: string;
 };
 
-export default function useRowDiffs(params: Params): ReturnType {
+export default function useRowDiffs(
+  params: Params,
+  forPull = false,
+): ReturnType {
+  const type = forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot;
   const { data, client, loading, error } = useRowDiffsQuery({
-    variables: params,
+    variables: { ...params, type },
   });
   const [state, setState] = useSetState(getDefaultState(data?.rowDiffs));
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
@@ -54,7 +59,7 @@ export default function useRowDiffs(params: Params): ReturnType {
     try {
       const res = await client.query<RowDiffsQuery, RowDiffsQueryVariables>({
         query: RowDiffsDocument,
-        variables: { ...params, offset, filterByRowType },
+        variables: { ...params, type, offset, filterByRowType },
       });
       setRowDiffs(res.data.rowDiffs.list);
       setState({ offset: res.data.rowDiffs.nextOffset });

@@ -1,7 +1,10 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
 import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
-import { TableDiffType } from "../diffSummaries/diffSummary.enums";
+import {
+  CommitDiffType,
+  TableDiffType,
+} from "../diffSummaries/diffSummary.enums";
 import { getDiffSummaries } from "../diffSummaries/diffSummary.resolver";
 import { ListRowsArgs } from "../rows/row.resolver";
 import { ROW_LIMIT } from "../utils";
@@ -17,18 +20,19 @@ import {
 import {
   getRowsQueryAsOf,
   getTableCommitDiffQuery,
+  hashOf,
+  mergeBase,
   tableColsQueryAsOf,
 } from "./rowDiff.queries";
 import { unionCols } from "./utils";
 
 @ArgsType()
 class ListRowDiffsArgs extends DBArgsWithOffset {
-  // Uses resolved commits
   @Field()
-  fromCommitId: string;
+  fromRefName: string;
 
   @Field()
-  toCommitId: string;
+  toRefName: string;
 
   @Field({ nullable: true })
   refName?: string;
@@ -38,6 +42,9 @@ class ListRowDiffsArgs extends DBArgsWithOffset {
 
   @Field(_type => DiffRowType, { nullable: true })
   filterByRowType?: DiffRowType;
+
+  @Field(_type => CommitDiffType, { nullable: true })
+  type?: CommitDiffType;
 }
 
 @Resolver(_of => RowDiff)
@@ -57,20 +64,30 @@ export class RowDiffResolver {
         const ds = await getDiffSummaries(query, {
           ...dbArgs,
           tableName,
-          fromRefName: args.fromCommitId,
-          toRefName: args.toCommitId,
+          fromRefName: args.fromRefName,
+          toRefName: args.toRefName,
+          type: args.type,
         });
         if (!ds.length) {
           throw new Error(`Could not get summary for table "${tableName}"`);
         }
 
-        const { tableType, fromTableName, toTableName } = ds[0];
+        const { fromCommitId, toCommitId } = await resolveRefs(
+          query,
+          args.fromRefName,
+          args.toRefName,
+          args.type,
+        );
 
+        const { tableType, fromTableName, toTableName } = ds[0];
+        console.log("from", args.fromRefName, "to", args.toRefName);
+        console.log("DIFF TYPE", ds[0]);
         if (tableType === TableDiffType.Dropped) {
+          // console.log("dropped", tableName, args.fromRefName);
           const rows = await getRowsForDiff(query, {
             ...dbArgs,
             tableName,
-            refName: args.fromCommitId,
+            refName: args.toRefName,
           });
           return fromOneSidedTable(rows, "dropped", args.filterByRowType);
         }
@@ -78,18 +95,18 @@ export class RowDiffResolver {
           const rows = await getRowsForDiff(query, {
             ...dbArgs,
             tableName,
-            refName: args.toCommitId,
+            refName: args.fromRefName,
           });
           return fromOneSidedTable(rows, "added", args.filterByRowType);
         }
 
         const oldCols = await query(tableColsQueryAsOf, [
           fromTableName,
-          args.fromCommitId,
+          fromCommitId,
         ]);
         const newCols = await query(tableColsQueryAsOf, [
           toTableName,
-          args.toCommitId,
+          toCommitId,
         ]);
 
         const colsUnion = unionCols(
@@ -98,7 +115,7 @@ export class RowDiffResolver {
         );
 
         const diffType = convertToStringForQuery(args.filterByRowType);
-        const refArgs = [args.fromCommitId, args.toCommitId, tableName];
+        const refArgs = [fromCommitId, toCommitId, tableName];
         const pageArgs = [ROW_LIMIT + 1, offset];
         const diffs = await query(
           getTableCommitDiffQuery(colsUnion, !!diffType),
@@ -130,4 +147,21 @@ async function getRowsForDiff(query: ParQuery, args: ListRowsArgs) {
     offset,
   ]);
   return fromDoltListRowWithColsRes(rows, columns, offset, args.tableName);
+}
+
+async function resolveRefs(
+  query: ParQuery,
+  fromRefName: string,
+  toRefName: string,
+  type?: CommitDiffType,
+): Promise<{ fromCommitId: string; toCommitId: string }> {
+  if (type === CommitDiffType.ThreeDot) {
+    const fromCommitId = await query(hashOf, [fromRefName]);
+    const toCommitId = await query(mergeBase, [toRefName, fromRefName]);
+    return {
+      fromCommitId: Object.values(fromCommitId[0])[0],
+      toCommitId: Object.values(toCommitId[0])[0],
+    };
+  }
+  return { fromCommitId: fromRefName, toCommitId: toRefName };
 }

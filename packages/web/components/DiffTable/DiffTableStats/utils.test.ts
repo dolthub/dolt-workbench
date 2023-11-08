@@ -10,7 +10,7 @@ describe("test getDoltCommitDiffQuery for diff tables", () => {
         hiddenColIndexes: [],
       }),
     ).toEqual(
-      `SELECT diff_type, \`from_id\`, \`to_id\`, \`from_name\`, \`to_name\`, from_commit, from_commit_date, to_commit, to_commit_date FROM \`dolt_commit_diff_${params.tableName}\` WHERE from_commit="${params.fromCommitId}" AND to_commit="${params.toCommitId}"`,
+      `SELECT diff_type, \`from_id\`, \`to_id\`, \`from_name\`, \`to_name\`, from_commit, from_commit_date, to_commit, to_commit_date FROM \`dolt_commit_diff_${params.tableName}\` WHERE from_commit="${params.fromRefName}" AND to_commit="${params.toRefName}"`,
     );
   });
 
@@ -22,7 +22,20 @@ describe("test getDoltCommitDiffQuery for diff tables", () => {
         hiddenColIndexes: [1],
       }),
     ).toEqual(
-      `SELECT diff_type, \`from_id\`, \`to_id\`, from_commit, from_commit_date, to_commit, to_commit_date FROM \`dolt_commit_diff_${params.tableName}\` WHERE from_commit="${params.fromCommitId}" AND to_commit="${params.toCommitId}"`,
+      `SELECT diff_type, \`from_id\`, \`to_id\`, from_commit, from_commit_date, to_commit, to_commit_date FROM \`dolt_commit_diff_${params.tableName}\` WHERE from_commit="${params.fromRefName}" AND to_commit="${params.toRefName}"`,
+    );
+  });
+
+  it("returns query for no diff tags and removed columns for pull", () => {
+    expect(
+      getDoltCommitDiffQuery({
+        params,
+        columns: tableCols,
+        hiddenColIndexes: [1],
+        forPull: true,
+      }),
+    ).toEqual(
+      `SELECT diff_type, \`from_id\`, \`to_id\`, from_commit, from_commit_date, to_commit, to_commit_date FROM \`dolt_commit_diff_${params.tableName}\` WHERE from_commit="${params.fromRefName}" AND to_commit=DOLT_MERGE_BASE("${params.toRefName}", "${params.fromRefName}")`,
     );
   });
 });

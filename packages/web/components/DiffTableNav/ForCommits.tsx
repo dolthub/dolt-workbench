@@ -14,21 +14,14 @@ export default function ForCommits(props: Props) {
   return (
     <DiffTableNav
       {...props}
-      diffStat={
-        <DiffStat
-          params={{
-            ...params,
-            refName,
-            fromRefName: params.fromCommitId,
-            toRefName: params.toCommitId,
-          }}
-        />
-      }
+      diffStat={<DiffStat params={{ ...params, refName }} />}
       diffSelector={
         <CommitInfo
           params={{
             ...params,
             refName: props.params.refName,
+            toCommitId: params.toRefName,
+            fromCommitId: params.fromRefName,
           }}
         />
       }

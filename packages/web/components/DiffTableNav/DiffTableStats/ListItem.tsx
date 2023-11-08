@@ -1,5 +1,5 @@
 import { DiffSummaryFragment } from "@gen/graphql-types";
-import { RequiredCommitsParams } from "@lib/params";
+import { RequiredRefsParams } from "@lib/params";
 import cx from "classnames";
 import StatIcon from "./StatIcon";
 import TableName from "./TableName";
@@ -8,7 +8,7 @@ import css from "./index.module.css";
 
 type Props = {
   diffSummary: DiffSummaryFragment;
-  params: RequiredCommitsParams & { refName: string };
+  params: RequiredRefsParams & { refName: string };
   isActive: boolean;
 };
 
@@ -26,14 +26,7 @@ export default function ListItem(props: Props) {
         </span>
         <TableName {...props} />
       </span>
-      <TableStat
-        {...props}
-        params={{
-          ...props.params,
-          fromRefName: props.params.fromCommitId,
-          toRefName: props.params.toCommitId,
-        }}
-      />
+      <TableStat {...props} params={props.params} />
     </li>
   );
 }

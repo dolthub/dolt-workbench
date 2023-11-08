@@ -223,3 +223,14 @@ export function commitDiffBreadcrumbDetails(
     },
   ];
 }
+
+export function pullsBreadcrumbs(params: DatabaseParams): BreadcrumbDetails[] {
+  return [
+    ...databaseBreadcrumbs(params),
+    {
+      child: <span>pull requests</span>,
+      name: BreadcrumbName.DBPulls,
+      type: BreadcrumbType.Text,
+    },
+  ];
+}

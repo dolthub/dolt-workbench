@@ -1,22 +1,24 @@
-import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
+import { DropdownItem } from "@components/DatabaseOptionsDropdown";
+import SmallLoader from "@components/SmallLoader";
+import Link from "@components/links/Link";
 import {
   ColumnForDataTableFragment,
   useDataTableQuery,
 } from "@gen/graphql-types";
-import { DiffParams } from "@lib/params";
+import { RequiredRefsParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
-import { DropdownItem } from "@components/DatabaseOptionsDropdown";
-import Link from "@components/links/Link";
-import SmallLoader from "@components/SmallLoader";
+import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
 import { getDoltCommitDiffQuery } from "../DiffTableStats/utils";
 import css from "./index.module.css";
 import { HiddenColIndexes } from "./utils";
 
 type Props = {
-  params: Required<DiffParams> & {
+  params: RequiredRefsParams & {
+    refName: string;
     tableName: string;
   };
   hiddenColIndexes: HiddenColIndexes;
+  forPull?: boolean;
 };
 
 type InnerProps = Props & {

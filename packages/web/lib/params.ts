@@ -49,6 +49,13 @@ export type CommitsParams = {
 
 export type RequiredCommitsParams = DatabaseParams & Required<CommitsParams>;
 
+export type RefsParams = {
+  fromRefName: string;
+  toRefName: string;
+};
+
+export type RequiredRefsParams = DatabaseParams & RefsParams;
+
 export type DiffParams = RefParams & CommitsParams;
 
 export type UploadParams = DatabaseParams & {
@@ -62,4 +69,9 @@ export type DiffRangeParams = RefParams & {
 export type DiffParamsWithRefs = DatabaseParams & {
   fromRefName: string;
   toRefName: string;
+};
+
+export type PullParams = OptionalRefParams & {
+  fromBranchName?: string;
+  toBranchName?: string;
 };

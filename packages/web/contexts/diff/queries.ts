@@ -12,15 +12,17 @@ export const DIFF_SUMMARIES = gql`
   }
   query DiffSummaries(
     $databaseName: String!
-    $fromCommitId: String!
-    $toCommitId: String!
+    $fromRefName: String!
+    $toRefName: String!
     $refName: String
+    $type: CommitDiffType
   ) {
     diffSummaries(
       databaseName: $databaseName
-      fromRefName: $fromCommitId
-      toRefName: $toCommitId
+      fromRefName: $fromRefName
+      toRefName: $toRefName
       refName: $refName
+      type: $type
     ) {
       ...DiffSummary
     }

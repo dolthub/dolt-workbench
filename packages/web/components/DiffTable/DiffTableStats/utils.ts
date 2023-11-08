@@ -1,12 +1,14 @@
-import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { CommitsParams, DiffParams } from "@lib/params";
 import { getAllSelectColumns } from "@components/CellButtons/queryHelpers";
+import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { RefsParams, RequiredRefsParams } from "@lib/params";
 import { isHiddenColumn } from "../DataDiff/utils";
 
 type Props = {
-  params: Required<DiffParams> & {
+  params: RequiredRefsParams & {
+    refName: string;
     tableName: string;
   };
+  forPull?: boolean;
   columns: ColumnForDataTableFragment[];
   hiddenColIndexes: number[];
 };
@@ -23,11 +25,14 @@ export function getDoltCommitDiffQuery(props: Props): string {
   const cols = getAllSelectColumns(colsWithNamesAndVals);
   return `SELECT ${cols} FROM \`dolt_commit_diff_${
     props.params.tableName
-  }\`${getWhereClause(props.params)}`;
+  }\`${getWhereClause(props.params, props.forPull)}`;
 }
 
-function getWhereClause(params: CommitsParams): string {
-  return ` WHERE from_commit="${params.fromCommitId}" AND to_commit="${params.toCommitId}"`;
+function getWhereClause(params: RefsParams, forPull = false): string {
+  const toCommit = forPull
+    ? `DOLT_MERGE_BASE("${params.toRefName}", "${params.fromRefName}")`
+    : `"${params.toRefName}"`;
+  return ` WHERE from_commit="${params.fromRefName}" AND to_commit=${toCommit}`;
 }
 
 // Get names and values for every column based on row value and dolt_commit_diff table

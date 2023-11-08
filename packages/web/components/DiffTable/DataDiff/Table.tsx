@@ -6,7 +6,7 @@ import {
 } from "@lib/doltSystemTables";
 import { gqlNoRefFoundErr } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
-import { DiffParams } from "@lib/params";
+import { TableParams } from "@lib/params";
 import cx from "classnames";
 import { useState } from "react";
 import Body from "./Body";
@@ -23,9 +23,7 @@ type Props = {
   state: RowDiffState;
   setHiddenColIndexes: SetHiddenColIndexes;
   hiddenColIndexes: HiddenColIndexes;
-  params: DiffParams & {
-    tableName: string;
-  };
+  params: TableParams;
   hideCellButtons?: boolean;
   refName: string;
   error?: ApolloError;

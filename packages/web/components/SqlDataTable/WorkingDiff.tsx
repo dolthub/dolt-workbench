@@ -25,9 +25,9 @@ function Inner() {
 }
 
 export default function WorkingDiff(props: Props) {
-  const fromCommitId = "HEAD";
-  const toCommitId = "WORKING";
-  const params = { ...props.params, toCommitId, fromCommitId };
+  const fromRefName = "HEAD";
+  const toRefName = "WORKING";
+  const params = { ...props.params, toRefName, fromRefName };
   return (
     <NotDoltWrapper hideNotDolt>
       <DiffProvider params={params} stayWithinPage>

@@ -9,7 +9,7 @@ import * as gen from "@gen/graphql-types";
 import {
   DatabaseParams,
   RefParams,
-  RequiredCommitsParams,
+  RequiredRefsParams,
   TableParams,
 } from "./params";
 
@@ -47,20 +47,16 @@ export const refetchResetChangesQueries = (
   variables: RefParams,
   isDolt = false,
 ): RefetchQueries => {
-  const diffVariables: RequiredCommitsParams = {
+  const diffVariables: RequiredRefsParams = {
     ...variables,
-    fromCommitId: "HEAD",
-    toCommitId: "WORKING",
+    fromRefName: "HEAD",
+    toRefName: "WORKING",
   };
   return [
     ...(isDolt ? [{ query: gen.GetStatusDocument, variables }] : []),
     {
       query: gen.DiffStatDocument,
-      variables: {
-        ...variables,
-        fromRefName: diffVariables.fromCommitId,
-        toRefName: diffVariables.toCommitId,
-      },
+      variables: diffVariables,
     },
     {
       query: gen.DiffSummariesDocument,

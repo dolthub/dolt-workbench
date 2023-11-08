@@ -1,5 +1,5 @@
 .horizontal {
-  @apply flex;
+  @apply flex items-center;
 }
 
 .label {
@@ -7,7 +7,7 @@
 }
 
 .horizontalLabel {
-  @apply mr-3 mt-1;
+  @apply mr-3 mb-0;
 }
 
 .dropdownIndicator {

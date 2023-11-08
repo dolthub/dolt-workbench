@@ -1,15 +1,20 @@
 import { ApolloError } from "@apollo/client";
-import { DiffSummaryFragment, useDiffSummariesQuery } from "@gen/graphql-types";
+import {
+  CommitDiffType,
+  DiffSummaryFragment,
+  useDiffSummariesQuery,
+} from "@gen/graphql-types";
 import useContextWithError from "@hooks/useContextWithError";
 import { createCustomContext } from "@lib/createCustomContext";
-import { RequiredCommitsParams } from "@lib/params";
+import { RequiredRefsParams } from "@lib/params";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 
 type Props = {
   children: ReactNode;
-  params: RequiredCommitsParams & { refName?: string };
+  params: RequiredRefsParams & { refName?: string };
   initialTableName?: string;
   stayWithinPage?: boolean;
+  forPull?: boolean;
 };
 
 // This contexts handles the diff summaries for the diff page
@@ -17,12 +22,13 @@ type DiffContextType = {
   diffSummaries: DiffSummaryFragment[];
   loading: boolean;
   error?: ApolloError;
-  params: RequiredCommitsParams;
+  params: RequiredRefsParams;
   activeTableName: string;
   setActiveTableName: (a: string) => void;
   refName: string;
   setRefName: (r: string) => void;
   stayWithinPage: boolean; // Changing tables within diff doesn't change URL
+  forPull: boolean;
 };
 
 export const DiffContext = createCustomContext<DiffContextType>("DiffContext");
@@ -33,13 +39,17 @@ export function DiffProvider({
   children,
   initialTableName,
   stayWithinPage = false,
+  forPull = false,
 }: Props): JSX.Element {
   const [activeTableName, setActiveTableName] = useState(
     initialTableName ?? "",
   );
   const [refName, setRefName] = useState(params.refName ?? "");
   const { data, error, loading } = useDiffSummariesQuery({
-    variables: params,
+    variables: {
+      ...params,
+      type: forPull ? CommitDiffType.ThreeDot : CommitDiffType.TwoDot,
+    },
   });
 
   useEffect(() => {
@@ -59,6 +69,7 @@ export function DiffProvider({
       refName,
       setRefName,
       stayWithinPage,
+      forPull,
     };
   }, [
     data,
@@ -70,6 +81,7 @@ export function DiffProvider({
     refName,
     setRefName,
     stayWithinPage,
+    forPull,
   ]);
 
   return <DiffContext.Provider value={value}>{children}</DiffContext.Provider>;

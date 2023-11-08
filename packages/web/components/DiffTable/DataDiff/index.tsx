@@ -8,7 +8,7 @@ import { useDiffContext } from "@contexts/diff";
 import { DiffRowType } from "@gen/graphql-types";
 import useFocus from "@hooks/useFocus";
 import { ApolloErrorType } from "@lib/errors/types";
-import { DiffParams } from "@lib/params";
+import { RequiredRefsParams } from "@lib/params";
 import InfiniteScroll from "react-infinite-scroller";
 import DiffMsg from "./DiffMsg";
 import FilterByType from "./FilterByType";
@@ -24,8 +24,9 @@ import { HiddenColIndexes, SetHiddenColIndexes, getIsPKTable } from "./utils";
 type Props = {
   hiddenColIndexes: HiddenColIndexes;
   setHiddenColIndexes: SetHiddenColIndexes;
-  params: Required<DiffParams> & {
+  params: RequiredRefsParams & {
     tableName: string;
+    refName: string;
   };
   hideCellButtons?: boolean;
 };
@@ -54,7 +55,7 @@ function Inner(props: InnerProps) {
 
   // For diff tables we want to use `refName` from `useDiffContext`, which is either the `fromBranchName`
   // for PR diffs or the current ref for commit diffs
-  const { refName } = useDiffContext();
+  const { refName, forPull } = useDiffContext();
   const res = useDataTableContext();
 
   return (
@@ -65,7 +66,7 @@ function Inner(props: InnerProps) {
           showingHideUnchangedCol={hideUnchangedCols}
           className={css.optionButton}
         >
-          <ViewSqlLink {...props} />
+          <ViewSqlLink {...props} forPull={forPull} />
         </DatabaseOptionsDropdown>
         <FilterByType filter={state.filter} setFilter={setFilter} />
       </div>
@@ -123,8 +124,10 @@ function Inner(props: InnerProps) {
 }
 
 export default function DataDiff(props: Props) {
+  const { forPull } = useDiffContext();
   const { state, fetchMore, setFilter, hasMore, loading } = useRowDiffs(
     props.params,
+    forPull,
   );
 
   if (loading) return <Loader loaded={false} />;
