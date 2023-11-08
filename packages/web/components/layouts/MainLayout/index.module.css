@@ -1,0 +1,12 @@
+.layout {
+  @apply bg-ld-grey h-full;
+  min-height: 100vh;
+}
+
+.container {
+  @apply max-w-2xl py-40 px-4 mx-auto;
+
+  h1 {
+    @apply mb-6 text-center;
+  }
+}

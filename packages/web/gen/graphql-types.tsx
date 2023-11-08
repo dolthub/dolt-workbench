@@ -193,7 +193,7 @@ export enum LoadDataModifier {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addDatabaseConnection: Scalars['String']['output'];
+  addDatabaseConnection?: Maybe<Scalars['String']['output']>;
   createBranch: Branch;
   createDatabase: Scalars['Boolean']['output'];
   createTag: Tag;
@@ -783,7 +783,7 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
 }>;
 
 
-export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: string };
+export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection?: string | null };
 
 export type HasDatabaseEnvQueryVariables = Exact<{ [key: string]: never; }>;
 

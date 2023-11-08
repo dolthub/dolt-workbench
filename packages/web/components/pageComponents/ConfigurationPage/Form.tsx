@@ -4,7 +4,7 @@ import CustomCheckbox from "@components/CustomCheckbox";
 import FormInput from "@components/FormInput";
 import Loader from "@components/Loader";
 import { useAddDatabaseConnectionMutation } from "@gen/graphql-types";
-import { database as databaseUrl } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { useRouter } from "next/router";
@@ -44,9 +44,7 @@ export default function Form(props: Props) {
       if (!db.data) {
         return;
       }
-      const { href, as } = databaseUrl({
-        databaseName: db.data.addDatabaseConnection,
-      });
+      const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
       router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error
@@ -64,7 +62,6 @@ export default function Form(props: Props) {
             onChangeString={setConnUrl}
             label="Connection string"
             placeholder="mysql://[username]:[password]@[host]/[database]"
-            light
           />
           <Button type="submit" disabled={!connUrl}>
             Go
@@ -138,7 +135,7 @@ export default function Form(props: Props) {
             </div>
           )}
           <ButtonsWithError error={res.error} onCancel={onCancel} left>
-            <Button type="submit" disabled={!host || !database || !username}>
+            <Button type="submit" disabled={!host || !username}>
               Launch Workbench
             </Button>
           </ButtonsWithError>

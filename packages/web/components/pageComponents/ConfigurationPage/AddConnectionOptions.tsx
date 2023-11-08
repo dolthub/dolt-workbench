@@ -5,7 +5,7 @@ import {
   useAddDatabaseConnectionMutation,
   useHasDatabaseEnvQuery,
 } from "@gen/graphql-types";
-import { database } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import Form from "./Form";
@@ -28,9 +28,7 @@ function Inner(props: InnerProps) {
       if (!db.data) {
         return;
       }
-      const { href, as } = database({
-        databaseName: db.data.addDatabaseConnection,
-      });
+      const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
       router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error
