@@ -9,9 +9,6 @@ module.exports = {
     "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:jest-dom/recommended",
-    "plugin:testing-library/dom",
-    "plugin:css-modules/recommended",
   ],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -23,9 +20,6 @@ module.exports = {
   plugins: [
     "@typescript-eslint",
     "jest",
-    "jest-dom",
-    "testing-library",
-    "css-modules",
   ],
   rules: {
     "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
@@ -95,7 +89,7 @@ module.exports = {
     "@typescript-eslint/prefer-optional-chain": "error",
     "@typescript-eslint/prefer-string-starts-ends-with": "error",
     "@typescript-eslint/promise-function-async": "error",
-    "css-modules/no-unused-class": "warn",
+    "max-classes-per-file": "off",
     "import/prefer-default-export": "off",
     "no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
     "no-sequences": "error",
