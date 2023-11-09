@@ -1,0 +1,19 @@
+**/node_modules
+**/npm-debug.log
+**/yarn-error.log
+**/.next
+**/.cache
+**/.eslintcache
+**/dist
+**/*.tsbuildinfo
+.rts2_cache*
+WebDockerfile
+GraphQLDockerfile
+*.env
+
+# .yarn/*
+# !.yarn/patches
+# !.yarn/plugins
+# !.yarn/releases
+# !.yarn/sdks
+# !.yarn/versions
