@@ -1,0 +1,11 @@
+.selectors {
+  @apply flex items-center;
+}
+
+.selector {
+  @apply min-w-[225px];
+}
+
+.arrow {
+  @apply text-2xl mx-6;
+}

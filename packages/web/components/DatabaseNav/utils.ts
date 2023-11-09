@@ -4,6 +4,7 @@ import {
   database,
   DatabaseUrl,
   defaultDoc,
+  pulls,
   ref,
   RefUrl,
   releases,
@@ -20,8 +21,8 @@ function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
       return [database, commitLog];
     case "Releases":
       return [releases];
-    // case "Pull Requests":
-    //   return [pulls];
+    case "Pull Requests":
+      return [pulls];
     default:
       return [database, ref];
   }

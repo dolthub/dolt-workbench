@@ -24,6 +24,11 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   const { diffSummaries } = useDiffContext();
   const isPrimaryKeyChange = errorMatches(gqlErrorPrimaryKeyChange, props.err);
+
+  if (!diffSummaries.length) {
+    return <p className={css.noChanges}>No changes to show</p>;
+  }
+
   return (
     <div
       className={cx(css.summary, props.className)}
@@ -44,8 +49,9 @@ function Inner(props: InnerProps) {
 }
 
 export default function DiffStat(props: Props) {
+  const { type } = useDiffContext();
   const { data, loading, error } = useDiffStatQuery({
-    variables: props.params,
+    variables: { ...props.params, type },
   });
 
   return (

@@ -15,6 +15,9 @@ export const getRowsQueryAsOf = (
 
 export const tableColsQueryAsOf = `DESCRIBE ?? AS OF ?`;
 
+export const hashOf = `SELECT HASHOF(?)`;
+export const mergeBase = `SELECT DOLT_MERGE_BASE(?, ?)`;
+
 export function getTableCommitDiffQuery(
   cols: RawRows,
   hasFilter = false,

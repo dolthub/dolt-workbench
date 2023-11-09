@@ -50,8 +50,8 @@ export default function DiffPage(props: Props) {
       {...props}
       params={{
         ...props.params,
-        fromCommitId: props.initialFromCommitId,
-        toCommitId: props.initialToCommitId,
+        fromRefName: props.initialFromCommitId,
+        toRefName: props.initialToCommitId,
       }}
       initialTableName={props.tableName}
     >

@@ -1,9 +1,11 @@
 import DatabasesDropdown from "@components/DatabasesDropdown";
 import CommitLogLink from "@components/links/CommitLogLink";
 import Link from "@components/links/Link";
+import PullLink from "@components/links/PullLink";
 import {
   DatabaseParams,
   DiffRangeParams,
+  PullDiffParams,
   RefParams,
   SqlQueryParams,
   TableParams,
@@ -219,6 +221,48 @@ export function commitDiffBreadcrumbDetails(
     {
       child: commitDiffText,
       name: BreadcrumbName.DBCommitDiff,
+      type: BreadcrumbType.Text,
+    },
+  ];
+}
+
+export function pullsBreadcrumbs(params: DatabaseParams): BreadcrumbDetails[] {
+  return [
+    ...databaseBreadcrumbs(params),
+    {
+      child: <span>pull requests</span>,
+      name: BreadcrumbName.DBPulls,
+      type: BreadcrumbType.Text,
+    },
+  ];
+}
+
+export function pullDiffBreadcrumbDetails(
+  params: PullDiffParams,
+): BreadcrumbDetails[] {
+  const pullLink = <PullLink params={params}>pull request</PullLink>;
+  const pullDiffText = <span>diff</span>;
+  const commitDiffText = (
+    <span>
+      {params.refName}...{params.fromBranchName}
+    </span>
+  );
+
+  return [
+    ...databaseBreadcrumbs(params),
+    {
+      child: pullLink,
+      name: BreadcrumbName.DBPull,
+      type: BreadcrumbType.Link,
+    },
+    {
+      child: pullDiffText,
+      name: BreadcrumbName.DBPullDiff,
+      type: BreadcrumbType.Text,
+    },
+    {
+      child: commitDiffText,
+      name: BreadcrumbName.DBPullDiffRange,
       type: BreadcrumbType.Text,
     },
   ];

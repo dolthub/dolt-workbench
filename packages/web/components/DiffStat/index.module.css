@@ -34,3 +34,7 @@
 .primaryKeyChange {
   @apply text-primary font-normal;
 }
+
+.noChanges {
+  @apply mx-3 mt-4;
+}

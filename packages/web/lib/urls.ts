@@ -83,6 +83,20 @@ function getDiffRange(p: ps.DiffParams): string {
 export const releases = (p: ps.OptionalRefParams): Route =>
   database(p).addStatic("releases").withQuery({ refName: p.refName });
 
+const staticPulls = (p: ps.DatabaseParams) => database(p).addStatic("pulls");
+
+export const pulls = (p: ps.PullParams): Route =>
+  staticPulls(p).withQuery({
+    refName: p.refName,
+    from: p.fromBranchName,
+  });
+
+export const pullDiff = (p: ps.PullDiffParams): Route =>
+  staticPulls(p)
+    .addStatic("compare")
+    .addDynamic("refName", p.refName, ENCODE)
+    .addDynamic("fromBranchName", p.fromBranchName, ENCODE);
+
 export const newRelease = (p: ps.OptionalRefParams): Route =>
   releases(p).addStatic("new").withQuery({ refName: p.refName });
 

@@ -37,20 +37,22 @@ export const ROW_DIFFS = gql`
   query RowDiffs(
     $databaseName: String!
     $tableName: String!
-    $fromCommitId: String!
-    $toCommitId: String!
+    $fromRefName: String!
+    $toRefName: String!
     $refName: String
     $offset: Int
     $filterByRowType: DiffRowType
+    $type: CommitDiffType
   ) {
     rowDiffs(
       databaseName: $databaseName
       tableName: $tableName
-      fromCommitId: $fromCommitId
-      toCommitId: $toCommitId
+      fromRefName: $fromRefName
+      toRefName: $toRefName
       refName: $refName
       offset: $offset
       filterByRowType: $filterByRowType
+      type: $type
     ) {
       ...RowDiffListWithCols
     }
@@ -71,16 +73,18 @@ export const SCHEMA_DIFF = gql`
   query SchemaDiff(
     $databaseName: String!
     $tableName: String!
-    $fromCommitId: String!
-    $toCommitId: String!
+    $fromRefName: String!
+    $toRefName: String!
     $refName: String
+    $type: CommitDiffType
   ) {
     schemaDiff(
       databaseName: $databaseName
       tableName: $tableName
-      fromCommitId: $fromCommitId
-      toCommitId: $toCommitId
+      fromRefName: $fromRefName
+      toRefName: $toRefName
       refName: $refName
+      type: $type
     ) {
       ...SchemaDiff
     }

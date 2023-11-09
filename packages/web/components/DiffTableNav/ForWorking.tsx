@@ -1,11 +1,11 @@
 import DiffStat from "@components/DiffStat";
-import { RequiredCommitsParams } from "@lib/params";
+import { RequiredRefsParams } from "@lib/params";
 import cx from "classnames";
 import DiffTableStats from "./DiffTableStats";
 import css from "./index.module.css";
 
 type Props = {
-  params: RequiredCommitsParams & { refName: string };
+  params: RequiredRefsParams & { refName: string };
 };
 
 export default function ForWorking(props: Props) {
@@ -16,11 +16,7 @@ export default function ForWorking(props: Props) {
           <h1>Working Changes</h1>
           <DiffStat
             {...props}
-            params={{
-              ...props.params,
-              fromRefName: props.params.fromCommitId,
-              toRefName: props.params.toCommitId,
-            }}
+            params={props.params}
             className={css.wkSummary}
             flat
           />

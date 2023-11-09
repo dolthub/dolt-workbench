@@ -15,10 +15,7 @@ export default function ForReleases(props: Props): JSX.Element {
   const feature = props.newRelease ? "Creating releases" : "Viewing releases";
   return (
     <ForDefaultBranch
-      params={{
-        ...props.params,
-        refName: props.params.refName ?? undefined,
-      }}
+      params={props.params}
       initialTabIndex={3}
       hideDefaultTable
       smallHeaderBreadcrumbs={

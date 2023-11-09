@@ -23,7 +23,11 @@ const customJestConfig = {
     "@hooks/(.*)": "<rootDir>/hooks/$1",
     "@lib/(.*)": "<rootDir>/lib/$1",
   },
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
+  testPathIgnorePatterns: [
+    "<rootDir>/.next/",
+    "<rootDir>/node_modules/",
+    "<rootDir>/lib/testUtils.test.ts",
+  ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
   collectCoverage: false,
 };

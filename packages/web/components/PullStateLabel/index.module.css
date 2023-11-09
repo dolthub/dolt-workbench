@@ -1,0 +1,14 @@
+.state {
+  @apply inline-block rounded-full text-sm text-center mb-1 py-0.5 uppercase;
+  width: 4.5rem;
+}
+
+.Open {
+  @apply text-acc-green;
+  background-color: #d8f5e6;
+}
+
+.Merged {
+  @apply text-acc-pink;
+  background-color: #fae9fa;
+}

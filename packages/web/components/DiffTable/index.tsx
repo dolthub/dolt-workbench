@@ -1,7 +1,7 @@
 import StatusWithOptions from "@components/StatusWithOptions";
 import { useDiffContext } from "@contexts/diff";
 import { DiffSummaryFragment, TableDiffType } from "@gen/graphql-types";
-import { DatabaseParams, RequiredCommitsParams } from "@lib/params";
+import { DatabaseParams, RequiredRefsParams } from "@lib/params";
 import { useEffect, useState } from "react";
 import DataSection from "./DataSection";
 import DiffTableStats from "./DiffTableStats";
@@ -80,11 +80,11 @@ export default function DiffTable(props: Props) {
   return <Inner {...props} diffSummary={currentDiffSummary} />;
 }
 
-function isShowingUncommittedChanges(params: RequiredCommitsParams): boolean {
+function isShowingUncommittedChanges(params: RequiredRefsParams): boolean {
   return (
-    params.fromCommitId === "WORKING" ||
-    params.toCommitId === "WORKING" ||
-    params.fromCommitId === "STAGED" ||
-    params.toCommitId === "STAGED"
+    params.fromRefName === "WORKING" ||
+    params.toRefName === "WORKING" ||
+    params.fromRefName === "STAGED" ||
+    params.toRefName === "STAGED"
   );
 }

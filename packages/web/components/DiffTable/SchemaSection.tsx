@@ -36,11 +36,12 @@ function Inner({ schemaDiff }: InnerProps) {
 }
 
 export default function SchemaSection(props: Props) {
-  const { params } = useDiffContext();
+  const { params, type } = useDiffContext();
   const res = useSchemaDiffQuery({
     variables: {
       ...params,
       tableName: props.diffSummary.tableName,
+      type,
     },
   });
   return (

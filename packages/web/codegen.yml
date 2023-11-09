@@ -12,4 +12,9 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
-
+  gen/fragmentTypes.json:
+    plugins:
+      - "fragment-matcher"
+    config:
+      apolloClientVersion: 3
+      

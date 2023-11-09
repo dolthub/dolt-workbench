@@ -15,6 +15,7 @@ type Props = {
   diffSelector?: ReactNode;
   diffTables?: ReactNode;
   white?: boolean;
+  forPull?: boolean;
 };
 
 export default function DiffTableNav({ white = false, ...props }: Props) {
@@ -33,7 +34,11 @@ export default function DiffTableNav({ white = false, ...props }: Props) {
     >
       {!!props.diffSelector && (
         <div className={css.top}>
-          <BackButton params={props.params} open={open} />
+          <BackButton
+            params={props.params}
+            open={open}
+            forPull={props.forPull}
+          />
           <GiHamburgerMenu
             onClick={toggleMenu}
             className={css.menuIcon}

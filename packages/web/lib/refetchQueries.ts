@@ -8,8 +8,9 @@ import {
 import * as gen from "@gen/graphql-types";
 import {
   DatabaseParams,
+  PullDiffParams,
   RefParams,
-  RequiredCommitsParams,
+  RequiredRefsParams,
   TableParams,
 } from "./params";
 
@@ -47,20 +48,16 @@ export const refetchResetChangesQueries = (
   variables: RefParams,
   isDolt = false,
 ): RefetchQueries => {
-  const diffVariables: RequiredCommitsParams = {
+  const diffVariables: RequiredRefsParams = {
     ...variables,
-    fromCommitId: "HEAD",
-    toCommitId: "WORKING",
+    fromRefName: "HEAD",
+    toRefName: "WORKING",
   };
   return [
     ...(isDolt ? [{ query: gen.GetStatusDocument, variables }] : []),
     {
       query: gen.DiffStatDocument,
-      variables: {
-        ...variables,
-        fromRefName: diffVariables.fromCommitId,
-        toRefName: diffVariables.toCommitId,
-      },
+      variables: diffVariables,
     },
     {
       query: gen.DiffSummariesDocument,
@@ -87,6 +84,23 @@ export const refetchTableUploadQueries = (
 ) => [
   ...refetchResetChangesQueries(variables, isDolt),
   ...refetchTableQueries(variables),
+];
+
+export const refetchDeletedBranch = (
+  params: PullDiffParams,
+): RefetchQueries => [
+  {
+    query: gen.GetBranchForPullDocument,
+    variables: {
+      databaseName: params.databaseName,
+      branchName: params.fromBranchName,
+    },
+  },
+  {
+    query: gen.PullDetailsForPullDetailsDocument,
+    variables: params,
+  },
+  ...refetchBranchQueries(params),
 ];
 
 export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {

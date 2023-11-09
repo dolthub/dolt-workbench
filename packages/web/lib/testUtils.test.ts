@@ -49,8 +49,3 @@ export function setup(jsx: React.ReactElement) {
     ...render(jsx),
   };
 }
-
-// Need to place the above functions in a .test.tsx file, so there needs to be at least one test in the file
-describe("utils test", () => {
-  it("works", () => {});
-});

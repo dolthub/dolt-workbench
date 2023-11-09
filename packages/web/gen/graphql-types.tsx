@@ -200,6 +200,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
+  mergePull: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
 };
 
@@ -253,6 +254,53 @@ export type MutationLoadDataFileArgs = {
   tableName: Scalars['String']['input'];
 };
 
+
+export type MutationMergePullArgs = {
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+};
+
+export type PullDetailCommit = {
+  __typename?: 'PullDetailCommit';
+  _id: Scalars['ID']['output'];
+  commitId: Scalars['String']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  message: Scalars['String']['output'];
+  parentCommitId?: Maybe<Scalars['String']['output']>;
+  username: Scalars['String']['output'];
+};
+
+export type PullDetailSummary = {
+  __typename?: 'PullDetailSummary';
+  _id: Scalars['ID']['output'];
+  createdAt: Scalars['Timestamp']['output'];
+  numCommits: Scalars['Float']['output'];
+  username: Scalars['String']['output'];
+};
+
+export type PullDetails = PullDetailCommit | PullDetailSummary;
+
+export enum PullState {
+  Merged = 'Merged',
+  Open = 'Open',
+  Unspecified = 'Unspecified'
+}
+
+export type PullSummary = {
+  __typename?: 'PullSummary';
+  _id: Scalars['ID']['output'];
+  commits: CommitList;
+};
+
+export type PullWithDetails = {
+  __typename?: 'PullWithDetails';
+  _id: Scalars['ID']['output'];
+  details?: Maybe<Array<PullDetails>>;
+  state: PullState;
+  summary?: Maybe<PullSummary>;
+};
+
 export type Query = {
   __typename?: 'Query';
   branch?: Maybe<Branch>;
@@ -270,6 +318,7 @@ export type Query = {
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
   hasDatabaseEnv: Scalars['Boolean']['output'];
+  pullWithDetails: PullWithDetails;
   rowDiffs: RowDiffList;
   rows: RowList;
   schemaDiff?: Maybe<SchemaDiff>;
@@ -306,8 +355,10 @@ export type QueryBranchesArgs = {
 export type QueryCommitsArgs = {
   afterCommitId?: InputMaybe<Scalars['String']['input']>;
   databaseName: Scalars['String']['input'];
+  excludingCommitsFromRefName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
+  twoDot?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -361,14 +412,22 @@ export type QueryDoltSchemasArgs = {
 };
 
 
+export type QueryPullWithDetailsArgs = {
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+};
+
+
 export type QueryRowDiffsArgs = {
   databaseName: Scalars['String']['input'];
   filterByRowType?: InputMaybe<DiffRowType>;
-  fromCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  type?: InputMaybe<CommitDiffType>;
 };
 
 
@@ -382,10 +441,11 @@ export type QueryRowsArgs = {
 
 export type QuerySchemaDiffArgs = {
   databaseName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  type?: InputMaybe<CommitDiffType>;
 };
 
 
@@ -675,11 +735,12 @@ export type RowDiffListWithColsFragment = { __typename?: 'RowDiffList', nextOffs
 export type RowDiffsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
   filterByRowType?: InputMaybe<DiffRowType>;
+  type?: InputMaybe<CommitDiffType>;
 }>;
 
 
@@ -692,9 +753,10 @@ export type SchemaDiffFragment = { __typename?: 'SchemaDiff', schemaPatch?: Arra
 export type SchemaDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<CommitDiffType>;
 }>;
 
 
@@ -869,6 +931,44 @@ export type DocPageQueryNoBranchQueryVariables = Exact<{
 
 export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?: { __typename?: 'Branch', _id: string, branchName: string } | null };
 
+export type GetBranchForPullQueryVariables = Exact<{
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type GetBranchForPullQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null };
+
+export type MergePullMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+}>;
+
+
+export type MergePullMutation = { __typename?: 'Mutation', mergePull: boolean };
+
+export type PullDetailCommitFragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
+
+export type PullDetailSummaryFragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
+
+type PullDetailsForPullDetails_PullDetailCommit_Fragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
+
+type PullDetailsForPullDetails_PullDetailSummary_Fragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
+
+export type PullDetailsForPullDetailsFragment = PullDetailsForPullDetails_PullDetailCommit_Fragment | PullDetailsForPullDetails_PullDetailSummary_Fragment;
+
+export type PullDetailsFragment = { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null };
+
+export type PullDetailsForPullDetailsQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+}>;
+
+
+export type PullDetailsForPullDetailsQuery = { __typename?: 'Query', pullWithDetails: { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null } };
+
 export type RefPageQueryVariables = Exact<{
   refName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -947,9 +1047,10 @@ export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fro
 
 export type DiffSummariesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<CommitDiffType>;
 }>;
 
 
@@ -1266,6 +1367,44 @@ export const DocColumnValuesForDocPageFragmentDoc = gql`
   }
 }
     `;
+export const PullDetailCommitFragmentDoc = gql`
+    fragment PullDetailCommit on PullDetailCommit {
+  _id
+  username
+  message
+  createdAt
+  commitId
+  parentCommitId
+}
+    `;
+export const PullDetailSummaryFragmentDoc = gql`
+    fragment PullDetailSummary on PullDetailSummary {
+  _id
+  username
+  createdAt
+  numCommits
+}
+    `;
+export const PullDetailsForPullDetailsFragmentDoc = gql`
+    fragment PullDetailsForPullDetails on PullDetails {
+  ... on PullDetailCommit {
+    ...PullDetailCommit
+  }
+  ... on PullDetailSummary {
+    ...PullDetailSummary
+  }
+}
+    ${PullDetailCommitFragmentDoc}
+${PullDetailSummaryFragmentDoc}`;
+export const PullDetailsFragmentDoc = gql`
+    fragment PullDetails on PullWithDetails {
+  _id
+  state
+  details {
+    ...PullDetailsForPullDetails
+  }
+}
+    ${PullDetailsForPullDetailsFragmentDoc}`;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -1721,15 +1860,16 @@ export type DiffStatQueryHookResult = ReturnType<typeof useDiffStatQuery>;
 export type DiffStatLazyQueryHookResult = ReturnType<typeof useDiffStatLazyQuery>;
 export type DiffStatQueryResult = Apollo.QueryResult<DiffStatQuery, DiffStatQueryVariables>;
 export const RowDiffsDocument = gql`
-    query RowDiffs($databaseName: String!, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType) {
+    query RowDiffs($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType, $type: CommitDiffType) {
   rowDiffs(
     databaseName: $databaseName
     tableName: $tableName
-    fromCommitId: $fromCommitId
-    toCommitId: $toCommitId
+    fromRefName: $fromRefName
+    toRefName: $toRefName
     refName: $refName
     offset: $offset
     filterByRowType: $filterByRowType
+    type: $type
   ) {
     ...RowDiffListWithCols
   }
@@ -1750,11 +1890,12 @@ export const RowDiffsDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
  *      offset: // value for 'offset'
  *      filterByRowType: // value for 'filterByRowType'
+ *      type: // value for 'type'
  *   },
  * });
  */
@@ -1770,13 +1911,14 @@ export type RowDiffsQueryHookResult = ReturnType<typeof useRowDiffsQuery>;
 export type RowDiffsLazyQueryHookResult = ReturnType<typeof useRowDiffsLazyQuery>;
 export type RowDiffsQueryResult = Apollo.QueryResult<RowDiffsQuery, RowDiffsQueryVariables>;
 export const SchemaDiffDocument = gql`
-    query SchemaDiff($databaseName: String!, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String) {
+    query SchemaDiff($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   schemaDiff(
     databaseName: $databaseName
     tableName: $tableName
-    fromCommitId: $fromCommitId
-    toCommitId: $toCommitId
+    fromRefName: $fromRefName
+    toRefName: $toRefName
     refName: $refName
+    type: $type
   ) {
     ...SchemaDiff
   }
@@ -1797,9 +1939,10 @@ export const SchemaDiffDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
+ *      type: // value for 'type'
  *   },
  * });
  */
@@ -2449,6 +2592,120 @@ export function useDocPageQueryNoBranchLazyQuery(baseOptions?: Apollo.LazyQueryH
 export type DocPageQueryNoBranchHookResult = ReturnType<typeof useDocPageQueryNoBranch>;
 export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchLazyQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
+export const GetBranchForPullDocument = gql`
+    query GetBranchForPull($branchName: String!, $databaseName: String!) {
+  branch(branchName: $branchName, databaseName: $databaseName) {
+    _id
+  }
+}
+    `;
+
+/**
+ * __useGetBranchForPullQuery__
+ *
+ * To run a query within a React component, call `useGetBranchForPullQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBranchForPullQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBranchForPullQuery({
+ *   variables: {
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useGetBranchForPullQuery(baseOptions: Apollo.QueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
+      }
+export function useGetBranchForPullLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
+        }
+export type GetBranchForPullQueryHookResult = ReturnType<typeof useGetBranchForPullQuery>;
+export type GetBranchForPullLazyQueryHookResult = ReturnType<typeof useGetBranchForPullLazyQuery>;
+export type GetBranchForPullQueryResult = Apollo.QueryResult<GetBranchForPullQuery, GetBranchForPullQueryVariables>;
+export const MergePullDocument = gql`
+    mutation MergePull($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+  mergePull(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+  )
+}
+    `;
+export type MergePullMutationFn = Apollo.MutationFunction<MergePullMutation, MergePullMutationVariables>;
+
+/**
+ * __useMergePullMutation__
+ *
+ * To run a mutation, you first call `useMergePullMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergePullMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergePullMutation, { data, loading, error }] = useMergePullMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *   },
+ * });
+ */
+export function useMergePullMutation(baseOptions?: Apollo.MutationHookOptions<MergePullMutation, MergePullMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MergePullMutation, MergePullMutationVariables>(MergePullDocument, options);
+      }
+export type MergePullMutationHookResult = ReturnType<typeof useMergePullMutation>;
+export type MergePullMutationResult = Apollo.MutationResult<MergePullMutation>;
+export type MergePullMutationOptions = Apollo.BaseMutationOptions<MergePullMutation, MergePullMutationVariables>;
+export const PullDetailsForPullDetailsDocument = gql`
+    query PullDetailsForPullDetails($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+  pullWithDetails(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+  ) {
+    ...PullDetails
+  }
+}
+    ${PullDetailsFragmentDoc}`;
+
+/**
+ * __usePullDetailsForPullDetailsQuery__
+ *
+ * To run a query within a React component, call `usePullDetailsForPullDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePullDetailsForPullDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePullDetailsForPullDetailsQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *   },
+ * });
+ */
+export function usePullDetailsForPullDetailsQuery(baseOptions: Apollo.QueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+      }
+export function usePullDetailsForPullDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+        }
+export type PullDetailsForPullDetailsQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsQuery>;
+export type PullDetailsForPullDetailsLazyQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsLazyQuery>;
+export type PullDetailsForPullDetailsQueryResult = Apollo.QueryResult<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>;
 export const RefPageQueryDocument = gql`
     query RefPageQuery($refName: String!, $databaseName: String!, $filterSystemTables: Boolean) {
   branch(databaseName: $databaseName, branchName: $refName) {
@@ -2734,12 +2991,13 @@ export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTa
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const DiffSummariesDocument = gql`
-    query DiffSummaries($databaseName: String!, $fromCommitId: String!, $toCommitId: String!, $refName: String) {
+    query DiffSummaries($databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   diffSummaries(
     databaseName: $databaseName
-    fromRefName: $fromCommitId
-    toRefName: $toCommitId
+    fromRefName: $fromRefName
+    toRefName: $toRefName
     refName: $refName
+    type: $type
   ) {
     ...DiffSummary
   }
@@ -2759,9 +3017,10 @@ export const DiffSummariesDocument = gql`
  * const { data, loading, error } = useDiffSummariesQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
+ *      fromRefName: // value for 'fromRefName'
+ *      toRefName: // value for 'toRefName'
  *      refName: // value for 'refName'
+ *      type: // value for 'type'
  *   },
  * });
  */

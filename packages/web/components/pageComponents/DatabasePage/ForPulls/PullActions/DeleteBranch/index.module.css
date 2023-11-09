@@ -1,0 +1,35 @@
+.container {
+  @apply flex flex-col justify-between rounded-lg bg-ld-lightpurple max-w-[46rem] mx-auto p-2 pb-4 my-6 border;
+
+  @screen lg {
+    @apply mb-0 flex-row pb-2;
+  }
+}
+
+.mergedContainer {
+  @apply border-acc-pink;
+}
+
+.deleteMsg {
+  @apply flex mx-3 my-1;
+}
+
+.success {
+  @apply font-semibold mb-1;
+}
+
+.deleteBtn {
+  @apply px-4 h-8 mt-3 mx-2 min-w-[150px];
+}
+
+.merged {
+  @apply bg-acc-pink;
+}
+
+.err {
+  @apply mx-auto max-w-3xl text-center font-semibold;
+}
+
+.modal {
+  @apply max-w-xl;
+}

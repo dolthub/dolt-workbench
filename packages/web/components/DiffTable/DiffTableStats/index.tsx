@@ -14,14 +14,13 @@ type Props = {
 };
 
 export default function DiffTableStats(props: Props) {
-  const { params, refName } = useDiffContext();
+  const { params, refName, type } = useDiffContext();
   const { data, loading, error } = useDiffStatQuery({
     variables: {
       ...params,
       refName,
-      fromRefName: params.fromCommitId,
-      toRefName: params.toCommitId,
       tableName: props.diffSummary.tableName,
+      type,
     },
   });
 

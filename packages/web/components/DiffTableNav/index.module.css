@@ -7,11 +7,8 @@
 }
 
 .openContainer {
-  @apply transition-width duration-75 basis-80 mx-4;
-
-  @screen lg {
-    @apply w-96 mx-0;
-  }
+  @apply transition-width w-96 min-w-[24rem] duration-75;
+  flex-basis: 24rem;
 }
 
 .closedContainer {

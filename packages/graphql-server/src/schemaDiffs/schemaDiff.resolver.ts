@@ -1,23 +1,30 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { DataSourceService } from "../dataSources/dataSource.service";
+import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
-import { SchemaDiff } from "./schemaDiff.model";
-import { schemaDiffQuery, schemaPatchQuery } from "./schemaDiff.queries";
+import { SchemaDiff, fromDoltSchemaDiffRows } from "./schemaDiff.model";
+import {
+  schemaDiffQuery,
+  schemaPatchQuery,
+  threeDotSchemaPatchQuery,
+} from "./schemaDiff.queries";
 
 @ArgsType()
 class SchemaDiffArgs extends DBArgs {
-  // Uses resolved commits
   @Field()
-  fromCommitId: string;
+  fromRefName: string;
 
   @Field()
-  toCommitId: string;
+  toRefName: string;
 
   @Field({ nullable: true })
   refName?: string;
 
   @Field()
   tableName: string;
+
+  @Field(_type => CommitDiffType, { nullable: true })
+  type?: CommitDiffType;
 }
 
 @Resolver(_of => SchemaDiff)
@@ -28,25 +35,22 @@ export class SchemaDiffResolver {
   async schemaDiff(
     @Args() args: SchemaDiffArgs,
   ): Promise<SchemaDiff | undefined> {
-    const commitArgs = [args.fromCommitId, args.toCommitId, args.tableName];
-
     return this.dss.query(
       async query => {
-        const res = await query(schemaPatchQuery, commitArgs);
-        const schemaPatch = res.map(r => r.statement);
+        if (args.type === CommitDiffType.ThreeDot) {
+          const commitArgs = [
+            `${args.toRefName}...${args.fromRefName}`,
+            args.tableName,
+          ];
+          const patchRes = await query(threeDotSchemaPatchQuery, commitArgs);
+          const diffRes = await query(schemaDiffQuery, commitArgs);
+          return fromDoltSchemaDiffRows(patchRes, diffRes);
+        }
 
+        const commitArgs = [args.fromRefName, args.toRefName, args.tableName];
+        const patchRes = await query(schemaPatchQuery, commitArgs);
         const diffRes = await query(schemaDiffQuery, commitArgs);
-        const schemaDiff = diffRes.length
-          ? {
-              leftLines: diffRes[0].from_create_statement,
-              rightLines: diffRes[0].to_create_statement,
-            }
-          : undefined;
-
-        return {
-          schemaDiff,
-          schemaPatch,
-        };
+        return fromDoltSchemaDiffRows(patchRes, diffRes);
       },
       args.databaseName,
       args.refName,
