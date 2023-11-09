@@ -1,5 +1,9 @@
 .selector {
-  @apply mx-3 py-3 text-primary;
+  @apply mx-3 py-3 text-primary break-words;
+
+  code {
+    @apply text-sm;
+  }
 }
 
 .branch {

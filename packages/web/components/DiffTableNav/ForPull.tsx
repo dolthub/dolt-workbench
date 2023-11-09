@@ -3,7 +3,6 @@ import DiffStat from "@components/DiffStat";
 import { PullDiffParams } from "@lib/params";
 import DiffTableStats from "./DiffTableStats";
 import DiffTableNav from "./component";
-import css from "./index.module.css";
 
 type Props = {
   params: PullDiffParams;
@@ -11,23 +10,6 @@ type Props = {
 };
 
 export default function ForPull(props: Props) {
-  const selector = <DiffSelector.ForPull params={props.params} />;
-  if (!props.params.fromBranchName || !props.params.refName) {
-    return (
-      <DiffTableNav
-        {...props}
-        diffSelector={selector}
-        diffStat={
-          <p className={css.noDiff} data-cy="diff-layout-no-diff">
-            Select branches to view diff
-          </p>
-        }
-        diffTables={null}
-        forPull
-      />
-    );
-  }
-
   const params = {
     ...props.params,
     fromRefName: props.params.fromBranchName,
@@ -36,7 +18,7 @@ export default function ForPull(props: Props) {
   return (
     <DiffTableNav
       {...props}
-      diffSelector={selector}
+      diffSelector={<DiffSelector.ForPull params={props.params} />}
       diffStat={<DiffStat params={params} />}
       diffTables={<DiffTableStats />}
       forPull

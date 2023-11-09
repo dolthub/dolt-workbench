@@ -762,15 +762,6 @@ export type SchemaDiffQueryVariables = Exact<{
 
 export type SchemaDiffQuery = { __typename?: 'Query', schemaDiff?: { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null } | null };
 
-export type PullCommitsQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-  refName: Scalars['String']['input'];
-  excludingCommitsFromRefName: Scalars['String']['input'];
-}>;
-
-
-export type PullCommitsQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
-
 export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
 
 export type IndexForTableListFragment = { __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> };
@@ -1966,50 +1957,6 @@ export function useSchemaDiffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type SchemaDiffQueryHookResult = ReturnType<typeof useSchemaDiffQuery>;
 export type SchemaDiffLazyQueryHookResult = ReturnType<typeof useSchemaDiffLazyQuery>;
 export type SchemaDiffQueryResult = Apollo.QueryResult<SchemaDiffQuery, SchemaDiffQueryVariables>;
-export const PullCommitsDocument = gql`
-    query PullCommits($databaseName: String!, $refName: String!, $excludingCommitsFromRefName: String!) {
-  commits(
-    databaseName: $databaseName
-    refName: $refName
-    excludingCommitsFromRefName: $excludingCommitsFromRefName
-    twoDot: true
-  ) {
-    list {
-      ...CommitForHistory
-    }
-  }
-}
-    ${CommitForHistoryFragmentDoc}`;
-
-/**
- * __usePullCommitsQuery__
- *
- * To run a query within a React component, call `usePullCommitsQuery` and pass it any options that fit your needs.
- * When your component renders, `usePullCommitsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = usePullCommitsQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *      refName: // value for 'refName'
- *      excludingCommitsFromRefName: // value for 'excludingCommitsFromRefName'
- *   },
- * });
- */
-export function usePullCommitsQuery(baseOptions: Apollo.QueryHookOptions<PullCommitsQuery, PullCommitsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<PullCommitsQuery, PullCommitsQueryVariables>(PullCommitsDocument, options);
-      }
-export function usePullCommitsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PullCommitsQuery, PullCommitsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<PullCommitsQuery, PullCommitsQueryVariables>(PullCommitsDocument, options);
-        }
-export type PullCommitsQueryHookResult = ReturnType<typeof usePullCommitsQuery>;
-export type PullCommitsLazyQueryHookResult = ReturnType<typeof usePullCommitsLazyQuery>;
-export type PullCommitsQueryResult = Apollo.QueryResult<PullCommitsQuery, PullCommitsQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!, $refName: String!) {
   tables(databaseName: $databaseName, refName: $refName, filterSystemTables: true) {

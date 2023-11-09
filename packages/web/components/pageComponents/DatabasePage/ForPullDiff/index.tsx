@@ -3,12 +3,12 @@ import DiffTableNav from "@components/DiffTableNav";
 import PullDiffBreadcrumbs from "@components/breadcrumbs/PullDiffBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DiffProvider } from "@contexts/diff";
-import { RequiredPullDiffParams } from "@lib/params";
+import { PullDiffParams } from "@lib/params";
 import { pulls } from "@lib/urls";
 import ForDefaultBranch from "../ForDefaultBranch";
 
 type Props = {
-  params: RequiredPullDiffParams;
+  params: PullDiffParams;
   tableName?: string;
 };
 

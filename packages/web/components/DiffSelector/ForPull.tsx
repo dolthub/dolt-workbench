@@ -8,8 +8,8 @@ type Props = {
 export default function ForPull(props: Props) {
   return (
     <DiffSelector>
-      Viewing changes between <code>{props.params.fromBranchName}</code> and{" "}
-      <code>{props.params.refName}</code>
+      Viewing changes between <code>{props.params.refName}</code> and{" "}
+      <code>{props.params.fromBranchName}</code>
     </DiffSelector>
   );
 }

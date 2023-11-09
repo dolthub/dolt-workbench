@@ -103,3 +103,26 @@
 .toggle {
   @apply font-normal text-ld-darkgrey border-none px-3 text-sm hidden lg:contents;
 }
+
+.arrow {
+  @apply relative z-10;
+}
+
+.arrowGrey {
+  @apply border-ld-lightgrey bg-ld-lightpurple;
+}
+
+.arrowRed {
+  @apply border-acc-red bg-[#FDEEED];
+}
+
+.arrowGreen {
+  @apply bg-[#E6F6EE] border-acc-green;
+}
+
+.arrowLeft {
+  @apply w-4 h-4 absolute rounded-sm rotate-45 border-l border-t -top-2 left-3;
+  @screen lg {
+    @apply border-b border-t-0 left-[0.3rem] top-[1.2rem];
+  }
+}

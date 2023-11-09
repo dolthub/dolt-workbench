@@ -11,6 +11,7 @@ import { PullDiffParams } from "@lib/params";
 import { FiGitPullRequest } from "@react-icons/all-files/fi/FiGitPullRequest";
 import cx from "classnames";
 import { useState } from "react";
+import { Arrow } from "./Arrow";
 import ErrorsWithDirections from "./ErrorsWithDirections";
 import MergeConflictsDirections from "./ErrorsWithDirections/MergeConflictsDirections";
 import MergeMessage from "./MergeMessage";
@@ -46,7 +47,7 @@ export default function MergeButton(props: Props) {
       <span className={cx(css.picContainer, { [css.redIcon]: red })}>
         <FiGitPullRequest />
       </span>
-      {/* <Arrow red={red} green={!red} /> */}
+      <Arrow red={red} green={!red} />
       <div className={css.container}>
         <div className={cx(css.top, { [css.red]: red })}>
           <MergeMessageTitle hasConflicts={hasConflicts} />

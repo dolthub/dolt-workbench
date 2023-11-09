@@ -1,11 +1,11 @@
 import Page from "@components/util/Page";
 import Maybe from "@lib/Maybe";
-import { RequiredPullDiffParams } from "@lib/params";
+import { PullDiffParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: RequiredPullDiffParams;
+  params: PullDiffParams;
   tableName?: Maybe<string>;
 };
 
@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   return {
     props: {
-      params: params as RequiredPullDiffParams,
+      params: params as PullDiffParams,
       tableName: query.tableName ? String(query.tableName) : null,
     },
   };

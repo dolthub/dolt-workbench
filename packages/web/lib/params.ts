@@ -75,10 +75,4 @@ export type PullParams = OptionalRefParams & {
   fromBranchName?: string;
 };
 
-export type RequiredPullDiffParams = RefParams & {
-  fromBranchName: string;
-};
-
-export type PullDiffParams = RequiredPullDiffParams & {
-  tableName?: string;
-};
+export type PullDiffParams = Required<PullParams>;
