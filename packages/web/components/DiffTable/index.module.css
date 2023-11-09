@@ -23,7 +23,7 @@
 }
 
 .buttons {
-  @apply w-full mx-2 text-acc-hoverlinkblue;
+  @apply mx-2 text-acc-hoverlinkblue;
 
   button {
     @apply pb-2 mr-4 px-6 font-semibold;
