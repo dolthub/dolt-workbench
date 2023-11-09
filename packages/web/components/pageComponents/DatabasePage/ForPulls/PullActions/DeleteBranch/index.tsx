@@ -55,7 +55,8 @@ function Inner(props: InnerProps) {
 
   if (
     !props.branchExists ||
-    props.params.fromBranchName === defaultBranchName
+    props.params.fromBranchName === defaultBranchName ||
+    props.params.fromBranchName === props.params.refName
   ) {
     return null;
   }
