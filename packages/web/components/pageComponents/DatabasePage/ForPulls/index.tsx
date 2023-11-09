@@ -28,7 +28,9 @@ type BranchesProps = {
 };
 
 function ForBranches(props: BranchesProps) {
-  const res = usePullDetailsForPullDetailsQuery({ variables: props.params });
+  const res = usePullDetailsForPullDetailsQuery({
+    variables: { ...props.params, toBranchName: props.params.refName },
+  });
 
   useEffect(() => {
     if (!res.data) return;
@@ -63,13 +65,13 @@ function Inner(props: Props) {
         <div>
           <PullStateLabel state={pullState} />
           {props.params.fromBranchName &&
-            props.params.toBranchName &&
+            props.params.refName &&
             pullState === PullState.Open && (
               <Link
                 {...pullDiff({
                   ...props.params,
+                  refName: props.params.refName,
                   fromBranchName: props.params.fromBranchName,
-                  toBranchName: props.params.toBranchName,
                 })}
                 className={css.viewDiffButton}
               >
@@ -81,12 +83,12 @@ function Inner(props: Props) {
         </div>
       </div>
 
-      {props.params.fromBranchName && props.params.toBranchName ? (
+      {props.params.fromBranchName && props.params.refName ? (
         <ForBranches
           params={{
             ...props.params,
             fromBranchName: props.params.fromBranchName,
-            toBranchName: props.params.toBranchName,
+            refName: props.params.refName,
           }}
           setPullState={setPullState}
         />

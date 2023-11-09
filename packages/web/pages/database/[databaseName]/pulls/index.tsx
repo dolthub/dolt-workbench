@@ -7,7 +7,6 @@ import { GetServerSideProps, NextPage } from "next";
 type Props = {
   params: MaybeRefParams & {
     from?: Maybe<string>;
-    to?: Maybe<string>;
   };
 };
 
@@ -18,7 +17,6 @@ const PullsPage: NextPage<Props> = ({ params }) => (
         databaseName: params.databaseName,
         refName: params.refName ?? undefined,
         fromBranchName: params.from ?? undefined,
-        toBranchName: params.to ?? undefined,
       }}
     />
   </Page>
@@ -34,7 +32,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         ...(params as DatabaseParams),
         refName: query.refName ? String(query.refName) : null,
         from: query.from ? String(query.from) : null,
-        to: query.to ? String(query.to) : null,
       },
     },
   };

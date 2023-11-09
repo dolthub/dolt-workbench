@@ -5,9 +5,7 @@ import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: RequiredPullDiffParams & {
-    refName?: Maybe<string>;
-  };
+  params: RequiredPullDiffParams;
   tableName?: Maybe<string>;
 };
 
@@ -17,8 +15,7 @@ const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
       params={{
         databaseName: params.databaseName,
         fromBranchName: params.fromBranchName,
-        toBranchName: params.toBranchName,
-        refName: params.refName ?? undefined,
+        refName: params.refName,
       }}
       tableName={tableName ?? undefined}
     />
@@ -31,10 +28,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   return {
     props: {
-      params: {
-        ...(params as RequiredPullDiffParams),
-        refName: query.refName ? String(query.refName) : null,
-      },
+      params: params as RequiredPullDiffParams,
       tableName: query.tableName ? String(query.tableName) : null,
     },
   };

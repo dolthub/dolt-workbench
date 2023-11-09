@@ -26,10 +26,10 @@ function Inner(props: InnerProps) {
             <div data-cy="to-branch-selector">
               <BranchSelect
                 branchList={props.branches}
-                currentBranchName={props.params.toBranchName ?? ""}
+                currentBranchName={props.params.refName ?? ""}
                 label="Base branch"
                 onChange={b => {
-                  const p = pulls({ ...props.params, toBranchName: b });
+                  const p = pulls({ ...props.params, refName: b });
                   router.push(p.href, p.as).catch(console.error);
                 }}
               />

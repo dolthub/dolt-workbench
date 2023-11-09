@@ -89,15 +89,14 @@ export const pulls = (p: ps.PullParams): Route =>
   staticPulls(p).withQuery({
     refName: p.refName,
     from: p.fromBranchName,
-    to: p.toBranchName,
   });
 
 export const pullDiff = (p: ps.PullDiffParams): Route =>
   staticPulls(p)
     .addStatic("compare")
+    .addDynamic("refName", p.refName, ENCODE)
     .addDynamic("fromBranchName", p.fromBranchName, ENCODE)
-    .addDynamic("toBranchName", p.toBranchName, ENCODE)
-    .withQuery({ refName: p.refName, tableName: p.tableName });
+    .withQuery({ tableName: p.tableName });
 
 export const newRelease = (p: ps.OptionalRefParams): Route =>
   releases(p).addStatic("new").withQuery({ refName: p.refName });

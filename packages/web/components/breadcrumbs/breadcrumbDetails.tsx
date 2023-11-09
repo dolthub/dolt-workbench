@@ -244,7 +244,7 @@ export function pullDiffBreadcrumbDetails(
   const pullDiffText = <span>diff</span>;
   const commitDiffText = (
     <span>
-      {params.toBranchName}...{params.fromBranchName}
+      {params.refName}...{params.fromBranchName}
     </span>
   );
 

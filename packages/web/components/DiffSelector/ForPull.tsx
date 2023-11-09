@@ -9,7 +9,7 @@ export default function ForPull(props: Props) {
   return (
     <DiffSelector>
       Viewing changes between <code>{props.params.fromBranchName}</code> and{" "}
-      <code>{props.params.toBranchName}</code>
+      <code>{props.params.refName}</code>
     </DiffSelector>
   );
 }

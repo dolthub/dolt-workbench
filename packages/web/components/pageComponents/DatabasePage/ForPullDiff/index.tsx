@@ -8,7 +8,7 @@ import { pulls } from "@lib/urls";
 import ForDefaultBranch from "../ForDefaultBranch";
 
 type Props = {
-  params: RequiredPullDiffParams & { refName?: string };
+  params: RequiredPullDiffParams;
   tableName?: string;
 };
 
@@ -18,7 +18,7 @@ export default function ForPullDiff(props: Props) {
       params={{
         ...props.params,
         fromRefName: props.params.fromBranchName,
-        toRefName: props.params.toBranchName,
+        toRefName: props.params.refName,
       }}
       initialTableName={props.tableName}
       forPull

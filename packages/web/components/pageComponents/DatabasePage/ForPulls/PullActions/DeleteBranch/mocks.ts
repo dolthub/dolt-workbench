@@ -3,43 +3,48 @@ import { MockedResponse } from "@apollo/client/testing";
 import {
   DeleteBranchDocument,
   GetBranchForPullDocument,
-  PullForPullDetailsFragment,
+  PullDetailsForPullDetailsDocument,
+  PullDetailsFragment,
   PullState,
 } from "@gen/graphql-types";
-import { fakeDeploymentParams, fakeTimestamp } from "@hosted/fakers";
-import { BranchUtils, PullUtils } from "@hosted/resource-utils";
 import { BranchParams, PullParams } from "@lib/params";
 
-export const pullParams: PullParams = {
-  ...fakeDeploymentParams(),
+export const pullParams: Required<PullParams> = {
   databaseName: "test",
-  pullId: "5",
+  refName: "main",
+  fromBranchName: "taylor/feature-branch",
 };
 
-const pullId = PullUtils.rn.fromParams(pullParams);
+export const pullWithDetails = (
+  params: Required<PullParams>,
+): PullDetailsFragment => {
+  return {
+    __typename: "PullWithDetails",
+    state: PullState.Merged,
+    _id: `databases/${params.databaseName}/pulls/${params.refName}/${params.fromBranchName}`,
+    details: [],
+  };
+};
 
-export const pull: PullForPullDetailsFragment = {
-  ...pullParams,
-  __typename: "Pull",
-  _id: pullId,
-  title: "Pull Title",
-  description: "",
-  state: PullState.Merged,
-  creatorName: "taylor",
-  fromBranchName: "taylor/feature-branch",
-  toBranchName: "master",
-  createdAt: fakeTimestamp(),
+export const pullDetailsMock = (
+  params: Required<PullParams>,
+): MockedResponse => {
+  return {
+    request: {
+      query: PullDetailsForPullDetailsDocument,
+      variables: { ...params, toBranchName: params.refName },
+    },
+    result: { data: { pullWithDetails } },
+  };
 };
 
 const branchParams: BranchParams = {
-  ownerName: pull.ownerName,
-  deploymentName: pull.deploymentName,
-  branchName: pull.fromBranchName,
-  databaseName: pull.databaseName,
+  branchName: pullParams.fromBranchName,
+  databaseName: pullParams.databaseName,
 };
 
 export const branchExistsMock = (
-  branchName = pull.fromBranchName,
+  branchName = pullParams.fromBranchName,
 ): MockedResponse => {
   const params = { ...branchParams, branchName };
   return {
@@ -51,7 +56,7 @@ export const branchExistsMock = (
       data: {
         branch: {
           __typename: "Branch",
-          _id: BranchUtils.rn.fromParams(params),
+          _id: `databases/${params.databaseName}/branches/${params.branchName}`,
         },
       },
     },
@@ -70,7 +75,7 @@ export const deleteBranchNewData = jest.fn(() => {
 });
 
 export const deleteBranchMock = (
-  branchName = pull.fromBranchName,
+  branchName = pullParams.fromBranchName,
 ): MockedResponse => {
   return {
     request: {

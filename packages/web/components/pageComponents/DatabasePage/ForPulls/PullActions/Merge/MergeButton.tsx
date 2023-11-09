@@ -25,11 +25,10 @@ type Props = {
 export default function MergeButton(props: Props) {
   // const { setState } = usePullDetailsContext();
   const [showDirections, setShowDirections] = useState(false);
+  const variables = { ...props.params, toBranchName: props.params.refName };
   const { mutateFn: merge, ...res } = useMutation({
     hook: useMergePullMutation,
-    refetchQueries: [
-      { query: PullDetailsForPullDetailsDocument, variables: props.params },
-    ],
+    refetchQueries: [{ query: PullDetailsForPullDetailsDocument, variables }],
   });
 
   const hasConflicts = errorMatches(gqlPullHasConflicts, res.err);
@@ -38,7 +37,7 @@ export default function MergeButton(props: Props) {
   const red = hasConflicts;
 
   const onClick = async () => {
-    await merge({ variables: props.params });
+    await merge({ variables });
     // setState({ isMerging: true });
   };
 

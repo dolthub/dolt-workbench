@@ -12,7 +12,7 @@ type Props = {
 
 export default function ForPull(props: Props) {
   const selector = <DiffSelector.ForPull params={props.params} />;
-  if (!props.params.fromBranchName || !props.params.toBranchName) {
+  if (!props.params.fromBranchName || !props.params.refName) {
     return (
       <DiffTableNav
         {...props}
@@ -31,7 +31,7 @@ export default function ForPull(props: Props) {
   const params = {
     ...props.params,
     fromRefName: props.params.fromBranchName,
-    toRefName: props.params.toBranchName,
+    toRefName: props.params.refName,
   };
   return (
     <DiffTableNav

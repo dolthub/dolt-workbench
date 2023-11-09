@@ -1,28 +1,20 @@
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
-import { DeploymentRole } from "@gen/graphql-types";
-import { mocksForDepRoleHook } from "@hooks/useDeploymentRole/mocks";
-import { fakeDeploymentParams } from "@hosted/fakers";
-import { DatabaseParams } from "@lib/params";
-import { providerNoCacheOptions } from "@lib/queryUtils";
 import { setup } from "@lib/testUtils.test";
 import { screen, waitFor } from "@testing-library/react";
 import DeleteBranch from ".";
-import { pullDetailsMock } from "../../mocks";
 import * as mocks from "./mocks";
-
-const params: DatabaseParams = {
-  ...fakeDeploymentParams(),
-  databaseName: "test",
-};
 
 async function renderWithProvider(
   mockRes: MockedResponse[],
   showButton: boolean,
-  fromBranchName = mocks.pull.fromBranchName,
+  fromBranchName = mocks.pullParams.fromBranchName,
 ) {
   const { user } = setup(
-    <MockedProvider mocks={mockRes} defaultOptions={providerNoCacheOptions}>
-      <DeleteBranch pull={{ ...mocks.pull, fromBranchName }} />
+    <MockedProvider mocks={mockRes}>
+      <DeleteBranch
+        pullDetails={mocks.pullWithDetails(mocks.pullParams)}
+        params={mocks.pullParams}
+      />
     </MockedProvider>,
   );
 
@@ -37,34 +29,13 @@ async function renderWithProvider(
 }
 
 describe("test DeleteBranch", () => {
-  it("renders nothing for no write perms", async () => {
-    await renderWithProvider(
-      [
-        mocks.branchExistsMock(),
-        ...mocksForDepRoleHook(params, DeploymentRole.Reader),
-      ],
-      false,
-    );
-  });
-
-  it("renders nothing for master from branch", async () => {
-    await renderWithProvider(
-      [
-        mocks.branchExistsMock("master"),
-        ...mocksForDepRoleHook(params, DeploymentRole.Admin),
-      ],
-      false,
-      "master",
-    );
+  it("renders nothing for main from branch", async () => {
+    await renderWithProvider([mocks.branchExistsMock("main")], false, "main");
   });
 
   it("renders delete branch button and errors on delete", async () => {
     const user = await renderWithProvider(
-      [
-        mocks.branchExistsMock(),
-        mocks.deleteBranchErrorMock,
-        ...mocksForDepRoleHook(mocks.pullParams, DeploymentRole.Admin),
-      ],
+      [mocks.branchExistsMock(), mocks.deleteBranchErrorMock],
       true,
     );
 
@@ -80,8 +51,7 @@ describe("test DeleteBranch", () => {
         mocks.branchExistsMock(),
         mocks.deleteBranchMock(),
         mocks.branchNotExistsMock,
-        pullDetailsMock(mocks.pullParams),
-        ...mocksForDepRoleHook(mocks.pullParams, DeploymentRole.Admin),
+        mocks.pullDetailsMock(mocks.pullParams),
       ],
       true,
     );

@@ -16,4 +16,8 @@
 
 .verticalLine {
   @apply border-l w-0 h-8 ml-3 lg:ml-[4.25rem];
+
+  &:last-of-type {
+    @apply h-14;
+  }
 }

@@ -73,15 +73,12 @@ export type DiffParamsWithRefs = DatabaseParams & {
 
 export type PullParams = OptionalRefParams & {
   fromBranchName?: string;
-  toBranchName?: string;
 };
 
-export type RequiredPullDiffParams = DatabaseParams & {
+export type RequiredPullDiffParams = RefParams & {
   fromBranchName: string;
-  toBranchName: string;
 };
 
 export type PullDiffParams = RequiredPullDiffParams & {
-  refName?: string;
   tableName?: string;
 };
