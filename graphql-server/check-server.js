@@ -30,13 +30,13 @@ async function checkServer(waitTime = 25000) {
 // generateTypes runs the generate graphql types command in the web package
 function generateTypes() {
   return spawnSync("yarn", ["run", "generate-types"], {
-    cwd: `${__dirname}/web`,
+    cwd: `${__dirname}/../web`,
     stdio: "inherit",
   });
 }
 
 // runServer runs the graphql server and exits with error if the
-// server writes to stderr or recieves an error event
+// server writes to stderr or receives an error event
 function runServer() {
   const server = spawn("node", ["dist/main.js"], {
     shell: true,

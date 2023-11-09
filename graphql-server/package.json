@@ -5,6 +5,7 @@
   "author": "DoltHub",
   "private": true,
   "scripts": {
+    "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build && yarn check",
     "build": "nest build",
     "check-server": "./ci-helper.sh ./",
     "compile": "tsc -b",

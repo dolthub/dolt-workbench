@@ -4,6 +4,7 @@
   "author": "DoltHub",
   "private": true,
   "scripts": {
+    "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
     "compile": "tsc -b",
     "dev": "next dev -p 3002",
     "build": "next build",

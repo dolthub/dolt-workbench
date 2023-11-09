@@ -3,20 +3,12 @@
 set -e
 
 if [ -z "$1" ]; then
-  echo "Must supply graphql-server package dir: ./ci-helper.sh ./packages/graphql-server"
+  echo "Must supply graphql-server package dir: ./ci-helper.sh ./graphql-server"
   exit 1
 fi
 
-# compile web
-(
-  cd "$1"/../web
-  yarn run compile
-)
-
 # compile and build graphql
 (
-  cd "$1"/../graphql-server
-  yarn run compile
   yarn run build
 )
 
@@ -25,4 +17,13 @@ fi
   node "$1"/check-server.js
 )
 
-exit 0
+# Check for uncommitted changes
+out=$(git status --porcelain)
+
+if [ -z "$out" ]; then
+  exit 0
+fi
+
+echo "Found uncommitted changes during CI"
+echo $out
+exit 1

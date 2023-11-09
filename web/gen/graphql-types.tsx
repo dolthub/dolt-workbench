@@ -1533,8 +1533,13 @@ export function useBranchesForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
         }
+export function useBranchesForSelectorSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+        }
 export type BranchesForSelectorQueryHookResult = ReturnType<typeof useBranchesForSelectorQuery>;
 export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranchesForSelectorLazyQuery>;
+export type BranchesForSelectorSuspenseQueryHookResult = ReturnType<typeof useBranchesForSelectorSuspenseQuery>;
 export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
 export const TagListDocument = gql`
     query TagList($databaseName: String!) {
@@ -1568,8 +1573,13 @@ export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Ta
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
         }
+export function useTagListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        }
 export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
+export type TagListSuspenseQueryHookResult = ReturnType<typeof useTagListSuspenseQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
@@ -1600,8 +1610,13 @@ export function useCurrentDatabaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>(CurrentDatabaseDocument, options);
         }
+export function useCurrentDatabaseSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>(CurrentDatabaseDocument, options);
+        }
 export type CurrentDatabaseQueryHookResult = ReturnType<typeof useCurrentDatabaseQuery>;
 export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDatabaseLazyQuery>;
+export type CurrentDatabaseSuspenseQueryHookResult = ReturnType<typeof useCurrentDatabaseSuspenseQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
 export const ResetDatabaseDocument = gql`
     mutation ResetDatabase {
@@ -1666,8 +1681,13 @@ export function useGetTagLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Get
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
         }
+export function useGetTagSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetTagQuery, GetTagQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
+        }
 export type GetTagQueryHookResult = ReturnType<typeof useGetTagQuery>;
 export type GetTagLazyQueryHookResult = ReturnType<typeof useGetTagLazyQuery>;
+export type GetTagSuspenseQueryHookResult = ReturnType<typeof useGetTagSuspenseQuery>;
 export type GetTagQueryResult = Apollo.QueryResult<GetTagQuery, GetTagQueryVariables>;
 export const GetBranchDocument = gql`
     query GetBranch($branchName: String!, $databaseName: String!) {
@@ -1702,8 +1722,13 @@ export function useGetBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetBranchQuery, GetBranchQueryVariables>(GetBranchDocument, options);
         }
+export function useGetBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBranchQuery, GetBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBranchQuery, GetBranchQueryVariables>(GetBranchDocument, options);
+        }
 export type GetBranchQueryHookResult = ReturnType<typeof useGetBranchQuery>;
 export type GetBranchLazyQueryHookResult = ReturnType<typeof useGetBranchLazyQuery>;
+export type GetBranchSuspenseQueryHookResult = ReturnType<typeof useGetBranchSuspenseQuery>;
 export type GetBranchQueryResult = Apollo.QueryResult<GetBranchQuery, GetBranchQueryVariables>;
 export const SqlSelectForCsvDownloadDocument = gql`
     query SqlSelectForCsvDownload($databaseName: String!, $refName: String!, $queryString: String!) {
@@ -1741,8 +1766,13 @@ export function useSqlSelectForCsvDownloadLazyQuery(baseOptions?: Apollo.LazyQue
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>(SqlSelectForCsvDownloadDocument, options);
         }
+export function useSqlSelectForCsvDownloadSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>(SqlSelectForCsvDownloadDocument, options);
+        }
 export type SqlSelectForCsvDownloadQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadQuery>;
 export type SqlSelectForCsvDownloadLazyQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadLazyQuery>;
+export type SqlSelectForCsvDownloadSuspenseQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadSuspenseQuery>;
 export type SqlSelectForCsvDownloadQueryResult = Apollo.QueryResult<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>;
 export const DatabasesDocument = gql`
     query Databases {
@@ -1773,8 +1803,13 @@ export function useDatabasesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DatabasesQuery, DatabasesQueryVariables>(DatabasesDocument, options);
         }
+export function useDatabasesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DatabasesQuery, DatabasesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DatabasesQuery, DatabasesQueryVariables>(DatabasesDocument, options);
+        }
 export type DatabasesQueryHookResult = ReturnType<typeof useDatabasesQuery>;
 export type DatabasesLazyQueryHookResult = ReturnType<typeof useDatabasesLazyQuery>;
+export type DatabasesSuspenseQueryHookResult = ReturnType<typeof useDatabasesSuspenseQuery>;
 export type DatabasesQueryResult = Apollo.QueryResult<DatabasesQuery, DatabasesQueryVariables>;
 export const CommitsForDiffSelectorDocument = gql`
     query CommitsForDiffSelector($refName: String!, $databaseName: String!) {
@@ -1809,8 +1844,13 @@ export function useCommitsForDiffSelectorLazyQuery(baseOptions?: Apollo.LazyQuer
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>(CommitsForDiffSelectorDocument, options);
         }
+export function useCommitsForDiffSelectorSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>(CommitsForDiffSelectorDocument, options);
+        }
 export type CommitsForDiffSelectorQueryHookResult = ReturnType<typeof useCommitsForDiffSelectorQuery>;
 export type CommitsForDiffSelectorLazyQueryHookResult = ReturnType<typeof useCommitsForDiffSelectorLazyQuery>;
+export type CommitsForDiffSelectorSuspenseQueryHookResult = ReturnType<typeof useCommitsForDiffSelectorSuspenseQuery>;
 export type CommitsForDiffSelectorQueryResult = Apollo.QueryResult<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>;
 export const DiffStatDocument = gql`
     query DiffStat($databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType, $tableName: String) {
@@ -1856,8 +1896,13 @@ export function useDiffStatLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<D
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DiffStatQuery, DiffStatQueryVariables>(DiffStatDocument, options);
         }
+export function useDiffStatSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DiffStatQuery, DiffStatQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DiffStatQuery, DiffStatQueryVariables>(DiffStatDocument, options);
+        }
 export type DiffStatQueryHookResult = ReturnType<typeof useDiffStatQuery>;
 export type DiffStatLazyQueryHookResult = ReturnType<typeof useDiffStatLazyQuery>;
+export type DiffStatSuspenseQueryHookResult = ReturnType<typeof useDiffStatSuspenseQuery>;
 export type DiffStatQueryResult = Apollo.QueryResult<DiffStatQuery, DiffStatQueryVariables>;
 export const RowDiffsDocument = gql`
     query RowDiffs($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType, $type: CommitDiffType) {
@@ -1907,8 +1952,13 @@ export function useRowDiffsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<R
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RowDiffsQuery, RowDiffsQueryVariables>(RowDiffsDocument, options);
         }
+export function useRowDiffsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowDiffsQuery, RowDiffsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowDiffsQuery, RowDiffsQueryVariables>(RowDiffsDocument, options);
+        }
 export type RowDiffsQueryHookResult = ReturnType<typeof useRowDiffsQuery>;
 export type RowDiffsLazyQueryHookResult = ReturnType<typeof useRowDiffsLazyQuery>;
+export type RowDiffsSuspenseQueryHookResult = ReturnType<typeof useRowDiffsSuspenseQuery>;
 export type RowDiffsQueryResult = Apollo.QueryResult<RowDiffsQuery, RowDiffsQueryVariables>;
 export const SchemaDiffDocument = gql`
     query SchemaDiff($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
@@ -1954,8 +2004,13 @@ export function useSchemaDiffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<SchemaDiffQuery, SchemaDiffQueryVariables>(SchemaDiffDocument, options);
         }
+export function useSchemaDiffSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SchemaDiffQuery, SchemaDiffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SchemaDiffQuery, SchemaDiffQueryVariables>(SchemaDiffDocument, options);
+        }
 export type SchemaDiffQueryHookResult = ReturnType<typeof useSchemaDiffQuery>;
 export type SchemaDiffLazyQueryHookResult = ReturnType<typeof useSchemaDiffLazyQuery>;
+export type SchemaDiffSuspenseQueryHookResult = ReturnType<typeof useSchemaDiffSuspenseQuery>;
 export type SchemaDiffQueryResult = Apollo.QueryResult<SchemaDiffQuery, SchemaDiffQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!, $refName: String!) {
@@ -1990,8 +2045,13 @@ export function useTableListForSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<TableListForSchemasQuery, TableListForSchemasQueryVariables>(TableListForSchemasDocument, options);
         }
+export function useTableListForSchemasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TableListForSchemasQuery, TableListForSchemasQueryVariables>(TableListForSchemasDocument, options);
+        }
 export type TableListForSchemasQueryHookResult = ReturnType<typeof useTableListForSchemasQuery>;
 export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableListForSchemasLazyQuery>;
+export type TableListForSchemasSuspenseQueryHookResult = ReturnType<typeof useTableListForSchemasSuspenseQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const RowsForDoltSchemasDocument = gql`
     query RowsForDoltSchemas($databaseName: String!, $refName: String!) {
@@ -2026,8 +2086,13 @@ export function useRowsForDoltSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHoo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
         }
+export function useRowsForDoltSchemasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
+        }
 export type RowsForDoltSchemasQueryHookResult = ReturnType<typeof useRowsForDoltSchemasQuery>;
 export type RowsForDoltSchemasLazyQueryHookResult = ReturnType<typeof useRowsForDoltSchemasLazyQuery>;
+export type RowsForDoltSchemasSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltSchemasSuspenseQuery>;
 export type RowsForDoltSchemasQueryResult = Apollo.QueryResult<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>;
 export const RowsForDoltProceduresDocument = gql`
     query RowsForDoltProcedures($databaseName: String!, $refName: String!) {
@@ -2062,8 +2127,13 @@ export function useRowsForDoltProceduresLazyQuery(baseOptions?: Apollo.LazyQuery
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
         }
+export function useRowsForDoltProceduresSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
+        }
 export type RowsForDoltProceduresQueryHookResult = ReturnType<typeof useRowsForDoltProceduresQuery>;
 export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRowsForDoltProceduresLazyQuery>;
+export type RowsForDoltProceduresSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltProceduresSuspenseQuery>;
 export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
 export const SqlSelectForSqlDataTableDocument = gql`
     query SqlSelectForSqlDataTable($databaseName: String!, $refName: String!, $queryString: String!) {
@@ -2111,8 +2181,13 @@ export function useSqlSelectForSqlDataTableLazyQuery(baseOptions?: Apollo.LazyQu
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
         }
+export function useSqlSelectForSqlDataTableSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
+        }
 export type SqlSelectForSqlDataTableQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableQuery>;
 export type SqlSelectForSqlDataTableLazyQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableLazyQuery>;
+export type SqlSelectForSqlDataTableSuspenseQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableSuspenseQuery>;
 export type SqlSelectForSqlDataTableQueryResult = Apollo.QueryResult<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>;
 export const GetStatusDocument = gql`
     query GetStatus($databaseName: String!, $refName: String!) {
@@ -2147,8 +2222,13 @@ export function useGetStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
         }
+export function useGetStatusSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetStatusQuery, GetStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
+        }
 export type GetStatusQueryHookResult = ReturnType<typeof useGetStatusQuery>;
 export type GetStatusLazyQueryHookResult = ReturnType<typeof useGetStatusLazyQuery>;
+export type GetStatusSuspenseQueryHookResult = ReturnType<typeof useGetStatusSuspenseQuery>;
 export type GetStatusQueryResult = Apollo.QueryResult<GetStatusQuery, GetStatusQueryVariables>;
 export const TableForBranchDocument = gql`
     query TableForBranch($databaseName: String!, $refName: String!, $tableName: String!) {
@@ -2184,8 +2264,13 @@ export function useTableForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<TableForBranchQuery, TableForBranchQueryVariables>(TableForBranchDocument, options);
         }
+export function useTableForBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableForBranchQuery, TableForBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TableForBranchQuery, TableForBranchQueryVariables>(TableForBranchDocument, options);
+        }
 export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQuery>;
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
+export type TableForBranchSuspenseQueryHookResult = ReturnType<typeof useTableForBranchSuspenseQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
 export const RowsForViewsDocument = gql`
     query RowsForViews($databaseName: String!, $refName: String!) {
@@ -2220,8 +2305,13 @@ export function useRowsForViewsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RowsForViewsQuery, RowsForViewsQueryVariables>(RowsForViewsDocument, options);
         }
+export function useRowsForViewsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForViewsQuery, RowsForViewsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForViewsQuery, RowsForViewsQueryVariables>(RowsForViewsDocument, options);
+        }
 export type RowsForViewsQueryHookResult = ReturnType<typeof useRowsForViewsQuery>;
 export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsLazyQuery>;
+export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
     mutation AddDatabaseConnection($url: String, $useEnv: Boolean, $hideDoltFeatures: Boolean) {
@@ -2289,8 +2379,13 @@ export function useHasDatabaseEnvLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
         }
+export function useHasDatabaseEnvSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
+        }
 export type HasDatabaseEnvQueryHookResult = ReturnType<typeof useHasDatabaseEnvQuery>;
 export type HasDatabaseEnvLazyQueryHookResult = ReturnType<typeof useHasDatabaseEnvLazyQuery>;
+export type HasDatabaseEnvSuspenseQueryHookResult = ReturnType<typeof useHasDatabaseEnvSuspenseQuery>;
 export type HasDatabaseEnvQueryResult = Apollo.QueryResult<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>;
 export const BranchListDocument = gql`
     query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
@@ -2327,8 +2422,13 @@ export function useBranchListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
         }
+export function useBranchListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BranchListQuery, BranchListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
+        }
 export type BranchListQueryHookResult = ReturnType<typeof useBranchListQuery>;
 export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQuery>;
+export type BranchListSuspenseQueryHookResult = ReturnType<typeof useBranchListSuspenseQuery>;
 export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
 export const DeleteBranchDocument = gql`
     mutation DeleteBranch($branchName: String!, $databaseName: String!) {
@@ -2436,8 +2536,13 @@ export function useHistoryForCommitLazyQuery(baseOptions?: Apollo.LazyQueryHookO
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
         }
+export function useHistoryForCommitSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
+        }
 export type HistoryForCommitQueryHookResult = ReturnType<typeof useHistoryForCommitQuery>;
 export type HistoryForCommitLazyQueryHookResult = ReturnType<typeof useHistoryForCommitLazyQuery>;
+export type HistoryForCommitSuspenseQueryHookResult = ReturnType<typeof useHistoryForCommitSuspenseQuery>;
 export type HistoryForCommitQueryResult = Apollo.QueryResult<HistoryForCommitQuery, HistoryForCommitQueryVariables>;
 export const DefaultBranchPageQueryDocument = gql`
     query DefaultBranchPageQuery($databaseName: String!, $filterSystemTables: Boolean) {
@@ -2474,8 +2579,13 @@ export function useDefaultBranchPageQueryLazyQuery(baseOptions?: Apollo.LazyQuer
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
         }
+export function useDefaultBranchPageQuerySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+        }
 export type DefaultBranchPageQueryHookResult = ReturnType<typeof useDefaultBranchPageQuery>;
 export type DefaultBranchPageQueryLazyQueryHookResult = ReturnType<typeof useDefaultBranchPageQueryLazyQuery>;
+export type DefaultBranchPageQuerySuspenseQueryHookResult = ReturnType<typeof useDefaultBranchPageQuerySuspenseQuery>;
 export type DefaultBranchPageQueryQueryResult = Apollo.QueryResult<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>;
 export const DocsRowsForDocPageQueryDocument = gql`
     query DocsRowsForDocPageQuery($databaseName: String!, $refName: String!) {
@@ -2510,8 +2620,13 @@ export function useDocsRowsForDocPageQueryLazyQuery(baseOptions?: Apollo.LazyQue
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>(DocsRowsForDocPageQueryDocument, options);
         }
+export function useDocsRowsForDocPageQuerySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>(DocsRowsForDocPageQueryDocument, options);
+        }
 export type DocsRowsForDocPageQueryHookResult = ReturnType<typeof useDocsRowsForDocPageQuery>;
 export type DocsRowsForDocPageQueryLazyQueryHookResult = ReturnType<typeof useDocsRowsForDocPageQueryLazyQuery>;
+export type DocsRowsForDocPageQuerySuspenseQueryHookResult = ReturnType<typeof useDocsRowsForDocPageQuerySuspenseQuery>;
 export type DocsRowsForDocPageQueryQueryResult = Apollo.QueryResult<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>;
 export const DocDataForDocPageDocument = gql`
     query DocDataForDocPage($databaseName: String!, $refName: String!, $docType: DocType) {
@@ -2553,8 +2668,13 @@ export function useDocDataForDocPageLazyQuery(baseOptions?: Apollo.LazyQueryHook
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>(DocDataForDocPageDocument, options);
         }
+export function useDocDataForDocPageSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>(DocDataForDocPageDocument, options);
+        }
 export type DocDataForDocPageQueryHookResult = ReturnType<typeof useDocDataForDocPageQuery>;
 export type DocDataForDocPageLazyQueryHookResult = ReturnType<typeof useDocDataForDocPageLazyQuery>;
+export type DocDataForDocPageSuspenseQueryHookResult = ReturnType<typeof useDocDataForDocPageSuspenseQuery>;
 export type DocDataForDocPageQueryResult = Apollo.QueryResult<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>;
 export const DocPageQueryNoBranchDocument = gql`
     query DocPageQueryNoBranch($databaseName: String!) {
@@ -2589,8 +2709,13 @@ export function useDocPageQueryNoBranchLazyQuery(baseOptions?: Apollo.LazyQueryH
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>(DocPageQueryNoBranchDocument, options);
         }
+export function useDocPageQueryNoBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>(DocPageQueryNoBranchDocument, options);
+        }
 export type DocPageQueryNoBranchHookResult = ReturnType<typeof useDocPageQueryNoBranch>;
 export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchLazyQuery>;
+export type DocPageQueryNoBranchSuspenseQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchSuspenseQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
 export const GetBranchForPullDocument = gql`
     query GetBranchForPull($branchName: String!, $databaseName: String!) {
@@ -2625,8 +2750,13 @@ export function useGetBranchForPullLazyQuery(baseOptions?: Apollo.LazyQueryHookO
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
         }
+export function useGetBranchForPullSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
+        }
 export type GetBranchForPullQueryHookResult = ReturnType<typeof useGetBranchForPullQuery>;
 export type GetBranchForPullLazyQueryHookResult = ReturnType<typeof useGetBranchForPullLazyQuery>;
+export type GetBranchForPullSuspenseQueryHookResult = ReturnType<typeof useGetBranchForPullSuspenseQuery>;
 export type GetBranchForPullQueryResult = Apollo.QueryResult<GetBranchForPullQuery, GetBranchForPullQueryVariables>;
 export const MergePullDocument = gql`
     mutation MergePull($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
@@ -2703,8 +2833,13 @@ export function usePullDetailsForPullDetailsLazyQuery(baseOptions?: Apollo.LazyQ
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
         }
+export function usePullDetailsForPullDetailsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+        }
 export type PullDetailsForPullDetailsQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsQuery>;
 export type PullDetailsForPullDetailsLazyQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsLazyQuery>;
+export type PullDetailsForPullDetailsSuspenseQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsSuspenseQuery>;
 export type PullDetailsForPullDetailsQueryResult = Apollo.QueryResult<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>;
 export const RefPageQueryDocument = gql`
     query RefPageQuery($refName: String!, $databaseName: String!, $filterSystemTables: Boolean) {
@@ -2747,8 +2882,13 @@ export function useRefPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
         }
+export function useRefPageQuerySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+        }
 export type RefPageQueryHookResult = ReturnType<typeof useRefPageQuery>;
 export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryLazyQuery>;
+export type RefPageQuerySuspenseQueryHookResult = ReturnType<typeof useRefPageQuerySuspenseQuery>;
 export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
 export const CreateTagDocument = gql`
     mutation CreateTag($databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!) {
@@ -2900,8 +3040,13 @@ export function useDoltDatabaseDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHo
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>(DoltDatabaseDetailsDocument, options);
         }
+export function useDoltDatabaseDetailsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>(DoltDatabaseDetailsDocument, options);
+        }
 export type DoltDatabaseDetailsQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsQuery>;
 export type DoltDatabaseDetailsLazyQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsLazyQuery>;
+export type DoltDatabaseDetailsSuspenseQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsSuspenseQuery>;
 export type DoltDatabaseDetailsQueryResult = Apollo.QueryResult<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>;
 export const DataTableQueryDocument = gql`
     query DataTableQuery($databaseName: String!, $refName: String!, $tableName: String!) {
@@ -2944,8 +3089,13 @@ export function useDataTableQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DataTableQuery, DataTableQueryVariables>(DataTableQueryDocument, options);
         }
+export function useDataTableQuerySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DataTableQuery, DataTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DataTableQuery, DataTableQueryVariables>(DataTableQueryDocument, options);
+        }
 export type DataTableQueryHookResult = ReturnType<typeof useDataTableQuery>;
 export type DataTableQueryLazyQueryHookResult = ReturnType<typeof useDataTableQueryLazyQuery>;
+export type DataTableQuerySuspenseQueryHookResult = ReturnType<typeof useDataTableQuerySuspenseQuery>;
 export type DataTableQueryQueryResult = Apollo.QueryResult<DataTableQuery, DataTableQueryVariables>;
 export const RowsForDataTableQueryDocument = gql`
     query RowsForDataTableQuery($databaseName: String!, $refName: String!, $tableName: String!, $offset: Int) {
@@ -2987,8 +3137,13 @@ export function useRowsForDataTableQueryLazyQuery(baseOptions?: Apollo.LazyQuery
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<RowsForDataTableQuery, RowsForDataTableQueryVariables>(RowsForDataTableQueryDocument, options);
         }
+export function useRowsForDataTableQuerySuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDataTableQuery, RowsForDataTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForDataTableQuery, RowsForDataTableQueryVariables>(RowsForDataTableQueryDocument, options);
+        }
 export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTableQuery>;
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
+export type RowsForDataTableQuerySuspenseQueryHookResult = ReturnType<typeof useRowsForDataTableQuerySuspenseQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const DiffSummariesDocument = gql`
     query DiffSummaries($databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
@@ -3032,8 +3187,13 @@ export function useDiffSummariesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<DiffSummariesQuery, DiffSummariesQueryVariables>(DiffSummariesDocument, options);
         }
+export function useDiffSummariesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DiffSummariesQuery, DiffSummariesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DiffSummariesQuery, DiffSummariesQueryVariables>(DiffSummariesDocument, options);
+        }
 export type DiffSummariesQueryHookResult = ReturnType<typeof useDiffSummariesQuery>;
 export type DiffSummariesLazyQueryHookResult = ReturnType<typeof useDiffSummariesLazyQuery>;
+export type DiffSummariesSuspenseQueryHookResult = ReturnType<typeof useDiffSummariesSuspenseQuery>;
 export type DiffSummariesQueryResult = Apollo.QueryResult<DiffSummariesQuery, DiffSummariesQueryVariables>;
 export const HistoryForBranchDocument = gql`
     query HistoryForBranch($databaseName: String!, $refName: String!, $offset: Int) {
@@ -3069,8 +3229,13 @@ export function useHistoryForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookO
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
         }
+export function useHistoryForBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
+        }
 export type HistoryForBranchQueryHookResult = ReturnType<typeof useHistoryForBranchQuery>;
 export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryForBranchLazyQuery>;
+export type HistoryForBranchSuspenseQueryHookResult = ReturnType<typeof useHistoryForBranchSuspenseQuery>;
 export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
 export const BranchListForCommitGraphDocument = gql`
     query BranchListForCommitGraph($databaseName: String!) {
@@ -3106,8 +3271,13 @@ export function useBranchListForCommitGraphLazyQuery(baseOptions?: Apollo.LazyQu
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
         }
+export function useBranchListForCommitGraphSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
+        }
 export type BranchListForCommitGraphQueryHookResult = ReturnType<typeof useBranchListForCommitGraphQuery>;
 export type BranchListForCommitGraphLazyQueryHookResult = ReturnType<typeof useBranchListForCommitGraphLazyQuery>;
+export type BranchListForCommitGraphSuspenseQueryHookResult = ReturnType<typeof useBranchListForCommitGraphSuspenseQuery>;
 export type BranchListForCommitGraphQueryResult = Apollo.QueryResult<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>;
 export const TableNamesDocument = gql`
     query TableNames($databaseName: String!, $refName: String!, $filterSystemTables: Boolean) {
@@ -3147,6 +3317,11 @@ export function useTableNamesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
           const options = {...defaultOptions, ...baseOptions}
           return Apollo.useLazyQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
         }
+export function useTableNamesSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
+        }
 export type TableNamesQueryHookResult = ReturnType<typeof useTableNamesQuery>;
 export type TableNamesLazyQueryHookResult = ReturnType<typeof useTableNamesLazyQuery>;
+export type TableNamesSuspenseQueryHookResult = ReturnType<typeof useTableNamesSuspenseQuery>;
 export type TableNamesQueryResult = Apollo.QueryResult<TableNamesQuery, TableNamesQueryVariables>;
