@@ -12,7 +12,7 @@ dist
 Dockerfile
 *.env
 .gitignore
-README.md
+*.md
 
 **/*.test.ts
 

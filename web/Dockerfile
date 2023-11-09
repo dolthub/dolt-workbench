@@ -1,81 +1,59 @@
-###################
-# BUILD FOR LOCAL DEVELOPMENT
-###################
+FROM --platform=linux/amd64 node:18.13.0-alpine3.17 AS base
 
-FROM --platform=linux/amd64 node:18.13.0-alpine3.17 as development
+# Install dependencies only when needed
+FROM base AS deps
+# Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-# Create app directory
-WORKDIR /usr/src/app
-
+# Install dependencies
 COPY .yarn ./.yarn
-COPY --chown=node:node yarn.lock package.json .yarnrc.yml ./
-
+COPY package.json yarn.lock .yarnrc.yml ./
 RUN yarn install --immutable
 
-# Bundle app source
-COPY --chown=node:node . .
+# Rebuild the source code only when needed
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
-# Use the node user from the image (instead of the root user)
-USER node
+# Next.js collects completely anonymous telemetry data about general usage.
+# Learn more here: https://nextjs.org/telemetry
+# Uncomment the following line in case you want to disable telemetry during the build.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-###################
-# BUILD FOR PRODUCTION
-###################
+RUN yarn build
 
-FROM --platform=linux/amd64 node:18.13.0-alpine3.17 as build
-
-# Create app directory
-WORKDIR /usr/src/app
-
-COPY .yarn ./.yarn
-COPY --chown=node:node yarn.lock package.json .yarnrc.yml ./
-
-COPY --chown=node:node --from=development /usr/src/app/node_modules ./node_modules
-
-COPY --chown=node:node . .
-
-RUN yarn run build
+# Production image, copy all the files and run next
+FROM base AS runner
+WORKDIR /app
 
 ENV NODE_ENV production
+# Uncomment the following line in case you want to disable telemetry during runtime.
+ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN yarn workspaces focus --production && yarn cache clean
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
 
-USER node
+COPY --from=builder /app/public ./public
 
-###################
-# PRODUCTION
-###################
-
-FROM --platform=linux/amd64 node:18.13.0-alpine3.17 as production
-
-# Copy the bundled code from the build stage to the production image
-COPY --chown=node:node --from=build /usr/src/app/node_modules ./node_modules
-COPY --chown=node:node --from=build /usr/src/app/public ./public
+# Set the correct permission for prerender cache
+RUN mkdir .next
+RUN chown nextjs:nodejs .next
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
-COPY --from=build --chown=node:node /usr/src/app/.next/standalone ./
-COPY --from=build --chown=node:node /usr/src/app/.next/static ./.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Start the server using the production build
+USER nextjs
+
 EXPOSE 3000
+
+ENV PORT 3000
+# set hostname to localhost
+ENV HOSTNAME "0.0.0.0"
+
 CMD ["node", "server.js"]
 
-# RUN mkdir build
-# WORKDIR build
-
-# COPY ./packages/web/package.json .
-# RUN yarn install
-
-# COPY ./packages/web .
-# RUN yarn build
-
-# FROM --platform=linux/arm64/v8 node:18.18.0-alpine3.18
-
-# RUN mkdir -p /usr/dolt-workbench
-# WORKDIR /usr/dolt-workbench
-# COPY --from=builder /build/. .
-
-# ENV NODE_ENV=production
-# EXPOSE 3000
-# CMD [ "npm", "start" ]
+# Source: https://github.com/vercel/next.js/blob/canary/examples/with-docker/Dockerfile
