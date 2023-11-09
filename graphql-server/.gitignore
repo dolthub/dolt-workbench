@@ -36,6 +36,8 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
+.eslintcache
+
 .yarn/*
 !.yarn/patches
 !.yarn/plugins

@@ -29,6 +29,10 @@ async function checkServer(waitTime = 25000) {
 
 // generateTypes runs the generate graphql types command in the web package
 function generateTypes() {
+  spawnSync("yarn", ["install"], {
+    cwd: `${__dirname}/../web`,
+    stdio: "inherit",
+  });
   return spawnSync("yarn", ["run", "generate-types"], {
     cwd: `${__dirname}/../web`,
     stdio: "inherit",

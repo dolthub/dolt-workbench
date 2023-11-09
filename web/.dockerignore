@@ -1,20 +1,25 @@
 node_modules
 npm-debug.log
 yarn-error.log
+.next
+.cache
+.gitignore
 .eslintcache
 .eslintignore
 .eslintrc.js
 .pretterrc.js
-check-server.js
-ci-helper.sh
+.unimportedrc.json
+.codegen.yml
+jest.config.js
+jest.setup.js
 dist
 *.tsbuildinfo
 Dockerfile
 *.env
-.gitignore
-README.md
+*.md
 
 **/*.test.ts
+**/*.test.tsx
 
 .yarn/cache
 .yarn/install-state.gz

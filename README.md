@@ -3,9 +3,7 @@
 A SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) to unlock
 powerful version control features, such as branches, commits, and merge.
 
-## Getting Started
-
-### Using Docker
+## Getting started with Docker
 
 ```
 % docker compose up --build
@@ -13,18 +11,17 @@ powerful version control features, such as branches, commits, and merge.
 
 Navigate to http://localhost:3002 to enter database information.
 
-### From source
+## Getting started from source
 
-Clone this repository and install/compile the code:
-
-```
-% yarn && yarn compile
-```
+First clone this repository.
 
 ### Run the GraphQL server
 
+Start the GraphQL server. If successful, you'll see the GraphQL playground when you navigate to `localhost:9002/graphql`.
+
 ```
-% cd packages/graphql-server
+% cd graphql-server
+graphql-server% yarn && yarn compile
 graphql-server% yarn dev
 ```
 
