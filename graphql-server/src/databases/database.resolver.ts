@@ -8,10 +8,7 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import {
-  DataSourceService,
-  getIsDolt,
-} from "../dataSources/dataSource.service";
+import { DataSourceService } from "../dataSources/dataSource.service";
 import { DBArgs } from "../utils/commonTypes";
 
 @ArgsType()
@@ -82,7 +79,7 @@ export class DatabaseResolver {
     const workbenchConfig = this.dss.getWorkbenchConfig();
     const qr = this.dss.getQR();
     try {
-      const isDolt = await getIsDolt(qr);
+      const isDolt = await this.dss.getIsDolt(qr);
       return {
         isDolt,
         hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,

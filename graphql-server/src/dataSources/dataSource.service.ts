@@ -12,6 +12,8 @@ class WorkbenchConfig {
   connectionUrl: string;
 
   useSSL: boolean;
+
+  isDolt?: boolean;
 }
 
 @Injectable()
@@ -84,6 +86,25 @@ export class DataSourceService {
     });
   }
 
+  async getIsDolt(qr: QueryRunner): Promise<boolean> {
+    const { workbenchConfig } = this;
+    if (!workbenchConfig) {
+      throw new Error("Workbench config not found. Restart database.");
+    }
+
+    if (workbenchConfig.isDolt !== undefined) {
+      return workbenchConfig.isDolt;
+    }
+    try {
+      const res = await qr.query("SELECT dolt_version()");
+      workbenchConfig.isDolt = !!res;
+      return !!res;
+    } catch (_) {
+      workbenchConfig.isDolt = false;
+      return false;
+    }
+  }
+
   // Queries that will work on both MySQL and Dolt
   async queryMaybeDolt(
     executeQuery: (pq: ParQuery, isDolt: boolean) => any,
@@ -96,7 +117,7 @@ export class DataSourceService {
         return res;
       }
 
-      const isDolt = await getIsDolt(qr);
+      const isDolt = await this.getIsDolt(qr);
       if (dbName) {
         await qr.query(useDBStatement(dbName, refName, isDolt));
       }
@@ -159,13 +180,4 @@ export function useDBStatement(
     return `USE \`${dbName}/${refName}\``;
   }
   return `USE \`${dbName}\``;
-}
-
-export async function getIsDolt(qr: QueryRunner): Promise<boolean> {
-  try {
-    const res = await qr.query("SELECT dolt_version()");
-    return !!res;
-  } catch (_) {
-    return false;
-  }
 }
