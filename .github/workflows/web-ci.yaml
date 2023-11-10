@@ -1,0 +1,25 @@
+name: Run web CI
+on:
+  pull_request:
+    paths:
+      - 'web/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-web-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install and run web CI
+        working-directory: ./web
+        run: |
+          yarn
+          yarn run ci

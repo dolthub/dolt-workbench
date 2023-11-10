@@ -1,0 +1,33 @@
+.container {
+  @apply max-w-6xl py-24 bg-ld-grey;
+}
+
+.top {
+  p {
+    @apply text-lg text-center max-w-xl mx-auto mt-6;
+  }
+}
+
+.databaseForm {
+  @apply flex items-start justify-between;
+
+  h3 {
+    @apply mb-8;
+  }
+}
+
+.databaseConfig {
+  @apply m-10 max-w-2xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+}
+
+.checkbox {
+  @apply mt-7 mb-10 text-sm;
+}
+
+.advancedSettings {
+  @apply my-5 flex items-center;
+
+  svg {
+    @apply mr-2;
+  }
+}

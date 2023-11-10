@@ -1,0 +1,25 @@
+name: Run graphql CI
+on:
+  pull_request:
+    paths:
+      - 'graphql-server/**'
+  workflow_dispatch:
+
+concurrency:
+  group: ci-graphql-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install and run graphql CI
+        working-directory: ./graphql-server
+        run: |
+          yarn
+          yarn run ci

@@ -1,15 +1,15 @@
 services:
   graphql:
     build:
-      dockerfile: GraphQLDockerfile
-      context: .
+      dockerfile: Dockerfile
+      context: ./graphql-server
     ports:
       - 9002:9002
-    image:  docker.io/taylorbantle1/dolt-workbench:graphql
+    image: docker.io/taylorbantle1/dolt-workbench:graphql
   web:
     build:
-      dockerfile: WebDockerfile
-      context: .
+      dockerfile: Dockerfile
+      context: ./web
     ports:
       - 3002:3000
-    image:  docker.io/taylorbantle1/dolt-workbench:web  
+    image: docker.io/taylorbantle1/dolt-workbench:web
