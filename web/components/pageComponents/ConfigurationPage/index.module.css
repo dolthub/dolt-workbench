@@ -4,7 +4,7 @@
 
 .top {
   p {
-    @apply text-lg text-center max-w-xl mx-auto my-10;
+    @apply text-lg text-center max-w-xl mx-auto mt-6;
   }
 }
 
@@ -12,20 +12,12 @@
   @apply flex items-start justify-between;
 
   h3 {
-    @apply mb-4;
+    @apply mb-8;
   }
 }
 
-.quickStart {
-  @apply bg-white border rounded p-6 m-10 max-w-lg w-full;
-}
-
-.or {
-  @apply font-semibold mt-32 text-lg;
-}
-
 .databaseConfig {
-  @apply m-10 max-w-xl w-full border rounded p-6 bg-white;
+  @apply m-10 max-w-2xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
 }
 
 .checkbox {

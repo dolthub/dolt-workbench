@@ -3,13 +3,10 @@ import ButtonsWithError from "@components/ButtonsWithError";
 import CustomCheckbox from "@components/CustomCheckbox";
 import FormInput from "@components/FormInput";
 import Loader from "@components/Loader";
-import { useAddDatabaseConnectionMutation } from "@gen/graphql-types";
-import { maybeDatabase } from "@lib/urls";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
-import { useRouter } from "next/router";
-import { SyntheticEvent, useState } from "react";
 import css from "./index.module.css";
+import useConfig from "./useConfig";
 
 type Props = {
   hasDatabaseEnv: boolean;
@@ -17,125 +14,87 @@ type Props = {
 };
 
 export default function Form(props: Props) {
-  const router = useRouter();
-  const [connUrl, setConnUrl] = useState("");
-  const [host, setHost] = useState("");
-  const [port, setPort] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [database, setDatabase] = useState("");
-  const [hideDoltFeatures, setHideDoltFeatures] = useState(false);
-  const [useSSL, setUseSSL] = useState(true);
-  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
-  const [addDb, res] = useAddDatabaseConnectionMutation();
+  const { onSubmit, state, setState, error, clearState } = useConfig();
 
   const onCancel = props.hasDatabaseEnv
     ? () => {
         props.setShowForm(false);
-        setConnUrl("");
       }
-    : undefined;
-
-  const onSubmit = async (e: SyntheticEvent, url: string) => {
-    e.preventDefault();
-
-    try {
-      const db = await addDb({ variables: { url, hideDoltFeatures, useSSL } });
-      await res.client.clearStore();
-      if (!db.data) {
-        return;
-      }
-      const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
-      router.push(href, as).catch(console.error);
-    } catch (_) {
-      // Handled by res.error
-    }
-  };
+    : clearState;
 
   return (
     <div className={css.databaseForm}>
-      <div className={css.quickStart}>
-        <form onSubmit={async e => onSubmit(e, connUrl)}>
-          <Loader loaded={!res.loading} />
-          <h3>Quick Start</h3>
-          <FormInput
-            value={connUrl}
-            onChangeString={setConnUrl}
-            label="Connection string"
-            placeholder="mysql://[username]:[password]@[host]/[database]"
-          />
-          <Button type="submit" disabled={!connUrl}>
-            Go
-          </Button>
-        </form>
-      </div>
-      <div className={css.or}>OR</div>
+      <Loader loaded={!state.loading} />
       <div className={css.databaseConfig}>
         <form
           onSubmit={async e =>
             onSubmit(
               e,
-              `mysql://${username}:${password}@${host}:${port}/${database}`,
+              `mysql://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`,
             )
           }
         >
-          <h3>Connectivity</h3>
+          <h3>Set up new connection</h3>
           <FormInput
             label="Host"
-            value={host}
-            onChangeString={setHost}
+            value={state.host}
+            onChangeString={h => setState({ host: h })}
             placeholder="127.0.0.1"
             horizontal
           />
           <FormInput
             label="Port"
-            value={port}
-            onChangeString={setPort}
+            value={state.port}
+            onChangeString={p => setState({ port: p })}
             placeholder="3306"
             horizontal
           />
           <FormInput
             label="Username"
-            value={username}
-            onChangeString={setUsername}
+            value={state.username}
+            onChangeString={u => setState({ username: u })}
             placeholder="root"
             horizontal
           />
           <FormInput
             label="Password"
-            value={password}
-            onChangeString={setPassword}
+            value={state.password}
+            onChangeString={p => setState({ password: p })}
             placeholder="**********"
             type="password"
             horizontal
           />
           <FormInput
             label="Database"
-            value={database}
-            onChangeString={setDatabase}
+            value={state.database}
+            onChangeString={d => setState({ database: d })}
             placeholder="mydb"
             horizontal
           />
           <Button.Link
-            onClick={() => setShowAdvancedSettings(s => !s)}
+            onClick={() =>
+              setState({ showAdvancedSettings: !state.showAdvancedSettings })
+            }
             className={css.advancedSettings}
           >
-            {showAdvancedSettings ? <FaCaretUp /> : <FaCaretDown />} Advanced
-            settings
+            {state.showAdvancedSettings ? <FaCaretUp /> : <FaCaretDown />}{" "}
+            Advanced settings
           </Button.Link>
-          {showAdvancedSettings && (
+          {state.showAdvancedSettings && (
             <div>
               <CustomCheckbox
-                checked={useSSL}
-                onChange={() => setUseSSL(!useSSL)}
+                checked={state.useSSL}
+                onChange={() => setState({ useSSL: !state.useSSL })}
                 name="use-ssl"
                 label="Use SSL"
                 description="If server does not allow insecure connections, client must use SSL/TLS."
                 className={css.checkbox}
               />
               <CustomCheckbox
-                checked={hideDoltFeatures}
-                onChange={() => setHideDoltFeatures(!hideDoltFeatures)}
+                checked={state.hideDoltFeatures}
+                onChange={() =>
+                  setState({ hideDoltFeatures: !state.hideDoltFeatures })
+                }
                 name="hide-dolt-features"
                 label="Hide Dolt features"
                 description="Hides Dolt features like branches, logs, and commits for non-Dolt MySQL databases. Will otherwise be disabled."
@@ -143,8 +102,12 @@ export default function Form(props: Props) {
               />
             </div>
           )}
-          <ButtonsWithError error={res.error} onCancel={onCancel} left>
-            <Button type="submit" disabled={!host || !username}>
+          <ButtonsWithError
+            error={error}
+            onCancel={onCancel}
+            cancelText={props.hasDatabaseEnv ? "cancel" : "clear"}
+          >
+            <Button type="submit" disabled={!state.host || !state.username}>
               Launch Workbench
             </Button>
           </ButtonsWithError>

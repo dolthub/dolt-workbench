@@ -7,6 +7,7 @@ import css from "./index.module.css";
 
 type Props = {
   onCancel?: () => void;
+  cancelText?: string;
   error?: ApolloErrorType;
   children: ReactNode;
   className?: string;
@@ -41,7 +42,7 @@ export default function ButtonsWithError({
             data-cy="cancel-button"
             className={css.cancel}
           >
-            cancel
+            {props.cancelText ?? "cancel"}
           </Button.Link>
         )}
       </Button.Group>
