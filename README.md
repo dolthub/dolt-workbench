@@ -21,8 +21,8 @@ Start the GraphQL server. If successful, you'll see the GraphQL playground when 
 
 ```
 % cd graphql-server
-graphql-server% yarn && yarn compile
-graphql-server% yarn dev
+graphql-server % yarn && yarn compile
+graphql-server % yarn dev
 ```
 
 If you want the server to start up with a configured database connection, add a
@@ -41,7 +41,8 @@ GraphQL server (localhost:9002).
 
 ```
 % cd packages/web
-web% yarn dev
+web % yarn && yarn compile
+web % yarn dev
 ```
 
 Open your browser to [localhost:3002](http://localhost:3002).

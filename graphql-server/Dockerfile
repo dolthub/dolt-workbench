@@ -23,6 +23,8 @@ FROM --platform=linux/amd64 node:18.13.0-alpine3.17 as build
 
 WORKDIR /app
 
+RUN apk update && apk add curl
+
 COPY .yarn ./.yarn
 COPY --chown=node:node yarn.lock package.json .yarnrc.yml ./
 
@@ -33,9 +35,12 @@ COPY --chown=node:node . .
 RUN yarn run build
 
 # TODO: Figure out CORS for production builds
-ENV NODE_ENV development
+ENV NODE_ENV production
 
 RUN yarn workspaces focus --production && yarn cache clean
+
+RUN curl -sf https://gobinaries.com/tj/node-prune | sh
+RUN node-prune
 
 USER node
 
