@@ -32,6 +32,7 @@ COPY --chown=node:node . .
 
 RUN yarn run build
 
+# TODO: Figure out CORS for production builds
 ENV NODE_ENV development
 
 RUN yarn workspaces focus --production && yarn cache clean
@@ -50,7 +51,8 @@ COPY --chown=node:node --from=build /app/dist ./dist
 
 # Start the server using the production build
 EXPOSE 9002
-CMD [ "node", "dist/main.js" ]
+ENV HOSTNAME "0.0.0.0"
 
+CMD [ "node", "dist/main.js" ]
 
 # Source: https://www.tomray.dev/nestjs-docker-production#putting-it-all-together
