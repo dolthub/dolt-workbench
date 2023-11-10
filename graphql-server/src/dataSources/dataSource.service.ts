@@ -10,6 +10,8 @@ class WorkbenchConfig {
   hideDoltFeatures: boolean;
 
   connectionUrl: string;
+
+  useSSL: boolean;
 }
 
 @Injectable()
@@ -118,9 +120,11 @@ export class DataSourceService {
       type: "mysql",
       connectorPackage: "mysql2",
       url: config.connectionUrl,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: config.useSSL
+        ? {
+            rejectUnauthorized: false,
+          }
+        : undefined,
       synchronize: false,
       logging: "all",
 

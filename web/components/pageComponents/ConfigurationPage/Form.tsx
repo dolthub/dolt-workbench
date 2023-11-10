@@ -19,12 +19,13 @@ type Props = {
 export default function Form(props: Props) {
   const router = useRouter();
   const [connUrl, setConnUrl] = useState("");
-  const [host, setHost] = useState("127.0.0.1");
-  const [port, setPort] = useState("3306");
-  const [username, setUsername] = useState("root");
+  const [host, setHost] = useState("");
+  const [port, setPort] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [database, setDatabase] = useState("");
   const [hideDoltFeatures, setHideDoltFeatures] = useState(false);
+  const [useSSL, setUseSSL] = useState(true);
   const [showAdvancedSettings, setShowAdvancedSettings] = useState(false);
   const [addDb, res] = useAddDatabaseConnectionMutation();
 
@@ -39,7 +40,7 @@ export default function Form(props: Props) {
     e.preventDefault();
 
     try {
-      const db = await addDb({ variables: { url, hideDoltFeatures } });
+      const db = await addDb({ variables: { url, hideDoltFeatures, useSSL } });
       await res.client.clearStore();
       if (!db.data) {
         return;
@@ -124,6 +125,14 @@ export default function Form(props: Props) {
           </Button.Link>
           {showAdvancedSettings && (
             <div>
+              <CustomCheckbox
+                checked={useSSL}
+                onChange={() => setUseSSL(!useSSL)}
+                name="use-ssl"
+                label="Use SSL"
+                description="If server does not allow insecure connections, client must use SSL/TLS."
+                className={css.checkbox}
+              />
               <CustomCheckbox
                 checked={hideDoltFeatures}
                 onChange={() => setHideDoltFeatures(!hideDoltFeatures)}

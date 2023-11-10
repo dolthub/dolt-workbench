@@ -209,6 +209,7 @@ export type MutationAddDatabaseConnectionArgs = {
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -842,6 +843,7 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
   url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
@@ -2314,11 +2316,12 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($url: String, $useEnv: Boolean, $hideDoltFeatures: Boolean) {
+    mutation AddDatabaseConnection($url: String, $useEnv: Boolean, $hideDoltFeatures: Boolean, $useSSL: Boolean) {
   addDatabaseConnection(
     url: $url
     useEnv: $useEnv
     hideDoltFeatures: $hideDoltFeatures
+    useSSL: $useSSL
   )
 }
     `;
@@ -2340,6 +2343,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  *      url: // value for 'url'
  *      useEnv: // value for 'useEnv'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
+ *      useSSL: // value for 'useSSL'
  *   },
  * });
  */

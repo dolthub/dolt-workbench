@@ -24,6 +24,9 @@ class AddDatabaseConnectionArgs {
 
   @Field({ nullable: true })
   hideDoltFeatures?: boolean;
+
+  @Field({ nullable: true })
+  useSSL?: boolean;
 }
 
 @ObjectType()
@@ -100,11 +103,13 @@ export class DatabaseResolver {
       await this.dss.addDS({
         connectionUrl: url,
         hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
+        useSSL: !!args.useSSL,
       });
     } else if (args.url) {
       await this.dss.addDS({
         connectionUrl: args.url,
         hideDoltFeatures: !!args.hideDoltFeatures,
+        useSSL: !!args.useSSL,
       });
     } else {
       throw new Error("database url not provided");

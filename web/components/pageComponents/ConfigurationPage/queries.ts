@@ -5,11 +5,13 @@ export const ADD_DATABASE_CONNECTION = gql`
     $url: String
     $useEnv: Boolean
     $hideDoltFeatures: Boolean
+    $useSSL: Boolean
   ) {
     addDatabaseConnection(
       url: $url
       useEnv: $useEnv
       hideDoltFeatures: $hideDoltFeatures
+      useSSL: $useSSL
     )
   }
 `;
