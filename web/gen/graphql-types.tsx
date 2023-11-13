@@ -509,7 +509,6 @@ export type QueryViewsArgs = {
 
 export enum QueryExecutionStatus {
   Error = 'Error',
-  RowLimit = 'RowLimit',
   Success = 'Success',
   Timeout = 'Timeout'
 }

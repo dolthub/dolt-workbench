@@ -3,7 +3,7 @@ import { SortBranchesBy } from "./branch.enum";
 export const branchQuery = `SELECT * FROM dolt_branches WHERE name=?`;
 
 export const getBranchesQuery = (sortBy?: SortBranchesBy) =>
-  `SELECT * FROM dolt_branches ${getOrderByForBranches(sortBy)}LIMIT 200`;
+  `SELECT * FROM dolt_branches ${getOrderByForBranches(sortBy)}`;
 
 export const callNewBranch = `CALL DOLT_BRANCH(?, ?)`;
 

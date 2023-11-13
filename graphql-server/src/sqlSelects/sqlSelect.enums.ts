@@ -4,7 +4,6 @@ export enum QueryExecutionStatus {
   Success,
   Error,
   Timeout,
-  RowLimit,
 }
 
 registerEnumType(QueryExecutionStatus, { name: "QueryExecutionStatus" });

@@ -92,22 +92,4 @@ describe("test SqlMessage", () => {
     expect(await screen.findByText("master")).toBeVisible();
     expect(screen.getByText("1 row selected")).toBeVisible();
   });
-
-  it("renders row limit message", async () => {
-    render(
-      <MockedProvider mocks={[databaseDetailsMock(true, false)]}>
-        <SqlMessage
-          params={params}
-          rowsLen={200}
-          executionStatus={QueryExecutionStatus.RowLimit}
-        />
-      </MockedProvider>,
-    );
-
-    expect(await screen.findByText("master")).toBeVisible();
-    expect(screen.getByText(/200 rows selected/)).toBeVisible();
-    expect(
-      screen.getByText(/\(for unlimited query results download /),
-    ).toBeVisible();
-  });
 });

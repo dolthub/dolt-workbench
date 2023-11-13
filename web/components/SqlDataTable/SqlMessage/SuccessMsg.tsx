@@ -1,4 +1,3 @@
-import DoltLink from "@components/links/DoltLink";
 import Link from "@components/links/Link";
 import useIsDolt from "@hooks/useIsDolt";
 import { SqlQueryParams } from "@lib/params";
@@ -41,7 +40,6 @@ export default function SuccessMsg(props: Props) {
 type ExecutionProps = {
   rowsLen: number;
   params: SqlQueryParams;
-  hitRowLimit?: boolean;
 };
 
 export function ExecutionMessage(props: ExecutionProps) {
@@ -53,12 +51,6 @@ export function ExecutionMessage(props: ExecutionProps) {
         <span>
           {" "}
           on <span className={css.bold}>{props.params.refName}</span>
-        </span>
-      )}
-      {props.hitRowLimit && (
-        <span>
-          {" "}
-          (for unlimited query results download <DoltLink />)
         </span>
       )}
     </p>

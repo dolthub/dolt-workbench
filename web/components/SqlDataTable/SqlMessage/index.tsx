@@ -4,7 +4,7 @@ import { QueryExecutionStatus } from "@gen/graphql-types";
 import { isTimeoutError } from "@lib/errors/helpers";
 import { SqlQueryParams } from "@lib/params";
 import { isMultipleQueries } from "@lib/parseSqlQuery";
-import SuccessMsg, { ExecutionMessage } from "./SuccessMsg";
+import SuccessMsg from "./SuccessMsg";
 import TimeoutMessage from "./TimeoutMsg";
 import css from "./index.module.css";
 import { improveGqlError } from "./utils";
@@ -43,8 +43,6 @@ export default function SqlMessage(props: Props) {
       return <SuccessMsg {...props} />;
     case QueryExecutionStatus.Timeout:
       return <TimeoutMessage {...props} />;
-    case QueryExecutionStatus.RowLimit:
-      return <ExecutionMessage {...props} hitRowLimit />;
     case QueryExecutionStatus.Error:
     default:
       if (props.executionMessage && isTimeoutError(props.executionMessage)) {
