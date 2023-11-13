@@ -2,14 +2,10 @@ import Btn from "@components/Btn";
 import Loader from "@components/Loader";
 import SqlEditor from "@components/SqlEditor";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import {
-  ColumnForDataTableFragment,
-  useDataTableQuery,
-} from "@gen/graphql-types";
-import { OptionalRefParams, RefParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import { BiPencil } from "@react-icons/all-files/bi/BiPencil";
 import dynamic from "next/dynamic";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Buttons from "./Buttons";
 import Errors from "./Errors";
 import css from "./index.module.css";
@@ -19,32 +15,15 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
 });
 
-type Params = OptionalRefParams & {
-  q?: string;
-  tableName?: string;
-};
-
-type RequireParams = RefParams & {
-  q?: string;
-  tableName: string;
-};
-
 type Props = {
-  params: Params;
+  params: OptionalRefParams & {
+    q?: string;
+    tableName?: string;
+  };
   empty?: boolean;
 };
 
-type InnerProps = Props & {
-  cols?: ColumnForDataTableFragment[];
-};
-
-type QueryProps = Props & {
-  params: RequireParams;
-};
-
-function Inner(props: InnerProps) {
-  const [showDefaultQueryInfo, setShowDefaultQueryInfo] = useState(false);
-
+export default function DatabaseTableHeader(props: Props) {
   const sqlString = getSqlString(
     props.params.q,
     props.params.tableName,
@@ -60,15 +39,13 @@ function Inner(props: InnerProps) {
   } = useSqlEditorContext();
 
   useEffect(() => {
-    const sqlRes = getEditorString(
+    const sqlQuery = getEditorString(
       props.params.q,
       props.params.tableName,
       props.empty,
-      props.cols,
     );
-    setEditorString(sqlRes.sqlQuery);
-    setShowDefaultQueryInfo(sqlRes.showDefaultQueryInfo);
-  }, [props.cols]);
+    setEditorString(sqlQuery);
+  }, [props.params.q, props.params.tableName, props.empty]);
 
   return (
     <div className={css.editorContainer}>
@@ -86,7 +63,7 @@ function Inner(props: InnerProps) {
         <Buttons sqlString={editorString} params={props.params} />
       </div>
       {showSqlEditor ? (
-        <SqlEditor {...props} showDefaultQueryInfo={showDefaultQueryInfo} />
+        <SqlEditor {...props} />
       ) : (
         <Btn
           data-cy="sql-editor-collapsed"
@@ -119,28 +96,4 @@ function getQueryTitle(sqlString: string, empty?: boolean): string {
   if (sqlString === "SHOW TABLES") return "Query";
   if (empty) return "Sample Query";
   return "Query";
-}
-
-function WithQuery(props: QueryProps) {
-  const res = useDataTableQuery({
-    variables: props.params,
-  });
-  if (res.loading) return <Loader loaded={false} />;
-  return <Inner {...props} cols={res.data?.table.columns} />;
-}
-
-export default function DatabaseTableHeader(props: Props) {
-  if (props.params.tableName && props.params.refName) {
-    return (
-      <WithQuery
-        {...props}
-        params={{
-          ...props.params,
-          refName: props.params.refName,
-          tableName: props.params.tableName,
-        }}
-      />
-    );
-  }
-  return <Inner {...props} />;
 }
