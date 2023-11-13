@@ -6,7 +6,7 @@ FROM --platform=linux/amd64 node:18.13.0-alpine3.17 as development
 
 WORKDIR /app
 
-COPY .yarn ./.yarn
+COPY --chown=node:node .yarn ./.yarn
 COPY --chown=node:node yarn.lock package.json .yarnrc.yml ./
 
 RUN yarn install --immutable
@@ -25,7 +25,7 @@ WORKDIR /app
 
 RUN apk update && apk add curl
 
-COPY .yarn ./.yarn
+COPY --chown=node:node .yarn ./.yarn
 COPY --chown=node:node yarn.lock package.json .yarnrc.yml ./
 
 COPY --chown=node:node --from=development /app/node_modules ./node_modules
