@@ -60,23 +60,13 @@ export function fromSqlSelectRow(
     };
   }
 
-  // Get first 201 rows to determine if limit has been reached
-  const sliced = doltRows.slice(0, 201);
-  const rows: row.Row[] = sliced.map(row.fromDoltRowRes);
-  if (!rows.length) {
+  if (!doltRows.length) {
     return res;
   }
-  const columns: column.Column[] = Object.keys(sliced[0]).map(c => {
+  const rows: row.Row[] = doltRows.map(row.fromDoltRowRes);
+  const columns: column.Column[] = Object.keys(doltRows[0]).map(c => {
     return { name: c, isPrimaryKey: false, type: "unknown" };
   });
 
-  if (rows.length > 200) {
-    return {
-      ...res,
-      columns,
-      rows: rows.slice(0, 200),
-      queryExecutionStatus: QueryExecutionStatus.RowLimit,
-    };
-  }
   return { ...res, columns, rows };
 }

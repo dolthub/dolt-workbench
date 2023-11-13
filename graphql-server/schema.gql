@@ -235,7 +235,6 @@ enum QueryExecutionStatus {
   Success
   Error
   Timeout
-  RowLimit
 }
 
 type Status {
