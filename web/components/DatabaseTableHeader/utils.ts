@@ -1,5 +1,6 @@
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 
+export const DEFAULT_LIMIT = 1000;
 const exampleCreateTable = `CREATE TABLE tablename (pk INT, col1 VARCHAR(255), PRIMARY KEY (pk));`;
 
 export function getSqlString(
@@ -27,8 +28,7 @@ export function getEditorString(
   return query ?? sampleQuery(tableName ?? "");
 }
 
-function addEmptyLines(firstLine: string): string {
-  const lines = [firstLine];
+function addEmptyLines(lines: string[]): string {
   // eslint-disable-next-line no-empty
   while (lines.push("") < 5) {}
   return lines.join("\n");
@@ -36,9 +36,12 @@ function addEmptyLines(firstLine: string): string {
 
 export function sampleQuery(tableName?: string): string {
   if (!tableName || isDoltSystemTable(tableName)) {
-    return addEmptyLines("SHOW TABLES;");
+    return addEmptyLines(["SHOW TABLES;"]);
   }
-  return addEmptyLines(`SELECT * FROM \`${tableName}\`;`);
+  return addEmptyLines([
+    `SELECT * FROM \`${tableName}\``,
+    `LIMIT ${DEFAULT_LIMIT};`,
+  ]);
 }
 
 export function sampleCreateQueryForEmpty(): string {
@@ -50,5 +53,5 @@ export function sampleCreateQueryForEmpty(): string {
     ");",
   ];
 
-  return lines.join("\n");
+  return addEmptyLines(lines);
 }
