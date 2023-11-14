@@ -10,6 +10,7 @@ const defaultState = {
   username: "root",
   password: "",
   database: "",
+  connectionUrl: "",
   hideDoltFeatures: false,
   useSSL: true,
   showAdvancedSettings: false,
@@ -20,7 +21,7 @@ type ConfigState = typeof defaultState;
 type ConfigDispatch = Dispatch<Partial<ConfigState>>;
 
 type ReturnType = {
-  onSubmit: (e: SyntheticEvent, url: string) => Promise<void>;
+  onSubmit: (e: SyntheticEvent) => Promise<void>;
   state: ConfigState;
   setState: ConfigDispatch;
   error?: Error | undefined;
@@ -47,9 +48,12 @@ export default function useConfig(): ReturnType {
     sessionStorage.removeItem("db-config");
   };
 
-  const onSubmit = async (e: SyntheticEvent, url: string) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true });
+    const url =
+      state.connectionUrl ||
+      `mysql://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`;
 
     try {
       const db = await addDb({
@@ -71,6 +75,7 @@ export default function useConfig(): ReturnType {
           username: state.username,
           database: state.database,
           hideDoltFeatures: state.hideDoltFeatures,
+          connectionUrl: state.connectionUrl,
           useSSL: state.useSSL,
         }),
       );

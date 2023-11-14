@@ -26,15 +26,16 @@ export default function Form(props: Props) {
     <div className={css.databaseForm}>
       <Loader loaded={!state.loading} />
       <div className={css.databaseConfig}>
-        <form
-          onSubmit={async e =>
-            onSubmit(
-              e,
-              `mysql://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`,
-            )
-          }
-        >
+        <form onSubmit={onSubmit}>
           <h3>Set up new connection</h3>
+          <FormInput
+            value={state.connectionUrl}
+            onChangeString={c => setState({ connectionUrl: c })}
+            label="URL"
+            placeholder="mysql://[username]:[password]@[host]/[database]"
+            horizontal
+          />
+          <div className={css.or}>OR</div>
           <FormInput
             label="Host"
             value={state.host}
@@ -107,7 +108,12 @@ export default function Form(props: Props) {
             onCancel={onCancel}
             cancelText={props.hasDatabaseEnv ? "cancel" : "clear"}
           >
-            <Button type="submit" disabled={!state.host || !state.username}>
+            <Button
+              type="submit"
+              disabled={
+                !state.connectionUrl && (!state.host || !state.username)
+              }
+            >
               Launch Workbench
             </Button>
           </ButtonsWithError>
