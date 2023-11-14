@@ -52,7 +52,7 @@ export default function useConfig(): ReturnType {
     e.preventDefault();
     setState({ loading: true });
     const url =
-      state.connectionUrl ??
+      state.connectionUrl ||
       `mysql://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`;
 
     try {
