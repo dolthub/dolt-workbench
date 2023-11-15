@@ -1,9 +1,0 @@
-.inner {
-  p {
-    @apply text-lg text-center;
-  }
-
-  button {
-    @apply my-6 text-center mx-auto;
-  }
-}

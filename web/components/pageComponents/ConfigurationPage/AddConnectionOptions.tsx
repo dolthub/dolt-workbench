@@ -1,5 +1,4 @@
-import Button from "@components/Button";
-import ButtonsWithError from "@components/ButtonsWithError";
+import ErrorMsg from "@components/ErrorMsg";
 import QueryHandler from "@components/util/QueryHandler";
 import {
   useAddDatabaseConnectionMutation,
@@ -37,19 +36,19 @@ function Inner(props: InnerProps) {
 
   if (!showForm) {
     return (
-      <div className={css.top}>
-        <p>
-          A database connection URL was found in the environment. You can use
-          this connection or create a new one.
-        </p>
-        <form onSubmit={onSubmit}>
-          <ButtonsWithError error={res.error}>
-            <Button type="submit">Use connection URL from env</Button>
-            <Button onClick={() => setShowForm(true)}>
-              Change connection URL
-            </Button>
-          </ButtonsWithError>
-        </form>
+      <div className={css.options}>
+        <button type="button" onClick={onSubmit} className={css.option}>
+          <h3>Use database connection URL from environment</h3>
+        </button>
+        <div>or</div>
+        <button
+          type="button"
+          onClick={() => setShowForm(true)}
+          className={css.option}
+        >
+          <h3>Connect to a different database</h3>
+        </button>
+        <ErrorMsg err={res.error} />
       </div>
     );
   }

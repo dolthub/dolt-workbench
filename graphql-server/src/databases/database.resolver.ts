@@ -97,10 +97,11 @@ export class DatabaseResolver {
       const url = this.configService.get("DATABASE_URL");
       if (!url) throw new Error("DATABASE_URL not found in env");
       const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
+      const useSSL = this.configService.get("USE_SSL");
       await this.dss.addDS({
         connectionUrl: url,
         hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
-        useSSL: !!args.useSSL,
+        useSSL: useSSL !== undefined ? useSSL === "true" : true,
       });
     } else if (args.url) {
       await this.dss.addDS({
