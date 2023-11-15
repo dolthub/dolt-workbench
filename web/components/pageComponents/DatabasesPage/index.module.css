@@ -1,7 +1,5 @@
-.container {
-  p {
-    @apply text-lg text-center mb-10;
-  }
+.desc {
+  @apply text-lg text-center mb-10;
 }
 
 .database {
@@ -10,6 +8,10 @@
   &:hover {
     @apply border-acc-grey;
   }
+}
+
+.noDbs {
+  @apply text-lg;
 }
 
 .button {
