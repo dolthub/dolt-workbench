@@ -8,6 +8,22 @@
   }
 }
 
+.options {
+  @apply flex my-16 justify-between items-center max-w-2xl mx-auto;
+}
+
+.option {
+  @apply w-72 h-24 bg-white rounded border-2 border-acc-linkblue text-acc-linkblue px-4 py-3;
+
+  h3 {
+    @apply text-lg;
+  }
+
+  &:hover {
+    @apply border-acc-hoverlinkblue text-acc-hoverlinkblue;
+  }
+}
+
 .databaseForm {
   @apply flex items-start justify-between;
 
@@ -34,4 +50,8 @@
 
 .or {
   @apply font-semibold text-center w-full my-5 text-lg;
+}
+
+.err {
+  @apply text-center;
 }
