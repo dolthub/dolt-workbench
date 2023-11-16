@@ -17,7 +17,7 @@ export default function HomePage() {
 
   useEffectAsync(async () => {
     if (!res.data) return;
-    if (!res.data?.hasDatabaseEnv) {
+    if (!res.data.hasDatabaseEnv) {
       setLoading(false);
       return;
     }

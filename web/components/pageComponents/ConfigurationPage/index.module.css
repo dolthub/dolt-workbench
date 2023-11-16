@@ -51,3 +51,7 @@
 .or {
   @apply font-semibold text-center w-full my-5 text-lg;
 }
+
+.err {
+  @apply text-center;
+}

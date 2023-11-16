@@ -36,19 +36,21 @@ function Inner(props: InnerProps) {
 
   if (!showForm) {
     return (
-      <div className={css.options}>
-        <button type="button" onClick={onSubmit} className={css.option}>
-          <h3>Use database connection URL from environment</h3>
-        </button>
-        <div>or</div>
-        <button
-          type="button"
-          onClick={() => setShowForm(true)}
-          className={css.option}
-        >
-          <h3>Connect to a different database</h3>
-        </button>
-        <ErrorMsg err={res.error} />
+      <div>
+        <div className={css.options}>
+          <button type="button" onClick={onSubmit} className={css.option}>
+            <h3>Use database connection URL from environment</h3>
+          </button>
+          <div>or</div>
+          <button
+            type="button"
+            onClick={() => setShowForm(true)}
+            className={css.option}
+          >
+            <h3>Connect to a different database</h3>
+          </button>
+        </div>
+        <ErrorMsg err={res.error} className={css.err} />
       </div>
     );
   }
