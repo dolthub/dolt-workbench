@@ -7,7 +7,7 @@ to unlock powerful version control features.
 
 ### Modern, web-based table browser
 
-![Modern, web-based table browser](./images/table-browser.png)
+<img width="1445" alt="Modern, web-based table browser" src="https://github.com/dolthub/dolt-workbench/assets/29443194/77e29d8a-90d3-4739-90e4-25310887718a">
 
 ### Auto-complete sql queries
 
