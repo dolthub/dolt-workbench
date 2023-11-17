@@ -12,7 +12,7 @@ workbench on the market.
 ### Modern, web-based table browser
 
 Why is your SQL workbench stuck in 2003? The Dolt Workbench brings a modern browser-based UI to the
-workbench features you know and love. It makes browsing table data and schemas is more
+workbench features you know and love. It makes browsing table data and schemas more
 intuitive and looks good doing it.
 
 ![Modern, web-based table browser](./images/table-browser.png)
