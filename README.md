@@ -71,7 +71,7 @@ those changes on a branch.
 
 ### Tags
 
-Tag your data at a certain commit to represent a data release. Data releases are a
+Tag your data at a commit to represent a data release. Data releases are a
 collection of data with a specific schema and known set of data points. Users with
 separate copies of a database can have confidence they're working with the exact same
 data.
