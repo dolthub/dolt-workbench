@@ -1,13 +1,13 @@
 # dolt-workbench
 
-A SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) to unlock
-powerful version control features, such as branches, commits, and merge.
+A modern SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) 
+to unlock powerful version control features.
 
 ![Dolt Workbench](./images/workbench.png)
 
 ## Getting started
 
-The easiest way to get started is to use Docker. Assuming you have Docker
+The easiest way to get started is with Docker. Assuming you have Docker
 [installed](https://www.docker.com/get-started/) and running, you can simply pull and run
 the image.
 
@@ -23,7 +23,7 @@ You can find more in-depth instructions on
 
 ## Getting started from source
 
-First clone this repository.
+First, clone this repository.
 
 ### Run the GraphQL server
 
@@ -36,13 +36,13 @@ graphql-server % yarn dev
 ```
 
 If you want the server to start up with a configured database connection, add a
-`.development.env` file with a `DATABASE_CONNECTION` field, like so:
+`.development.env` file with a `DATABASE_URL` field, like so:
 
 ```bash
 DATABASE_URL="mysql://[username]:[password]@[host]/[database]"
 ```
 
-Otherwise you will be able to provide a connection string from the UI.
+Otherwise you will be able to provide connection information from the UI.
 
 ### Run the web server
 
