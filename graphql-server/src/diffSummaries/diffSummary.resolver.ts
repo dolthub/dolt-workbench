@@ -36,6 +36,7 @@ export class DiffSummaryResolver {
     return this.dss.query(
       async q => getDiffSummaries(q, args),
       args.databaseName,
+      args.refName,
     );
   }
 }

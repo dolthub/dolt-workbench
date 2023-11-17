@@ -32,22 +32,26 @@ export class DiffStatResolver {
     const type = args.type ?? CommitDiffType.TwoDot;
     checkArgs(args);
 
-    return this.dss.query(async query => {
-      if (type === CommitDiffType.ThreeDot) {
-        const res = await query(getThreeDotDiffStatQuery(!!args.tableName), [
-          `${args.toRefName}...${args.fromRefName}`,
+    return this.dss.query(
+      async query => {
+        if (type === CommitDiffType.ThreeDot) {
+          const res = await query(getThreeDotDiffStatQuery(!!args.tableName), [
+            `${args.toRefName}...${args.fromRefName}`,
+            args.tableName,
+          ]);
+          return fromDoltDiffStat(res);
+        }
+
+        const res = await query(getDiffStatQuery(!!args.tableName), [
+          args.fromRefName,
+          args.toRefName,
           args.tableName,
         ]);
         return fromDoltDiffStat(res);
-      }
-
-      const res = await query(getDiffStatQuery(!!args.tableName), [
-        args.fromRefName,
-        args.toRefName,
-        args.tableName,
-      ]);
-      return fromDoltDiffStat(res);
-    }, args.databaseName);
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 }
 
