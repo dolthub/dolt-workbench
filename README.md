@@ -3,6 +3,8 @@
 A SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) to unlock
 powerful version control features, such as branches, commits, and merge.
 
+![Dolt Workbench](./workbench-screenshot.png)
+
 ## Getting started
 
 The easiest way to get started is to use Docker. Assuming you have Docker
@@ -54,9 +56,3 @@ web % yarn dev
 ```
 
 Open your browser to [localhost:3002](http://localhost:3002).
-
-## Building the Docker images
-
-```
-% docker compose build
-```
