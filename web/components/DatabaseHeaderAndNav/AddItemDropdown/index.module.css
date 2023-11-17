@@ -23,7 +23,7 @@
 }
 
 .button {
-  @apply flex justify-center items-center pl-2 pr-1 h-8 text-white text-sm font-normal border-opaque-rounded bg-[#4B75C1] w-20 mr-3;
+  @apply flex justify-center items-center pl-2 pr-1 h-8 text-white text-sm font-normal border-opaque-rounded bg-white/10 w-20 mr-3;
 
   &:hover {
     @apply button-shadow;

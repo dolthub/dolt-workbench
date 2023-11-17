@@ -31,7 +31,7 @@
 
 .tab:hover,
 .active {
-  @apply border-b-4 border-[#FF912B] text-[#FF912B];
+  @apply border-b-4 border-[#FF8D69] text-[#FF8D69];
 }
 
 .disabledTab {

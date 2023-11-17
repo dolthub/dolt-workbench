@@ -23,7 +23,7 @@ export const branchPathColors = [
   customColors["ld-darkblue"],
   customColors["ld-orange"],
   customColors["acc-hoverlinkblue"],
-  customColors["acc-bright-green"],
+  customColors["ld-brightgreen"],
   "#C5A15A",
   "#FA7978",
   customColors["acc-darkgrey"],

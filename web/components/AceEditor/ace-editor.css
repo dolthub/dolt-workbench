@@ -82,6 +82,13 @@
 .ace-monokai .ace_keyword,
 .ace-monokai .ace_meta.ace_tag,
 .ace-monokai .ace_storage {
+  @apply text-blue-300 uppercase;
+}
+
+.ace-view .ace_entity.ace_name.ace_tag,
+.ace-view .ace_keyword,
+.ace-view .ace_meta.ace_tag,
+.ace-view .ace_storage {
   @apply text-acc-hoverlinkblue uppercase;
 }
 
@@ -115,7 +122,13 @@
 .ace-monokai .ace_support.ace_constant,
 .ace-monokai .ace_constant,
 .ace-monokai .ace_support.ace_function {
-  color: #e47718;
+  @apply text-ld-lightgrey;
+}
+
+.ace-view .ace_support.ace_constant,
+.ace-view .ace_constant,
+.ace-view .ace_support.ace_function {
+  @apply text-ld-mediumblue;
 }
 
 .ace-monokai .ace_fold {
@@ -142,7 +155,7 @@
 }
 
 .ace-monokai .ace_string {
-  @apply text-acc-red;
+  color: #fd971f;
 }
 
 .ace-monokai .ace_comment {
