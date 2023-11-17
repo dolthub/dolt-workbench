@@ -3,7 +3,7 @@
 A SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) to unlock
 powerful version control features, such as branches, commits, and merge.
 
-![Dolt Workbench](./workbench-screenshot.png)
+![Dolt Workbench](./images/workbench.png)
 
 ## Getting started
 
