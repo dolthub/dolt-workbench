@@ -18,8 +18,8 @@ the image.
 
 Navigate to http://localhost:3000 to enter your database information.
 
-You can find more in-depth instructions o n
-[Docker Hub](https://hub.docker.com/repository/docker/taylorbantle1/dolt-workbench).
+You can find more in-depth instructions on
+[DockerHub](https://hub.docker.com/repository/docker/taylorbantle1/dolt-workbench).
 
 ## Getting started from source
 
