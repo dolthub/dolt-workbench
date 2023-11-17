@@ -82,7 +82,7 @@ data.
 
 Pull requests are a way to propose changes to a database. A pull request is created from a
 branch with new changes that a user would like to make to another branch (commonly the
-`main` branch). Easily review the diff of the proposed changes and think through potential
+`main` branch). Easily review the diff of proposed changes and think through potential
 improvements or implications of the change. The pull request can then be merged, which
 will update the base branch with the changes from the feature branch.
 
