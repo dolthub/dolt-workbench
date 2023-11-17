@@ -36,12 +36,13 @@ function Inner(props: InnerProps) {
 
   if (!showForm) {
     return (
-      <div>
+      <div className={css.whiteContainer}>
+        <h3>Choose how to connect</h3>
         <div className={css.options}>
           <button type="button" onClick={onSubmit} className={css.option}>
             <h3>Use database connection URL from environment</h3>
           </button>
-          <div>or</div>
+          <div className={css.or}>or</div>
           <button
             type="button"
             onClick={() => setShowForm(true)}

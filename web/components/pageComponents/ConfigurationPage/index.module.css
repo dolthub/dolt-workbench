@@ -2,38 +2,46 @@
   @apply max-w-6xl py-24 bg-ld-grey;
 }
 
+.inner {
+  @apply flex justify-between;
+}
+
 .top {
+  @apply mr-24 mt-10;
+  h1 {
+    @apply text-left;
+  }
   p {
-    @apply text-lg text-center max-w-xl mx-auto mt-6;
+    @apply text-xl max-w-lg mt-7 leading-8;
   }
 }
 
 .options {
-  @apply flex my-16 justify-between items-center max-w-2xl mx-auto;
+  @apply flex flex-col my-14 justify-between items-center max-w-2xl mx-auto;
 }
 
 .option {
-  @apply w-72 h-24 bg-white rounded border-2 border-acc-linkblue text-acc-linkblue px-4 py-3;
+  @apply w-72 h-24 bg-indigo-50 rounded border-2 border-acc-linkblue text-acc-linkblue px-4 py-3;
 
   h3 {
     @apply text-lg;
   }
 
   &:hover {
-    @apply border-acc-hoverlinkblue text-acc-hoverlinkblue;
+    @apply border-acc-hoverlinkblue text-acc-hoverlinkblue bg-blue-50;
   }
 }
 
 .databaseForm {
-  @apply flex items-start justify-between;
+  @apply w-full max-w-xl;
 
   h3 {
     @apply mb-8;
   }
 }
 
-.databaseConfig {
-  @apply m-10 max-w-2xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+.whiteContainer {
+  @apply max-w-xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
 }
 
 .checkbox {
