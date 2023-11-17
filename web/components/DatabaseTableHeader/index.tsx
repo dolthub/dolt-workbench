@@ -72,7 +72,6 @@ export default function DatabaseTableHeader(props: Props) {
         >
           <div className={css.editorText}>
             <AceEditor
-              className="ace-view"
               value={sqlString}
               name="AceViewer"
               fontSize={13}
@@ -80,6 +79,7 @@ export default function DatabaseTableHeader(props: Props) {
               wrapEnabled
               showGutter={false}
               maxLines={4}
+              light
             />
             <span className={css.editIcon}>
               <BiPencil />

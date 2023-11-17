@@ -47,15 +47,16 @@ function Inner({ rows, params }: InnerProps) {
   return (
     <div className={css.top}>
       <AceEditor
-        className="ace-view"
         value={fragment}
         name="AceViewer"
         fontSize={13}
         readOnly
         wrapEnabled
         focus
+        showPrintMargin={false}
         showGutter={false}
         height={isMobile ? "calc(100vh - 38rem)" : "calc(100vh - 28rem)"}
+        light
       />
       <div className={css.buttons}>
         {isView && (
