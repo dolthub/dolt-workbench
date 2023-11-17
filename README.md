@@ -1,9 +1,47 @@
 # dolt-workbench
 
-A modern SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com) 
+A modern SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com)
 to unlock powerful version control features.
 
-![Dolt Workbench](./images/workbench.png)
+## Features
+
+### Modern, web-based table browser
+
+![Modern, web-based table browser](./images/table-browser.png)
+
+### Auto-complete sql queries
+
+![SQL queries](./images/sql-queries.png)
+
+### Edit data using point and click interface
+
+![Edit data](./images/edit-data.png)
+
+### ER diagrams
+
+![ER diagrams](./images/er-diagram.png)
+
+### File upload
+
+![File upload](./images/file-importer.png)
+
+## Version control features with [Dolt](https://doltdb.com)
+
+### Commit log visualizations
+
+![Commit graph](./images/commit-graph.png)
+
+### Branch navigation
+
+![Branch navigation](./images/branches.png)
+
+### Tags
+
+![Tags](./images/tags.png)
+
+### Pull requests
+
+![Pull requests](./images/pull-diff.png)
 
 ## Getting started
 
