@@ -64,7 +64,7 @@ insights into your development process.
 ### Branch navigation
 
 A branch adds non-distributed, write isolation to your database. If you have a set of
-database changes that logically should be grouped together or reviewed together, you make
+database changes that logically should be grouped or reviewed together, you make
 those changes on a branch.
 
 ![Branch navigation](./images/branches.png)
