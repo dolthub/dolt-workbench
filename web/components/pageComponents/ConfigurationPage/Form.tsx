@@ -25,7 +25,7 @@ export default function Form(props: Props) {
   return (
     <div className={css.databaseForm}>
       <Loader loaded={!state.loading} />
-      <div className={css.databaseConfig}>
+      <div className={css.whiteContainer}>
         <form onSubmit={onSubmit}>
           <h3>Set up new connection</h3>
           <FormInput

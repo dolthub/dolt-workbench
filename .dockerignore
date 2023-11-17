@@ -16,9 +16,11 @@
 **/*.tsbuildinfo
 Dockerfile
 **/*.env
-*.md
+**/*.md
 **/check-server.js
 **/ci-helper.sh
+images/
+.github
 
 **/*.test.ts
 **/*.test.tsx

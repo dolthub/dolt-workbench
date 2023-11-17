@@ -92,5 +92,5 @@
 }
 
 .resetButton {
-  @apply mr-5 text-xl text-white hover:text-ld-lightblue;
+  @apply mr-5 text-xl text-white hover:text-ld-lightblue hidden lg:block;
 }

@@ -33,7 +33,6 @@ export default function MobileSqlViewer(props: Props) {
         >
           <div className={css.editorText}>
             <AceEditor
-              className="ace-view"
               value={props.sqlString}
               name="AceViewer"
               fontSize={13}
@@ -43,6 +42,7 @@ export default function MobileSqlViewer(props: Props) {
               minLines={openSqlEditor ? 6 : 1}
               maxLines={50}
               focus={false}
+              light
             />
           </div>
         </Btn>

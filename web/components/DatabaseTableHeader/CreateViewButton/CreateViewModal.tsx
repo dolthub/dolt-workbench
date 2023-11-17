@@ -58,7 +58,6 @@ export default function CreateViewModal({
         <div className={css.query}>
           <div className={css.label}>Query</div>
           <AceEditor
-            className="ace-view"
             value={`CREATE VIEW \`${name}\` AS ${props.query}`}
             name="AceViewer"
             fontSize={13}
@@ -66,6 +65,7 @@ export default function CreateViewModal({
             wrapEnabled
             showGutter={false}
             maxLines={6}
+            light
           />
         </div>
         <FormInput

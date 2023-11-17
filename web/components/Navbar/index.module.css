@@ -1,5 +1,5 @@
 .container {
-  @apply w-full bg-[#28519A] text-white pt-2 h-12 z-50 mx-auto pb-2;
+  @apply w-full bg-ld-darkerblue text-white pt-2 h-12 z-50 mx-auto pb-2;
 }
 
 .inner {
@@ -46,7 +46,7 @@
 }
 
 .closeIcon {
-  @apply rounded-full bg-[#4B75C1] ml-3 w-7 h-7 flex justify-center items-center;
+  @apply rounded-full bg-white/10 ml-3 w-7 h-7 flex justify-center items-center;
   svg {
     @apply text-base font-semibold;
   }

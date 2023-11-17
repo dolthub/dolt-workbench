@@ -51,13 +51,7 @@ export default function Cell(props: Props): JSX.Element {
   );
 
   if (createTableCell) {
-    return (
-      <CreateTableCell
-        value={value}
-        data-cy={dataCy}
-        isMobile={props.isMobile}
-      />
-    );
+    return <CreateTableCell value={value} data-cy={dataCy} />;
   }
 
   return (

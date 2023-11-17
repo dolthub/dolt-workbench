@@ -37,8 +37,8 @@ const mobileSelectorStyle: StylesConfig<Option, boolean, GroupBase<Option>> = {
   control: styles => {
     return {
       ...styles,
-      backgroundColor: "#4B75C1",
-      borderColor: "#4B75C1",
+      backgroundColor: "rgba(255, 255, 255, 0.1)",
+      borderColor: "rgba(255, 255, 255, 0.1)",
       marginTop: "1rem",
     };
   },

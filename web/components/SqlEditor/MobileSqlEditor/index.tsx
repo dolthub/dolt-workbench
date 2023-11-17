@@ -57,6 +57,7 @@ export default function MobileSqlEditor(props: Props) {
             editor.commands.removeCommand("find");
           }}
           onChange={debounce(setEditorString, 100)}
+          light
         />
         <BottomButtons
           setSubmitting={setSubmitting}

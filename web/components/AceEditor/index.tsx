@@ -1,28 +1,28 @@
-import cx from "classnames";
 import Editor, { IAceEditorProps } from "react-ace";
 
 // It is important that these are loaded after the "react-ace" import above.
 require("ace-builds/src-noconflict/mode-mysql");
-// Uses the Monokai theme as a baseline and overrides
+// Uses the github_dark theme as a baseline and overrides
 // with custom styles in ace-editor.css
-require("ace-builds/src-noconflict/theme-monokai");
+require("ace-builds/src-noconflict/theme-github_dark");
+require("ace-builds/src-noconflict/theme-github");
 
 type Props = IAceEditorProps & {
   innerRef?: React.MutableRefObject<any>;
-  isMobile?: boolean;
+  light?: boolean;
 };
 
 export default function AceEditor(props: Props) {
   return (
     <Editor
       mode="mysql"
-      theme="monokai" // overridden in ace-editor.css
+      theme={props.light ? "github" : "github_dark"} // overridden in ace-editor.css
       width="100%"
       highlightActiveLine={false}
       wrapEnabled
       ref={props.innerRef}
       {...props}
-      className={cx(props.className, { noMobileEditor: props.isMobile })}
+      className={props.className}
     />
   );
 }

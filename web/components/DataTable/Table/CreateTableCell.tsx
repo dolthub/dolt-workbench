@@ -9,7 +9,6 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 type Props = {
   value: string;
   ["data-cy"]?: string;
-  isMobile?: boolean;
 };
 
 export default function CreateTableCell(props: Props) {
@@ -26,7 +25,7 @@ export default function CreateTableCell(props: Props) {
       }}
     >
       <AceEditor
-        className="ace-view create-table-ace"
+        className="create-table-ace"
         value={props.value}
         name="AceViewer"
         fontSize={13}
@@ -40,7 +39,7 @@ export default function CreateTableCell(props: Props) {
         onLoad={editorInstance => {
           editorInstance.resize();
         }}
-        isMobile={props.isMobile}
+        light
       />
     </td>
   );

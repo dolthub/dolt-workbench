@@ -11,5 +11,5 @@
 }
 
 .label {
-  @apply font-semibold mb-2;
+  @apply font-semibold mb-4 text-base;
 }
