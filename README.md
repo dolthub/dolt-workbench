@@ -91,7 +91,7 @@ will update the base branch with the changes from the feature branch.
 
 The easiest way to get started is with Docker. Assuming you have Docker
 [installed](https://www.docker.com/get-started/) and running, you can simply pull and run
-the image.
+the [Docker image](https://hub.docker.com/r/dolthub/dolt-workbench).
 
 ```
 % docker pull dolthub/dolt-workbench:combined
@@ -101,7 +101,7 @@ the image.
 Navigate to http://localhost:3000 to enter your database information.
 
 You can find more in-depth instructions on
-[DockerHub](https://hub.docker.com/repository/docker/taylorbantle1/dolt-workbench).
+[DockerHub](https://hub.docker.com/r/dolthub/dolt-workbench).
 
 ## Getting started from source
 
