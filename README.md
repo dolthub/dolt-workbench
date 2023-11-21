@@ -94,8 +94,8 @@ The easiest way to get started is with Docker. Assuming you have Docker
 the [Docker image](https://hub.docker.com/r/dolthub/dolt-workbench).
 
 ```
-% docker pull dolthub/dolt-workbench:combined
-% docker run -p 9002:9002 -p 3000:3000 dolthub/dolt-workbench:combined
+% docker pull dolthub/dolt-workbench:latest
+% docker run -p 9002:9002 -p 3000:3000 dolthub/dolt-workbench:latest
 ```
 
 Navigate to http://localhost:3000 to enter your database information.
