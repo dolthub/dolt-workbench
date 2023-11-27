@@ -2,9 +2,9 @@ import plugin from "tailwindcss/plugin";
 
 const colors = {
   primary: "#183362",
-  "ld-darkerblue": "#262E44",
+  "ld-darkerblue": "#192E3D",
   "ld-darkblue": "#183362",
-  "ld-mediumblue": "#35405F",
+  "ld-mediumblue": "#2E4459",
   "ld-blue": "#6db0fc",
   "ld-lightblue": "#f6f8f9",
   "ld-grey": "#f2f5fb",
@@ -16,10 +16,10 @@ const colors = {
   // Database page colors
   "ld-darkgrey": "#95a3a7",
   "ld-darkergrey": "#384B52",
-  "acc-hoverlinkblue": "#466CD3",
+  "acc-hoverlinkblue": "#1f6dc6",
   "acc-hoverblue": "#1d2c7f",
   "acc-grey": "#b2c0c4",
-  "acc-linkblue": "#375AB7",
+  "acc-linkblue": "#3d91f0",
   "acc-lightgrey": "#c6cdd0",
   "acc-darkgrey": "#5d6280",
   "acc-green": "#5ac58d",
