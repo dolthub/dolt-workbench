@@ -6,6 +6,8 @@ FROM --platform=linux/amd64 node:18.13.0-alpine3.17 as graphql-base
 FROM graphql-base AS graphql-deps
 WORKDIR /app/graphql-server
 
+VOLUME /app/graphql-server/store
+
 # Copy the package.json and yarn files
 COPY --chown=node:node graphql-server/.yarn ./.yarn
 COPY --chown=node:node graphql-server/yarn.lock graphql-server/package.json graphql-server/.yarnrc.yml ./

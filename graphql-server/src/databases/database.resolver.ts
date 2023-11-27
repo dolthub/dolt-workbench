@@ -8,7 +8,8 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { readFileSync, writeFileSync } from "fs";
+import * as fs from "fs";
+import { resolve } from "path";
 import { DataSourceService } from "../dataSources/dataSource.service";
 import { DBArgs } from "../utils/commonTypes";
 
@@ -79,7 +80,12 @@ export class DatabaseResolver {
   async databaseState(): Promise<DatabaseState> {
     const hasEnv = !!this.configService.get("DATABASE_URL");
     try {
-      const file = readFileSync("store.json", { encoding: "utf8", flag: "r" });
+      const file = fs.readFileSync(
+        resolve(__dirname, "../../store/store.json"),
+        {
+          encoding: "utf8",
+        },
+      );
       if (!file) {
         return { hasEnv };
       }
@@ -148,8 +154,15 @@ export class DatabaseResolver {
       };
       await this.dss.addDS(workbenchConfig);
 
+      if (!fs.existsSync(resolve(__dirname, "../../store"))) {
+        fs.mkdirSync(resolve(__dirname, "../../store"));
+      }
+
       const stringified = JSON.stringify(workbenchConfig);
-      writeFileSync("store.json", stringified);
+      fs.writeFileSync(
+        resolve(__dirname, "../../store/store.json"),
+        stringified,
+      );
     } else {
       throw new Error("database url not provided");
     }

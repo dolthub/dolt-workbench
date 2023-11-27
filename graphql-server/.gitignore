@@ -45,4 +45,4 @@ lerna-debug.log*
 !.yarn/sdks
 !.yarn/versions
 node_modules
-store.json
+store
