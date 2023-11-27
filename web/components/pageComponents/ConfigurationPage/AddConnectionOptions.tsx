@@ -2,7 +2,7 @@ import ErrorMsg from "@components/ErrorMsg";
 import QueryHandler from "@components/util/QueryHandler";
 import {
   useAddDatabaseConnectionMutation,
-  useHasDatabaseEnvQuery,
+  useDatabaseStateQuery,
 } from "@gen/graphql-types";
 import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -60,11 +60,11 @@ function Inner(props: InnerProps) {
 }
 
 export default function AddConnectionOptions() {
-  const res = useHasDatabaseEnvQuery();
+  const res = useDatabaseStateQuery();
   return (
     <QueryHandler
       result={res}
-      render={data => <Inner hasDatabaseEnv={data.hasDatabaseEnv} />}
+      render={data => <Inner hasDatabaseEnv={data.databaseState.hasEnv} />}
     />
   );
 }

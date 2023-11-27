@@ -99,6 +99,17 @@ type DoltDatabaseDetails {
   hideDoltFeatures: Boolean!
 }
 
+type StoredState {
+  connectionUrl: String!
+  useSSL: Boolean
+  hideDoltFeatures: Boolean
+}
+
+type DatabaseState {
+  hasEnv: Boolean!
+  storedState: StoredState
+}
+
 type DiffStat {
   rowsUnmodified: Float!
   rowsAdded: Float!
@@ -266,7 +277,7 @@ type Query {
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
   currentDatabase: String
-  hasDatabaseEnv: Boolean!
+  databaseState: DatabaseState!
   databases: [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
@@ -317,7 +328,7 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): Branch!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(url: String, useEnv: Boolean, hideDoltFeatures: Boolean, useSSL: Boolean): String
+  addDatabaseConnection(url: String, useEnv: Boolean, hideDoltFeatures: Boolean, useSSL: Boolean, shouldStore: Boolean): String
   createDatabase(databaseName: String!): Boolean!
   resetDatabase: Boolean!
   loadDataFile(tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!

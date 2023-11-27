@@ -6,18 +6,27 @@ export const ADD_DATABASE_CONNECTION = gql`
     $useEnv: Boolean
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
+    $shouldStore: Boolean
   ) {
     addDatabaseConnection(
       url: $url
       useEnv: $useEnv
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
+      shouldStore: $shouldStore
     )
   }
 `;
 
 export const HAS_DB_ENV = gql`
-  query HasDatabaseEnv {
-    hasDatabaseEnv
+  query DatabaseState {
+    databaseState {
+      hasEnv
+      storedState {
+        connectionUrl
+        useSSL
+        hideDoltFeatures
+      }
+    }
   }
 `;

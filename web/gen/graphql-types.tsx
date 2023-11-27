@@ -88,6 +88,12 @@ export type CommitList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
+export type DatabaseState = {
+  __typename?: 'DatabaseState';
+  hasEnv: Scalars['Boolean']['output'];
+  storedState?: Maybe<StoredState>;
+};
+
 export enum DiffRowType {
   Added = 'Added',
   All = 'All',
@@ -207,6 +213,7 @@ export type Mutation = {
 
 export type MutationAddDatabaseConnectionArgs = {
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  shouldStore?: InputMaybe<Scalars['Boolean']['input']>;
   url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
@@ -309,6 +316,7 @@ export type Query = {
   branches: BranchNamesList;
   commits: CommitList;
   currentDatabase?: Maybe<Scalars['String']['output']>;
+  databaseState: DatabaseState;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
   diffStat: DiffStat;
@@ -318,7 +326,6 @@ export type Query = {
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
-  hasDatabaseEnv: Scalars['Boolean']['output'];
   pullWithDetails: PullWithDetails;
   rowDiffs: RowDiffList;
   rows: RowList;
@@ -584,6 +591,13 @@ export type Status = {
   tableName: Scalars['String']['output'];
 };
 
+export type StoredState = {
+  __typename?: 'StoredState';
+  connectionUrl: Scalars['String']['output'];
+  hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
+  useSSL?: Maybe<Scalars['Boolean']['output']>;
+};
+
 export type Table = {
   __typename?: 'Table';
   _id: Scalars['ID']['output'];
@@ -843,15 +857,16 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+  shouldStore?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection?: string | null };
 
-export type HasDatabaseEnvQueryVariables = Exact<{ [key: string]: never; }>;
+export type DatabaseStateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type HasDatabaseEnvQuery = { __typename?: 'Query', hasDatabaseEnv: boolean };
+export type DatabaseStateQuery = { __typename?: 'Query', databaseState: { __typename?: 'DatabaseState', hasEnv: boolean, storedState?: { __typename?: 'StoredState', connectionUrl: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null } | null } };
 
 export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
 
@@ -2315,12 +2330,13 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($url: String, $useEnv: Boolean, $hideDoltFeatures: Boolean, $useSSL: Boolean) {
+    mutation AddDatabaseConnection($url: String, $useEnv: Boolean, $hideDoltFeatures: Boolean, $useSSL: Boolean, $shouldStore: Boolean) {
   addDatabaseConnection(
     url: $url
     useEnv: $useEnv
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
+    shouldStore: $shouldStore
   )
 }
     `;
@@ -2343,6 +2359,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  *      useEnv: // value for 'useEnv'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
+ *      shouldStore: // value for 'shouldStore'
  *   },
  * });
  */
@@ -2353,43 +2370,50 @@ export function useAddDatabaseConnectionMutation(baseOptions?: Apollo.MutationHo
 export type AddDatabaseConnectionMutationHookResult = ReturnType<typeof useAddDatabaseConnectionMutation>;
 export type AddDatabaseConnectionMutationResult = Apollo.MutationResult<AddDatabaseConnectionMutation>;
 export type AddDatabaseConnectionMutationOptions = Apollo.BaseMutationOptions<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
-export const HasDatabaseEnvDocument = gql`
-    query HasDatabaseEnv {
-  hasDatabaseEnv
+export const DatabaseStateDocument = gql`
+    query DatabaseState {
+  databaseState {
+    hasEnv
+    storedState {
+      connectionUrl
+      useSSL
+      hideDoltFeatures
+    }
+  }
 }
     `;
 
 /**
- * __useHasDatabaseEnvQuery__
+ * __useDatabaseStateQuery__
  *
- * To run a query within a React component, call `useHasDatabaseEnvQuery` and pass it any options that fit your needs.
- * When your component renders, `useHasDatabaseEnvQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useDatabaseStateQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatabaseStateQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useHasDatabaseEnvQuery({
+ * const { data, loading, error } = useDatabaseStateQuery({
  *   variables: {
  *   },
  * });
  */
-export function useHasDatabaseEnvQuery(baseOptions?: Apollo.QueryHookOptions<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>) {
+export function useDatabaseStateQuery(baseOptions?: Apollo.QueryHookOptions<DatabaseStateQuery, DatabaseStateQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
+        return Apollo.useQuery<DatabaseStateQuery, DatabaseStateQueryVariables>(DatabaseStateDocument, options);
       }
-export function useHasDatabaseEnvLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>) {
+export function useDatabaseStateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatabaseStateQuery, DatabaseStateQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
+          return Apollo.useLazyQuery<DatabaseStateQuery, DatabaseStateQueryVariables>(DatabaseStateDocument, options);
         }
-export function useHasDatabaseEnvSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>) {
+export function useDatabaseStateSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DatabaseStateQuery, DatabaseStateQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>(HasDatabaseEnvDocument, options);
+          return Apollo.useSuspenseQuery<DatabaseStateQuery, DatabaseStateQueryVariables>(DatabaseStateDocument, options);
         }
-export type HasDatabaseEnvQueryHookResult = ReturnType<typeof useHasDatabaseEnvQuery>;
-export type HasDatabaseEnvLazyQueryHookResult = ReturnType<typeof useHasDatabaseEnvLazyQuery>;
-export type HasDatabaseEnvSuspenseQueryHookResult = ReturnType<typeof useHasDatabaseEnvSuspenseQuery>;
-export type HasDatabaseEnvQueryResult = Apollo.QueryResult<HasDatabaseEnvQuery, HasDatabaseEnvQueryVariables>;
+export type DatabaseStateQueryHookResult = ReturnType<typeof useDatabaseStateQuery>;
+export type DatabaseStateLazyQueryHookResult = ReturnType<typeof useDatabaseStateLazyQuery>;
+export type DatabaseStateSuspenseQueryHookResult = ReturnType<typeof useDatabaseStateSuspenseQuery>;
+export type DatabaseStateQueryResult = Apollo.QueryResult<DatabaseStateQuery, DatabaseStateQueryVariables>;
 export const BranchListDocument = gql`
     query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
   branches(databaseName: $databaseName, sortBy: $sortBy) {

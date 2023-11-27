@@ -1,7 +1,7 @@
 import Loader from "@components/Loader";
 import {
   useAddDatabaseConnectionMutation,
-  useHasDatabaseEnvQuery,
+  useDatabaseStateQuery,
 } from "@gen/graphql-types";
 import useEffectAsync from "@hooks/useEffectAsync";
 import { maybeDatabase } from "@lib/urls";
@@ -11,13 +11,17 @@ import ConfigurationPage from "../ConfigurationPage";
 
 export default function HomePage() {
   const router = useRouter();
-  const res = useHasDatabaseEnvQuery();
+  const res = useDatabaseStateQuery();
   const [addDb] = useAddDatabaseConnectionMutation();
   const [loading, setLoading] = useState(true);
 
   useEffectAsync(async () => {
+    if (res.error) {
+      setLoading(false);
+      return;
+    }
     if (!res.data) return;
-    if (!res.data.hasDatabaseEnv) {
+    if (!res.data.databaseState.hasEnv) {
       setLoading(false);
       return;
     }
@@ -34,7 +38,7 @@ export default function HomePage() {
       // Handled by res.error
       setLoading(false);
     }
-  }, [res.data?.hasDatabaseEnv]);
+  }, [res.data?.databaseState.hasEnv, res.error]);
 
   if (loading) return <Loader loaded={false} />;
   return <ConfigurationPage />;
