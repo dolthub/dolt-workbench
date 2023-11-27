@@ -127,15 +127,6 @@ graphql-server % yarn && yarn compile
 graphql-server % yarn dev
 ```
 
-If you want the server to start up with a configured database connection, add a
-`.development.env` file with a `DATABASE_URL` field, like so:
-
-```bash
-DATABASE_URL="mysql://[username]:[password]@[host]/[database]"
-```
-
-Otherwise you will be able to provide connection information from the UI.
-
 ### Run the web server
 
 In another shell, start the web server. This will automatically point at the running
