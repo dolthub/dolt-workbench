@@ -9,16 +9,13 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { readFileSync, writeFileSync } from "fs";
-import {
-  DataSourceService,
-  WorkbenchConfig,
-} from "../dataSources/dataSource.service";
+import { DataSourceService } from "../dataSources/dataSource.service";
 import { DBArgs } from "../utils/commonTypes";
 
 @ArgsType()
 class AddDatabaseConnectionArgs {
   @Field({ nullable: true })
-  url?: string;
+  connectionUrl?: string;
 
   @Field({ nullable: true })
   useEnv?: boolean;
@@ -28,9 +25,6 @@ class AddDatabaseConnectionArgs {
 
   @Field({ nullable: true })
   useSSL?: boolean;
-
-  @Field({ nullable: true })
-  shouldStore?: boolean;
 }
 
 @ObjectType()
@@ -84,19 +78,18 @@ export class DatabaseResolver {
   @Query(_returns => DatabaseState)
   async databaseState(): Promise<DatabaseState> {
     const hasEnv = !!this.configService.get("DATABASE_URL");
-    const file = readFileSync("store.json", { encoding: "utf8", flag: "r" });
-    if (!file) {
-      return { hasEnv };
-    }
     try {
+      const file = readFileSync("store.json", { encoding: "utf8", flag: "r" });
+      if (!file) {
+        return { hasEnv };
+      }
       const parsed = JSON.parse(file);
-      console.log(parsed);
       return {
         hasEnv,
         storedState: parsed,
       };
     } catch (err) {
-      console.error("Error parsing store json:", err);
+      console.error("Error reading store.json:", err);
       return { hasEnv };
     }
   }
@@ -136,32 +129,29 @@ export class DatabaseResolver {
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string | undefined> {
-    let workbenchConfig: WorkbenchConfig;
     if (args.useEnv) {
       const url = this.configService.get("DATABASE_URL");
       if (!url) throw new Error("DATABASE_URL not found in env");
       const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
       const useSSL = this.configService.get("USE_SSL");
-      workbenchConfig = {
+      const workbenchConfig = {
         connectionUrl: url,
         hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
         useSSL: useSSL !== undefined ? useSSL === "true" : true,
       };
       await this.dss.addDS(workbenchConfig);
-    } else if (args.url) {
-      workbenchConfig = {
-        connectionUrl: args.url,
+    } else if (args.connectionUrl) {
+      const workbenchConfig = {
+        connectionUrl: args.connectionUrl,
         hideDoltFeatures: !!args.hideDoltFeatures,
         useSSL: !!args.useSSL,
       };
       await this.dss.addDS(workbenchConfig);
-    } else {
-      throw new Error("database url not provided");
-    }
 
-    if (args.shouldStore) {
       const stringified = JSON.stringify(workbenchConfig);
       writeFileSync("store.json", stringified);
+    } else {
+      throw new Error("database url not provided");
     }
 
     const db = await this.currentDatabase();

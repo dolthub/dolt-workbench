@@ -2,7 +2,7 @@ import { useAddDatabaseConnectionMutation } from "@gen/graphql-types";
 import useSetState from "@hooks/useSetState";
 import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
-import { Dispatch, SyntheticEvent, useEffect } from "react";
+import { Dispatch, SyntheticEvent } from "react";
 
 const defaultState = {
   host: "",
@@ -31,21 +31,10 @@ type ReturnType = {
 export default function useConfig(): ReturnType {
   const router = useRouter();
   const [state, setState] = useSetState(defaultState);
-
-  useEffect(() => {
-    const config = sessionStorage.getItem("db-config");
-    if (!config) {
-      return;
-    }
-    const parsed = JSON.parse(config);
-    setState(parsed);
-  }, []);
-
   const [addDb, res] = useAddDatabaseConnectionMutation();
 
   const clearState = () => {
     setState(defaultState);
-    sessionStorage.removeItem("db-config");
   };
 
   const onSubmit = async (e: SyntheticEvent) => {
@@ -58,7 +47,7 @@ export default function useConfig(): ReturnType {
     try {
       const db = await addDb({
         variables: {
-          url,
+          connectionUrl: url,
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,
         },
@@ -67,18 +56,7 @@ export default function useConfig(): ReturnType {
       if (!db.data) {
         return;
       }
-      sessionStorage.setItem(
-        "db-config",
-        JSON.stringify({
-          host: state.host,
-          port: state.port,
-          username: state.username,
-          database: state.database,
-          hideDoltFeatures: state.hideDoltFeatures,
-          connectionUrl: state.connectionUrl,
-          useSSL: state.useSSL,
-        }),
-      );
+
       const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
       await router.push(href, as);
     } catch (_) {

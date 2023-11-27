@@ -212,9 +212,8 @@ export type Mutation = {
 
 
 export type MutationAddDatabaseConnectionArgs = {
+  connectionUrl?: InputMaybe<Scalars['String']['input']>;
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
-  shouldStore?: InputMaybe<Scalars['Boolean']['input']>;
-  url?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -853,15 +852,16 @@ export type RowsForViewsQueryVariables = Exact<{
 export type RowsForViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
-  url?: InputMaybe<Scalars['String']['input']>;
+  connectionUrl?: InputMaybe<Scalars['String']['input']>;
   useEnv?: InputMaybe<Scalars['Boolean']['input']>;
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
-  shouldStore?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection?: string | null };
+
+export type StoredStateFragment = { __typename?: 'StoredState', connectionUrl: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null };
 
 export type DatabaseStateQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1326,6 +1326,13 @@ export const TableWithColumnsFragmentDoc = gql`
   }
 }
     ${ColumnForTableListFragmentDoc}`;
+export const StoredStateFragmentDoc = gql`
+    fragment StoredState on StoredState {
+  connectionUrl
+  useSSL
+  hideDoltFeatures
+}
+    `;
 export const BranchFragmentDoc = gql`
     fragment Branch on Branch {
   _id
@@ -2330,13 +2337,12 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($url: String, $useEnv: Boolean, $hideDoltFeatures: Boolean, $useSSL: Boolean, $shouldStore: Boolean) {
+    mutation AddDatabaseConnection($connectionUrl: String, $useEnv: Boolean, $hideDoltFeatures: Boolean, $useSSL: Boolean) {
   addDatabaseConnection(
-    url: $url
+    connectionUrl: $connectionUrl
     useEnv: $useEnv
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
-    shouldStore: $shouldStore
   )
 }
     `;
@@ -2355,11 +2361,10 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  * @example
  * const [addDatabaseConnectionMutation, { data, loading, error }] = useAddDatabaseConnectionMutation({
  *   variables: {
- *      url: // value for 'url'
+ *      connectionUrl: // value for 'connectionUrl'
  *      useEnv: // value for 'useEnv'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
- *      shouldStore: // value for 'shouldStore'
  *   },
  * });
  */
@@ -2375,13 +2380,11 @@ export const DatabaseStateDocument = gql`
   databaseState {
     hasEnv
     storedState {
-      connectionUrl
-      useSSL
-      hideDoltFeatures
+      ...StoredState
     }
   }
 }
-    `;
+    ${StoredStateFragmentDoc}`;
 
 /**
  * __useDatabaseStateQuery__
