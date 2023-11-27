@@ -1,4 +1,3 @@
-import { ConfigService } from "@nestjs/config";
 import {
   Args,
   ArgsType,
@@ -9,15 +8,17 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { DataSourceService } from "../dataSources/dataSource.service";
+import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs } from "../utils/commonTypes";
+import { DatabaseConnection } from "./database.model";
 
 @ArgsType()
 class AddDatabaseConnectionArgs {
-  @Field({ nullable: true })
-  url?: string;
+  @Field()
+  connectionUrl: string;
 
-  @Field({ nullable: true })
-  useEnv?: boolean;
+  @Field()
+  name: string;
 
   @Field({ nullable: true })
   hideDoltFeatures?: boolean;
@@ -35,11 +36,17 @@ class DoltDatabaseDetails {
   hideDoltFeatures: boolean;
 }
 
-@Resolver()
+@ArgsType()
+class RemoveDatabaseConnectionArgs {
+  @Field()
+  name: string;
+}
+
+@Resolver(_of => DatabaseConnection)
 export class DatabaseResolver {
   constructor(
     private readonly dss: DataSourceService,
-    private readonly configService: ConfigService,
+    private readonly fileStoreService: FileStoreService,
   ) {}
 
   @Query(_returns => String, { nullable: true })
@@ -53,9 +60,9 @@ export class DatabaseResolver {
     }
   }
 
-  @Query(_returns => Boolean)
-  async hasDatabaseEnv(): Promise<boolean> {
-    return !!this.configService.get("DATABASE_URL");
+  @Query(_returns => [DatabaseConnection])
+  async storedConnections(): Promise<DatabaseConnection[]> {
+    return this.fileStoreService.getStore();
   }
 
   @Query(_returns => [String])
@@ -93,29 +100,29 @@ export class DatabaseResolver {
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string | undefined> {
-    if (args.useEnv) {
-      const url = this.configService.get("DATABASE_URL");
-      if (!url) throw new Error("DATABASE_URL not found in env");
-      const hideDoltFeatures = this.configService.get("HIDE_DOLT_FEATURES");
-      const useSSL = this.configService.get("USE_SSL");
-      await this.dss.addDS({
-        connectionUrl: url,
-        hideDoltFeatures: !!hideDoltFeatures && hideDoltFeatures === "true",
-        useSSL: useSSL !== undefined ? useSSL === "true" : true,
-      });
-    } else if (args.url) {
-      await this.dss.addDS({
-        connectionUrl: args.url,
-        hideDoltFeatures: !!args.hideDoltFeatures,
-        useSSL: !!args.useSSL,
-      });
-    } else {
-      throw new Error("database url not provided");
-    }
+    const workbenchConfig = {
+      connectionUrl: args.connectionUrl,
+      hideDoltFeatures: !!args.hideDoltFeatures,
+      useSSL: !!args.useSSL,
+    };
+    await this.dss.addDS(workbenchConfig);
+
+    this.fileStoreService.addItemToStore({
+      ...workbenchConfig,
+      name: args.name,
+    });
 
     const db = await this.currentDatabase();
     if (!db) return undefined;
     return db;
+  }
+
+  @Mutation(_returns => Boolean)
+  async removeDatabaseConnection(
+    @Args() args: RemoveDatabaseConnectionArgs,
+  ): Promise<boolean> {
+    this.fileStoreService.removeItemFromStore(args.name);
+    return true;
   }
 
   @Mutation(_returns => Boolean)

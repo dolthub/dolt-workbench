@@ -104,6 +104,15 @@ Navigate to http://localhost:3000 to enter your database information.
 You can find more in-depth instructions on
 [DockerHub](https://hub.docker.com/r/dolthub/dolt-workbench).
 
+### Saving connection information between runs
+
+If you want to save connection information between Docker runs, you can mount a local
+directory to the `store` directory in `/app/graphql-server` in the container.
+
+```
+% docker run -p 9002:9002 -p 3000:3000 -v ~/path/to/store:/app/graphql-server/store dolthub/dolt-workbench:latest
+```
+
 ## Getting started from source
 
 First, clone this repository.

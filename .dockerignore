@@ -27,3 +27,4 @@ images/
 
 **/.yarn/cache
 **/.yarn/install-state.gz
+**/store

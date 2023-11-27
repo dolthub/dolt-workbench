@@ -1,0 +1,19 @@
+.whiteContainer {
+  @apply max-w-xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+}
+
+.options {
+  @apply my-6;
+
+  ul {
+    @apply mb-8;
+  }
+}
+
+.connection {
+  @apply my-3 border rounded py-1.5 px-3 flex justify-between;
+}
+
+.err {
+  @apply text-center;
+}
