@@ -5,9 +5,8 @@ import { DatabaseConnection } from "../databases/database.model";
 
 @Injectable()
 export class FileStoreService {
-  constructor() {}
-
-  getStore(): Array<DatabaseConnection> {
+  // eslint-disable-next-line class-methods-use-this
+  getStore(): DatabaseConnection[] {
     try {
       const file = fs.readFileSync(
         resolve(__dirname, "../../store/store.json"),
