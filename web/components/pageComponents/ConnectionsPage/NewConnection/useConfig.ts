@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { Dispatch, SyntheticEvent } from "react";
 
 const defaultState = {
+  name: "",
   host: "",
   port: "3306",
   username: "root",
@@ -47,6 +48,7 @@ export default function useConfig(): ReturnType {
     try {
       const db = await addDb({
         variables: {
+          name: state.name,
           connectionUrl: url,
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,

@@ -2,32 +2,36 @@ import { gql } from "@apollo/client";
 
 export const ADD_DATABASE_CONNECTION = gql`
   mutation AddDatabaseConnection(
-    $connectionUrl: String
-    $useEnv: Boolean
+    $connectionUrl: String!
+    $name: String!
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
-      useEnv: $useEnv
+      name: $name
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
     )
   }
 `;
 
-export const HAS_DB_ENV = gql`
-  fragment StoredState on StoredState {
+export const STORED_CONNECTIONS = gql`
+  fragment DatabaseConnection on DatabaseConnection {
     connectionUrl
+    name
     useSSL
     hideDoltFeatures
   }
-  query DatabaseState {
-    databaseState {
-      hasEnv
-      storedState {
-        ...StoredState
-      }
+  query StoredConnections {
+    storedConnections {
+      ...DatabaseConnection
     }
+  }
+`;
+
+export const REMOVE_CONNECTION = gql`
+  mutation RemoveConnection($name: String!) {
+    removeDatabaseConnection(name: $name)
   }
 `;

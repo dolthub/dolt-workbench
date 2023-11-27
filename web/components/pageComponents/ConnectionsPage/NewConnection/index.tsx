@@ -9,14 +9,16 @@ import css from "./index.module.css";
 import useConfig from "./useConfig";
 
 type Props = {
-  hasDatabaseEnv: boolean;
+  canGoBack: boolean;
   setShowForm: (s: boolean) => void;
 };
 
-export default function Form(props: Props) {
+export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
+  const canSubmit =
+    state.name && (state.connectionUrl || (state.host && state.username));
 
-  const onCancel = props.hasDatabaseEnv
+  const onCancel = props.canGoBack
     ? () => {
         props.setShowForm(false);
       }
@@ -28,6 +30,15 @@ export default function Form(props: Props) {
       <div className={css.whiteContainer}>
         <form onSubmit={onSubmit}>
           <h3>Set up new connection</h3>
+          <div className={css.nameInput}>
+            <FormInput
+              value={state.name}
+              onChangeString={n => setState({ name: n })}
+              label="Name"
+              placeholder="mydatabase (required)"
+              horizontal
+            />
+          </div>
           <FormInput
             value={state.connectionUrl}
             onChangeString={c => setState({ connectionUrl: c })}
@@ -106,14 +117,9 @@ export default function Form(props: Props) {
           <ButtonsWithError
             error={error}
             onCancel={onCancel}
-            cancelText={props.hasDatabaseEnv ? "cancel" : "clear"}
+            cancelText={props.canGoBack ? "cancel" : "clear"}
           >
-            <Button
-              type="submit"
-              disabled={
-                !state.connectionUrl && (!state.host || !state.username)
-              }
-            >
+            <Button type="submit" disabled={!canSubmit}>
               Launch Workbench
             </Button>
           </ButtonsWithError>

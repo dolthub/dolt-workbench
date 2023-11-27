@@ -14,8 +14,8 @@ export default function Navbar(props: Props) {
       <div className={css.inner}>
         <div className={css.left}>
           <DocsLink className={css.link}>Documentation</DocsLink>
-          <Link className={css.link} href="/configuration">
-            Configuration
+          <Link className={css.link} href="/connections">
+            Connections
           </Link>
         </div>
 

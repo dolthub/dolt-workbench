@@ -88,10 +88,12 @@ export type CommitList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
-export type DatabaseState = {
-  __typename?: 'DatabaseState';
-  hasEnv: Scalars['Boolean']['output'];
-  storedState?: Maybe<StoredState>;
+export type DatabaseConnection = {
+  __typename?: 'DatabaseConnection';
+  connectionUrl: Scalars['String']['output'];
+  hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
+  name: Scalars['String']['output'];
+  useSSL?: Maybe<Scalars['Boolean']['output']>;
 };
 
 export enum DiffRowType {
@@ -207,14 +209,15 @@ export type Mutation = {
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
+  removeDatabaseConnection: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
 };
 
 
 export type MutationAddDatabaseConnectionArgs = {
-  connectionUrl?: InputMaybe<Scalars['String']['input']>;
+  connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
-  useEnv?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -268,6 +271,11 @@ export type MutationMergePullArgs = {
   toBranchName: Scalars['String']['input'];
 };
 
+
+export type MutationRemoveDatabaseConnectionArgs = {
+  name: Scalars['String']['input'];
+};
+
 export type PullDetailCommit = {
   __typename?: 'PullDetailCommit';
   _id: Scalars['ID']['output'];
@@ -315,7 +323,6 @@ export type Query = {
   branches: BranchNamesList;
   commits: CommitList;
   currentDatabase?: Maybe<Scalars['String']['output']>;
-  databaseState: DatabaseState;
   databases: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
   diffStat: DiffStat;
@@ -332,6 +339,7 @@ export type Query = {
   sqlSelect: SqlSelect;
   sqlSelectForCsvDownload: Scalars['String']['output'];
   status: Array<Status>;
+  storedConnections: Array<DatabaseConnection>;
   table: Table;
   tableNames: TableNames;
   tables: Array<Table>;
@@ -590,13 +598,6 @@ export type Status = {
   tableName: Scalars['String']['output'];
 };
 
-export type StoredState = {
-  __typename?: 'StoredState';
-  connectionUrl: Scalars['String']['output'];
-  hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
-  useSSL?: Maybe<Scalars['Boolean']['output']>;
-};
-
 export type Table = {
   __typename?: 'Table';
   _id: Scalars['ID']['output'];
@@ -852,8 +853,8 @@ export type RowsForViewsQueryVariables = Exact<{
 export type RowsForViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type AddDatabaseConnectionMutationVariables = Exact<{
-  connectionUrl?: InputMaybe<Scalars['String']['input']>;
-  useEnv?: InputMaybe<Scalars['Boolean']['input']>;
+  connectionUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
@@ -861,12 +862,19 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection?: string | null };
 
-export type StoredStateFragment = { __typename?: 'StoredState', connectionUrl: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null };
+export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null };
 
-export type DatabaseStateQueryVariables = Exact<{ [key: string]: never; }>;
+export type StoredConnectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DatabaseStateQuery = { __typename?: 'Query', databaseState: { __typename?: 'DatabaseState', hasEnv: boolean, storedState?: { __typename?: 'StoredState', connectionUrl: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null } | null } };
+export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null }> };
+
+export type RemoveConnectionMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
+
+
+export type RemoveConnectionMutation = { __typename?: 'Mutation', removeDatabaseConnection: boolean };
 
 export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
 
@@ -1326,9 +1334,10 @@ export const TableWithColumnsFragmentDoc = gql`
   }
 }
     ${ColumnForTableListFragmentDoc}`;
-export const StoredStateFragmentDoc = gql`
-    fragment StoredState on StoredState {
+export const DatabaseConnectionFragmentDoc = gql`
+    fragment DatabaseConnection on DatabaseConnection {
   connectionUrl
+  name
   useSSL
   hideDoltFeatures
 }
@@ -2337,10 +2346,10 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($connectionUrl: String, $useEnv: Boolean, $hideDoltFeatures: Boolean, $useSSL: Boolean) {
+    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean) {
   addDatabaseConnection(
     connectionUrl: $connectionUrl
-    useEnv: $useEnv
+    name: $name
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
   )
@@ -2362,7 +2371,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  * const [addDatabaseConnectionMutation, { data, loading, error }] = useAddDatabaseConnectionMutation({
  *   variables: {
  *      connectionUrl: // value for 'connectionUrl'
- *      useEnv: // value for 'useEnv'
+ *      name: // value for 'name'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
  *   },
@@ -2375,48 +2384,76 @@ export function useAddDatabaseConnectionMutation(baseOptions?: Apollo.MutationHo
 export type AddDatabaseConnectionMutationHookResult = ReturnType<typeof useAddDatabaseConnectionMutation>;
 export type AddDatabaseConnectionMutationResult = Apollo.MutationResult<AddDatabaseConnectionMutation>;
 export type AddDatabaseConnectionMutationOptions = Apollo.BaseMutationOptions<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
-export const DatabaseStateDocument = gql`
-    query DatabaseState {
-  databaseState {
-    hasEnv
-    storedState {
-      ...StoredState
-    }
+export const StoredConnectionsDocument = gql`
+    query StoredConnections {
+  storedConnections {
+    ...DatabaseConnection
   }
 }
-    ${StoredStateFragmentDoc}`;
+    ${DatabaseConnectionFragmentDoc}`;
 
 /**
- * __useDatabaseStateQuery__
+ * __useStoredConnectionsQuery__
  *
- * To run a query within a React component, call `useDatabaseStateQuery` and pass it any options that fit your needs.
- * When your component renders, `useDatabaseStateQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useStoredConnectionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStoredConnectionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useDatabaseStateQuery({
+ * const { data, loading, error } = useStoredConnectionsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useDatabaseStateQuery(baseOptions?: Apollo.QueryHookOptions<DatabaseStateQuery, DatabaseStateQueryVariables>) {
+export function useStoredConnectionsQuery(baseOptions?: Apollo.QueryHookOptions<StoredConnectionsQuery, StoredConnectionsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DatabaseStateQuery, DatabaseStateQueryVariables>(DatabaseStateDocument, options);
+        return Apollo.useQuery<StoredConnectionsQuery, StoredConnectionsQueryVariables>(StoredConnectionsDocument, options);
       }
-export function useDatabaseStateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatabaseStateQuery, DatabaseStateQueryVariables>) {
+export function useStoredConnectionsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StoredConnectionsQuery, StoredConnectionsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DatabaseStateQuery, DatabaseStateQueryVariables>(DatabaseStateDocument, options);
+          return Apollo.useLazyQuery<StoredConnectionsQuery, StoredConnectionsQueryVariables>(StoredConnectionsDocument, options);
         }
-export function useDatabaseStateSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DatabaseStateQuery, DatabaseStateQueryVariables>) {
+export function useStoredConnectionsSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<StoredConnectionsQuery, StoredConnectionsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<DatabaseStateQuery, DatabaseStateQueryVariables>(DatabaseStateDocument, options);
+          return Apollo.useSuspenseQuery<StoredConnectionsQuery, StoredConnectionsQueryVariables>(StoredConnectionsDocument, options);
         }
-export type DatabaseStateQueryHookResult = ReturnType<typeof useDatabaseStateQuery>;
-export type DatabaseStateLazyQueryHookResult = ReturnType<typeof useDatabaseStateLazyQuery>;
-export type DatabaseStateSuspenseQueryHookResult = ReturnType<typeof useDatabaseStateSuspenseQuery>;
-export type DatabaseStateQueryResult = Apollo.QueryResult<DatabaseStateQuery, DatabaseStateQueryVariables>;
+export type StoredConnectionsQueryHookResult = ReturnType<typeof useStoredConnectionsQuery>;
+export type StoredConnectionsLazyQueryHookResult = ReturnType<typeof useStoredConnectionsLazyQuery>;
+export type StoredConnectionsSuspenseQueryHookResult = ReturnType<typeof useStoredConnectionsSuspenseQuery>;
+export type StoredConnectionsQueryResult = Apollo.QueryResult<StoredConnectionsQuery, StoredConnectionsQueryVariables>;
+export const RemoveConnectionDocument = gql`
+    mutation RemoveConnection($name: String!) {
+  removeDatabaseConnection(name: $name)
+}
+    `;
+export type RemoveConnectionMutationFn = Apollo.MutationFunction<RemoveConnectionMutation, RemoveConnectionMutationVariables>;
+
+/**
+ * __useRemoveConnectionMutation__
+ *
+ * To run a mutation, you first call `useRemoveConnectionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveConnectionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeConnectionMutation, { data, loading, error }] = useRemoveConnectionMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *   },
+ * });
+ */
+export function useRemoveConnectionMutation(baseOptions?: Apollo.MutationHookOptions<RemoveConnectionMutation, RemoveConnectionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveConnectionMutation, RemoveConnectionMutationVariables>(RemoveConnectionDocument, options);
+      }
+export type RemoveConnectionMutationHookResult = ReturnType<typeof useRemoveConnectionMutation>;
+export type RemoveConnectionMutationResult = Apollo.MutationResult<RemoveConnectionMutation>;
+export type RemoveConnectionMutationOptions = Apollo.BaseMutationOptions<RemoveConnectionMutation, RemoveConnectionMutationVariables>;
 export const BranchListDocument = gql`
     query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
   branches(databaseName: $databaseName, sortBy: $sortBy) {

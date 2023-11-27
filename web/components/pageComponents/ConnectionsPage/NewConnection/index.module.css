@@ -1,0 +1,31 @@
+.databaseForm {
+  @apply w-full max-w-xl;
+
+  h3 {
+    @apply mb-8;
+  }
+}
+
+.whiteContainer {
+  @apply max-w-xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+}
+
+.nameInput {
+  @apply pb-4 mb-8 border-b;
+}
+
+.or {
+  @apply font-semibold text-center w-full my-5 text-lg;
+}
+
+.advancedSettings {
+  @apply my-5 flex items-center;
+
+  svg {
+    @apply mr-2;
+  }
+}
+
+.checkbox {
+  @apply mt-7 mb-10 text-sm;
+}

@@ -6,7 +6,7 @@ import { RawRows } from "../utils/commonTypes";
 export const dbNotFoundErr = "Database connection not found";
 export type ParQuery = (q: string, p?: any[] | undefined) => Promise<RawRows>;
 
-export class WorkbenchConfig {
+class WorkbenchConfig {
   hideDoltFeatures: boolean;
 
   connectionUrl: string;
