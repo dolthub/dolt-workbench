@@ -1,17 +1,11 @@
 import DocsLink from "@components/links/DocsLink";
 import ExternalLink from "@components/links/ExternalLink";
 import Link from "@components/links/Link";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import Btn from "../Btn";
 import css from "./index.module.css";
 
-type Props = {
-  home?: boolean;
-};
-
-export default function Navbar(props: Props) {
+export default function Navbar() {
   return (
     <div className={css.container}>
       <div className={css.inner}>
@@ -43,16 +37,6 @@ export default function Navbar(props: Props) {
               <FaDocker /> Docker Hub
             </ExternalLink>
           </div>
-          {!props.home && (
-            <Link href="/" className={css.exit}>
-              <Btn>
-                <span className={css.closeIcon}>
-                  <AiOutlineClose />
-                </span>
-                Exit
-              </Btn>
-            </Link>
-          )}
         </div>
       </div>
     </div>

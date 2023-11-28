@@ -11,7 +11,7 @@ type Props = {
 export default function MainLayout(props: Props) {
   return (
     <div className={css.layout}>
-      <Navbar home />
+      <Navbar />
       <main className={cx(css.container, props.className)}>
         {props.children}
       </main>

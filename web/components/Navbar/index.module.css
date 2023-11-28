@@ -31,20 +31,6 @@
   @apply flex justify-end items-center mr-6 w-1/3;
 }
 
-.exit {
-  button {
-    @apply flex justify-center items-center px-2 text-white text-sm font-normal tracking-wider;
-
-    &:hover {
-      @apply text-blue-200;
-    }
-
-    &:focus {
-      @apply outline-none;
-    }
-  }
-}
-
 .closeIcon {
   @apply rounded-full bg-white/10 mr-3 w-7 h-7 flex justify-center items-center;
   svg {
@@ -61,7 +47,7 @@
 }
 
 .hubLinks {
-  @apply flex items-start mr-12;
+  @apply flex items-start mr-6;
 
   svg {
     @apply text-lg mr-2.5 mt-0.5;
