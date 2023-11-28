@@ -1,7 +1,7 @@
 # dolt-workbench
 
-A modern SQL workbench for your MySQL-compatible database. Use [Dolt](https://doltdb.com)
-to unlock powerful version control features.
+A modern, browser-based, open source SQL workbench for your MySQL-compatible database.
+Use [Dolt](https://doltdb.com) to unlock powerful version control features.
 
 ## Features
 
