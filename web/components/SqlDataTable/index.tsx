@@ -15,13 +15,12 @@ import {
 } from "@gen/graphql-types";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
 import { SqlQueryParams } from "@lib/params";
-import { isMutation } from "@lib/parseSqlQuery";
-import { refetchSqlUpdateQueriesCacheEvict } from "@lib/refetchQueries";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SqlMessage from "./SqlMessage";
 import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
 import css from "./index.module.css";
+import useSqlQuery from "./useSqlQuery";
 
 type Props = {
   params: SqlQueryParams;
@@ -37,25 +36,7 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const { addMutation } = useSessionQueryHistory();
-  const isMut = isMutation(props.params.q);
-
-  useEffect(() => {
-    if (!isMut) return;
-    addMutation(props.params.q);
-  }, [props.params.q]);
-
-  useEffect(() => {
-    if (!isMut) return;
-    if (props.gqlError) return;
-    // Need timeout here so that queries are not refetched before sql query has
-    // time to finish
-    setTimeout(() => {
-      props.client
-        .refetchQueries(refetchSqlUpdateQueriesCacheEvict)
-        .catch(console.error);
-    }, 300);
-  }, [props.gqlError, isMut, props.client]);
+  const isMut = useSqlQuery(props.params, props.client, props.gqlError);
 
   const msg = <SqlMessage {...props} rowsLen={props.rows?.length ?? 0} />;
   return (

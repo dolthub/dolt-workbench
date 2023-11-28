@@ -122,6 +122,7 @@ export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
       "schemaDiff",
       "doltProcedures",
       "doltSchemas",
+      "databases",
     ].forEach(fieldName => {
       cache.evict({ fieldName });
     });
