@@ -15,7 +15,7 @@ Why is your SQL workbench stuck in 2003? The Dolt Workbench brings a modern brow
 workbench features you know and love. It makes browsing table data and schemas more
 intuitive and looks good doing it.
 
-<img width="1357" alt="Modern, web based table-browser" src="https://github.com/dolthub/dolt-workbench/assets/29443194/e921e759-38cd-4b83-aae7-3472374936e6">
+<img width="1357" alt="Modern, web based table-browser" src="https://github.com/dolthub/dolt-workbench/assets/29443194/8ee94e74-f185-4808-90ee-2551c4636749">
 
 ### Auto-generate SQL queries
 
