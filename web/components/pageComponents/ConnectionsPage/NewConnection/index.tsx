@@ -3,6 +3,8 @@ import ButtonsWithError from "@components/ButtonsWithError";
 import CustomCheckbox from "@components/CustomCheckbox";
 import FormInput from "@components/FormInput";
 import Loader from "@components/Loader";
+import ExternalLink from "@components/links/ExternalLink";
+import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import cx from "classnames";
@@ -38,6 +40,10 @@ export default function NewConnection(props: Props) {
         <form onSubmit={onSubmit}>
           <div className={css.section}>
             <h3>Set up new connection</h3>
+            <p className={css.instructions}>
+              View instructions for connecting to local and Docker installed
+              databases <ExternalLink href={dockerHubRepo}>here</ExternalLink>.
+            </p>
             <div className={css.nameInput}>
               <FormInput
                 value={state.name}

@@ -2,7 +2,7 @@
   @apply w-full max-w-xl;
 
   h3 {
-    @apply mb-8;
+    @apply mb-4;
   }
 }
 
@@ -32,4 +32,8 @@
 
 .checkbox {
   @apply mt-7 mb-10 text-sm;
+}
+
+.instructions {
+  @apply mb-8;
 }
