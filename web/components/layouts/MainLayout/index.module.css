@@ -1,6 +1,10 @@
 .layout {
   @apply bg-ld-grey h-full;
   min-height: 100vh;
+
+  footer {
+    @apply absolute bottom-0 w-full h-8 flex justify-end px-3;
+  }
 }
 
 .container {

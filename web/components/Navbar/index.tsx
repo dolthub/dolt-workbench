@@ -1,14 +1,11 @@
 import DocsLink from "@components/links/DocsLink";
+import ExternalLink from "@components/links/ExternalLink";
 import Link from "@components/links/Link";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-import Btn from "../Btn";
+import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
+import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import css from "./index.module.css";
 
-type Props = {
-  home?: boolean;
-};
-
-export default function Navbar(props: Props) {
+export default function Navbar() {
   return (
     <div className={css.container}>
       <div className={css.inner}>
@@ -26,16 +23,20 @@ export default function Navbar(props: Props) {
         </div>
 
         <div className={css.right}>
-          {!props.home && (
-            <Link href="/" className={css.exit}>
-              <Btn>
-                Exit
-                <span className={css.closeIcon}>
-                  <AiOutlineClose />
-                </span>
-              </Btn>
-            </Link>
-          )}
+          <div className={css.hubLinks}>
+            <ExternalLink
+              href="https://github.com/dolthub/dolt-workbench"
+              className={css.link}
+            >
+              <FaGithub /> GitHub
+            </ExternalLink>
+            <ExternalLink
+              href="https://hub.docker.com/r/dolthub/dolt-workbench"
+              className={css.link}
+            >
+              <FaDocker /> Docker Hub
+            </ExternalLink>
+          </div>
         </div>
       </div>
     </div>

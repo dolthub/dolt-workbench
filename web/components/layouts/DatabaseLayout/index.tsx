@@ -80,7 +80,6 @@ export default function DatabaseLayout(props: Props) {
                 [css.maxWidth]: !useFullWidth,
                 [css.noHeader]: !showHeader,
               })}
-              // onScroll={props.onScroll}
               mobileBreakpoint={1024}
             >
               {props.children}
