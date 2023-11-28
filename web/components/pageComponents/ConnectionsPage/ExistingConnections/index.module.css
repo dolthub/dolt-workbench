@@ -17,3 +17,11 @@
 .err {
   @apply text-center;
 }
+
+.newConnection {
+  @apply flex items-center px-4;
+
+  svg {
+    @apply mr-2;
+  }
+}

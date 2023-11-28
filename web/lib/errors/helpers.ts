@@ -31,6 +31,8 @@ export function improveErrorMsg(message: string): string {
   switch (message) {
     case "":
       return "Error message empty";
+    case "Server does not support secure connnection":
+      return "Server does not support secure connection. See advanced settings to disable SSL.";
     default:
       return message;
   }

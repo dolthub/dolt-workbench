@@ -17,6 +17,8 @@ export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
   const canSubmit =
     state.name && (state.connectionUrl || (state.host && state.username));
+  const isDocker = location.origin === "http://localhost:3000";
+  console.log(location);
 
   const onCancel = props.canGoBack
     ? () => {
@@ -51,7 +53,7 @@ export default function NewConnection(props: Props) {
             label="Host"
             value={state.host}
             onChangeString={h => setState({ host: h })}
-            placeholder="127.0.0.1"
+            placeholder={isDocker ? "host.docker.internal" : "127.0.0.1"}
             horizontal
           />
           <FormInput

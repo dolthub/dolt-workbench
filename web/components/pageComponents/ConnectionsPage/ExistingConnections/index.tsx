@@ -5,6 +5,7 @@ import {
   StoredConnectionsDocument,
   useRemoveConnectionMutation,
 } from "@gen/graphql-types";
+import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import { useState } from "react";
 import Item from "./Item";
 import css from "./index.module.css";
@@ -52,8 +53,11 @@ export default function ExistingConnections(props: Props) {
             &quot; connection?
           </p>
         </DeleteModal>
-        <Button onClick={() => props.setShowForm(true)}>
-          Add new connection
+        <Button
+          onClick={() => props.setShowForm(true)}
+          className={css.newConnection}
+        >
+          <AiOutlinePlus /> New connection
         </Button>
       </div>
     </div>
