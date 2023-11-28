@@ -99,10 +99,9 @@ the [Docker image](https://hub.docker.com/r/dolthub/dolt-workbench).
 % docker run -p 9002:9002 -p 3000:3000 dolthub/dolt-workbench:latest
 ```
 
-Navigate to http://localhost:3000 to enter your database information.
-
-You can find more in-depth instructions on
-[DockerHub](https://hub.docker.com/r/dolthub/dolt-workbench).
+Navigate to http://localhost:3000 to enter your database information. See instructions on 
+[Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench) for connecting to local and 
+Docker installed databases.
 
 ### Saving connection information between runs
 
