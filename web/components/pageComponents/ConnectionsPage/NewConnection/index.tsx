@@ -6,6 +6,7 @@ import Loader from "@components/Loader";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import cx from "classnames";
+import { useEffect, useState } from "react";
 import css from "./index.module.css";
 import useConfig from "./useConfig";
 
@@ -18,7 +19,11 @@ export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
   const canSubmit =
     state.name && (state.connectionUrl || (state.host && state.username));
-  const isDocker = location.origin === "http://localhost:3000";
+  const [isDocker, setIsDocker] = useState(false);
+
+  useEffect(() => {
+    setIsDocker(window.location.origin === "http://localhost:3000");
+  }, []);
 
   const onCancel = props.canGoBack
     ? () => {
