@@ -2,16 +2,20 @@
   @apply w-full max-w-xl;
 
   h3 {
-    @apply mb-8;
+    @apply mb-4;
   }
 }
 
 .whiteContainer {
-  @apply max-w-xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+  @apply max-w-xl w-full border rounded-lg py-10 bg-white mx-auto;
 }
 
-.nameInput {
-  @apply pb-4 mb-8 border-b;
+.section {
+  @apply px-14 py-4;
+}
+
+.middle {
+  @apply border-y pt-8;
 }
 
 .or {
@@ -28,4 +32,8 @@
 
 .checkbox {
   @apply mt-7 mb-10 text-sm;
+}
+
+.instructions {
+  @apply mb-8;
 }

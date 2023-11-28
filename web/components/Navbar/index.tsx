@@ -1,6 +1,7 @@
 import DocsLink from "@components/links/DocsLink";
 import ExternalLink from "@components/links/ExternalLink";
 import Link from "@components/links/Link";
+import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import css from "./index.module.css";
@@ -24,16 +25,10 @@ export default function Navbar() {
 
         <div className={css.right}>
           <div className={css.hubLinks}>
-            <ExternalLink
-              href="https://github.com/dolthub/dolt-workbench"
-              className={css.link}
-            >
+            <ExternalLink href={workbenchGithubRepo} className={css.link}>
               <FaGithub /> GitHub
             </ExternalLink>
-            <ExternalLink
-              href="https://hub.docker.com/r/dolthub/dolt-workbench"
-              className={css.link}
-            >
+            <ExternalLink href={dockerHubRepo} className={css.link}>
               <FaDocker /> Docker Hub
             </ExternalLink>
           </div>

@@ -3,12 +3,12 @@
   min-height: 100vh;
 
   footer {
-    @apply absolute bottom-0 w-full h-8 flex justify-end px-3;
+    @apply w-full h-8 flex justify-end px-4;
   }
 }
 
 .container {
-  @apply max-w-2xl py-40 px-4 mx-auto;
+  @apply max-w-2xl py-40 px-4 mx-auto min-h-[calc(100vh-5rem)];
 
   h1 {
     @apply mb-6 text-center;
