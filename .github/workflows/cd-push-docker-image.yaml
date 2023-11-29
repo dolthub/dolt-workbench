@@ -34,7 +34,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: dolthub/dolt-workbench:${{ github.event.inputs.version || github.event.client_payload.version }}
+          tags: dolthub/dolt-workbench:${{ github.event.inputs.version || github.event.client_payload.version }} , dolthub/dolt-workbench:latest
       - name: Update Docker Hub README
         uses: peter-evans/dockerhub-description@v3
         with:
