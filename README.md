@@ -3,6 +3,8 @@
 A modern, browser-based, open source SQL workbench for your MySQL-compatible database.
 Use [Dolt](https://doltdb.com) to unlock powerful version control features.
 
+Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
+
 ## Features
 
 Whether you decide to connect this workbench to a MySQL database or Dolt database, the
