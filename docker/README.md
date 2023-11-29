@@ -2,7 +2,7 @@
 
 A modern, browser-based, open source SQL workbench for your MySQL-compatible database. Unlock powerful version control features when you use [Dolt](https://doltdb.com).
 
-<img  src="https://www.dolthub.com/blog/static/3f1358cd506d7b8ed383ea0751b67446/4f2ef/table-browser.png" width="850px" alt="Dolt Workbench" />
+<img src="https://www.dolthub.com/blog/static/3f1358cd506d7b8ed383ea0751b67446/4f2ef/table-browser.png" width="850px" alt="Dolt Workbench" />
 
 Features include:
 
@@ -127,3 +127,7 @@ Or you can run a Dolt SQL server for an existing database on your local machine:
 ```
 
 When you enter your database configuration from the UI, you can use `my-doltdb` as the host name to connect to the database running in that container.
+
+## Contact
+
+You can reach us on [Discord](https://discord.com/invite/RFwfYpu) or [file a GitHub issue](https://github.com/dolthub/dolt-workbench/issues).
