@@ -1,0 +1,67 @@
+name: Release dolt-workbench
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'SemVer format release tag, i.e. 0.24.5'
+        required: true
+
+jobs:
+  format-version:
+    runs-on: ubuntu-22.04
+    outputs:
+      version: ${{ steps.format_version.outputs.version }}
+    steps:
+      - name: Format Input
+        id: format_version
+        run: |
+          version="${{ github.event.inputs.version }}"
+          if [[ $version == v* ]];
+          then
+            version="${version:1}"
+          fi
+          echo "version=$version" >> $GITHUB_OUTPUT
+
+  create-release:
+    needs: format-version
+    name: Create release
+    runs-on: ubuntu-22.04
+    outputs:
+      release_id: ${{ steps.create_release.outputs.id }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Create Release
+        id: create_release
+        uses: dolthub/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ needs.format-version.outputs.version }}
+          release_name: ${{ needs.format-version.outputs.version }}
+          draft: false
+          prerelease: false
+
+  create-release-notes:
+    needs: [format-version, create-release]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger Release Notes
+        uses: peter-evans/repository-dispatch@v2.0.0
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: release-notes
+          client-payload: '{"version": "${{ needs.format-version.outputs.version }}", "release_id": "${{ needs.create-release.outputs.release_id }}"}'
+
+  docker-image-push:
+    needs: [ format-version, create-release ]
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger Push Docker Image
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: push-docker-image
+          client-payload: '{"version": "${{ needs.format-version.outputs.version }}"}'
+                    
