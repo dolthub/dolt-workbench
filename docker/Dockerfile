@@ -73,7 +73,7 @@ FROM --platform=linux/amd64 node:18.13.0-alpine3.17 AS production
 # Set the working directory
 WORKDIR /app
 
-COPY ./process.yml .
+COPY ./docker/process.yml .
 
 # Install pm2 globally
 RUN npm install -g pm2

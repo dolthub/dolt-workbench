@@ -1,8 +1,8 @@
 services:
   combined:
     build:
-      dockerfile: Dockerfile
-      context: .
+      context: ../
+      dockerfile: docker/Dockerfile
     ports:
       - 3000:3000
       - 9002:9002
