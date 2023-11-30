@@ -47,7 +47,13 @@ function TableHandles({ data }: Props) {
             key={h}
             type="source"
             position={Position.Right}
-            style={{ top: 30 * columnInd + 50, width: 0, height: 0 }}
+            style={{
+              top: 30 * columnInd + 50,
+              width: 0,
+              height: 0,
+              minWidth: 0,
+              minHeight: 0,
+            }}
             isConnectable={false}
             id={h}
           />
@@ -61,7 +67,13 @@ function TableHandles({ data }: Props) {
             key={h}
             type="target"
             position={Position.Left}
-            style={{ top: 45 + 30 * columnInd, width: 0, height: 0 }}
+            style={{
+              top: 45 + 30 * columnInd,
+              width: 0,
+              height: 0,
+              minWidth: 0,
+              minHeight: 0,
+            }}
             isConnectable={false}
             id={h}
           />
