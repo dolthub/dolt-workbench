@@ -1310,7 +1310,7 @@ __metadata:
     babel-jest: ^29.7.0
     chance: ^1.1.11
     classnames: ^2.3.2
-    commit-graph: ^1.6.0
+    commit-graph: ^1.6.11
     cssnano: ^6.0.1
     diff: ^5.1.0
     eslint: ^8.52.0
@@ -5220,16 +5220,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commit-graph@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "commit-graph@npm:1.6.0"
+"commit-graph@npm:^1.6.11":
+  version: 1.6.11
+  resolution: "commit-graph@npm:1.6.11"
   dependencies:
     classnames: ^2.3.2
     next: ^13.4.4
     react: ^18.2.0
     react-dom: ^18.2.0
     react-tooltip: ^5.19.0
-  checksum: 8fdf684e304cef22a8936524e506be6e795e94e3552b23ec6a663c1a39ed8eaab140a31d869e45ac124401b936e21bedad91af71e017cdb127a974754bb01066
+  checksum: 22a3afd9d38f36dd672e9200cfe3488dc6d9cb6bd8f69025f7dcdc260a7a56646c2515ed4ccb918edd52440fd3a80cebfbf7590c5165410093a5d70f9d55e1b2
   languageName: node
   linkType: hard
 
