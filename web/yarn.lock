@@ -1295,7 +1295,7 @@ __metadata:
     "@types/diff": ^5.0.7
     "@types/jest": ^29.5.6
     "@types/lodash": ^4.14.199
-    "@types/node": ^20.8.4
+    "@types/node": ^20.10.1
     "@types/react": ^18.2.33
     "@types/react-copy-to-clipboard": ^5.0.6
     "@types/react-dom": ^18.2.14
@@ -3545,12 +3545,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.8.4":
+"@types/node@npm:*":
   version: 20.9.0
   resolution: "@types/node@npm:20.9.0"
   dependencies:
     undici-types: ~5.26.4
   checksum: bfd927da6bff8a32051fa44bb47ca32a56d2c8bc8ba0170770f181cc1fa3c0b05863c9b930f0ba8604a48d5eb0d319166601709ca53bf2deae0025d8b6c6b8a3
+  languageName: node
+  linkType: hard
+
+"@types/node@npm:^20.10.1":
+  version: 20.10.1
+  resolution: "@types/node@npm:20.10.1"
+  dependencies:
+    undici-types: ~5.26.4
+  checksum: 9dfdcd2496ce535dba0ae496985d6e991a8a5d70a180db3a94c947a2123d99318a95dce4aa2a192f7e57c3afa3fdb44d6fd63e18efd49568950d6c239dadcc39
   languageName: node
   linkType: hard
 
