@@ -38,7 +38,7 @@
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "graphql": "^16.7.1",
-    "graphql-upload": "13",
+    "graphql-upload": "16",
     "mysql2": "^3.1.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.4",
