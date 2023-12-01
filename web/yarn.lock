@@ -1304,7 +1304,7 @@ __metadata:
     "@types/react-timeago": ^4.1.4
     "@typescript-eslint/eslint-plugin": ^6.10.0
     "@typescript-eslint/parser": ^6.10.0
-    ace-builds: ^1.28.0
+    ace-builds: ^1.32.0
     apollo-upload-client: ^17.0.0
     autoprefixer: ^10.4.16
     babel-jest: ^29.7.0
@@ -3996,7 +3996,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ace-builds@npm:^1.28.0, ace-builds@npm:^1.4.14":
+"ace-builds@npm:^1.32.0":
+  version: 1.32.0
+  resolution: "ace-builds@npm:1.32.0"
+  checksum: 4da2919224a6d8590649eb3a63d9c5734209fe2e29f81e1bbe05fa146043c50c64b06098dcbaecd25359671f0d9733cb0734f76cd1eb839eee6fb55cf3978a43
+  languageName: node
+  linkType: hard
+
+"ace-builds@npm:^1.4.14":
   version: 1.31.1
   resolution: "ace-builds@npm:1.31.1"
   checksum: efa503e4bacc0c989708fc608aba031476592f23785d21855843dd2f416e5738ead4980339a72e54e2f2354e7209ff2ac301fc962b8dfcf764ed5adfe23fe7de
