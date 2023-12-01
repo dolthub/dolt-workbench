@@ -1,12 +1,23 @@
 version: 2
 updates:
 - package-ecosystem: npm
-  directory: "/"
+  directory: "/web"
   schedule:
     interval: monthly
     time: "06:30"
     timezone: America/Los_Angeles
-  open-pull-requests-limit: 10
+  open-pull-requests-limit: 6
+  reviewers:
+  - tbantle22
+  labels:
+  - dependencies
+- package-ecosystem: npm
+  directory: "/graphql-server"
+  schedule:
+    interval: monthly
+    time: "06:30"
+    timezone: America/Los_Angeles
+  open-pull-requests-limit: 4
   reviewers:
   - tbantle22
   labels:
