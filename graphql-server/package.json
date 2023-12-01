@@ -39,7 +39,7 @@
     "cors": "^2.8.5",
     "graphql": "^16.7.1",
     "graphql-upload": "13",
-    "mysql2": "^3.1.0",
+    "mysql2": "^3.6.5",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.4",
     "timeago.js": "^4.0.2",
