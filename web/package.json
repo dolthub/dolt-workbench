@@ -101,7 +101,7 @@
     "jest-environment-jsdom": "^29.7.0",
     "postcss": "^8.4.31",
     "postcss-preset-env": "^9.1.4",
-    "prettier": "^3.0.3",
+    "prettier": "^3.1.0",
     "react-select-event": "^5.5.1",
     "stylelint": "^15.11.0",
     "stylelint-config-recommended": "^13.0.0",
