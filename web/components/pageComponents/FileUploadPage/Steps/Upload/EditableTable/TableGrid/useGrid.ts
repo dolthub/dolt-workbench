@@ -1,7 +1,6 @@
 import { ApolloError } from "@apollo/client";
+import { useEffectAsync, useSetState } from "@dolthub/react-hooks";
 import { ColumnForDataTableFragment, FileType } from "@gen/graphql-types";
-import useEffectAsync from "@hooks/useEffectAsync";
-import useSetState from "@hooks/useSetState";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { nTimesWithIndex } from "@lib/nTimes";
 import { ReactElement, useReducer, useState } from "react";

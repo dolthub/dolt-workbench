@@ -1,4 +1,5 @@
 import { ApolloError } from "@apollo/client";
+import { useContextWithError } from "@dolthub/react-hooks";
 import {
   ColumnForDataTableFragment,
   ForeignKeysForDataTableFragment,
@@ -9,7 +10,6 @@ import {
   useDataTableQuery,
   useRowsForDataTableQuery,
 } from "@gen/graphql-types";
-import useContextWithError from "@hooks/useContextWithError";
 import useSqlParser from "@hooks/useSqlParser";
 import Maybe from "@lib/Maybe";
 import { createCustomContext } from "@lib/createCustomContext";

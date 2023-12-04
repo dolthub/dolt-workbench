@@ -1,5 +1,5 @@
 import Button from "@components/Button";
-import useDelay from "@hooks/useDelay";
+import { useDelay } from "@dolthub/react-hooks";
 import { IoCopyOutline } from "@react-icons/all-files/io5/IoCopyOutline";
 import cx from "classnames";
 import CopyToClipboard from "react-copy-to-clipboard";
