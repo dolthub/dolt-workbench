@@ -1,6 +1,6 @@
+import { useSetState } from "@dolthub/react-hooks";
 import { useCreateTagMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
-import useSetState from "@hooks/useSetState";
 import { ApolloErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
 import { refetchTagQueries } from "@lib/refetchQueries";

@@ -1,9 +1,9 @@
+import { useSetState } from "@dolthub/react-hooks";
 import { DocType } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent } from "react";
-import useSetState from "../useSetState";
 import { getDocsQuery } from "./utils";
 
 type DocState = {

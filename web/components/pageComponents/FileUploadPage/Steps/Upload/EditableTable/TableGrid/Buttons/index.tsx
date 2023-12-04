@@ -1,5 +1,5 @@
 import Button from "@components/Button";
-import useOnClickOutside from "@hooks/useOnClickOutside";
+import { useOnClickOutside } from "@dolthub/react-hooks";
 import { handleCaughtError } from "@lib/errors/helpers";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";

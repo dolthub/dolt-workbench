@@ -3,7 +3,7 @@ import DatabaseTableHeader from "@components/DatabaseTableHeader";
 import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseTableHeaderMobile";
 import DatabaseTableNav from "@components/DatabaseTableNav";
 import KeyNav from "@components/util/KeyNav";
-import { useReactiveWidth } from "@hooks/useReactiveSize";
+import { useReactiveWidth } from "@dolthub/react-hooks";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl, database } from "@lib/urls";
 import cx from "classnames";

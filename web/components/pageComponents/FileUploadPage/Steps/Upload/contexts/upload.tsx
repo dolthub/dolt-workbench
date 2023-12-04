@@ -1,9 +1,8 @@
 import { ApolloError } from "@apollo/client";
+import { useContextWithError, useSetState } from "@dolthub/react-hooks";
 import { useLoadDataMutation } from "@gen/graphql-types";
-import useContextWithError from "@hooks/useContextWithError";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useMutation from "@hooks/useMutation";
-import useSetState from "@hooks/useSetState";
 import { createCustomContext } from "@lib/createCustomContext";
 import { TableParams } from "@lib/params";
 import { refetchTableUploadQueries } from "@lib/refetchQueries";

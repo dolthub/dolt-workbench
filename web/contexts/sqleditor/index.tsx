@@ -1,8 +1,10 @@
+import {
+  useContextWithError,
+  useReactiveWidth,
+  useSetState,
+} from "@dolthub/react-hooks";
 import useApolloError from "@hooks/useApolloError";
-import useContextWithError from "@hooks/useContextWithError";
-import { useReactiveWidth } from "@hooks/useReactiveSize";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
-import useSetState from "@hooks/useSetState";
 import useSqlParser from "@hooks/useSqlParser";
 import { createCustomContext } from "@lib/createCustomContext";
 import { ApolloErrorType } from "@lib/errors/types";

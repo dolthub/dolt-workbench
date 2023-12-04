@@ -1,5 +1,5 @@
+import { useEffectOnMount } from "@dolthub/react-hooks";
 import useDefaultBranch from "@hooks/useDefaultBranch";
-import useEffectOnMount from "@hooks/useEffectOnMount";
 import { OptionalRefParams } from "@lib/params";
 import { useEffect, useState } from "react";
 import CustomBranchSelector from "./BranchSelector";

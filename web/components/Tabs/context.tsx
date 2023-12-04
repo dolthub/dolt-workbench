@@ -1,4 +1,4 @@
-import useContextWithError from "@hooks/useContextWithError";
+import { useContextWithError } from "@dolthub/react-hooks";
 import { createCustomContext } from "@lib/createCustomContext";
 import React, { ReactNode, useState } from "react";
 
