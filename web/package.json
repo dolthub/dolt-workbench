@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
-    "@dolthub/react-hooks": "^0.1.2",
+    "@dolthub/react-hooks": "^0.1.3",
     "@react-icons/all-files": "^4.1.0",
     "ace-builds": "^1.32.0",
     "apollo-upload-client": "^17.0.0",

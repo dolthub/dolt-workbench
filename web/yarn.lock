@@ -1281,7 +1281,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
     "@apollo/client": ^3.7.0
-    "@dolthub/react-hooks": ^0.1.2
+    "@dolthub/react-hooks": ^0.1.3
     "@graphql-codegen/cli": ^5.0.0
     "@graphql-codegen/fragment-matcher": ^5.0.0
     "@graphql-codegen/typescript-operations": ^4.0.1
@@ -1368,13 +1368,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/react-hooks@npm:^0.1.2":
-  version: 0.1.2
-  resolution: "@dolthub/react-hooks@npm:0.1.2"
+"@dolthub/react-hooks@npm:^0.1.3":
+  version: 0.1.3
+  resolution: "@dolthub/react-hooks@npm:0.1.3"
   peerDependencies:
-    react: "*"
-    react-dom: "*"
-  checksum: 58a65246c31ec6d661a4bbf09ff7a6a70038e27daf8921e8dbebadc27cd9ae85f731732424a8c0f725b5607c8694d7cd8e88f771c490fea168dcfc99131c8a77
+    "@types/react": ^18.2.0
+    react: ^18.2.0
+  checksum: 7d54f6556e41d4c77e912ee2d0aecc77afc6c7359d2cd3c033a2f3500bc22b50d3795b232269943e52a10cebe24efff7086140efe4e686c087ab271099fbbcda
   languageName: node
   linkType: hard
 
