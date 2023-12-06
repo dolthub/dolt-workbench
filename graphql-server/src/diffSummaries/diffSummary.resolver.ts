@@ -1,5 +1,6 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { ParQuery } from "../dataSources/dataSource.service";
 import { checkArgs } from "../diffStats/diffStat.resolver";
 import { DBArgs } from "../utils/commonTypes";
 import { CommitDiffType } from "./diffSummary.enums";
@@ -29,11 +30,12 @@ class DiffSummaryArgs extends DBArgs {
 
 @Resolver(_of => DiffSummary)
 export class DiffSummaryResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => [DiffSummary])
   async diffSummaries(@Args() args: DiffSummaryArgs): Promise<DiffSummary[]> {
-    return this.dss.query(
+    const conn = this.conn.connection();
+    return conn.query(
       async q => getDiffSummaries(q, args),
       args.databaseName,
       args.refName,

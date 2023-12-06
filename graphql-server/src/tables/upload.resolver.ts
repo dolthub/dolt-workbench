@@ -2,10 +2,8 @@ import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { ReadStream } from "fs";
 import { GraphQLUpload } from "graphql-upload";
 import * as mysql from "mysql2/promise";
-import {
-  DataSourceService,
-  useDBStatement,
-} from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { useDBStatement } from "../dataSources/dataSource.service";
 import { TableArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";
@@ -35,11 +33,13 @@ class TableImportArgs extends TableArgs {
 
 @Resolver(_of => Table)
 export class FileUploadResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly connResolver: ConnectionResolver) {}
 
   @Mutation(_returns => Boolean)
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
-    const conn = await mysql.createConnection(this.dss.getMySQLConfig());
+    const conn = await mysql.createConnection(
+      this.connResolver.getMySQLConfig(),
+    );
 
     let isDolt = false;
     try {

@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
 import { DiffStat, fromDoltDiffStat } from "./diffStat.model";
@@ -25,14 +25,15 @@ export class DiffStatArgs extends DBArgs {
 
 @Resolver(_of => DiffStat)
 export class DiffStatResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => DiffStat)
   async diffStat(@Args() args: DiffStatArgs): Promise<DiffStat> {
+    const conn = this.conn.connection();
     const type = args.type ?? CommitDiffType.TwoDot;
     checkArgs(args);
 
-    return this.dss.query(
+    return conn.query(
       async query => {
         if (type === CommitDiffType.ThreeDot) {
           const res = await query(getThreeDotDiffStatQuery(!!args.tableName), [

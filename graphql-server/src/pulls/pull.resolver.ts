@@ -7,7 +7,7 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { CommitResolver } from "../commits/commit.resolver";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { DBArgs } from "../utils/commonTypes";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
 import { callMerge } from "./pull.queries";
@@ -24,7 +24,7 @@ class PullArgs extends DBArgs {
 @Resolver(_of => PullWithDetails)
 export class PullResolver {
   constructor(
-    private readonly dss: DataSourceService,
+    private readonly conn: ConnectionResolver,
     private readonly commitResolver: CommitResolver,
   ) {}
 
@@ -43,7 +43,8 @@ export class PullResolver {
 
   @Mutation(_returns => Boolean)
   async mergePull(@Args() args: PullArgs): Promise<boolean> {
-    return this.dss.query(
+    const conn = this.conn.connection();
+    return conn.query(
       async query => {
         await query("BEGIN");
 

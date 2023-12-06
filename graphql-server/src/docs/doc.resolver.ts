@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { RefArgs } from "../utils/commonTypes";
 import { DocType } from "./doc.enum";
 import { Doc, DocList, fromDoltDocsRow } from "./doc.model";
@@ -13,14 +13,15 @@ class GetDefaultDocArgs extends RefArgs {
 
 @Resolver(_of => Doc)
 export class DocsResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => DocList)
   async docs(
     @Args()
     args: RefArgs,
   ): Promise<DocList> {
-    return this.dss.query(
+    const conn = this.conn.connection();
+    return conn.query(
       async query => {
         const docRows = await query(docsQuery);
         if (!docRows.length) return { list: [] };
@@ -40,7 +41,8 @@ export class DocsResolver {
   async docOrDefaultDoc(
     @Args() args: GetDefaultDocArgs,
   ): Promise<Doc | undefined> {
-    return this.dss.query(
+    const conn = this.conn.connection();
+    return conn.query(
       async query => {
         const docRows = await query(docsQuery);
         if (!docRows.length) return { list: [] };

@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { getCellValue } from "../rows/row.model";
 import { RawRows, RefArgs } from "../utils/commonTypes";
 import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";
@@ -12,11 +12,12 @@ export class SqlSelectArgs extends RefArgs {
 
 @Resolver(_of => SqlSelect)
 export class SqlSelectResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async query => {
         const res = await query(args.queryString);
         return fromSqlSelectRow(
@@ -33,7 +34,8 @@ export class SqlSelectResolver {
 
   @Query(_returns => String)
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async query => {
         const res = await query(args.queryString);
         return toCsvString(res);

@@ -8,7 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { Table } from "../tables/table.model";
 import { TableResolver } from "../tables/table.resolver";
 import { BranchArgs, DBArgs } from "../utils/commonTypes";
@@ -62,13 +62,14 @@ class ListBranchesArgs extends DBArgs {
 @Resolver(_of => Branch)
 export class BranchResolver {
   constructor(
-    private readonly dss: DataSourceService,
+    private readonly conn: ConnectionResolver,
     private readonly tableResolver: TableResolver,
   ) {}
 
   @Query(_returns => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
-    return this.dss.queryMaybeDolt(async (query, isDolt) => {
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(async (query, isDolt) => {
       if (!isDolt) {
         return branchForNonDoltDB(args.databaseName);
       }
@@ -92,7 +93,8 @@ export class BranchResolver {
 
   @Query(_returns => BranchNamesList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchNamesList> {
-    return this.dss.queryMaybeDolt(async (query, isDolt) => {
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(async (query, isDolt) => {
       if (!isDolt) {
         return {
           list: [branchForNonDoltDB(args.databaseName)],
@@ -113,7 +115,8 @@ export class BranchResolver {
 
   @Mutation(_returns => Branch)
   async createBranch(@Args() args: CreateBranchArgs): Promise<Branch> {
-    return this.dss.query(async query => {
+    const conn = this.conn.connection();
+    return conn.query(async query => {
       await query(callNewBranch, [args.newBranchName, args.fromRefName]);
       const branch = await query(branchQuery, [args.newBranchName]);
       if (!branch.length) throw new Error("Created branch not found");
@@ -123,7 +126,8 @@ export class BranchResolver {
 
   @Mutation(_returns => Boolean)
   async deleteBranch(@Args() args: BranchArgs): Promise<boolean> {
-    return this.dss.query(async query => {
+    const conn = this.conn.connection();
+    return conn.query(async query => {
       await query(callDeleteBranch, [args.branchName]);
       return true;
     }, args.databaseName);

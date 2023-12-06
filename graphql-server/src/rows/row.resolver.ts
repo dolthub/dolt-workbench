@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { listTablesQuery } from "../tables/table.queries";
 import { ROW_LIMIT } from "../utils";
 import { RefArgs } from "../utils/commonTypes";
@@ -17,11 +17,12 @@ export class ListRowsArgs extends RefArgs {
 
 @Resolver(_of => Row)
 export class RowResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async query => {
         const columns = await query(listTablesQuery, [args.tableName]);
         const offset = args.offset ?? 0;

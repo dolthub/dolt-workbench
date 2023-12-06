@@ -1,5 +1,6 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { ParQuery } from "../dataSources/dataSource.service";
 import { systemTableValues } from "../systemTables/systemTable.enums";
 import { RefArgs, TableArgs } from "../utils/commonTypes";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
@@ -19,11 +20,12 @@ class ListTableArgs extends RefArgs {
 
 @Resolver(_of => Table)
 export class TableResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => Table)
   async table(@Args() args: TableArgs): Promise<Table> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async (q, isDolt) => getTableInfo(q, args, isDolt),
       args.databaseName,
       args.refName,
@@ -32,7 +34,8 @@ export class TableResolver {
 
   @Query(_returns => TableNames)
   async tableNames(@Args() args: ListTableArgs): Promise<TableNames> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async (q, isDolt) => getTableNames(q, args, isDolt),
       args.databaseName,
       args.refName,
@@ -41,7 +44,8 @@ export class TableResolver {
 
   @Query(_returns => [Table])
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async (q, isDolt) => {
         const tableNames = await getTableNames(q, args, isDolt);
         const tables = await Promise.all(

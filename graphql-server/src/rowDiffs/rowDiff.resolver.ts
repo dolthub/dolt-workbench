@@ -1,6 +1,7 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
-import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { ParQuery } from "../dataSources/dataSource.service";
 import {
   CommitDiffType,
   TableDiffType,
@@ -49,7 +50,7 @@ class ListRowDiffsArgs extends DBArgsWithOffset {
 
 @Resolver(_of => RowDiff)
 export class RowDiffResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => RowDiffList)
   async rowDiffs(
@@ -58,8 +59,9 @@ export class RowDiffResolver {
   ): Promise<RowDiffList> {
     const dbArgs = { databaseName, refName };
     const offset = args.offset ?? 0;
+    const conn = this.conn.connection();
 
-    return this.dss.query(
+    return conn.query(
       async query => {
         const ds = await getDiffSummaries(query, {
           ...dbArgs,

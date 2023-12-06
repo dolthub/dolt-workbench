@@ -7,7 +7,7 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs } from "../utils/commonTypes";
 import { DatabaseConnection } from "./database.model";
@@ -45,13 +45,14 @@ class RemoveDatabaseConnectionArgs {
 @Resolver(_of => DatabaseConnection)
 export class DatabaseResolver {
   constructor(
-    private readonly dss: DataSourceService,
+    private readonly conn: ConnectionResolver,
     private readonly fileStoreService: FileStoreService,
   ) {}
 
   @Query(_returns => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
-    const qr = this.dss.getQR();
+    const conn = this.conn.connection();
+    const qr = conn.getQR();
     try {
       const res = await qr.getCurrentDatabase();
       return res;
@@ -67,7 +68,8 @@ export class DatabaseResolver {
 
   @Query(_returns => [String])
   async databases(): Promise<string[]> {
-    return this.dss.query(async query => {
+    const conn = this.conn.connection();
+    return conn.query(async query => {
       const dbs = await query("SHOW DATABASES");
       return dbs
         .map(db => db.Database)
@@ -83,10 +85,11 @@ export class DatabaseResolver {
 
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
-    const workbenchConfig = this.dss.getWorkbenchConfig();
-    const qr = this.dss.getQR();
+    const workbenchConfig = this.conn.getWorkbenchConfig();
+    const conn = this.conn.connection();
+    const qr = conn.getQR();
     try {
-      const isDolt = await this.dss.getIsDolt(qr);
+      const isDolt = await conn.getIsDolt(qr);
       return {
         isDolt,
         hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
@@ -105,7 +108,7 @@ export class DatabaseResolver {
       hideDoltFeatures: !!args.hideDoltFeatures,
       useSSL: !!args.useSSL,
     };
-    await this.dss.addDS(workbenchConfig);
+    await this.conn.addConnection(workbenchConfig);
 
     this.fileStoreService.addItemToStore({
       ...workbenchConfig,
@@ -127,7 +130,8 @@ export class DatabaseResolver {
 
   @Mutation(_returns => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
-    const qr = this.dss.getQR();
+    const conn = this.conn.connection();
+    const qr = conn.getQR();
     try {
       await qr.createDatabase(args.databaseName);
       return true;
@@ -138,7 +142,7 @@ export class DatabaseResolver {
 
   @Mutation(_returns => Boolean)
   async resetDatabase(): Promise<boolean> {
-    await this.dss.resetDS();
+    await this.conn.resetDS();
     return true;
   }
 }

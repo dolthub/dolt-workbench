@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { DBArgsWithOffset, RawRow } from "../utils/commonTypes";
 import { Commit, CommitList, fromDoltLogRow } from "./commit.model";
@@ -23,7 +23,7 @@ export class ListCommitsArgs extends DBArgsWithOffset {
 
 @Resolver(_of => Commit)
 export class CommitResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => CommitList)
   async commits(
@@ -34,7 +34,8 @@ export class CommitResolver {
     if (err) throw err;
     const refName = args.refName ?? args.afterCommitId ?? "";
     const offset = args.offset ?? 0;
-    return this.dss.query(async query => {
+    const conn = this.conn.connection();
+    return conn.query(async query => {
       if (args.twoDot && args.excludingCommitsFromRefName) {
         const logs = await query(twoDotDoltLogsQuery, [
           `${args.excludingCommitsFromRefName}..${refName}`,

@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
 import { SchemaDiff, fromDoltSchemaDiffRows } from "./schemaDiff.model";
@@ -29,13 +29,14 @@ class SchemaDiffArgs extends DBArgs {
 
 @Resolver(_of => SchemaDiff)
 export class SchemaDiffResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => SchemaDiff, { nullable: true })
   async schemaDiff(
     @Args() args: SchemaDiffArgs,
   ): Promise<SchemaDiff | undefined> {
-    return this.dss.query(
+    const conn = this.conn.connection();
+    return conn.query(
       async query => {
         if (args.type === CommitDiffType.ThreeDot) {
           const commitArgs = [

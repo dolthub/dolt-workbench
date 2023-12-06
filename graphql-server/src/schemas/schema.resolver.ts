@@ -1,5 +1,6 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { ParQuery } from "../dataSources/dataSource.service";
 import { handleTableNotFound } from "../tables/table.resolver";
 import { RefArgs } from "../utils/commonTypes";
 import { SchemaType } from "./schema.enums";
@@ -15,14 +16,15 @@ import {
 
 @Resolver(_of => SchemaItem)
 export class SchemaResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => [SchemaItem])
   async doltSchemas(
     @Args() args: RefArgs,
     type?: SchemaType,
   ): Promise<SchemaItem[]> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async (query, isDolt) => {
         if (!isDolt) {
           return getSchemasForNonDolt(query, args.databaseName, type);
@@ -48,7 +50,8 @@ export class SchemaResolver {
 
   @Query(_returns => [SchemaItem])
   async doltProcedures(@Args() args: RefArgs): Promise<[SchemaItem]> {
-    return this.dss.queryMaybeDolt(
+    const conn = this.conn.connection();
+    return conn.queryMaybeDolt(
       async (query, isDolt) => {
         if (!isDolt) {
           const res = await query(getProceduresQuery, [args.databaseName]);
