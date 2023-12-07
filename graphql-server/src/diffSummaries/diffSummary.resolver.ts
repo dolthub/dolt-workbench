@@ -1,14 +1,10 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
-import { ParQuery } from "../dataSources/dataSource.service";
+import { DataSourceService } from "../dataSources/dataSource.service";
 import { checkArgs } from "../diffStats/diffStat.resolver";
 import { DBArgs } from "../utils/commonTypes";
 import { CommitDiffType } from "./diffSummary.enums";
 import { DiffSummary, fromDoltDiffSummary } from "./diffSummary.model";
-import {
-  getDiffSummaryQuery,
-  getThreeDotDiffSummaryQuery,
-} from "./diffSummary.queries";
 
 @ArgsType()
 class DiffSummaryArgs extends DBArgs {
@@ -35,34 +31,23 @@ export class DiffSummaryResolver {
   @Query(_returns => [DiffSummary])
   async diffSummaries(@Args() args: DiffSummaryArgs): Promise<DiffSummary[]> {
     const conn = this.conn.connection();
-    return conn.query(
-      async q => getDiffSummaries(q, args),
-      args.databaseName,
-      args.refName,
-    );
+    return getDiffSummaries(conn, args);
   }
 }
 
 export async function getDiffSummaries(
-  query: ParQuery,
+  conn: DataSourceService,
   args: DiffSummaryArgs,
 ): Promise<DiffSummary[]> {
   const type = args.type ?? CommitDiffType.TwoDot;
   checkArgs(args);
 
   if (type === CommitDiffType.ThreeDot) {
-    const res = await query(getThreeDotDiffSummaryQuery(!!args.tableName), [
-      `${args.toRefName}...${args.fromRefName}`,
-      args.tableName,
-    ]);
+    const res = await conn.getThreeDotDiffSummary(args);
     return res.map(fromDoltDiffSummary).sort(sortByTableName);
   }
 
-  const res = await query(getDiffSummaryQuery(!!args.tableName), [
-    args.fromRefName,
-    args.toRefName,
-    args.tableName,
-  ]);
+  const res = await conn.getDiffSummary(args);
   return res.map(fromDoltDiffSummary).sort(sortByTableName);
 }
 

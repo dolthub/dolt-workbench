@@ -19,12 +19,6 @@ import {
   branchForNonDoltDB,
   fromDoltBranchesRow,
 } from "./branch.model";
-import {
-  branchQuery,
-  callDeleteBranch,
-  callNewBranch,
-  getBranchesQuery,
-} from "./branch.queries";
 
 @ArgsType()
 export class GetBranchOrDefaultArgs extends DBArgs {
@@ -69,14 +63,12 @@ export class BranchResolver {
   @Query(_returns => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
     const conn = this.conn.connection();
-    return conn.queryMaybeDolt(async (query, isDolt) => {
-      if (!isDolt) {
-        return branchForNonDoltDB(args.databaseName);
-      }
-      const branch = await query(branchQuery, [args.branchName]);
-      if (!branch.length) return undefined;
-      return fromDoltBranchesRow(args.databaseName, branch[0]);
-    }, args.databaseName);
+    const { res, isDolt } = await conn.getBranch(args);
+    if (!isDolt) {
+      return branchForNonDoltDB(args.databaseName);
+    }
+    if (!res.length) return undefined;
+    return fromDoltBranchesRow(args.databaseName, res[0]);
   }
 
   @Query(_returns => Branch, { nullable: true })
@@ -94,17 +86,15 @@ export class BranchResolver {
   @Query(_returns => BranchNamesList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchNamesList> {
     const conn = this.conn.connection();
-    return conn.queryMaybeDolt(async (query, isDolt) => {
-      if (!isDolt) {
-        return {
-          list: [branchForNonDoltDB(args.databaseName)],
-        };
-      }
-      const branches = await query(getBranchesQuery(args.sortBy));
+    const { res, isDolt } = await conn.getBranches(args);
+    if (!isDolt) {
       return {
-        list: branches.map(b => fromDoltBranchesRow(args.databaseName, b)),
+        list: [branchForNonDoltDB(args.databaseName)],
       };
-    }, args.databaseName);
+    }
+    return {
+      list: res.map(b => fromDoltBranchesRow(args.databaseName, b)),
+    };
   }
 
   @Query(_returns => Branch, { nullable: true })
@@ -113,24 +103,18 @@ export class BranchResolver {
     return getDefaultBranchFromBranchesList(branchNames.list);
   }
 
-  @Mutation(_returns => Branch)
-  async createBranch(@Args() args: CreateBranchArgs): Promise<Branch> {
+  @Mutation(_returns => String)
+  async createBranch(@Args() args: CreateBranchArgs): Promise<string> {
     const conn = this.conn.connection();
-    return conn.query(async query => {
-      await query(callNewBranch, [args.newBranchName, args.fromRefName]);
-      const branch = await query(branchQuery, [args.newBranchName]);
-      if (!branch.length) throw new Error("Created branch not found");
-      return fromDoltBranchesRow(args.databaseName, branch[0]);
-    }, args.databaseName);
+    await conn.createNewBranch({ ...args, branchName: args.newBranchName });
+    return args.newBranchName;
   }
 
   @Mutation(_returns => Boolean)
   async deleteBranch(@Args() args: BranchArgs): Promise<boolean> {
     const conn = this.conn.connection();
-    return conn.query(async query => {
-      await query(callDeleteBranch, [args.branchName]);
-      return true;
-    }, args.databaseName);
+    await conn.callDeleteBranch(args);
+    return true;
   }
 
   @ResolveField(_returns => Table, { nullable: true })

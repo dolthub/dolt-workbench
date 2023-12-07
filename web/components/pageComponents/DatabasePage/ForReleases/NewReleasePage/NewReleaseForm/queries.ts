@@ -12,8 +12,6 @@ export const CREATE_TAG_MUTATION = gql`
       tagName: $tagName
       message: $message
       fromRefName: $fromRefName
-    ) {
-      ...TagForList
-    }
+    )
   }
 `;

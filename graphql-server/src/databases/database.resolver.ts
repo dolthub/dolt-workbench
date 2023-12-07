@@ -52,13 +52,7 @@ export class DatabaseResolver {
   @Query(_returns => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
     const conn = this.conn.connection();
-    const qr = conn.getQR();
-    try {
-      const res = await qr.getCurrentDatabase();
-      return res;
-    } finally {
-      await qr.release();
-    }
+    return conn.currentDatabase();
   }
 
   @Query(_returns => [DatabaseConnection])
@@ -69,34 +63,27 @@ export class DatabaseResolver {
   @Query(_returns => [String])
   async databases(): Promise<string[]> {
     const conn = this.conn.connection();
-    return conn.query(async query => {
-      const dbs = await query("SHOW DATABASES");
-      return dbs
-        .map(db => db.Database)
-        .filter(
-          db =>
-            db !== "information_schema" &&
-            db !== "mysql" &&
-            db !== "dolt_cluster" &&
-            !db.includes("/"),
-        );
-    });
+    const dbs = await conn.databases();
+    return dbs
+      .map(db => db.Database)
+      .filter(
+        db =>
+          db !== "information_schema" &&
+          db !== "mysql" &&
+          db !== "dolt_cluster" &&
+          !db.includes("/"),
+      );
   }
 
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
     const conn = this.conn.connection();
-    const qr = conn.getQR();
-    try {
-      const isDolt = await conn.getIsDolt(qr);
-      return {
-        isDolt,
-        hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
-      };
-    } finally {
-      await qr.release();
-    }
+    const isDolt = await conn.getIsDolt();
+    return {
+      isDolt,
+      hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
+    };
   }
 
   @Mutation(_returns => String, { nullable: true })
@@ -131,13 +118,8 @@ export class DatabaseResolver {
   @Mutation(_returns => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
     const conn = this.conn.connection();
-    const qr = conn.getQR();
-    try {
-      await qr.createDatabase(args.databaseName);
-      return true;
-    } finally {
-      await qr.release();
-    }
+    await conn.createDatabase(args);
+    return true;
   }
 
   @Mutation(_returns => Boolean)

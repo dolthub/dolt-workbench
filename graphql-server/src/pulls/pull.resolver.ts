@@ -10,7 +10,6 @@ import { CommitResolver } from "../commits/commit.resolver";
 import { ConnectionResolver } from "../connections/connection.resolver";
 import { DBArgs } from "../utils/commonTypes";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
-import { callMerge } from "./pull.queries";
 
 @ArgsType()
 class PullArgs extends DBArgs {
@@ -44,29 +43,11 @@ export class PullResolver {
   @Mutation(_returns => Boolean)
   async mergePull(@Args() args: PullArgs): Promise<boolean> {
     const conn = this.conn.connection();
-    return conn.query(
-      async query => {
-        await query("BEGIN");
-
-        const res = await query(callMerge, [
-          args.fromBranchName,
-          `Merge branch ${args.fromBranchName}`,
-          //  commitAuthor: {
-          //    name: currentUser.username,
-          //    email: currentUser.emailAddressesList[0].address,
-          //   },
-        ]);
-
-        if (res.length && res[0].conflicts !== "0") {
-          await query("ROLLBACK");
-          throw new Error("Merge conflict detected");
-        }
-
-        await query("COMMIT");
-        return true;
-      },
-      args.databaseName,
-      args.toBranchName,
-    );
+    await conn.callMerge({
+      databaseName: args.databaseName,
+      fromBranchName: args.fromBranchName,
+      toBranchName: args.toBranchName,
+    });
+    return true;
   }
 }

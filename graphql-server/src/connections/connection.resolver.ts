@@ -44,7 +44,7 @@ export class ConnectionResolver {
     };
   }
 
-  async addConnection(config: WorkbenchConfig) {
+  async addConnection(config: WorkbenchConfig): Promise<void> {
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
@@ -79,7 +79,7 @@ export class ConnectionResolver {
     return this.workbenchConfig;
   }
 
-  async resetDS() {
+  async resetDS(): Promise<void> {
     if (!this.workbenchConfig) {
       throw new Error(
         "Workbench config not found. Please add connectivity information.",

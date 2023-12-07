@@ -3,7 +3,6 @@ import { ConnectionResolver } from "../connections/connection.resolver";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { DBArgsWithOffset, RawRow } from "../utils/commonTypes";
 import { Commit, CommitList, fromDoltLogRow } from "./commit.model";
-import { doltLogsQuery, twoDotDoltLogsQuery } from "./commit.queries";
 
 @ArgsType()
 export class ListCommitsArgs extends DBArgsWithOffset {
@@ -35,16 +34,17 @@ export class CommitResolver {
     const refName = args.refName ?? args.afterCommitId ?? "";
     const offset = args.offset ?? 0;
     const conn = this.conn.connection();
-    return conn.query(async query => {
-      if (args.twoDot && args.excludingCommitsFromRefName) {
-        const logs = await query(twoDotDoltLogsQuery, [
-          `${args.excludingCommitsFromRefName}..${refName}`,
-        ]);
-        return getCommitListRes(logs, args);
-      }
-      const logs = await query(doltLogsQuery, [refName, ROW_LIMIT + 1, offset]);
+
+    if (args.twoDot && args.excludingCommitsFromRefName) {
+      const logs = await conn.getTwoDotLogs({
+        toRefName: args.excludingCommitsFromRefName,
+        fromRefName: refName,
+        databaseName: args.databaseName,
+      });
       return getCommitListRes(logs, args);
-    }, args.databaseName);
+    }
+    const logs = await conn.getLogs({ ...args, refName }, offset);
+    return getCommitListRes(logs, args);
   }
 }
 

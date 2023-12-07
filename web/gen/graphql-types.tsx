@@ -202,9 +202,9 @@ export enum LoadDataModifier {
 export type Mutation = {
   __typename?: 'Mutation';
   addDatabaseConnection?: Maybe<Scalars['String']['output']>;
-  createBranch: Branch;
+  createBranch: Scalars['String']['output'];
   createDatabase: Scalars['Boolean']['output'];
-  createTag: Tag;
+  createTag: Scalars['String']['output'];
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
@@ -894,8 +894,6 @@ export type DeleteBranchMutationVariables = Exact<{
 
 export type DeleteBranchMutation = { __typename?: 'Mutation', deleteBranch: boolean };
 
-export type BranchForCreateBranchFragment = { __typename?: 'Branch', databaseName: string, branchName: string };
-
 export type CreateBranchMutationVariables = Exact<{
   newBranchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -903,7 +901,7 @@ export type CreateBranchMutationVariables = Exact<{
 }>;
 
 
-export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: { __typename?: 'Branch', databaseName: string, branchName: string } };
+export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: string };
 
 export type CommitForAfterCommitHistoryFragment = { __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
@@ -1010,7 +1008,7 @@ export type CreateTagMutationVariables = Exact<{
 }>;
 
 
-export type CreateTagMutation = { __typename?: 'Mutation', createTag: { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } } };
+export type CreateTagMutation = { __typename?: 'Mutation', createTag: string };
 
 export type DeleteTagMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1349,12 +1347,6 @@ export const BranchFragmentDoc = gql`
   databaseName
   lastUpdated
   lastCommitter
-}
-    `;
-export const BranchForCreateBranchFragmentDoc = gql`
-    fragment BranchForCreateBranch on Branch {
-  databaseName
-  branchName
 }
     `;
 export const CommitForAfterCommitHistoryFragmentDoc = gql`
@@ -2535,11 +2527,9 @@ export const CreateBranchDocument = gql`
     newBranchName: $newBranchName
     databaseName: $databaseName
     fromRefName: $fromRefName
-  ) {
-    ...BranchForCreateBranch
-  }
+  )
 }
-    ${BranchForCreateBranchFragmentDoc}`;
+    `;
 export type CreateBranchMutationFn = Apollo.MutationFunction<CreateBranchMutation, CreateBranchMutationVariables>;
 
 /**
@@ -2964,11 +2954,9 @@ export const CreateTagDocument = gql`
     tagName: $tagName
     message: $message
     fromRefName: $fromRefName
-  ) {
-    ...TagForList
-  }
+  )
 }
-    ${TagForListFragmentDoc}`;
+    `;
 export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, CreateTagMutationVariables>;
 
 /**

@@ -3,7 +3,7 @@ import { ReadStream } from "fs";
 import { GraphQLUpload } from "graphql-upload";
 import * as mysql from "mysql2/promise";
 import { ConnectionResolver } from "../connections/connection.resolver";
-import { useDBStatement } from "../dataSources/dataSource.service";
+import { useDBStatement } from "../dataSources/dataSource.queries";
 import { TableArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";

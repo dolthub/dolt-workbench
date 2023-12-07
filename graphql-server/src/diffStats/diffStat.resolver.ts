@@ -3,7 +3,6 @@ import { ConnectionResolver } from "../connections/connection.resolver";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
 import { DiffStat, fromDoltDiffStat } from "./diffStat.model";
-import { getDiffStatQuery, getThreeDotDiffStatQuery } from "./diffStat.queries";
 
 @ArgsType()
 export class DiffStatArgs extends DBArgs {
@@ -33,26 +32,13 @@ export class DiffStatResolver {
     const type = args.type ?? CommitDiffType.TwoDot;
     checkArgs(args);
 
-    return conn.query(
-      async query => {
-        if (type === CommitDiffType.ThreeDot) {
-          const res = await query(getThreeDotDiffStatQuery(!!args.tableName), [
-            `${args.toRefName}...${args.fromRefName}`,
-            args.tableName,
-          ]);
-          return fromDoltDiffStat(res);
-        }
+    if (type === CommitDiffType.ThreeDot) {
+      const res = await conn.getThreeDotDiffStat(args);
+      return fromDoltDiffStat(res);
+    }
 
-        const res = await query(getDiffStatQuery(!!args.tableName), [
-          args.fromRefName,
-          args.toRefName,
-          args.tableName,
-        ]);
-        return fromDoltDiffStat(res);
-      },
-      args.databaseName,
-      args.refName,
-    );
+    const res = await conn.getDiffStat(args);
+    return fromDoltDiffStat(res);
   }
 }
 

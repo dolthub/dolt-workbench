@@ -61,19 +61,19 @@ export class RowDiffResolver {
     const offset = args.offset ?? 0;
     const conn = this.conn.connection();
 
+    const ds = await getDiffSummaries(conn, {
+      ...dbArgs,
+      tableName,
+      fromRefName: args.fromRefName,
+      toRefName: args.toRefName,
+      type: args.type,
+    });
+    if (!ds.length) {
+      throw new Error(`Could not get summary for table "${tableName}"`);
+    }
+
     return conn.query(
       async query => {
-        const ds = await getDiffSummaries(query, {
-          ...dbArgs,
-          tableName,
-          fromRefName: args.fromRefName,
-          toRefName: args.toRefName,
-          type: args.type,
-        });
-        if (!ds.length) {
-          throw new Error(`Could not get summary for table "${tableName}"`);
-        }
-
         const { fromCommitId, toCommitId } = await resolveRefs(
           query,
           args.fromRefName,
