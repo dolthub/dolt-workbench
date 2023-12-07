@@ -1,7 +1,8 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
+import { RawRow } from "../dataSources/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
-import { DBArgsWithOffset, RawRow } from "../utils/commonTypes";
+import { DBArgsWithOffset } from "../utils/commonTypes";
 import { Commit, CommitList, fromDoltLogRow } from "./commit.model";
 
 @ArgsType()

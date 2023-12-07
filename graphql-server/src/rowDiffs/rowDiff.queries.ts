@@ -2,7 +2,7 @@ import {
   getOrderByFromCols,
   getPKColsForRowsQuery,
 } from "../dataSources/dataSource.queries";
-import { RawRows } from "../utils/commonTypes";
+import { RawRows } from "../dataSources/types";
 
 export const getRowsQueryAsOf = (
   columns: RawRows,

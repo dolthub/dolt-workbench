@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../utils/commonTypes";
+import { RawRow } from "../dataSources/types";
 import { TableDiffType, toTableDiffType } from "./diffSummary.enums";
 
 @ObjectType()

@@ -2,27 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { DataSource, QueryRunner } from "typeorm";
 import { SortBranchesBy } from "../branches/branch.enum";
 import { SchemaType } from "../schemas/schema.enums";
-import { handleTableNotFound } from "../tables/table.resolver";
 import { ROW_LIMIT } from "../utils";
-import { RawRows, TableArgs } from "../utils/commonTypes";
+import { TableArgs } from "../utils/commonTypes";
 import * as qh from "./dataSource.queries";
-import {
-  BranchArgs,
-  BranchesArgs,
-  DBArgs,
-  IsDoltRes,
-  PR,
-  RawRow,
-  RefArgs,
-  RefsArgs,
-  TableRowPagination,
-  TagArgs,
-  UPR,
-} from "./types";
-import { handleRefNotFound } from "./utils";
+import * as t from "./types";
+import { handleRefNotFound, handleTableNotFound } from "./utils";
 
 export const dbNotFoundErr = "Database connection not found";
-export type ParQuery = (q: string, p?: any[] | undefined) => Promise<RawRows>;
+export type ParQuery = (q: string, p?: any[] | undefined) => t.PR;
 
 @Injectable()
 export class DataSourceService {
@@ -62,7 +49,7 @@ export class DataSourceService {
     refName?: string,
   ): Promise<any> {
     return this.handleAsyncQuery(async qr => {
-      async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
+      async function query(q: string, p?: any[] | undefined): t.PR {
         const res = await qr.query(q, p);
         return res;
       }
@@ -77,7 +64,7 @@ export class DataSourceService {
 
   async query2(
     q: string,
-    p: Array<any>,
+    p: any[],
     dbName?: string,
     refName?: string,
   ): Promise<any> {
@@ -106,9 +93,7 @@ export class DataSourceService {
   }
 
   async getIsDolt(): Promise<boolean> {
-    return this.handleAsyncQuery(async qr => {
-      return this.getIsDoltHelper(qr);
-    });
+    return this.handleAsyncQuery(async qr => this.getIsDoltHelper(qr));
   }
 
   // Queries that will work on both MySQL and Dolt
@@ -118,7 +103,7 @@ export class DataSourceService {
     refName?: string,
   ): Promise<any> {
     return this.handleAsyncQuery(async qr => {
-      async function query(q: string, p?: any[] | undefined): Promise<RawRows> {
+      async function query(q: string, p?: any[] | undefined): t.PR {
         const res = await qr.query(q, p);
         return res;
       }
@@ -137,7 +122,7 @@ export class DataSourceService {
     p: any[],
     dbName?: string,
     refName?: string,
-    notDoltFn?: (qr: QueryRunner) => UPR,
+    notDoltFn?: (qr: QueryRunner) => t.UPR,
   ): Promise<{ res: any; isDolt: boolean }> {
     return this.handleAsyncQuery(async qr => {
       const isDolt = await this.getIsDoltHelper(qr);
@@ -149,7 +134,7 @@ export class DataSourceService {
         if (notDoltFn) {
           return notDoltFn(qr);
         }
-        return undefined;
+        return { res: [], isDolt: false };
       }
 
       const res = await qr.query(q, p);
@@ -160,7 +145,7 @@ export class DataSourceService {
 
   // QUERIES
 
-  async databases(): PR {
+  async databases(): t.PR {
     return this.query2(qh.databasesQuery, []);
   }
 
@@ -168,13 +153,13 @@ export class DataSourceService {
     return this.handleAsyncQuery(async qr => qr.getCurrentDatabase());
   }
 
-  async createDatabase(args: DBArgs): PR {
+  async createDatabase(args: t.DBArgs): t.PR {
     return this.handleAsyncQuery(async qr =>
       qr.createDatabase(args.databaseName),
     );
   }
 
-  async getTableColumns(args: TableArgs): PR {
+  async getTableColumns(args: TableArgs): t.PR {
     return this.query2(
       qh.tableColsQuery,
       [args.tableName],
@@ -183,7 +168,7 @@ export class DataSourceService {
     );
   }
 
-  async getTableRows(args: TableArgs, page: TableRowPagination): PR {
+  async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
     const { q, cols } = qh.getRowsQuery(page.columns);
     return this.query2(
       q,
@@ -193,7 +178,7 @@ export class DataSourceService {
     );
   }
 
-  async getSqlSelect(args: RefArgs & { queryString: string }): IsDoltRes {
+  async getSqlSelect(args: t.RefArgs & { queryString: string }): t.IsDoltRes {
     return this.queryMaybeDolt2(
       args.queryString,
       [],
@@ -205,7 +190,7 @@ export class DataSourceService {
 
   // DOLT-SPECIFIC QUERIES
 
-  async getDoltSchemas(args: RefArgs, type?: SchemaType): IsDoltRes {
+  async getDoltSchemas(args: t.RefArgs, type?: SchemaType): t.IsDoltRes {
     return handleTableNotFound(async () =>
       this.queryMaybeDolt2(
         qh.getDoltSchemasQuery(!!type),
@@ -222,8 +207,8 @@ export class DataSourceService {
           }
 
           const tRes = await qr.query(qh.getTriggersQuery);
-          const triggers = tRes.map(t => {
-            return { name: t.Trigger, type: SchemaType.Trigger };
+          const triggers = tRes.map(tr => {
+            return { name: tr.Trigger, type: SchemaType.Trigger };
           });
 
           const eRes = await qr.query(qh.getEventsQuery);
@@ -237,7 +222,7 @@ export class DataSourceService {
     );
   }
 
-  async getDoltProcedures(args: RefArgs): IsDoltRes {
+  async getDoltProcedures(args: t.RefArgs): t.IsDoltRes {
     return handleTableNotFound(async () =>
       this.queryMaybeDolt2(
         qh.doltProceduresQuery,
@@ -250,7 +235,7 @@ export class DataSourceService {
     );
   }
 
-  async getBranch(args: BranchArgs): IsDoltRes {
+  async getBranch(args: t.BranchArgs): t.IsDoltRes {
     return this.queryMaybeDolt2(
       qh.branchQuery,
       [args.branchName],
@@ -258,7 +243,7 @@ export class DataSourceService {
     );
   }
 
-  async getBranches(args: DBArgs & { sortBy?: SortBranchesBy }): IsDoltRes {
+  async getBranches(args: t.DBArgs & { sortBy?: SortBranchesBy }): t.IsDoltRes {
     return this.queryMaybeDolt2(
       qh.getBranchesQuery(args.sortBy),
       [],
@@ -266,7 +251,7 @@ export class DataSourceService {
     );
   }
 
-  async createNewBranch(args: BranchArgs & { fromRefName: string }): PR {
+  async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
     return this.query2(
       qh.callNewBranch,
       [args.branchName, args.fromRefName],
@@ -274,7 +259,7 @@ export class DataSourceService {
     );
   }
 
-  async callDeleteBranch(args: BranchArgs): PR {
+  async callDeleteBranch(args: t.BranchArgs): t.PR {
     return this.query2(
       qh.callDeleteBranch,
       [args.branchName],
@@ -282,7 +267,7 @@ export class DataSourceService {
     );
   }
 
-  async getLogs(args: RefArgs, offset: number): PR {
+  async getLogs(args: t.RefArgs, offset: number): t.PR {
     return handleRefNotFound(async () =>
       this.query2(
         qh.doltLogsQuery,
@@ -292,7 +277,7 @@ export class DataSourceService {
     );
   }
 
-  async getTwoDotLogs(args: RefsArgs): PR {
+  async getTwoDotLogs(args: t.RefsArgs): t.PR {
     return handleRefNotFound(async () =>
       this.query2(
         qh.twoDotDoltLogsQuery,
@@ -302,7 +287,7 @@ export class DataSourceService {
     );
   }
 
-  async getDiffStat(args: RefsArgs & { tableName?: string }): PR {
+  async getDiffStat(args: t.RefsArgs & { tableName?: string }): t.PR {
     return this.query2(
       qh.getDiffStatQuery(!!args.tableName),
       [args.fromRefName, args.toRefName, args.tableName],
@@ -311,7 +296,7 @@ export class DataSourceService {
     );
   }
 
-  async getThreeDotDiffStat(args: RefsArgs & { tableName?: string }): PR {
+  async getThreeDotDiffStat(args: t.RefsArgs & { tableName?: string }): t.PR {
     return this.query2(
       qh.getThreeDotDiffStatQuery(!!args.tableName),
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -320,7 +305,7 @@ export class DataSourceService {
     );
   }
 
-  async getDiffSummary(args: RefsArgs & { tableName?: string }): PR {
+  async getDiffSummary(args: t.RefsArgs & { tableName?: string }): t.PR {
     return this.query2(
       qh.getDiffSummaryQuery(!!args.tableName),
       [args.fromRefName, args.toRefName, args.tableName],
@@ -329,7 +314,9 @@ export class DataSourceService {
     );
   }
 
-  async getThreeDotDiffSummary(args: RefsArgs & { tableName?: string }): PR {
+  async getThreeDotDiffSummary(
+    args: t.RefsArgs & { tableName?: string },
+  ): t.PR {
     return this.query2(
       qh.getThreeDotDiffSummaryQuery(!!args.tableName),
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -338,7 +325,7 @@ export class DataSourceService {
     );
   }
 
-  async getSchemaPatch(args: RefsArgs & { tableName: string }): PR {
+  async getSchemaPatch(args: t.RefsArgs & { tableName: string }): t.PR {
     return this.query2(
       qh.schemaPatchQuery,
       [args.fromRefName, args.toRefName, args.tableName],
@@ -347,7 +334,7 @@ export class DataSourceService {
     );
   }
 
-  async getThreeDotSchemaPatch(args: RefsArgs & { tableName: string }): PR {
+  async getThreeDotSchemaPatch(args: t.RefsArgs & { tableName: string }): t.PR {
     return this.query2(
       qh.threeDotSchemaPatchQuery,
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -356,7 +343,7 @@ export class DataSourceService {
     );
   }
 
-  async getSchemaDiff(args: RefsArgs & { tableName: string }): PR {
+  async getSchemaDiff(args: t.RefsArgs & { tableName: string }): t.PR {
     return this.query2(
       qh.schemaDiffQuery,
       [args.fromRefName, args.toRefName, args.tableName],
@@ -365,7 +352,7 @@ export class DataSourceService {
     );
   }
 
-  async getThreeDotSchemaDiff(args: RefsArgs & { tableName: string }): PR {
+  async getThreeDotSchemaDiff(args: t.RefsArgs & { tableName: string }): t.PR {
     return this.query2(
       qh.threeDotSchemaDiffQuery,
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -374,30 +361,30 @@ export class DataSourceService {
     );
   }
 
-  async getDocs(args: RefArgs): UPR {
+  async getDocs(args: t.RefArgs): t.UPR {
     return handleTableNotFound(async () =>
       this.query2(qh.docsQuery, [], args.databaseName, args.refName),
     );
   }
 
-  async getStatus(args: RefArgs): PR {
+  async getStatus(args: t.RefArgs): t.PR {
     return this.query2(qh.statusQuery, [], args.databaseName, args.refName);
   }
 
-  async getTag(args: TagArgs): PR {
+  async getTag(args: t.TagArgs): t.PR {
     return this.query2(qh.tagQuery, [args.tagName], args.databaseName);
   }
 
-  async getTags(args: DBArgs): PR {
+  async getTags(args: t.DBArgs): t.PR {
     return this.query2(qh.tagsQuery, [], args.databaseName);
   }
 
   async createNewTag(
-    args: TagArgs & {
+    args: t.TagArgs & {
       fromRefName: string;
       message?: string;
     },
-  ): PR {
+  ): t.PR {
     return this.query2(
       qh.getCallNewTag(!!args.message),
       [args.tagName, args.fromRefName, args.message],
@@ -405,11 +392,11 @@ export class DataSourceService {
     );
   }
 
-  async callDeleteTag(args: TagArgs): PR {
+  async callDeleteTag(args: t.TagArgs): t.PR {
     return this.query2(qh.callDeleteTag, [args.tagName], args.databaseName);
   }
 
-  async callMerge(args: BranchesArgs): Promise<RawRow> {
+  async callMerge(args: t.BranchesArgs): Promise<t.RawRow> {
     return this.query(
       async query => {
         await query("BEGIN");

@@ -15,7 +15,6 @@ export class SchemaResolver {
   ): Promise<SchemaItem[]> {
     const conn = this.conn.connection();
     const { res } = await conn.getDoltSchemas(args, type);
-    if (!res) return [];
     return res.map(r => {
       return { name: r.name, type: r.type };
     });

@@ -2,7 +2,7 @@ export type DBArgs = { databaseName: string };
 export type RefArgs = DBArgs & { refName: string };
 export type BranchArgs = DBArgs & { branchName: string };
 export type TagArgs = DBArgs & { tagName: string };
-// export type TableArgs = RefArgs & { tableName: string };
+export type TableArgs = RefArgs & { tableName: string };
 // export type TableRevArgs = DBArgs & {
 //   revisionName: string;
 //   tableName: string;

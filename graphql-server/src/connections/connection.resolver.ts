@@ -14,7 +14,9 @@ export class WorkbenchConfig {
 @Resolver()
 export class ConnectionResolver {
   private ds: DataSource;
+
   private dss: DataSourceService | undefined;
+
   private workbenchConfig: WorkbenchConfig | undefined;
 
   connection(): DataSourceService {
@@ -45,7 +47,7 @@ export class ConnectionResolver {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<void> {
-    if (this.ds?.isInitialized) {
+    if (this.ds.isInitialized) {
       await this.ds.destroy();
     }
 

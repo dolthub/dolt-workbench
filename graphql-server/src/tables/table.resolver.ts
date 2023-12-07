@@ -1,6 +1,7 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
 import { ParQuery } from "../dataSources/dataSource.service";
+import { handleTableNotFound } from "../dataSources/utils";
 import { systemTableValues } from "../systemTables/systemTable.enums";
 import { RefArgs, TableArgs } from "../utils/commonTypes";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
@@ -74,7 +75,7 @@ async function getTableNames(
   const tables = await query(listTablesQuery);
   const mapped = mapTablesRes(tables);
 
-  if (args.filterSystemTables || !isDolt) return { list: mapped };
+  if (args.filterSystemTables ?? !isDolt) return { list: mapped };
 
   // Add system tables if filter is false
   const systemTables = await getSystemTables(query);
@@ -100,20 +101,6 @@ async function getTableInfo(
     fkRows,
     idxRows,
   );
-}
-
-export async function handleTableNotFound(
-  q: () => Promise<any | undefined>,
-): Promise<any | undefined> {
-  try {
-    const res = await q();
-    return res;
-  } catch (err) {
-    if (err.message.includes("table not found")) {
-      return undefined;
-    }
-    throw err;
-  }
 }
 
 export async function getSystemTables(query: ParQuery): Promise<string[]> {

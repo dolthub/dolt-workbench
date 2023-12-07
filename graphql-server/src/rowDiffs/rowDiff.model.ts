@@ -1,9 +1,10 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import * as columns from "../columns/column.model";
 import { Column } from "../columns/column.model";
+import { RawRow } from "../dataSources/types";
 import * as row from "../rows/row.model";
 import { ROW_LIMIT, getNextOffset } from "../utils";
-import { ListOffsetRes, RawRow } from "../utils/commonTypes";
+import { ListOffsetRes } from "../utils/commonTypes";
 import { DiffRowType } from "./rowDiff.enums";
 import { canShowDroppedOrAddedRows } from "./utils";
 

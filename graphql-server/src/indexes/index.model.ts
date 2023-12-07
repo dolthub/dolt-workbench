@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../utils/commonTypes";
+import { RawRow } from "../dataSources/types";
 
 @ObjectType()
 export class IndexColumn {
