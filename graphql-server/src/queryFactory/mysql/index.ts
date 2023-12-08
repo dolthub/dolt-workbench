@@ -131,7 +131,11 @@ export class MySQLQueryFactory
   }
 
   async getProcedures(args: t.DBArgs): t.UPR {
-    return this.query(qh.proceduresQuery, [], args.databaseName);
+    return this.query(
+      qh.proceduresQuery,
+      [args.databaseName],
+      args.databaseName,
+    );
   }
 
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL

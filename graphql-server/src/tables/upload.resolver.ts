@@ -1,9 +1,8 @@
 import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { ReadStream } from "fs";
 import { GraphQLUpload } from "graphql-upload";
-import * as mysql from "mysql2/promise";
 import { ConnectionResolver } from "../connections/connection.resolver";
-import { getLoadDataQuery, useDB } from "../queryFactory/mysql/queries";
+import { useDB } from "../queryFactory/mysql/queries";
 import { TableArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";
@@ -36,9 +35,7 @@ export class FileUploadResolver {
 
   @Mutation(_returns => Boolean)
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
-    const conn = await mysql.createConnection(
-      this.connResolver.getMySQLConfig(),
-    );
+    const conn = await this.connResolver.mysqlConnection();
 
     let isDolt = false;
     try {
@@ -67,4 +64,35 @@ export class FileUploadResolver {
 
     return true;
   }
+}
+
+function getLoadDataQuery(
+  filename: string,
+  tableName: string,
+  fileType: FileType,
+  modifier?: LoadDataModifier,
+): string {
+  return `LOAD DATA LOCAL INFILE '${filename}'
+${getModifier(modifier)}INTO TABLE \`${tableName}\` 
+FIELDS TERMINATED BY '${getDelim(fileType)}' ENCLOSED BY '' 
+LINES TERMINATED BY '\n' 
+IGNORE 1 ROWS;`;
+}
+
+function getModifier(m?: LoadDataModifier): string {
+  switch (m) {
+    case LoadDataModifier.Ignore:
+      return "IGNORE ";
+    case LoadDataModifier.Replace:
+      return "REPLACE ";
+    default:
+      return "";
+  }
+}
+
+function getDelim(ft: FileType): string {
+  if (ft === FileType.Psv) {
+    return "|";
+  }
+  return ",";
 }

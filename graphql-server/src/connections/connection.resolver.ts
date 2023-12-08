@@ -1,5 +1,5 @@
 import { Resolver } from "@nestjs/graphql";
-import { ConnectionOptions } from "mysql2";
+import * as mysql from "mysql2/promise";
 import { DataSource } from "typeorm";
 import { DoltQueryFactory } from "../queryFactory/dolt";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
@@ -28,14 +28,14 @@ export class ConnectionResolver {
     return this.qf;
   }
 
-  // Used for file upload only
-  getMySQLConfig(): ConnectionOptions {
+  // Used for file upload only, must destroy after using
+  async mysqlConnection(): Promise<mysql.Connection> {
     const { workbenchConfig } = this;
     if (!workbenchConfig) {
       throw new Error("Workbench config not found for MySQL connection");
     }
 
-    return {
+    const options: mysql.ConnectionOptions = {
       uri: workbenchConfig.connectionUrl,
       ssl: {
         rejectUnauthorized: false,
@@ -46,6 +46,8 @@ export class ConnectionResolver {
       // Allows file upload via LOAD DATA
       flags: ["+LOCAL_FILES"],
     };
+
+    return mysql.createConnection(options);
   }
 
   async addConnection(config: WorkbenchConfig): Promise<void> {

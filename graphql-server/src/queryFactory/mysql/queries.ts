@@ -1,4 +1,3 @@
-import { FileType, LoadDataModifier } from "../../tables/table.enum";
 import { RawRows } from "../types";
 
 // Cannot use params here for the database revision. It will incorrectly
@@ -65,32 +64,3 @@ export const getTriggersQuery = `SHOW TRIGGERS`;
 export const getEventsQuery = `SHOW EVENTS`;
 
 export const proceduresQuery = `SHOW PROCEDURE STATUS WHERE type = "PROCEDURE" AND db = ?`;
-
-export const getLoadDataQuery = (
-  filename: string,
-  tableName: string,
-  fileType: FileType,
-  modifier?: LoadDataModifier,
-): string => `LOAD DATA LOCAL INFILE '${filename}'
-${getModifier(modifier)}INTO TABLE \`${tableName}\` 
-FIELDS TERMINATED BY '${getDelim(fileType)}' ENCLOSED BY '' 
-LINES TERMINATED BY '\n' 
-IGNORE 1 ROWS;`;
-
-function getModifier(m?: LoadDataModifier): string {
-  switch (m) {
-    case LoadDataModifier.Ignore:
-      return "IGNORE ";
-    case LoadDataModifier.Replace:
-      return "REPLACE ";
-    default:
-      return "";
-  }
-}
-
-function getDelim(ft: FileType): string {
-  if (ft === FileType.Psv) {
-    return "|";
-  }
-  return ",";
-}

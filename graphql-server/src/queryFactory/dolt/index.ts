@@ -1,8 +1,8 @@
-import { CommitDiffType } from "src/diffSummaries/diffSummary.enums";
-import { convertToStringForQuery } from "src/rowDiffs/rowDiff.enums";
-import { systemTableValues } from "src/systemTables/systemTable.enums";
 import { SortBranchesBy } from "../../branches/branch.enum";
+import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
+import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
+import { systemTableValues } from "../../systemTables/systemTable.enums";
 import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { MySQLQueryFactory } from "../mysql";
 import * as myqh from "../mysql/queries";
