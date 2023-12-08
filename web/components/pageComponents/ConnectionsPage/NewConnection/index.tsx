@@ -2,8 +2,10 @@ import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import CustomCheckbox from "@components/CustomCheckbox";
 import FormInput from "@components/FormInput";
+import FormSelect from "@components/FormSelect";
 import Loader from "@components/Loader";
 import ExternalLink from "@components/links/ExternalLink";
+import { DatabaseType } from "@gen/graphql-types";
 import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
@@ -53,6 +55,21 @@ export default function NewConnection(props: Props) {
                 horizontal
                 light
               />
+              <FormSelect
+                label="Type"
+                val={state.type}
+                onChangeValue={t =>
+                  setState({
+                    type: t,
+                    port: t === DatabaseType.Mysql ? "3306" : "5432",
+                  })
+                }
+                options={[
+                  { label: "MySQL/Dolt", value: DatabaseType.Mysql },
+                  { label: "PostreSQL", value: DatabaseType.Postgres },
+                ]}
+                horizontal
+              />
             </div>
           </div>
           <div className={cx(css.section, css.middle)}>
@@ -60,7 +77,9 @@ export default function NewConnection(props: Props) {
               value={state.connectionUrl}
               onChangeString={c => setState({ connectionUrl: c })}
               label="URL"
-              placeholder="mysql://[user]:[password]@[host]/[database]"
+              placeholder={`${
+                state.type === DatabaseType.Mysql ? "mysql" : "postgresql"
+              }://[user]:[password]@[host]/[database]`}
               horizontal
               light
             />
@@ -77,7 +96,7 @@ export default function NewConnection(props: Props) {
               label="Port"
               value={state.port}
               onChangeString={p => setState({ port: p })}
-              placeholder="3306"
+              placeholder={state.type === DatabaseType.Mysql ? "3306" : "5432"}
               horizontal
               light
             />

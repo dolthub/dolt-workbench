@@ -6,12 +6,14 @@ export const ADD_DATABASE_CONNECTION = gql`
     $name: String!
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
+    $type: DatabaseType
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
       name: $name
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
+      type: $type
     )
   }
 `;
@@ -22,6 +24,7 @@ export const STORED_CONNECTIONS = gql`
     name
     useSSL
     hideDoltFeatures
+    type
   }
   query StoredConnections {
     storedConnections {

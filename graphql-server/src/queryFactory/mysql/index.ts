@@ -16,6 +16,14 @@ export class MySQLQueryFactory
 {
   isDolt = false;
 
+  async checkoutDatabase(
+    qr: QueryRunner,
+    dbName: string,
+    refName?: string,
+  ): Promise<void> {
+    await qr.query(qh.useDB(dbName, refName, this.isDolt));
+  }
+
   async query<T>(
     q: string,
     p: t.Params,
@@ -24,7 +32,7 @@ export class MySQLQueryFactory
   ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       const res = await qr.query(q, p);
@@ -44,7 +52,7 @@ export class MySQLQueryFactory
       }
 
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       return executeQuery(query);
@@ -58,7 +66,7 @@ export class MySQLQueryFactory
   ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       return executeQuery(qr.manager);
@@ -72,15 +80,16 @@ export class MySQLQueryFactory
   ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       return executeQuery(qr);
     });
   }
 
-  async databases(): t.PR {
-    return this.query(qh.databasesQuery, []);
+  async databases(): Promise<string[]> {
+    const res: t.RawRows = await this.query(qh.databasesQuery, []);
+    return res.map(r => r.Database);
   }
 
   async getTableNames(args: t.RefArgs): Promise<string[]> {

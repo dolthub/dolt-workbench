@@ -47,7 +47,7 @@ export declare class QueryFactory {
 
   // QUERIES
 
-  databases(): t.PR;
+  databases(): Promise<string[]>;
 
   currentDatabase(): Promise<string | undefined>;
 

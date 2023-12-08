@@ -1,4 +1,7 @@
-import { useAddDatabaseConnectionMutation } from "@gen/graphql-types";
+import {
+  DatabaseType,
+  useAddDatabaseConnectionMutation,
+} from "@gen/graphql-types";
 import useSetState from "@hooks/useSetState";
 import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -16,6 +19,7 @@ const defaultState = {
   useSSL: true,
   showAdvancedSettings: false,
   loading: false,
+  type: DatabaseType.Mysql,
 };
 
 type ConfigState = typeof defaultState;
@@ -43,7 +47,9 @@ export default function useConfig(): ReturnType {
     setState({ loading: true });
     const url =
       state.connectionUrl ||
-      `mysql://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`;
+      `${state.type === DatabaseType.Mysql ? "mysql" : "postgresql"}://${
+        state.username
+      }:${state.password}@${state.host}:${state.port}/${state.database}`;
 
     try {
       const db = await addDb({
@@ -52,6 +58,7 @@ export default function useConfig(): ReturnType {
           connectionUrl: url,
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,
+          type: state.type,
         },
       });
       await res.client.clearStore();
