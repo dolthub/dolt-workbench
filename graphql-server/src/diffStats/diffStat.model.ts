@@ -1,5 +1,5 @@
 import { Field, Float, ObjectType } from "@nestjs/graphql";
-import { RawRow, RawRows } from "../dataSources/types";
+import { RawRow, RawRows } from "../queryFactory/types";
 
 @ObjectType()
 export class DiffStat {

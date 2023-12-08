@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
-import { RawRows } from "../dataSources/types";
+import { RawRows } from "../queryFactory/types";
 import { getCellValue } from "../rows/row.model";
 import { RefArgs } from "../utils/commonTypes";
 import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";

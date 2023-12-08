@@ -1,5 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../dataSources/types";
+import { RawRow } from "../queryFactory/types";
 import { Row } from "../rows/row.model";
 import { DocType } from "./doc.enum";
 

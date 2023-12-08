@@ -1,4 +1,4 @@
-import { RawRows } from "../dataSources/types";
+import { RawRows } from "../queryFactory/types";
 
 export function mapTablesRes(tables: RawRows): string[] {
   return tables

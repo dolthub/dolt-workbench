@@ -1,7 +1,7 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
 import { Column } from "../columns/column.model";
-import { RawRow, RawRows } from "../dataSources/types";
+import { RawRow, RawRows } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";

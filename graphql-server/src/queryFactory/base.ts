@@ -1,6 +1,7 @@
 import { DataSource, QueryRunner } from "typeorm";
-import { dbNotFoundErr } from "../dataSources/dataSource.service";
 import * as t from "./types";
+
+export const dbNotFoundErr = "Database connection not found";
 
 export class BaseQueryFactory {
   ds: DataSource | undefined;

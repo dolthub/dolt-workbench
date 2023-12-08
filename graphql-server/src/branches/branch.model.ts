@@ -1,5 +1,5 @@
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../dataSources/types";
+import { RawRow } from "../queryFactory/types";
 import * as table from "../tables/table.model";
 import { convertToUTCDate } from "../utils";
 

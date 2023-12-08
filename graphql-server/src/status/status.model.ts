@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { RawRows } from "../dataSources/types";
+import { RawRows } from "../queryFactory/types";
 
 @ObjectType()
 export class Status {

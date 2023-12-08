@@ -17,15 +17,15 @@ export class WorkbenchConfig {
 export class ConnectionResolver {
   private ds: DataSource | undefined;
 
-  private dss: QueryFactory | undefined;
+  private qf: QueryFactory | undefined;
 
   private workbenchConfig: WorkbenchConfig | undefined;
 
   connection(): QueryFactory {
-    if (!this.dss) {
+    if (!this.qf) {
       throw new Error("Data source service not initialized");
     }
-    return this.dss;
+    return this.qf;
   }
 
   // Used for file upload only
@@ -77,7 +77,7 @@ export class ConnectionResolver {
     await this.ds.initialize();
 
     const qf = await this.newQueryFactory(this.ds);
-    this.dss = qf;
+    this.qf = qf;
   }
 
   getWorkbenchConfig(): WorkbenchConfig | undefined {
