@@ -1,7 +1,9 @@
 import { Resolver } from "@nestjs/graphql";
 import { ConnectionOptions } from "mysql2";
 import { DataSource } from "typeorm";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { DoltQueryFactory } from "../queryFactory/dolt";
+import { MySQLQueryFactory } from "../queryFactory/mysql";
+import { QueryFactory } from "../queryFactory/types";
 
 export class WorkbenchConfig {
   hideDoltFeatures: boolean;
@@ -13,13 +15,13 @@ export class WorkbenchConfig {
 
 @Resolver()
 export class ConnectionResolver {
-  private ds: DataSource;
+  private ds: DataSource | undefined;
 
-  private dss: DataSourceService | undefined;
+  private dss: QueryFactory | undefined;
 
   private workbenchConfig: WorkbenchConfig | undefined;
 
-  connection(): DataSourceService {
+  connection(): QueryFactory {
     if (!this.dss) {
       throw new Error("Data source service not initialized");
     }
@@ -47,7 +49,7 @@ export class ConnectionResolver {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<void> {
-    if (this.ds.isInitialized) {
+    if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
 
@@ -74,11 +76,24 @@ export class ConnectionResolver {
 
     await this.ds.initialize();
 
-    this.dss = new DataSourceService(this.ds);
+    const qf = await this.newQueryFactory(this.ds);
+    this.dss = qf;
   }
 
   getWorkbenchConfig(): WorkbenchConfig | undefined {
     return this.workbenchConfig;
+  }
+
+  async newQueryFactory(ds: DataSource): Promise<QueryFactory> {
+    try {
+      const res = await ds.query("SELECT dolt_version()");
+      if (!!res) {
+        return new DoltQueryFactory(ds);
+      }
+      return new MySQLQueryFactory(ds);
+    } catch (_) {
+      return new MySQLQueryFactory(ds);
+    }
   }
 
   async resetDS(): Promise<void> {

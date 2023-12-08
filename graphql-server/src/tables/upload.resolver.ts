@@ -4,10 +4,10 @@ import { GraphQLUpload } from "graphql-upload";
 import * as mysql from "mysql2/promise";
 import { ConnectionResolver } from "../connections/connection.resolver";
 import { useDBStatement } from "../dataSources/dataSource.queries";
+import { getLoadDataQuery } from "../queryFactory/mysql/queries";
 import { TableArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";
-import { getLoadDataQuery } from "./table.queries";
 
 export interface FileUpload {
   filename: string;

@@ -31,3 +31,30 @@ export type TableRowPagination = { columns: RawRow[]; offset: number };
 // export type QueryFunc = (s: string) => PR;
 // export type ParQuery = (q: string, p?: ObjectLiteral) => PR;
 // export type CommitAuthor = { name: string; email: string };
+
+// export declare class DataSourceService {
+//   isDolt: boolean;
+
+//   constructor(ds: DataSource | undefined);
+
+//   get getDS(): DataSource;
+// }
+
+// export declare class ExtendedQueryRunner {
+//   connect(): Promise<any>;
+
+//   release(): Promise<void>;
+
+//   query(query: string, parameters?: any[] | undefined): Promise<any>;
+
+//   getCurrentDatabase(): Promise<string | undefined>;
+
+//   createDatabase(
+//     database: string,
+//     ifNotExist?: boolean | undefined,
+//   ): Promise<void>;
+// }
+
+// export declare class ExtendedDataSource extends DataSource {
+//   createExtendedQueryRunner(): ExtendedQueryRunner;
+// }

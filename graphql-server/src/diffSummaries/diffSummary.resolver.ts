@@ -1,7 +1,7 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
-import { DataSourceService } from "../dataSources/dataSource.service";
 import { checkArgs } from "../diffStats/diffStat.resolver";
+import { QueryFactory } from "../queryFactory/types";
 import { DBArgs } from "../utils/commonTypes";
 import { CommitDiffType } from "./diffSummary.enums";
 import { DiffSummary, fromDoltDiffSummary } from "./diffSummary.model";
@@ -36,7 +36,7 @@ export class DiffSummaryResolver {
 }
 
 export async function getDiffSummaries(
-  conn: DataSourceService,
+  conn: QueryFactory,
   args: DiffSummaryArgs,
 ): Promise<DiffSummary[]> {
   const type = args.type ?? CommitDiffType.TwoDot;

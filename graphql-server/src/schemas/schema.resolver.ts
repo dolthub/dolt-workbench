@@ -14,7 +14,7 @@ export class SchemaResolver {
     type?: SchemaType,
   ): Promise<SchemaItem[]> {
     const conn = this.conn.connection();
-    const { res } = await conn.getDoltSchemas(args, type);
+    const res = await conn.getSchemas(args, type);
     return res.map(r => {
       return { name: r.name, type: r.type };
     });
@@ -28,9 +28,12 @@ export class SchemaResolver {
   @Query(_returns => [SchemaItem])
   async doltProcedures(@Args() args: RefArgs): Promise<SchemaItem[]> {
     const conn = this.conn.connection();
-    const { res, isDolt } = await conn.getDoltProcedures(args);
+    const res = await conn.getProcedures(args);
     return res.map(r => {
-      return { name: isDolt ? r.name : r.Name, type: SchemaType.Procedure };
+      return {
+        name: conn.isDolt ? r.name : r.Name,
+        type: SchemaType.Procedure,
+      };
     });
   }
 }

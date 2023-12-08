@@ -79,9 +79,8 @@ export class DatabaseResolver {
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
     const conn = this.conn.connection();
-    const isDolt = await conn.getIsDolt();
     return {
-      isDolt,
+      isDolt: conn.isDolt,
       hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
     };
   }

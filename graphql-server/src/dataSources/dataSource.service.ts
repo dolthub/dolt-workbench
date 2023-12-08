@@ -1,45 +1,36 @@
 import { Injectable } from "@nestjs/common";
-import { DataSource, QueryRunner } from "typeorm";
+import { QueryRunner } from "typeorm";
 import { SortBranchesBy } from "../branches/branch.enum";
+import { QueryFactory } from "../queryFactory/types";
 import { SchemaType } from "../schemas/schema.enums";
-import { ROW_LIMIT } from "../utils";
+import { ROW_LIMIT, handleTableNotFound } from "../utils";
 import { TableArgs } from "../utils/commonTypes";
 import * as qh from "./dataSource.queries";
 import * as t from "./types";
-import { handleRefNotFound, handleTableNotFound } from "./utils";
+import { handleRefNotFound } from "./utils";
 
 export const dbNotFoundErr = "Database connection not found";
 export type ParQuery = (q: string, p?: any[] | undefined) => t.PR;
 
 @Injectable()
 export class DataSourceService {
-  private isDolt: boolean | undefined;
+  // private isDolt: boolean | undefined;
 
-  constructor(private ds: DataSource | undefined) {}
+  constructor(private qf: QueryFactory | undefined) {}
 
   // UTILS
 
-  getDS(): DataSource {
-    const { ds } = this;
-    if (!ds) throw new Error(dbNotFoundErr);
-    return ds;
-  }
-
-  getQR(): QueryRunner {
-    return this.getDS().createQueryRunner();
+  getQF(): QueryFactory {
+    if (!this.qf) {
+      throw new Error("Query factory not initialized");
+    }
+    return this.qf;
   }
 
   async handleAsyncQuery(
     work: (qr: QueryRunner) => Promise<any>,
   ): Promise<any> {
-    const qr = this.getQR();
-    try {
-      await qr.connect();
-      const res = await work(qr);
-      return res;
-    } finally {
-      await qr.release();
-    }
+    return this.getQF().handleAsyncQuery(work);
   }
 
   // Assumes Dolt database
@@ -78,22 +69,8 @@ export class DataSourceService {
     });
   }
 
-  async getIsDoltHelper(qr: QueryRunner): Promise<boolean> {
-    if (this.isDolt !== undefined) {
-      return this.isDolt;
-    }
-    try {
-      const res = await qr.query("SELECT dolt_version()");
-      this.isDolt = !!res;
-      return !!res;
-    } catch (_) {
-      this.isDolt = false;
-      return false;
-    }
-  }
-
   async getIsDolt(): Promise<boolean> {
-    return this.handleAsyncQuery(async qr => this.getIsDoltHelper(qr));
+    return this.getQF().isDolt;
   }
 
   // Queries that will work on both MySQL and Dolt
@@ -108,7 +85,7 @@ export class DataSourceService {
         return res;
       }
 
-      const isDolt = await this.getIsDoltHelper(qr);
+      const isDolt = await this.getIsDolt();
       if (dbName) {
         await qr.query(qh.useDBStatement(dbName, refName, isDolt));
       }
@@ -125,7 +102,7 @@ export class DataSourceService {
     notDoltFn?: (qr: QueryRunner) => t.UPR,
   ): Promise<{ res: any; isDolt: boolean }> {
     return this.handleAsyncQuery(async qr => {
-      const isDolt = await this.getIsDoltHelper(qr);
+      const isDolt = await this.getIsDolt();
       if (dbName) {
         await qr.query(qh.useDBStatement(dbName, refName, isDolt));
       }
@@ -160,12 +137,7 @@ export class DataSourceService {
   }
 
   async getTableColumns(args: TableArgs): t.PR {
-    return this.query2(
-      qh.tableColsQuery,
-      [args.tableName],
-      args.databaseName,
-      args.refName,
-    );
+    return this.getQF().getTableColumns(args);
   }
 
   async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
@@ -184,7 +156,7 @@ export class DataSourceService {
       [],
       args.databaseName,
       args.refName,
-      async (qr: QueryRunner) => qr.query(args.queryString),
+      async qr => qr.query(args.queryString),
     );
   }
 
@@ -229,8 +201,7 @@ export class DataSourceService {
         [],
         args.databaseName,
         args.refName,
-        async (qr: QueryRunner) =>
-          qr.query(qh.getProceduresQuery, [args.databaseName]),
+        async qr => qr.query(qh.getProceduresQuery, [args.databaseName]),
       ),
     );
   }

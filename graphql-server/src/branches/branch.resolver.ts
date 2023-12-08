@@ -13,12 +13,7 @@ import { Table } from "../tables/table.model";
 import { TableResolver } from "../tables/table.resolver";
 import { BranchArgs, DBArgs } from "../utils/commonTypes";
 import { SortBranchesBy } from "./branch.enum";
-import {
-  Branch,
-  BranchNamesList,
-  branchForNonDoltDB,
-  fromDoltBranchesRow,
-} from "./branch.model";
+import { Branch, BranchNamesList, fromDoltBranchesRow } from "./branch.model";
 
 @ArgsType()
 export class GetBranchOrDefaultArgs extends DBArgs {
@@ -63,10 +58,7 @@ export class BranchResolver {
   @Query(_returns => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
     const conn = this.conn.connection();
-    const { res, isDolt } = await conn.getBranch(args);
-    if (!isDolt) {
-      return branchForNonDoltDB(args.databaseName);
-    }
+    const res = await conn.getBranch(args);
     if (!res.length) return undefined;
     return fromDoltBranchesRow(args.databaseName, res[0]);
   }
@@ -86,12 +78,7 @@ export class BranchResolver {
   @Query(_returns => BranchNamesList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchNamesList> {
     const conn = this.conn.connection();
-    const { res, isDolt } = await conn.getBranches(args);
-    if (!isDolt) {
-      return {
-        list: [branchForNonDoltDB(args.databaseName)],
-      };
-    }
+    const res = await conn.getBranches(args);
     return {
       list: res.map(b => fromDoltBranchesRow(args.databaseName, b)),
     };
