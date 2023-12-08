@@ -20,14 +20,28 @@ export type RefsArgs = DBArgs & {
   toRefName: string;
   refName?: string;
 };
+export type RowDiffArgs = DBArgs & {
+  refName?: string;
+  tableName: string;
+  fromTableName: string;
+  toTableName: string;
+  fromCommitId: string;
+  toCommitId: string;
+  offset: number;
+  filterByRowType?: DiffRowType;
+};
 
 export type RawRow = Record<string, any>;
 export type RawRows = RawRow[];
 export type PR = Promise<RawRows>;
+export type SPR = Promise<RawRow>;
 export type UPR = Promise<RawRows | undefined>;
-export type ParQuery = (q: string, p?: any[] | undefined) => PR;
+export type Params = Array<string | number | undefined> | undefined;
+export type ParQuery = (q: string, p?: Params) => PR;
 
 export type TableRowPagination = { columns: RawRow[]; offset: number };
+export type DiffRes = Promise<{ colsUnion: RawRows; diff: RawRows }>;
+export type CommitsRes = Promise<{ fromCommitId: string; toCommitId: string }>;
 
 export declare class QueryFactory {
   ds: DataSource | undefined;
@@ -42,29 +56,29 @@ export declare class QueryFactory {
 
   getQR(): QueryRunner;
 
-  handleAsyncQuery(work: (qr: QueryRunner) => Promise<any>): Promise<any>;
+  handleAsyncQuery<T>(work: (qr: QueryRunner) => Promise<T>): Promise<T>;
 
-  query(q: string, p: any[], dbName?: string, refName?: string): Promise<any>;
+  query<T>(q: string, p: Params, dbName?: string, refName?: string): Promise<T>;
 
-  queryMultiple(
-    executeQuery: (pq: ParQuery) => Promise<any>,
+  queryMultiple<T>(
+    executeQuery: (pq: ParQuery) => Promise<T>,
     dbName?: string,
     refName?: string,
-  ): Promise<any>;
+  ): Promise<T>;
 
   // QUERIES
 
   databases(): PR;
 
-  currentDatabase(): Promise<string>;
+  currentDatabase(): Promise<string | undefined>;
 
-  createDatabase(args: DBArgs): PR;
+  createDatabase(args: DBArgs): Promise<void>;
 
   getTableNames(args: RefArgs, filterSystemTables?: boolean): PR;
 
   getTables(args: RefArgs, tns: string[]): PR;
 
-  getTableInfo(args: TableArgs): PR;
+  getTableInfo(args: TableArgs): SPR;
 
   getTableColumns(args: TableArgs): PR;
 
@@ -72,9 +86,9 @@ export declare class QueryFactory {
 
   getSqlSelect(args: RefArgs & { queryString: string }): PR;
 
-  getSchemas(args: RefArgs, type?: SchemaType): PR;
+  getSchemas(args: RefArgs, type?: SchemaType): UPR;
 
-  getProcedures(args: RefArgs): PR;
+  getProcedures(args: RefArgs): UPR;
 
   // DOLT-SPECIFIC QUERIES
 
@@ -123,7 +137,7 @@ export declare class QueryFactory {
 
   callDeleteTag(args: TagArgs): PR;
 
-  callMerge(args: BranchesArgs): Promise<RawRow>;
+  callMerge(args: BranchesArgs): Promise<boolean>;
 
   resolveRefs(
     args: RefsArgs & { type?: CommitDiffType },
@@ -133,16 +147,5 @@ export declare class QueryFactory {
     args: TableArgs & { offset: number },
   ): Promise<{ rows: RawRows; columns: RawRows }>;
 
-  getRowDiffs(
-    args: DBArgs & {
-      refName?: string;
-      tableName: string;
-      fromTableName: string;
-      toTableName: string;
-      fromCommitId: string;
-      toCommitId: string;
-      offset: number;
-      filterByRowType?: DiffRowType;
-    },
-  ): Promise<{ colsUnion: RawRows; diff: RawRows }>;
+  getRowDiffs(args: RowDiffArgs): DiffRes;
 }

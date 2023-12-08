@@ -20,9 +20,7 @@ export class BaseQueryFactory {
     return this.getDS().createQueryRunner();
   }
 
-  async handleAsyncQuery(
-    work: (qr: QueryRunner) => Promise<any>,
-  ): Promise<any> {
+  async handleAsyncQuery<T>(work: (qr: QueryRunner) => Promise<T>): Promise<T> {
     const qr = this.getQR();
     try {
       await qr.connect();
@@ -33,11 +31,11 @@ export class BaseQueryFactory {
     }
   }
 
-  async currentDatabase(): Promise<string> {
+  async currentDatabase(): Promise<string | undefined> {
     return this.handleAsyncQuery(async qr => qr.getCurrentDatabase());
   }
 
-  async createDatabase(args: t.DBArgs): t.PR {
+  async createDatabase(args: t.DBArgs): Promise<void> {
     return this.handleAsyncQuery(async qr =>
       qr.createDatabase(args.databaseName),
     );

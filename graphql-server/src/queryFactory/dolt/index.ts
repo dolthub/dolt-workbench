@@ -1,8 +1,5 @@
 import { CommitDiffType } from "src/diffSummaries/diffSummary.enums";
-import {
-  DiffRowType,
-  convertToStringForQuery,
-} from "src/rowDiffs/rowDiff.enums";
+import { convertToStringForQuery } from "src/rowDiffs/rowDiff.enums";
 import { systemTableValues } from "src/systemTables/systemTable.enums";
 import { SortBranchesBy } from "../../branches/branch.enum";
 import { SchemaType } from "../../schemas/schema.enums";
@@ -43,7 +40,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getSchemas(args: t.RefArgs, type?: SchemaType): t.PR {
+  async getSchemas(args: t.RefArgs, type?: SchemaType): t.UPR {
     const q = qh.getDoltSchemasQuery(!!type);
     const p = type ? [type] : [];
     return handleTableNotFound(async () =>
@@ -51,7 +48,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getProcedures(args: t.RefArgs): t.PR {
+  async getProcedures(args: t.RefArgs): t.UPR {
     return handleTableNotFound(async () =>
       this.query(qh.doltProceduresQuery, [], args.databaseName, args.refName),
     );
@@ -210,7 +207,7 @@ export class DoltQueryFactory
     return this.query(qh.callDeleteTag, [args.tagName], args.databaseName);
   }
 
-  async callMerge(args: t.BranchesArgs): Promise<t.RawRow> {
+  async callMerge(args: t.BranchesArgs): Promise<boolean> {
     return this.queryMultiple(
       async query => {
         await query("BEGIN");
@@ -240,7 +237,7 @@ export class DoltQueryFactory
 
   async resolveRefs(
     args: t.RefsArgs & { type?: CommitDiffType },
-  ): Promise<{ fromCommitId: string; toCommitId: string }> {
+  ): t.CommitsRes {
     if (args.type !== CommitDiffType.ThreeDot) {
       return { fromCommitId: args.fromRefName, toCommitId: args.toRefName };
     }
@@ -285,18 +282,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getRowDiffs(
-    args: t.DBArgs & {
-      refName?: string;
-      tableName: string;
-      fromTableName: string;
-      toTableName: string;
-      fromCommitId: string;
-      toCommitId: string;
-      offset: number;
-      filterByRowType?: DiffRowType;
-    },
-  ): Promise<{ colsUnion: t.RawRows; diff: t.RawRows }> {
+  async getRowDiffs(args: t.RowDiffArgs): t.DiffRes {
     return this.queryMultiple(
       async query => {
         const oldCols = await query(qh.tableColsQueryAsOf, [
@@ -311,13 +297,13 @@ export class DoltQueryFactory
         const diffType = convertToStringForQuery(args.filterByRowType);
         const refArgs = [args.fromCommitId, args.toCommitId, args.toTableName];
         const pageArgs = [ROW_LIMIT + 1, args.offset];
-        const diffs = await query(
+        const diff = await query(
           qh.getTableCommitDiffQuery(colsUnion, !!diffType),
           diffType
             ? [...refArgs, diffType, ...pageArgs]
             : [...refArgs, ...pageArgs],
         );
-        return { colsUnion, diffs };
+        return { colsUnion, diff };
       },
       args.databaseName,
       args.refName,

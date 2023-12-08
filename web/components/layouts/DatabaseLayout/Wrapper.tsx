@@ -19,7 +19,11 @@ function Inner(props: Props) {
   if (res.loading) {
     return <Loader loaded={false} />;
   }
-  if (res.error && errorMatches(gqlDatabaseNotFoundErr, res.error)) {
+  if (
+    res.error &&
+    (errorMatches(gqlDatabaseNotFoundErr, res.error) ||
+      errorMatches("Data source service not initialized", res.error))
+  ) {
     router.push("/").catch(console.error);
     return <Loader loaded={false} />;
   }

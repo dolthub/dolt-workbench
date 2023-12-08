@@ -1,7 +1,5 @@
 /* eslint-disable class-methods-use-this */
 
-import { QueryRunner } from "typeorm";
-import { DiffRowType } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
 import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
@@ -15,23 +13,15 @@ export class MySQLQueryFactory
 {
   isDolt = false;
 
-  async getUseDB(
-    qr: QueryRunner,
-    dbName: string,
-    refName?: string,
-  ): Promise<void> {
-    await qr.query(qh.useDB(dbName, refName, this.isDolt));
-  }
-
-  async query(
+  async query<T>(
     q: string,
-    p: any[],
+    p: t.Params,
     dbName?: string,
     refName?: string,
-  ): Promise<any> {
+  ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await this.getUseDB(qr, dbName, refName);
+        await qr.query(qh.useDB(dbName, refName, this.isDolt));
       }
 
       const res = await qr.query(q, p);
@@ -39,19 +29,19 @@ export class MySQLQueryFactory
     });
   }
 
-  async queryMultiple(
-    executeQuery: (pq: t.ParQuery) => Promise<any>,
+  async queryMultiple<T>(
+    executeQuery: (pq: t.ParQuery) => Promise<T>,
     dbName?: string,
     refName?: string,
-  ): Promise<any> {
+  ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
-      async function query(q: string, p?: any[] | undefined): t.PR {
+      async function query(q: string, p?: t.Params): t.PR {
         const res = await qr.query(q, p);
         return res;
       }
 
       if (dbName) {
-        await this.getUseDB(qr, dbName, refName);
+        await qr.query(qh.useDB(dbName, refName, this.isDolt));
       }
 
       return executeQuery(query);
@@ -66,9 +56,9 @@ export class MySQLQueryFactory
     return this.query(qh.listTablesQuery, [], args.databaseName);
   }
 
-  async getTableInfo(args: t.TableArgs): t.PR {
+  async getTableInfo(args: t.TableArgs): t.SPR {
     return this.queryMultiple(
-      async query => [getTableInfoWithQR(query, args, this.isDolt)],
+      async query => getTableInfoWithQR(query, args, this.isDolt),
       args.databaseName,
       args.refName,
     );
@@ -116,7 +106,7 @@ export class MySQLQueryFactory
     return this.query(args.queryString, [], args.databaseName, args.refName);
   }
 
-  async getSchemas(args: t.DBArgs, type?: SchemaType): t.PR {
+  async getSchemas(args: t.DBArgs, type?: SchemaType): t.UPR {
     return this.queryMultiple(async query => {
       const vRes = await query(qh.getViewsQuery, [args.databaseName]);
       const views = vRes.map(v => {
@@ -140,7 +130,7 @@ export class MySQLQueryFactory
     }, args.databaseName);
   }
 
-  async getProcedures(args: t.DBArgs): t.PR {
+  async getProcedures(args: t.DBArgs): t.UPR {
     return this.query(qh.proceduresQuery, [], args.databaseName);
   }
 
@@ -240,7 +230,7 @@ export class MySQLQueryFactory
     throw notDoltError("delete tag");
   }
 
-  async callMerge(_args: t.BranchesArgs): Promise<t.RawRow> {
+  async callMerge(_args: t.BranchesArgs): Promise<boolean> {
     throw notDoltError("merge branches");
   }
 
@@ -256,18 +246,7 @@ export class MySQLQueryFactory
     throw notDoltError("get one-sided diff");
   }
 
-  async getRowDiffs(
-    _args: t.DBArgs & {
-      refName?: string;
-      tableName: string;
-      fromTableName: string;
-      toTableName: string;
-      fromCommitId: string;
-      toCommitId: string;
-      offset: number;
-      filterByRowType?: DiffRowType;
-    },
-  ): Promise<{ colsUnion: t.RawRows; diff: t.RawRows }> {
+  async getRowDiffs(_args: t.RowDiffArgs): t.DiffRes {
     throw notDoltError("get row sided diffs");
   }
 }
@@ -276,7 +255,7 @@ async function getTableInfoWithQR(
   query: t.ParQuery,
   args: t.TableArgs,
   isDolt: boolean,
-): Promise<t.RawRow> {
+): t.SPR {
   const columns = await query(qh.columnsQuery, [args.tableName]);
   const fkRows = await query(qh.foreignKeysQuery, [
     args.tableName,

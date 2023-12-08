@@ -46,9 +46,9 @@ export function convertToUTCDate(d: Date): Date {
   return utcDate;
 }
 
-export async function handleTableNotFound(
-  q: () => Promise<any | undefined>,
-): Promise<any | undefined> {
+export async function handleTableNotFound<T>(
+  q: () => Promise<T | undefined>,
+): Promise<T | undefined> {
   try {
     const res = await q();
     return res;

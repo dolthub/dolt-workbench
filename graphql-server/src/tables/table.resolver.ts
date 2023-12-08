@@ -19,14 +19,13 @@ export class TableResolver {
   async table(@Args() args: TableArgs): Promise<Table> {
     const conn = this.conn.connection();
     const res = await conn.getTableInfo(args);
-    if (!res.length) throw new Error("Table not found");
     return fromDoltRowRes(
       args.databaseName,
       args.refName,
       args.tableName,
-      res[0].columns,
-      res[0].fkRows,
-      res[0].idxRows,
+      res.columns,
+      res.fkRows,
+      res.idxRows,
     );
   }
 
@@ -41,7 +40,6 @@ export class TableResolver {
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
     const conn = this.conn.connection();
     const tableNames = await conn.getTableNames(args, args.filterSystemTables);
-
     const res = await conn.getTables(args, mapTablesRes(tableNames));
     return res.map(t =>
       fromDoltRowRes(

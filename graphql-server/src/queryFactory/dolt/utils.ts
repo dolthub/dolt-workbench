@@ -1,6 +1,6 @@
 import { RawRows } from "../types";
 
-export async function handleRefNotFound(q: () => Promise<any>): Promise<any> {
+export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   try {
     const res = await q();
     return res;
