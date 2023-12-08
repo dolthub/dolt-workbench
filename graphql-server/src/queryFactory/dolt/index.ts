@@ -270,14 +270,13 @@ export class DoltQueryFactory
           args.tableName,
           args.refName,
         ]);
-        const offset = args.offset ?? 0;
         const { q, cols } = qh.getRowsQueryAsOf(columns);
         const rows = await query(q, [
           args.tableName,
           args.refName,
           ...cols,
           ROW_LIMIT + 1,
-          offset,
+          args.offset,
         ]);
         return { rows, columns };
       },

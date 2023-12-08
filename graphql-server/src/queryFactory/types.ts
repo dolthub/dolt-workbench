@@ -4,6 +4,31 @@ import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DiffRowType } from "../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../schemas/schema.enums";
 
+export type DBArgs = { databaseName: string };
+export type RefArgs = DBArgs & { refName: string };
+export type BranchArgs = DBArgs & { branchName: string };
+export type TagArgs = DBArgs & { tagName: string };
+export type TableArgs = RefArgs & { tableName: string };
+
+export type BranchesArgs = DBArgs & {
+  fromBranchName: string;
+  toBranchName: string;
+  refName?: string;
+};
+export type RefsArgs = DBArgs & {
+  fromRefName: string;
+  toRefName: string;
+  refName?: string;
+};
+
+export type RawRow = Record<string, any>;
+export type RawRows = RawRow[];
+export type PR = Promise<RawRows>;
+export type UPR = Promise<RawRows | undefined>;
+export type ParQuery = (q: string, p?: any[] | undefined) => PR;
+
+export type TableRowPagination = { columns: RawRow[]; offset: number };
+
 export declare class QueryFactory {
   ds: DataSource | undefined;
 
@@ -121,28 +146,3 @@ export declare class QueryFactory {
     },
   ): Promise<{ colsUnion: RawRows; diff: RawRows }>;
 }
-
-export type ParQuery = (q: string, p?: any[] | undefined) => PR;
-export type DBArgs = { databaseName: string };
-export type RefArgs = DBArgs & { refName: string };
-export type BranchArgs = DBArgs & { branchName: string };
-export type TagArgs = DBArgs & { tagName: string };
-export type TableArgs = RefArgs & { tableName: string };
-
-export type BranchesArgs = DBArgs & {
-  fromBranchName: string;
-  toBranchName: string;
-  refName?: string;
-};
-export type RefsArgs = DBArgs & {
-  fromRefName: string;
-  toRefName: string;
-  refName?: string;
-};
-
-export type RawRow = Record<string, any>;
-export type RawRows = RawRow[];
-export type PR = Promise<RawRows>;
-export type UPR = Promise<RawRows | undefined>;
-
-export type TableRowPagination = { columns: RawRow[]; offset: number };

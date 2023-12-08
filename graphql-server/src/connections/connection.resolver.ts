@@ -76,7 +76,7 @@ export class ConnectionResolver {
 
     await this.ds.initialize();
 
-    const qf = await this.newQueryFactory(this.ds);
+    const qf = await this.newQueryFactory();
     this.qf = qf;
   }
 
@@ -84,15 +84,15 @@ export class ConnectionResolver {
     return this.workbenchConfig;
   }
 
-  async newQueryFactory(ds: DataSource): Promise<QueryFactory> {
+  async newQueryFactory(): Promise<QueryFactory> {
     try {
-      const res = await ds.query("SELECT dolt_version()");
-      if (!!res) {
-        return new DoltQueryFactory(ds);
+      const res = await this.ds?.query("SELECT dolt_version()");
+      if (res) {
+        return new DoltQueryFactory(this.ds);
       }
-      return new MySQLQueryFactory(ds);
+      return new MySQLQueryFactory(this.ds);
     } catch (_) {
-      return new MySQLQueryFactory(ds);
+      return new MySQLQueryFactory(this.ds);
     }
   }
 

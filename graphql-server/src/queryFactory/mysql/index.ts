@@ -1,3 +1,5 @@
+/* eslint-disable class-methods-use-this */
+
 import { QueryRunner } from "typeorm";
 import { DiffRowType } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
@@ -280,6 +282,6 @@ async function getTableInfoWithQR(
     args.tableName,
     isDolt ? `${args.databaseName}/${args.refName}` : args.databaseName,
   ]);
-  const idxRows = await query(qh.indexQuery, [name]);
+  const idxRows = await query(qh.indexQuery, [args.tableName]);
   return { name: args.tableName, columns, fkRows, idxRows };
 }
