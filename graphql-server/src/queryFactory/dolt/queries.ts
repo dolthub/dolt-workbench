@@ -1,30 +1,17 @@
 import { SortBranchesBy } from "../../branches/branch.enum";
-import { DoltSystemTable } from "../../systemTables/systemTable.enums";
 import { getOrderByFromCols, getPKColsForRowsQuery } from "../mysql/queries";
 import { RawRows } from "../types";
 
-export const getDoltSchemasQuery = (hasWhereCause = false): string =>
-  `SELECT * FROM ${DoltSystemTable.SCHEMAS}${
-    hasWhereCause ? " WHERE type = ?" : ""
-  }`;
-
-export const doltProceduresQuery = `SELECT * FROM ${DoltSystemTable.PROCEDURES}`;
-
 // BRANCHES
-
-export const branchQuery = `SELECT * FROM dolt_branches WHERE name=?`;
-
-export const getBranchesQuery = (sortBy?: SortBranchesBy) =>
-  `SELECT * FROM dolt_branches ${getOrderByForBranches(sortBy)}`;
 
 export const callNewBranch = `CALL DOLT_BRANCH(?, ?)`;
 
 export const callDeleteBranch = `CALL DOLT_BRANCH("-D", ?)`;
 
-function getOrderByForBranches(sortBy?: SortBranchesBy): string {
+export function getOrderByColForBranches(sortBy?: SortBranchesBy): string {
   switch (sortBy) {
     case SortBranchesBy.LastUpdated:
-      return "ORDER BY latest_commit_date DESC ";
+      return "latest_commit_date";
     default:
       return "";
   }
@@ -61,23 +48,11 @@ export const schemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF(?, ?, ?)`;
 
 export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF(?, ?)`;
 
-// DOCS
-
-export const docsQuery = `SELECT * FROM dolt_docs`;
-
 // PULLS
 
 export const callMerge = `CALL DOLT_MERGE(?, "--no-ff", "-m", ?)`;
 
-// STATUS
-
-export const statusQuery = `SELECT * FROM dolt_status`;
-
 // TAGS
-
-export const tagsQuery = `SELECT * FROM dolt_tags ORDER BY date DESC`;
-
-export const tagQuery = `SELECT * FROM dolt_tags WHERE tag_name=?`;
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;
 

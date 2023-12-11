@@ -2,7 +2,10 @@ import { SortBranchesBy } from "../../branches/branch.enum";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
-import { systemTableValues } from "../../systemTables/systemTable.enums";
+import {
+  DoltSystemTable,
+  systemTableValues,
+} from "../../systemTables/systemTable.enums";
 import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { MySQLQueryFactory } from "../mysql";
 import * as myqh from "../mysql/queries";
@@ -41,25 +44,61 @@ export class DoltQueryFactory
   }
 
   async getSchemas(args: t.RefArgs, type?: SchemaType): t.UPR {
-    const q = qh.getDoltSchemasQuery(!!type);
-    const p = type ? [type] : [];
-    return handleTableNotFound(async () =>
-      this.query(q, p, args.databaseName, args.refName),
+    return this.queryForBuilder(
+      async em => {
+        let sel = em
+          .createQueryBuilder()
+          .select("*")
+          .from(DoltSystemTable.SCHEMAS, "");
+        if (type) {
+          sel = sel.where(`${DoltSystemTable.SCHEMAS}.type = :type`, {
+            type,
+          });
+        }
+        return handleTableNotFound(async () => sel.getRawMany());
+      },
+      args.databaseName,
+      args.refName,
     );
   }
 
   async getProcedures(args: t.RefArgs): t.UPR {
-    return handleTableNotFound(async () =>
-      this.query(qh.doltProceduresQuery, [], args.databaseName, args.refName),
+    return this.queryForBuilder(
+      async em => {
+        const sel = em
+          .createQueryBuilder()
+          .select("*")
+          .from(DoltSystemTable.PROCEDURES, "");
+        return handleTableNotFound(async () => sel.getRawMany());
+      },
+      args.databaseName,
+      args.refName,
     );
   }
 
-  async getBranch(args: t.BranchArgs): t.PR {
-    return this.query(qh.branchQuery, [args.branchName], args.databaseName);
+  async getBranch(args: t.BranchArgs): t.UPR {
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_branches", "")
+          .where(`dolt_branches.name = :name`, {
+            name: args.branchName,
+          })
+          .getRawOne(),
+      args.databaseName,
+    );
   }
 
   async getBranches(args: t.DBArgs & { sortBy?: SortBranchesBy }): t.PR {
-    return this.query(qh.getBranchesQuery(args.sortBy), [], args.databaseName);
+    return this.queryForBuilder(async em => {
+      let sel = em.createQueryBuilder().select("*").from("dolt_branches", "");
+      if (args.sortBy) {
+        sel = sel.addOrderBy(qh.getOrderByColForBranches(args.sortBy), "DESC");
+      }
+      return sel.getRawMany();
+    }, args.databaseName);
   }
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
@@ -173,21 +212,56 @@ export class DoltQueryFactory
   }
 
   async getDocs(args: t.RefArgs): t.UPR {
-    return handleTableNotFound(async () =>
-      this.query(qh.docsQuery, [], args.databaseName, args.refName),
+    return this.queryForBuilder(
+      async em => {
+        const sel = em
+          .createQueryBuilder()
+          .select("*")
+          .from(DoltSystemTable.DOCS, "");
+        return handleTableNotFound(async () => sel.getRawMany());
+      },
+      args.databaseName,
+      args.refName,
     );
   }
 
   async getStatus(args: t.RefArgs): t.PR {
-    return this.query(qh.statusQuery, [], args.databaseName, args.refName);
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_status", "")
+          .getRawMany(),
+      args.databaseName,
+      args.refName,
+    );
   }
 
-  async getTag(args: t.TagArgs): t.PR {
-    return this.query(qh.tagQuery, [args.tagName], args.databaseName);
+  async getTag(args: t.TagArgs): t.UPR {
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_tags", "")
+          .where("dolt_tags.tag_name", { tag_name: args.tagName })
+          .getRawOne(),
+      args.databaseName,
+    );
   }
 
   async getTags(args: t.DBArgs): t.PR {
-    return this.query(qh.tagsQuery, [], args.databaseName);
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_tags", "")
+          .orderBy("dolt_tags.date", "DESC")
+          .getRawMany(),
+      args.databaseName,
+    );
   }
 
   async createNewTag(

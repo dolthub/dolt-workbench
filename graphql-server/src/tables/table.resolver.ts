@@ -40,7 +40,6 @@ export class TableResolver {
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
     const conn = this.conn.connection();
     const tableNames = await conn.getTableNames(args, args.filterSystemTables);
-    console.log("got tables");
     const res = await conn.getTables(args, mapTablesRes(tableNames));
     return res.map(t =>
       fromDoltRowRes(

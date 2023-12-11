@@ -92,7 +92,7 @@ export declare class QueryFactory {
 
   // DOLT-SPECIFIC QUERIES
 
-  getBranch(args: BranchArgs): PR;
+  getBranch(args: BranchArgs): UPR;
 
   getBranches(args: DBArgs & { sortBy?: SortBranchesBy }): PR;
 
@@ -124,7 +124,7 @@ export declare class QueryFactory {
 
   getStatus(args: RefArgs): PR;
 
-  getTag(args: TagArgs): PR;
+  getTag(args: TagArgs): UPR;
 
   getTags(args: DBArgs): PR;
 

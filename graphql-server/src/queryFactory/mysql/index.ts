@@ -201,7 +201,7 @@ export class MySQLQueryFactory
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL
 
   // Returns static branch
-  async getBranch(args: t.BranchArgs): t.PR {
+  async getBranch(args: t.BranchArgs): t.UPR {
     return [
       {
         name: args.branchName,
@@ -213,7 +213,8 @@ export class MySQLQueryFactory
   }
 
   async getBranches(args: t.DBArgs): t.PR {
-    return this.getBranch({ ...args, branchName: "main" });
+    const branch = await this.getBranch({ ...args, branchName: "main" });
+    return branch ?? [];
   }
 
   async createNewBranch(_: t.BranchArgs & { fromRefName: string }): t.PR {
@@ -274,7 +275,7 @@ export class MySQLQueryFactory
     throw notDoltError("get status");
   }
 
-  async getTag(_args: t.TagArgs): t.PR {
+  async getTag(_args: t.TagArgs): t.UPR {
     throw notDoltError("get tag");
   }
 
