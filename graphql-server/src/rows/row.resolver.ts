@@ -19,10 +19,10 @@ export class RowResolver {
   @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {
     const conn = this.conn.connection();
-    const columns = await conn.getTableColumns(args);
+    const pkCols = await conn.getTablePKColumns(args);
     const offset = args.offset ?? 0;
     const rows = await conn.getTableRows(args, {
-      columns,
+      pkCols,
       offset,
     });
     return fromDoltListRowRes(rows, offset);

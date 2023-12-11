@@ -1,7 +1,7 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
 import { checkArgs } from "../diffStats/diffStat.resolver";
-import { QueryFactory } from "../queryFactory/types";
+import { QueryFactory } from "../queryFactory";
 import { DBArgs } from "../utils/commonTypes";
 import { CommitDiffType } from "./diffSummary.enums";
 import { DiffSummary, fromDoltDiffSummary } from "./diffSummary.model";

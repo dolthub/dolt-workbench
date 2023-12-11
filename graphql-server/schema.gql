@@ -39,13 +39,13 @@ type Index {
 }
 
 type Table {
-  _id: ID!
-  databaseName: String!
-  refName: String!
   tableName: String!
   columns: [Column!]!
   foreignKeys: [ForeignKey!]!
   indexes: [Index!]!
+  _id: ID!
+  databaseName: String!
+  refName: String!
 }
 
 type TableNames {

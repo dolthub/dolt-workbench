@@ -3,7 +3,6 @@ import { ConnectionResolver } from "../connections/connection.resolver";
 import { handleTableNotFound } from "../utils";
 import { RefArgs, TableArgs } from "../utils/commonTypes";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
-import { mapTablesRes } from "./utils";
 
 @ArgsType()
 class ListTableArgs extends RefArgs {
@@ -19,38 +18,25 @@ export class TableResolver {
   async table(@Args() args: TableArgs): Promise<Table> {
     const conn = this.conn.connection();
     const res = await conn.getTableInfo(args);
-    return fromDoltRowRes(
-      args.databaseName,
-      args.refName,
-      args.tableName,
-      res.columns,
-      res.fkRows,
-      res.idxRows,
-    );
+    if (!res) {
+      throw new Error("no such table in database");
+    }
+    return fromDoltRowRes(args.databaseName, args.refName, res);
   }
 
   @Query(_returns => TableNames)
   async tableNames(@Args() args: ListTableArgs): Promise<TableNames> {
     const conn = this.conn.connection();
     const res = await conn.getTableNames(args, args.filterSystemTables);
-    return { list: mapTablesRes(res) };
+    return { list: res };
   }
 
   @Query(_returns => [Table])
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
     const conn = this.conn.connection();
     const tableNames = await conn.getTableNames(args, args.filterSystemTables);
-    const res = await conn.getTables(args, mapTablesRes(tableNames));
-    return res.map(t =>
-      fromDoltRowRes(
-        args.databaseName,
-        args.refName,
-        t.name,
-        t.columns,
-        t.fkRows,
-        t.idxRows,
-      ),
-    );
+    const res = await conn.getTables(args, tableNames);
+    return res.map(t => fromDoltRowRes(args.databaseName, args.refName, t));
   }
 
   // Utils

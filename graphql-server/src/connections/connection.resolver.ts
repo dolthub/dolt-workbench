@@ -1,9 +1,9 @@
 import { Resolver } from "@nestjs/graphql";
 import * as mysql from "mysql2/promise";
 import { DataSource } from "typeorm";
+import { QueryFactory } from "../queryFactory";
 import { DoltQueryFactory } from "../queryFactory/dolt";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
-import { QueryFactory } from "../queryFactory/types";
 
 export class WorkbenchConfig {
   hideDoltFeatures: boolean;

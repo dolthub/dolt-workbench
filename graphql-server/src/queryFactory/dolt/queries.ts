@@ -1,6 +1,25 @@
 import { SortBranchesBy } from "../../branches/branch.enum";
-import { getOrderByFromCols, getPKColsForRowsQuery } from "../mysql/queries";
 import { RawRows } from "../types";
+
+// TABLE
+
+export const columnsQuery = `DESCRIBE ??`;
+
+export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+WHERE table_name=? AND table_schema=? 
+AND referenced_table_schema IS NOT NULL`;
+
+export const indexQuery = `SELECT 
+  table_name, 
+  index_name, 
+  GROUP_CONCAT(comment) as COMMENTS, 
+  GROUP_CONCAT(non_unique) AS NON_UNIQUES, 
+  GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS 
+FROM information_schema.statistics 
+WHERE table_name=? AND index_name!="PRIMARY" 
+GROUP BY index_name;`;
+
+export const tableColsQuery = `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`;
 
 // BRANCHES
 
@@ -66,6 +85,16 @@ export function getAuthorNameString(hasAuthor: boolean): string {
   return `, "--author", ?`;
 }
 
+// Creates ORDER BY statement with column parameters
+// i.e. ORDER BY ::col1, ::col2
+function getOrderByFromCols(numCols: number): string {
+  if (!numCols) return "";
+  const pkCols = Array.from({ length: numCols })
+    .map(() => `? ASC`)
+    .join(", ");
+  return pkCols === "" ? "" : `ORDER BY ${pkCols} `;
+}
+
 export const getRowsQueryAsOf = (
   columns: RawRows,
 ): { q: string; cols: string[] } => {
@@ -77,6 +106,12 @@ export const getRowsQueryAsOf = (
     cols,
   };
 };
+
+function getPKColsForRowsQuery(cs: RawRows): string[] {
+  const pkCols = cs.filter(col => col.Key === "PRI");
+  const cols = pkCols.map(c => c.Field);
+  return cols;
+}
 
 export const tableColsQueryAsOf = `DESCRIBE ?? AS OF ?`;
 
