@@ -1,5 +1,6 @@
 /* eslint-disable class-methods-use-this */
 
+import { EntityManager, QueryRunner } from "typeorm";
 import { SchemaType } from "../../schemas/schema.enums";
 import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
@@ -48,15 +49,58 @@ export class MySQLQueryFactory
     });
   }
 
+  async queryForBuilder<T>(
+    executeQuery: (em: EntityManager) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.handleAsyncQuery(async qr => {
+      if (dbName) {
+        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+      }
+
+      return executeQuery(qr.manager);
+    });
+  }
+
+  async queryQR<T>(
+    executeQuery: (em: QueryRunner) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.handleAsyncQuery(async qr => {
+      if (dbName) {
+        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+      }
+
+      return executeQuery(qr);
+    });
+  }
+
   async databases(): t.PR {
     return this.query(qh.databasesQuery, []);
   }
 
   async getTableNames(args: t.RefArgs): t.PR {
+    // This doesn't work because it doesn't get tables for just the current database
+    // return this.handleAsyncQuery(async qr => {
+    //   const t = await qr.getTables();
+    //   return t.map(t => {
+    //     return { [`Tables_in_${args.databaseName}`]: t.name };
+    //   });
+    // });
     return this.query(qh.listTablesQuery, [], args.databaseName);
   }
 
   async getTableInfo(args: t.TableArgs): t.SPR {
+    // return this.queryQR(
+    //   async qr => {
+    //     const tables = await qr.getTable(args.tableName);
+    //     return tables;
+    //   },
+    //   args.databaseName,
+    //   args.refName,
+    // );
     return this.queryMultiple(
       async query => getTableInfoWithQR(query, args, this.isDolt),
       args.databaseName,
@@ -65,6 +109,14 @@ export class MySQLQueryFactory
   }
 
   async getTables(args: t.RefArgs, tns: string[]): t.PR {
+    // return this.queryQR(
+    //   async qr => {
+    //     const tables = await qr.getTables(tns);
+    //     return tables;
+    //   },
+    //   args.databaseName,
+    //   args.refName,
+    // );
     return this.queryMultiple(async query => {
       const tableInfos = await Promise.all(
         tns.map(async name => {
@@ -93,13 +145,21 @@ export class MySQLQueryFactory
   }
 
   async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
-    const { q, cols } = qh.getRowsQuery(page.columns);
-    return this.query(
-      q,
-      [args.tableName, ...cols, ROW_LIMIT + 1, page.offset],
-      args.databaseName,
-      args.refName,
-    );
+    return this.queryForBuilder(async em => {
+      let build = em
+        .createQueryBuilder()
+        .select("*")
+        .from(args.tableName, args.tableName);
+
+      qh.getPKColsForRowsQuery(page.columns).forEach(col => {
+        build = build.addOrderBy(col, "ASC");
+      });
+
+      return build
+        .limit(ROW_LIMIT + 1)
+        .offset(page.offset)
+        .getRawMany();
+    });
   }
 
   async getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR {
