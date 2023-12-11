@@ -440,7 +440,6 @@ async function getTableInfoWithQR(
     args.tableName,
     `${args.databaseName}/${args.refName}`,
   ]);
-  console.log("FOREIGN KEYS", fkRows);
   const idxRows = await query(qh.indexQuery, [args.tableName]);
   return {
     tableName: args.tableName,
