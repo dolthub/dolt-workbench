@@ -1,9 +1,9 @@
 import Btn from "@components/Btn";
 import Popup from "@components/Popup";
 import useEffectOnMount from "@hooks/useEffectOnMount";
+import useSqlParser from "@hooks/useSqlParser";
 import fakeEscapePress from "@lib/fakeEscapePress";
 import { SqlQueryParams } from "@lib/params";
-import { isMutation } from "@lib/parseSqlQuery";
 import { CgArrowsH } from "@react-icons//all-files/cg/CgArrowsH";
 import { CgCompress } from "@react-icons//all-files/cg/CgCompress";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
@@ -26,6 +26,7 @@ export default function DatabaseOptionsDropdown({
   onClickHideUnchangedCol,
   ...props
 }: Props): JSX.Element | null {
+  const { isMutation } = useSqlParser();
   const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
 

@@ -1,13 +1,10 @@
+import useSqlParser from "@hooks/useSqlParser";
 import { removeClauses } from "@lib/doltSystemTables";
-import {
-  convertToSqlWithNewColNames,
-  getColumns,
-  getTableName,
-} from "@lib/parseSqlQuery";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
-export function getDoltHistoryQuery(q: string): string {
+export function useGetDoltHistoryQuery(q: string): string {
+  const { getTableName, convertToSqlWithNewColNames } = useSqlParser();
   // This is a workaround until all where clauses work
   const queryWithoutClauses = removeClauses(q);
   const tableName = getTableName(queryWithoutClauses);
@@ -18,7 +15,7 @@ export function getDoltHistoryQuery(q: string): string {
     "dolt_history",
   );
   const cols = [
-    ...getCols(queryWithoutClauses),
+    ...useGetCols(queryWithoutClauses),
     "commit_hash",
     "committer",
     "commit_date",
@@ -102,7 +99,8 @@ function removeExtraWhereClause(q: string): string {
 }
 
 // Gets column names and removes "from_" and "to_" prefixes
-function getCols(q: string): string[] {
+function useGetCols(q: string): string[] {
+  const { getColumns } = useSqlParser();
   const columns = getColumns(q);
   if (!columns) return [];
   if (columns === "*") return ["*"];

@@ -9,7 +9,7 @@ import { BiCaretRight } from "@react-icons/all-files/bi/BiCaretRight";
 import cx from "classnames";
 import { useRef, useState } from "react";
 import css from "./index.module.css";
-import { getForeignKeyQuery } from "./queryHelpers";
+import { useGetForeignKeyQuery } from "./queryHelpers";
 import { ReferencedColumn, getForeignKeyMap } from "./utils";
 
 type Props = {
@@ -67,7 +67,7 @@ type FKTableLinkProps = {
 function FKTableLink(props: FKTableLinkProps) {
   const sqlParams = {
     ...props.params,
-    q: getForeignKeyQuery(props.table, props.columns),
+    q: useGetForeignKeyQuery(props.table, props.columns),
   };
   const url = sqlQuery(sqlParams);
   return (

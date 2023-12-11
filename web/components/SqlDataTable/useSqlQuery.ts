@@ -4,8 +4,8 @@ import {
   NormalizedCacheObject,
 } from "@apollo/client";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
+import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
-import { isMutation } from "@lib/parseSqlQuery";
 import { refetchSqlUpdateQueriesCacheEvict } from "@lib/refetchQueries";
 import { databases } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -16,6 +16,7 @@ export default function useSqlQuery(
   client: ApolloClient<NormalizedCacheObject>,
   gqlError?: ApolloError,
 ): boolean {
+  const { isMutation } = useSqlParser();
   const router = useRouter();
   const { addMutation } = useSessionQueryHistory();
   const isMut = isMutation(params.q);

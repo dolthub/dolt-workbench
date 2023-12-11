@@ -1,6 +1,6 @@
 import CommitsBreadcrumbs from "@components/breadcrumbs/CommitsBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { OptionalRefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
 import DatabasePage from "../component";
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function ForCommits(props: Props) {
-  const { isDolt } = useIsDolt();
+  const { isDolt } = useDatabaseDetails();
   const notCommitLogPage =
     !props.params.refName || props.compare || !!props.params.diffRange;
   const commonProps = {

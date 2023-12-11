@@ -1,5 +1,5 @@
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useRole from "@hooks/useRole";
 import { DatabaseParams, UploadParams } from "@lib/params";
 import { ReactNode } from "react";
@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function PageWrapper(props: Props) {
-  const doltRes = useIsDolt();
+  const doltRes = useDatabaseDetails();
   const { userHasWritePerms, loading } = useRole();
   const res = useDefaultBranchPageQuery({
     variables: { ...props.params, filterSystemTables: true },

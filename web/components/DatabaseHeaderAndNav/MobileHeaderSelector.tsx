@@ -1,6 +1,6 @@
 import FormSelect from "@components/FormSelect";
 import { Option } from "@components/FormSelect/types";
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import {
   getDatabasePageName,
   getDatabasePageRedirectInfo,
@@ -62,7 +62,7 @@ const mobileSelectorStyle: StylesConfig<Option, boolean, GroupBase<Option>> = {
 };
 
 export default function MobileHeaderSelector(props: Props) {
-  const res = useIsDolt();
+  const res = useDatabaseDetails();
   const router = useRouter();
 
   const handleChangeTab = (pageName: string) => {

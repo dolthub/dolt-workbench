@@ -3,7 +3,7 @@ import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import css from "./index.module.css";
-import { getFilterByCellQuery } from "./queryHelpers";
+import { useGetFilterByCellQuery } from "./queryHelpers";
 
 type Props = {
   col?: ColumnForDataTableFragment;
@@ -21,7 +21,7 @@ export default function FilterButton({ col, value }: Props) {
     if (!col) {
       return;
     }
-    const query = getFilterByCellQuery(col, value, { ...params, tableName });
+    const query = useGetFilterByCellQuery(col, value, { ...params, tableName });
     await executeQuery({ ...params, query });
   };
 

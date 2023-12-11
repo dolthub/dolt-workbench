@@ -1,10 +1,11 @@
 import Button from "@components/Button";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { convertToSqlWithNewCols, getColumns } from "@lib/parseSqlQuery";
+import useSqlParser from "@hooks/useSqlParser";
 import css from "./index.module.css";
 
 export default function ShowAllColumns() {
+  const { convertToSqlWithNewCols, getColumns } = useSqlParser();
   const { executeQuery } = useSqlEditorContext();
   const { params, tableNames } = useDataTableContext();
 

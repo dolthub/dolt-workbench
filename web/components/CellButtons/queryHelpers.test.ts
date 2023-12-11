@@ -1,4 +1,4 @@
-import { getDoltDiffQuery, getForeignKeyQuery } from "./queryHelpers";
+import { getDoltDiffQuery, useGetForeignKeyQuery } from "./queryHelpers";
 import {
   fkProps,
   foreignKeyQuery,
@@ -34,7 +34,7 @@ describe("query conversions work for cell buttons", () => {
   });
 
   it("converts table and foreign key columns information to foreign key query for row with multiple foreign keys", () => {
-    const query = getForeignKeyQuery(fkProps.table, fkProps.cols);
+    const query = useGetForeignKeyQuery(fkProps.table, fkProps.cols);
     expect(query).toBe(foreignKeyQuery);
   });
 });

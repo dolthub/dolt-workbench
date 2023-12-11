@@ -1,6 +1,6 @@
 import ErrorMsg from "@components/ErrorMsg";
 import Loader from "@components/Loader";
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import React, { ReactElement } from "react";
 import NotDoltMsg from "./NotDoltMsg";
 
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function NotDoltWrapper(props: Props) {
-  const res = useIsDolt();
+  const res = useDatabaseDetails();
   if (res.loading) return <Loader loaded={false} />;
   if (res.error) return <ErrorMsg err={res.error} />;
   if (res.isDolt) {

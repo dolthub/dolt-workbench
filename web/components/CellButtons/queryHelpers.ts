@@ -2,9 +2,9 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
+import useSqlParser from "@hooks/useSqlParser";
 import { getWhereClauseForPKValues } from "@lib/dataTable";
 import { TableParams } from "@lib/params";
-import { convertToSqlWithNewCondition } from "@lib/parseSqlQuery";
 import { ReferencedColumn } from "./utils";
 
 export type Props = {
@@ -205,11 +205,12 @@ export function getHideRowQuery(
 
 // Gets query that filters based on cell value
 // i.e. "SELECT * FROM [tableName] WHERE `[colName]` = '[colValue]'"
-export function getFilterByCellQuery(
+export function useGetFilterByCellQuery(
   col: ColumnForDataTableFragment,
   value: string,
   params: TableParams & { q?: string },
 ): string {
+  const { convertToSqlWithNewCondition } = useSqlParser();
   const { q, tableName } = params;
   const query = q ?? `SELECT *\nFROM \`${tableName}\``;
   const val = col.type === "TIMESTAMP" ? convertTimestamp(value) : value;
@@ -217,10 +218,11 @@ export function getFilterByCellQuery(
 }
 
 // Gets query that filters based on foreign keys
-export function getForeignKeyQuery(
+export function useGetForeignKeyQuery(
   table: string,
   cols: ReferencedColumn[],
 ): string {
+  const { convertToSqlWithNewCondition } = useSqlParser();
   let query = `select * from ${table}`;
   cols.forEach(fkCol => {
     query = convertToSqlWithNewCondition(

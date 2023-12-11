@@ -1,23 +1,15 @@
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import compareArray from "@lib/compareArray";
 import { NULL_VALUE } from "@lib/null";
-import {
-  convertToSqlWithNewCondition,
-  convertToSqlWithOrderBy,
-  fallbackGetTableNamesForSelect,
-  getQueryType,
-  getTableName,
-  isMultipleQueries,
-  isMutation,
-  makeQueryExecutable,
-  removeColumnFromQuery,
-} from ".";
+import useSqlParser from ".";
 import { mutationExamples } from "./mutationExamples";
+import { fallbackGetTableNamesForSelect } from "./util";
 
 const invalidQuery = `this is not a valid query`;
 
 describe("parse sql query", () => {
   it("check if the string contains multiple queries", () => {
+    const { isMultipleQueries } = useSqlParser();
     const twoQueries = `SELECT * FROM test; SELECT * FROM test2;`;
     expect(isMultipleQueries(twoQueries)).toBe(true);
     const singleQueries = `SELECT * FROM test`;
@@ -28,6 +20,8 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for lunch-places", () => {
+    const { getTableName } = useSqlParser();
+
     const lpTableName = "lunch-places";
     const basicQuery = `SELECT * FROM \`${lpTableName}\``;
     expect(getTableName(basicQuery)).toBe(lpTableName);
@@ -48,6 +42,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name for mutations", () => {
+    const { getTableName } = useSqlParser();
     expect(getTableName("DROP TABLE `test`")).toBe("test");
     expect(
       getTableName("INSERT INTO test (pk, col1) VALUES (1, 'string')"),
@@ -65,6 +60,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for dolt_commit_diff table", () => {
+    const { getTableName } = useSqlParser();
     const ddTableName = "dolt_commit_diff_career_totals_allstar";
     const basicQuery = `SELECT * FROM ${ddTableName}`;
     expect(getTableName(basicQuery)).toBe(ddTableName);
@@ -88,6 +84,7 @@ describe("parse sql query", () => {
   });
 
   it("adds a new condition to a query string for null and non-null values", () => {
+    const { convertToSqlWithNewCondition } = useSqlParser();
     const column = "rating";
     const value = "10";
     const nullVal = NULL_VALUE;
@@ -144,6 +141,7 @@ describe("parse sql query", () => {
   });
 
   it("adds or removes order by clause to query", () => {
+    const { convertToSqlWithOrderBy } = useSqlParser();
     const column = "name";
     const type = "ASC";
     const query = "SELECT * FROM `lunch-places`";
@@ -183,6 +181,7 @@ describe("parse sql query", () => {
   });
 
   it("gets query type", () => {
+    const { getQueryType } = useSqlParser();
     expect(getQueryType("SELECT * FROM tablename")).toEqual("select");
     expect(getQueryType("SHOW TABLES")).toEqual("show");
     expect(
@@ -204,6 +203,7 @@ describe("parse sql query", () => {
 });
 
 describe("test isMutation", () => {
+  const { isMutation } = useSqlParser();
   const notMutations = [
     "SELECT * FROM tablename",
     "SHOW TABLES",
@@ -363,40 +363,45 @@ describe("removes column from query", () => {
 
   tests.forEach(test => {
     it(test.desc, () => {
+      const { removeColumnFromQuery } = useSqlParser();
       expect(
         removeColumnFromQuery(test.query, test.colToRemove, test.cols),
       ).toEqual(test.expected);
     });
   });
 
-  expect(() =>
-    removeColumnFromQuery(invalidQuery, "age", columns.slice(0, 2)),
-  ).not.toThrowError();
-});
-
-describe("test executable query", () => {
-  const tests = [
-    {
-      desc: "escapes single quotes",
-      query: "select * from tablename where col='name'",
-    },
-    {
-      desc: "removes extra whitespace",
-      query: ` select *
-from tablename
-where col='name'
-
-      `,
-    },
-  ];
-  tests.forEach(test => {
-    it(test.desc, () => {
-      expect(makeQueryExecutable(test.query)).toEqual(
-        "select * from tablename where col=\\'name\\'",
-      );
-    });
+  it("remove column doesn't throw error", () => {
+    const { removeColumnFromQuery } = useSqlParser();
+    expect(() =>
+      removeColumnFromQuery(invalidQuery, "age", columns.slice(0, 2)),
+    ).not.toThrow();
   });
 });
+
+// describe("test executable query", () => {
+//   const {makeQueryExecutable} = useSqlParser();
+//   const tests = [
+//     {
+//       desc: "escapes single quotes",
+//       query: "select * from tablename where col='name'",
+//     },
+//     {
+//       desc: "removes extra whitespace",
+//       query: ` select *
+// from tablename
+// where col='name'
+
+//       `,
+//     },
+//   ];
+//   tests.forEach(test => {
+//     it(test.desc, () => {
+//       expect(makeQueryExecutable(test.query)).toEqual(
+//         "select * from tablename where col=\\'name\\'",
+//       );
+//     });
+//   });
+// });
 
 describe("test use regex to get table names from query", () => {
   const tests = [

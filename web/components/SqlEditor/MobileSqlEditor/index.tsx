@@ -1,6 +1,6 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import useSqlParser from "@hooks/useSqlParser";
 import { OptionalRefParams } from "@lib/params";
-import { isMutation } from "@lib/parseSqlQuery";
 import { debounce } from "lodash";
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function MobileSqlEditor(props: Props) {
+  const { isMutation } = useSqlParser();
   const { editorString, setEditorString, executeQuery, setError } =
     useSqlEditorContext("Tables");
   const aceEditor = useRef<any>(null);

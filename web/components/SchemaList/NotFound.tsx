@@ -1,4 +1,4 @@
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { RefParams } from "@lib/params";
 import css from "./index.module.css";
 
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function NotFound(props: Props) {
-  const { isDolt } = useIsDolt();
+  const { isDolt } = useDatabaseDetails();
   const label = `db-${props.name}-empty`;
   return (
     <p className={css.text} data-cy={label}>

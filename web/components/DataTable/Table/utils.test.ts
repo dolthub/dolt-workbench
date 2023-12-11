@@ -1,6 +1,6 @@
 import {
   getDeleteRowQuery,
-  getFilterByCellQuery,
+  useGetFilterByCellQuery,
 } from "@components/CellButtons/queryHelpers";
 import {
   ColumnForDataTableFragment,
@@ -357,8 +357,8 @@ describe("test getFilterByCellQuery", () => {
   ];
 
   tests.forEach(t => {
-    it(`tests getFilterByCellQuery for ${t.desc}`, () => {
-      expect(getFilterByCellQuery(t.col, t.value, t.params)).toEqual(
+    it(`tests useGetFilterByCellQuery for ${t.desc}`, () => {
+      expect(useGetFilterByCellQuery(t.col, t.value, t.params)).toEqual(
         t.expectedQuery,
       );
     });

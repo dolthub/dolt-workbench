@@ -1,8 +1,8 @@
 import {
-  isDoltDiffTableQuery,
   isDoltSystemTable,
   isShowSchemaFragmentQuery,
   isUneditableDoltSystemTable,
+  useIsDoltDiffTableQuery,
 } from "./doltSystemTables";
 
 describe("test doltSystemTables util functions", () => {
@@ -42,22 +42,22 @@ describe("test doltSystemTables util functions", () => {
     ).toBeFalsy();
     expect(isShowSchemaFragmentQuery("show view cases")).toBeFalsy();
   });
-  it("checks isDoltDiffTableQuery", () => {
+  it("checks useIsDoltDiffTableQuery", () => {
     expect(
-      isDoltDiffTableQuery("select * from dolt_diff_tablename"),
+      useIsDoltDiffTableQuery("select * from dolt_diff_tablename"),
     ).toBeTruthy();
     expect(
-      isDoltDiffTableQuery(
+      useIsDoltDiffTableQuery(
         "select col1, col2 from dolt_diff_newtable where id=2",
       ),
     ).toBeTruthy();
     expect(
-      isDoltDiffTableQuery(
+      useIsDoltDiffTableQuery(
         "select col1, col2 from dolt_commit_diff_newtable where id=2",
       ),
     ).toBeTruthy();
     expect(
-      isDoltDiffTableQuery("select col1, col2 from dolt_schemas"),
+      useIsDoltDiffTableQuery("select col1, col2 from dolt_schemas"),
     ).toBeFalsy();
   });
 });

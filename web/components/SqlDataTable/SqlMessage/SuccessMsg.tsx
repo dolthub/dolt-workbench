@@ -1,7 +1,7 @@
 import Link from "@components/links/Link";
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
-import { isMutation } from "@lib/parseSqlQuery";
 import { pluralize } from "@lib/pluralize";
 import { ref } from "@lib/urls";
 import css from "./index.module.css";
@@ -14,6 +14,7 @@ type Props = {
 };
 
 export default function SuccessMsg(props: Props) {
+  const { isMutation } = useSqlParser();
   const lower = props.params.q.toLowerCase();
   if (isMutation(props.params.q)) {
     return (
@@ -43,7 +44,7 @@ type ExecutionProps = {
 };
 
 export function ExecutionMessage(props: ExecutionProps) {
-  const { isDolt } = useIsDolt();
+  const { isDolt } = useDatabaseDetails();
   return (
     <p className={css.status}>
       {props.rowsLen} {pluralize(props.rowsLen, "row")} selected

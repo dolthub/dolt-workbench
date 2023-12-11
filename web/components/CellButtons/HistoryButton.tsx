@@ -8,9 +8,9 @@ import {
   RowForDataTableFragment,
   SchemaItemFragment,
 } from "@gen/graphql-types";
+import useSqlParser from "@hooks/useSqlParser";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableParams } from "@lib/params";
-import { parseSelectQuery } from "@lib/parseSqlQuery";
 import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
 import cx from "classnames";
 import { ReactNode, useEffect, useState } from "react";
@@ -80,7 +80,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const isView = getIsView(tableName, views);
   const isSystemTable = isDoltSystemTable(tableName);
   const pksShowing = queryShowingPKs(props.columns, columns);
-  const isJoin = queryHasMultipleTables(params.q);
+  const isJoin = useQueryHasMultipleTables(params.q);
 
   const disabled =
     props.doltDisabled ||
@@ -123,7 +123,8 @@ function getIsView(tableName: string, views?: SchemaItemFragment[]): boolean {
   return views.some(v => v.name === tableName);
 }
 
-function queryHasMultipleTables(q?: string): boolean {
+function useQueryHasMultipleTables(q?: string): boolean {
+  const { parseSelectQuery } = useSqlParser();
   if (!q) return false;
   const parsed = parseSelectQuery(q);
   if (!parsed?.from) return false;

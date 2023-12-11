@@ -2,8 +2,8 @@ import SmallLoader from "@components/SmallLoader";
 import Tooltip from "@components/Tooltip";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useDefaultBranch from "@hooks/useDefaultBranch";
-import useIsDolt from "@hooks/useIsDolt";
 import { OptionalRefParams, RefParams } from "@lib/params";
 import NavItem from "./Item";
 import css from "./index.module.css";
@@ -26,7 +26,7 @@ type QueryProps = Props & {
 const tabs = ["Database", "About", "Commit Log", "Releases", "Pull Requests"];
 
 export default function DatabaseNav(props: Props) {
-  const { isDolt } = useIsDolt();
+  const { isDolt } = useDatabaseDetails();
   if (props.params.refName && isDolt) {
     return (
       <Query
