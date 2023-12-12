@@ -1,11 +1,13 @@
 import Button from "@components/Button";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import useSqlParser from "@hooks/useSqlParser";
 import css from "./index.module.css";
 
 export default function ShowAllColumns() {
-  const { convertToSqlWithNewCols, getColumns } = useSqlParser();
+  const { getColumns } = useSqlParser();
+  const { convertToSqlWithNewCols } = useSqlBuilder();
   const { executeQuery } = useSqlEditorContext();
   const { params, tableNames } = useDataTableContext();
 
@@ -20,6 +22,7 @@ export default function ShowAllColumns() {
     const query = convertToSqlWithNewCols(q, "*", tableNames);
     await executeQuery({ ...params, query });
   };
+
   return (
     <Button.Underlined className={css.colsButton} onClick={onClick}>
       Show all columns

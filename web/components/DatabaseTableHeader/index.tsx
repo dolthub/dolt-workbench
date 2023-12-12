@@ -2,57 +2,32 @@ import Btn from "@components/Btn";
 import Loader from "@components/Loader";
 import SqlEditor from "@components/SqlEditor";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { OptionalRefParams } from "@lib/params";
 import { BiPencil } from "@react-icons/all-files/bi/BiPencil";
 import dynamic from "next/dynamic";
-import { useEffect } from "react";
 import Buttons from "./Buttons";
 import Errors from "./Errors";
 import css from "./index.module.css";
-import { getEditorString, getSqlString } from "./utils";
+import { Params, useSqlStrings } from "./utils";
 
 const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
 });
 
 type Props = {
-  params: OptionalRefParams & {
-    q?: string;
-    tableName?: string;
-  };
+  params: Params;
   empty?: boolean;
 };
 
 export default function DatabaseTableHeader(props: Props) {
-  const sqlString = getSqlString(
-    props.params.q,
-    props.params.tableName,
-    props.empty,
-  );
-
-  const {
-    editorString,
-    setEditorString,
-    showSqlEditor,
-    toggleSqlEditor,
-    loading,
-  } = useSqlEditorContext();
-
-  useEffect(() => {
-    const sqlQuery = getEditorString(
-      props.params.q,
-      props.params.tableName,
-      props.empty,
-    );
-    setEditorString(sqlQuery);
-  }, [props.params.q, props.params.tableName, props.empty]);
+  const { sqlString, editorString } = useSqlStrings(props.params, props.empty);
+  const { showSqlEditor, toggleSqlEditor, loading } = useSqlEditorContext();
 
   return (
     <div className={css.editorContainer}>
       <Loader loaded={!loading} />
       <div className={css.editorHeader}>
         <div className={css.queryHeader}>
-          {getQueryTitle(sqlString, props.empty)}
+          Query
           {props.empty && (
             <span className={css.sampleQueryDir}>
               <Btn onClick={() => toggleSqlEditor()}>open the sql editor</Btn>{" "}
@@ -90,10 +65,4 @@ export default function DatabaseTableHeader(props: Props) {
       <Errors />
     </div>
   );
-}
-
-function getQueryTitle(sqlString: string, empty?: boolean): string {
-  if (sqlString === "SHOW TABLES") return "Query";
-  if (empty) return "Sample Query";
-  return "Query";
 }

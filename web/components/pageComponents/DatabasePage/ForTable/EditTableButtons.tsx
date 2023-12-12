@@ -5,6 +5,7 @@ import Link from "@components/links/Link";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { useTagListQuery } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { TableParams } from "@lib/params";
 import { table } from "@lib/urls";
 import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
@@ -13,7 +14,7 @@ import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
 import { ImTable2 } from "@react-icons/all-files/im/ImTable2";
 import OptionSquare from "./OptionSquare";
 import css from "./index.module.css";
-import { getInsertQuery } from "./utils";
+import { mapColTypeToFakeValue } from "./utils";
 
 type Props = {
   params: TableParams;
@@ -22,7 +23,7 @@ type Props = {
 export default function EditTableButtons(props: Props) {
   const { executeQuery, setEditorString, toggleSqlEditor } =
     useSqlEditorContext();
-
+  const { dropTable, insertIntoTable } = useSqlBuilder();
   const { columns } = useDataTableContext();
   const tagRes = useTagListQuery({
     variables: props.params,
@@ -33,14 +34,16 @@ export default function EditTableButtons(props: Props) {
   const uploadParams = { ...props.params, uploadId: String(Date.now()) };
 
   const onWriteQuery = () => {
-    setEditorString(getInsertQuery(props.params.tableName, columns));
+    const values = columns?.map(mapColTypeToFakeValue) ?? [];
+    const colNames = columns?.map(c => c.name) ?? [];
+    setEditorString(insertIntoTable(props.params.tableName, colNames, values));
     toggleSqlEditor(true);
   };
 
   const onDrop = async () => {
     await executeQuery({
       ...props.params,
-      query: `DROP TABLE \`${props.params.tableName}\``,
+      query: dropTable(props.params.tableName),
     });
   };
 

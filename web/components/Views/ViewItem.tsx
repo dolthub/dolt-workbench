@@ -1,6 +1,7 @@
 import Btn from "@components/Btn";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { SchemaItemFragment } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import excerpt from "@lib/excerpt";
 import { RefParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
@@ -13,13 +14,14 @@ type Props = {
 };
 
 export default function ViewItem(props: Props) {
+  const { selectFromTable } = useSqlBuilder();
   const { name } = props.view;
   const { queryClickHandler } = useSqlEditorContext("Views");
   const viewingQuery = isActive(name, props.params.q);
   const id = `view-${name}`;
 
   const executeView = async () => {
-    const query = `SELECT * FROM \`${name}\``;
+    const query = selectFromTable(name);
     await queryClickHandler({ ...props.params, query });
   };
 
@@ -50,5 +52,9 @@ function isActive(name: string, activeQuery?: string): boolean {
 }
 
 function matchesDef(text: string, name: string, q: string): boolean {
-  return q === `${text} ${name}` || q === `${text} \`${name}\``;
+  return (
+    q === `${text} ${name}` ||
+    q === `${text} \`${name}\`` ||
+    q === `${text} "${name}"`
+  );
 }

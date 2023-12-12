@@ -43,38 +43,6 @@ export function getWhereClauseForPKValues(
   return strings.join(" AND ");
 }
 
-// Gets query that make a cell NULL,
-// i.e. "UPDATE [tableName] SET [currentCol] = NULL WHERE [pk1Col] = [pk1Val] AND [pkNCol] = [pkNVal]"
-export function getUpdateCellToNullQuery(
-  tableName: string,
-  currentCol: string,
-  cols: ColumnForDataTableFragment[],
-  row: RowForDataTableFragment,
-): string {
-  return `UPDATE \`${tableName}\` SET \`${currentCol}\` = NULL WHERE ${getWhereClauseForPKValues(
-    cols,
-    row,
-  )}`;
-}
-
-// Gets query that updates a cell,
-// i.e. "UPDATE [tableName] SET [currentCol] = [newValue] WHERE [pk1Col] = [pk1Val] AND [pkNCol] = [pkNVal]"
-export function getUpdateCellQuery(
-  tableName: string,
-  currentCol: string,
-  newValue: string,
-  cols: ColumnForDataTableFragment[],
-  row: RowForDataTableFragment,
-  colType?: string,
-): string {
-  const value =
-    colType === "bit(1)" ? newValue || 0 : `"${escapeDoubleQuotes(newValue)}"`;
-  return `UPDATE \`${tableName}\` SET \`${currentCol}\` = ${value} WHERE ${getWhereClauseForPKValues(
-    cols,
-    row,
-  )}`;
-}
-
 export function isLongContentType(currentColType?: string): boolean {
   if (!currentColType) return false;
   const colType = currentColType.toLowerCase();

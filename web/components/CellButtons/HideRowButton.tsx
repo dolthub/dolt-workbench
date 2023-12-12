@@ -5,9 +5,9 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { mapQueryColsToAllCols } from "@lib/dataTable";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import css from "./index.module.css";
-import { getHideRowQuery } from "./queryHelpers";
+import { toPKColsMapQueryCols } from "./queryHelpers";
 
 type Props = {
   row: RowForDataTableFragment;
@@ -18,14 +18,14 @@ export default function HideRowButton(props: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
+  const { hideRowQuery } = useSqlBuilder();
 
   if (!tableName) return null;
 
   const onClick = async () => {
-    const query = getHideRowQuery(
+    const query = hideRowQuery(
       tableName,
-      props.row,
-      mapQueryColsToAllCols(props.columns, columns),
+      toPKColsMapQueryCols(props.row, props.columns, columns),
     );
     await executeQuery({ ...params, query });
   };

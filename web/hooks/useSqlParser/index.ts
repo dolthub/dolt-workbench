@@ -1,16 +1,7 @@
-import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import Maybe from "@lib/Maybe";
-import { AST, Parser, Select } from "node-sql-parser";
-import {
-  Columns,
-  escapeSingleQuotesInWhereObj,
-  fallbackGetTableNamesForSelect,
-  getOrderByArr,
-  getWhereObj,
-  mapColsToColumnNames,
-  mapColsToColumnRef,
-} from "./util";
+import { AST, Column, Parser, Select } from "node-sql-parser";
+import { fallbackGetTableNamesForSelect } from "./util";
 
 const parser = new Parser();
 
@@ -33,6 +24,7 @@ export default function useSqlParser() {
       console.error(getQueryError(q, err));
     }
     const obj: AST = Array.isArray(ast) ? ast[0] : ast;
+    // return obj;
     return obj.type === "select" ? obj : null;
   }
 
@@ -59,93 +51,13 @@ export default function useSqlParser() {
   }
 
   // Extracts columns from query string
-  function getColumns(q: string): Columns | undefined {
+  function getColumns(q: string): any[] | Column[] | "*" | undefined {
     const ast = parseSelectQuery(q);
     return ast?.columns;
   }
 
-  function convertToSql(select: Select): string {
-    return parser.sqlify(select, opt);
-  }
-
-  // Converts query string to sql with new table name and columns
-  function convertToSqlWithNewColNames(
-    q: string,
-    cols: string[] | "*",
-    tableName: string,
-  ): string {
-    const ast = parseSelectQuery(q);
-    const columns = cols === "*" ? cols : mapColsToColumnNames(cols);
-    if (!ast) return "";
-    const newAst: Select = {
-      ...ast,
-      columns,
-      from: [{ db: null, table: tableName, as: null }],
-      where: escapeSingleQuotesInWhereObj(ast.where),
-    };
-    return convertToSql(newAst);
-  }
-
-  // Converts query string to sql with new table name and columns
-  function convertToSqlWithNewCols(
-    q: string,
-    cols: ColumnForDataTableFragment[] | "*",
-    tableNames?: string[],
-  ): string {
-    const ast = parseSelectQuery(q);
-    const isJoinClause = tableNames && tableNames.length > 1;
-    const columns =
-      cols === "*" ? cols : mapColsToColumnRef(cols, !!isJoinClause);
-
-    if (!ast) return "";
-    if (!tableNames || tableNames.length === 0) {
-      return convertToSql({
-        ...ast,
-        columns,
-        from: [{ db: null, table: null, as: null }],
-        where: escapeSingleQuotesInWhereObj(ast.where),
-      });
-    }
-    const newAst: Select = {
-      ...ast,
-      columns,
-      from: tableNames.map(table => {
-        return { db: null, table, as: null };
-      }),
-      where: escapeSingleQuotesInWhereObj(ast.where),
-    };
-    return convertToSql(newAst);
-  }
-
-  // Adds condition to query string
-  function convertToSqlWithNewCondition(
-    query: string,
-    column: string,
-    value: string,
-  ): string {
-    const parsed = parseSelectQuery(query);
-    if (!parsed) {
-      return query;
-    }
-    const where = getWhereObj(column, value, parsed);
-    return convertToSql({
-      ...parsed,
-      where,
-    });
-  }
-
-  // Adds order by clause to query string
-  function convertToSqlWithOrderBy(
-    query: string,
-    column: string,
-    type?: "ASC" | "DESC",
-  ): string {
-    const parsed = parseSelectQuery(query);
-    if (!parsed) {
-      return query;
-    }
-    const orderby = getOrderByArr(parsed, column, type);
-    return convertToSql({ ...parsed, orderby });
+  function sqlify(ast: AST[] | AST): string {
+    return parser.sqlify(ast, opt);
   }
 
   // Check if query has order by clause for column and type
@@ -211,17 +123,6 @@ export default function useSqlParser() {
     return !!type && type !== "select" && type !== "desc" && type !== "show";
   }
 
-  // Removes a column from a select query
-  function removeColumnFromQuery(
-    q: string,
-    colNameToRemove: string,
-    cols: ColumnForDataTableFragment[],
-  ): string {
-    const newCols = cols.filter(c => c.name !== colNameToRemove);
-    const tableName = getTableNames(q);
-    return convertToSqlWithNewCols(q, newCols, tableName);
-  }
-
   function isMultipleQueries(queryString: string): boolean {
     try {
       const { ast } = parser.parse(queryString);
@@ -232,18 +133,16 @@ export default function useSqlParser() {
   }
 
   return {
-    convertToSqlWithNewColNames,
-    convertToSqlWithNewCols,
-    convertToSqlWithNewCondition,
-    convertToSqlWithOrderBy,
     getColumns,
     getQueryType,
     getTableName,
+    getTableNames,
     isMultipleQueries,
     isMutation,
+    isPostgres,
     parseSelectQuery,
     queryHasOrderBy,
-    removeColumnFromQuery,
     requireTableNamesForSelect,
+    sqlify,
   };
 }

@@ -73,7 +73,7 @@ function AddFromSQL() {
       </p>
       <p>
         <CodeBlock.WithCopyButton
-          textToCopy={`INSERT INTO dolt_docs VALUES ("README.md", "[your readme text]");`}
+          textToCopy={`INSERT INTO dolt_docs VALUES ('README.md', '[your readme text]');`}
         />
       </p>
       <p>
@@ -81,7 +81,7 @@ function AddFromSQL() {
       </p>
       <p>
         <CodeBlock.WithCopyButton
-          textToCopy={`INSERT INTO dolt_docs VALUES ("LICENSE.md", "[your license text]");`}
+          textToCopy={`INSERT INTO dolt_docs VALUES ('LICENSE.md', '[your license text]');`}
         />
       </p>
       <p>
@@ -90,7 +90,7 @@ function AddFromSQL() {
       </p>
       <p>
         <CodeBlock.WithCopyButton
-          textToCopy={`CALL DOLT_COMMIT("-am", "Add docs");`}
+          textToCopy={`CALL DOLT_COMMIT('-am', 'Add docs');`}
         />
       </p>
     </>

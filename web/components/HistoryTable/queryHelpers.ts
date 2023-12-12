@@ -1,10 +1,12 @@
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import useSqlParser from "@hooks/useSqlParser";
 import { removeClauses } from "@lib/doltSystemTables";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
 export function useGetDoltHistoryQuery(q: string): () => string {
-  const { getTableName, convertToSqlWithNewColNames } = useSqlParser();
+  const { getTableName } = useSqlParser();
+  const { convertToSqlWithNewColNames } = useSqlBuilder();
   const queryWithoutClauses = removeClauses(q);
   const queryCols = useGetCols(queryWithoutClauses);
 
