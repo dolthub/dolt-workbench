@@ -18,7 +18,7 @@ export class PostgresQueryFactory
   }
 
   async checkoutDatabase(qr: QueryRunner, dbName: string): Promise<void> {
-    await qr.query(qh.setSearchPath(dbName));
+    await qr.query(qh.setSearchPath(dbName, this.isDolt));
   }
 
   async getTableNames(args: t.RefArgs): Promise<string[]> {
@@ -46,37 +46,13 @@ export class PostgresQueryFactory
     }, args.databaseName);
   }
 
-  async getSchemas(args: t.DBArgs, type?: SchemaType): t.UPR {
-    return this.queryMultiple(async query => {
-      // const vRes = await query(qh.getViewsQuery, [args.databaseName]);
-      // const views = vRes.map(v => {
-      //   return { name: v.TABLE_NAME, type: SchemaType.View };
-      // });
-      // if (type === SchemaType.View) {
-      //   return views;
-      // }
-
-      // const tRes = await query(qh.getTriggersQuery);
-      // const triggers = tRes.map(tr => {
-      //   return { name: tr.Trigger, type: SchemaType.Trigger };
-      // });
-
-      // const eRes = await query(qh.getEventsQuery);
-      // const events = eRes.map(e => {
-      //   return { name: e.Name, type: SchemaType.Event };
-      // });
-
-      // return [...views, ...triggers, ...events];
-      return [];
-    }, args.databaseName);
+  async getSchemas(args: t.DBArgs, _type?: SchemaType): t.UPR {
+    // TODO: schemas
+    return this.queryMultiple(async _query => [], args.databaseName);
   }
 
   async getProcedures(args: t.DBArgs): t.UPR {
-    // return this.query(
-    //   qh.proceduresQuery,
-    //   [args.databaseName],
-    //   args.databaseName,
-    // );
-    return [];
+    // TODO: procedures
+    return this.query("", [args.databaseName], args.databaseName);
   }
 }
