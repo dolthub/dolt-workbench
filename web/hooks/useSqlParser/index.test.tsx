@@ -12,7 +12,7 @@ import { fallbackGetTableNamesForSelect } from "./util";
 const invalidQuery = `this is not a valid query`;
 
 // TODO: Test postgres
-function render() {
+function renderUseSqlParser() {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <MockedProvider mocks={[databaseDetailsMock(true, true, false)]}>
       {children}
@@ -25,7 +25,7 @@ function render() {
 
 describe("parse sql query", () => {
   it("check if the string contains multiple queries", () => {
-    const { isMultipleQueries } = render();
+    const { isMultipleQueries } = renderUseSqlParser();
     const twoQueries = `SELECT * FROM test; SELECT * FROM test2;`;
     expect(isMultipleQueries(twoQueries)).toBe(true);
     const singleQueries = `SELECT * FROM test`;
@@ -36,7 +36,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for lunch-places", () => {
-    const { getTableName } = render();
+    const { getTableName } = renderUseSqlParser();
 
     const lpTableName = "lunch-places";
     const basicQuery = `SELECT * FROM \`${lpTableName}\``;
@@ -58,7 +58,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name for mutations", () => {
-    const { getTableName } = render();
+    const { getTableName } = renderUseSqlParser();
     expect(getTableName("DROP TABLE `test`")).toBe("test");
     expect(
       getTableName("INSERT INTO test (pk, col1) VALUES (1, 'string')"),
@@ -76,7 +76,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for dolt_commit_diff table", () => {
-    const { getTableName } = render();
+    const { getTableName } = renderUseSqlParser();
     const ddTableName = "dolt_commit_diff_career_totals_allstar";
     const basicQuery = `SELECT * FROM ${ddTableName}`;
     expect(getTableName(basicQuery)).toBe(ddTableName);
@@ -100,7 +100,7 @@ describe("parse sql query", () => {
   });
 
   it("adds a new condition to a query string for null and non-null values", () => {
-    const { convertToSqlWithNewCondition } = render();
+    const { convertToSqlWithNewCondition } = renderUseSqlParser();
     const column = "rating";
     const value = "10";
     const nullVal = NULL_VALUE;
@@ -157,7 +157,7 @@ describe("parse sql query", () => {
   });
 
   it("adds or removes order by clause to query", () => {
-    const { convertToSqlWithOrderBy } = render();
+    const { convertToSqlWithOrderBy } = renderUseSqlParser();
     const column = "name";
     const type = "ASC";
     const query = "SELECT * FROM `lunch-places`";
@@ -197,7 +197,7 @@ describe("parse sql query", () => {
   });
 
   it("gets query type", () => {
-    const { getQueryType } = render();
+    const { getQueryType } = renderUseSqlParser();
     expect(getQueryType("SELECT * FROM tablename")).toEqual("select");
     expect(getQueryType("SHOW TABLES")).toEqual("show");
     expect(
@@ -219,7 +219,7 @@ describe("parse sql query", () => {
 });
 
 describe("test isMutation", () => {
-  const { isMutation } = render();
+  const { isMutation } = renderUseSqlParser();
   const notMutations = [
     "SELECT * FROM tablename",
     "SHOW TABLES",
@@ -379,7 +379,7 @@ describe("removes column from query", () => {
 
   tests.forEach(test => {
     it(test.desc, () => {
-      const { removeColumnFromQuery } = render();
+      const { removeColumnFromQuery } = renderUseSqlParser();
       expect(
         removeColumnFromQuery(test.query, test.colToRemove, test.cols),
       ).toEqual(test.expected);
@@ -387,7 +387,7 @@ describe("removes column from query", () => {
   });
 
   it("remove column doesn't throw error", () => {
-    const { removeColumnFromQuery } = render();
+    const { removeColumnFromQuery } = renderUseSqlParser();
     expect(() =>
       removeColumnFromQuery(invalidQuery, "age", columns.slice(0, 2)),
     ).not.toThrow();
@@ -395,7 +395,7 @@ describe("removes column from query", () => {
 });
 
 // describe("test executable query", () => {
-//   const {makeQueryExecutable} = render();
+//   const {makeQueryExecutable} = renderUseSqlParser();
 //   const tests = [
 //     {
 //       desc: "escapes single quotes",

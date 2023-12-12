@@ -18,6 +18,7 @@ type Props = {
 
 function Inner({ params }: Props) {
   const { isMutation } = useSqlParser();
+  const getIsDoltDiffTableQuery = useIsDoltDiffTableQuery();
   const routeRefChangeTo = (p: RefParams) =>
     isMutation(params.q)
       ? ref(p)
@@ -30,7 +31,7 @@ function Inner({ params }: Props) {
     routeRefChangeTo,
   };
 
-  if (useIsDoltDiffTableQuery(params.q)) {
+  if (getIsDoltDiffTableQuery(params.q)) {
     return (
       <DatabasePage {...commonProps}>
         <HistoryTable params={params} />

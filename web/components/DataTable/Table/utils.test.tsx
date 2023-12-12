@@ -1,7 +1,9 @@
+import { MockedProvider } from "@apollo/client/testing";
 import {
   getDeleteRowQuery,
   useGetFilterByCellQuery,
 } from "@components/CellButtons/queryHelpers";
+import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import {
   ColumnForDataTableFragment,
   ColumnValue,
@@ -9,13 +11,28 @@ import {
 } from "@gen/graphql-types";
 import { getUpdateCellQuery } from "@lib/dataTable";
 import { TableParams } from "@lib/params";
+import { renderHook } from "@testing-library/react";
 import cx from "classnames";
+import { ReactNode } from "react";
 import css from "./index.module.css";
 import {
   getDiffTypeClassnameForCell,
   getDiffTypeClassnameForRow,
   getDiffTypeColumnIndex,
 } from "./utils";
+
+function renderUseGetFilterByCellQuery() {
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <MockedProvider mocks={[databaseDetailsMock(true, true, false)]}>
+      {children}
+    </MockedProvider>
+  );
+
+  const { result } = renderHook(() => useGetFilterByCellQuery(), {
+    wrapper,
+  });
+  return result.current;
+}
 
 const idPKColumn: ColumnForDataTableFragment = {
   name: "id",
@@ -292,7 +309,7 @@ describe("test getDeleteRowQuery", () => {
   });
 });
 
-describe("test getFilterByCellQuery", () => {
+describe("test useGetFilterByCellQuery", () => {
   const refParams = {
     databaseName: "dbname",
     refName: "master",
@@ -356,9 +373,9 @@ describe("test getFilterByCellQuery", () => {
     },
   ];
 
+  const generate = renderUseGetFilterByCellQuery();
   tests.forEach(t => {
     it(`tests useGetFilterByCellQuery for ${t.desc}`, () => {
-      const generate = useGetFilterByCellQuery();
       expect(generate(t.col, t.value, t.params)).toEqual(t.expectedQuery);
     });
   });

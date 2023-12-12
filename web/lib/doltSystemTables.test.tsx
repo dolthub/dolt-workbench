@@ -1,9 +1,24 @@
+import { MockedProvider } from "@apollo/client/testing";
+import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
+import { renderHook } from "@testing-library/react";
+import { ReactNode } from "react";
 import {
   isDoltSystemTable,
   isShowSchemaFragmentQuery,
   isUneditableDoltSystemTable,
   useIsDoltDiffTableQuery,
 } from "./doltSystemTables";
+
+function renderUseIsDoltDiffTableQuery() {
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <MockedProvider mocks={[databaseDetailsMock(true, true, false)]}>
+      {children}
+    </MockedProvider>
+  );
+
+  const { result } = renderHook(useIsDoltDiffTableQuery, { wrapper });
+  return result.current;
+}
 
 describe("test doltSystemTables util functions", () => {
   it("checks isDoltSystemTable", () => {
@@ -42,22 +57,24 @@ describe("test doltSystemTables util functions", () => {
     ).toBeFalsy();
     expect(isShowSchemaFragmentQuery("show view cases")).toBeFalsy();
   });
+
   it("checks useIsDoltDiffTableQuery", () => {
+    const getIsDoltDiffTableQuery = renderUseIsDoltDiffTableQuery();
     expect(
-      useIsDoltDiffTableQuery("select * from dolt_diff_tablename"),
+      getIsDoltDiffTableQuery("select * from dolt_diff_tablename"),
     ).toBeTruthy();
     expect(
-      useIsDoltDiffTableQuery(
+      getIsDoltDiffTableQuery(
         "select col1, col2 from dolt_diff_newtable where id=2",
       ),
     ).toBeTruthy();
     expect(
-      useIsDoltDiffTableQuery(
+      getIsDoltDiffTableQuery(
         "select col1, col2 from dolt_commit_diff_newtable where id=2",
       ),
     ).toBeTruthy();
     expect(
-      useIsDoltDiffTableQuery("select col1, col2 from dolt_schemas"),
+      getIsDoltDiffTableQuery("select col1, col2 from dolt_schemas"),
     ).toBeFalsy();
   });
 });
