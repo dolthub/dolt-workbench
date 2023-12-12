@@ -1,15 +1,31 @@
+import { MockedProvider } from "@apollo/client/testing";
+import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import compareArray from "@lib/compareArray";
 import { NULL_VALUE } from "@lib/null";
+import { renderHook } from "@testing-library/react";
+import { ReactNode } from "react";
 import useSqlParser from ".";
 import { mutationExamples } from "./mutationExamples";
 import { fallbackGetTableNamesForSelect } from "./util";
 
 const invalidQuery = `this is not a valid query`;
 
+// TODO: Test postgres
+function render() {
+  const wrapper = ({ children }: { children: ReactNode }) => (
+    <MockedProvider mocks={[databaseDetailsMock(true, true, false)]}>
+      {children}
+    </MockedProvider>
+  );
+
+  const { result } = renderHook(() => useSqlParser(), { wrapper });
+  return result.current;
+}
+
 describe("parse sql query", () => {
   it("check if the string contains multiple queries", () => {
-    const { isMultipleQueries } = useSqlParser();
+    const { isMultipleQueries } = render();
     const twoQueries = `SELECT * FROM test; SELECT * FROM test2;`;
     expect(isMultipleQueries(twoQueries)).toBe(true);
     const singleQueries = `SELECT * FROM test`;
@@ -20,7 +36,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for lunch-places", () => {
-    const { getTableName } = useSqlParser();
+    const { getTableName } = render();
 
     const lpTableName = "lunch-places";
     const basicQuery = `SELECT * FROM \`${lpTableName}\``;
@@ -42,7 +58,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name for mutations", () => {
-    const { getTableName } = useSqlParser();
+    const { getTableName } = render();
     expect(getTableName("DROP TABLE `test`")).toBe("test");
     expect(
       getTableName("INSERT INTO test (pk, col1) VALUES (1, 'string')"),
@@ -60,7 +76,7 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for dolt_commit_diff table", () => {
-    const { getTableName } = useSqlParser();
+    const { getTableName } = render();
     const ddTableName = "dolt_commit_diff_career_totals_allstar";
     const basicQuery = `SELECT * FROM ${ddTableName}`;
     expect(getTableName(basicQuery)).toBe(ddTableName);
@@ -84,7 +100,7 @@ describe("parse sql query", () => {
   });
 
   it("adds a new condition to a query string for null and non-null values", () => {
-    const { convertToSqlWithNewCondition } = useSqlParser();
+    const { convertToSqlWithNewCondition } = render();
     const column = "rating";
     const value = "10";
     const nullVal = NULL_VALUE;
@@ -141,7 +157,7 @@ describe("parse sql query", () => {
   });
 
   it("adds or removes order by clause to query", () => {
-    const { convertToSqlWithOrderBy } = useSqlParser();
+    const { convertToSqlWithOrderBy } = render();
     const column = "name";
     const type = "ASC";
     const query = "SELECT * FROM `lunch-places`";
@@ -181,7 +197,7 @@ describe("parse sql query", () => {
   });
 
   it("gets query type", () => {
-    const { getQueryType } = useSqlParser();
+    const { getQueryType } = render();
     expect(getQueryType("SELECT * FROM tablename")).toEqual("select");
     expect(getQueryType("SHOW TABLES")).toEqual("show");
     expect(
@@ -203,7 +219,7 @@ describe("parse sql query", () => {
 });
 
 describe("test isMutation", () => {
-  const { isMutation } = useSqlParser();
+  const { isMutation } = render();
   const notMutations = [
     "SELECT * FROM tablename",
     "SHOW TABLES",
@@ -363,7 +379,7 @@ describe("removes column from query", () => {
 
   tests.forEach(test => {
     it(test.desc, () => {
-      const { removeColumnFromQuery } = useSqlParser();
+      const { removeColumnFromQuery } = render();
       expect(
         removeColumnFromQuery(test.query, test.colToRemove, test.cols),
       ).toEqual(test.expected);
@@ -371,7 +387,7 @@ describe("removes column from query", () => {
   });
 
   it("remove column doesn't throw error", () => {
-    const { removeColumnFromQuery } = useSqlParser();
+    const { removeColumnFromQuery } = render();
     expect(() =>
       removeColumnFromQuery(invalidQuery, "age", columns.slice(0, 2)),
     ).not.toThrow();
@@ -379,7 +395,7 @@ describe("removes column from query", () => {
 });
 
 // describe("test executable query", () => {
-//   const {makeQueryExecutable} = useSqlParser();
+//   const {makeQueryExecutable} = render();
 //   const tests = [
 //     {
 //       desc: "escapes single quotes",
