@@ -17,9 +17,10 @@ export default function HistoryTable(props: Props) {
   const { executeQuery } = useSqlEditorContext();
   const forRow = props.params.q.split(whitespace)[1] === "*";
   const [err, setErr] = useState("");
+  const generateQuery = useGetDoltHistoryQuery(props.params.q);
 
   const onClick = async () => {
-    const query = useGetDoltHistoryQuery(props.params.q);
+    const query = generateQuery();
     if (query === "") {
       setErr("Error generating history query. We are working on a fix.");
       return;

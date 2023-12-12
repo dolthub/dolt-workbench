@@ -205,16 +205,25 @@ export function getHideRowQuery(
 
 // Gets query that filters based on cell value
 // i.e. "SELECT * FROM [tableName] WHERE `[colName]` = '[colValue]'"
-export function useGetFilterByCellQuery(
+export function useGetFilterByCellQuery(): (
   col: ColumnForDataTableFragment,
   value: string,
   params: TableParams & { q?: string },
-): string {
+) => string {
   const { convertToSqlWithNewCondition } = useSqlParser();
-  const { q, tableName } = params;
-  const query = q ?? `SELECT *\nFROM \`${tableName}\``;
-  const val = col.type === "TIMESTAMP" ? convertTimestamp(value) : value;
-  return convertToSqlWithNewCondition(query, col.name, val);
+
+  const generate = (
+    col: ColumnForDataTableFragment,
+    value: string,
+    params: TableParams & { q?: string },
+  ): string => {
+    const { q, tableName } = params;
+    const query = q ?? `SELECT *\nFROM \`${tableName}\``;
+    const val = col.type === "TIMESTAMP" ? convertTimestamp(value) : value;
+    return convertToSqlWithNewCondition(query, col.name, val);
+  };
+
+  return generate;
 }
 
 // Gets query that filters based on foreign keys

@@ -14,6 +14,7 @@ export default function FilterButton({ col, value }: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName } = params;
+  const generateQuery = useGetFilterByCellQuery();
 
   if (!tableName) return null;
 
@@ -21,7 +22,7 @@ export default function FilterButton({ col, value }: Props) {
     if (!col) {
       return;
     }
-    const query = useGetFilterByCellQuery(col, value, { ...params, tableName });
+    const query = generateQuery(col, value, { ...params, tableName });
     await executeQuery({ ...params, query });
   };
 

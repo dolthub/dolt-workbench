@@ -358,9 +358,8 @@ describe("test getFilterByCellQuery", () => {
 
   tests.forEach(t => {
     it(`tests useGetFilterByCellQuery for ${t.desc}`, () => {
-      expect(useGetFilterByCellQuery(t.col, t.value, t.params)).toEqual(
-        t.expectedQuery,
-      );
+      const generate = useGetFilterByCellQuery();
+      expect(generate(t.col, t.value, t.params)).toEqual(t.expectedQuery);
     });
   });
 });

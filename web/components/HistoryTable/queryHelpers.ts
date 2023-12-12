@@ -3,27 +3,28 @@ import { removeClauses } from "@lib/doltSystemTables";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
-export function useGetDoltHistoryQuery(q: string): string {
+export function useGetDoltHistoryQuery(q: string): () => string {
   const { getTableName, convertToSqlWithNewColNames } = useSqlParser();
-  // This is a workaround until all where clauses work
   const queryWithoutClauses = removeClauses(q);
-  const tableName = getTableName(queryWithoutClauses);
-  if (!tableName) return "";
+  const queryCols = useGetCols(queryWithoutClauses);
 
-  const historyTableName = tableName.replace(
-    /dolt_diff|dolt_commit_diff/,
-    "dolt_history",
-  );
-  const cols = [
-    ...useGetCols(queryWithoutClauses),
-    "commit_hash",
-    "committer",
-    "commit_date",
-  ];
+  const generate = (): string => {
+    // This is a workaround until all where clauses work
+    const tableName = getTableName(queryWithoutClauses);
+    if (!tableName) return "";
 
-  // SELECT [cols] FROM dolt_history_[tableName] WHERE [conditions];
-  const query = formatQuery(q);
-  return convertToSqlWithNewColNames(query, cols, historyTableName);
+    const historyTableName = tableName.replace(
+      /dolt_diff|dolt_commit_diff/,
+      "dolt_history",
+    );
+    const cols = [...queryCols, "commit_hash", "committer", "commit_date"];
+
+    // SELECT [cols] FROM dolt_history_[tableName] WHERE [conditions];
+    const query = formatQuery(q);
+    return convertToSqlWithNewColNames(query, cols, historyTableName);
+  };
+
+  return generate;
 }
 
 function formatQuery(q: string): string {

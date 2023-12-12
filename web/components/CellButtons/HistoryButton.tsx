@@ -67,6 +67,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
   const { views, loading } = useViewList(params);
+  const isJoin = useQueryHasMultipleTables(params.q);
 
   if (loading) {
     return (
@@ -80,7 +81,6 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const isView = getIsView(tableName, views);
   const isSystemTable = isDoltSystemTable(tableName);
   const pksShowing = queryShowingPKs(props.columns, columns);
-  const isJoin = useQueryHasMultipleTables(params.q);
 
   const disabled =
     props.doltDisabled ||
