@@ -14,6 +14,10 @@
   @apply px-14 py-4;
 }
 
+.typeSelect {
+  @apply ml-8 mb-4;
+}
+
 .middle {
   @apply border-y pt-8;
 }

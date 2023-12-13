@@ -46,31 +46,31 @@ export default function NewConnection(props: Props) {
               View instructions for connecting to local and Docker installed
               databases <ExternalLink href={dockerHubRepo}>here</ExternalLink>.
             </p>
-            <div className={css.nameInput}>
-              <FormInput
-                value={state.name}
-                onChangeString={n => setState({ name: n })}
-                label="Name"
-                placeholder="my-database (required)"
-                horizontal
-                light
-              />
-              <FormSelect
-                label="Type"
-                val={state.type}
-                onChangeValue={t =>
-                  setState({
-                    type: t,
-                    port: t === DatabaseType.Mysql ? "3306" : "5432",
-                  })
-                }
-                options={[
-                  { label: "MySQL/Dolt", value: DatabaseType.Mysql },
-                  { label: "PostreSQL", value: DatabaseType.Postgres },
-                ]}
-                horizontal
-              />
-            </div>
+            <FormInput
+              value={state.name}
+              onChangeString={n => setState({ name: n })}
+              label="Name"
+              placeholder="my-database (required)"
+              horizontal
+              light
+            />
+            <FormSelect
+              outerClassName={css.typeSelect}
+              label="Type"
+              val={state.type}
+              onChangeValue={t =>
+                setState({
+                  type: t,
+                  port: t === DatabaseType.Mysql ? "3306" : "5432",
+                })
+              }
+              options={[
+                { label: "MySQL/Dolt", value: DatabaseType.Mysql },
+                { label: "PostreSQL", value: DatabaseType.Postgres },
+              ]}
+              horizontal
+              light
+            />
           </div>
           <div className={cx(css.section, css.middle)}>
             <FormInput

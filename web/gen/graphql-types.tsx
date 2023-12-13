@@ -1043,7 +1043,7 @@ export type LoadDataMutation = { __typename?: 'Mutation', loadDataFile: boolean 
 export type DoltDatabaseDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean } };
+export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean, type: DatabaseType } };
 
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -3080,6 +3080,7 @@ export const DoltDatabaseDetailsDocument = gql`
   doltDatabaseDetails {
     isDolt
     hideDoltFeatures
+    type
   }
 }
     `;
