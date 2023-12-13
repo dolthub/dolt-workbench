@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
+import { RawRow } from "../queryFactory/types";
 import * as row from "../rows/row.model";
-import { RawRow } from "../utils/commonTypes";
 import { QueryExecutionStatus } from "./sqlSelect.enums";
 
 @ObjectType()

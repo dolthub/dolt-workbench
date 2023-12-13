@@ -1,7 +1,7 @@
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
+import { RawRow } from "../queryFactory/types";
 import * as table from "../tables/table.model";
 import { convertToUTCDate } from "../utils";
-import { RawRow } from "../utils/commonTypes";
 
 @ObjectType()
 export class Branch {

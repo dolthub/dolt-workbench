@@ -1,14 +1,8 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService, ParQuery } from "../dataSources/dataSource.service";
-import { systemTableValues } from "../systemTables/systemTable.enums";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { handleTableNotFound } from "../utils";
 import { RefArgs, TableArgs } from "../utils/commonTypes";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
-import {
-  columnsQuery,
-  foreignKeysQuery,
-  indexQuery,
-  listTablesQuery,
-} from "./table.queries";
 import { mapTablesRes } from "./utils";
 
 @ArgsType()
@@ -19,40 +13,43 @@ class ListTableArgs extends RefArgs {
 
 @Resolver(_of => Table)
 export class TableResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => Table)
   async table(@Args() args: TableArgs): Promise<Table> {
-    return this.dss.queryMaybeDolt(
-      async (q, isDolt) => getTableInfo(q, args, isDolt),
+    const conn = this.conn.connection();
+    const res = await conn.getTableInfo(args);
+    return fromDoltRowRes(
       args.databaseName,
       args.refName,
+      args.tableName,
+      res.columns,
+      res.fkRows,
+      res.idxRows,
     );
   }
 
   @Query(_returns => TableNames)
   async tableNames(@Args() args: ListTableArgs): Promise<TableNames> {
-    return this.dss.queryMaybeDolt(
-      async (q, isDolt) => getTableNames(q, args, isDolt),
-      args.databaseName,
-      args.refName,
-    );
+    const conn = this.conn.connection();
+    const res = await conn.getTableNames(args, args.filterSystemTables);
+    return { list: mapTablesRes(res) };
   }
 
   @Query(_returns => [Table])
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
-    return this.dss.queryMaybeDolt(
-      async (q, isDolt) => {
-        const tableNames = await getTableNames(q, args, isDolt);
-        const tables = await Promise.all(
-          tableNames.list.map(async name =>
-            getTableInfo(q, { ...args, tableName: name }, isDolt),
-          ),
-        );
-        return tables;
-      },
-      args.databaseName,
-      args.refName,
+    const conn = this.conn.connection();
+    const tableNames = await conn.getTableNames(args, args.filterSystemTables);
+    const res = await conn.getTables(args, mapTablesRes(tableNames));
+    return res.map(t =>
+      fromDoltRowRes(
+        args.databaseName,
+        args.refName,
+        t.name,
+        t.columns,
+        t.fkRows,
+        t.idxRows,
+      ),
     );
   }
 
@@ -60,67 +57,4 @@ export class TableResolver {
   async maybeTable(@Args() args: TableArgs): Promise<Table | undefined> {
     return handleTableNotFound(async () => this.table(args));
   }
-}
-
-async function getTableNames(
-  query: ParQuery,
-  args: ListTableArgs,
-  isDolt: boolean,
-): Promise<TableNames> {
-  const tables = await query(listTablesQuery);
-  const mapped = mapTablesRes(tables);
-
-  if (args.filterSystemTables || !isDolt) return { list: mapped };
-
-  // Add system tables if filter is false
-  const systemTables = await getSystemTables(query);
-  return { list: [...mapped, ...systemTables] };
-}
-
-async function getTableInfo(
-  query: ParQuery,
-  args: TableArgs,
-  isDolt: boolean,
-): Promise<Table> {
-  const columns = await query(columnsQuery, [args.tableName]);
-  const fkRows = await query(foreignKeysQuery, [
-    args.tableName,
-    isDolt ? `${args.databaseName}/${args.refName}` : args.databaseName,
-  ]);
-  const idxRows = await query(indexQuery, [args.tableName]);
-  return fromDoltRowRes(
-    args.databaseName,
-    args.refName,
-    args.tableName,
-    columns,
-    fkRows,
-    idxRows,
-  );
-}
-
-export async function handleTableNotFound(
-  q: () => Promise<any | undefined>,
-): Promise<any | undefined> {
-  try {
-    const res = await q();
-    return res;
-  } catch (err) {
-    if (err.message.includes("table not found")) {
-      return undefined;
-    }
-    throw err;
-  }
-}
-
-export async function getSystemTables(query: ParQuery): Promise<string[]> {
-  const systemTables = await Promise.all(
-    systemTableValues.map(async st => {
-      const cols = await handleTableNotFound(async () =>
-        query(columnsQuery, [st]),
-      );
-      if (cols) return `${st}`;
-      return undefined;
-    }),
-  );
-  return systemTables.filter(st => !!st) as string[];
 }

@@ -1,9 +1,9 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { RawRow } from "../queryFactory/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
-import { DBArgsWithOffset, RawRow } from "../utils/commonTypes";
+import { DBArgsWithOffset } from "../utils/commonTypes";
 import { Commit, CommitList, fromDoltLogRow } from "./commit.model";
-import { doltLogsQuery, twoDotDoltLogsQuery } from "./commit.queries";
 
 @ArgsType()
 export class ListCommitsArgs extends DBArgsWithOffset {
@@ -23,7 +23,7 @@ export class ListCommitsArgs extends DBArgsWithOffset {
 
 @Resolver(_of => Commit)
 export class CommitResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => CommitList)
   async commits(
@@ -34,16 +34,18 @@ export class CommitResolver {
     if (err) throw err;
     const refName = args.refName ?? args.afterCommitId ?? "";
     const offset = args.offset ?? 0;
-    return this.dss.query(async query => {
-      if (args.twoDot && args.excludingCommitsFromRefName) {
-        const logs = await query(twoDotDoltLogsQuery, [
-          `${args.excludingCommitsFromRefName}..${refName}`,
-        ]);
-        return getCommitListRes(logs, args);
-      }
-      const logs = await query(doltLogsQuery, [refName, ROW_LIMIT + 1, offset]);
+    const conn = this.conn.connection();
+
+    if (args.twoDot && args.excludingCommitsFromRefName) {
+      const logs = await conn.getTwoDotLogs({
+        toRefName: args.excludingCommitsFromRefName,
+        fromRefName: refName,
+        databaseName: args.databaseName,
+      });
       return getCommitListRes(logs, args);
-    }, args.databaseName);
+    }
+    const logs = await conn.getLogs({ ...args, refName }, offset);
+    return getCommitListRes(logs, args);
   }
 }
 

@@ -2,7 +2,7 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
 import * as foreignKey from "../indexes/foreignKey.model";
 import * as index from "../indexes/index.model";
-import { RawRow } from "../utils/commonTypes";
+import { RawRow } from "../queryFactory/types";
 
 @ObjectType()
 export class Table {

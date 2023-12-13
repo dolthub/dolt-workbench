@@ -46,7 +46,7 @@ export default function NewBranchForm(props: Props): JSX.Element {
     if (!data) return;
     const { href, as } = ref({
       ...props.params,
-      refName: data.createBranch.branchName,
+      refName: data.createBranch,
     });
     router.push(href, as).catch(console.error);
   };

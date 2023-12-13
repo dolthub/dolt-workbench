@@ -1,10 +1,11 @@
 import { Field, ObjectType } from "@nestjs/graphql";
+import { RawRow } from "../queryFactory/types";
 import {
   ROW_LIMIT,
   convertDateToUTCDatetimeString,
   getNextOffset,
 } from "../utils";
-import { ListOffsetRes, RawRow } from "../utils/commonTypes";
+import { ListOffsetRes } from "../utils/commonTypes";
 
 // Using an unprintable string for null values so we can distinguish between
 // string "null" and null

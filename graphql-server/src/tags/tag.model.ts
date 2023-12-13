@@ -1,7 +1,7 @@
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import * as doltWriter from "../commits/doltWriter.model";
+import { RawRow } from "../queryFactory/types";
 import { convertToUTCDate } from "../utils";
-import { RawRow } from "../utils/commonTypes";
 
 @ObjectType()
 export class Tag {

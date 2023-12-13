@@ -1,9 +1,10 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import * as columns from "../columns/column.model";
+import * as column from "../columns/column.model";
 import { Column } from "../columns/column.model";
+import { RawRow, RawRows } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { ROW_LIMIT, getNextOffset } from "../utils";
-import { ListOffsetRes, RawRow } from "../utils/commonTypes";
+import { ListOffsetRes } from "../utils/commonTypes";
 import { DiffRowType } from "./rowDiff.enums";
 import { canShowDroppedOrAddedRows } from "./utils";
 
@@ -27,19 +28,21 @@ export class RowDiffList extends ListOffsetRes {
 
 @ObjectType()
 export class RowListWithCols extends row.RowList {
-  @Field(_type => [columns.Column])
-  columns: columns.Column[];
+  @Field(_type => [column.Column])
+  columns: column.Column[];
 }
 
 export function fromRowDiffRowsWithCols(
-  cols: Column[],
-  diffs: RawRow[],
+  tableName: string,
+  cols: RawRows,
+  diffs: RawRows,
   offset: number,
 ): RowDiffList {
+  const columns = cols.map(c => column.fromDoltRowRes(c, tableName));
   const rowDiffsList: RowDiff[] = diffs.map(rd => {
     const addedVals: Array<string | null> = [];
     const deletedVals: Array<string | null> = [];
-    cols.forEach(c => {
+    columns.forEach(c => {
       addedVals.push(rd[`to_${c.name}`]);
       deletedVals.push(rd[`from_${c.name}`]);
     });
@@ -50,7 +53,7 @@ export function fromRowDiffRowsWithCols(
   return {
     list: rowDiffsList.slice(0, ROW_LIMIT),
     nextOffset: getNextOffset(rowDiffsList.length, offset),
-    columns: cols,
+    columns,
   };
 }
 
@@ -63,7 +66,7 @@ export function fromDoltListRowWithColsRes(
   return {
     list: rows.slice(0, ROW_LIMIT).map(row.fromDoltRowRes),
     nextOffset: getNextOffset(rows.length, offset),
-    columns: cols.map(c => columns.fromDoltRowRes(c, tableName)),
+    columns: cols.map(c => column.fromDoltRowRes(c, tableName)),
   };
 }
 

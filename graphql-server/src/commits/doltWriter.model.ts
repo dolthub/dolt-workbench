@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../utils/commonTypes";
+import { RawRow } from "../queryFactory/types";
 
 @ObjectType()
 export class DoltWriter {

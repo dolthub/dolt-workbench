@@ -1,10 +1,6 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_BRANCH = gql`
-  fragment BranchForCreateBranch on Branch {
-    databaseName
-    branchName
-  }
   mutation CreateBranch(
     $newBranchName: String!
     $databaseName: String!
@@ -14,8 +10,6 @@ export const CREATE_BRANCH = gql`
       newBranchName: $newBranchName
       databaseName: $databaseName
       fromRefName: $fromRefName
-    ) {
-      ...BranchForCreateBranch
-    }
+    )
   }
 `;

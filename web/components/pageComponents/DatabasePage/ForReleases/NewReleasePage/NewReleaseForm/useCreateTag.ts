@@ -1,4 +1,4 @@
-import { CreateTagMutation, useCreateTagMutation } from "@gen/graphql-types";
+import { useCreateTagMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import useSetState from "@hooks/useSetState";
 import { ApolloErrorType } from "@lib/errors/types";
@@ -15,7 +15,7 @@ type FormData = {
 
 type ReturnType = {
   // Returns the created tag if successful
-  createTag: () => Promise<CreateTagMutation | null | undefined>;
+  createTag: () => Promise<string | undefined>;
   creationErr: ApolloErrorType;
   loading: boolean;
   canCreateTag: boolean;
@@ -40,7 +40,7 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
     refetchQueries: refetchTagQueries(params),
   });
 
-  const createTag = async (): Promise<CreateTagMutation | null | undefined> => {
+  const createTag = async (): Promise<string | undefined> => {
     setLoading(true);
     try {
       const { data } = await createTagMutation({
@@ -58,7 +58,7 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
           //   undefined,
         },
       });
-      return data;
+      return data?.createTag;
     } finally {
       setLoading(false);
     }

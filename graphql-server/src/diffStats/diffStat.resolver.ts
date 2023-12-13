@@ -1,9 +1,8 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
 import { DiffStat, fromDoltDiffStat } from "./diffStat.model";
-import { getDiffStatQuery, getThreeDotDiffStatQuery } from "./diffStat.queries";
 
 @ArgsType()
 export class DiffStatArgs extends DBArgs {
@@ -25,33 +24,21 @@ export class DiffStatArgs extends DBArgs {
 
 @Resolver(_of => DiffStat)
 export class DiffStatResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => DiffStat)
   async diffStat(@Args() args: DiffStatArgs): Promise<DiffStat> {
+    const conn = this.conn.connection();
     const type = args.type ?? CommitDiffType.TwoDot;
     checkArgs(args);
 
-    return this.dss.query(
-      async query => {
-        if (type === CommitDiffType.ThreeDot) {
-          const res = await query(getThreeDotDiffStatQuery(!!args.tableName), [
-            `${args.toRefName}...${args.fromRefName}`,
-            args.tableName,
-          ]);
-          return fromDoltDiffStat(res);
-        }
+    if (type === CommitDiffType.ThreeDot) {
+      const res = await conn.getThreeDotDiffStat(args);
+      return fromDoltDiffStat(res);
+    }
 
-        const res = await query(getDiffStatQuery(!!args.tableName), [
-          args.fromRefName,
-          args.toRefName,
-          args.tableName,
-        ]);
-        return fromDoltDiffStat(res);
-      },
-      args.databaseName,
-      args.refName,
-    );
+    const res = await conn.getDiffStat(args);
+    return fromDoltDiffStat(res);
   }
 }
 

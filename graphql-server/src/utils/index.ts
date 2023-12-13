@@ -45,3 +45,17 @@ export function convertToUTCDate(d: Date): Date {
   utcDate.setUTCSeconds(d.getSeconds());
   return utcDate;
 }
+
+export async function handleTableNotFound<T>(
+  q: () => Promise<T | undefined>,
+): Promise<T | undefined> {
+  try {
+    const res = await q();
+    return res;
+  } catch (err) {
+    if (err.message.includes("table not found")) {
+      return undefined;
+    }
+    throw err;
+  }
+}

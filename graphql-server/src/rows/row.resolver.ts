@@ -1,10 +1,7 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
-import { listTablesQuery } from "../tables/table.queries";
-import { ROW_LIMIT } from "../utils";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { RefArgs } from "../utils/commonTypes";
 import { Row, RowList, fromDoltListRowRes } from "./row.model";
-import { getRowsQuery } from "./row.queries";
 
 @ArgsType()
 export class ListRowsArgs extends RefArgs {
@@ -17,25 +14,17 @@ export class ListRowsArgs extends RefArgs {
 
 @Resolver(_of => Row)
 export class RowResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {
-    return this.dss.queryMaybeDolt(
-      async query => {
-        const columns = await query(listTablesQuery, [args.tableName]);
-        const offset = args.offset ?? 0;
-        const { q, cols } = getRowsQuery(columns);
-        const rows = await query(q, [
-          args.tableName,
-          ...cols,
-          ROW_LIMIT + 1,
-          offset,
-        ]);
-        return fromDoltListRowRes(rows, offset);
-      },
-      args.databaseName,
-      args.refName,
-    );
+    const conn = this.conn.connection();
+    const columns = await conn.getTableColumns(args);
+    const offset = args.offset ?? 0;
+    const rows = await conn.getTableRows(args, {
+      columns,
+      offset,
+    });
+    return fromDoltListRowRes(rows, offset);
   }
 }

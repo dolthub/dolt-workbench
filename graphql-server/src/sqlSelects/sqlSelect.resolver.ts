@@ -1,7 +1,8 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
+import { RawRows } from "../queryFactory/types";
 import { getCellValue } from "../rows/row.model";
-import { RawRows, RefArgs } from "../utils/commonTypes";
+import { RefArgs } from "../utils/commonTypes";
 import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";
 
 @ArgsType()
@@ -12,35 +13,25 @@ export class SqlSelectArgs extends RefArgs {
 
 @Resolver(_of => SqlSelect)
 export class SqlSelectResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
-    return this.dss.queryMaybeDolt(
-      async query => {
-        const res = await query(args.queryString);
-        return fromSqlSelectRow(
-          args.databaseName,
-          args.refName,
-          res,
-          args.queryString,
-        );
-      },
+    const conn = this.conn.connection();
+    const res = await conn.getSqlSelect(args);
+    return fromSqlSelectRow(
       args.databaseName,
       args.refName,
+      res,
+      args.queryString,
     );
   }
 
   @Query(_returns => String)
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
-    return this.dss.queryMaybeDolt(
-      async query => {
-        const res = await query(args.queryString);
-        return toCsvString(res);
-      },
-      args.databaseName,
-      args.refName,
-    );
+    const conn = this.conn.connection();
+    const res = await conn.getSqlSelect(args);
+    return toCsvString(res);
   }
 }
 

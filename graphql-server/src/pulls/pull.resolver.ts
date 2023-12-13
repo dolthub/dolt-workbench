@@ -7,10 +7,9 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { CommitResolver } from "../commits/commit.resolver";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { DBArgs } from "../utils/commonTypes";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
-import { callMerge } from "./pull.queries";
 
 @ArgsType()
 class PullArgs extends DBArgs {
@@ -24,7 +23,7 @@ class PullArgs extends DBArgs {
 @Resolver(_of => PullWithDetails)
 export class PullResolver {
   constructor(
-    private readonly dss: DataSourceService,
+    private readonly conn: ConnectionResolver,
     private readonly commitResolver: CommitResolver,
   ) {}
 
@@ -43,29 +42,12 @@ export class PullResolver {
 
   @Mutation(_returns => Boolean)
   async mergePull(@Args() args: PullArgs): Promise<boolean> {
-    return this.dss.query(
-      async query => {
-        await query("BEGIN");
-
-        const res = await query(callMerge, [
-          args.fromBranchName,
-          `Merge branch ${args.fromBranchName}`,
-          //  commitAuthor: {
-          //    name: currentUser.username,
-          //    email: currentUser.emailAddressesList[0].address,
-          //   },
-        ]);
-
-        if (res.length && res[0].conflicts !== "0") {
-          await query("ROLLBACK");
-          throw new Error("Merge conflict detected");
-        }
-
-        await query("COMMIT");
-        return true;
-      },
-      args.databaseName,
-      args.toBranchName,
-    );
+    const conn = this.conn.connection();
+    await conn.callMerge({
+      databaseName: args.databaseName,
+      fromBranchName: args.fromBranchName,
+      toBranchName: args.toBranchName,
+    });
+    return true;
   }
 }

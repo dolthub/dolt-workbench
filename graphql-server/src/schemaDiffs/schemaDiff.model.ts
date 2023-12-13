@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "@nestjs/graphql";
-import { RawRows } from "../utils/commonTypes";
+import { RawRows } from "../queryFactory/types";
 
 @ObjectType()
 export class TextDiff {

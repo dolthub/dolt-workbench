@@ -1,13 +1,8 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { DataSourceService } from "../dataSources/dataSource.service";
+import { ConnectionResolver } from "../connections/connection.resolver";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
 import { SchemaDiff, fromDoltSchemaDiffRows } from "./schemaDiff.model";
-import {
-  schemaDiffQuery,
-  schemaPatchQuery,
-  threeDotSchemaPatchQuery,
-} from "./schemaDiff.queries";
 
 @ArgsType()
 class SchemaDiffArgs extends DBArgs {
@@ -29,31 +24,22 @@ class SchemaDiffArgs extends DBArgs {
 
 @Resolver(_of => SchemaDiff)
 export class SchemaDiffResolver {
-  constructor(private readonly dss: DataSourceService) {}
+  constructor(private readonly conn: ConnectionResolver) {}
 
   @Query(_returns => SchemaDiff, { nullable: true })
   async schemaDiff(
     @Args() args: SchemaDiffArgs,
   ): Promise<SchemaDiff | undefined> {
-    return this.dss.query(
-      async query => {
-        if (args.type === CommitDiffType.ThreeDot) {
-          const commitArgs = [
-            `${args.toRefName}...${args.fromRefName}`,
-            args.tableName,
-          ];
-          const patchRes = await query(threeDotSchemaPatchQuery, commitArgs);
-          const diffRes = await query(schemaDiffQuery, commitArgs);
-          return fromDoltSchemaDiffRows(patchRes, diffRes);
-        }
+    const conn = this.conn.connection();
 
-        const commitArgs = [args.fromRefName, args.toRefName, args.tableName];
-        const patchRes = await query(schemaPatchQuery, commitArgs);
-        const diffRes = await query(schemaDiffQuery, commitArgs);
-        return fromDoltSchemaDiffRows(patchRes, diffRes);
-      },
-      args.databaseName,
-      args.refName,
-    );
+    if (args.type === CommitDiffType.ThreeDot) {
+      const patchRes = await conn.getThreeDotSchemaPatch(args);
+      const diffRes = await conn.getThreeDotSchemaDiff(args);
+      return fromDoltSchemaDiffRows(patchRes, diffRes);
+    }
+
+    const patchRes = await conn.getSchemaPatch(args);
+    const diffRes = await conn.getSchemaDiff(args);
+    return fromDoltSchemaDiffRows(patchRes, diffRes);
   }
 }
