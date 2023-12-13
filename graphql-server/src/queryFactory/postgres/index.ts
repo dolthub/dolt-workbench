@@ -1,6 +1,7 @@
 import { QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
+import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
 import { MySQLQueryFactory } from "../mysql";
 import { convertToTableDetails } from "../mysql/utils";
@@ -47,7 +48,7 @@ export class PostgresQueryFactory
     }, args.databaseName);
   }
 
-  async getSchemas(args: t.DBArgs, type?: SchemaType): t.UPR {
+  async getSchemas(args: t.DBArgs, type?: SchemaType): Promise<SchemaItem[]> {
     return this.queryMultiple(async query => {
       const vRes = await query(qh.getViewsQuery, [args.databaseName]);
       const views = vRes.map(v => {
@@ -56,13 +57,27 @@ export class PostgresQueryFactory
       if (type === SchemaType.View) {
         return views;
       }
-      // TODO: events, triggers
-      return views;
+      const tRes = await query(qh.getTriggersQuery, [args.databaseName]);
+      const triggers = tRes.map(tr => {
+        return { name: tr.trigger_name, type: SchemaType.Trigger };
+      });
+
+      const eRes = await query(qh.getEventsQuery);
+      const events = eRes.map(e => {
+        return { name: e.evtname, type: SchemaType.Event };
+      });
+      return [...views, ...triggers, ...events];
     }, args.databaseName);
   }
 
-  async getProcedures(args: t.DBArgs): t.UPR {
-    // TODO: procedures
-    return this.query("", [args.databaseName], args.databaseName);
+  async getProcedures(args: t.DBArgs): Promise<SchemaItem[]> {
+    const res: t.RawRows = await this.query(
+      qh.getProceduresQuery,
+      [args.databaseName],
+      args.databaseName,
+    );
+    return res.map(r => {
+      return { name: r.proname, type: SchemaType.Procedure };
+    });
   }
 }

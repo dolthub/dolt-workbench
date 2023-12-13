@@ -6,6 +6,7 @@ import * as foreignKey from "../../indexes/foreignKey.model";
 import * as index from "../../indexes/index.model";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
+import { SchemaItem } from "../../schemas/schema.model";
 import {
   DoltSystemTable,
   systemTableValues,
@@ -91,7 +92,7 @@ export class DoltQueryFactory
     return res.filter(c => c.Key === "PRI").map(c => c.Field);
   }
 
-  async getSchemas(args: t.RefArgs, type?: SchemaType): t.UPR {
+  async getSchemas(args: t.RefArgs, type?: SchemaType): Promise<SchemaItem[]> {
     return this.queryForBuilder(
       async em => {
         let sel = em
@@ -103,21 +104,32 @@ export class DoltQueryFactory
             type,
           });
         }
-        return handleTableNotFound(async () => sel.getRawMany());
+        const res = await handleTableNotFound(async () => sel.getRawMany());
+        if (!res) return [];
+        return res.map(r => {
+          return { name: r.name, type: r.type };
+        });
       },
       args.databaseName,
       args.refName,
     );
   }
 
-  async getProcedures(args: t.RefArgs): t.UPR {
+  async getProcedures(args: t.RefArgs): Promise<SchemaItem[]> {
     return this.queryForBuilder(
       async em => {
         const sel = em
           .createQueryBuilder()
           .select("*")
           .from(DoltSystemTable.PROCEDURES, "");
-        return handleTableNotFound(async () => sel.getRawMany());
+        const res = await handleTableNotFound(async () => sel.getRawMany());
+        if (!res) return [];
+        return res.map(r => {
+          return {
+            name: r.name,
+            type: SchemaType.Procedure,
+          };
+        });
       },
       args.databaseName,
       args.refName,

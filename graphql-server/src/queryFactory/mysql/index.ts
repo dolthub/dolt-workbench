@@ -3,6 +3,7 @@
 import { EntityManager, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
+import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
 import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
@@ -146,7 +147,7 @@ export class MySQLQueryFactory
     return this.query(args.queryString, [], args.databaseName, args.refName);
   }
 
-  async getSchemas(args: t.DBArgs, type?: SchemaType): t.UPR {
+  async getSchemas(args: t.DBArgs, type?: SchemaType): Promise<SchemaItem[]> {
     return this.queryMultiple(async query => {
       const vRes = await query(qh.getViewsQuery, [args.databaseName]);
       const views = vRes.map(v => {
@@ -170,12 +171,15 @@ export class MySQLQueryFactory
     }, args.databaseName);
   }
 
-  async getProcedures(args: t.DBArgs): t.UPR {
-    return this.query(
+  async getProcedures(args: t.DBArgs): Promise<SchemaItem[]> {
+    const res: t.RawRows = await this.query(
       qh.proceduresQuery,
       [args.databaseName],
       args.databaseName,
     );
+    return res.map(r => {
+      return { name: r.Name, type: SchemaType.Procedure };
+    });
   }
 
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL

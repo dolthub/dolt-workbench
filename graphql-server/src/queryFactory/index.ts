@@ -2,6 +2,7 @@ import { DataSource, EntityManager, QueryRunner } from "typeorm";
 import { SortBranchesBy } from "../branches/branch.enum";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { SchemaType } from "../schemas/schema.enums";
+import { SchemaItem } from "../schemas/schema.model";
 import { TableDetails } from "../tables/table.model";
 import * as t from "./types";
 
@@ -68,9 +69,9 @@ export declare class QueryFactory {
 
   getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR;
 
-  getSchemas(args: t.RefArgs, type?: SchemaType): t.UPR;
+  getSchemas(args: t.RefArgs, type?: SchemaType): Promise<SchemaItem[]>;
 
-  getProcedures(args: t.RefArgs): t.UPR;
+  getProcedures(args: t.RefArgs): Promise<SchemaItem[]>;
 
   // DOLT-SPECIFIC QUERIES
 
