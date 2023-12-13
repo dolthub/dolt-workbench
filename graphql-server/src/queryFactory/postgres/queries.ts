@@ -5,3 +5,5 @@ export const listTablesQuery = `SELECT * FROM pg_catalog.pg_tables where scheman
 
 export const databasesQuery = `select schema_name
     from information_schema.schemata;`;
+
+export const getViewsQuery = `select table_name from INFORMATION_SCHEMA.views WHERE table_schema = $1`;

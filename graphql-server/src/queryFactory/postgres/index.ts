@@ -1,5 +1,6 @@
 import { QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
+import { SchemaType } from "../../schemas/schema.enums";
 import { TableDetails } from "../../tables/table.model";
 import { MySQLQueryFactory } from "../mysql";
 import { convertToTableDetails } from "../mysql/utils";
@@ -46,9 +47,18 @@ export class PostgresQueryFactory
     }, args.databaseName);
   }
 
-  async getSchemas(args: t.DBArgs, _type?: SchemaType): t.UPR {
-    // TODO: schemas
-    return this.queryMultiple(async _query => [], args.databaseName);
+  async getSchemas(args: t.DBArgs, type?: SchemaType): t.UPR {
+    return this.queryMultiple(async query => {
+      const vRes = await query(qh.getViewsQuery, [args.databaseName]);
+      const views = vRes.map(v => {
+        return { name: v.table_name, type: SchemaType.View };
+      });
+      if (type === SchemaType.View) {
+        return views;
+      }
+      // TODO: events, triggers
+      return views;
+    }, args.databaseName);
   }
 
   async getProcedures(args: t.DBArgs): t.UPR {
