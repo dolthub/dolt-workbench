@@ -14,7 +14,6 @@ import {
   useSqlSelectForSqlDataTableQuery,
 } from "@gen/graphql-types";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
-import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import SqlMessage from "./SqlMessage";
@@ -37,9 +36,7 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const { parseSelectQuery } = useSqlParser();
   const isMut = useSqlQuery(props.params, props.client, props.gqlError);
-  console.log(parseSelectQuery(props.params.q));
   const msg = <SqlMessage {...props} rowsLen={props.rows?.length ?? 0} />;
   return (
     <>

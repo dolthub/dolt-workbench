@@ -1,10 +1,11 @@
-import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
 import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
 import {
   Conditions,
   escapeSingleQuotesInWhereObj,
   getOrderByArr,
+  getPostgresSchemaDefQuery,
   getSqlAlter,
   getSqlColumn,
   getSqlDelete,
@@ -127,7 +128,6 @@ export default function useSqlBuilder() {
     conditions: Conditions,
     q?: string,
   ): string {
-    console.log("IS POSTGRES", isPostgres);
     let sel: Partial<Select> = { from: [{ table: tableName }] };
     if (q) {
       const parsed = parseSelectQuery(q);
@@ -244,6 +244,16 @@ where schemaname='${dbName}';`;
       : `CREATE VIEW \`${name}\` AS ${q}`;
   }
 
+  function showCreateQuery(
+    dbName: string,
+    name: string,
+    kind: SchemaType,
+  ): string {
+    return isPostgres
+      ? getPostgresSchemaDefQuery(dbName, name, kind)
+      : `SHOW CREATE ${kind.toUpperCase()} \`${name}\``;
+  }
+
   return {
     addWhereClauseToSelect,
     alterTableDropColQuery,
@@ -256,8 +266,10 @@ where schemaname='${dbName}';`;
     getDefaultQueryString,
     hideRowQuery,
     insertIntoTable,
+    isPostgres,
     removeColumnFromQuery,
     selectFromTable,
+    showCreateQuery,
     updateTableMakeNullQuery,
     updateTableQuery,
   };

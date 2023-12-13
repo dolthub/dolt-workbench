@@ -1,4 +1,4 @@
-import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import { isNullValue } from "@lib/null";
 import {
   Alter,
@@ -218,4 +218,25 @@ export function getWhereFromPKCols(
     cond = getWhereObj(c.col, c.val, cond);
   });
   return cond;
+}
+
+export function getPostgresSchemaDefQuery(
+  dbName: string,
+  name: string,
+  kind: SchemaType,
+): string {
+  switch (kind) {
+    case SchemaType.Table:
+      return `SELECT * FROM information_schema.columns WHERE table_schema = '${dbName}' AND table_name = '${name}'`;
+    case SchemaType.View:
+      return `SELECT pg_get_viewdef('${name}', true)`;
+    case SchemaType.Trigger:
+      return `SELECT pg_get_triggerdef(oid) FROM pg_trigger where tgname = '${name}'`;
+    case SchemaType.Event:
+      return `SELECT * FROM pg_event_trigger WHERE evtname = '${name}'`;
+    case SchemaType.Procedure:
+      return `SELECT pg_get_functiondef(oid) FROM pg_proc WHERE proname = '${name}'`;
+    default:
+      return "";
+  }
 }
