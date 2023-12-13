@@ -45,7 +45,7 @@ export function fromDoltBranchesRow(
     _id: `databases/${databaseName}/branches/${b.name}`,
     databaseName,
     branchName: b.name,
-    head: b.head,
+    head: b.hash,
     lastUpdated: convertToUTCDate(b.latest_commit_date),
     lastCommitter: b.latest_committer,
     tableNames: tns,
