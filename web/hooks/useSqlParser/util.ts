@@ -7,16 +7,3 @@ export function fallbackGetTableNamesForSelect(query: string): string[] {
   const tableNames = matches.flatMap(match => match.slice(1).filter(Boolean));
   return tableNames;
 }
-
-// Query should be wrapped in single quotes
-// function makeQueryExecutable(q: string): string {
-//   return (
-//     q
-//       // Escape single quotes
-//       .replace(/'/g, "\\'")
-//       // Remove newlines and carriage returns
-//       .replace(/\r\n|\n|\r/gm, " ")
-//       // Remove whitespace from beginning/end
-//       .trim()
-//   );
-// }

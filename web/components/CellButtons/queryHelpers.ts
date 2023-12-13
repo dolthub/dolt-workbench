@@ -170,7 +170,7 @@ export function convertTimestamp(ts: string): string {
   return `${day} ${formattedTime}`;
 }
 
-function toPKCols(
+export function toPKCols(
   row: RowForDataTableFragment,
   cols: ColumnForDataTableFragment[],
 ): Conditions {

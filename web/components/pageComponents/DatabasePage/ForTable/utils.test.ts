@@ -20,10 +20,10 @@ describe("test insert query utils", () => {
   });
 
   it("gets random date or time", () => {
-    const timeRegex = /"(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)"/; // HH:MM:SS
-    const dateRegex = /^"\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])"$/; // YYYY-MM-DD
+    const timeRegex = /(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)/; // HH:MM:SS
+    const dateRegex = /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])$/; // YYYY-MM-DD
     const datetimeRegex =
-      /^"\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\s(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)"/; // YYYY-MM-DD HH:MM:SS
+      /^\d{4}-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])\s(?:[01]\d|2[0-3]):(?:[0-5]\d):(?:[0-5]\d)/; // YYYY-MM-DD HH:MM:SS
     const tests = [
       { type: "time", regex: timeRegex },
       { type: "date", regex: dateRegex },

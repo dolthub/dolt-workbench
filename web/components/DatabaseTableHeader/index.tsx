@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import Buttons from "./Buttons";
 import Errors from "./Errors";
 import css from "./index.module.css";
-import { Params, useSqlStrings } from "./utils";
+import { Params, useSqlStrings } from "./useSqlStrings";
 
 const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,

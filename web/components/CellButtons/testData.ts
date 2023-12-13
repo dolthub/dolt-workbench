@@ -360,28 +360,3 @@ export const saDiffHistoryWithClausesQuery = sprintf(
   saPK1Val,
   historyOrderBy,
 );
-
-const fkTableName = "fk_table";
-const fkColumns = [
-  {
-    columnName: "col1",
-    columnValue: "fk1",
-  },
-  {
-    columnName: "col2",
-    columnValue: "fk2",
-  },
-];
-export const fkProps = {
-  table: fkTableName,
-  cols: fkColumns,
-};
-
-export const foreignKeyQuery = sprintf(
-  `SELECT * FROM \`$\` WHERE \`$\` = '$' AND \`$\` = '$'`,
-  fkTableName,
-  fkColumns[0].columnName,
-  fkColumns[0].columnValue,
-  fkColumns[1].columnName,
-  fkColumns[1].columnValue,
-);

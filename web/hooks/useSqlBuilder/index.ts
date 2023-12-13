@@ -1,18 +1,12 @@
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import {
-  AST,
-  Alter,
-  Delete,
-  Insert_Replace,
-  Select,
-  Update,
-} from "node-sql-parser";
+import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
 import {
   Conditions,
   escapeSingleQuotesInWhereObj,
   getOrderByArr,
   getSqlAlter,
+  getSqlColumn,
   getSqlDelete,
   getSqlInsert,
   getSqlSelect,
@@ -54,8 +48,7 @@ export default function useSqlBuilder() {
   ): string {
     const ast = parseSelectQuery(q);
     const isJoinClause = tableNames && tableNames.length > 1;
-    const columns =
-      cols === "*" ? cols : mapColsToColumnRef(cols, !!isJoinClause);
+    const columns = mapColsToColumnRef(cols, !!isJoinClause);
 
     if (!ast) return "";
     if (!tableNames || tableNames.length === 0) {
@@ -84,7 +77,7 @@ export default function useSqlBuilder() {
     tableNames: string,
   ): string {
     const ast = parseSelectQuery(q);
-    const columns = cols === "*" ? cols : mapColsToColumnNames(cols);
+    const columns = mapColsToColumnNames(cols);
     if (!ast) return "";
     const newAst: Select = {
       ...ast,
@@ -134,6 +127,7 @@ export default function useSqlBuilder() {
     conditions: Conditions,
     q?: string,
   ): string {
+    console.log("IS POSTGRES", isPostgres);
     let sel: Partial<Select> = { from: [{ table: tableName }] };
     if (q) {
       const parsed = parseSelectQuery(q);
@@ -168,14 +162,14 @@ export default function useSqlBuilder() {
     if (isPostgres) {
       return `SELECT *
 FROM pg_catalog.pg_tables
-where schemaname='${dbName}'`;
+where schemaname='${dbName}';`;
     }
-    return "SHOW TABLES";
+    return "SHOW TABLES;";
   }
 
   function hideRowQuery(tableName: string, conditions: Conditions): string {
     return convertToSqlSelect({
-      columns: "*",
+      columns: [getSqlColumn("*")],
       type: "select",
       from: [{ table: tableName }],
       where: {
@@ -188,8 +182,9 @@ where schemaname='${dbName}'`;
 
   function alterTableDropColQuery(tableName: string, column: string): string {
     const alt = {
-      type: "alter",
+      // type: "alter",
       // TODO: Alter type is wrong
+      // table: { table: tableName, db: null, as: null },
       table: [{ table: tableName, db: null, as: null }],
       expr: [
         {
@@ -238,13 +233,9 @@ where schemaname='${dbName}'`;
   }
 
   function dropTable(tableName: string): string {
-    const drop: AST = {
-      // TODO: Drop type
-      type: "drop",
-      keyword: "table",
-      name: [{ db: null, table: tableName, as: null }],
-    };
-    return sqlify(drop);
+    return isPostgres
+      ? `DROP TABLE "${tableName}"`
+      : `DROP TABLE \`${tableName}\``;
   }
 
   function createView(name: string, q: string): string {

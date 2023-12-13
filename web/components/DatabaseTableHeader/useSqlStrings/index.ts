@@ -25,7 +25,7 @@ export function useSqlStrings(
       return exampleCreateTable;
     }
     if (!params.q && !params.tableName) return defaultQuery;
-    return (params.q || selectFromTable(params.tableName ?? "")).replace(
+    return (params.q || selectFromTable(params.tableName ?? "")).replaceAll(
       /\r\n|\n|\r/gm,
       " ",
     );

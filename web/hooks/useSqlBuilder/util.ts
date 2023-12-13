@@ -4,6 +4,7 @@ import {
   Alter,
   Column,
   Delete,
+  Expr,
   Insert_Replace,
   OrderBy,
   Select,
@@ -12,13 +13,17 @@ import {
 
 export type Conditions = Array<{ col: string; val: string }>;
 
+export function getSqlColumn(column: string): Column {
+  return { expr: { column, type: "column_ref", table: null }, as: "" };
+}
+
 export function getSqlSelect(sel: Partial<Select>): Select {
   return {
     with: null,
     type: "select",
     options: null,
     distinct: null,
-    columns: "*",
+    columns: [getSqlColumn("*")],
     from: null,
     where: null,
     groupby: null,
@@ -70,7 +75,8 @@ export function getSqlUpdate(upd: Partial<Update>): Update {
   };
 }
 
-export function mapColsToColumnNames(cols: string[]): Column[] {
+export function mapColsToColumnNames(cols: string[] | "*"): Column[] {
+  if (cols === "*") return [getSqlColumn("*")];
   return cols.map(c => {
     return {
       expr: {
@@ -84,9 +90,10 @@ export function mapColsToColumnNames(cols: string[]): Column[] {
 }
 
 export function mapColsToColumnRef(
-  cols: ColumnForDataTableFragment[],
+  cols: ColumnForDataTableFragment[] | "*",
   isJoinClause: boolean,
 ): Column[] {
+  if (cols === "*") return [getSqlColumn("*")];
   return cols.map(c => {
     return {
       expr: {
@@ -100,7 +107,7 @@ export function mapColsToColumnRef(
 }
 
 // The where object is a binary tree with 'left' and 'right' nodes
-export function escapeSingleQuotesInWhereObj(where: any): any {
+export function escapeSingleQuotesInWhereObj(where: any | null): any | null {
   if (!where) return null;
 
   if (where.args) {
@@ -137,7 +144,7 @@ export function escapeSingleQuotes(value: string): string {
   return value.replace(/'/g, "\\'");
 }
 
-function getNewWhereCondition(column: string, value: string) {
+function getNewWhereCondition(column: string, value: string): Expr {
   const valIsNull = isNullValue(value);
   const escapedVal = escapeSingleQuotes(value);
   return {
@@ -149,6 +156,8 @@ function getNewWhereCondition(column: string, value: string) {
       column,
     },
     right: {
+      // type: "param",
+      // value: escapedVal,
       type: valIsNull ? "null" : "string",
       value: valIsNull ? null : escapedVal,
     },
@@ -156,7 +165,11 @@ function getNewWhereCondition(column: string, value: string) {
 }
 
 // Creates where object from conditions or adds conditions to existing where object
-export function getWhereObj(column: string, value: string, where: any | null) {
+export function getWhereObj(
+  column: string,
+  value: string,
+  where: any | null,
+): Expr {
   const newCondition = getNewWhereCondition(column, value);
 
   if (!where) {
@@ -199,7 +212,7 @@ export function getOrderByArr(
 export function getWhereFromPKCols(
   conditions: Conditions,
   where?: any | null,
-): any {
+): Expr {
   let cond: any | null = where || null;
   conditions.forEach(c => {
     cond = getWhereObj(c.col, c.val, cond);

@@ -5,7 +5,7 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
 import Errors from "../Errors";
-import { Params, useSqlStrings } from "../utils";
+import { Params, useSqlStrings } from "../useSqlStrings";
 import css from "./index.module.css";
 
 type Props = {

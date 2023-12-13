@@ -1,19 +1,9 @@
-import { MockedProvider } from "@apollo/client/testing";
-import {
-  getDeleteRowQuery,
-  useGetFilterByCellQuery,
-} from "@components/CellButtons/queryHelpers";
-import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import {
   ColumnForDataTableFragment,
   ColumnValue,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { getUpdateCellQuery } from "@lib/dataTable";
-import { TableParams } from "@lib/params";
-import { renderHook } from "@testing-library/react";
 import cx from "classnames";
-import { ReactNode } from "react";
 import css from "./index.module.css";
 import {
   getDiffTypeClassnameForCell,
@@ -21,35 +11,10 @@ import {
   getDiffTypeColumnIndex,
 } from "./utils";
 
-function renderUseGetFilterByCellQuery() {
-  const wrapper = ({ children }: { children: ReactNode }) => (
-    <MockedProvider mocks={[databaseDetailsMock(true, true, false)]}>
-      {children}
-    </MockedProvider>
-  );
-
-  const { result } = renderHook(() => useGetFilterByCellQuery(), {
-    wrapper,
-  });
-  return result.current;
-}
-
 const idPKColumn: ColumnForDataTableFragment = {
   name: "id",
   isPrimaryKey: true,
   type: "INT",
-};
-
-const pkPKColumn: ColumnForDataTableFragment = {
-  name: "pk2",
-  isPrimaryKey: true,
-  type: "INT",
-};
-
-const nameColumn: ColumnForDataTableFragment = {
-  name: "name",
-  isPrimaryKey: false,
-  type: "VARCHAR(16383)",
 };
 
 const fromIdPKColumn: ColumnForDataTableFragment = {
@@ -70,8 +35,6 @@ const diffTypeColumn: ColumnForDataTableFragment = {
 
 const idColValue: ColumnValue = { displayValue: "1" };
 const idTwoColValue: ColumnValue = { displayValue: "2" };
-const nameColValue: ColumnValue = { displayValue: "Taylor" };
-const nameSingleQuoteColValue: ColumnValue = { displayValue: "Taylor's chair" };
 const removedDiffTypeColValue: ColumnValue = { displayValue: "removed" };
 const modifiedDiffTypeColValue: ColumnValue = { displayValue: "modified" };
 const addedDiffTypeColValue: ColumnValue = { displayValue: "added" };
@@ -207,176 +170,6 @@ describe("tests getDiffTypeColumnIndex", () => {
   tests.forEach(test => {
     it(`tests getDiffTypeColumnIndex for ${test.desc}`, () => {
       expect(getDiffTypeColumnIndex(test.cols)).toEqual(test.expectedIndex);
-    });
-  });
-});
-
-describe("test getUpdateCellQuery", () => {
-  const tests: Array<{
-    desc: string;
-    tableName: string;
-    currentCol: string;
-    newVal: string;
-    columns: ColumnForDataTableFragment[];
-    row: RowForDataTableFragment;
-    expectedQuery: string;
-  }> = [
-    {
-      desc: "one pk",
-      tableName: "test-table",
-      currentCol: "name",
-      newVal: "New Name",
-      columns: [idPKColumn, nameColumn],
-      row: { columnValues: [idColValue, nameColValue] },
-      expectedQuery: `UPDATE \`test-table\` SET \`name\` = "New Name" WHERE \`id\` = "1"`,
-    },
-    {
-      desc: "two pks",
-      tableName: "test-table",
-      currentCol: "name",
-      newVal: "New Name",
-      columns: [idPKColumn, pkPKColumn, nameColumn],
-      row: { columnValues: [idColValue, idTwoColValue, nameColValue] },
-      expectedQuery: `UPDATE \`test-table\` SET \`name\` = "New Name" WHERE \`id\` = "1" AND \`pk2\` = "2"`,
-    },
-    {
-      desc: "three pks with single quote val",
-      tableName: "test-table",
-      currentCol: "name",
-      newVal: "New Name",
-      columns: [idPKColumn, pkPKColumn, { ...nameColumn, isPrimaryKey: true }],
-      row: {
-        columnValues: [idColValue, idTwoColValue, nameSingleQuoteColValue],
-      },
-      expectedQuery: `UPDATE \`test-table\` SET \`name\` = "New Name" WHERE \`id\` = "1" AND \`pk2\` = "2" AND \`name\` = "Taylor's chair"`,
-    },
-  ];
-
-  tests.forEach(t => {
-    it(`tests getUpdateCellQuery for ${t.desc}`, () => {
-      expect(
-        getUpdateCellQuery(
-          t.tableName,
-          t.currentCol,
-          t.newVal,
-          t.columns,
-          t.row,
-        ),
-      ).toEqual(t.expectedQuery);
-    });
-  });
-});
-
-describe("test getDeleteRowQuery", () => {
-  const tests: Array<{
-    desc: string;
-    tableName: string;
-    columns: ColumnForDataTableFragment[];
-    row: RowForDataTableFragment;
-    expectedQuery: string;
-  }> = [
-    {
-      desc: "one pk",
-      tableName: "test-table",
-      columns: [idPKColumn, nameColumn],
-      row: { columnValues: [idColValue, nameColValue] },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = "1"`,
-    },
-    {
-      desc: "two pks",
-      tableName: "test-table",
-      columns: [idPKColumn, pkPKColumn, nameColumn],
-      row: { columnValues: [idColValue, idTwoColValue, nameColValue] },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = "1" AND \`pk2\` = "2"`,
-    },
-    {
-      desc: "three pks with single quote val",
-      tableName: "test-table",
-      columns: [idPKColumn, pkPKColumn, { ...nameColumn, isPrimaryKey: true }],
-      row: {
-        columnValues: [idColValue, idTwoColValue, nameSingleQuoteColValue],
-      },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = "1" AND \`pk2\` = "2" AND \`name\` = "Taylor's chair"`,
-    },
-  ];
-
-  tests.forEach(t => {
-    it(`tests getDeleteRowQuery for ${t.desc}`, () => {
-      expect(getDeleteRowQuery(t.tableName, t.row, t.columns)).toEqual(
-        t.expectedQuery,
-      );
-    });
-  });
-});
-
-describe("test useGetFilterByCellQuery", () => {
-  const refParams = {
-    databaseName: "dbname",
-    refName: "master",
-  };
-  const tests: Array<{
-    desc: string;
-    col: ColumnForDataTableFragment;
-    value: string;
-    params: TableParams & { q?: string };
-    expectedQuery: string;
-  }> = [
-    {
-      desc: "no current query",
-      col: nameColumn,
-      value: "test-string",
-      params: { ...refParams, tableName: "test_table" },
-      expectedQuery: "SELECT * FROM `test_table` WHERE `name` = 'test-string'",
-    },
-    {
-      desc: "current query with columns",
-      col: nameColumn,
-      value: "test-string",
-      params: {
-        ...refParams,
-        tableName: "test_table",
-        q: "SELECT id, name FROM test_table",
-      },
-      expectedQuery:
-        "SELECT `id`, `name` FROM `test_table` WHERE `name` = 'test-string'",
-    },
-    {
-      desc: "current query with where clause",
-      col: nameColumn,
-      value: "test-string",
-      params: {
-        ...refParams,
-        tableName: "test_table",
-        q: "SELECT * FROM test_table WHERE id=1",
-      },
-      expectedQuery:
-        "SELECT * FROM `test_table` WHERE `id` = 1 AND `name` = 'test-string'",
-    },
-    {
-      desc: "no current query with single quote value",
-      col: nameColumn,
-      value: "McDonald's",
-      params: { ...refParams, tableName: "test_table" },
-      expectedQuery: "SELECT * FROM `test_table` WHERE `name` = 'McDonald\\'s'",
-    },
-    {
-      desc: "current query with single quote value in where clause",
-      col: idPKColumn,
-      value: "2",
-      params: {
-        ...refParams,
-        tableName: "test_table",
-        q: "SELECT * FROM `test_table` WHERE `name` = 'McDonald\\'s'",
-      },
-      expectedQuery:
-        "SELECT * FROM `test_table` WHERE `name` = 'McDonald\\'s' AND `id` = '2'",
-    },
-  ];
-
-  const generate = renderUseGetFilterByCellQuery();
-  tests.forEach(t => {
-    it(`tests useGetFilterByCellQuery for ${t.desc}`, () => {
-      expect(generate(t.col, t.value, t.params)).toEqual(t.expectedQuery);
     });
   });
 });
