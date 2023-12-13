@@ -2,19 +2,9 @@ import { Field, ID, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
 import * as foreignKey from "../indexes/foreignKey.model";
 import * as index from "../indexes/index.model";
-import { RawRow } from "../queryFactory/types";
 
 @ObjectType()
-export class Table {
-  @Field(_type => ID)
-  _id: string;
-
-  @Field()
-  databaseName: string;
-
-  @Field()
-  refName: string;
-
+export class TableDetails {
   @Field()
   tableName: string;
 
@@ -29,6 +19,18 @@ export class Table {
 }
 
 @ObjectType()
+export class Table extends TableDetails {
+  @Field(_type => ID)
+  _id: string;
+
+  @Field()
+  databaseName: string;
+
+  @Field()
+  refName: string;
+}
+
+@ObjectType()
 export class TableNames {
   @Field(_type => [String])
   list: string[];
@@ -37,18 +39,12 @@ export class TableNames {
 export function fromDoltRowRes(
   databaseName: string,
   refName: string,
-  tableName: string,
-  columns: RawRow[],
-  fkRows: RawRow[],
-  idxRows: RawRow[],
+  details: TableDetails,
 ): Table {
   return {
-    _id: `databases/${databaseName}/refs/${refName}/tables/${tableName}`,
+    ...details,
+    _id: `databases/${databaseName}/refs/${refName}/tables/${details.tableName}`,
     databaseName,
     refName,
-    tableName,
-    columns: columns.map(c => column.fromDoltRowRes(c, tableName)),
-    foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
-    indexes: index.fromDoltRowsRes(idxRows),
   };
 }

@@ -59,7 +59,7 @@ export class BranchResolver {
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
     const conn = this.conn.connection();
     const res = await conn.getBranch(args);
-    if (!res.length) return undefined;
+    if (!res?.length) return undefined;
     return fromDoltBranchesRow(args.databaseName, res[0]);
   }
 

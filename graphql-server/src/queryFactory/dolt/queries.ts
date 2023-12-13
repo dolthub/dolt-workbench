@@ -1,30 +1,36 @@
 import { SortBranchesBy } from "../../branches/branch.enum";
-import { DoltSystemTable } from "../../systemTables/systemTable.enums";
-import { getOrderByFromCols, getPKColsForRowsQuery } from "../mysql/queries";
 import { RawRows } from "../types";
 
-export const getDoltSchemasQuery = (hasWhereCause = false): string =>
-  `SELECT * FROM ${DoltSystemTable.SCHEMAS}${
-    hasWhereCause ? " WHERE type = ?" : ""
-  }`;
+// TABLE
 
-export const doltProceduresQuery = `SELECT * FROM ${DoltSystemTable.PROCEDURES}`;
+export const columnsQuery = `DESCRIBE ??`;
+
+export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
+WHERE table_name=? AND table_schema=? 
+AND referenced_table_schema IS NOT NULL`;
+
+export const indexQuery = `SELECT 
+  table_name, 
+  index_name, 
+  GROUP_CONCAT(comment) as COMMENTS, 
+  GROUP_CONCAT(non_unique) AS NON_UNIQUES, 
+  GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS 
+FROM information_schema.statistics 
+WHERE table_name=? AND index_name!="PRIMARY" 
+GROUP BY index_name;`;
+
+export const tableColsQuery = `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`;
 
 // BRANCHES
-
-export const branchQuery = `SELECT * FROM dolt_branches WHERE name=?`;
-
-export const getBranchesQuery = (sortBy?: SortBranchesBy) =>
-  `SELECT * FROM dolt_branches ${getOrderByForBranches(sortBy)}`;
 
 export const callNewBranch = `CALL DOLT_BRANCH(?, ?)`;
 
 export const callDeleteBranch = `CALL DOLT_BRANCH("-D", ?)`;
 
-function getOrderByForBranches(sortBy?: SortBranchesBy): string {
+export function getOrderByColForBranches(sortBy?: SortBranchesBy): string {
   switch (sortBy) {
     case SortBranchesBy.LastUpdated:
-      return "ORDER BY latest_commit_date DESC ";
+      return "latest_commit_date";
     default:
       return "";
   }
@@ -61,23 +67,11 @@ export const schemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF(?, ?, ?)`;
 
 export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF(?, ?)`;
 
-// DOCS
-
-export const docsQuery = `SELECT * FROM dolt_docs`;
-
 // PULLS
 
 export const callMerge = `CALL DOLT_MERGE(?, "--no-ff", "-m", ?)`;
 
-// STATUS
-
-export const statusQuery = `SELECT * FROM dolt_status`;
-
 // TAGS
-
-export const tagsQuery = `SELECT * FROM dolt_tags ORDER BY date DESC`;
-
-export const tagQuery = `SELECT * FROM dolt_tags WHERE tag_name=?`;
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;
 
@@ -91,6 +85,16 @@ export function getAuthorNameString(hasAuthor: boolean): string {
   return `, "--author", ?`;
 }
 
+// Creates ORDER BY statement with column parameters
+// i.e. ORDER BY ::col1, ::col2
+function getOrderByFromCols(numCols: number): string {
+  if (!numCols) return "";
+  const pkCols = Array.from({ length: numCols })
+    .map(() => `? ASC`)
+    .join(", ");
+  return pkCols === "" ? "" : `ORDER BY ${pkCols} `;
+}
+
 export const getRowsQueryAsOf = (
   columns: RawRows,
 ): { q: string; cols: string[] } => {
@@ -102,6 +106,12 @@ export const getRowsQueryAsOf = (
     cols,
   };
 };
+
+function getPKColsForRowsQuery(cs: RawRows): string[] {
+  const pkCols = cs.filter(col => col.Key === "PRI");
+  const cols = pkCols.map(c => c.Field);
+  return cols;
+}
 
 export const tableColsQueryAsOf = `DESCRIBE ?? AS OF ?`;
 

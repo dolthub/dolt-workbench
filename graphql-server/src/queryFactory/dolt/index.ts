@@ -1,65 +1,152 @@
+import { QueryFactory } from "..";
 import { SortBranchesBy } from "../../branches/branch.enum";
+import * as column from "../../columns/column.model";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
+import * as foreignKey from "../../indexes/foreignKey.model";
+import * as index from "../../indexes/index.model";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
-import { systemTableValues } from "../../systemTables/systemTable.enums";
+import {
+  DoltSystemTable,
+  systemTableValues,
+} from "../../systemTables/systemTable.enums";
+import { TableDetails } from "../../tables/table.model";
 import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { MySQLQueryFactory } from "../mysql";
 import * as myqh from "../mysql/queries";
+import { mapTablesRes } from "../mysql/utils";
 import * as t from "../types";
 import * as qh from "./queries";
 import { handleRefNotFound, unionCols } from "./utils";
 
 export class DoltQueryFactory
   extends MySQLQueryFactory
-  implements t.QueryFactory
+  implements QueryFactory
 {
   isDolt = true;
 
-  async getTableNames(args: t.RefArgs, filterSystemTables?: boolean): t.PR {
+  async getTableNames(
+    args: t.RefArgs,
+    filterSystemTables?: boolean,
+  ): Promise<string[]> {
     return this.queryMultiple(
       async query => {
-        const tables = await query(myqh.listTablesQuery, []);
+        const res: t.RawRows = await query(myqh.listTablesQuery, []);
+        const tables = mapTablesRes(res);
         if (filterSystemTables) return tables;
 
-        const systemTables: Array<t.RawRow | undefined> = await Promise.all(
+        const systemTables: Array<string | undefined> = await Promise.all(
           systemTableValues.map(async st => {
             const cols = await handleTableNotFound(async () =>
-              query(myqh.columnsQuery, [st]),
+              query(qh.columnsQuery, [st]),
             );
             if (cols) {
-              return { [`Tables_in_${args.databaseName}`]: `${st}` };
+              return `${st}`;
             }
             return undefined;
           }),
         );
-        return [...tables, ...(systemTables.filter(st => !!st) as t.RawRows)];
+        return [...tables, ...(systemTables.filter(st => !!st) as string[])];
       },
       args.databaseName,
       args.refName,
     );
   }
 
+  // TODO: Why does qr.getTable() not work for foreign keys for Dolt?
+  async getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined> {
+    return this.queryMultiple(
+      async query => getTableInfoWithQR(query, args),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
+    return this.queryMultiple(
+      async query => {
+        const tableInfos = await Promise.all(
+          tns.map(async name => {
+            const tableInfo = await getTableInfoWithQR(query, {
+              ...args,
+              tableName: name,
+            });
+            return tableInfo;
+          }),
+        );
+        return tableInfos;
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
+    const res: t.RawRows = await this.query(
+      qh.tableColsQuery,
+      [args.tableName],
+      args.databaseName,
+      args.refName,
+    );
+    return res.filter(c => c.Key === "PRI").map(c => c.Field);
+  }
+
   async getSchemas(args: t.RefArgs, type?: SchemaType): t.UPR {
-    const q = qh.getDoltSchemasQuery(!!type);
-    const p = type ? [type] : [];
-    return handleTableNotFound(async () =>
-      this.query(q, p, args.databaseName, args.refName),
+    return this.queryForBuilder(
+      async em => {
+        let sel = em
+          .createQueryBuilder()
+          .select("*")
+          .from(DoltSystemTable.SCHEMAS, "");
+        if (type) {
+          sel = sel.where(`${DoltSystemTable.SCHEMAS}.type = :type`, {
+            type,
+          });
+        }
+        return handleTableNotFound(async () => sel.getRawMany());
+      },
+      args.databaseName,
+      args.refName,
     );
   }
 
   async getProcedures(args: t.RefArgs): t.UPR {
-    return handleTableNotFound(async () =>
-      this.query(qh.doltProceduresQuery, [], args.databaseName, args.refName),
+    return this.queryForBuilder(
+      async em => {
+        const sel = em
+          .createQueryBuilder()
+          .select("*")
+          .from(DoltSystemTable.PROCEDURES, "");
+        return handleTableNotFound(async () => sel.getRawMany());
+      },
+      args.databaseName,
+      args.refName,
     );
   }
 
-  async getBranch(args: t.BranchArgs): t.PR {
-    return this.query(qh.branchQuery, [args.branchName], args.databaseName);
+  async getBranch(args: t.BranchArgs): t.UPR {
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_branches", "")
+          .where(`dolt_branches.name = :name`, {
+            name: args.branchName,
+          })
+          .getRawOne(),
+      args.databaseName,
+    );
   }
 
   async getBranches(args: t.DBArgs & { sortBy?: SortBranchesBy }): t.PR {
-    return this.query(qh.getBranchesQuery(args.sortBy), [], args.databaseName);
+    return this.queryForBuilder(async em => {
+      let sel = em.createQueryBuilder().select("*").from("dolt_branches", "");
+      if (args.sortBy) {
+        sel = sel.addOrderBy(qh.getOrderByColForBranches(args.sortBy), "DESC");
+      }
+      return sel.getRawMany();
+    }, args.databaseName);
   }
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
@@ -98,7 +185,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getDiffStat(args: t.RefsArgs & { tableName?: string }): t.PR {
+  async getDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
       qh.getDiffStatQuery(!!args.tableName),
       [args.fromRefName, args.toRefName, args.tableName],
@@ -107,7 +194,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getThreeDotDiffStat(args: t.RefsArgs & { tableName?: string }): t.PR {
+  async getThreeDotDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
       qh.getThreeDotDiffStatQuery(!!args.tableName),
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -116,7 +203,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getDiffSummary(args: t.RefsArgs & { tableName?: string }): t.PR {
+  async getDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
       qh.getDiffSummaryQuery(!!args.tableName),
       [args.fromRefName, args.toRefName, args.tableName],
@@ -125,9 +212,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getThreeDotDiffSummary(
-    args: t.RefsArgs & { tableName?: string },
-  ): t.PR {
+  async getThreeDotDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
       qh.getThreeDotDiffSummaryQuery(!!args.tableName),
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -136,7 +221,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getSchemaPatch(args: t.RefsArgs & { tableName: string }): t.PR {
+  async getSchemaPatch(args: t.RefsTableArgs): t.PR {
     return this.query(
       qh.schemaPatchQuery,
       [args.fromRefName, args.toRefName, args.tableName],
@@ -145,7 +230,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getThreeDotSchemaPatch(args: t.RefsArgs & { tableName: string }): t.PR {
+  async getThreeDotSchemaPatch(args: t.RefsTableArgs): t.PR {
     return this.query(
       qh.threeDotSchemaPatchQuery,
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -154,7 +239,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getSchemaDiff(args: t.RefsArgs & { tableName: string }): t.PR {
+  async getSchemaDiff(args: t.RefsTableArgs): t.PR {
     return this.query(
       qh.schemaDiffQuery,
       [args.fromRefName, args.toRefName, args.tableName],
@@ -163,7 +248,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getThreeDotSchemaDiff(args: t.RefsArgs & { tableName: string }): t.PR {
+  async getThreeDotSchemaDiff(args: t.RefsTableArgs): t.PR {
     return this.query(
       qh.threeDotSchemaDiffQuery,
       [`${args.toRefName}...${args.fromRefName}`, args.tableName],
@@ -173,21 +258,56 @@ export class DoltQueryFactory
   }
 
   async getDocs(args: t.RefArgs): t.UPR {
-    return handleTableNotFound(async () =>
-      this.query(qh.docsQuery, [], args.databaseName, args.refName),
+    return this.queryForBuilder(
+      async em => {
+        const sel = em
+          .createQueryBuilder()
+          .select("*")
+          .from(DoltSystemTable.DOCS, "");
+        return handleTableNotFound(async () => sel.getRawMany());
+      },
+      args.databaseName,
+      args.refName,
     );
   }
 
   async getStatus(args: t.RefArgs): t.PR {
-    return this.query(qh.statusQuery, [], args.databaseName, args.refName);
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_status", "")
+          .getRawMany(),
+      args.databaseName,
+      args.refName,
+    );
   }
 
-  async getTag(args: t.TagArgs): t.PR {
-    return this.query(qh.tagQuery, [args.tagName], args.databaseName);
+  async getTag(args: t.TagArgs): t.UPR {
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_tags", "")
+          .where("dolt_tags.tag_name", { tag_name: args.tagName })
+          .getRawOne(),
+      args.databaseName,
+    );
   }
 
   async getTags(args: t.DBArgs): t.PR {
-    return this.query(qh.tagsQuery, [], args.databaseName);
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_tags", "")
+          .orderBy("dolt_tags.date", "DESC")
+          .getRawMany(),
+      args.databaseName,
+    );
   }
 
   async createNewTag(
@@ -309,4 +429,22 @@ export class DoltQueryFactory
       args.refName,
     );
   }
+}
+
+async function getTableInfoWithQR(
+  query: t.ParQuery,
+  args: t.TableArgs,
+): Promise<TableDetails> {
+  const columns = await query(qh.columnsQuery, [args.tableName]);
+  const fkRows = await query(qh.foreignKeysQuery, [
+    args.tableName,
+    `${args.databaseName}/${args.refName}`,
+  ]);
+  const idxRows = await query(qh.indexQuery, [args.tableName]);
+  return {
+    tableName: args.tableName,
+    columns: columns.map(c => column.fromDoltRowRes(c, args.tableName)),
+    foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
+    indexes: index.fromDoltRowsRes(idxRows),
+  };
 }

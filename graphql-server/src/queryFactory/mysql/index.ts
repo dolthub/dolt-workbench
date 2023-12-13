@@ -1,15 +1,18 @@
 /* eslint-disable class-methods-use-this */
 
+import { EntityManager, QueryRunner } from "typeorm";
+import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
+import { TableDetails } from "../../tables/table.model";
 import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
 import * as t from "../types";
 import * as qh from "./queries";
-import { notDoltError } from "./utils";
+import { convertToTableDetails, mapTablesRes, notDoltError } from "./utils";
 
 export class MySQLQueryFactory
   extends BaseQueryFactory
-  implements t.QueryFactory
+  implements QueryFactory
 {
   isDolt = false;
 
@@ -48,58 +51,86 @@ export class MySQLQueryFactory
     });
   }
 
+  async queryForBuilder<T>(
+    executeQuery: (em: EntityManager) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.handleAsyncQuery(async qr => {
+      if (dbName) {
+        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+      }
+
+      return executeQuery(qr.manager);
+    });
+  }
+
+  async queryQR<T>(
+    executeQuery: (qr: QueryRunner) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.handleAsyncQuery(async qr => {
+      if (dbName) {
+        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+      }
+
+      return executeQuery(qr);
+    });
+  }
+
   async databases(): t.PR {
     return this.query(qh.databasesQuery, []);
   }
 
-  async getTableNames(args: t.RefArgs): t.PR {
-    return this.query(qh.listTablesQuery, [], args.databaseName);
-  }
-
-  async getTableInfo(args: t.TableArgs): t.SPR {
-    return this.queryMultiple(
-      async query => getTableInfoWithQR(query, args, this.isDolt),
+  async getTableNames(args: t.RefArgs): Promise<string[]> {
+    const res: t.RawRows = await this.query(
+      qh.listTablesQuery,
+      [],
       args.databaseName,
-      args.refName,
     );
+    return mapTablesRes(res);
   }
 
-  async getTables(args: t.RefArgs, tns: string[]): t.PR {
-    return this.queryMultiple(async query => {
-      const tableInfos = await Promise.all(
-        tns.map(async name => {
-          const row = await getTableInfoWithQR(
-            query,
-            {
-              ...args,
-              tableName: name,
-            },
-            this.isDolt,
-          );
-          return row;
-        }),
-      );
-      return tableInfos;
+  async getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined> {
+    return this.queryQR(async qr => {
+      const table = await qr.getTable(args.tableName);
+      if (!table) return undefined;
+      return convertToTableDetails(table);
     }, args.databaseName);
   }
 
-  async getTableColumns(args: t.TableArgs): t.PR {
-    return this.query(
-      qh.tableColsQuery,
-      [args.tableName],
-      args.databaseName,
-      args.refName,
-    );
+  async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
+    return this.queryQR(async qr => {
+      const tables = await qr.getTables(tns);
+      return tables.map(convertToTableDetails);
+    }, args.databaseName);
+  }
+
+  async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
+    return this.queryQR(async qr => {
+      const table = await qr.getTable(args.tableName);
+      if (!table) return [];
+      return table.columns.filter(c => c.isPrimary).map(c => c.name);
+    }, args.databaseName);
   }
 
   async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
-    const { q, cols } = qh.getRowsQuery(page.columns);
-    return this.query(
-      q,
-      [args.tableName, ...cols, ROW_LIMIT + 1, page.offset],
-      args.databaseName,
-      args.refName,
-    );
+    return this.queryForBuilder(async em => {
+      let build = em
+        .createQueryBuilder()
+        .select("*")
+        .from(args.tableName, args.tableName);
+
+      page.pkCols.forEach(col => {
+        build = build.addOrderBy(col, "ASC");
+      });
+
+      return build
+        .limit(ROW_LIMIT + 1)
+        .offset(page.offset)
+        .getRawMany();
+    });
   }
 
   async getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR {
@@ -141,7 +172,7 @@ export class MySQLQueryFactory
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL
 
   // Returns static branch
-  async getBranch(args: t.BranchArgs): t.PR {
+  async getBranch(args: t.BranchArgs): t.UPR {
     return [
       {
         name: args.branchName,
@@ -153,7 +184,8 @@ export class MySQLQueryFactory
   }
 
   async getBranches(args: t.DBArgs): t.PR {
-    return this.getBranch({ ...args, branchName: "main" });
+    const branch = await this.getBranch({ ...args, branchName: "main" });
+    return branch ?? [];
   }
 
   async createNewBranch(_: t.BranchArgs & { fromRefName: string }): t.PR {
@@ -188,21 +220,19 @@ export class MySQLQueryFactory
     throw notDoltError("get three dot diff summary");
   }
 
-  async getSchemaPatch(_args: t.RefsArgs & { tableName: string }): t.PR {
+  async getSchemaPatch(_args: t.RefsTableArgs): t.PR {
     throw notDoltError("get schema patch");
   }
 
-  async getThreeDotSchemaPatch(
-    _args: t.RefsArgs & { tableName: string },
-  ): t.PR {
+  async getThreeDotSchemaPatch(_args: t.RefsTableArgs): t.PR {
     throw notDoltError("get three dot schema patch");
   }
 
-  async getSchemaDiff(_args: t.RefsArgs & { tableName: string }): t.PR {
+  async getSchemaDiff(_args: t.RefsTableArgs): t.PR {
     throw notDoltError("get schema diff");
   }
 
-  async getThreeDotSchemaDiff(_args: t.RefsArgs & { tableName: string }): t.PR {
+  async getThreeDotSchemaDiff(_args: t.RefsTableArgs): t.PR {
     throw notDoltError("get three dot schema diff");
   }
 
@@ -214,7 +244,7 @@ export class MySQLQueryFactory
     throw notDoltError("get status");
   }
 
-  async getTag(_args: t.TagArgs): t.PR {
+  async getTag(_args: t.TagArgs): t.UPR {
     throw notDoltError("get tag");
   }
 
@@ -253,18 +283,4 @@ export class MySQLQueryFactory
   async getRowDiffs(_args: t.RowDiffArgs): t.DiffRes {
     throw notDoltError("get row sided diffs");
   }
-}
-
-async function getTableInfoWithQR(
-  query: t.ParQuery,
-  args: t.TableArgs,
-  isDolt: boolean,
-): t.SPR {
-  const columns = await query(qh.columnsQuery, [args.tableName]);
-  const fkRows = await query(qh.foreignKeysQuery, [
-    args.tableName,
-    isDolt ? `${args.databaseName}/${args.refName}` : args.databaseName,
-  ]);
-  const idxRows = await query(qh.indexQuery, [args.tableName]);
-  return { name: args.tableName, columns, fkRows, idxRows };
 }
