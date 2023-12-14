@@ -6,13 +6,15 @@ import FormSelect from "@components/FormSelect";
 import Loader from "@components/Loader";
 import ExternalLink from "@components/links/ExternalLink";
 import { DatabaseType } from "@gen/graphql-types";
+import useEffectOnMount from "@hooks/useEffectOnMount";
 import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
+import { IoIosArrowDropleftCircle } from "@react-icons/all-files/io/IoIosArrowDropleftCircle";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import css from "./index.module.css";
-import useConfig from "./useConfig";
+import useConfig, { getCanSubmit } from "./useConfig";
 
 type Props = {
   canGoBack: boolean;
@@ -21,13 +23,11 @@ type Props = {
 
 export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
-  const canSubmit =
-    state.name && (state.connectionUrl || (state.host && state.username));
   const [isDocker, setIsDocker] = useState(false);
 
-  useEffect(() => {
+  useEffectOnMount(() => {
     setIsDocker(window.location.origin === "http://localhost:3000");
-  }, []);
+  });
 
   const onCancel = props.canGoBack
     ? () => {
@@ -38,6 +38,11 @@ export default function NewConnection(props: Props) {
   return (
     <div className={css.databaseForm}>
       <Loader loaded={!state.loading} />
+      {props.canGoBack && (
+        <Button.Link onClick={onCancel} className={css.goback}>
+          <IoIosArrowDropleftCircle /> back to connections
+        </Button.Link>
+      )}
       <div className={css.whiteContainer}>
         <form onSubmit={onSubmit}>
           <div className={css.section}>
@@ -125,7 +130,6 @@ export default function NewConnection(props: Props) {
               horizontal
               light
             />
-            {/* TODO: This doesn't work */}
             {state.type === DatabaseType.Postgres && (
               <FormInput
                 label="Schema"
@@ -174,7 +178,7 @@ export default function NewConnection(props: Props) {
               onCancel={onCancel}
               cancelText={props.canGoBack ? "cancel" : "clear"}
             >
-              <Button type="submit" disabled={!canSubmit}>
+              <Button type="submit" disabled={!getCanSubmit(state)}>
                 Launch Workbench
               </Button>
             </ButtonsWithError>

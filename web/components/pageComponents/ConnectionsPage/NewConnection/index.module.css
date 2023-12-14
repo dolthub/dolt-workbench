@@ -10,6 +10,13 @@
   @apply max-w-xl w-full border rounded-lg py-10 bg-white mx-auto;
 }
 
+.goback {
+  @apply mb-2 mx-2;
+  svg {
+    @apply mb-[0.2rem] mr-1 inline-block;
+  }
+}
+
 .section {
   @apply px-14 py-4;
 }

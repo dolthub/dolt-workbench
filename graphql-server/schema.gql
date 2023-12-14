@@ -100,6 +100,7 @@ type DatabaseConnection {
   hideDoltFeatures: Boolean
   useSSL: Boolean
   type: DatabaseType
+  schema: String
 }
 
 enum DatabaseType {
@@ -285,7 +286,6 @@ type Query {
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
   currentDatabase: String
-  currentSchema: String
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
   schemas: [String!]!
@@ -338,7 +338,7 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
+  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, schema: String): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
   createSchema(schemaName: String!): Boolean!

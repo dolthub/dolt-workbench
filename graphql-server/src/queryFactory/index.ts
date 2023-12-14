@@ -54,8 +54,6 @@ export declare class QueryFactory {
 
   schemas?(args: t.DBArgs): Promise<string[]>;
 
-  currentSchema?(): Promise<string | undefined>;
-
   createDatabase(args: t.DBArgs): Promise<void>;
 
   createSchema?(args: t.SchemaArgs): Promise<void>;

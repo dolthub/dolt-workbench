@@ -2,6 +2,7 @@ import {
   DatabaseType,
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
+import useMutation from "@hooks/useMutation";
 import useSetState from "@hooks/useSetState";
 import { maybeDatabase, maybeSchema } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -37,8 +38,9 @@ type ReturnType = {
 export default function useConfig(): ReturnType {
   const router = useRouter();
   const [state, setState] = useSetState(defaultState);
-  const [addDb, res] = useAddDatabaseConnectionMutation();
-
+  const { mutateFn, ...res } = useMutation({
+    hook: useAddDatabaseConnectionMutation,
+  });
   const clearState = () => {
     setState(defaultState);
   };
@@ -47,34 +49,21 @@ export default function useConfig(): ReturnType {
     e.preventDefault();
     setState({ loading: true });
 
-    if (state.database === "" && state.type === DatabaseType.Postgres) {
-      // setState({error: new Error("Database is required for Postgres database")})
-      return;
-    }
-
-    const url =
-      state.connectionUrl ||
-      `${state.type === DatabaseType.Mysql ? "mysql" : "postgresql"}://${
-        state.username
-      }:${state.password}@${state.host}:${state.port}/${state.database}${
-        state.schema ? `?currentSchema=${state.schema}` : ""
-      }}`;
-
     try {
-      const db = await addDb({
+      const db = await mutateFn({
         variables: {
           name: state.name,
-          connectionUrl: url,
+          connectionUrl: getConnectionUrl(state),
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,
           type: state.type,
+          schema: state.schema,
         },
       });
       await res.client.clearStore();
       if (!db.data) {
         return;
       }
-
       const { href, as } =
         state.type === DatabaseType.Mysql
           ? maybeDatabase(db.data.addDatabaseConnection.currentDatabase)
@@ -87,5 +76,18 @@ export default function useConfig(): ReturnType {
     }
   };
 
-  return { onSubmit, state, setState, error: res.error, clearState };
+  return { onSubmit, state, setState, error: res.err, clearState };
+}
+
+function getConnectionUrl(state: ConfigState): string {
+  if (state.connectionUrl) return state.connectionUrl;
+  const prefix = state.type === DatabaseType.Mysql ? "mysql" : "postgresql";
+  return `${prefix}://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`;
+}
+
+export function getCanSubmit(state: ConfigState): boolean {
+  if (!state.name) return false;
+  if (state.connectionUrl) return true;
+  if (!state.host || !state.username) return false;
+  return true;
 }

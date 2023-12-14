@@ -17,4 +17,7 @@ export class DatabaseConnection {
 
   @Field(_type => DatabaseType, { nullable: true })
   type?: DatabaseType;
+
+  @Field({ nullable: true })
+  schema?: string;
 }

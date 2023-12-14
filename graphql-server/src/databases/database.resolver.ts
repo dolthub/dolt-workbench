@@ -29,6 +29,9 @@ class AddDatabaseConnectionArgs {
 
   @Field(_type => DatabaseType, { nullable: true })
   type?: DatabaseType;
+
+  @Field({ nullable: true })
+  schema?: string;
 }
 
 @ObjectType()
@@ -70,12 +73,6 @@ export class DatabaseResolver {
   async currentDatabase(): Promise<string | undefined> {
     const conn = this.conn.connection();
     return conn.currentDatabase();
-  }
-
-  @Query(_returns => String, { nullable: true })
-  async currentSchema(): Promise<string | undefined> {
-    const conn = this.conn.connection();
-    return conn.currentSchema ? conn.currentSchema() : undefined;
   }
 
   @Query(_returns => [DatabaseConnection])
@@ -129,6 +126,7 @@ export class DatabaseResolver {
       hideDoltFeatures: !!args.hideDoltFeatures,
       useSSL: !!args.useSSL,
       type,
+      schema: args.schema,
     };
     await this.conn.addConnection(workbenchConfig);
 
@@ -144,8 +142,7 @@ export class DatabaseResolver {
     if (!db) {
       throw new Error("Must provide database for Postgres connection");
     }
-    const schema = await this.currentSchema();
-    return { currentDatabase: db, currentSchema: schema };
+    return { currentDatabase: db, currentSchema: args.schema };
   }
 
   @Mutation(_returns => Boolean)
