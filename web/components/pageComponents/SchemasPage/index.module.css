@@ -1,0 +1,35 @@
+.desc {
+  @apply text-lg text-center mb-10;
+}
+
+.database {
+  @apply bg-white w-full border my-2 px-4 py-2 rounded flex justify-between;
+
+  &:hover {
+    @apply border-acc-grey;
+  }
+}
+
+.noDbs {
+  @apply text-lg;
+}
+
+.button {
+  @apply bg-acc-hoverlinkblue text-white my-6 px-4 py-1.5 text-base rounded button-shadow;
+
+  &:hover {
+    @apply text-white bg-acc-linkblue button-shadow-hover;
+  }
+}
+
+.go {
+  @apply hidden;
+}
+
+.database:hover .go {
+  @apply flex items-center;
+
+  svg {
+    @apply ml-2;
+  }
+}

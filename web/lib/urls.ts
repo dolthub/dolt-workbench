@@ -11,8 +11,13 @@ export const databases = new Route("/database");
 export const database = (p: ps.DatabaseParams): Route =>
   databases.addDynamic("databaseName", p.databaseName);
 
+export const schemas = new Route("/schemas");
+
 export const maybeDatabase = (databaseName?: Maybe<string>): Route =>
   databaseName ? database({ databaseName }) : databases;
+
+export const maybeSchema = (schemaName?: Maybe<string>): Route =>
+  schemaName ? database({ databaseName: schemaName }) : schemas;
 
 export const query = (p: ps.RefParams): Route =>
   database(p).addStatic("query").addDynamic("refName", p.refName, ENCODE);

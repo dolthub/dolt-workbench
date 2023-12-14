@@ -15,8 +15,20 @@ export class PostgresQueryFactory
   isDolt = false;
 
   async databases(): Promise<string[]> {
+    // return this.queryQR(async qr => qr());
     const res: t.RawRows = await this.query(qh.databasesQuery, []);
+    return res.map(r => r.datname);
+  }
+
+  async schemas(args: t.DBArgs): Promise<string[]> {
+    const res: t.RawRows = await this.query(qh.schemasQuery, [
+      args.databaseName,
+    ]);
     return res.map(r => r.schema_name);
+  }
+
+  async createSchema(args: t.SchemaArgs): Promise<void> {
+    return this.handleAsyncQuery(async qr => qr.createSchema(args.schemaName));
   }
 
   async checkoutDatabase(qr: QueryRunner, dbName: string): Promise<void> {

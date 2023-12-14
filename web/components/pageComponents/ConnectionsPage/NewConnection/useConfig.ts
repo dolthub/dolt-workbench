@@ -3,7 +3,7 @@ import {
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
 import useSetState from "@hooks/useSetState";
-import { maybeDatabase } from "@lib/urls";
+import { maybeDatabase, maybeSchema } from "@lib/urls";
 import { useRouter } from "next/router";
 import { Dispatch, SyntheticEvent } from "react";
 
@@ -14,6 +14,7 @@ const defaultState = {
   username: "root",
   password: "",
   database: "",
+  schema: undefined as string | undefined,
   connectionUrl: "",
   hideDoltFeatures: false,
   useSSL: true,
@@ -45,11 +46,19 @@ export default function useConfig(): ReturnType {
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true });
+
+    if (state.database === "" && state.type === DatabaseType.Postgres) {
+      // setState({error: new Error("Database is required for Postgres database")})
+      return;
+    }
+
     const url =
       state.connectionUrl ||
       `${state.type === DatabaseType.Mysql ? "mysql" : "postgresql"}://${
         state.username
-      }:${state.password}@${state.host}:${state.port}/${state.database}`;
+      }:${state.password}@${state.host}:${state.port}/${state.database}${
+        state.schema ? `?currentSchema=${state.schema}` : ""
+      }}`;
 
     try {
       const db = await addDb({
@@ -66,7 +75,10 @@ export default function useConfig(): ReturnType {
         return;
       }
 
-      const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
+      const { href, as } =
+        state.type === DatabaseType.Mysql
+          ? maybeDatabase(db.data.addDatabaseConnection.currentDatabase)
+          : maybeSchema(db.data.addDatabaseConnection.currentSchema);
       await router.push(href, as);
     } catch (_) {
       // Handled by res.error

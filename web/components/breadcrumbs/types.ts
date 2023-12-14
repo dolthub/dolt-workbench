@@ -2,6 +2,7 @@ import { ReactElement } from "react";
 
 export enum BreadcrumbName {
   Database = "database",
+  DatabasePostgres = "database-postgres",
   DatabaseDrop = "database-dropdown",
   DBBranches = "db-branches",
   DBPulls = "db-pulls",

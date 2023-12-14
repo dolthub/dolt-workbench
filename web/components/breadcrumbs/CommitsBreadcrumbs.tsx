@@ -13,7 +13,7 @@ export default function CommitsBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-commits-breadcrumbs"
       data-cy="db-commits-breadcrumbs"
-      breadcrumbs={commitLogBreadcrumbDetails(params)}
+      breadcrumbs={db => commitLogBreadcrumbDetails(params, db)}
     />
   );
 }

@@ -14,7 +14,10 @@ export const ADD_DATABASE_CONNECTION = gql`
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
-    )
+    ) {
+      currentDatabase
+      currentSchema
+    }
   }
 `;
 

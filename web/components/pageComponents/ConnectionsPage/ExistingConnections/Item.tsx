@@ -2,9 +2,10 @@ import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
 import {
   DatabaseConnectionFragment,
+  DatabaseType,
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
-import { maybeDatabase } from "@lib/urls";
+import { maybeDatabase, maybeSchema } from "@lib/urls";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import { useRouter } from "next/router";
 import css from "./index.module.css";
@@ -25,7 +26,10 @@ export default function Item({ conn, onDeleteClicked }: Props) {
       if (!db.data) {
         return;
       }
-      const { href, as } = maybeDatabase(db.data.addDatabaseConnection);
+      const { href, as } =
+        conn.type === DatabaseType.Mysql
+          ? maybeDatabase(db.data.addDatabaseConnection.currentDatabase)
+          : maybeSchema(db.data.addDatabaseConnection.currentSchema);
       router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error

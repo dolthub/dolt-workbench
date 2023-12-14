@@ -66,7 +66,7 @@ export default function NewConnection(props: Props) {
               }
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
-                { label: "PostreSQL", value: DatabaseType.Postgres },
+                { label: "PostgreSQL", value: DatabaseType.Postgres },
               ]}
               horizontal
               light
@@ -125,6 +125,17 @@ export default function NewConnection(props: Props) {
               horizontal
               light
             />
+            {/* TODO: This doesn't work */}
+            {state.type === DatabaseType.Postgres && (
+              <FormInput
+                label="Schema"
+                value={state.schema}
+                onChangeString={s => setState({ schema: s })}
+                placeholder="myschema"
+                horizontal
+                light
+              />
+            )}
           </div>
           <div className={css.section}>
             <Button.Link

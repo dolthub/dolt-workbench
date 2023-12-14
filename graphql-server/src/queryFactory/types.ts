@@ -1,6 +1,7 @@
 import { DiffRowType } from "../rowDiffs/rowDiff.enums";
 
 export type DBArgs = { databaseName: string };
+export type SchemaArgs = { schemaName: string };
 export type RefArgs = DBArgs & { refName: string };
 export type BranchArgs = DBArgs & { branchName: string };
 export type TagArgs = DBArgs & { tagName: string };

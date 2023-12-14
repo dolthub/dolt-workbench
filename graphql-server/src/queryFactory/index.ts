@@ -52,7 +52,13 @@ export declare class QueryFactory {
 
   currentDatabase(): Promise<string | undefined>;
 
+  schemas?(args: t.DBArgs): Promise<string[]>;
+
+  currentSchema?(): Promise<string | undefined>;
+
   createDatabase(args: t.DBArgs): Promise<void>;
+
+  createSchema?(args: t.SchemaArgs): Promise<void>;
 
   getTableNames(
     args: t.RefArgs,

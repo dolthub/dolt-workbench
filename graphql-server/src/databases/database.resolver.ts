@@ -9,7 +9,7 @@ import {
 } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
 import { FileStoreService } from "../fileStore/fileStore.service";
-import { DBArgs } from "../utils/commonTypes";
+import { DBArgs, SchemaArgs } from "../utils/commonTypes";
 import { DatabaseType } from "./database.enum";
 import { DatabaseConnection } from "./database.model";
 
@@ -43,6 +43,16 @@ class DoltDatabaseDetails {
   type: DatabaseType;
 }
 
+@ObjectType()
+class CurrentDatabaseState {
+  @Field({ nullable: true })
+  currentDatabase?: string;
+
+  // Postgres only
+  @Field({ nullable: true })
+  currentSchema?: string;
+}
+
 @ArgsType()
 class RemoveDatabaseConnectionArgs {
   @Field()
@@ -60,6 +70,12 @@ export class DatabaseResolver {
   async currentDatabase(): Promise<string | undefined> {
     const conn = this.conn.connection();
     return conn.currentDatabase();
+  }
+
+  @Query(_returns => String, { nullable: true })
+  async currentSchema(): Promise<string | undefined> {
+    const conn = this.conn.connection();
+    return conn.currentSchema ? conn.currentSchema() : undefined;
   }
 
   @Query(_returns => [DatabaseConnection])
@@ -80,6 +96,18 @@ export class DatabaseResolver {
     );
   }
 
+  @Query(_returns => [String])
+  async schemas(): Promise<string[]> {
+    const conn = this.conn.connection();
+    if (!conn.schemas) return [];
+    const db = await this.currentDatabase();
+    if (!db) return [];
+    const schemas = await conn.schemas({ databaseName: db });
+    return schemas.filter(
+      db => db !== "information_schema" && !db.includes("/"),
+    );
+  }
+
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
@@ -91,15 +119,16 @@ export class DatabaseResolver {
     };
   }
 
-  @Mutation(_returns => String, { nullable: true })
+  @Mutation(_returns => CurrentDatabaseState)
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
-  ): Promise<string | undefined> {
+  ): Promise<CurrentDatabaseState> {
+    const type = args.type ?? DatabaseType.Mysql;
     const workbenchConfig = {
       connectionUrl: args.connectionUrl,
       hideDoltFeatures: !!args.hideDoltFeatures,
       useSSL: !!args.useSSL,
-      type: args.type ?? DatabaseType.Mysql,
+      type,
     };
     await this.conn.addConnection(workbenchConfig);
 
@@ -109,8 +138,14 @@ export class DatabaseResolver {
     });
 
     const db = await this.currentDatabase();
-    if (!db) return undefined;
-    return db;
+    if (type === DatabaseType.Mysql) {
+      return { currentDatabase: db };
+    }
+    if (!db) {
+      throw new Error("Must provide database for Postgres connection");
+    }
+    const schema = await this.currentSchema();
+    return { currentDatabase: db, currentSchema: schema };
   }
 
   @Mutation(_returns => Boolean)
@@ -125,6 +160,14 @@ export class DatabaseResolver {
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.createDatabase(args);
+    return true;
+  }
+
+  @Mutation(_returns => Boolean)
+  async createSchema(@Args() args: SchemaArgs): Promise<boolean> {
+    const conn = this.conn.connection();
+    if (!conn.createSchema) return false;
+    await conn.createSchema(args);
     return true;
   }
 
