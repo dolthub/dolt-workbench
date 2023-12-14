@@ -104,7 +104,7 @@ export class DatabaseResolver {
     if (!db) return [];
     const schemas = await conn.schemas({ databaseName: db });
     return schemas.filter(
-      db => db !== "information_schema" && !db.includes("/"),
+      sch => sch !== "information_schema" && !sch.includes("/"),
     );
   }
 
