@@ -48,7 +48,7 @@ export function isLongContentType(currentColType?: string): boolean {
   const colType = currentColType.toLowerCase();
   return (
     (colType.includes("text") && colType !== "tinytext") ||
-    (colType.startsWith("varchar") &&
+    ((colType.startsWith("varchar") || colType.includes("character")) &&
       parseInt(colType.split(/\(|\)/)[1], 10) >= 100) ||
     colType === "json" ||
     colType === "longblob"

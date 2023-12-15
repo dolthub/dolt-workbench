@@ -70,7 +70,7 @@ export function getSqlUpdate(upd: Partial<Update>): Update {
     db: null,
     table: [],
     set: [],
-    where: {},
+    where: null,
     ...upd,
   };
 }
@@ -107,19 +107,22 @@ export function mapColsToColumnRef(
 }
 
 // The where object is a binary tree with 'left' and 'right' nodes
-export function escapeSingleQuotesInWhereObj(where: any | null): any | null {
+export function escapeSingleQuotesInWhereObj(
+  where: any | null,
+  isPostgres = false,
+): any | null {
   if (!where) return null;
 
   if (where.args) {
-    escapeSingleQuotesInWhereObj(where.args);
+    escapeSingleQuotesInWhereObj(where.args, isPostgres);
   }
 
   if (where.expr) {
-    escapeSingleQuotesInWhereObj(where.expr);
+    escapeSingleQuotesInWhereObj(where.expr, isPostgres);
   }
 
   if (where.left) {
-    escapeSingleQuotesInWhereObj(where.left);
+    escapeSingleQuotesInWhereObj(where.left, isPostgres);
   }
 
   if (where.value) {
@@ -128,25 +131,35 @@ export function escapeSingleQuotesInWhereObj(where: any | null): any | null {
       where.value = escapeSingleQuotes(where.value);
     }
     if (Array.isArray(where.value)) {
-      where.value.forEach((val: any) => escapeSingleQuotesInWhereObj(val));
+      where.value.forEach((val: any) =>
+        escapeSingleQuotesInWhereObj(val, isPostgres),
+      );
     }
   }
 
   if (where.right) {
-    escapeSingleQuotesInWhereObj(where.right);
+    escapeSingleQuotesInWhereObj(where.right, isPostgres);
   }
 
   return where;
 }
 
-export function escapeSingleQuotes(value: string): string {
+export function escapeSingleQuotes(value: string, isPostgres = false): string {
+  if (isPostgres) {
+    if (value.includes("''")) return value;
+    return value.replace(/'/g, "''");
+  }
   if (value.includes("\\'")) return value;
   return value.replace(/'/g, "\\'");
 }
 
-function getNewWhereCondition(column: string, value: string): Expr {
+function getNewWhereCondition(
+  column: string,
+  value: string,
+  isPostgres = false,
+): Expr {
   const valIsNull = isNullValue(value);
-  const escapedVal = escapeSingleQuotes(value);
+  const escapedVal = escapeSingleQuotes(value, isPostgres);
   return {
     type: "binary_expr",
     operator: valIsNull ? "IS" : "=",
@@ -168,9 +181,10 @@ function getNewWhereCondition(column: string, value: string): Expr {
 export function getWhereObj(
   column: string,
   value: string,
-  where: any | null,
+  where: Expr | null,
+  isPostgres = false,
 ): Expr {
-  const newCondition = getNewWhereCondition(column, value);
+  const newCondition = getNewWhereCondition(column, value, isPostgres);
 
   if (!where) {
     return newCondition;
@@ -179,7 +193,7 @@ export function getWhereObj(
   return {
     type: "binary_expr",
     operator: "AND",
-    left: { ...escapeSingleQuotesInWhereObj(where) },
+    left: { ...escapeSingleQuotesInWhereObj(where, isPostgres) },
     right: newCondition,
   };
 }
@@ -211,13 +225,14 @@ export function getOrderByArr(
 
 export function getWhereFromPKCols(
   conditions: Conditions,
-  where?: any | null,
-): Expr {
-  let cond: any | null = where || null;
+  where?: Expr | null,
+  isPostgres = false,
+): Expr | undefined {
+  let cond: Expr | null = where || null;
   conditions.forEach(c => {
-    cond = getWhereObj(c.col, c.val, cond);
+    cond = getWhereObj(c.col, c.val, cond, isPostgres);
   });
-  return cond;
+  return cond || undefined;
 }
 
 export function getPostgresSchemaDefQuery(

@@ -14,7 +14,7 @@ import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
 import { ImTable2 } from "@react-icons/all-files/im/ImTable2";
 import OptionSquare from "./OptionSquare";
 import css from "./index.module.css";
-import { mapColTypeToFakeValue } from "./utils";
+import { mapColsToFakeValues } from "./utils";
 
 type Props = {
   params: TableParams;
@@ -34,7 +34,7 @@ export default function EditTableButtons(props: Props) {
   const uploadParams = { ...props.params, uploadId: String(Date.now()) };
 
   const onWriteQuery = () => {
-    const values = columns?.map(mapColTypeToFakeValue) ?? [];
+    const values = mapColsToFakeValues(columns);
     const colNames = columns?.map(c => c.name) ?? [];
     setEditorString(insertIntoTable(props.params.tableName, colNames, values));
     toggleSqlEditor(true);

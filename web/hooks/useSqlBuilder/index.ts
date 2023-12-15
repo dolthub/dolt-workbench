@@ -3,6 +3,7 @@ import useSqlParser from "@hooks/useSqlParser";
 import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
 import {
   Conditions,
+  escapeSingleQuotes,
   escapeSingleQuotesInWhereObj,
   getOrderByArr,
   getPostgresSchemaDefQuery,
@@ -57,7 +58,7 @@ export default function useSqlBuilder() {
         ...ast,
         columns,
         from: [{ db: null, table: null, as: null }],
-        where: escapeSingleQuotesInWhereObj(ast.where),
+        where: escapeSingleQuotesInWhereObj(ast.where, isPostgres),
       });
     }
     const newAst: Select = {
@@ -66,7 +67,7 @@ export default function useSqlBuilder() {
       from: tableNames.map(table => {
         return { db: null, table, as: null };
       }),
-      where: escapeSingleQuotesInWhereObj(ast.where),
+      where: escapeSingleQuotesInWhereObj(ast.where, isPostgres),
     };
     return convertToSqlSelect(newAst);
   }
@@ -84,7 +85,7 @@ export default function useSqlBuilder() {
       ...ast,
       columns,
       from: [{ db: null, table: tableNames, as: null }],
-      where: escapeSingleQuotesInWhereObj(ast.where),
+      where: escapeSingleQuotesInWhereObj(ast.where, isPostgres),
     };
     return convertToSqlSelect(newAst);
   }
@@ -135,7 +136,7 @@ export default function useSqlBuilder() {
         sel = parsed;
       }
     }
-    sel.where = getWhereFromPKCols(conditions, sel.where);
+    sel.where = getWhereFromPKCols(conditions, sel.where, isPostgres);
     return convertToSqlSelect(sel);
   }
 
@@ -154,7 +155,7 @@ export default function useSqlBuilder() {
   function deleteFromTable(tableName: string, cond: Conditions): string {
     return convertToSqlDelete({
       from: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(cond),
+      where: getWhereFromPKCols(cond, null, isPostgres),
     });
   }
 
@@ -175,7 +176,10 @@ where schemaname='${dbName}';`;
       where: {
         name: "NOT",
         type: "function",
-        args: { type: "expr_list", value: [getWhereFromPKCols(conditions)] },
+        args: {
+          type: "expr_list",
+          value: [getWhereFromPKCols(conditions, null, isPostgres)],
+        },
       },
     });
   }
@@ -207,11 +211,14 @@ where schemaname='${dbName}';`;
   ): string {
     return convertToSqlUpdate({
       table: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(conditions),
+      where: getWhereFromPKCols(conditions, null, isPostgres),
       set: [
         {
           column: setCol,
-          value: { type: "single_quote_string", value: setVal },
+          value: {
+            type: "single_quote_string",
+            value: escapeSingleQuotes(setVal, isPostgres),
+          },
           table: null,
         },
       ],
@@ -225,7 +232,7 @@ where schemaname='${dbName}';`;
   ): string {
     return convertToSqlUpdate({
       table: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(conditions),
+      where: getWhereFromPKCols(conditions, null, isPostgres),
       set: [
         { column: setCol, value: { type: "null", value: null }, table: null },
       ],
@@ -233,15 +240,13 @@ where schemaname='${dbName}';`;
   }
 
   function dropTable(tableName: string): string {
-    return isPostgres
-      ? `DROP TABLE "${tableName}"`
-      : `DROP TABLE \`${tableName}\``;
+    const escapedName = isPostgres ? `"${tableName}"` : `\`${tableName}\``;
+    return `DROP TABLE ${escapedName}`;
   }
 
   function createView(name: string, q: string): string {
-    return isPostgres
-      ? `CREATE VIEW "${name}" AS ${q}`
-      : `CREATE VIEW \`${name}\` AS ${q}`;
+    const escapedName = isPostgres ? `"${name}"` : `\`${name}\``;
+    return `CREATE VIEW ${escapedName} AS ${q}`;
   }
 
   function showCreateQuery(
