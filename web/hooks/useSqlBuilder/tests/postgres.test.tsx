@@ -331,7 +331,6 @@ describe("test deleteFromTable", () => {
           td.nameSingleQuoteColValue,
         ],
       },
-      // TODO: Is this the right escaping?
       expectedQuery: `DELETE FROM "test-table" WHERE "id" = '1' AND "pk2" = '2' AND "name" = 'Taylor''s chair'`,
     },
   ];
@@ -346,7 +345,7 @@ describe("test deleteFromTable", () => {
   });
 });
 
-describe("test updateTableQuery", () => {
+describe("test updateTableQuery and updateTableMakeNullQuery", () => {
   const tests: Array<{
     desc: string;
     tableName: string;
@@ -355,6 +354,7 @@ describe("test updateTableQuery", () => {
     columns: ColumnForDataTableFragment[];
     row: RowForDataTableFragment;
     expectedQuery: string;
+    expectedNullQuery: string;
   }> = [
     {
       desc: "one pk",
@@ -364,6 +364,7 @@ describe("test updateTableQuery", () => {
       columns: [td.idPKColumn, td.nameColumn],
       row: { columnValues: [td.idColValue, td.nameColValue] },
       expectedQuery: `UPDATE "test-table" SET "name" = 'New Name' WHERE "id" = '1'`,
+      expectedNullQuery: `UPDATE "test-table" SET "name" = NULL WHERE "id" = '1'`,
     },
     {
       desc: "two pks",
@@ -373,6 +374,7 @@ describe("test updateTableQuery", () => {
       columns: [td.idPKColumn, td.pkPKColumn, td.nameColumn],
       row: { columnValues: [td.idColValue, td.idTwoColValue, td.nameColValue] },
       expectedQuery: `UPDATE "test-table" SET "name" = 'New Name' WHERE "id" = '1' AND "pk2" = '2'`,
+      expectedNullQuery: `UPDATE "test-table" SET "name" = NULL WHERE "id" = '1' AND "pk2" = '2'`,
     },
     {
       desc: "three pks with single quote val",
@@ -392,20 +394,23 @@ describe("test updateTableQuery", () => {
         ],
       },
       expectedQuery: `UPDATE "test-table" SET "name" = 'New Name' WHERE "id" = '1' AND "pk2" = '2' AND "name" = 'Taylor''s chair'`,
+      expectedNullQuery: `UPDATE "test-table" SET "name" = NULL WHERE "id" = '1' AND "pk2" = '2' AND "name" = 'Taylor''s chair'`,
     },
   ];
 
   tests.forEach(test => {
     it(test.desc, async () => {
-      const { updateTableQuery } = await renderUseSqlBuilderForPG();
+      const { updateTableQuery, updateTableMakeNullQuery } =
+        await renderUseSqlBuilderForPG();
+      const cols = toPKCols(test.row, test.columns);
+
       expect(
-        updateTableQuery(
-          test.tableName,
-          test.currentCol,
-          test.newVal,
-          toPKCols(test.row, test.columns),
-        ),
+        updateTableQuery(test.tableName, test.currentCol, test.newVal, cols),
       ).toEqual(test.expectedQuery);
+
+      expect(
+        updateTableMakeNullQuery(test.tableName, test.currentCol, cols),
+      ).toEqual(test.expectedNullQuery);
     });
   });
 });
