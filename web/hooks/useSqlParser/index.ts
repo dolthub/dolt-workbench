@@ -39,7 +39,7 @@ export default function useSqlParser() {
   }
 
   function requireTableNamesForSelect(q: string): string[] {
-    return getTableNames(q) ?? fallbackGetTableNamesForSelect(q);
+    return getTableNames(q) ?? fallbackGetTableNamesForSelect(q, isPostgres);
   }
 
   // Extracts tableName from query

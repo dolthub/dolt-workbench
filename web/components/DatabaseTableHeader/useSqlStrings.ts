@@ -16,7 +16,8 @@ export function useSqlStrings(
   params: Params,
   empty = false,
 ): { sqlString: string; editorString: string } {
-  const { getDefaultQueryString, selectFromTable } = useSqlBuilder();
+  const { getDefaultQueryString, selectFromTable, isPostgres } =
+    useSqlBuilder();
   const { editorString, setEditorString } = useSqlEditorContext();
   const defaultQuery = getDefaultQueryString(params.databaseName);
 
@@ -40,12 +41,12 @@ export function useSqlStrings(
       return addEmptyLines([defaultQuery]);
     }
     return addEmptyLines([selectFromTable(params.tableName, DEFAULT_LIMIT)]);
-  }, []);
+  }, [params.q, params.tableName, empty, isPostgres]);
 
   useEffect(() => {
     const sqlQuery = getEditorString();
     setEditorString(sqlQuery);
-  }, [params.q, params.tableName, empty, getEditorString]);
+  }, [getEditorString]);
 
   return { sqlString: getSqlString(), editorString };
 }

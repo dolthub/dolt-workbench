@@ -144,7 +144,7 @@ export default function useSqlBuilder() {
   function insertIntoTable(
     tableName: string,
     cols: string[],
-    vals: Array<ColumnValue>,
+    vals: ColumnValue[],
   ): string {
     return convertToSqlInsert({
       table: [{ table: tableName }],

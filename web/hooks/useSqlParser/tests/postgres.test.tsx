@@ -7,9 +7,11 @@ import {
   notMutationExamples,
 } from "./testData";
 
+const renderUseSqlParserForPG = async () => renderUseSqlParser(true);
+
 describe("parse sql query", () => {
   it("check if the string contains multiple queries", async () => {
-    const { isMultipleQueries } = await renderUseSqlParser();
+    const { isMultipleQueries } = await renderUseSqlParserForPG();
     const twoQueries = `SELECT * FROM test; SELECT * FROM test2;`;
     expect(isMultipleQueries(twoQueries)).toBe(true);
     const singleQueries = `SELECT * FROM test`;
@@ -20,47 +22,47 @@ describe("parse sql query", () => {
   });
 
   it("gets the table name from a select query string for lunch-places", async () => {
-    const { getTableName } = await renderUseSqlParser();
+    const { getTableName } = await renderUseSqlParserForPG();
 
     const lpTableName = "lunch-places";
-    const basicQuery = `SELECT * FROM \`${lpTableName}\``;
+    const basicQuery = `SELECT * FROM "${lpTableName}"`;
     expect(getTableName(basicQuery)).toBe(lpTableName);
 
-    const queryWithCols = `SELECT name, \`type of food\`, rating FROM \`${lpTableName}\``;
+    const queryWithCols = `SELECT name, "type of food", rating FROM "${lpTableName}"`;
     expect(getTableName(queryWithCols)).toBe(lpTableName);
 
     const queryWithWhereClause = `${queryWithCols} WHERE name = "Sidecar"`;
     expect(getTableName(queryWithWhereClause)).toBe(lpTableName);
 
-    const queryWithNewLines = `SELECT *\nFROM \`${lpTableName}\`\nORDER BY rating DESC`;
+    const queryWithNewLines = `SELECT *\nFROM "${lpTableName}"\nORDER BY rating DESC`;
     expect(getTableName(queryWithNewLines)).toBe(lpTableName);
 
-    const queryWithColsAndWhereNotClause = `SELECT \`name\`, \`restaurant_name\`, \`identifier\`, \`fat_g\` FROM \`menu-items\` WHERE NOT (\`name\` = "APPLE SLICES" AND \`restaurant_name\` = "MCDONALD'S" AND \`identifier\` = "NATIONAL")`;
+    const queryWithColsAndWhereNotClause = `SELECT "name", "restaurant_name", "identifier", "fat_g" FROM "menu-items" WHERE NOT ("name" = "APPLE SLICES" AND "restaurant_name" = "MCDONALD'S" AND "identifier" = "NATIONAL")`;
     expect(getTableName(queryWithColsAndWhereNotClause)).toBe("menu-items");
 
     expect(() => getTableName(invalidQuery)).not.toThrowError();
   });
 
   it("gets the table name for mutations", async () => {
-    const { getTableName } = await renderUseSqlParser();
-    expect(getTableName("DROP TABLE `test`")).toBe("test");
+    const { getTableName } = await renderUseSqlParserForPG();
+    expect(getTableName('DROP TABLE "test"')).toBe("test");
     expect(
       getTableName("INSERT INTO test (pk, col1) VALUES (1, 'string')"),
     ).toBe("test");
-    expect(getTableName("CREATE TABLE `test table` (pk int primary key)")).toBe(
+    expect(getTableName('CREATE TABLE "test table" (pk int primary key)')).toBe(
       "test table",
     );
     expect(getTableName("DELETE FROM test WHERE id=1")).toBe("test");
-    expect(getTableName("ALTER TABLE `testing` DROP COLUMN `c1`")).toBe(
+    expect(getTableName('ALTER TABLE "testing" DROP COLUMN "c1"')).toBe(
       "testing",
     );
     expect(
-      getTableName("UPDATE `test` SET `pk` = '10' WHERE `pk` = '2'"),
+      getTableName('UPDATE "test" SET "pk" = \'10\' WHERE "pk" = \'2\''),
     ).toEqual("test");
   });
 
   it("gets the table name from a select query string for dolt_commit_diff table", async () => {
-    const { getTableName } = await renderUseSqlParser();
+    const { getTableName } = await renderUseSqlParserForPG();
     const ddTableName = "dolt_commit_diff_career_totals_allstar";
     const basicQuery = `SELECT * FROM ${ddTableName}`;
     expect(getTableName(basicQuery)).toBe(ddTableName);
@@ -74,9 +76,9 @@ describe("parse sql query", () => {
     const queryWithNewLines = `SELECT *\nFROM ${ddTableName}\nORDER BY fg_pct DESC`;
     expect(getTableName(queryWithNewLines)).toBe(ddTableName);
 
-    const queryWithNewLinesAndBackticks = `SELECT \`from_col1\`, \`to_col1\`, from_commit, from_commit_date, to_commit, to_commit_date, diff_type
-    FROM \`dolt_commit_diff_foo\`
-    WHERE (\`to_pk\` = "3" OR \`from_pk\` = "3") AND (\`from_col1\` <> \`to_col1\` OR (\`from_col1\` IS NULL AND \`to_col1\` IS NOT NULL) OR (\`from_col1\` IS NOT NULL AND \`to_col1\` IS NULL))
+    const queryWithNewLinesAndBackticks = `SELECT "from_col1", "to_col1", from_commit, from_commit_date, to_commit, to_commit_date, diff_type
+    FROM "dolt_commit_diff_foo"
+    WHERE ("to_pk" = "3" OR "from_pk" = "3") AND ("from_col1" <> "to_col1" OR ("from_col1" IS NULL AND "to_col1" IS NOT NULL) OR ("from_col1" IS NOT NULL AND "to_col1" IS NULL))
     ORDER BY to_commit_date DESC`;
     expect(getTableName(queryWithNewLinesAndBackticks)).toBe(
       "dolt_commit_diff_foo",
@@ -84,7 +86,7 @@ describe("parse sql query", () => {
   });
 
   it("gets query type", async () => {
-    const { getQueryType } = await renderUseSqlParser();
+    const { getQueryType } = await renderUseSqlParserForPG();
     expect(getQueryType("SELECT * FROM tablename")).toEqual("select");
     expect(getQueryType("SHOW TABLES")).toEqual("show");
     expect(
@@ -100,7 +102,7 @@ describe("parse sql query", () => {
         "CREATE TABLE tablename (id INT, name VARCHAR(255), PRIMARY KEY(id))",
       ),
     ).toEqual("create");
-    expect(() => getQueryType(invalidQuery)).not.toThrowError();
+    expect(() => getQueryType(invalidQuery)).not.toThrow();
     expect(getQueryType(invalidQuery)).toEqual(undefined);
   });
 });
@@ -108,20 +110,20 @@ describe("parse sql query", () => {
 describe("test isMutation", () => {
   notMutationExamples.forEach(q => {
     it(`isMutation is false for "${q}"`, async () => {
-      const { isMutation } = await renderUseSqlParser();
+      const { isMutation } = await renderUseSqlParserForPG();
       expect(isMutation(q)).toBeFalsy();
     });
   });
 
   mutationExamples.forEach(q => {
     it(`isMutation is true for "${q}"`, async () => {
-      const { isMutation } = await renderUseSqlParser();
+      const { isMutation } = await renderUseSqlParserForPG();
       expect(isMutation(q)).toBeTruthy();
     });
   });
 
   it("doesn't throw error for invalid query", async () => {
-    const { isMutation } = await renderUseSqlParser();
+    const { isMutation } = await renderUseSqlParserForPG();
     expect(() => isMutation(invalidQuery)).not.toThrow();
   });
 });
@@ -149,9 +151,9 @@ describe("test use regex to get table names from query", () => {
       expected: ["table1", "table2"],
     },
     {
-      desc: "multiple tables with table names in backticks",
+      desc: "multiple tables with table names in quotes",
       query:
-        "select * from `table1` join `table2` on `table1`.id = `table2`.id",
+        'select * from "table1" join "table2" on "table1".id = "table2".id',
       expected: ["table1", "table2"],
     },
     {
@@ -171,7 +173,7 @@ describe("test use regex to get table names from query", () => {
     it(test.desc, () => {
       expect(
         compareArray(
-          fallbackGetTableNamesForSelect(test.query, false),
+          fallbackGetTableNamesForSelect(test.query, true),
           test.expected,
         ),
       ).toBe(true);
