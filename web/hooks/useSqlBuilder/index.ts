@@ -1,6 +1,6 @@
 import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
+import { Delete, Insert_Replace, Select, Update } from "node-sql-parser";
 import {
   ColumnValue,
   Conditions,
@@ -31,15 +31,24 @@ export default function useSqlBuilder() {
     return sqlify(getSqlDelete(del));
   }
 
-  function convertToSqlAlter(alt: Partial<Alter>): string {
-    return sqlify(getSqlAlter(alt));
-  }
+  // function convertToSqlAlter(alt: Partial<Alter>): string {
+  //   return sqlify(getSqlAlter(alt));
+  // }
 
   function convertToSqlUpdate(upd: Partial<Update>): string {
     return sqlify(getSqlUpdate(upd));
   }
 
   function convertToSqlSelect(select: Partial<Select>): string {
+    return sqlify(getSqlSelect(select));
+  }
+
+  // TODO: Remove these when node-sql-parser types are updated
+  function convertToSqlAlterAny(alt: any): string {
+    return sqlify(getSqlAlter(alt));
+  }
+
+  function convertToSqlSelectAny(select: any): string {
     return sqlify(getSqlSelect(select));
   }
 
@@ -183,7 +192,7 @@ where schemaname='${dbName}';`;
   }
 
   function hideRowQuery(tableName: string, conditions: Conditions): string {
-    return convertToSqlSelect({
+    return convertToSqlSelectAny({
       columns: [getSqlColumn("*")],
       type: "select",
       from: [{ table: tableName }],
@@ -214,7 +223,7 @@ where schemaname='${dbName}';`;
         },
       ],
     };
-    return convertToSqlAlter(alt);
+    return convertToSqlAlterAny(alt);
   }
 
   function updateTableQuery(

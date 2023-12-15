@@ -26,7 +26,7 @@ export function getSqlSelect(sel: Partial<Select>): Select {
     distinct: null,
     columns: [getSqlColumn("*")],
     from: null,
-    where: null,
+    where: null as any,
     groupby: null,
     having: null,
     orderby: null,
@@ -51,7 +51,7 @@ export function getSqlDelete(del: Partial<Delete>): Delete {
     type: "delete",
     from: [],
     table: null,
-    where: null,
+    where: null as any,
     ...del,
   };
 }
@@ -71,7 +71,7 @@ export function getSqlUpdate(upd: Partial<Update>): Update {
     db: null,
     table: [],
     set: [],
-    where: null,
+    where: null as any,
     ...upd,
   };
 }
@@ -107,6 +107,7 @@ export function mapColsToColumnRef(
   });
 }
 
+// TODO: Return Expr
 // The where object is a binary tree with 'left' and 'right' nodes
 export function escapeSingleQuotesInWhereObj(
   where: any | null,
@@ -154,11 +155,12 @@ export function escapeSingleQuotes(value: string, isPostgres: boolean): string {
   return value.replace(/'/g, "\\'");
 }
 
+// TODO: Return Expr
 function getNewWhereCondition(
   column: string,
   value: string,
   isPostgres: boolean,
-): Expr {
+): any {
   const valIsNull = isNullValue(value);
   const escapedVal = escapeSingleQuotes(value, isPostgres);
   return {
@@ -170,8 +172,6 @@ function getNewWhereCondition(
       column,
     },
     right: {
-      // type: "param",
-      // value: escapedVal,
       type: valIsNull ? "null" : "string",
       value: valIsNull ? null : escapedVal,
     },
