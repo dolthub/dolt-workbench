@@ -1,3 +1,4 @@
+import { DatabaseParams } from "@lib/params";
 import safeJSONParse from "@lib/safeJSONParse";
 import { useState } from "react";
 
@@ -11,10 +12,12 @@ type ReturnType = {
   queryIdx: number | undefined;
 };
 
-const queryStorageKey = `query-history`;
-const mutationStorageKey = `mutation-history`;
+export default function useSessionQueryHistory(
+  params: DatabaseParams,
+): ReturnType {
+  const queryStorageKey = `query-history-${params.databaseName}`;
+  const mutationStorageKey = `mutation-history-${params.databaseName}`;
 
-export default function useSessionQueryHistory(): ReturnType {
   const [queryIdx, setQueryIdx] = useState<number | undefined>(undefined);
 
   const getHistory = (key: string): string[] => {

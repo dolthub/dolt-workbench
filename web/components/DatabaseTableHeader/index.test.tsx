@@ -33,7 +33,7 @@ async function renderAndTestComponent(
 ) {
   const { user } = await setupAndWait(
     <MockedProvider mocks={[databaseDetailsMock(true, true, isPostgres)]}>
-      <SqlEditorProvider>
+      <SqlEditorProvider params={params}>
         <DatabaseTableHeader params={params} empty={empty} />
       </SqlEditorProvider>
     </MockedProvider>,

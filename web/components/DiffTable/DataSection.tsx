@@ -23,7 +23,7 @@ export default function DataSection(props: Props) {
 
   return (
     <DataTableProvider params={diffParams}>
-      <SqlEditorProvider>
+      <SqlEditorProvider params={params}>
         <DataDiff {...props} params={diffParams} />
       </SqlEditorProvider>
     </DataTableProvider>

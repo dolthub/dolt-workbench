@@ -18,7 +18,7 @@ export default function useSqlQuery(
 ): boolean {
   const { isMutation } = useSqlParser();
   const router = useRouter();
-  const { addMutation } = useSessionQueryHistory();
+  const { addMutation } = useSessionQueryHistory(params);
   const isMut = isMutation(params.q);
 
   useEffect(() => {

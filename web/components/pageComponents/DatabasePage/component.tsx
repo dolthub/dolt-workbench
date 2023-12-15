@@ -22,7 +22,7 @@ type Props = {
 
 export default function DatabasePage({ params, children, ...props }: Props) {
   return (
-    <SqlEditorProvider>
+    <SqlEditorProvider params={params}>
       <DatabaseLayout
         {...props}
         params={params}

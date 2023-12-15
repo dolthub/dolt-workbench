@@ -1,5 +1,5 @@
 import { ApolloErrorType } from "@lib/errors/types";
-import { OptionalRefParams } from "@lib/params";
+import { DatabaseParams, OptionalRefParams } from "@lib/params";
 import { Dispatch, ReactNode } from "react";
 
 type ModalState = {
@@ -27,4 +27,5 @@ export type SqlEditorContextType = {
 
 export type Props = {
   children: ReactNode;
+  params: DatabaseParams;
 };

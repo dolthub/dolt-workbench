@@ -28,7 +28,7 @@ export function SqlEditorProvider(props: Props) {
     errorIsOpen: false,
   });
   const router = useRouter();
-  const { addQuery } = useSessionQueryHistory();
+  const { addQuery } = useSessionQueryHistory(props.params);
 
   useEffect(() => {
     setShowSqlEditor(isMobile);
