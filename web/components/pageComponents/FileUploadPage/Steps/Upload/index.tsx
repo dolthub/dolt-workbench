@@ -1,8 +1,8 @@
 import ErrorMsg from "@components/ErrorMsg";
 import Loader from "@components/Loader";
-import LoadDataInfo from "../../LoadDataInfo";
 import StepLayout from "../../StepLayout";
 import Summary from "../../Summary";
+import UploadQueryInfo from "../../UploadQueryInfo";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import { UploadStage } from "../../enums";
 import DropZone from "./DropZone";
@@ -49,7 +49,7 @@ function Inner() {
           <OpenSpreadsheetZone />
         </div>
         <EditableTable />
-        <LoadDataInfo />
+        <UploadQueryInfo />
         <ErrorMsg err={uState.error ?? error} />
       </div>
     </StepLayout>

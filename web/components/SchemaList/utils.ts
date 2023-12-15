@@ -11,7 +11,7 @@ export function getActiveItem(
       case SchemaType.Table:
         return getItemNameFromPostgresQuery(
           q,
-          /SELECT \* FROM information_schema.columns WHERE table_schema = '.*' AND table_name = /gi,
+          /SELECT .* FROM information_schema.columns WHERE table_schema = '.*' AND table_name = /gi,
         );
 
       case SchemaType.View:

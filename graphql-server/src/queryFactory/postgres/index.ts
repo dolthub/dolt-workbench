@@ -15,7 +15,6 @@ export class PostgresQueryFactory
   isDolt = false;
 
   async databases(): Promise<string[]> {
-    // return this.queryQR(async qr => qr());
     const res: t.RawRows = await this.query(qh.databasesQuery, []);
     return res.map(r => r.datname);
   }

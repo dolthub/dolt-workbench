@@ -1,9 +1,9 @@
 import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
-import LoadDataInfo from "@components/pageComponents/FileUploadPage/LoadDataInfo";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { ErrorType } from "@lib/errors/types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import UpdateQueryInfo from "../../../UploadQueryInfo";
 import { useFileUploadContext } from "../../../contexts/fileUploadLocalForage";
 import { FileUploadState } from "../../../contexts/fileUploadLocalForage/state";
 import useUploadContext from "../contexts/upload";
@@ -29,7 +29,7 @@ function Inner(props: InnerProps) {
             <IoMdClose />
           </Button.Link>
           <h1 data-cy="spreadsheet-editor-title">Spreadsheet Editor</h1>
-          {props.state.tableName && <LoadDataInfo forSpreadsheet />}
+          {props.state.tableName && <UpdateQueryInfo forSpreadsheet />}
           <div>
             <div>
               <ErrorMsg err={props.error} />

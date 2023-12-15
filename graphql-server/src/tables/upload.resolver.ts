@@ -1,8 +1,12 @@
 import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { ReadStream } from "fs";
 import { GraphQLUpload } from "graphql-upload";
+import { from as copyFrom } from "pg-copy-streams";
+import { pipeline } from "stream/promises";
 import { ConnectionResolver } from "../connections/connection.resolver";
+import { DatabaseType } from "../databases/database.enum";
 import { useDB } from "../queryFactory/mysql/queries";
+import { setSearchPath } from "../queryFactory/postgres/queries";
 import { TableArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";
@@ -35,35 +39,68 @@ export class FileUploadResolver {
 
   @Mutation(_returns => Boolean)
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
-    const conn = await this.connResolver.mysqlConnection();
-
-    let isDolt = false;
-    try {
-      const res = await conn.query("SELECT dolt_version()");
-      isDolt = !!res;
-    } catch (_) {
-      // ignore
-    }
-
-    await conn.query(useDB(args.databaseName, args.refName, isDolt));
-    await conn.query("SET GLOBAL local_infile=ON;");
+    const config = this.connResolver.getWorkbenchConfig();
+    if (!config) throw new Error("Workbench config not found");
 
     const { createReadStream, filename } = await args.file;
 
-    await conn.query({
-      sql: getLoadDataQuery(
-        filename,
-        args.tableName,
-        args.fileType,
-        args.modifier,
-      ),
-      infileStreamFactory: createReadStream,
-    });
+    if (config.type === DatabaseType.Mysql) {
+      const conn = await this.connResolver.mysqlConnection();
 
-    conn.destroy();
+      let isDolt = false;
+      try {
+        const res = await conn.query("SELECT dolt_version()");
+        isDolt = !!res;
+      } catch (_) {
+        // ignore
+      }
+
+      await conn.query(useDB(args.databaseName, args.refName, isDolt));
+      await conn.query("SET GLOBAL local_infile=ON;");
+
+      await conn.query({
+        sql: getLoadDataQuery(
+          filename,
+          args.tableName,
+          args.fileType,
+          args.modifier,
+        ),
+        infileStreamFactory: createReadStream,
+      });
+
+      conn.destroy();
+
+      return true;
+    }
+
+    const qr = this.connResolver.connection().getQR();
+    const pgConnection = await qr.connect();
+
+    await pgConnection.query(setSearchPath(args.databaseName));
+
+    try {
+      await pipeline(
+        createReadStream,
+        pgConnection.query(
+          copyFrom(getCopyFromQuery(args.tableName, args.fileType)),
+        ),
+      );
+    } finally {
+      await qr.release();
+    }
 
     return true;
   }
+}
+
+function getCopyFromQuery(tableName: string, fileType: FileType): string {
+  return `COPY "${tableName}" 
+FROM STDIN
+WITH (
+  FORMAT csv, 
+  HEADER TRUE, 
+  DELIMITER '${getDelim(fileType)}'
+  )`;
 }
 
 function getLoadDataQuery(

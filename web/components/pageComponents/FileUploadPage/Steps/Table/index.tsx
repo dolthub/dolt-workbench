@@ -1,8 +1,8 @@
 import ErrorMsg from "@components/ErrorMsg";
 import Loader from "@components/Loader";
 import TableSelector from "@components/TableSelector";
-import LoadDataInfo from "../../LoadDataInfo";
 import StepLayout from "../../StepLayout";
+import UploadQueryInfo from "../../UploadQueryInfo";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import { UploadStage } from "../../enums";
 import TableOption from "./TableOption";
@@ -49,7 +49,7 @@ function Inner() {
                 onChangeTable={t => setState({ existingTable: t })}
                 light
               />
-              <LoadDataInfo />
+              <UploadQueryInfo />
             </div>
           </TableOption>
         </div>

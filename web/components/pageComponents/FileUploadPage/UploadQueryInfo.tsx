@@ -2,6 +2,7 @@ import CustomRadio from "@components/CustomRadio";
 import HelpPopup from "@components/HelpPopup";
 import ExternalLink from "@components/links/ExternalLink";
 import { LoadDataModifier } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { useFileUploadContext } from "./contexts/fileUploadLocalForage";
 import css from "./index.module.css";
 
@@ -9,15 +10,22 @@ type Props = {
   forSpreadsheet?: boolean;
 };
 
-export default function LoadDataInfo(props: Props) {
+export default function UploadQueryInfo(props: Props) {
+  const { isPostgres } = useDatabaseDetails();
   return (
     <div>
       <div className={css.loadData}>
         <p>
           Uses{" "}
-          <ExternalLink href="https://dev.mysql.com/doc/refman/8.0/en/load-data.html">
-            LOAD DATA
-          </ExternalLink>{" "}
+          {isPostgres ? (
+            <ExternalLink href="https://www.postgresql.org/docs/current/sql-copy.html">
+              COPY FROM
+            </ExternalLink>
+          ) : (
+            <ExternalLink href="https://dev.mysql.com/doc/refman/8.0/en/load-data.html">
+              LOAD DATA
+            </ExternalLink>
+          )}{" "}
           to{" "}
           {props.forSpreadsheet
             ? "insert spreadsheet rows"
@@ -30,11 +38,12 @@ export default function LoadDataInfo(props: Props) {
             <ul>
               <li>Must have header row</li>
               <li>Column count and type must match table</li>
+              {isPostgres && <li>Will fail on duplicate keys</li>}
             </ul>
           </div>
         </HelpPopup>
       </div>
-      <ModifierOptions />
+      {!isPostgres && <ModifierOptions />}
     </div>
   );
 }
