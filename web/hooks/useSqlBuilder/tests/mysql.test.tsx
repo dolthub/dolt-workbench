@@ -405,3 +405,15 @@ describe("test updateTableQuery", () => {
     });
   });
 });
+
+describe("test updateTableMakeNullQuery", () => {});
+
+describe("test convertToSqlWithNewCols", () => {});
+
+describe("test convertToSqlWithNewColNames", () => {});
+
+describe("test alterTableDropColQuery", () => {});
+
+describe("test hideRowQuery", () => {});
+
+describe("test selectFromTable", () => {});

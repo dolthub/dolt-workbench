@@ -105,8 +105,8 @@ function removeExtraWhereClause(q: string): string {
 function useGetCols(q: string): string[] {
   const { getColumns } = useSqlParser();
   const columns = getColumns(q);
-  if (!columns) return [];
-  if (columns === "*") return ["*"];
+  if (!columns?.length) return [];
+  if (columns[0].expr.column === "*") return ["*"];
   // Remove dolt_commit_diff_[table] specific columns and column to_ and from_ prefixes
   const mappedCols = columns
     .slice(1, columns.length - 4)

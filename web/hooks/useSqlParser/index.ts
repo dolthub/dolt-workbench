@@ -51,7 +51,7 @@ export default function useSqlParser() {
   }
 
   // Extracts columns from query string
-  function getColumns(q: string): any[] | Column[] | "*" | undefined {
+  function getColumns(q: string): any[] | Column[] | undefined {
     const ast = parseSelectQuery(q);
     return ast?.columns;
   }

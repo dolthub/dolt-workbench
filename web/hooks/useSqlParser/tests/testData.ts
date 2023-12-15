@@ -1,3 +1,5 @@
+import { AggrFunc, ColumnRef } from "node-sql-parser";
+
 export const invalidQuery = `this is not a valid query`;
 
 // TODO: Translate to postgres
@@ -114,3 +116,26 @@ export const mutationExamples = [
   "SET SESSION slow_query_log = 1",
   "FLUSH PRIVILEGES",
 ];
+
+// TODO: Replace with node-sql-parser column when fixed
+type Column = {
+  expr: ColumnRef | AggrFunc;
+  as: string | null;
+  type?: string;
+};
+
+export function getParserCol(
+  name: string,
+  includeType?: boolean,
+  table?: string,
+): Column {
+  return {
+    expr: {
+      column: name,
+      table: table ?? null,
+      type: "column_ref",
+    },
+    as: null,
+    type: includeType ? "expr" : undefined,
+  };
+}

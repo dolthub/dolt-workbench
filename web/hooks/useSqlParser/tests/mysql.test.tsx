@@ -2,6 +2,7 @@ import compareArray from "@lib/compareArray";
 import { fallbackGetTableNamesForSelect } from "../util";
 import { renderUseSqlParser } from "./render.test";
 import {
+  getParserCol,
   invalidQuery,
   mutationExamples,
   notMutationExamples,
@@ -126,7 +127,7 @@ describe("test isMutation", () => {
   });
 });
 
-describe("test use regex to get table names from query", () => {
+describe("test fallbackGetTableNamesForSelect", () => {
   const tests = [
     {
       desc: "single table",
@@ -175,6 +176,104 @@ describe("test use regex to get table names from query", () => {
           test.expected,
         ),
       ).toBe(true);
+    });
+  });
+});
+
+describe("test queryHasOrderBy", () => {
+  const tests = [
+    {
+      desc: "no order by",
+      query: "select * from `test`",
+      column: "test",
+      expectedDef: true,
+      expectedAsc: false,
+      expectedDesc: false,
+    },
+    {
+      desc: "order by, column doesn't match",
+      query: "select * from `test` ORDER BY `other-col` ASC",
+      column: "not-col",
+      expectedDef: true,
+      expectedAsc: false,
+      expectedDesc: false,
+    },
+    {
+      desc: "order by, column matches, desc",
+      query: "select * from `test` ORDER BY `my-col` DESC",
+      column: "my-col",
+      expectedDef: false,
+      expectedAsc: false,
+      expectedDesc: true,
+    },
+    {
+      desc: "order by, column matches, asc",
+      query: "select * from `test` ORDER BY `my-col` ASC",
+      column: "my-col",
+      expectedDef: false,
+      expectedAsc: true,
+      expectedDesc: false,
+    },
+    {
+      desc: "invalid query",
+      query: invalidQuery,
+      column: "my-col",
+      expectedDef: false,
+      expectedAsc: false,
+      expectedDesc: false,
+    },
+  ];
+
+  tests.forEach(test => {
+    it(test.desc, async () => {
+      const { queryHasOrderBy } = await renderUseSqlParser();
+      // Default
+      expect(queryHasOrderBy(test.query, test.column)).toBe(test.expectedDef);
+      // ASC
+      expect(queryHasOrderBy(test.query, test.column, "ASC")).toBe(
+        test.expectedAsc,
+      );
+      // DESC
+      expect(queryHasOrderBy(test.query, test.column, "DESC")).toBe(
+        test.expectedDesc,
+      );
+    });
+  });
+});
+
+describe("test getColumns", () => {
+  const tests = [
+    {
+      desc: "select *",
+      query: "select * from `test`",
+      expected: [getParserCol("*")],
+    },
+    {
+      desc: "select one column",
+      query: "select `col1` from `test`",
+      expected: [getParserCol("col1")],
+    },
+    {
+      desc: "select two columns",
+      query: "select `col1`, `col2` from `test`",
+      expected: [getParserCol("col1"), getParserCol("col2")],
+    },
+    {
+      desc: "update query",
+      query: "update `test` set `col1` = 'val1', `col2` = 'val2'",
+      expected: undefined,
+    },
+    {
+      desc: "invalid query",
+      query: invalidQuery,
+      expected: undefined,
+    },
+  ];
+
+  tests.forEach(test => {
+    it(test.desc, async () => {
+      const { getColumns } = await renderUseSqlParser();
+      expect(getColumns(test.query)).toEqual(test.expected);
     });
   });
 });
