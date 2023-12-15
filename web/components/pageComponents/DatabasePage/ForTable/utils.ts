@@ -1,30 +1,12 @@
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { escapeSingleQuotes } from "@hooks/useSqlBuilder/util";
+import { ColumnValue } from "@hooks/useSqlBuilder/util";
 import { getDateString, getTimeWithSeconds } from "@lib/dateConversions";
 import { loremer } from "@lib/loremer";
 import nTimes from "@lib/nTimes";
 
-type ColValue = {
-  type: string;
-  value: any;
-};
-
-export function mapColsToFakeValues(
-  cols?: ColumnForDataTableFragment[],
-): ColValue[] {
-  if (!cols) {
-    return [];
-  }
-  return cols.map(c => {
-    const v = mapColTypeToFakeValue(c);
-    if (v.type === "single_quote_string") {
-      return { type: v.type, value: escapeSingleQuotes(v.value) };
-    }
-    return v;
-  });
-}
-
-function mapColTypeToFakeValue(col: ColumnForDataTableFragment): ColValue {
+export function mapColTypeToFakeValue(
+  col: ColumnForDataTableFragment,
+): ColumnValue {
   const lower = col.type.toLowerCase();
   if (lower.includes("int")) {
     return { type: "number", value: getFakeInt(col.type) };

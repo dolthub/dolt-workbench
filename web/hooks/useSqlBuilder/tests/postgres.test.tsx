@@ -9,21 +9,23 @@ import { Conditions } from "../util";
 import { renderUseSqlBuilder } from "./render.test";
 import * as td from "./testData";
 
+const renderUseSqlBuilderForPG = async () => renderUseSqlBuilder(true);
+
 describe("test addWhereClauseToSelect", () => {
   const column = "rating";
   const value = "10";
   const nullVal = NULL_VALUE;
   const tableName = "lunch-places";
-  const condition = `\`${column}\` = '${value}'`;
-  const conditionNullVal = `\`${column}\` IS NULL`;
+  const condition = `"${column}" = '${value}'`;
+  const conditionNullVal = `"${column}" IS NULL`;
   const cond = [{ col: column, val: value }];
   const nullCond = [{ col: column, val: nullVal }];
 
-  const query = `SELECT * FROM \`${tableName}\``;
+  const query = `SELECT * FROM "${tableName}"`;
 
-  const queryWithCondition = `${query} WHERE \`type of food\` = 'mexican'`;
-  const queryWithConditions = `${query} WHERE (\`type of food\` = 'mexican' OR \`best dish\` = 'burrito')`;
-  const queryWithConditionAndLimit = `${query} WHERE \`type of food\` = 'mexican' LIMIT 100`;
+  const queryWithCondition = `${query} WHERE "type of food" = 'mexican'`;
+  const queryWithConditions = `${query} WHERE ("type of food" = 'mexican' OR "best dish" = 'burrito')`;
+  const queryWithConditionAndLimit = `${query} WHERE "type of food" = 'mexican' LIMIT 100`;
 
   const tests: Array<{
     desc: string;
@@ -51,20 +53,20 @@ describe("test addWhereClauseToSelect", () => {
     {
       desc: "query with where clause and limit",
       q: queryWithConditionAndLimit,
-      expected: `${query} WHERE \`type of food\` = 'mexican' AND ${condition} LIMIT 100`,
-      expectedNull: `${query} WHERE \`type of food\` = 'mexican' AND ${conditionNullVal} LIMIT 100`,
+      expected: `${query} WHERE "type of food" = 'mexican' AND ${condition} LIMIT 100`,
+      expectedNull: `${query} WHERE "type of food" = 'mexican' AND ${conditionNullVal} LIMIT 100`,
     },
   ];
 
   tests.forEach(test => {
     it(test.desc, async () => {
-      const { addWhereClauseToSelect } = await renderUseSqlBuilder();
+      const { addWhereClauseToSelect } = await renderUseSqlBuilderForPG();
       expect(addWhereClauseToSelect(tableName, cond, test.q)).toBe(
         test.expected,
       );
     });
     it(`${test.desc}, null condition`, async () => {
-      const { addWhereClauseToSelect } = await renderUseSqlBuilder();
+      const { addWhereClauseToSelect } = await renderUseSqlBuilderForPG();
       expect(addWhereClauseToSelect(tableName, nullCond, test.q)).toBe(
         test.expectedNull,
       );
@@ -72,7 +74,7 @@ describe("test addWhereClauseToSelect", () => {
   });
 
   it("does not throw error", async () => {
-    const { addWhereClauseToSelect } = await renderUseSqlBuilder();
+    const { addWhereClauseToSelect } = await renderUseSqlBuilderForPG();
     expect(() =>
       addWhereClauseToSelect(tableName, cond, td.invalidQuery),
     ).not.toThrow();
@@ -95,7 +97,8 @@ describe("test addWhereClauseToSelect for cell buttons", () => {
       desc: "no current query",
       cols: stringConds,
       params: { ...refParams, tableName: "test_table" },
-      expectedQuery: "SELECT * FROM `test_table` WHERE `name` = 'test-string'",
+      expectedQuery:
+        'SELECT * FROM "test_table" WHERE "name" = \'test-string\'',
     },
     {
       desc: "current query with columns",
@@ -106,7 +109,7 @@ describe("test addWhereClauseToSelect for cell buttons", () => {
         q: "SELECT id, name FROM test_table",
       },
       expectedQuery:
-        "SELECT `id`, `name` FROM `test_table` WHERE `name` = 'test-string'",
+        'SELECT "id", "name" FROM "test_table" WHERE "name" = \'test-string\'',
     },
     {
       desc: "current query with where clause",
@@ -117,13 +120,14 @@ describe("test addWhereClauseToSelect for cell buttons", () => {
         q: "SELECT * FROM test_table WHERE id=1",
       },
       expectedQuery:
-        "SELECT * FROM `test_table` WHERE `id` = 1 AND `name` = 'test-string'",
+        'SELECT * FROM "test_table" WHERE "id" = 1 AND "name" = \'test-string\'',
     },
     {
       desc: "no current query with single quote value",
       cols: [{ col: td.nameColumn.name, val: "McDonald's" }],
       params: { ...refParams, tableName: "test_table" },
-      expectedQuery: "SELECT * FROM `test_table` WHERE `name` = 'McDonald\\'s'",
+      expectedQuery:
+        "SELECT * FROM \"test_table\" WHERE \"name\" = 'McDonald''s'",
     },
     {
       desc: "current query with single quote value in where clause",
@@ -131,10 +135,10 @@ describe("test addWhereClauseToSelect for cell buttons", () => {
       params: {
         ...refParams,
         tableName: "test_table",
-        q: "SELECT * FROM `test_table` WHERE `name` = 'McDonald\\'s'",
+        q: "SELECT * FROM \"test_table\" WHERE \"name\" = 'McDonald''s'",
       },
       expectedQuery:
-        "SELECT * FROM `test_table` WHERE `name` = 'McDonald\\'s' AND `id` = '2'",
+        "SELECT * FROM \"test_table\" WHERE \"name\" = 'McDonald''s' AND \"id\" = '2'",
     },
     {
       desc: "for foreign keys query",
@@ -143,13 +147,13 @@ describe("test addWhereClauseToSelect for cell buttons", () => {
         ...refParams,
         tableName: td.fkTableName,
       },
-      expectedQuery: `SELECT * FROM \`${td.fkTableName}\` WHERE \`${td.fkColumns[0].col}\` = '${td.fkColumns[0].val}' AND \`${td.fkColumns[1].col}\` = '${td.fkColumns[1].val}'`,
+      expectedQuery: `SELECT * FROM "${td.fkTableName}" WHERE "${td.fkColumns[0].col}" = '${td.fkColumns[0].val}' AND "${td.fkColumns[1].col}" = '${td.fkColumns[1].val}'`,
     },
   ];
 
   tests.forEach(t => {
     it(t.desc, async () => {
-      const { addWhereClauseToSelect } = await renderUseSqlBuilder();
+      const { addWhereClauseToSelect } = await renderUseSqlBuilderForPG();
       expect(
         addWhereClauseToSelect(t.params.tableName, t.cols, t.params.q),
       ).toEqual(t.expectedQuery);
@@ -160,10 +164,10 @@ describe("test addWhereClauseToSelect for cell buttons", () => {
 describe("test convertToSqlWithOrderBy", () => {
   const column = "name";
   const type = "ASC";
-  const query = "SELECT * FROM `lunch-places`";
-  const queryOrderBy = `${query} ORDER BY \`rating\` ASC`;
-  const queryOrderBySameCol = `${query} ORDER BY \`${column}\` DESC`;
-  const queryOrderBySameColSameOrder = `${query} ORDER BY \`${column}\` DESC, \`rating\` ASC LIMIT 20`;
+  const query = 'SELECT * FROM "lunch-places"';
+  const queryOrderBy = `${query} ORDER BY "rating" ASC`;
+  const queryOrderBySameCol = `${query} ORDER BY "${column}" DESC`;
+  const queryOrderBySameColSameOrder = `${query} ORDER BY "${column}" DESC, "rating" ASC LIMIT 20`;
 
   const tests: Array<{
     desc: string;
@@ -174,37 +178,37 @@ describe("test convertToSqlWithOrderBy", () => {
     {
       desc: "query no order by",
       query,
-      queryWithOrderBy: `${query} ORDER BY \`${column}\` ${type}`,
+      queryWithOrderBy: `${query} ORDER BY "${column}" ${type}`,
     },
     {
       desc: "query with order by",
       query: queryOrderBy,
-      queryWithOrderBy: `${queryOrderBy}, \`${column}\` ${type}`,
+      queryWithOrderBy: `${queryOrderBy}, "${column}" ${type}`,
     },
     {
       desc: "query with order by same column",
       query: queryOrderBySameCol,
-      queryWithOrderBy: `${query} ORDER BY \`${column}\` ${type}`,
+      queryWithOrderBy: `${query} ORDER BY "${column}" ${type}`,
       queryRemovedOrderBy: query,
     },
     {
       desc: "query with order by same column and same order",
       query: queryOrderBySameColSameOrder,
-      queryWithOrderBy: `${query} ORDER BY \`${column}\` ${type}, \`rating\` ASC LIMIT 20`,
-      queryRemovedOrderBy: `${query} ORDER BY \`rating\` ASC LIMIT 20`,
+      queryWithOrderBy: `${query} ORDER BY "${column}" ${type}, "rating" ASC LIMIT 20`,
+      queryRemovedOrderBy: `${query} ORDER BY "rating" ASC LIMIT 20`,
     },
   ];
 
   tests.forEach(test => {
     it(`${test.desc}, add order by`, async () => {
-      const { convertToSqlWithOrderBy } = await renderUseSqlBuilder();
+      const { convertToSqlWithOrderBy } = await renderUseSqlBuilderForPG();
       expect(convertToSqlWithOrderBy(test.query, column, type)).toBe(
         test.queryWithOrderBy,
       );
     });
 
     it(`${test.desc}, remove order by`, async () => {
-      const { convertToSqlWithOrderBy } = await renderUseSqlBuilder();
+      const { convertToSqlWithOrderBy } = await renderUseSqlBuilderForPG();
       expect(convertToSqlWithOrderBy(test.queryWithOrderBy, column)).toBe(
         test.queryRemovedOrderBy ?? test.query,
       );
@@ -212,7 +216,7 @@ describe("test convertToSqlWithOrderBy", () => {
   });
 
   it("does not throw error", async () => {
-    const { convertToSqlWithOrderBy } = await renderUseSqlBuilder();
+    const { convertToSqlWithOrderBy } = await renderUseSqlBuilderForPG();
     expect(() =>
       convertToSqlWithOrderBy(td.invalidQuery, column),
     ).not.toThrow();
@@ -232,35 +236,35 @@ describe("test removeColumnFromQuery", () => {
       query: "SELECT * FROM tablename",
       colToRemove: "name",
       cols: td.columns.slice(0, 2),
-      expected: "SELECT `id` FROM `tablename`",
+      expected: 'SELECT "id" FROM "tablename"',
     },
     {
       desc: "select query with where clause",
       query: "SELECT id, name, age FROM tablename WHERE id=1",
       colToRemove: "id",
       cols: td.columns,
-      expected: "SELECT `name`, `age` FROM `tablename` WHERE `id` = 1",
+      expected: 'SELECT "name", "age" FROM "tablename" WHERE "id" = 1',
     },
     {
       desc: "select query with where not clause with double quoted single quote",
       query: `SELECT id, name, age FROM tablename WHERE NOT (id=1 AND name = "MCDONALD'S")`,
       colToRemove: "name",
       cols: td.columns,
-      expected: `SELECT \`id\`, \`age\` FROM \`tablename\` WHERE NOT(\`id\` = 1 AND \`name\` = "MCDONALD\\'S")`,
+      expected: `SELECT "id", "age" FROM "tablename" WHERE NOT("id" = 1 AND "name" = "MCDONALD''S")`,
     },
     {
       desc: "select query with where clause with escaped single quote",
-      query: `SELECT * FROM tablename WHERE name = 'MCDONALD\\'S'`,
+      query: `SELECT * FROM tablename WHERE name = 'MCDONALD''S'`,
       colToRemove: "age",
       cols: td.columns,
-      expected: `SELECT \`id\`, \`name\` FROM \`tablename\` WHERE \`name\` = 'MCDONALD\\'S'`,
+      expected: `SELECT "id", "name" FROM "tablename" WHERE "name" = 'MCDONALD''S'`,
     },
     {
       desc: "select query with where clause with two escaped single quotes",
-      query: `SELECT * FROM tablename WHERE name = 'MCDONALD\\'S' OR name = 'Jinky\\'s Cafe'`,
+      query: `SELECT * FROM tablename WHERE name = 'MCDONALD''S' OR name = 'Jinky''s Cafe'`,
       colToRemove: "age",
       cols: td.columns,
-      expected: `SELECT \`id\`, \`name\` FROM \`tablename\` WHERE \`name\` = 'MCDONALD\\'S' OR \`name\` = 'Jinky\\'s Cafe'`,
+      expected: `SELECT "id", "name" FROM "tablename" WHERE "name" = 'MCDONALD''S' OR "name" = 'Jinky''s Cafe'`,
     },
     {
       desc: "select query with join clause",
@@ -269,13 +273,13 @@ describe("test removeColumnFromQuery", () => {
       colToRemove: "name",
       cols: td.joinedColumns,
       expected:
-        "SELECT `tablename`.`id`, `tablename`.`age`, `tablename2`.`id` FROM `tablename`, `tablename2` WHERE `tablename`.`id` = `tablename2`.`id`",
+        'SELECT "tablename"."id", "tablename"."age", "tablename2"."id" FROM "tablename", "tablename2" WHERE "tablename"."id" = "tablename2"."id"',
     },
   ];
 
   tests.forEach(test => {
     it(test.desc, async () => {
-      const { removeColumnFromQuery } = await renderUseSqlBuilder();
+      const { removeColumnFromQuery } = await renderUseSqlBuilderForPG();
       expect(
         removeColumnFromQuery(test.query, test.colToRemove, test.cols),
       ).toEqual(test.expected);
@@ -283,7 +287,7 @@ describe("test removeColumnFromQuery", () => {
   });
 
   it("remove column doesn't throw error", async () => {
-    const { removeColumnFromQuery } = await renderUseSqlBuilder();
+    const { removeColumnFromQuery } = await renderUseSqlBuilderForPG();
     expect(() =>
       removeColumnFromQuery(td.invalidQuery, "age", td.columns.slice(0, 2)),
     ).not.toThrow();
@@ -303,14 +307,14 @@ describe("test deleteFromTable", () => {
       tableName: "test-table",
       columns: [td.idPKColumn, td.nameColumn],
       row: { columnValues: [td.idColValue, td.nameColValue] },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = '1'`,
+      expectedQuery: `DELETE FROM "test-table" WHERE "id" = '1'`,
     },
     {
       desc: "two pks",
       tableName: "test-table",
       columns: [td.idPKColumn, td.pkPKColumn, td.nameColumn],
       row: { columnValues: [td.idColValue, td.idTwoColValue, td.nameColValue] },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = '1' AND \`pk2\` = '2'`,
+      expectedQuery: `DELETE FROM "test-table" WHERE "id" = '1' AND "pk2" = '2'`,
     },
     {
       desc: "three pks with single quote val",
@@ -328,13 +332,13 @@ describe("test deleteFromTable", () => {
         ],
       },
       // TODO: Is this the right escaping?
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = '1' AND \`pk2\` = '2' AND \`name\` = 'Taylor\\'s chair'`,
+      expectedQuery: `DELETE FROM "test-table" WHERE "id" = '1' AND "pk2" = '2' AND "name" = 'Taylor''s chair'`,
     },
   ];
 
   tests.forEach(t => {
     it(t.desc, async () => {
-      const { deleteFromTable } = await renderUseSqlBuilder();
+      const { deleteFromTable } = await renderUseSqlBuilderForPG();
       expect(deleteFromTable(t.tableName, toPKCols(t.row, t.columns))).toEqual(
         t.expectedQuery,
       );
@@ -359,7 +363,7 @@ describe("test updateTableQuery", () => {
       newVal: "New Name",
       columns: [td.idPKColumn, td.nameColumn],
       row: { columnValues: [td.idColValue, td.nameColValue] },
-      expectedQuery: `UPDATE \`test-table\` SET \`name\` = 'New Name' WHERE \`id\` = '1'`,
+      expectedQuery: `UPDATE "test-table" SET "name" = 'New Name' WHERE "id" = '1'`,
     },
     {
       desc: "two pks",
@@ -368,7 +372,7 @@ describe("test updateTableQuery", () => {
       newVal: "New Name",
       columns: [td.idPKColumn, td.pkPKColumn, td.nameColumn],
       row: { columnValues: [td.idColValue, td.idTwoColValue, td.nameColValue] },
-      expectedQuery: `UPDATE \`test-table\` SET \`name\` = 'New Name' WHERE \`id\` = '1' AND \`pk2\` = '2'`,
+      expectedQuery: `UPDATE "test-table" SET "name" = 'New Name' WHERE "id" = '1' AND "pk2" = '2'`,
     },
     {
       desc: "three pks with single quote val",
@@ -387,13 +391,13 @@ describe("test updateTableQuery", () => {
           td.nameSingleQuoteColValue,
         ],
       },
-      expectedQuery: `UPDATE \`test-table\` SET \`name\` = 'New Name' WHERE \`id\` = '1' AND \`pk2\` = '2' AND \`name\` = 'Taylor\\'s chair'`,
+      expectedQuery: `UPDATE "test-table" SET "name" = 'New Name' WHERE "id" = '1' AND "pk2" = '2' AND "name" = 'Taylor''s chair'`,
     },
   ];
 
   tests.forEach(test => {
     it(test.desc, async () => {
-      const { updateTableQuery } = await renderUseSqlBuilder();
+      const { updateTableQuery } = await renderUseSqlBuilderForPG();
       expect(
         updateTableQuery(
           test.tableName,

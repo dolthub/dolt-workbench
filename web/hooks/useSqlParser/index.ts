@@ -76,11 +76,15 @@ export default function useSqlParser() {
     }
     // If default, check if order by for column exists
     if (!type) {
-      return !parsed.orderby.some(o => o.expr.column === column);
+      return !parsed.orderby.some(
+        o => o.expr.column === column || o.expr.value === column,
+      );
     }
     // Check if column and type match
     return parsed.orderby.some(
-      o => o.expr.column === column && o.type === type,
+      o =>
+        (o.expr.column === column || o.expr.value === column) &&
+        o.type === type,
     );
   }
 

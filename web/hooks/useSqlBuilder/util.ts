@@ -12,6 +12,7 @@ import {
 } from "node-sql-parser";
 
 export type Conditions = Array<{ col: string; val: string }>;
+export type ColumnValue = { type: string; value: any };
 
 export function getSqlColumn(column: string): Column {
   return { expr: { column, type: "column_ref", table: null }, as: "" };
@@ -109,7 +110,7 @@ export function mapColsToColumnRef(
 // The where object is a binary tree with 'left' and 'right' nodes
 export function escapeSingleQuotesInWhereObj(
   where: any | null,
-  isPostgres = false,
+  isPostgres: boolean,
 ): any | null {
   if (!where) return null;
 
@@ -128,7 +129,7 @@ export function escapeSingleQuotesInWhereObj(
   if (where.value) {
     if (typeof where.value === "string") {
       // eslint-disable-next-line no-param-reassign
-      where.value = escapeSingleQuotes(where.value);
+      where.value = escapeSingleQuotes(where.value, isPostgres);
     }
     if (Array.isArray(where.value)) {
       where.value.forEach((val: any) =>
@@ -144,7 +145,7 @@ export function escapeSingleQuotesInWhereObj(
   return where;
 }
 
-export function escapeSingleQuotes(value: string, isPostgres = false): string {
+export function escapeSingleQuotes(value: string, isPostgres: boolean): string {
   if (isPostgres) {
     if (value.includes("''")) return value;
     return value.replace(/'/g, "''");
@@ -156,7 +157,7 @@ export function escapeSingleQuotes(value: string, isPostgres = false): string {
 function getNewWhereCondition(
   column: string,
   value: string,
-  isPostgres = false,
+  isPostgres: boolean,
 ): Expr {
   const valIsNull = isNullValue(value);
   const escapedVal = escapeSingleQuotes(value, isPostgres);
@@ -182,7 +183,7 @@ export function getWhereObj(
   column: string,
   value: string,
   where: Expr | null,
-  isPostgres = false,
+  isPostgres: boolean,
 ): Expr {
   const newCondition = getNewWhereCondition(column, value, isPostgres);
 
@@ -206,11 +207,15 @@ export function getOrderByArr(
   // If default, remove order by clause for column
   if (!type) {
     return parsed.orderby
-      ? parsed.orderby.filter(o => o.expr.column !== column)
+      ? parsed.orderby.filter(
+          o => o.expr.column !== column && o.expr.value !== column,
+        )
       : null;
   }
   // If order by clause for column exists, update type
-  const colInOrderBy = parsed.orderby?.find(o => o.expr.column === column);
+  const colInOrderBy = parsed.orderby?.find(
+    o => o.expr.column === column || o.expr.value === column,
+  );
   if (colInOrderBy) {
     colInOrderBy.type = type;
     return parsed.orderby;
@@ -225,8 +230,8 @@ export function getOrderByArr(
 
 export function getWhereFromPKCols(
   conditions: Conditions,
+  isPostgres: boolean,
   where?: Expr | null,
-  isPostgres = false,
 ): Expr | undefined {
   let cond: Expr | null = where || null;
   conditions.forEach(c => {

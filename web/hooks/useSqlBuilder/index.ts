@@ -2,6 +2,7 @@ import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
 import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
 import {
+  ColumnValue,
   Conditions,
   escapeSingleQuotes,
   escapeSingleQuotesInWhereObj,
@@ -136,26 +137,39 @@ export default function useSqlBuilder() {
         sel = parsed;
       }
     }
-    sel.where = getWhereFromPKCols(conditions, sel.where, isPostgres);
+    sel.where = getWhereFromPKCols(conditions, isPostgres, sel.where);
     return convertToSqlSelect(sel);
   }
 
   function insertIntoTable(
     tableName: string,
     cols: string[],
-    vals: Array<{ type: string; value: any }>,
+    vals: Array<ColumnValue>,
   ): string {
     return convertToSqlInsert({
       table: [{ table: tableName }],
       columns: cols,
-      values: [{ type: "expr_list", value: vals }],
+      values: [
+        {
+          type: "expr_list",
+          value: vals.map(v => {
+            if (v.type === "single_quote_string") {
+              return {
+                type: v.type,
+                value: escapeSingleQuotes(v.value, isPostgres),
+              };
+            }
+            return v;
+          }),
+        },
+      ],
     });
   }
 
   function deleteFromTable(tableName: string, cond: Conditions): string {
     return convertToSqlDelete({
       from: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(cond, null, isPostgres),
+      where: getWhereFromPKCols(cond, isPostgres),
     });
   }
 
@@ -178,7 +192,7 @@ where schemaname='${dbName}';`;
         type: "function",
         args: {
           type: "expr_list",
-          value: [getWhereFromPKCols(conditions, null, isPostgres)],
+          value: [getWhereFromPKCols(conditions, isPostgres)],
         },
       },
     });
@@ -211,7 +225,7 @@ where schemaname='${dbName}';`;
   ): string {
     return convertToSqlUpdate({
       table: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(conditions, null, isPostgres),
+      where: getWhereFromPKCols(conditions, isPostgres),
       set: [
         {
           column: setCol,
@@ -232,7 +246,7 @@ where schemaname='${dbName}';`;
   ): string {
     return convertToSqlUpdate({
       table: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(conditions, null, isPostgres),
+      where: getWhereFromPKCols(conditions, isPostgres),
       set: [
         { column: setCol, value: { type: "null", value: null }, table: null },
       ],

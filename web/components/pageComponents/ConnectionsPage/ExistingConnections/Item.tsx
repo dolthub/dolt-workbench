@@ -27,9 +27,9 @@ export default function Item({ conn, onDeleteClicked }: Props) {
         return;
       }
       const { href, as } =
-        conn.type === DatabaseType.Mysql
-          ? maybeDatabase(db.data.addDatabaseConnection.currentDatabase)
-          : maybeSchema(db.data.addDatabaseConnection.currentSchema);
+        conn.type === DatabaseType.Postgres
+          ? maybeSchema(db.data.addDatabaseConnection.currentSchema)
+          : maybeDatabase(db.data.addDatabaseConnection.currentDatabase);
       router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error
