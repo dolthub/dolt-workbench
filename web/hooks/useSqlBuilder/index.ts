@@ -1,9 +1,10 @@
 import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import { Delete, Insert_Replace, Select, Update } from "node-sql-parser";
+import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
 import {
   ColumnValue,
   Conditions,
+  addToExistingWhereFromPKCols,
   escapeSingleQuotes,
   escapeSingleQuotesInWhereObj,
   getOrderByArr,
@@ -31,24 +32,15 @@ export default function useSqlBuilder() {
     return sqlify(getSqlDelete(del));
   }
 
-  // function convertToSqlAlter(alt: Partial<Alter>): string {
-  //   return sqlify(getSqlAlter(alt));
-  // }
+  function convertToSqlAlter(alt: Partial<Alter>): string {
+    return sqlify(getSqlAlter(alt));
+  }
 
   function convertToSqlUpdate(upd: Partial<Update>): string {
     return sqlify(getSqlUpdate(upd));
   }
 
   function convertToSqlSelect(select: Partial<Select>): string {
-    return sqlify(getSqlSelect(select));
-  }
-
-  // TODO: Remove these when node-sql-parser types are updated
-  function convertToSqlAlterAny(alt: any): string {
-    return sqlify(getSqlAlter(alt));
-  }
-
-  function convertToSqlSelectAny(select: any): string {
     return sqlify(getSqlSelect(select));
   }
 
@@ -146,7 +138,7 @@ export default function useSqlBuilder() {
         sel = parsed;
       }
     }
-    sel.where = getWhereFromPKCols(conditions, isPostgres, sel.where);
+    sel.where = addToExistingWhereFromPKCols(conditions, isPostgres, sel.where);
     return convertToSqlSelect(sel);
   }
 
@@ -192,26 +184,27 @@ where schemaname='${dbName}';`;
   }
 
   function hideRowQuery(tableName: string, conditions: Conditions): string {
-    return convertToSqlSelectAny({
+    const whereVals = getWhereFromPKCols(conditions, isPostgres);
+    const sel: Partial<Select> = {
       columns: [getSqlColumn("*")],
       type: "select",
       from: [{ table: tableName }],
-      where: {
+    };
+    if (whereVals) {
+      sel.where = {
         name: "NOT",
         type: "function",
         args: {
           type: "expr_list",
-          value: [getWhereFromPKCols(conditions, isPostgres)],
+          value: [whereVals],
         },
-      },
-    });
+      };
+    }
+    return convertToSqlSelect(sel);
   }
 
   function alterTableDropColQuery(tableName: string, column: string): string {
     const alt = {
-      // type: "alter",
-      // TODO: Alter type is wrong
-      // table: { table: tableName, db: null, as: null },
       table: [{ table: tableName, db: null, as: null }],
       expr: [
         {
@@ -223,7 +216,7 @@ where schemaname='${dbName}';`;
         },
       ],
     };
-    return convertToSqlAlterAny(alt);
+    return convertToSqlAlter(alt);
   }
 
   function updateTableQuery(
