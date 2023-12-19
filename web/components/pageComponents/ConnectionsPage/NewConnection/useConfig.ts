@@ -2,6 +2,7 @@ import {
   DatabaseType,
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
+import useEffectOnMount from "@hooks/useEffectOnMount";
 import useMutation from "@hooks/useMutation";
 import useSetState from "@hooks/useSetState";
 import { maybeDatabase, maybeSchema } from "@lib/urls";
@@ -11,6 +12,7 @@ import { Dispatch, SyntheticEvent } from "react";
 const defaultState = {
   name: "",
   host: "",
+  hostPlaceholder: "127.0.0.1",
   port: "3306",
   username: "root",
   password: "",
@@ -27,6 +29,15 @@ const defaultState = {
 type ConfigState = typeof defaultState;
 type ConfigDispatch = Dispatch<Partial<ConfigState>>;
 
+function getDefaultState(isDocker = false): ConfigState {
+  const defaultHost = isDocker ? "host.docker.internal" : "127.0.0.1";
+  return {
+    ...defaultState,
+    host: defaultHost,
+    hostPlaceholder: defaultHost,
+  };
+}
+
 type ReturnType = {
   onSubmit: (e: SyntheticEvent) => Promise<void>;
   state: ConfigState;
@@ -37,10 +48,17 @@ type ReturnType = {
 
 export default function useConfig(): ReturnType {
   const router = useRouter();
+
   const [state, setState] = useSetState(defaultState);
   const { mutateFn, ...res } = useMutation({
     hook: useAddDatabaseConnectionMutation,
   });
+
+  useEffectOnMount(() => {
+    const isDocker = window.location.origin === "http://localhost:3000";
+    setState(getDefaultState(isDocker));
+  });
+
   const clearState = () => {
     setState(defaultState);
   };

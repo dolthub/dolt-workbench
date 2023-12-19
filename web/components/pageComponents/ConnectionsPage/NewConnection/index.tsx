@@ -6,13 +6,11 @@ import FormSelect from "@components/FormSelect";
 import Loader from "@components/Loader";
 import ExternalLink from "@components/links/ExternalLink";
 import { DatabaseType } from "@gen/graphql-types";
-import useEffectOnMount from "@hooks/useEffectOnMount";
 import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { IoIosArrowDropleftCircle } from "@react-icons/all-files/io/IoIosArrowDropleftCircle";
 import cx from "classnames";
-import { useState } from "react";
 import css from "./index.module.css";
 import useConfig, { getCanSubmit } from "./useConfig";
 
@@ -23,11 +21,6 @@ type Props = {
 
 export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
-  const [isDocker, setIsDocker] = useState(false);
-
-  useEffectOnMount(() => {
-    setIsDocker(window.location.origin === "http://localhost:3000");
-  });
 
   const onCancel = props.canGoBack
     ? () => {
@@ -93,7 +86,7 @@ export default function NewConnection(props: Props) {
               label="Host"
               value={state.host}
               onChangeString={h => setState({ host: h })}
-              placeholder={isDocker ? "host.docker.internal" : "127.0.0.1"}
+              placeholder={state.hostPlaceholder}
               horizontal
               light
             />
