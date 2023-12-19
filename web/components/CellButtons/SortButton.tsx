@@ -17,10 +17,10 @@ type Props = {
 
 export default function SortButton({ col, dir }: Props) {
   const { queryHasOrderBy } = useSqlParser();
-  const { convertToSqlWithOrderBy } = useSqlBuilder();
+  const { convertToSqlWithOrderBy, selectFromTable } = useSqlBuilder();
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
-  const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
+  const q = params.q ?? selectFromTable(params.tableName ?? "");
   const checked = queryHasOrderBy(q, col.name, dir);
 
   const onClick = async () => {

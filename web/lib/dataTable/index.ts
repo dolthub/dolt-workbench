@@ -1,46 +1,9 @@
-import {
-  ColumnForDataTableFragment,
-  RowForDataTableFragment,
-} from "@gen/graphql-types";
-
 export function getBitDisplayValue(value: string): string {
   return value.charCodeAt(0).toString();
 }
 
-export function mapQueryColsToAllCols(
-  queryCols: ColumnForDataTableFragment[],
-  allCols?: ColumnForDataTableFragment[],
-): ColumnForDataTableFragment[] {
-  if (!allCols) return queryCols;
-  return queryCols.map(qCol => {
-    const matchedCol = allCols.find(aCol => aCol.name === qCol.name);
-    return matchedCol ?? qCol;
-  });
-}
-
 export function escapeDoubleQuotes(s: string): string {
   return s.replace(/"/g, `\\"`);
-}
-
-// Gets where clause for identify a row based on primary keys
-// i.e. `[pk1Col] = "[pk1Val]" AND [pkNCol] = "[pkNVal]"`
-export function getWhereClauseForPKValues(
-  cols: ColumnForDataTableFragment[],
-  row: RowForDataTableFragment,
-): string {
-  const colsWithValue = cols.map((col, i) => {
-    const rowVal = row.columnValues[i].displayValue;
-    return { col, value: rowVal };
-  });
-  const pkColAndVal = colsWithValue.filter(({ col }) => col.isPrimaryKey);
-  const strings = pkColAndVal.map(cV => {
-    const val =
-      cV.col.type === "bit(1)"
-        ? escapeDoubleQuotes(cV.value)
-        : `"${escapeDoubleQuotes(cV.value)}"`;
-    return `\`${cV.col.name}\` = ${val}`;
-  });
-  return strings.join(" AND ");
 }
 
 export function isLongContentType(currentColType?: string): boolean {

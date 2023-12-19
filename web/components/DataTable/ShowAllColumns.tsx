@@ -7,13 +7,13 @@ import css from "./index.module.css";
 
 export default function ShowAllColumns() {
   const { getColumns } = useSqlParser();
-  const { convertToSqlWithNewCols } = useSqlBuilder();
+  const { convertToSqlWithNewCols, selectFromTable } = useSqlBuilder();
   const { executeQuery } = useSqlEditorContext();
   const { params, tableNames } = useDataTableContext();
 
   if (!params.tableName || tableNames.length > 1) return null;
 
-  const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
+  const q = params.q ?? selectFromTable(params.tableName);
   const col = getColumns(q);
 
   if (!col?.length || col[0].expr.column === "*") return null;

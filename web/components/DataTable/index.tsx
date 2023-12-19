@@ -6,6 +6,7 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import DataTableLayout from "@layouts/DataTableLayout";
 import Maybe from "@lib/Maybe";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
@@ -74,9 +75,10 @@ function WithContext(props: TableProps) {
 }
 
 export default function DataTable(props: { params: DataTableParams }) {
+  const { selectFromTable } = useSqlBuilder();
   const params: SqlQueryParams = {
     ...props.params,
-    q: `SELECT * FROM \`${props.params.tableName}\``,
+    q: selectFromTable(props.params.tableName),
   };
   return (
     <>

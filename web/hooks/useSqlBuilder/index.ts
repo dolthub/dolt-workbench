@@ -1,6 +1,13 @@
 import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import { Alter, Delete, Insert_Replace, Select, Update } from "node-sql-parser";
+import {
+  Alter,
+  Delete,
+  Drop,
+  Insert_Replace,
+  Select,
+  Update,
+} from "node-sql-parser";
 import {
   ColumnValue,
   Conditions,
@@ -256,8 +263,12 @@ where schemaname='${dbName}';`;
   }
 
   function dropTable(tableName: string): string {
-    const escapedName = isPostgres ? `"${tableName}"` : `\`${tableName}\``;
-    return `DROP TABLE ${escapedName}`;
+    const drop: Drop = {
+      type: "drop",
+      keyword: "table",
+      name: [{ db: null, table: tableName, as: null }],
+    };
+    return sqlify(drop);
   }
 
   function createView(name: string, q: string): string {

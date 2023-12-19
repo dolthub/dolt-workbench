@@ -3,7 +3,6 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { Conditions } from "@hooks/useSqlBuilder/util";
-import { mapQueryColsToAllCols } from "@lib/dataTable";
 import { TableParams } from "@lib/params";
 
 export type Props = {
@@ -187,4 +186,15 @@ export function toPKColsMapQueryCols(
   cols?: ColumnForDataTableFragment[],
 ): Conditions {
   return toPKCols(row, mapQueryColsToAllCols(queryCols, cols));
+}
+
+function mapQueryColsToAllCols(
+  queryCols: ColumnForDataTableFragment[],
+  allCols?: ColumnForDataTableFragment[],
+): ColumnForDataTableFragment[] {
+  if (!allCols) return queryCols;
+  return queryCols.map(qCol => {
+    const matchedCol = allCols.find(aCol => aCol.name === qCol.name);
+    return matchedCol ?? qCol;
+  });
 }
