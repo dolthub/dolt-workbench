@@ -9,11 +9,11 @@ import { CellStatusActionType, ColumnStatus } from "@lib/tableTypes";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import CreateTableCell from "./AceCell";
 import CellDropdown from "./CellDropdown";
-import CreateTableCell from "./CreateTableCell";
 import css from "./index.module.css";
 import useCellDisplayValue from "./useCellDisplayValue";
-import { getDiffTypeClassnameForCell, isCreateTableCell } from "./utils";
+import { getDiffTypeClassnameForCell, getShowAceEditorForCell } from "./utils";
 
 type Props = {
   cell: ColumnValue;
@@ -38,7 +38,7 @@ export default function Cell(props: Props): JSX.Element {
     props.row,
     currentCol,
   );
-  const createTableCell = isCreateTableCell(currentCol, router.query.q);
+  const showAceCell = getShowAceEditorForCell(currentCol, router.query.q);
   const dataCy = `${props.isMobile ? "mobile-" : "desktop-"}db-data-table-row-${
     props.ridx
   }-col-${props.cidx}`;
@@ -50,7 +50,7 @@ export default function Cell(props: Props): JSX.Element {
     currentCol.type,
   );
 
-  if (createTableCell) {
+  if (showAceCell) {
     return <CreateTableCell value={value} data-cy={dataCy} />;
   }
 

@@ -9,10 +9,10 @@ import { DatabaseType } from "@gen/graphql-types";
 import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
+import { IoIosArrowDropleftCircle } from "@react-icons/all-files/io/IoIosArrowDropleftCircle";
 import cx from "classnames";
-import { useEffect, useState } from "react";
 import css from "./index.module.css";
-import useConfig from "./useConfig";
+import useConfig, { getCanSubmit } from "./useConfig";
 
 type Props = {
   canGoBack: boolean;
@@ -21,13 +21,6 @@ type Props = {
 
 export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
-  const canSubmit =
-    state.name && (state.connectionUrl || (state.host && state.username));
-  const [isDocker, setIsDocker] = useState(false);
-
-  useEffect(() => {
-    setIsDocker(window.location.origin === "http://localhost:3000");
-  }, []);
 
   const onCancel = props.canGoBack
     ? () => {
@@ -38,6 +31,11 @@ export default function NewConnection(props: Props) {
   return (
     <div className={css.databaseForm}>
       <Loader loaded={!state.loading} />
+      {props.canGoBack && (
+        <Button.Link onClick={onCancel} className={css.goback}>
+          <IoIosArrowDropleftCircle /> back to connections
+        </Button.Link>
+      )}
       <div className={css.whiteContainer}>
         <form onSubmit={onSubmit}>
           <div className={css.section}>
@@ -66,7 +64,7 @@ export default function NewConnection(props: Props) {
               }
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
-                { label: "PostreSQL", value: DatabaseType.Postgres },
+                { label: "PostgreSQL", value: DatabaseType.Postgres },
               ]}
               horizontal
               light
@@ -88,7 +86,7 @@ export default function NewConnection(props: Props) {
               label="Host"
               value={state.host}
               onChangeString={h => setState({ host: h })}
-              placeholder={isDocker ? "host.docker.internal" : "127.0.0.1"}
+              placeholder={state.hostPlaceholder}
               horizontal
               light
             />
@@ -125,6 +123,16 @@ export default function NewConnection(props: Props) {
               horizontal
               light
             />
+            {state.type === DatabaseType.Postgres && (
+              <FormInput
+                label="Schema"
+                value={state.schema}
+                onChangeString={s => setState({ schema: s })}
+                placeholder="myschema"
+                horizontal
+                light
+              />
+            )}
           </div>
           <div className={css.section}>
             <Button.Link
@@ -163,7 +171,7 @@ export default function NewConnection(props: Props) {
               onCancel={onCancel}
               cancelText={props.canGoBack ? "cancel" : "clear"}
             >
-              <Button type="submit" disabled={!canSubmit}>
+              <Button type="submit" disabled={!getCanSubmit(state)}>
                 Launch Workbench
               </Button>
             </ButtonsWithError>

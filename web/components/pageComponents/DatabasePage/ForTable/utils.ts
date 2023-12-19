@@ -1,48 +1,45 @@
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { ColumnValue } from "@hooks/useSqlBuilder/util";
 import { getDateString, getTimeWithSeconds } from "@lib/dateConversions";
 import { loremer } from "@lib/loremer";
 import nTimes from "@lib/nTimes";
 
-export function getInsertQuery(
-  tableName: string,
-  cols?: ColumnForDataTableFragment[],
-): string {
-  const values = cols?.map(mapColTypeToFakeValue).join(", ");
-  const colNames = cols?.map(c => `\`${c.name}\``).join(", ");
-  return `INSERT INTO \`${tableName}\` (${colNames}) VALUES (${values})`;
-}
-
-function mapColTypeToFakeValue(col: ColumnForDataTableFragment): string {
+export function mapColTypeToFakeValue(
+  col: ColumnForDataTableFragment,
+): ColumnValue {
   const lower = col.type.toLowerCase();
   if (lower.includes("int")) {
-    return `${getFakeInt(col.type)}`;
+    return { type: "number", value: getFakeInt(col.type) };
   }
   if (
     lower.includes("decimal") ||
     lower.includes("float") ||
     lower.includes("double")
   ) {
-    return `${Math.floor(Math.random() * 100)}.${Math.floor(
-      Math.random() * 100,
-    )}`;
+    return {
+      type: "number",
+      value: Number(
+        `${Math.floor(Math.random() * 100)}.${Math.floor(Math.random() * 100)}`,
+      ),
+    };
   }
   if (lower.includes("year")) {
     const currYear = new Date(Date.now()).getFullYear();
-    return `${getRandomNumFromRange(1900, currYear)}`;
+    return { type: "number", value: getRandomNumFromRange(1900, currYear) };
   }
   if (lower.includes("date") || lower.includes("time")) {
-    return getRandomDateOrTime(lower);
+    return { type: "single_quote_string", value: getRandomDateOrTime(lower) };
   }
   if (lower.includes("char") || lower.includes("text")) {
-    return getRandomText(lower);
+    return { type: "single_quote_string", value: getRandomText(lower) };
   }
   if (lower.includes("json")) {
-    return getRandomJSON();
+    return { type: "single_quote_string", value: getRandomJSON() };
   }
   if (lower === "blob" || lower === "longblob") {
-    return `"blob"`;
+    return { type: "single_quote_string", value: `blob` };
   }
-  return `"text"`;
+  return { type: "single_quote_string", value: "text" };
 }
 
 export function getFakeInt(type: string): number {
@@ -51,7 +48,7 @@ export function getFakeInt(type: string): number {
 
 function getRandomJSON(): string {
   const array = `[${nTimes(3, () => getFakeInt("smallint")).join(",")}]`;
-  return `'{"${loremer.word()}":"${loremer.sentence()}","${loremer.word()}":${array}}'`;
+  return `{"${loremer.word()}":"${loremer.sentence()}","${loremer.word()}":${array}}`;
 }
 
 // Uses max value signed https://dev.mysql.com/doc/refman/8.0/en/integer-types.html
@@ -77,15 +74,15 @@ export function getRandomDateOrTime(lowerType: string): string {
   const date = getDateString(ranDate);
   const time = getTimeWithSeconds(ranDate);
   if (lowerType === "time") {
-    return `"${time}"`;
+    return time;
   }
   if (lowerType === "date") {
-    return `"${date}"`;
+    return date;
   }
   if (lowerType === "datetime" || lowerType === "timestamp") {
-    return `"${date} ${time}"`;
+    return `${date} ${time}`;
   }
-  return `"${date}"`;
+  return date;
 }
 
 function getRandomDate(): Date {
@@ -102,24 +99,24 @@ export function getRandomText(lowerType: string): string {
     return getWordsForMaxSize(Number(size));
   }
   if (lowerType.startsWith("medium") || lowerType.startsWith("long")) {
-    return `"${loremer.sentence()}"`;
+    return loremer.sentence();
   }
   if (lowerType.startsWith("tiny")) {
-    return `"${loremer.word({ maxLength: 255 })}"`;
+    return loremer.word({ maxLength: 255 });
   }
-  return `"${loremer.word()}"`;
+  return loremer.word();
 }
 
 function getWordsForMaxSize(size: number): string {
   const maxSize = Math.min(size, 200);
   if (maxSize < 21) {
-    return `"${loremer.word({ maxLength: maxSize })}"`;
+    return loremer.word({ maxLength: maxSize });
   }
   const maxNumWords = Math.floor(maxSize / 10);
   const numWords = getRandomNumFromRange(2, maxNumWords);
-  return `"${nTimes(numWords, () =>
+  return nTimes(numWords, () =>
     loremer.word({ maxLength: maxSize / maxNumWords - 1 }),
-  ).join(" ")}"`;
+  ).join(" ");
 }
 
 // Inclusive

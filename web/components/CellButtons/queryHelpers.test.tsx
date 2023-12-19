@@ -1,7 +1,5 @@
-import { getDoltDiffQuery, getForeignKeyQuery } from "./queryHelpers";
+import { getDoltDiffQuery } from "./queryHelpers";
 import {
-  fkProps,
-  foreignKeyQuery,
   lpCellDiffQuery,
   lpCellProps,
   lpRowDiffQuery,
@@ -31,10 +29,5 @@ describe("query conversions work for cell buttons", () => {
   it("converts table information to dolt_diff query for row with multiple PKs and PK with timestamp type", () => {
     const query = getDoltDiffQuery(saRowProps);
     expect(query).toBe(saRowDiffQuery);
-  });
-
-  it("converts table and foreign key columns information to foreign key query for row with multiple foreign keys", () => {
-    const query = getForeignKeyQuery(fkProps.table, fkProps.cols);
-    expect(query).toBe(foreignKeyQuery);
   });
 });

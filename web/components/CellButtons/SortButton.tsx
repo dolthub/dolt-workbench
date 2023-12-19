@@ -3,7 +3,8 @@ import Button from "@components/Button";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { convertToSqlWithOrderBy, queryHasOrderBy } from "@lib/parseSqlQuery";
+import useSqlBuilder from "@hooks/useSqlBuilder";
+import useSqlParser from "@hooks/useSqlParser";
 import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
 import css from "./index.module.css";
 
@@ -15,9 +16,11 @@ type Props = {
 };
 
 export default function SortButton({ col, dir }: Props) {
+  const { queryHasOrderBy } = useSqlParser();
+  const { convertToSqlWithOrderBy, selectFromTable } = useSqlBuilder();
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
-  const q = params.q ?? `SELECT * FROM \`${params.tableName}\``;
+  const q = params.q ?? selectFromTable(params.tableName ?? "");
   const checked = queryHasOrderBy(q, col.name, dir);
 
   const onClick = async () => {

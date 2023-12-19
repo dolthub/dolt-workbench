@@ -8,6 +8,7 @@ import {
   useSqlSelectForSqlDataTableQuery,
 } from "@gen/graphql-types";
 import { useReactiveWidth } from "@hooks/useReactiveSize";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { SqlQueryParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import dynamic from "next/dynamic";
@@ -27,12 +28,13 @@ type InnerProps = Props & {
 };
 
 function Inner({ rows, params }: InnerProps) {
+  const { selectFromTable } = useSqlBuilder();
   const { isView, fragIdx } = getSchemaInfo(params.q);
   const { queryClickHandler } = useSqlEditorContext("Views");
   const { isMobile } = useReactiveWidth(null, 1024);
 
   const executeView = async (tableName: string) => {
-    const query = `SELECT * FROM \`${tableName}\``;
+    const query = selectFromTable(tableName);
     await queryClickHandler({ ...params, query });
   };
 

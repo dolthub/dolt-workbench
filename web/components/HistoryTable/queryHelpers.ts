@@ -1,32 +1,32 @@
+import useSqlBuilder from "@hooks/useSqlBuilder";
+import useSqlParser from "@hooks/useSqlParser";
 import { removeClauses } from "@lib/doltSystemTables";
-import {
-  convertToSqlWithNewColNames,
-  getColumns,
-  getTableName,
-} from "@lib/parseSqlQuery";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
-export function getDoltHistoryQuery(q: string): string {
-  // This is a workaround until all where clauses work
+export function useGetDoltHistoryQuery(q: string): () => string {
+  const { getTableName } = useSqlParser();
+  const { convertToSqlWithNewColNames } = useSqlBuilder();
   const queryWithoutClauses = removeClauses(q);
-  const tableName = getTableName(queryWithoutClauses);
-  if (!tableName) return "";
+  const queryCols = useGetCols(queryWithoutClauses);
 
-  const historyTableName = tableName.replace(
-    /dolt_diff|dolt_commit_diff/,
-    "dolt_history",
-  );
-  const cols = [
-    ...getCols(queryWithoutClauses),
-    "commit_hash",
-    "committer",
-    "commit_date",
-  ];
+  const generate = (): string => {
+    // This is a workaround until all where clauses work
+    const tableName = getTableName(queryWithoutClauses);
+    if (!tableName) return "";
 
-  // SELECT [cols] FROM dolt_history_[tableName] WHERE [conditions];
-  const query = formatQuery(q);
-  return convertToSqlWithNewColNames(query, cols, historyTableName);
+    const historyTableName = tableName.replace(
+      /dolt_diff|dolt_commit_diff/,
+      "dolt_history",
+    );
+    const cols = [...queryCols, "commit_hash", "committer", "commit_date"];
+
+    // SELECT [cols] FROM dolt_history_[tableName] WHERE [conditions];
+    const query = formatQuery(q);
+    return convertToSqlWithNewColNames(query, cols, historyTableName);
+  };
+
+  return generate;
 }
 
 function formatQuery(q: string): string {
@@ -102,10 +102,11 @@ function removeExtraWhereClause(q: string): string {
 }
 
 // Gets column names and removes "from_" and "to_" prefixes
-function getCols(q: string): string[] {
+function useGetCols(q: string): string[] {
+  const { getColumns } = useSqlParser();
   const columns = getColumns(q);
-  if (!columns) return [];
-  if (columns === "*") return ["*"];
+  if (!columns?.length) return [];
+  if (columns[0].expr.column === "*") return ["*"];
   // Remove dolt_commit_diff_[table] specific columns and column to_ and from_ prefixes
   const mappedCols = columns
     .slice(1, columns.length - 4)

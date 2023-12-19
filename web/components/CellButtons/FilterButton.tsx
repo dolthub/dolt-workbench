@@ -2,8 +2,9 @@ import Button from "@components/Button";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import css from "./index.module.css";
-import { getFilterByCellQuery } from "./queryHelpers";
+import { convertTimestamp } from "./queryHelpers";
 
 type Props = {
   col?: ColumnForDataTableFragment;
@@ -14,6 +15,7 @@ export default function FilterButton({ col, value }: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName } = params;
+  const { addWhereClauseToSelect } = useSqlBuilder();
 
   if (!tableName) return null;
 
@@ -21,7 +23,15 @@ export default function FilterButton({ col, value }: Props) {
     if (!col) {
       return;
     }
-    const query = getFilterByCellQuery(col, value, { ...params, tableName });
+    // TODO: timestamp not working for postgres
+    const val = col.type.toLowerCase().includes("timestamp")
+      ? convertTimestamp(value)
+      : value;
+    const query = addWhereClauseToSelect(
+      tableName,
+      [{ col: col.name, val }],
+      params.q,
+    );
     await executeQuery({ ...params, query });
   };
 

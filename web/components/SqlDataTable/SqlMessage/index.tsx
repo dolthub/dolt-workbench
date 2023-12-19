@@ -1,9 +1,9 @@
 import { ApolloError } from "@apollo/client";
 import ErrorMsg from "@components/ErrorMsg";
 import { QueryExecutionStatus } from "@gen/graphql-types";
+import useSqlParser from "@hooks/useSqlParser";
 import { isTimeoutError } from "@lib/errors/helpers";
 import { SqlQueryParams } from "@lib/params";
-import { isMultipleQueries } from "@lib/parseSqlQuery";
 import SuccessMsg from "./SuccessMsg";
 import TimeoutMessage from "./TimeoutMsg";
 import css from "./index.module.css";
@@ -21,6 +21,7 @@ type Props = TimeoutProps & {
 };
 
 export default function SqlMessage(props: Props) {
+  const { isMultipleQueries } = useSqlParser();
   if (props.gqlError) {
     if (
       isTimeoutError(props.gqlError.message) ||

@@ -1,9 +1,11 @@
 export const setSearchPath = (dbName: string, _isDolt = false) =>
   `SET SEARCH_PATH = '${dbName}'`;
 
-export const listTablesQuery = `SELECT * FROM pg_catalog.pg_tables where schemaname=$1;`;
+export const databasesQuery = `SELECT datname FROM pg_database`;
 
-export const databasesQuery = `SELECT schema_name FROM information_schema.schemata;`;
+export const schemasQuery = `SELECT schema_name FROM information_schema.schemata WHERE catalog_name = $1`;
+
+export const listTablesQuery = `SELECT * FROM pg_catalog.pg_tables where schemaname=$1;`;
 
 export const getViewsQuery = `SELECT table_name FROM INFORMATION_SCHEMA.views WHERE table_schema = $1`;
 

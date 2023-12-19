@@ -6,12 +6,10 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import {
-  getUpdateCellToNullQuery,
-  mapQueryColsToAllCols,
-} from "@lib/dataTable";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import css from "./index.module.css";
+import { toPKColsMapQueryCols } from "./queryHelpers";
 import { pksAreShowing } from "./utils";
 
 type Props = {
@@ -30,6 +28,7 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
   const notNullConstraint = !!props.currCol.constraints?.some(
     con => con.notNull,
   );
+  const { updateTableMakeNullQuery } = useSqlBuilder();
 
   if (
     !tableName ||
@@ -40,11 +39,10 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
   }
 
   const onClick = async () => {
-    const query = getUpdateCellToNullQuery(
+    const query = updateTableMakeNullQuery(
       tableName,
       props.currCol.name,
-      mapQueryColsToAllCols(props.queryCols, columns),
-      props.row,
+      toPKColsMapQueryCols(props.row, props.queryCols, columns),
     );
     if (props.setQuery) {
       props.setQuery(query);

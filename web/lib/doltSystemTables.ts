@@ -1,5 +1,5 @@
+import useSqlParser from "@hooks/useSqlParser";
 import Maybe from "./Maybe";
-import { getTableName } from "./parseSqlQuery";
 
 export function isDoltSystemTable(t: Maybe<string>): boolean {
   return !!t?.startsWith("dolt_");
@@ -20,14 +20,18 @@ export function isShowSchemaFragmentQuery(q: string): boolean {
   return !!q.match(/show create (view|event|trigger|procedure)/gi);
 }
 
-export function isDoltDiffTableQuery(q: string): boolean | undefined {
-  // This is a workaround until all where clauses work
-  const queryWithoutClauses = removeClauses(q);
-  const tableName = getTableName(queryWithoutClauses);
-  return (
-    tableName?.startsWith("dolt_diff_") ||
-    tableName?.startsWith("dolt_commit_diff_")
-  );
+export function useIsDoltDiffTableQuery(): (q: string) => boolean | undefined {
+  const { getTableName } = useSqlParser();
+  const generate = (q: string) => {
+    // This is a workaround until all where clauses work
+    const queryWithoutClauses = removeClauses(q);
+    const tableName = getTableName(queryWithoutClauses);
+    return (
+      tableName?.startsWith("dolt_diff_") ||
+      tableName?.startsWith("dolt_commit_diff_")
+    );
+  };
+  return generate;
 }
 
 export function removeClauses(q: string): string {

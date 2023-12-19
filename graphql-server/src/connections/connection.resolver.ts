@@ -15,6 +15,8 @@ export class WorkbenchConfig {
   useSSL: boolean;
 
   type: DatabaseType;
+
+  schema?: string; // Postgres only
 }
 
 @Resolver()
@@ -65,6 +67,7 @@ export class ConnectionResolver {
       type: config.type,
       connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
       url: config.connectionUrl,
+      schema: config.schema,
       ssl: config.useSSL
         ? {
             rejectUnauthorized: false,

@@ -2,10 +2,8 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { getWhereClauseForPKValues } from "@lib/dataTable";
+import { Conditions } from "@hooks/useSqlBuilder/util";
 import { TableParams } from "@lib/params";
-import { convertToSqlWithNewCondition } from "@lib/parseSqlQuery";
-import { ReferencedColumn } from "./utils";
 
 export type Props = {
   cidx: number;
@@ -171,63 +169,32 @@ export function convertTimestamp(ts: string): string {
   return `${day} ${formattedTime}`;
 }
 
-export function dropColumnQuery(tableName: string, colName: string): string {
-  return `ALTER TABLE \`${tableName}\` DROP COLUMN \`${colName}\``;
-}
-
-// Gets query that deletes a row,
-// i.e. "DELETE FROM [tableName] WHERE [pk1Col] = [pk1Val] AND [pkNCol] = [pkNVal]"
-export function getDeleteRowQuery(
-  tableName: string,
+export function toPKCols(
   row: RowForDataTableFragment,
-  columns?: ColumnForDataTableFragment[],
-): string {
-  if (!columns) return "";
-  return `DELETE FROM \`${tableName}\` WHERE ${getWhereClauseForPKValues(
-    columns,
-    row,
-  )}`;
+  cols: ColumnForDataTableFragment[],
+): Conditions {
+  return cols
+    .filter(c => c.isPrimaryKey)
+    .map((col, i) => {
+      return { col: col.name, val: row.columnValues[i].displayValue };
+    });
 }
 
-// Gets query that deletes a row,
-// i.e. "SELECT * FROM [tableName] WHERE NOT ([pk1Col] = [pk1Val] AND [pkNCol] = [pkNVal])"
-export function getHideRowQuery(
-  tableName: string,
+export function toPKColsMapQueryCols(
   row: RowForDataTableFragment,
-  columns?: ColumnForDataTableFragment[],
-): string {
-  if (!columns) return "";
-  return `SELECT * FROM \`${tableName}\` WHERE NOT (${getWhereClauseForPKValues(
-    columns,
-    row,
-  )})`;
+  queryCols: ColumnForDataTableFragment[],
+  cols?: ColumnForDataTableFragment[],
+): Conditions {
+  return toPKCols(row, mapQueryColsToAllCols(queryCols, cols));
 }
 
-// Gets query that filters based on cell value
-// i.e. "SELECT * FROM [tableName] WHERE `[colName]` = '[colValue]'"
-export function getFilterByCellQuery(
-  col: ColumnForDataTableFragment,
-  value: string,
-  params: TableParams & { q?: string },
-): string {
-  const { q, tableName } = params;
-  const query = q ?? `SELECT *\nFROM \`${tableName}\``;
-  const val = col.type === "TIMESTAMP" ? convertTimestamp(value) : value;
-  return convertToSqlWithNewCondition(query, col.name, val);
-}
-
-// Gets query that filters based on foreign keys
-export function getForeignKeyQuery(
-  table: string,
-  cols: ReferencedColumn[],
-): string {
-  let query = `select * from ${table}`;
-  cols.forEach(fkCol => {
-    query = convertToSqlWithNewCondition(
-      query,
-      fkCol.columnName,
-      fkCol.columnValue,
-    );
+function mapQueryColsToAllCols(
+  queryCols: ColumnForDataTableFragment[],
+  allCols?: ColumnForDataTableFragment[],
+): ColumnForDataTableFragment[] {
+  if (!allCols) return queryCols;
+  return queryCols.map(qCol => {
+    const matchedCol = allCols.find(aCol => aCol.name === qCol.name);
+    return matchedCol ?? qCol;
   });
-  return query;
 }

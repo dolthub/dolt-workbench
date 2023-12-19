@@ -6,10 +6,10 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { mapQueryColsToAllCols } from "@lib/dataTable";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import css from "./index.module.css";
-import { getDeleteRowQuery } from "./queryHelpers";
+import { toPKColsMapQueryCols } from "./queryHelpers";
 
 type Props = {
   row: RowForDataTableFragment;
@@ -21,14 +21,14 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
   const { executeQuery, setEditorString } = useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
+  const { deleteFromTable } = useSqlBuilder();
 
   if (!tableName || isUneditableDoltSystemTable(tableName)) return null;
 
   const onClick = async () => {
-    const query = getDeleteRowQuery(
+    const query = deleteFromTable(
       tableName,
-      props.row,
-      mapQueryColsToAllCols(props.columns, columns),
+      toPKColsMapQueryCols(props.row, props.columns, columns),
     );
     setEditorString(query);
     await executeQuery({

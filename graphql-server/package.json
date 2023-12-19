@@ -41,6 +41,7 @@
     "graphql-upload": "13",
     "mysql2": "^3.6.5",
     "pg": "^8.11.3",
+    "pg-copy-streams": "^6.0.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.4",
     "timeago.js": "^4.0.2",

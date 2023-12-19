@@ -37,7 +37,6 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   const isMut = useSqlQuery(props.params, props.client, props.gqlError);
-
   const msg = <SqlMessage {...props} rowsLen={props.rows?.length ?? 0} />;
   return (
     <>
@@ -83,7 +82,7 @@ function Query(props: Props) {
 }
 
 export default function SqlDataTable(props: Props) {
-  const { queryIsRecentMutation } = useSessionQueryHistory();
+  const { queryIsRecentMutation } = useSessionQueryHistory(props.params);
   const [runQueryAnyway, setRunQueryAnyway] = useState(false);
 
   if (queryIsRecentMutation(props.params.q) && !runQueryAnyway) {

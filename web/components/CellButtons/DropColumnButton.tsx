@@ -3,9 +3,9 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import css from "./index.module.css";
-import { dropColumnQuery } from "./queryHelpers";
 
 type Props = {
   col: ColumnForDataTableFragment;
@@ -16,13 +16,17 @@ export default function DropColumnButton({ col, refName }: Props) {
   const { executeQuery, setEditorString } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName } = params;
+  const { alterTableDropColQuery } = useSqlBuilder();
 
   if (!tableName || !col.sourceTable || isDoltSystemTable(tableName)) {
     return null;
   }
 
   const onClick = async () => {
-    const query = dropColumnQuery(col.sourceTable ?? tableName, col.name);
+    const query = alterTableDropColQuery(
+      col.sourceTable ?? tableName,
+      col.name,
+    );
     setEditorString(query);
     await executeQuery({
       ...params,

@@ -1,13 +1,14 @@
 # dolt-workbench
 
-A modern, browser-based, open source SQL workbench for your MySQL-compatible database.
-Use [Dolt](https://doltdb.com) to unlock powerful version control features.
+A modern, browser-based, open source SQL workbench for your MySQL and PostgreSQL
+compatible databases. Use [Dolt](https://doltdb.com) to unlock powerful version control
+features.
 
 Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
 
 ## Features
 
-Whether you decide to connect this workbench to a MySQL database or Dolt database, the
+Whether you decide to connect this workbench to a MySQL, Dolt, or PostgreSQL database, the
 Dolt Workbench has many features that make it the most modern and user-friendly web-based
 workbench on the market.
 
@@ -17,7 +18,7 @@ Why is your SQL workbench stuck in 2003? The Dolt Workbench brings a modern brow
 workbench features you know and love. It makes browsing table data and schemas more
 intuitive and looks good doing it.
 
-<img width="1357" alt="Modern, web based table-browser" src="https://github.com/dolthub/dolt-workbench/assets/29443194/8ee94e74-f185-4808-90ee-2551c4636749">
+<img width="1357" alt="Modern, web based table-browser" src="https://www.dolthub.com/blog/static/3f1358cd506d7b8ed383ea0751b67446/4f2ef/table-browser.png">
 
 ### Auto-generate SQL queries
 
@@ -100,8 +101,8 @@ the [Docker image](https://hub.docker.com/r/dolthub/dolt-workbench).
 % docker run -p 9002:9002 -p 3000:3000 dolthub/dolt-workbench:latest
 ```
 
-Navigate to http://localhost:3000 to enter your database information. See instructions on 
-[Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench) for connecting to local and 
+Navigate to http://localhost:3000 to enter your database information. See instructions on
+[Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench) for connecting to local and
 Docker installed databases.
 
 ### Saving connection information between runs

@@ -21,7 +21,7 @@ describe("tests Views", () => {
   it("renders correctly with no views", async () => {
     await renderAndWait(
       <MockedProvider mocks={[mocks.rowsForEmptyViewsMock]}>
-        <SqlEditorProvider>
+        <SqlEditorProvider params={mocks.params}>
           <Views params={mocks.params} />
         </SqlEditorProvider>
       </MockedProvider>,
@@ -42,7 +42,7 @@ describe("tests Views", () => {
     useMockRouter(jestRouter, {});
     await renderAndWait(
       <MockedProvider mocks={[mocks.rowsForViewsMock]}>
-        <SqlEditorProvider>
+        <SqlEditorProvider params={mocks.params}>
           <Views params={mocks.params} />
         </SqlEditorProvider>
       </MockedProvider>,

@@ -90,13 +90,32 @@ export function getInitialColumnStatus(
   return initialColumnStatus;
 }
 
-export function isCreateTableCell(
+export function getShowAceEditorForCell(
   currentCol: ColumnForDataTableFragment,
   q?: string | string[],
 ): boolean {
-  if (currentCol.name !== "Create Table" || !q) return false;
-  if (Array.isArray(q)) {
-    return q.some(qs => qs.toLowerCase().startsWith("show create table"));
+  if (!q) return false;
+  if (
+    ![
+      "Create Table",
+      "pg_get_viewdef",
+      "pg_get_triggerdef",
+      "pg_get_functiondef",
+    ].includes(currentCol.name)
+  ) {
+    return false;
   }
-  return q.toLowerCase().startsWith("show create table");
+  if (Array.isArray(q)) {
+    return q.some(qs => matchSchemaQuery(qs));
+  }
+  return matchSchemaQuery(q);
+}
+
+function matchSchemaQuery(q: string): boolean {
+  return (
+    !!q.match(/show create (view|event|trigger|procedure)/gi) ||
+    !!q.match(/SELECT pg_get_viewdef/gi) ||
+    !!q.match(/SELECT pg_get_triggerdef/gi) ||
+    !!q.match(/SELECT pg_get_functiondef/gi)
+  );
 }

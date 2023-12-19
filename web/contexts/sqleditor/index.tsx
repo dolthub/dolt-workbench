@@ -3,9 +3,9 @@ import useContextWithError from "@hooks/useContextWithError";
 import { useReactiveWidth } from "@hooks/useReactiveSize";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
 import useSetState from "@hooks/useSetState";
+import useSqlParser from "@hooks/useSqlParser";
 import { createCustomContext } from "@lib/createCustomContext";
 import { ApolloErrorType } from "@lib/errors/types";
-import { isMultipleQueries } from "@lib/parseSqlQuery";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -18,6 +18,7 @@ export const SqlEditorContext =
 // SqlEditorProvider should only be used in DatabasePage and the query catalog
 // page (to execute queries)
 export function SqlEditorProvider(props: Props) {
+  const { isMultipleQueries } = useSqlParser();
   const { isMobile } = useReactiveWidth(null, 1024);
   const [editorString, setEditorString] = useState("");
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);
@@ -27,7 +28,7 @@ export function SqlEditorProvider(props: Props) {
     errorIsOpen: false,
   });
   const router = useRouter();
-  const { addQuery } = useSessionQueryHistory();
+  const { addQuery } = useSessionQueryHistory(props.params);
 
   useEffect(() => {
     setShowSqlEditor(isMobile);

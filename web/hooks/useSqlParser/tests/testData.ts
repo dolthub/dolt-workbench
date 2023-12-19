@@ -1,3 +1,41 @@
+import { Column } from "node-sql-parser";
+
+export const invalidQuery = `this is not a valid query`;
+
+// TODO: Translate to postgres
+export const notMutationExamples = [
+  "SELECT * FROM tablename",
+  "SHOW TABLES",
+  "INVALID QUERY",
+  "DESCRIBE tablename",
+  "SHOW CREATE TABLE tablename",
+  "SHOW CREATE VIEW `view_name`",
+  "Select * from TABLE_NAME group by dept having salary > 10000;",
+  `with oops as (
+    SELECT from_name,to_ccn, to_name
+    from dolt_commit_diff_hospitals where from_commit = 'qtd6vb07pq7bfgt67m863anntm6fpu7n'
+    and to_commit = 'p730obnbmihnlq54uvenck13h12f7831'
+    and from_name <> to_name
+    )
+    select h.*, o.* hospitals h
+    join oops o
+        on h.ccn = o.to_ccn
+        and h.name <> o.from_name
+    set h.name = o.from_name
+`,
+  "SHOW DATABASES",
+  "SHOW COLUMNS FROM table_name",
+  "SHOW INDEXES FROM table_name",
+  "SHOW CREATE TABLE table_name",
+  "SHOW TRIGGERS",
+  "SHOW PROCEDURE STATUS",
+  "SHOW FUNCTION STATUS",
+  "SHOW GRANTS FOR user_name",
+  "SHOW PROCESSLIST",
+  "SHOW STATUS",
+];
+
+// TODO: Translate to postgres
 export const mutationExamples = [
   "INSERT INTO tablename (id, name) VALUES (1, 'taylor')",
   "INSERT INTO tablename VALUES (1, 'taylor')",
@@ -78,3 +116,19 @@ export const mutationExamples = [
   "SET SESSION slow_query_log = 1",
   "FLUSH PRIVILEGES",
 ];
+
+export function getParserCol(
+  name: string,
+  includeType?: boolean,
+  table?: string,
+): Column {
+  return {
+    expr: {
+      column: name,
+      table: table ?? null,
+      type: "column_ref",
+    },
+    as: null,
+    type: includeType ? "expr" : undefined,
+  };
+}

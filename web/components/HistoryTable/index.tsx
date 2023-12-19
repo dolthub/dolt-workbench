@@ -5,7 +5,7 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import css from "./index.module.css";
-import { getDoltHistoryQuery } from "./queryHelpers";
+import { useGetDoltHistoryQuery } from "./queryHelpers";
 
 type Props = {
   params: SqlQueryParams;
@@ -17,9 +17,10 @@ export default function HistoryTable(props: Props) {
   const { executeQuery } = useSqlEditorContext();
   const forRow = props.params.q.split(whitespace)[1] === "*";
   const [err, setErr] = useState("");
+  const generateQuery = useGetDoltHistoryQuery(props.params.q);
 
   const onClick = async () => {
-    const query = getDoltHistoryQuery(props.params.q);
+    const query = generateQuery();
     if (query === "") {
       setErr("Error generating history query. We are working on a fix.");
       return;

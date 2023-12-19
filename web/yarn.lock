@@ -1337,7 +1337,7 @@ __metadata:
     lodash: ^4.17.21
     next: ^14.0.1
     next-useragent: ^2.8.0
-    node-sql-parser: ^4.11.0
+    node-sql-parser: ^4.17.0
     postcss: ^8.4.31
     postcss-preset-env: ^9.1.4
     prettier: ^3.1.0
@@ -10012,12 +10012,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-sql-parser@npm:^4.11.0":
-  version: 4.11.0
-  resolution: "node-sql-parser@npm:4.11.0"
+"node-sql-parser@npm:^4.17.0":
+  version: 4.17.0
+  resolution: "node-sql-parser@npm:4.17.0"
   dependencies:
     big-integer: ^1.6.48
-  checksum: dd8f40e5332570a0b131025aebd1802171d18553bc5cd31f3a090851d03b63ef38a33c0cf5f9b4d2c8c02767ac1556ef20107cd8a8bb7ce8cf4ba5731c5d9c8a
+  checksum: 6b05834ae2039d2b716d7054e927c03c47a41f8361ae0426fd690dd1b789af1b40446b81408d50023bbb5b1d49b7b342b3e9b28eccd57176d4912f728fffad01
   languageName: node
   linkType: hard
 

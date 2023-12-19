@@ -1,4 +1,5 @@
 import Btn from "@components/Btn";
+import { toPKColsMapQueryCols } from "@components/CellButtons/queryHelpers";
 import SmallLoader from "@components/SmallLoader";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
@@ -6,11 +7,8 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import {
-  getBitDisplayValue,
-  getUpdateCellQuery,
-  mapQueryColsToAllCols,
-} from "@lib/dataTable";
+import useSqlBuilder from "@hooks/useSqlBuilder";
+import { getBitDisplayValue } from "@lib/dataTable";
 import { isNullValue } from "@lib/null";
 import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
@@ -41,6 +39,7 @@ export default function EditCellInput(props: Props) {
   const val = getDefaultVal(props.value, inputType);
   const [newValue, setNewValue] = useState(val);
   const [showTextarea, setShowTextarea] = useState(false);
+  const { updateTableQuery } = useSqlBuilder();
 
   if (!tableName) return null;
 
@@ -51,13 +50,11 @@ export default function EditCellInput(props: Props) {
       return;
     }
 
-    const query = getUpdateCellQuery(
+    const query = updateTableQuery(
       tableName,
       props.currentCol.name,
       newValue,
-      mapQueryColsToAllCols(props.queryCols, columns),
-      props.row,
-      inputType,
+      toPKColsMapQueryCols(props.row, props.queryCols, columns),
     );
     setEditorString(query);
     await executeQuery({

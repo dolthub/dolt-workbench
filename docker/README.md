@@ -1,6 +1,6 @@
 # dolt-workbench
 
-A modern, browser-based, open source SQL workbench for your MySQL-compatible database. Unlock powerful version control features when you use [Dolt](https://doltdb.com).
+A modern, browser-based, open source SQL workbench for your MySQL and PostgreSQL compatible databases. Unlock powerful version control features when you use [Dolt](https://doltdb.com).
 
 <img src="https://www.dolthub.com/blog/static/3f1358cd506d7b8ed383ea0751b67446/4f2ef/table-browser.png" width="850px" alt="Dolt Workbench" />
 
@@ -47,11 +47,11 @@ If your database is already internet accessible (i.e. your database is hosted on
 
 ## Connecting to a locally installed database
 
-If you'd like to connect to a MySQL-compatible server running on your local machine, there are some additional steps to accept connections from other hosts. Docker containers cannot use `localhost` or `127.0.0.1` to access services running on the host machine because they have their own local network. Instead, you can use `host.docker.internal` as the host IP which Docker resolves to the internal IP address used by the host machine.
+If you'd like to connect to a database server running on your local machine, there are some additional steps to accept connections from other hosts. Docker containers cannot use `localhost` or `127.0.0.1` to access services running on the host machine because they have their own local network. Instead, you can use `host.docker.internal` as the host IP which Docker resolves to the internal IP address used by the host machine.
 
 ### MySQL
 
-Set the `bind-address` directive in the MySQL configuration file (`my.cnf` or `my.ini`) to `0.0.0.0`.
+Set the `bind-address` directive in the MySQL configuration file (`my.cnf` or `my.ini`) to `0.0.0.0`. Restart the server.
 
 ```
 bind-address    = 0.0.0.0
@@ -71,9 +71,19 @@ my-dolt-db % dolt sql-server -H 0.0.0.0
 
 Use `host.docker.internal` as the host when entering your connection information from the UI.
 
+### PostgreSQL
+
+Locate your PostgreSQL configuration file (`postgresql.conf`) and change the `listen_addresses` directive from `localhost` to `*`. Restart the server.
+
+```
+listen_addresses = '*'
+```
+
+Use `host.docker.internal` as the host when entering your connection information from the UI.
+
 ## Connecting to a Docker installed database
 
-You can use Docker container networking to allow containers to connect to and communicate with each other, or to non-Docker workloads. This allows us to run a local MySQL server in the same network as the workbench.
+You can use Docker container networking to allow containers to connect to and communicate with each other, or to non-Docker workloads. This allows us to run a local server in the same network as the workbench.
 
 First, create the network:
 

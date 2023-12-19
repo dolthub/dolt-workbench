@@ -2,40 +2,20 @@ import Btn from "@components/Btn";
 import Loader from "@components/Loader";
 import MobileSqlViewer from "@components/SqlEditor/MobileSqlViewer";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { OptionalRefParams } from "@lib/params";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
-import { useEffect } from "react";
 import Errors from "../Errors";
-import { getEditorString, getSqlString } from "../utils";
+import { Params, useSqlStrings } from "../useSqlStrings";
 import css from "./index.module.css";
 
 type Props = {
-  params: OptionalRefParams & {
-    q?: string;
-    tableName?: string;
-  };
+  params: Params;
   empty?: boolean;
 };
 
 export default function DatabaseTableHeaderMobile(props: Props) {
-  const sqlString = getSqlString(
-    props.params.q,
-    props.params.tableName,
-    props.empty,
-  );
-
-  const { setEditorString, showSqlEditor, toggleSqlEditor, loading } =
-    useSqlEditorContext();
-
-  useEffect(() => {
-    const sqlQuery = getEditorString(
-      props.params.q,
-      props.params.tableName,
-      props.empty,
-    );
-    setEditorString(sqlQuery);
-  }, [props.empty, props.params.q, props.params.tableName]);
+  const { sqlString } = useSqlStrings(props.params, props.empty);
+  const { showSqlEditor, toggleSqlEditor, loading } = useSqlEditorContext();
 
   return (
     <div className={css.editorContainer}>

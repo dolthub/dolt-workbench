@@ -1,5 +1,5 @@
 import Button from "@components/Button";
-import { sampleCreateQueryForEmpty } from "@components/DatabaseTableHeader/utils";
+import { sampleCreateQueryForEmpty } from "@components/DatabaseTableHeader/useSqlStrings";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useSqlEditorContext } from "@contexts/sqleditor";

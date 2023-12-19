@@ -17,6 +17,7 @@ type Props = {
 export default function Table(props: Props) {
   const initialColumnStatus = getInitialColumnStatus(props.columns);
   const [columnStatus, setColumnStatus] = useState(initialColumnStatus);
+
   return (
     <>
       <MobileTable

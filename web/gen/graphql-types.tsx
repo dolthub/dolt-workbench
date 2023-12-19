@@ -88,11 +88,18 @@ export type CommitList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
+export type CurrentDatabaseState = {
+  __typename?: 'CurrentDatabaseState';
+  currentDatabase?: Maybe<Scalars['String']['output']>;
+  currentSchema?: Maybe<Scalars['String']['output']>;
+};
+
 export type DatabaseConnection = {
   __typename?: 'DatabaseConnection';
   connectionUrl: Scalars['String']['output'];
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
+  schema?: Maybe<Scalars['String']['output']>;
   type?: Maybe<DatabaseType>;
   useSSL?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -208,9 +215,10 @@ export enum LoadDataModifier {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addDatabaseConnection?: Maybe<Scalars['String']['output']>;
+  addDatabaseConnection: CurrentDatabaseState;
   createBranch: Scalars['String']['output'];
   createDatabase: Scalars['Boolean']['output'];
+  createSchema: Scalars['Boolean']['output'];
   createTag: Scalars['String']['output'];
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
@@ -225,6 +233,7 @@ export type MutationAddDatabaseConnectionArgs = {
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  schema?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -239,6 +248,11 @@ export type MutationCreateBranchArgs = {
 
 export type MutationCreateDatabaseArgs = {
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationCreateSchemaArgs = {
+  schemaName: Scalars['String']['input'];
 };
 
 
@@ -344,6 +358,7 @@ export type Query = {
   rowDiffs: RowDiffList;
   rows: RowList;
   schemaDiff?: Maybe<SchemaDiff>;
+  schemas: Array<Scalars['String']['output']>;
   sqlSelect: SqlSelect;
   sqlSelectForCsvDownload: Scalars['String']['output'];
   status: Array<Status>;
@@ -658,6 +673,13 @@ export type CreateDatabaseMutationVariables = Exact<{
 
 export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
 
+export type CreateSchemaMutationVariables = Exact<{
+  schemaName: Scalars['String']['input'];
+}>;
+
+
+export type CreateSchemaMutation = { __typename?: 'Mutation', createSchema: boolean };
+
 export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
 
 export type BranchesForSelectorQueryVariables = Exact<{
@@ -866,17 +888,18 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<DatabaseType>;
+  schema?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection?: string | null };
+export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: { __typename?: 'CurrentDatabaseState', currentDatabase?: string | null, currentSchema?: string | null } };
 
-export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null };
+export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, schema?: string | null };
 
 export type StoredConnectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null }> };
+export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, schema?: string | null }> };
 
 export type RemoveConnectionMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -1039,6 +1062,11 @@ export type LoadDataMutationVariables = Exact<{
 
 
 export type LoadDataMutation = { __typename?: 'Mutation', loadDataFile: boolean };
+
+export type DatabaseSchemasQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DatabaseSchemasQuery = { __typename?: 'Query', schemas: Array<string> };
 
 export type DoltDatabaseDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1348,6 +1376,7 @@ export const DatabaseConnectionFragmentDoc = gql`
   useSSL
   hideDoltFeatures
   type
+  schema
 }
     `;
 export const BranchFragmentDoc = gql`
@@ -1533,6 +1562,37 @@ export function useCreateDatabaseMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDatabaseMutation>;
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
+export const CreateSchemaDocument = gql`
+    mutation CreateSchema($schemaName: String!) {
+  createSchema(schemaName: $schemaName)
+}
+    `;
+export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutation, CreateSchemaMutationVariables>;
+
+/**
+ * __useCreateSchemaMutation__
+ *
+ * To run a mutation, you first call `useCreateSchemaMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSchemaMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSchemaMutation, { data, loading, error }] = useCreateSchemaMutation({
+ *   variables: {
+ *      schemaName: // value for 'schemaName'
+ *   },
+ * });
+ */
+export function useCreateSchemaMutation(baseOptions?: Apollo.MutationHookOptions<CreateSchemaMutation, CreateSchemaMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateSchemaMutation, CreateSchemaMutationVariables>(CreateSchemaDocument, options);
+      }
+export type CreateSchemaMutationHookResult = ReturnType<typeof useCreateSchemaMutation>;
+export type CreateSchemaMutationResult = Apollo.MutationResult<CreateSchemaMutation>;
+export type CreateSchemaMutationOptions = Apollo.BaseMutationOptions<CreateSchemaMutation, CreateSchemaMutationVariables>;
 export const BranchesForSelectorDocument = gql`
     query BranchesForSelector($databaseName: String!) {
   branches(databaseName: $databaseName) {
@@ -2348,14 +2408,18 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType, $schema: String) {
   addDatabaseConnection(
     connectionUrl: $connectionUrl
     name: $name
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
     type: $type
-  )
+    schema: $schema
+  ) {
+    currentDatabase
+    currentSchema
+  }
 }
     `;
 export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabaseConnectionMutation, AddDatabaseConnectionMutationVariables>;
@@ -2378,6 +2442,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
  *      type: // value for 'type'
+ *      schema: // value for 'schema'
  *   },
  * });
  */
@@ -3075,6 +3140,43 @@ export function useLoadDataMutation(baseOptions?: Apollo.MutationHookOptions<Loa
 export type LoadDataMutationHookResult = ReturnType<typeof useLoadDataMutation>;
 export type LoadDataMutationResult = Apollo.MutationResult<LoadDataMutation>;
 export type LoadDataMutationOptions = Apollo.BaseMutationOptions<LoadDataMutation, LoadDataMutationVariables>;
+export const DatabaseSchemasDocument = gql`
+    query DatabaseSchemas {
+  schemas
+}
+    `;
+
+/**
+ * __useDatabaseSchemasQuery__
+ *
+ * To run a query within a React component, call `useDatabaseSchemasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatabaseSchemasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDatabaseSchemasQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDatabaseSchemasQuery(baseOptions?: Apollo.QueryHookOptions<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>(DatabaseSchemasDocument, options);
+      }
+export function useDatabaseSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>(DatabaseSchemasDocument, options);
+        }
+export function useDatabaseSchemasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>(DatabaseSchemasDocument, options);
+        }
+export type DatabaseSchemasQueryHookResult = ReturnType<typeof useDatabaseSchemasQuery>;
+export type DatabaseSchemasLazyQueryHookResult = ReturnType<typeof useDatabaseSchemasLazyQuery>;
+export type DatabaseSchemasSuspenseQueryHookResult = ReturnType<typeof useDatabaseSchemasSuspenseQuery>;
+export type DatabaseSchemasQueryResult = Apollo.QueryResult<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>;
 export const DoltDatabaseDetailsDocument = gql`
     query DoltDatabaseDetails {
   doltDatabaseDetails {

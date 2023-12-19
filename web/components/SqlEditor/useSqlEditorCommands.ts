@@ -27,7 +27,7 @@ export default function useSqlEditorCommands(
   const { editorString, setEditorString, executeQuery, toggleSqlEditor } =
     useSqlEditorContext("Tables");
   const { getPrevQuery, getNextQuery, queryIdx, getLastQuery } =
-    useSessionQueryHistory();
+    useSessionQueryHistory(params);
   const [state, setState] = useSetState(defaultState);
   const keyBindingCommands = getKeyBindingCommands(setState, toggleSqlEditor);
 

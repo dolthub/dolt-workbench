@@ -11,7 +11,7 @@ type Props = {
   ["data-cy"]?: string;
 };
 
-export default function CreateTableCell(props: Props) {
+export default function AceCell(props: Props) {
   const font = "13px Roboto Mono,Menlo,Monaco,Courier New,monospace,serif";
   const { height, width } = getHeightAndWidth(props.value, font);
 

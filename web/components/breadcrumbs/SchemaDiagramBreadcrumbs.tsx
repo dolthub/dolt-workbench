@@ -13,7 +13,7 @@ export default function SchemaDiagramBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-schema-diagram-breadcrumbs"
       data-cy="db-schema-diagram-breadcrumbs"
-      breadcrumbs={schemaBreadcrumbsDetails(params)}
+      breadcrumbs={db => schemaBreadcrumbsDetails(params, db)}
     />
   );
 }

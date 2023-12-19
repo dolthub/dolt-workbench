@@ -1,5 +1,6 @@
 import SmallLoader from "@components/SmallLoader";
 import { SchemaType } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { RefParams } from "@lib/params";
 import { pluralize } from "@lib/pluralize";
 import { useEffect } from "react";
@@ -16,9 +17,9 @@ type InnerProps = {
 };
 
 export default function List(props: InnerProps) {
-  const activeItem = getActiveItem(props.kind, props.params.q);
+  const { showCreateQuery, isPostgres } = useSqlBuilder();
+  const activeItem = getActiveItem(props.kind, props.params.q, isPostgres);
   const pluralKind = pluralize(2, props.kind.toLowerCase());
-
   useEffect(() => {
     if (!activeItem) return;
     const el = document.getElementById(activeItem);
@@ -45,7 +46,7 @@ export default function List(props: InnerProps) {
               name={t}
               params={props.params}
               isActive={t === activeItem}
-              query={`SHOW CREATE ${props.kind.toUpperCase()} \`${t}\``}
+              query={showCreateQuery(props.params.databaseName, t, props.kind)}
             />
           ))}
         </ol>

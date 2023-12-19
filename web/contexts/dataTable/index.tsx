@@ -10,10 +10,10 @@ import {
   useRowsForDataTableQuery,
 } from "@gen/graphql-types";
 import useContextWithError from "@hooks/useContextWithError";
+import useSqlParser from "@hooks/useSqlParser";
 import Maybe from "@lib/Maybe";
 import { createCustomContext } from "@lib/createCustomContext";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
-import { isMutation, requireTableNamesForSelect } from "@lib/parseSqlQuery";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
 type DataTableParams = TableParams & { offset?: number };
@@ -128,6 +128,7 @@ export function DataTableProvider({
   children,
   showingWorkingDiff,
 }: Props) {
+  const { isMutation, requireTableNamesForSelect } = useSqlParser();
   const tableNames = useMemo(
     () =>
       "tableName" in params

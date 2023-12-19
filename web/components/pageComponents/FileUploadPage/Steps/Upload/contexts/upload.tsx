@@ -1,7 +1,7 @@
 import { ApolloError } from "@apollo/client";
 import { useLoadDataMutation } from "@gen/graphql-types";
 import useContextWithError from "@hooks/useContextWithError";
-import useIsDolt from "@hooks/useIsDolt";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useMutation from "@hooks/useMutation";
 import useSetState from "@hooks/useSetState";
 import { createCustomContext } from "@lib/createCustomContext";
@@ -35,7 +35,7 @@ type Props = {
 };
 
 export function UploadProvider(props: Props) {
-  const { isDolt } = useIsDolt();
+  const { isDolt } = useDatabaseDetails();
   const router = useRouter();
   const { state: fuState, dbParams } = useFileUploadContext();
   const [state, setState] = useSetState({

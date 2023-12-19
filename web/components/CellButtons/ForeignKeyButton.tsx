@@ -3,13 +3,13 @@ import Link from "@components/links/Link";
 import { useDataTableContext } from "@contexts/dataTable";
 import { RowForDataTableFragment } from "@gen/graphql-types";
 import useOnClickOutside from "@hooks/useOnClickOutside";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { BiCaretRight } from "@react-icons/all-files/bi/BiCaretRight";
 import cx from "classnames";
 import { useRef, useState } from "react";
 import css from "./index.module.css";
-import { getForeignKeyQuery } from "./queryHelpers";
 import { ReferencedColumn, getForeignKeyMap } from "./utils";
 
 type Props = {
@@ -65,14 +65,18 @@ type FKTableLinkProps = {
 };
 
 function FKTableLink(props: FKTableLinkProps) {
-  const sqlParams = {
-    ...props.params,
-    q: getForeignKeyQuery(props.table, props.columns),
-  };
-  const url = sqlQuery(sqlParams);
+  const { addWhereClauseToSelect } = useSqlBuilder();
+
+  const q = addWhereClauseToSelect(
+    props.table,
+    props.columns.map(c => {
+      return { col: c.columnName, val: c.columnValue };
+    }),
+  );
+
   return (
     <div key={props.table}>
-      <Link {...url}>{props.table}</Link>
+      <Link {...sqlQuery({ ...props.params, q })}>{props.table}</Link>
     </div>
   );
 }

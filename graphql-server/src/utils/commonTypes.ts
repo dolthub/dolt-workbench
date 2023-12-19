@@ -13,6 +13,12 @@ export class DBArgs {
 }
 
 @ArgsType()
+export class SchemaArgs {
+  @Field()
+  schemaName: string;
+}
+
+@ArgsType()
 export class BranchArgs extends DBArgs {
   @Field()
   branchName: string;
