@@ -3,6 +3,7 @@
 import { EntityManager, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
+import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
 import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
@@ -16,6 +17,14 @@ export class MySQLQueryFactory
 {
   isDolt = false;
 
+  async checkoutDatabase(
+    qr: QueryRunner,
+    dbName: string,
+    refName?: string,
+  ): Promise<void> {
+    await qr.query(qh.useDB(dbName, refName, this.isDolt));
+  }
+
   async query<T>(
     q: string,
     p: t.Params,
@@ -24,7 +33,7 @@ export class MySQLQueryFactory
   ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       const res = await qr.query(q, p);
@@ -44,7 +53,7 @@ export class MySQLQueryFactory
       }
 
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       return executeQuery(query);
@@ -58,7 +67,7 @@ export class MySQLQueryFactory
   ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       return executeQuery(qr.manager);
@@ -72,15 +81,16 @@ export class MySQLQueryFactory
   ): Promise<T> {
     return this.handleAsyncQuery(async qr => {
       if (dbName) {
-        await qr.query(qh.useDB(dbName, refName, this.isDolt));
+        await this.checkoutDatabase(qr, dbName, refName);
       }
 
       return executeQuery(qr);
     });
   }
 
-  async databases(): t.PR {
-    return this.query(qh.databasesQuery, []);
+  async databases(): Promise<string[]> {
+    const res: t.RawRows = await this.query(qh.databasesQuery, []);
+    return res.map(r => r.Database);
   }
 
   async getTableNames(args: t.RefArgs): Promise<string[]> {
@@ -137,7 +147,7 @@ export class MySQLQueryFactory
     return this.query(args.queryString, [], args.databaseName, args.refName);
   }
 
-  async getSchemas(args: t.DBArgs, type?: SchemaType): t.UPR {
+  async getSchemas(args: t.DBArgs, type?: SchemaType): Promise<SchemaItem[]> {
     return this.queryMultiple(async query => {
       const vRes = await query(qh.getViewsQuery, [args.databaseName]);
       const views = vRes.map(v => {
@@ -161,12 +171,15 @@ export class MySQLQueryFactory
     }, args.databaseName);
   }
 
-  async getProcedures(args: t.DBArgs): t.UPR {
-    return this.query(
+  async getProcedures(args: t.DBArgs): Promise<SchemaItem[]> {
+    const res: t.RawRows = await this.query(
       qh.proceduresQuery,
       [args.databaseName],
       args.databaseName,
     );
+    return res.map(r => {
+      return { name: r.Name, type: SchemaType.Procedure };
+    });
   }
 
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL

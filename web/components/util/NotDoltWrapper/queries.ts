@@ -5,6 +5,7 @@ export const DOLT_DATABASE_DETAILS = gql`
     doltDatabaseDetails {
       isDolt
       hideDoltFeatures
+      type
     }
   }
 `;

@@ -99,11 +99,18 @@ type DatabaseConnection {
   name: String!
   hideDoltFeatures: Boolean
   useSSL: Boolean
+  type: DatabaseType
+}
+
+enum DatabaseType {
+  Mysql
+  Postgres
 }
 
 type DoltDatabaseDetails {
   isDolt: Boolean!
   hideDoltFeatures: Boolean!
+  type: DatabaseType!
 }
 
 type DiffStat {
@@ -324,7 +331,7 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean): String
+  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): String
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
   resetDatabase: Boolean!

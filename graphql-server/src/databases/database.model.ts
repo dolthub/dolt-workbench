@@ -1,4 +1,5 @@
 import { Field, ObjectType } from "@nestjs/graphql";
+import { DatabaseType } from "./database.enum";
 
 @ObjectType()
 export class DatabaseConnection {
@@ -13,4 +14,7 @@ export class DatabaseConnection {
 
   @Field({ nullable: true })
   useSSL?: boolean;
+
+  @Field(_type => DatabaseType, { nullable: true })
+  type?: DatabaseType;
 }

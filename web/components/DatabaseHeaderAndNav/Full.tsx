@@ -1,5 +1,5 @@
 import DatabaseNav from "@components/DatabaseNav";
-import PermissionLabel from "@components/PermissionLabel";
+import DatabaseTypeLabel from "@components/DatabaseTypeLabel";
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
 import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
@@ -23,17 +23,11 @@ export default function Full(props: Props) {
     >
       <div className={css.headerDetails}>
         <div className={css.topLeft}>
-          {/* <span className={css.visibility}>
-            <RiGitRepositoryPrivateLine
-              aria-label="private-lock-icon"
-              className={css.icon}
-            />
-          </span> */}
           <DatabaseBreadcrumbs
             className={css.databaseBreadcrumbs}
             params={props.params}
           />
-          <PermissionLabel className={css.permission} />
+          <DatabaseTypeLabel className={css.permission} />
         </div>
         <div>
           <RightHeaderButtons

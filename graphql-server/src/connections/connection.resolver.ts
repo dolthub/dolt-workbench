@@ -1,9 +1,11 @@
 import { Resolver } from "@nestjs/graphql";
 import * as mysql from "mysql2/promise";
 import { DataSource } from "typeorm";
+import { DatabaseType } from "../databases/database.enum";
 import { QueryFactory } from "../queryFactory";
 import { DoltQueryFactory } from "../queryFactory/dolt";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
+import { PostgresQueryFactory } from "../queryFactory/postgres";
 
 export class WorkbenchConfig {
   hideDoltFeatures: boolean;
@@ -11,6 +13,8 @@ export class WorkbenchConfig {
   connectionUrl: string;
 
   useSSL: boolean;
+
+  type: DatabaseType;
 }
 
 @Resolver()
@@ -58,8 +62,8 @@ export class ConnectionResolver {
     this.workbenchConfig = config;
 
     this.ds = new DataSource({
-      type: "mysql",
-      connectorPackage: "mysql2",
+      type: config.type,
+      connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
       url: config.connectionUrl,
       ssl: config.useSSL
         ? {
@@ -78,7 +82,7 @@ export class ConnectionResolver {
 
     await this.ds.initialize();
 
-    const qf = await this.newQueryFactory();
+    const qf = await this.newQueryFactory(config.type);
     this.qf = qf;
   }
 
@@ -86,7 +90,10 @@ export class ConnectionResolver {
     return this.workbenchConfig;
   }
 
-  async newQueryFactory(): Promise<QueryFactory> {
+  async newQueryFactory(type: DatabaseType): Promise<QueryFactory> {
+    if (type === DatabaseType.Postgres) {
+      return new PostgresQueryFactory(this.ds);
+    }
     try {
       const res = await this.ds?.query("SELECT dolt_version()");
       if (res) {

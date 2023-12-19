@@ -10,6 +10,7 @@ import {
 import { ConnectionResolver } from "../connections/connection.resolver";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs } from "../utils/commonTypes";
+import { DatabaseType } from "./database.enum";
 import { DatabaseConnection } from "./database.model";
 
 @ArgsType()
@@ -25,6 +26,9 @@ class AddDatabaseConnectionArgs {
 
   @Field({ nullable: true })
   useSSL?: boolean;
+
+  @Field(_type => DatabaseType, { nullable: true })
+  type?: DatabaseType;
 }
 
 @ObjectType()
@@ -34,6 +38,9 @@ class DoltDatabaseDetails {
 
   @Field()
   hideDoltFeatures: boolean;
+
+  @Field(_type => DatabaseType)
+  type: DatabaseType;
 }
 
 @ArgsType()
@@ -64,15 +71,13 @@ export class DatabaseResolver {
   async databases(): Promise<string[]> {
     const conn = this.conn.connection();
     const dbs = await conn.databases();
-    return dbs
-      .map(db => db.Database)
-      .filter(
-        db =>
-          db !== "information_schema" &&
-          db !== "mysql" &&
-          db !== "dolt_cluster" &&
-          !db.includes("/"),
-      );
+    return dbs.filter(
+      db =>
+        db !== "information_schema" &&
+        db !== "mysql" &&
+        db !== "dolt_cluster" &&
+        !db.includes("/"),
+    );
   }
 
   @Query(_returns => DoltDatabaseDetails)
@@ -82,6 +87,7 @@ export class DatabaseResolver {
     return {
       isDolt: conn.isDolt,
       hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
+      type: workbenchConfig?.type ?? DatabaseType.Mysql,
     };
   }
 
@@ -93,6 +99,7 @@ export class DatabaseResolver {
       connectionUrl: args.connectionUrl,
       hideDoltFeatures: !!args.hideDoltFeatures,
       useSSL: !!args.useSSL,
+      type: args.type ?? DatabaseType.Mysql,
     };
     await this.conn.addConnection(workbenchConfig);
 

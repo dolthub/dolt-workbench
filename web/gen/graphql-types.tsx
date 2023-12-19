@@ -93,8 +93,14 @@ export type DatabaseConnection = {
   connectionUrl: Scalars['String']['output'];
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
+  type?: Maybe<DatabaseType>;
   useSSL?: Maybe<Scalars['Boolean']['output']>;
 };
+
+export enum DatabaseType {
+  Mysql = 'Mysql',
+  Postgres = 'Postgres'
+}
 
 export enum DiffRowType {
   Added = 'Added',
@@ -147,6 +153,7 @@ export type DoltDatabaseDetails = {
   __typename?: 'DoltDatabaseDetails';
   hideDoltFeatures: Scalars['Boolean']['output'];
   isDolt: Scalars['Boolean']['output'];
+  type: DatabaseType;
 };
 
 export type DoltWriter = {
@@ -218,6 +225,7 @@ export type MutationAddDatabaseConnectionArgs = {
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
@@ -857,17 +865,18 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
   name: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+  type?: InputMaybe<DatabaseType>;
 }>;
 
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection?: string | null };
 
-export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null };
+export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null };
 
 export type StoredConnectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null }> };
+export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null }> };
 
 export type RemoveConnectionMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -1034,7 +1043,7 @@ export type LoadDataMutation = { __typename?: 'Mutation', loadDataFile: boolean 
 export type DoltDatabaseDetailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean } };
+export type DoltDatabaseDetailsQuery = { __typename?: 'Query', doltDatabaseDetails: { __typename?: 'DoltDatabaseDetails', isDolt: boolean, hideDoltFeatures: boolean, type: DatabaseType } };
 
 export type ColumnForDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -1338,6 +1347,7 @@ export const DatabaseConnectionFragmentDoc = gql`
   name
   useSSL
   hideDoltFeatures
+  type
 }
     `;
 export const BranchFragmentDoc = gql`
@@ -2338,12 +2348,13 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean) {
+    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
   addDatabaseConnection(
     connectionUrl: $connectionUrl
     name: $name
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
+    type: $type
   )
 }
     `;
@@ -2366,6 +2377,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  *      name: // value for 'name'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
+ *      type: // value for 'type'
  *   },
  * });
  */
@@ -3068,6 +3080,7 @@ export const DoltDatabaseDetailsDocument = gql`
   doltDatabaseDetails {
     isDolt
     hideDoltFeatures
+    type
   }
 }
     `;
