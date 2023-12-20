@@ -202,6 +202,7 @@ const dolthubWords = [
   "database",
   "version control",
   "MySQL",
+  "PostgreSQL",
   "Git",
   "GitHub",
   "rollback",

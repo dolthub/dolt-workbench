@@ -40,8 +40,9 @@ export default function ConfigurationPage() {
         <div className={css.top}>
           <h1>Welcome to the Dolt Workbench</h1>
           <p>
-            Connect the workbench to any MySQL-compatible database. Use{" "}
-            <DoltLink>Dolt</DoltLink> to unlock version control features.
+            Connect the workbench to any MySQL or PostgreSQL compatible
+            database. Use <DoltLink>Dolt</DoltLink> to unlock version control
+            features.
           </p>
         </div>
         <QueryHandler
