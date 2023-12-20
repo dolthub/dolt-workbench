@@ -26,7 +26,7 @@ export default function ExistingConnections(props: Props) {
 
   return (
     <div className={css.whiteContainer}>
-      <h3>MySQL Connections</h3>
+      <h3>Connections</h3>
       <div className={css.options}>
         <ul>
           {props.connections.map(conn => (

@@ -161,7 +161,7 @@ export default function NewConnection(props: Props) {
                   }
                   name="hide-dolt-features"
                   label="Hide Dolt features"
-                  description="Hides Dolt features like branches, logs, and commits for non-Dolt MySQL databases. Will otherwise be disabled."
+                  description="Hides Dolt features like branches, logs, and commits for non-Dolt databases. Will otherwise be disabled."
                   className={css.checkbox}
                 />
               </div>
