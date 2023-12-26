@@ -113,7 +113,7 @@ export function getShowAceEditorForCell(
 
 function matchSchemaQuery(q: string): boolean {
   return (
-    !!q.match(/show create (view|event|trigger|procedure)/gi) ||
+    !!q.match(/show create (view|event|trigger|procedure|table)/gi) ||
     !!q.match(/SELECT pg_get_viewdef/gi) ||
     !!q.match(/SELECT pg_get_triggerdef/gi) ||
     !!q.match(/SELECT pg_get_functiondef/gi)
