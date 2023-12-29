@@ -1,5 +1,5 @@
+import { useEffectOnMount } from "@dolthub/react-hooks";
 import { useRouter } from "next/router";
-import useEffectOnMount from "./useEffectOnMount";
 
 // Do something on route change
 export default function useOnRouteChange(onRouteChange: (url: string) => void) {

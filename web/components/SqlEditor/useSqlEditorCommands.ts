@@ -1,6 +1,6 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { useSetState } from "@dolthub/react-hooks";
 import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
-import useSetState from "@hooks/useSetState";
 import { OptionalRefParams } from "@lib/params";
 import { Ace } from "ace-builds";
 import { Dispatch, useCallback, useEffect } from "react";

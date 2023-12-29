@@ -1,10 +1,9 @@
+import { useEffectOnMount, useSetState } from "@dolthub/react-hooks";
 import {
   DatabaseType,
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
-import useEffectOnMount from "@hooks/useEffectOnMount";
 import useMutation from "@hooks/useMutation";
-import useSetState from "@hooks/useSetState";
 import { maybeDatabase, maybeSchema } from "@lib/urls";
 import { useRouter } from "next/router";
 import { Dispatch, SyntheticEvent } from "react";

@@ -1,6 +1,6 @@
 import Btn from "@components/Btn";
 import Popup from "@components/Popup";
-import useEffectOnMount from "@hooks/useEffectOnMount";
+import { useEffectOnMount } from "@dolthub/react-hooks";
 import useSqlParser from "@hooks/useSqlParser";
 import fakeEscapePress from "@lib/fakeEscapePress";
 import { SqlQueryParams } from "@lib/params";

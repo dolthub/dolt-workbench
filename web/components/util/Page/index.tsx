@@ -1,4 +1,4 @@
-import useEffectOnMount from "@hooks/useEffectOnMount";
+import { useEffectOnMount } from "@dolthub/react-hooks";
 import { ReactNode } from "react";
 import Meta from "./Meta";
 

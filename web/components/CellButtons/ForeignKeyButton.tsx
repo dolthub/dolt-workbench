@@ -1,8 +1,8 @@
 import Button from "@components/Button";
 import Link from "@components/links/Link";
 import { useDataTableContext } from "@contexts/dataTable";
+import { useOnClickOutside } from "@dolthub/react-hooks";
 import { RowForDataTableFragment } from "@gen/graphql-types";
-import useOnClickOutside from "@hooks/useOnClickOutside";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";

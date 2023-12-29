@@ -1,9 +1,8 @@
 import Loader from "@components/Loader";
 import Page404 from "@components/Page404";
+import { useAnchorTag, useReactiveWidth } from "@dolthub/react-hooks";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
-import useAnchorTag from "@hooks/useAnchorTag";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";
-import { useReactiveWidth } from "@hooks/useReactiveSize";
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroller";
