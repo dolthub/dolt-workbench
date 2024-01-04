@@ -1354,7 +1354,7 @@ __metadata:
     react-select: ^5.7.7
     react-select-event: ^5.5.1
     react-timeago: ^7.2.0
-    react-tooltip: 5.8.3
+    react-tooltip: 5.25.1
     reactflow: ^11.9.4
     reactjs-popup: ^2.0.6
     sharp: ^0.32.6
@@ -1600,21 +1600,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/core@npm:^1.1.0, @floating-ui/core@npm:^1.4.2":
+"@floating-ui/core@npm:^1.4.2":
   version: 1.5.0
   resolution: "@floating-ui/core@npm:1.5.0"
   dependencies:
     "@floating-ui/utils": ^0.1.3
   checksum: 54b4fe26b3c228746ac5589f97303abf158b80aa5f8b99027259decd68d1c2030c4c637648ebd33dfe78a4212699453bc2bd7537fd5a594d3bd3e63d362f666f
-  languageName: node
-  linkType: hard
-
-"@floating-ui/dom@npm:1.1.1":
-  version: 1.1.1
-  resolution: "@floating-ui/dom@npm:1.1.1"
-  dependencies:
-    "@floating-ui/core": ^1.1.0
-  checksum: 8b7f3b98ed7ec0b634e4a0b735253b0442358c5cea8302935fc185b2bd882202a053622abe9248c76d0908645dd35f93adeaed2d64371b2ab76b36725ce3f7d3
   languageName: node
   linkType: hard
 
@@ -11645,16 +11636,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:5.8.3":
-  version: 5.8.3
-  resolution: "react-tooltip@npm:5.8.3"
+"react-tooltip@npm:5.25.1":
+  version: 5.25.1
+  resolution: "react-tooltip@npm:5.25.1"
   dependencies:
-    "@floating-ui/dom": 1.1.1
-    classnames: ^2.3.2
+    "@floating-ui/dom": ^1.0.0
+    classnames: ^2.3.0
   peerDependencies:
     react: ">=16.14.0"
     react-dom: ">=16.14.0"
-  checksum: 9743ab23f189fc4e05f6d6a7928c3a95821cf031a9bed0945ebae34c557910654b68a98cc198b6e2a2ac676224e7c4aad2165c03e3cc376b6cc81ec67d9e64e0
+  checksum: bb80b71400013676290febe9c5a5e8c0a362af8cab838dbe1aa92962ad6605f35b8ad748400df8892594fe1f01435df2707b3679e21c7c0191170e758bc3cd22
   languageName: node
   linkType: hard
 
