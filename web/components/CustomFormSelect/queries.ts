@@ -6,10 +6,8 @@ export const BRANCH_SELECTOR_QUERY = gql`
     databaseName
   }
   query BranchesForSelector($databaseName: String!) {
-    branches(databaseName: $databaseName) {
-      list {
-        ...BranchForBranchSelector
-      }
+    allBranches(databaseName: $databaseName) {
+      ...BranchForBranchSelector
     }
   }
 `;

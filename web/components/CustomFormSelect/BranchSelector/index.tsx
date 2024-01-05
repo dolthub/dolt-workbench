@@ -36,7 +36,7 @@ export default function CustomBranchSelector(props: CustomProps): JSX.Element {
       render={data => (
         <Inner
           {...props}
-          branches={data.branches.list}
+          branches={data.allBranches}
           defaultName={props.defaultName ?? defaultBranchName}
         />
       )}

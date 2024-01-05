@@ -1,4 +1,7 @@
 import {
+  BranchListForCommitGraphDocument,
+  BranchListForCommitGraphQuery,
+  BranchListForCommitGraphQueryVariables,
   CommitForHistoryFragment,
   HistoryForBranchDocument,
   HistoryForBranchQuery,
@@ -55,16 +58,16 @@ export function useCommitListForCommitGraph(
   const [dataInitiallyLoaded, setDataInitiallyLoaded] = useState(false);
 
   const [branches, setBranches] = useState(branchesData?.branches.list);
-  // const [branchesPageToken, setBranchesPageToken] = useState(
-  //   branchesData?.branches.nextPageToken,
-  // );
+  const [branchesOffset, setBranchesOffset] = useState(
+    branchesData?.branches.nextOffset,
+  );
 
   useEffect(() => {
     if (!data || !branchesData || (dataInitiallyLoaded && !reload)) return;
     setCommits(data.commits.list);
     setCommitsOffset(data.commits.nextOffset);
     setBranches(branchesData.branches.list);
-    // setBranchesPageToken(branchesData.branches.nextPageToken);
+    setBranchesOffset(branchesData.branches.nextOffset);
     setDataInitiallyLoaded(true);
   }, [
     data,
@@ -75,7 +78,7 @@ export function useCommitListForCommitGraph(
     params,
     branchesData,
     setBranches,
-    // setBranchesPageToken,
+    setBranchesOffset,
   ]);
 
   const loadMore = async () => {
@@ -101,24 +104,24 @@ export function useCommitListForCommitGraph(
         handleCaughtApolloError(e, setErr);
       }
     }
-    // if (branchesPageToken) {
-    //   try {
-    //     const result = await branchesClient.query<
-    //       BranchListForCommitGraphQuery,
-    //       BranchListForCommitGraphQueryVariables
-    //     >({
-    //       query: BranchListForCommitGraphDocument,
-    //       variables: { ...params, pageToken: branchesPageToken },
-    //     });
-    //     const newBranches = result.data.branches.list;
-    //     const newToken = result.data.branches.nextPageToken;
-    //     const allBranches = (branches ?? []).concat(newBranches);
-    //     setBranches(allBranches);
-    //     setBranchesPageToken(newToken);
-    //   } catch (e) {
-    //     handleCaughtApolloError(e, setErr);
-    //   }
-    // }
+    if (branchesOffset) {
+      try {
+        const result = await branchesRes.client.query<
+          BranchListForCommitGraphQuery,
+          BranchListForCommitGraphQueryVariables
+        >({
+          query: BranchListForCommitGraphDocument,
+          variables: { ...params, offset: branchesOffset },
+        });
+        const newBranches = result.data.branches.list;
+        const newToken = result.data.branches.nextOffset;
+        const allBranches = (branches ?? []).concat(newBranches);
+        setBranches(allBranches);
+        setBranchesOffset(newToken);
+      } catch (e) {
+        handleCaughtApolloError(e, setErr);
+      }
+    }
   };
 
   const branchHeads =

@@ -8,11 +8,16 @@ export const BRANCHES_FOR_BRANCHES_PAGE_QUERY = gql`
     lastUpdated
     lastCommitter
   }
-  query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
-    branches(databaseName: $databaseName, sortBy: $sortBy) {
+  query BranchList(
+    $databaseName: String!
+    $sortBy: SortBranchesBy
+    $offset: Int
+  ) {
+    branches(databaseName: $databaseName, sortBy: $sortBy, offset: $offset) {
       list {
         ...Branch
       }
+      nextOffset
     }
   }
 `;

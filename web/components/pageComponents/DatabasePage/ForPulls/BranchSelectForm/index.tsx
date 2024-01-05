@@ -1,5 +1,8 @@
 import QueryHandler from "@components/util/QueryHandler";
-import { BranchFragment, useBranchListQuery } from "@gen/graphql-types";
+import {
+  BranchForBranchSelectorFragment,
+  useBranchesForSelectorQuery,
+} from "@gen/graphql-types";
 import { PullParams } from "@lib/params";
 import { pulls } from "@lib/urls";
 import { BsArrowLeft } from "@react-icons/all-files/bs/BsArrowLeft";
@@ -12,7 +15,7 @@ type Props = {
 };
 
 type InnerProps = Props & {
-  branches: BranchFragment[];
+  branches: BranchForBranchSelectorFragment[];
 };
 
 function Inner(props: InnerProps) {
@@ -58,12 +61,12 @@ function Inner(props: InnerProps) {
 }
 
 export default function BranchSelectForm(props: Props) {
-  const branchRes = useBranchListQuery({ variables: props.params });
+  const branchRes = useBranchesForSelectorQuery({ variables: props.params });
 
   return (
     <QueryHandler
       result={branchRes}
-      render={data => <Inner {...props} branches={data.branches.list} />}
+      render={data => <Inner {...props} branches={data.allBranches} />}
     />
   );
 }

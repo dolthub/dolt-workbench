@@ -27,6 +27,8 @@ type Props = {
 
 type InnerProps = {
   branches: BranchFragment[];
+  loadMore: () => Promise<void>;
+  hasMore: boolean;
   sortBranches: (sortBy?: SortBranchesBy) => Promise<void>;
   sortBy?: SortBranchesBy;
 } & Props;
@@ -119,6 +121,8 @@ export default function BranchesPage({ params }: Props): JSX.Element {
         <Inner
           params={params}
           branches={data}
+          loadMore={res.loadMore}
+          hasMore={res.hasMore}
           sortBranches={res.sortBranches}
           sortBy={res.sortBy}
         />
