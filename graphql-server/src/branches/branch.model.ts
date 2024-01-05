@@ -2,6 +2,7 @@ import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
 import * as table from "../tables/table.model";
 import { convertToUTCDate } from "../utils";
+import { ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()
 export class Branch {
@@ -31,7 +32,7 @@ export class Branch {
 }
 
 @ObjectType()
-export class BranchNamesList {
+export class BranchList extends ListOffsetRes {
   @Field(_type => [Branch])
   list: Branch[];
 }

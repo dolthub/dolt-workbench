@@ -68,7 +68,8 @@ type Branch {
 """
 scalar Timestamp
 
-type BranchNamesList {
+type BranchList {
+  nextOffset: Int
   list: [Branch!]!
 }
 
@@ -282,7 +283,8 @@ type TagList {
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
-  branches(databaseName: String!, sortBy: SortBranchesBy): BranchNamesList!
+  branches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
+  allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
   currentDatabase: String

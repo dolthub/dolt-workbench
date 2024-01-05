@@ -27,12 +27,14 @@ export const callNewBranch = `CALL DOLT_BRANCH(?, ?)`;
 
 export const callDeleteBranch = `CALL DOLT_BRANCH("-D", ?)`;
 
-export function getOrderByColForBranches(sortBy?: SortBranchesBy): string {
+export function getOrderByColForBranches(
+  sortBy?: SortBranchesBy,
+): [string, "ASC" | "DESC"] {
   switch (sortBy) {
     case SortBranchesBy.LastUpdated:
-      return "latest_commit_date";
+      return ["latest_commit_date", "DESC"];
     default:
-      return "";
+      return ["name", "ASC"];
   }
 }
 

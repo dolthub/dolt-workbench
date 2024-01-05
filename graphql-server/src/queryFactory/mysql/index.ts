@@ -196,7 +196,11 @@ export class MySQLQueryFactory
     ];
   }
 
-  async getBranches(args: t.DBArgs): t.PR {
+  async getBranches(args: t.DBArgs & { offset: number }): t.PR {
+    return this.getAllBranches(args);
+  }
+
+  async getAllBranches(args: t.DBArgs): t.PR {
     const branch = await this.getBranch({ ...args, branchName: "main" });
     return branch ?? [];
   }

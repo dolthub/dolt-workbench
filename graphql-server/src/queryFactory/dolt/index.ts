@@ -151,13 +151,30 @@ export class DoltQueryFactory
     );
   }
 
-  async getBranches(args: t.DBArgs & { sortBy?: SortBranchesBy }): t.PR {
+  async getBranches(
+    args: t.DBArgs & { sortBy?: SortBranchesBy; offset: number },
+  ): t.PR {
     return this.queryForBuilder(async em => {
-      let sel = em.createQueryBuilder().select("*").from("dolt_branches", "");
-      if (args.sortBy) {
-        sel = sel.addOrderBy(qh.getOrderByColForBranches(args.sortBy), "DESC");
-      }
-      return sel.getRawMany();
+      const [orderBy, dir] = qh.getOrderByColForBranches(args.sortBy);
+      return em
+        .createQueryBuilder()
+        .select("*")
+        .from("dolt_branches", "")
+        .addOrderBy(orderBy, dir)
+        .limit(ROW_LIMIT + 1)
+        .offset(args.offset)
+        .getRawMany();
+    }, args.databaseName);
+  }
+
+  async getAllBranches(args: t.DBArgs): t.PR {
+    return this.queryForBuilder(async em => {
+      return em
+        .createQueryBuilder()
+        .select("*")
+        .from("dolt_branches", "")
+        .limit(1000)
+        .getRawMany();
     }, args.databaseName);
   }
 
