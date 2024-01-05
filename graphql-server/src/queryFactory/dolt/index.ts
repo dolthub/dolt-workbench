@@ -168,14 +168,16 @@ export class DoltQueryFactory
   }
 
   async getAllBranches(args: t.DBArgs): t.PR {
-    return this.queryForBuilder(async em => {
-      return em
-        .createQueryBuilder()
-        .select("*")
-        .from("dolt_branches", "")
-        .limit(1000)
-        .getRawMany();
-    }, args.databaseName);
+    return this.queryForBuilder(
+      async em =>
+        em
+          .createQueryBuilder()
+          .select("*")
+          .from("dolt_branches", "")
+          .limit(1000)
+          .getRawMany(),
+      args.databaseName,
+    );
   }
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {

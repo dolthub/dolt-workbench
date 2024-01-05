@@ -8,11 +8,11 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { RawRow } from "src/queryFactory/types";
-import { ROW_LIMIT, getNextOffset } from "src/utils";
 import { ConnectionResolver } from "../connections/connection.resolver";
+import { RawRow } from "../queryFactory/types";
 import { Table } from "../tables/table.model";
 import { TableResolver } from "../tables/table.resolver";
+import { ROW_LIMIT, getNextOffset } from "../utils";
 import { BranchArgs, DBArgs, DBArgsWithOffset } from "../utils/commonTypes";
 import { SortBranchesBy } from "./branch.enum";
 import { Branch, BranchList, fromDoltBranchesRow } from "./branch.model";
