@@ -78,10 +78,7 @@ export const branchSelectorMock = (
     },
     result: {
       data: {
-        branches: {
-          __typename: "BranchNamesList",
-          list: empty ? [] : [testBranch(params), mainBranch(params)],
-        },
+        allBranches: empty ? [] : [testBranch(params), mainBranch(params)],
       },
     },
   };
@@ -95,10 +92,7 @@ export const noBranchMock = (params: DatabaseParams): MockedResponse => {
     },
     result: {
       data: {
-        branches: {
-          __typename: "BranchNamesList",
-          list: [],
-        },
+        allBranches: [],
       },
     },
   };
@@ -112,10 +106,7 @@ export const oneBranchMock = (params: DatabaseParams): MockedResponse => {
     },
     result: {
       data: {
-        branches: {
-          __typename: "BranchNamesList",
-          list: [mainBranch(params)],
-        },
+        allBranches: [mainBranch(params)],
       },
     },
   };

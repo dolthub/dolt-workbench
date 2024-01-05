@@ -41,9 +41,10 @@ export type BranchTableNamesArgs = {
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
-export type BranchNamesList = {
-  __typename?: 'BranchNamesList';
+export type BranchList = {
+  __typename?: 'BranchList';
   list: Array<Branch>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
 export type ColConstraint = {
@@ -340,9 +341,10 @@ export type PullWithDetails = {
 
 export type Query = {
   __typename?: 'Query';
+  allBranches: Array<Branch>;
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
-  branches: BranchNamesList;
+  branches: BranchList;
   commits: CommitList;
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
@@ -372,6 +374,13 @@ export type Query = {
 };
 
 
+export type QueryAllBranchesArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<SortBranchesBy>;
+};
+
+
 export type QueryBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -386,6 +395,7 @@ export type QueryBranchOrDefaultArgs = {
 
 export type QueryBranchesArgs = {
   databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<SortBranchesBy>;
 };
 
@@ -687,7 +697,7 @@ export type BranchesForSelectorQueryVariables = Exact<{
 }>;
 
 
-export type BranchesForSelectorQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> } };
+export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> };
 
 export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
 
@@ -913,10 +923,11 @@ export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: s
 export type BranchListQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   sortBy?: InputMaybe<SortBranchesBy>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
 
 export type DeleteBranchMutationVariables = Exact<{
   branchName: Scalars['String']['input'];
@@ -1134,10 +1145,11 @@ export type BranchForCommitGraphFragment = { __typename?: 'Branch', branchName: 
 
 export type BranchListForCommitGraphQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type BranchListForCommitGraphQuery = { __typename?: 'Query', branches: { __typename?: 'BranchNamesList', list: Array<{ __typename?: 'Branch', branchName: string, head?: string | null }> } };
+export type BranchListForCommitGraphQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', branchName: string, head?: string | null }> } };
 
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1595,10 +1607,8 @@ export type CreateSchemaMutationResult = Apollo.MutationResult<CreateSchemaMutat
 export type CreateSchemaMutationOptions = Apollo.BaseMutationOptions<CreateSchemaMutation, CreateSchemaMutationVariables>;
 export const BranchesForSelectorDocument = gql`
     query BranchesForSelector($databaseName: String!) {
-  branches(databaseName: $databaseName) {
-    list {
-      ...BranchForBranchSelector
-    }
+  allBranches(databaseName: $databaseName) {
+    ...BranchForBranchSelector
   }
 }
     ${BranchForBranchSelectorFragmentDoc}`;
@@ -2524,11 +2534,12 @@ export type RemoveConnectionMutationHookResult = ReturnType<typeof useRemoveConn
 export type RemoveConnectionMutationResult = Apollo.MutationResult<RemoveConnectionMutation>;
 export type RemoveConnectionMutationOptions = Apollo.BaseMutationOptions<RemoveConnectionMutation, RemoveConnectionMutationVariables>;
 export const BranchListDocument = gql`
-    query BranchList($databaseName: String!, $sortBy: SortBranchesBy) {
-  branches(databaseName: $databaseName, sortBy: $sortBy) {
+    query BranchList($databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+  branches(databaseName: $databaseName, sortBy: $sortBy, offset: $offset) {
     list {
       ...Branch
     }
+    nextOffset
   }
 }
     ${BranchFragmentDoc}`;
@@ -2547,6 +2558,7 @@ export const BranchListDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      sortBy: // value for 'sortBy'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
@@ -3408,11 +3420,12 @@ export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryFo
 export type HistoryForBranchSuspenseQueryHookResult = ReturnType<typeof useHistoryForBranchSuspenseQuery>;
 export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
 export const BranchListForCommitGraphDocument = gql`
-    query BranchListForCommitGraph($databaseName: String!) {
-  branches(databaseName: $databaseName) {
+    query BranchListForCommitGraph($databaseName: String!, $offset: Int) {
+  branches(databaseName: $databaseName, offset: $offset) {
     list {
       ...BranchForCommitGraph
     }
+    nextOffset
   }
 }
     ${BranchForCommitGraphFragmentDoc}`;
@@ -3430,6 +3443,7 @@ export const BranchListForCommitGraphDocument = gql`
  * const { data, loading, error } = useBranchListForCommitGraphQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      offset: // value for 'offset'
  *   },
  * });
  */

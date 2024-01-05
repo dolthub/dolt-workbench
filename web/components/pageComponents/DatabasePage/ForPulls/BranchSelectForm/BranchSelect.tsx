@@ -1,9 +1,9 @@
 import FormSelect from "@components/FormSelect";
-import { BranchFragment } from "@gen/graphql-types";
+import { BranchForBranchSelectorFragment } from "@gen/graphql-types";
 import css from "./index.module.css";
 
 type Props = {
-  branchList: BranchFragment[];
+  branchList: BranchForBranchSelectorFragment[];
   currentBranchName: string;
   onChange: (b: string) => void;
   label: string;

@@ -9,11 +9,13 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
+import { RawRow } from "../queryFactory/types";
 import { Table } from "../tables/table.model";
 import { TableResolver } from "../tables/table.resolver";
-import { BranchArgs, DBArgs } from "../utils/commonTypes";
+import { ROW_LIMIT, getNextOffset } from "../utils";
+import { BranchArgs, DBArgs, DBArgsWithOffset } from "../utils/commonTypes";
 import { SortBranchesBy } from "./branch.enum";
-import { Branch, BranchNamesList, fromDoltBranchesRow } from "./branch.model";
+import { Branch, BranchList, fromDoltBranchesRow } from "./branch.model";
 
 @ArgsType()
 export class GetBranchOrDefaultArgs extends DBArgs {
@@ -43,7 +45,7 @@ export class CreateBranchArgs extends DBArgs {
 }
 
 @ArgsType()
-class ListBranchesArgs extends DBArgs {
+class ListBranchesArgs extends DBArgsWithOffset {
   @Field(_type => SortBranchesBy, { nullable: true })
   sortBy?: SortBranchesBy;
 }
@@ -75,13 +77,18 @@ export class BranchResolver {
     return branch;
   }
 
-  @Query(_returns => BranchNamesList)
-  async branches(@Args() args: ListBranchesArgs): Promise<BranchNamesList> {
+  @Query(_returns => BranchList)
+  async branches(@Args() args: ListBranchesArgs): Promise<BranchList> {
     const conn = this.conn.connection();
-    const res = await conn.getBranches(args);
-    return {
-      list: res.map(b => fromDoltBranchesRow(args.databaseName, b)),
-    };
+    const res = await conn.getBranches({ ...args, offset: args.offset ?? 0 });
+    return fromBranchListRes(res, args);
+  }
+
+  @Query(_returns => [Branch])
+  async allBranches(@Args() args: ListBranchesArgs): Promise<Branch[]> {
+    const conn = this.conn.connection();
+    const res = await conn.getAllBranches(args);
+    return res.map(b => fromDoltBranchesRow(args.databaseName, b));
   }
 
   @Query(_returns => Branch, { nullable: true })
@@ -161,4 +168,16 @@ export function getDefaultBranchFromBranchesList(
   }
 
   return options[0];
+}
+
+function fromBranchListRes(
+  branches: RawRow[],
+  args: ListBranchesArgs,
+): BranchList {
+  return {
+    list: branches
+      .slice(0, ROW_LIMIT)
+      .map(b => fromDoltBranchesRow(args.databaseName, b)),
+    nextOffset: getNextOffset(branches.length, args.offset ?? 0),
+  };
 }

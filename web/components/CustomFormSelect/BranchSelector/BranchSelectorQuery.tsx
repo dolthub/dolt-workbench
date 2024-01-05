@@ -34,7 +34,7 @@ export default function BranchSelectorQuery(props: BranchSelectorForRepoProps) {
         <Inner
           {...props}
           onChangeValue={handleChangeBranch}
-          branches={data.branches.list}
+          branches={data.allBranches}
           defaultName={props.defaultName ?? defaultBranchName}
         />
       )}

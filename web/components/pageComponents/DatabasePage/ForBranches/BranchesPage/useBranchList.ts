@@ -7,6 +7,7 @@ import {
   useBranchListQuery,
 } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
+import Maybe from "@lib/Maybe";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
@@ -14,6 +15,8 @@ import { useEffect, useState } from "react";
 
 type ReturnType = {
   branches?: BranchFragment[];
+  loadMore: () => Promise<void>;
+  hasMore: boolean;
   loading: boolean;
   error?: ApolloErrorType;
   refetch: () => Promise<void>;
@@ -28,6 +31,8 @@ export function useBranchList(params: DatabaseParams): ReturnType {
   });
   const [branches, setBranches] = useState(data?.branches.list);
   const [sortBy, setSortBy] = useState<SortBranchesBy | undefined>(undefined);
+  const [offset, setOffset] = useState(data?.branches.nextOffset);
+  const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
   const [err, setErr] = useApolloError(res.error);
 
   const refetch = async () => {
@@ -41,7 +46,30 @@ export function useBranchList(params: DatabaseParams): ReturnType {
 
   useEffect(() => {
     setBranches(data?.branches.list);
-  }, [data, setBranches]);
+    setOffset(data?.branches.nextOffset);
+  }, [data, setBranches, setOffset]);
+
+  const loadMore = async () => {
+    if (!offset) {
+      return;
+    }
+    setLastOffset(offset);
+    try {
+      const result = await res.client.query<
+        BranchListQuery,
+        BranchListQueryVariables
+      >({
+        query: BranchListDocument,
+        variables: { ...params, offset, sortBy },
+      });
+      const newBranches = result.data.branches.list;
+      const newOffset = result.data.branches.nextOffset;
+      setBranches((branches ?? []).concat(newBranches));
+      setOffset(newOffset);
+    } catch (e) {
+      handleCaughtApolloError(e, setErr);
+    }
+  };
 
   const sortBranches = async (sb?: SortBranchesBy) => {
     setSortBy(sb);
@@ -54,11 +82,17 @@ export function useBranchList(params: DatabaseParams): ReturnType {
         variables: { ...params, sortBy: sb },
       });
       const newBranches = result.data.branches.list;
+      const newOffset = result.data.branches.nextOffset;
       setBranches(newBranches);
+      setOffset(newOffset);
+      setLastOffset(undefined);
     } catch (e) {
       handleCaughtApolloError(e, setErr);
     }
   };
+
+  const hasMore =
+    offset !== undefined && offset !== null && offset !== lastOffset;
 
   return {
     ...res,
@@ -67,5 +101,7 @@ export function useBranchList(params: DatabaseParams): ReturnType {
     refetch,
     sortBranches,
     sortBy,
+    loadMore,
+    hasMore,
   };
 }

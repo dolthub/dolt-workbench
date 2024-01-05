@@ -50,7 +50,7 @@ export default function BranchSelectorWithTableQuery(
         <Inner
           {...props}
           onChangeValue={handleChangeBranch}
-          branches={data.branches.list}
+          branches={data.allBranches}
           defaultName={props.defaultName ?? defaultBranchName}
         />
       )}
