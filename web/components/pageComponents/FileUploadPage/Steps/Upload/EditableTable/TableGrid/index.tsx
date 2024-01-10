@@ -30,15 +30,7 @@ function Inner(props: InnerProps) {
 
   const gridElement = (
     <DataGrid
-      columns={[
-        indexColumn,
-        ...props.state.columns.map(col => {
-          return {
-            ...col,
-            // headerRenderer: HeaderRenderer,
-          };
-        }),
-      ]}
+      columns={[indexColumn, ...props.state.columns]}
       topSummaryRows={[{ _id: -1 }]}
       rows={props.state.rows}
       rowKeyGetter={row => row._id}
@@ -102,30 +94,3 @@ export default function TableGrid(props: Props) {
   const { state, setState, gridFunctions: gf } = useGrid(props.columns);
   return <Inner {...props} {...{ state, setState, gf }} />;
 }
-
-// function HeaderRenderer(props: HeaderRendererProps<Row>) {
-//   return (
-//     <ContextMenuTrigger
-//       id="grid-header-context-menu"
-//       collect={() => {
-//         return { column: props.column };
-//       }}
-//     >
-//       <div>{props.column.name}</div>
-//     </ContextMenuTrigger>
-//   );
-// }
-
-// function RowRenderer(props: RowRendererProps<Row>) {
-//   return (
-//     <ContextMenuTrigger
-//       id="grid-row-context-menu"
-//       collect={() => {
-//         return { rowIdx: props.rowIdx };
-//       }}
-//       disable={props.rowIdx === 0}
-//     >
-//       <GridRow {...props} />
-//     </ContextMenuTrigger>
-//   );
-// }

@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
 import { TagForListFragment, useTagListQuery } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
+import { useEffect, useState } from "react";
 
 type ReturnType = {
   tags: TagForListFragment[] | undefined;
