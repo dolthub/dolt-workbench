@@ -82,7 +82,7 @@ export function filterOutEmptyRowsAndCols(rows: string[][]): string[][] {
   return filteredEmptyCols;
 }
 
-function serializeCellValue(value: string): string {
+export function serializeCellValue(value: string): string {
   const formattedValue = value.replace(/"/g, '""');
   return formattedValue.includes(",") ||
     formattedValue.includes('"') ||

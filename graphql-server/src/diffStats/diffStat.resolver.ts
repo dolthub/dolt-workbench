@@ -50,6 +50,9 @@ export function checkArgs(args: DiffStatArgs): void {
   ) {
     throw new Error("refName is required for TwoDot diff with ref keyword");
   }
+  if (args.refName && isRefKeyword(args.refName)) {
+    throw new Error("refName cannot be a ref keyword");
+  }
 }
 
 function isRefKeyword(refName: string): boolean {

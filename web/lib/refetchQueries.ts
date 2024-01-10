@@ -54,15 +54,20 @@ export const refetchResetChangesQueries = (
     toRefName: "WORKING",
   };
   return [
-    ...(isDolt ? [{ query: gen.GetStatusDocument, variables }] : []),
-    {
-      query: gen.DiffStatDocument,
-      variables: diffVariables,
-    },
-    {
-      query: gen.DiffSummariesDocument,
-      variables: diffVariables,
-    },
+    ...(isDolt
+      ? [
+          { query: gen.GetStatusDocument, variables },
+          {
+            query: gen.DiffStatDocument,
+            variables: diffVariables,
+          },
+          {
+            query: gen.DiffSummariesDocument,
+            variables: diffVariables,
+          },
+        ]
+      : []),
+
     {
       query: gen.TableNamesDocument,
       variables: { ...variables, filterSystemTables: true },

@@ -5,6 +5,7 @@ import Link from "@components/links/Link";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { useTagListQuery } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { TableParams } from "@lib/params";
 import { table } from "@lib/urls";
@@ -20,17 +21,16 @@ type Props = {
   params: TableParams;
 };
 
-export default function EditTableButtons(props: Props) {
+type InnerProps = Props & {
+  refIsTag?: boolean;
+};
+
+function Inner(props: InnerProps) {
   const { executeQuery, setEditorString, toggleSqlEditor } =
     useSqlEditorContext();
   const { dropTable, insertIntoTable } = useSqlBuilder();
   const { columns } = useDataTableContext();
-  const tagRes = useTagListQuery({
-    variables: props.params,
-  });
-  const refIsTag = !!tagRes.data?.tags.list.find(
-    t => t.tagName === props.params.refName,
-  );
+
   const uploadParams = { ...props.params, uploadId: String(Date.now()) };
 
   const onWriteQuery = () => {
@@ -53,18 +53,18 @@ export default function EditTableButtons(props: Props) {
         Edit table{" "}
         <span className={css.tableName}>{props.params.tableName}</span>
       </h2>
-      {refIsTag && (
+      {props.refIsTag && (
         <ErrorMsg errString="A tag is currently selected. Please change to a branch from the left branch/tag dropdown to edit this database." />
       )}
       <div className={css.sections}>
         <OptionSquare
           icon={<AiOutlineCode />}
-          disabled={refIsTag}
+          disabled={props.refIsTag}
           link={
             <Button.Link
               onClick={onWriteQuery}
               data-cy="sql-query-edit-button"
-              disabled={refIsTag}
+              disabled={props.refIsTag}
             >
               SQL Query
             </Button.Link>
@@ -72,7 +72,7 @@ export default function EditTableButtons(props: Props) {
         />
         <OptionSquare
           icon={<ImTable2 />}
-          disabled={refIsTag}
+          disabled={props.refIsTag}
           link={
             <DatabaseUploadStageLink
               params={{ ...uploadParams, spreadsheet: true }}
@@ -84,7 +84,7 @@ export default function EditTableButtons(props: Props) {
         />
         <OptionSquare
           icon={<FiUpload />}
-          disabled={refIsTag}
+          disabled={props.refIsTag}
           link={
             <DatabaseUploadStageLink params={uploadParams} stage="upload">
               File Upload
@@ -95,7 +95,7 @@ export default function EditTableButtons(props: Props) {
       <Button.Link
         onClick={onDrop}
         className={css.drop}
-        disabled={refIsTag}
+        disabled={props.refIsTag}
         red
       >
         <AiOutlineDelete /> Drop Table
@@ -105,4 +105,21 @@ export default function EditTableButtons(props: Props) {
       </Link>
     </div>
   );
+}
+
+function ForDolt(props: Props) {
+  const tagRes = useTagListQuery({
+    variables: props.params,
+  });
+  const refIsTag = !!tagRes.data?.tags.list.find(
+    t => t.tagName === props.params.refName,
+  );
+  return <Inner {...props} refIsTag={refIsTag} />;
+}
+
+export default function EditTableButtons(props: Props) {
+  const res = useDatabaseDetails();
+
+  if (!res.isDolt) return <Inner {...props} />;
+  return <ForDolt {...props} />;
 }

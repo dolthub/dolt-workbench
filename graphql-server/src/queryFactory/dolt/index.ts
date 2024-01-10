@@ -412,25 +412,21 @@ export class DoltQueryFactory
   async getOneSidedRowDiff(
     args: t.TableArgs & { offset: number },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
-    return this.queryMultiple(
-      async query => {
-        const columns = await query(qh.tableColsQueryAsOf, [
-          args.tableName,
-          args.refName,
-        ]);
-        const { q, cols } = qh.getRowsQueryAsOf(columns);
-        const rows = await query(q, [
-          args.tableName,
-          args.refName,
-          ...cols,
-          ROW_LIMIT + 1,
-          args.offset,
-        ]);
-        return { rows, columns };
-      },
-      args.databaseName,
-      args.refName,
-    );
+    return this.queryMultiple(async query => {
+      const columns = await query(qh.tableColsQueryAsOf, [
+        args.tableName,
+        args.refName,
+      ]);
+      const { q, cols } = qh.getRowsQueryAsOf(columns);
+      const rows = await query(q, [
+        args.tableName,
+        args.refName,
+        ...cols,
+        ROW_LIMIT + 1,
+        args.offset,
+      ]);
+      return { rows, columns };
+    }, args.databaseName);
   }
 
   async getRowDiffs(args: t.RowDiffArgs): t.DiffRes {

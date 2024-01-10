@@ -3,6 +3,7 @@ import Link from "@components/links/Link";
 import { useDiffContext } from "@contexts/diff";
 import { DiffSummaryFragment, TableDiffType } from "@gen/graphql-types";
 import { useRouter } from "next/router";
+import css from "./index.module.css";
 
 type TableProps = {
   diffSummary: DiffSummaryFragment;
@@ -28,7 +29,10 @@ function TableLink({ displayedTableName, diffSummary }: TableProps) {
 
   if (stayWithinPage) {
     return (
-      <Button.Link onClick={() => setActiveTableName(diffSummary.tableName)}>
+      <Button.Link
+        onClick={() => setActiveTableName(diffSummary.tableName)}
+        className={css.tableButton}
+      >
         {displayedTableName}
       </Button.Link>
     );
