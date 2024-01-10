@@ -1,3 +1,7 @@
+import CopyRowButton from "@components/CellButtons/CopyRowButton";
+import DeleteRowButton from "@components/CellButtons/DeleteRowButton";
+import HideRowButton from "@components/CellButtons/HideRowButton";
+import CellDropdown from "@components/CellDropdown";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
@@ -5,9 +9,6 @@ import {
 import { ColumnStatus } from "@lib/tableTypes";
 import cx from "classnames";
 import { useState } from "react";
-import DeleteRowButton from "@components/CellButtons/DeleteRowButton";
-import HideRowButton from "@components/CellButtons/HideRowButton";
-import CellDropdown from "@components/CellDropdown";
 import Cell from "./Cell";
 import css from "./index.module.css";
 import { getDiffTypeClassnameForRow } from "./utils";
@@ -41,6 +42,7 @@ export default function Row(props: Props) {
           >
             <HideRowButton {...props} />
             <DeleteRowButton {...props} />
+            <CopyRowButton {...props} />
           </CellDropdown>
         )}
       </td>
