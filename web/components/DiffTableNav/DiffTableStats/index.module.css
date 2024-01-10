@@ -45,3 +45,7 @@
 .noChanges {
   @apply mx-3 mt-4 mb-8 lg:mb-16;
 }
+
+.tableButton {
+  @apply leading-5;
+}
