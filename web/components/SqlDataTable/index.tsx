@@ -7,13 +7,13 @@ import Button from "@components/Button";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import Loader from "@components/Loader";
 import DataTableLayout from "@components/layouts/DataTableLayout";
+import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import {
   ColumnForSqlDataTableFragment,
   QueryExecutionStatus,
   RowForDataTableFragment,
   useSqlSelectForSqlDataTableQuery,
 } from "@gen/graphql-types";
-import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import SqlMessage from "./SqlMessage";
@@ -82,7 +82,9 @@ function Query(props: Props) {
 }
 
 export default function SqlDataTable(props: Props) {
-  const { queryIsRecentMutation } = useSessionQueryHistory(props.params);
+  const { queryIsRecentMutation } = useSessionQueryHistory(
+    props.params.databaseName,
+  );
   const [runQueryAnyway, setRunQueryAnyway] = useState(false);
 
   if (queryIsRecentMutation(props.params.q) && !runQueryAnyway) {

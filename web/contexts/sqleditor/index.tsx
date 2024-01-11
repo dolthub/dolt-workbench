@@ -1,10 +1,10 @@
 import {
   useContextWithError,
   useReactiveWidth,
+  useSessionQueryHistory,
   useSetState,
 } from "@dolthub/react-hooks";
 import useApolloError from "@hooks/useApolloError";
-import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
 import useSqlParser from "@hooks/useSqlParser";
 import { createCustomContext } from "@lib/createCustomContext";
 import { ApolloErrorType } from "@lib/errors/types";
@@ -30,7 +30,7 @@ export function SqlEditorProvider(props: Props) {
     errorIsOpen: false,
   });
   const router = useRouter();
-  const { addQuery } = useSessionQueryHistory(props.params);
+  const { addQuery } = useSessionQueryHistory(props.params.databaseName);
 
   useEffect(() => {
     setShowSqlEditor(isMobile);

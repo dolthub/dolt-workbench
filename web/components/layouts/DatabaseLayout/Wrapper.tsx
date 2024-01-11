@@ -1,12 +1,12 @@
 import Loader from "@components/Loader";
 import Navbar from "@components/Navbar";
+import { useSqlEditorContext } from "@contexts/sqleditor";
+import { GlobalHotKeys, useHotKeysForToggle } from "@dolthub/react-hooks";
 import { useCurrentDatabaseQuery } from "@gen/graphql-types";
-import useHotKeys from "@hooks/useHotKeys";
 import { gqlDatabaseNotFoundErr } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import { GlobalHotKeys } from "react-hotkeys";
 import css from "./index.module.css";
 
 type Props = {
@@ -31,7 +31,8 @@ function Inner(props: Props) {
 }
 
 export default function DatabaseLayoutWrapper(props: Props) {
-  const { keyMap, handlers } = useHotKeys();
+  const { toggleSqlEditor } = useSqlEditorContext();
+  const { keyMap, handlers } = useHotKeysForToggle(toggleSqlEditor);
   return (
     <DatabaseLayoutWrapperOuter>
       <GlobalHotKeys keyMap={keyMap} handlers={handlers} />
