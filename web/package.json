@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
+    "clean": "tsc -b --clean && yarn yalc:clean",
     "compile": "tsc -b",
     "dev": "next dev -p 3002",
     "build": "next build",
@@ -18,7 +19,9 @@
     "prettier": "prettier --check '{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'",
     "prettier-fix": "prettier --write '{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'",
     "test": "jest --env=jest-environment-jsdom",
-    "find:unused": "npx unimported"
+    "find:unused": "npx unimported",
+    "yalc:react-lib": "yalc link @dolthub/react-hooks",
+    "yalc:clean": "yalc remove --all"
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
@@ -106,7 +109,8 @@
     "stylelint": "^15.11.0",
     "stylelint-config-recommended": "^13.0.0",
     "ts-jest": "^29.1.1",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "yalc": "^1.0.0-pre.53"
   },
   "resolutions": {
     "@types/react": "18.2.33"
