@@ -25,7 +25,7 @@ type InnerProps = {
 function Inner({ commits, ...props }: InnerProps) {
   const router = useRouter();
   useAnchorTag();
-  const { isMobile } = useReactiveWidth(null, 1024);
+  const { isMobile } = useReactiveWidth(1024);
 
   return (
     <div>

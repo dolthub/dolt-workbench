@@ -21,7 +21,7 @@ export const SqlEditorContext =
 // page (to execute queries)
 export function SqlEditorProvider(props: Props) {
   const { isMultipleQueries } = useSqlParser();
-  const { isMobile } = useReactiveWidth(null, 1024);
+  const { isMobile } = useReactiveWidth(1024);
   const [editorString, setEditorString] = useState("");
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);
   const [loading, setLoading] = useState(false);

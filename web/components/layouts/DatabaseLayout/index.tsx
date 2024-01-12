@@ -39,7 +39,7 @@ export default function DatabaseLayout(props: Props) {
   const forDataTable = !!(q || tableName);
   const showHeader = forDataTable || props.showSqlConsole || props.empty;
   const useFullWidth = forDataTable || !!props.wide;
-  const { isMobile } = useReactiveWidth(null, 1024);
+  const { isMobile } = useReactiveWidth(1024);
   const [showTableNav, setShowTableNav] = useState(false);
   return (
     <Wrapper>

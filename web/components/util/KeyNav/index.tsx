@@ -1,5 +1,5 @@
 import { useFocus, useReactiveWidth } from "@dolthub/react-hooks";
-import { createElement, ReactHTML, ReactNode } from "react";
+import { ReactHTML, ReactNode, createElement } from "react";
 
 type Props = {
   children: ReactNode;
@@ -20,7 +20,7 @@ const KeyNav = ({
   children,
   onScroll,
 }: Props) => {
-  const { isMobile } = useReactiveWidth(null, mobileBreakpoint);
+  const { isMobile } = useReactiveWidth(mobileBreakpoint);
 
   if (!isMobile) {
     return (
