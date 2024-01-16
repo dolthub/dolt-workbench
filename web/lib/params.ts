@@ -1,4 +1,4 @@
-import Maybe from "./Maybe";
+import { Maybe } from "@dolthub/web-utils";
 
 export type DatabaseParams = {
   databaseName: string;
