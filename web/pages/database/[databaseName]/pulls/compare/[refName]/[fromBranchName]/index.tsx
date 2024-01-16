@@ -1,5 +1,5 @@
 import Page from "@components/util/Page";
-import Maybe from "@lib/Maybe";
+import { Maybe } from "@dolthub/web-utils";
 import { PullDiffParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";

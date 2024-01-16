@@ -1,4 +1,4 @@
-import excerpt from "@lib/excerpt";
+import { excerpt } from "@dolthub/web-utils";
 import { FiKey } from "@react-icons/all-files/fi/FiKey";
 import { Handle, Position } from "reactflow";
 import css from "./index.module.css";

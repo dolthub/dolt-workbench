@@ -1,5 +1,5 @@
+import { enumKeys } from "@dolthub/web-utils";
 import { PullState } from "@gen/graphql-types";
-import enumKeys from "@lib/enumKeys";
 import { render, screen } from "@testing-library/react";
 import PullStateLabel from ".";
 

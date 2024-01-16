@@ -1,11 +1,11 @@
 import QueryHandler from "@components/util/QueryHandler";
 import { useDiffContext } from "@contexts/diff";
+import { Maybe } from "@dolthub/web-utils";
 import {
   DiffSummaryFragment,
   SchemaDiffFragment,
   useSchemaDiffQuery,
 } from "@gen/graphql-types";
-import Maybe from "@lib/Maybe";
 import SchemaDiff from "./SchemaDiff";
 import SchemaPatch from "./SchemaPatch";
 import css from "./index.module.css";

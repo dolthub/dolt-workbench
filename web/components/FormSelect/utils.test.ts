@@ -1,4 +1,4 @@
-import { nTimesWithIndex } from "@lib/nTimes";
+import { nTimesWithIndex } from "@dolthub/web-utils";
 import { Option } from "./types";
 import { getValueForOptions, moveSelectedToTop } from "./utils";
 

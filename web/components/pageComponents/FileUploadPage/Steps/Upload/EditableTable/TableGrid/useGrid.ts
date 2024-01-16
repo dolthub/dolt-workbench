@@ -1,8 +1,8 @@
 import { ApolloError } from "@apollo/client";
 import { useEffectAsync, useSetState } from "@dolthub/react-hooks";
+import { nTimesWithIndex } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment, FileType } from "@gen/graphql-types";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
-import { nTimesWithIndex } from "@lib/nTimes";
 import { ReactElement, useReducer, useState } from "react";
 import { DataGridProps, FillEvent } from "react-data-grid";
 import { useFileUploadContext } from "../../../../contexts/fileUploadLocalForage";

@@ -1,5 +1,5 @@
+import { Maybe } from "@dolthub/web-utils";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
-import Maybe from "@lib/Maybe";
 import { AST, Column, Parser, Select } from "node-sql-parser";
 import { fallbackGetTableNamesForSelect } from "./util";
 

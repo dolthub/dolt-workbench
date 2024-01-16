@@ -1,5 +1,6 @@
 import { ApolloError } from "@apollo/client";
 import { useContextWithError } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   ForeignKeysForDataTableFragment,
@@ -11,7 +12,6 @@ import {
   useRowsForDataTableQuery,
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import Maybe from "@lib/Maybe";
 import { createCustomContext } from "@lib/createCustomContext";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";

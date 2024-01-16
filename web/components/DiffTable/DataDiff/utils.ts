@@ -1,3 +1,4 @@
+import { safeJSONParse } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   ColumnForDiffTableListFragment,
@@ -5,7 +6,6 @@ import {
 } from "@gen/graphql-types";
 import { isLongContentType } from "@lib/dataTable";
 import { getDisplayValue, isNullValue } from "@lib/null";
-import safeJSONParse from "@lib/safeJSONParse";
 import { CellStatusActionType, ColumnStatus } from "@lib/tableTypes";
 import * as diff from "diff";
 

@@ -1,4 +1,4 @@
-import Maybe from "@lib/Maybe";
+import { Maybe } from "@dolthub/web-utils";
 import ReactDiffViewer from "react-diff-viewer";
 import css from "./index.module.css";
 

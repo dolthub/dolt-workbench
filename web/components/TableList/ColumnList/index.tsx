@@ -2,13 +2,13 @@ import Btn from "@components/Btn";
 import Popup from "@components/Popup";
 import SmallLoader from "@components/SmallLoader";
 import QueryHandler from "@components/util/QueryHandler";
+import { excerpt } from "@dolthub/web-utils";
 import {
   Column,
   ColumnForTableListFragment,
   useTableForBranchQuery,
 } from "@gen/graphql-types";
 import { splitEnumOptions } from "@lib/dataTable";
-import excerpt from "@lib/excerpt";
 import { TableParams } from "@lib/params";
 import { FiKey } from "@react-icons/all-files/fi/FiKey";
 import { HiOutlineDotsHorizontal } from "@react-icons/all-files/hi/HiOutlineDotsHorizontal";

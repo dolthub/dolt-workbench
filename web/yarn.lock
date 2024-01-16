@@ -1282,6 +1282,7 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.7.0
     "@dolthub/react-hooks": ^0.1.6
+    "@dolthub/web-utils": ^0.1.0
     "@graphql-codegen/cli": ^5.0.0
     "@graphql-codegen/fragment-matcher": ^5.0.0
     "@graphql-codegen/typescript-operations": ^4.0.1
@@ -1378,6 +1379,13 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
   checksum: 89d1a2782c48f46ddc4fcba841e60eced0fc67861cd6dd2a3f9aa4e869d805cb95b2ceae9881dffae43343128895308928ac2825a20344b070a2a0a7403b7296
+  languageName: node
+  linkType: hard
+
+"@dolthub/web-utils@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@dolthub/web-utils@npm:0.1.0"
+  checksum: c9be832068836fa98f4133ce7b07af7743cf9bbcd455b337d4d5a3e0d5fbdf49cf73d0d554e7b47ab076fe4c5273c5952b7c50a52c5b07430edc09b1f2650bb9
   languageName: node
   linkType: hard
 

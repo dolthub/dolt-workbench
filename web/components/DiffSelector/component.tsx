@@ -1,5 +1,5 @@
+import { excerpt } from "@dolthub/web-utils";
 import { CommitForDiffSelectorFragment } from "@gen/graphql-types";
-import excerpt from "@lib/excerpt";
 import cx from "classnames";
 import { ReactNode } from "react";
 import css from "./index.module.css";

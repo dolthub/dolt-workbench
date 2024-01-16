@@ -1,5 +1,5 @@
+import { Maybe } from "@dolthub/web-utils";
 import useSqlParser from "@hooks/useSqlParser";
-import Maybe from "./Maybe";
 
 export function isDoltSystemTable(t: Maybe<string>): boolean {
   return !!t?.startsWith("dolt_");

@@ -1,4 +1,4 @@
-import Maybe from "./Maybe";
+import { Maybe } from "@dolthub/web-utils";
 import * as ps from "./params";
 import { Route } from "./urlUtils";
 

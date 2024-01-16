@@ -1,5 +1,5 @@
+import { Maybe } from "@dolthub/web-utils";
 import { SchemaDiffForTableListFragment } from "@gen/graphql-types";
-import Maybe from "@lib/Maybe";
 import ReactDiffViewer from "react-diff-viewer";
 import css from "./index.module.css";
 

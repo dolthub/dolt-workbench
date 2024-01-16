@@ -1,6 +1,5 @@
+import { excerpt, prettyJSONText } from "@dolthub/web-utils";
 import { getBitDisplayValue, isLongContentType } from "@lib/dataTable";
-import excerpt from "@lib/excerpt";
-import { prettyJSONText } from "@lib/prettyJSON";
 import {
   CellStatusActionType,
   ColumnStatus,

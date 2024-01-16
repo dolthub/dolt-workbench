@@ -1,4 +1,4 @@
-import compareArray from "@lib/compareArray";
+import { compareArray } from "@dolthub/web-utils";
 import { fallbackGetTableNamesForSelect } from "../util";
 import { renderUseSqlParser } from "./render.test";
 import {
