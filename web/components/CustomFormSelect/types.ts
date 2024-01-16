@@ -1,5 +1,5 @@
 import { Option } from "@components/FormSelect";
-import Maybe from "@lib/Maybe";
+import { Maybe } from "@dolthub/web-utils";
 import { Route } from "@lib/urlUtils";
 
 export type Tab = {

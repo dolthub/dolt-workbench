@@ -1,4 +1,4 @@
-import excerpt from "@lib/excerpt";
+import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
 import css from "./index.module.css";
 

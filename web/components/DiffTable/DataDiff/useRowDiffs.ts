@@ -1,4 +1,5 @@
 import { useSetState } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import {
   CommitDiffType,
   DiffRowType,
@@ -9,7 +10,6 @@ import {
   useRowDiffsQuery,
 } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
-import Maybe from "@lib/Maybe";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { RequiredRefsParams } from "@lib/params";

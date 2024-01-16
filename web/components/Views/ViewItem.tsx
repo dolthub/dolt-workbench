@@ -1,8 +1,8 @@
 import Btn from "@components/Btn";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { excerpt } from "@dolthub/web-utils";
 import { SchemaItemFragment } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import excerpt from "@lib/excerpt";
 import { RefParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import cx from "classnames";

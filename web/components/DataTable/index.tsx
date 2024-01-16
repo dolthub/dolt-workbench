@@ -2,13 +2,13 @@ import { ApolloError } from "@apollo/client";
 import ErrorMsg from "@components/ErrorMsg";
 import Loader from "@components/Loader";
 import { useDataTableContext } from "@contexts/dataTable";
+import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import DataTableLayout from "@layouts/DataTableLayout";
-import Maybe from "@lib/Maybe";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
 import { ReactNode } from "react";
 import AddRowsButton from "./AddRowsButton";

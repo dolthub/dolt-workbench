@@ -1,7 +1,7 @@
 import Btn from "@components/Btn";
 import Link from "@components/links/Link";
+import { excerpt } from "@dolthub/web-utils";
 import { Maybe } from "@gen/graphql-types";
-import excerpt from "@lib/excerpt";
 import { RefParams } from "@lib/params";
 import { table } from "@lib/urls";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";

@@ -1,4 +1,4 @@
-import randomArrayItem from "@lib/randomArrayItem";
+import { randomArrayItem } from "@dolthub/web-utils";
 import {
   fireEvent,
   queryByAttribute,

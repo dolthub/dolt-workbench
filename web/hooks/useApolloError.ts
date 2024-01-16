@@ -1,5 +1,5 @@
+import { tuplify } from "@dolthub/web-utils";
 import { ApolloErrorType, SetApolloErrorType } from "@lib/errors/types";
-import tuplify from "@lib/tuplify";
 import { useEffect, useState } from "react";
 
 type ReturnType = [ApolloErrorType, SetApolloErrorType];

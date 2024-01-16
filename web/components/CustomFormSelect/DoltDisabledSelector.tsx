@@ -1,5 +1,5 @@
 import Tooltip from "@components/Tooltip";
-import Maybe from "@lib/Maybe";
+import { Maybe } from "@dolthub/web-utils";
 import css from "./index.module.css";
 
 type Props = {

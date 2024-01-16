@@ -1,6 +1,6 @@
 import Btn from "@components/Btn";
 import Link from "@components/links/Link";
-import excerpt from "@lib/excerpt";
+import { excerpt } from "@dolthub/web-utils";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { RiBookOpenLine } from "@react-icons/all-files/ri/RiBookOpenLine";

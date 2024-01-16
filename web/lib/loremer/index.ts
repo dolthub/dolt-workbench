@@ -1,5 +1,4 @@
-import nTimes from "@lib/nTimes";
-import randomArrayItem from "@lib/randomArrayItem";
+import { nTimes, randomArrayItem } from "@dolthub/web-utils";
 import { initialUppercase, validResourceSegmentPattern } from "./utils";
 import defaultWords from "./words";
 

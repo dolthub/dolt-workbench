@@ -1,3 +1,4 @@
+import { Maybe } from "@dolthub/web-utils";
 import {
   BranchListForCommitGraphDocument,
   BranchListForCommitGraphQuery,
@@ -9,7 +10,6 @@ import {
   useBranchListForCommitGraphQuery,
   useHistoryForBranchQuery,
 } from "@gen/graphql-types";
-import Maybe from "@lib/Maybe";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { RefParams } from "@lib/params";

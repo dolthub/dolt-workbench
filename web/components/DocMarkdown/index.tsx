@@ -1,6 +1,6 @@
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { Maybe } from "@dolthub/web-utils";
 import { DocForDocPageFragment } from "@gen/graphql-types";
-import Maybe from "@lib/Maybe";
 import { RefParams } from "@lib/params";
 import { useState } from "react";
 import Buttons from "./Buttons";

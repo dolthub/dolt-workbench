@@ -1,10 +1,10 @@
+import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForDiffTableListFragment,
   DiffRowType,
   RowDiffForTableListFragment,
   RowDiffListWithColsFragment,
 } from "@gen/graphql-types";
-import Maybe from "@lib/Maybe";
 import { Dispatch } from "react";
 
 export const defaultState = {

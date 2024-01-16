@@ -1,5 +1,5 @@
+import { excerpt } from "@dolthub/web-utils";
 import { BranchForBranchSelectorFragment } from "@gen/graphql-types";
-import excerpt from "@lib/excerpt";
 import { branches } from "@lib/urls";
 import Selector from "../component";
 import { BranchSelectorProps } from "./types";
