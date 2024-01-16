@@ -6,3 +6,6 @@ static
 *.config.js
 *.setup.ts
 .eslintrc.js
+
+.yalc
+yalc.lock

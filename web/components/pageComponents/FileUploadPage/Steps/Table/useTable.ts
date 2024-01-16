@@ -1,4 +1,4 @@
-import useSetState from "@hooks/useSetState";
+import { useSetState } from "@dolthub/react-hooks";
 import { useRouter } from "next/router";
 import { Dispatch, useEffect, useState } from "react";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";

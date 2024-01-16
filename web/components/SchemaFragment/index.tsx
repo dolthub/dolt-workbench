@@ -3,11 +3,11 @@ import CopyButton from "@components/CopyButton";
 import ErrorMsg from "@components/ErrorMsg";
 import QueryHandler from "@components/util/QueryHandler";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { useReactiveWidth } from "@dolthub/react-hooks";
 import {
   RowForDataTableFragment,
   useSqlSelectForSqlDataTableQuery,
 } from "@gen/graphql-types";
-import { useReactiveWidth } from "@hooks/useReactiveSize";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { SqlQueryParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
@@ -31,7 +31,7 @@ function Inner({ rows, params }: InnerProps) {
   const { selectFromTable } = useSqlBuilder();
   const { isView, fragIdx } = getSchemaInfo(params.q);
   const { queryClickHandler } = useSqlEditorContext("Views");
-  const { isMobile } = useReactiveWidth(null, 1024);
+  const { isMobile } = useReactiveWidth(1024);
 
   const executeView = async (tableName: string) => {
     const query = selectFromTable(tableName);

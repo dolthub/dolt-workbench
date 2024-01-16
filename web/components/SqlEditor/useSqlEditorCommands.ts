@@ -1,7 +1,6 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import useSessionQueryHistory from "@hooks/useSessionQueryHistory";
-import useSetState from "@hooks/useSetState";
-import { OptionalRefParams } from "@lib/params";
+import { useSessionQueryHistory, useSetState } from "@dolthub/react-hooks";
+import { DatabaseParams } from "@lib/params";
 import { Ace } from "ace-builds";
 import { Dispatch, useCallback, useEffect } from "react";
 import { ICommand } from "react-ace";
@@ -22,12 +21,12 @@ type ReturnType = {
 };
 
 export default function useSqlEditorCommands(
-  params: OptionalRefParams,
+  params: DatabaseParams & { refName?: string },
 ): ReturnType {
   const { editorString, setEditorString, executeQuery, toggleSqlEditor } =
     useSqlEditorContext("Tables");
-  const { getPrevQuery, getNextQuery, queryIdx, getLastQuery } =
-    useSessionQueryHistory(params);
+  const { getPrevQuery, getNextQuery, history, queryIdx } =
+    useSessionQueryHistory(params.databaseName);
   const [state, setState] = useSetState(defaultState);
   const keyBindingCommands = getKeyBindingCommands(setState, toggleSqlEditor);
 
@@ -42,8 +41,7 @@ export default function useSqlEditorCommands(
   }, [state.gettingNextQuery]);
 
   const executePrevQuery = useCallback(() => {
-    const last = getLastQuery();
-    if (!queryIdx && last && last !== editorString) {
+    if (!queryIdx && history.length && history[0] !== editorString) {
       setState({ queryDraft: editorString });
     }
     const shouldSkipFirst = (prev: string): boolean =>

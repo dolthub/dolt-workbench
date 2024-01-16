@@ -1,4 +1,4 @@
-import { useReactiveWidth } from "@hooks/useReactiveSize";
+import { useReactiveWidth } from "@dolthub/react-hooks";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl, database } from "@lib/urls";
 import { ReactElement, ReactNode } from "react";

@@ -1,9 +1,8 @@
 import Loader from "@components/Loader";
 import Page404 from "@components/Page404";
+import { useAnchorTag, useReactiveWidth } from "@dolthub/react-hooks";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
-import useAnchorTag from "@hooks/useAnchorTag";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";
-import { useReactiveWidth } from "@hooks/useReactiveSize";
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import InfiniteScroll from "react-infinite-scroller";
@@ -26,7 +25,7 @@ type InnerProps = {
 function Inner({ commits, ...props }: InnerProps) {
   const router = useRouter();
   useAnchorTag();
-  const { isMobile } = useReactiveWidth(null, 1024);
+  const { isMobile } = useReactiveWidth(1024);
 
   return (
     <div>

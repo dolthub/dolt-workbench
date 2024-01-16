@@ -3,7 +3,7 @@ import DatabaseTableHeader from "@components/DatabaseTableHeader";
 import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseTableHeaderMobile";
 import DatabaseTableNav from "@components/DatabaseTableNav";
 import KeyNav from "@components/util/KeyNav";
-import { useReactiveWidth } from "@hooks/useReactiveSize";
+import { useReactiveWidth } from "@dolthub/react-hooks";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl, database } from "@lib/urls";
 import cx from "classnames";
@@ -39,7 +39,7 @@ export default function DatabaseLayout(props: Props) {
   const forDataTable = !!(q || tableName);
   const showHeader = forDataTable || props.showSqlConsole || props.empty;
   const useFullWidth = forDataTable || !!props.wide;
-  const { isMobile } = useReactiveWidth(null, 1024);
+  const { isMobile } = useReactiveWidth(1024);
   const [showTableNav, setShowTableNav] = useState(false);
   return (
     <Wrapper>

@@ -1,4 +1,4 @@
-import useOnClickOutside from "@hooks/useOnClickOutside";
+import { useOnClickOutside } from "@dolthub/react-hooks";
 import { useRef } from "react";
 import "react-data-grid/lib/styles.css";
 import css from "./index.module.css";

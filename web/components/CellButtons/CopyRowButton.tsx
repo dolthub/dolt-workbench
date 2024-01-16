@@ -1,10 +1,10 @@
 import Button from "@components/Button";
 import { serializeCellValue } from "@components/pageComponents/FileUploadPage/Steps/Upload/EditableTable/TableGrid/utils";
+import { useDelay } from "@dolthub/react-hooks";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import useDelay from "@hooks/useDelay";
 import { getBitDisplayValue } from "@lib/dataTable";
 import CopyToClipboard from "react-copy-to-clipboard";
 import css from "./index.module.css";
