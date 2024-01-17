@@ -1,8 +1,8 @@
 import Link from "@components/links/Link";
+import { pluralize } from "@dolthub/web-utils";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
-import { pluralize } from "@lib/pluralize";
 import { ref } from "@lib/urls";
 import css from "./index.module.css";
 import { parseQuery } from "./utils";

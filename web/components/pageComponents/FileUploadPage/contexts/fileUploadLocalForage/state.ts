@@ -1,3 +1,4 @@
+import { Route } from "@dolthub/web-utils";
 import {
   FileType,
   ImportOperation,
@@ -5,7 +6,6 @@ import {
 } from "@gen/graphql-types";
 import { ErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
-import { Route } from "@lib/urlUtils";
 
 const defaultState = {
   branchName: "",

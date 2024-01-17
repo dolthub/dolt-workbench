@@ -1,7 +1,7 @@
 import Tooltip from "@components/Tooltip";
 import CommitLink from "@components/links/CommitLink";
+import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
-import { longDateTimeString } from "@lib/dateConversions";
 import { RefParams } from "@lib/params";
 import cx from "classnames";
 import css from "./index.module.css";
@@ -42,7 +42,7 @@ export default function CommitLogItem(props: Props) {
         <span>
           <User {...props} /> committed{" "}
           <span className={css.timeago} data-cy="commit-log-item-date">
-            {longDateTimeString(new Date(commit.committedAt))}
+            {getLongDateTimeString(new Date(commit.committedAt))}
           </span>
         </span>
         <span data-cy="commit-log-id-desktop" className={css.showForDesktop}>

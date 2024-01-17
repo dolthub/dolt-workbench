@@ -18,13 +18,16 @@
     "prettier-fix": "prettier --write 'src/**/*.{js,ts}'",
     "lint": "eslint --cache --ext .ts,.js,.tsx,.jsx .",
     "lint-errors": "eslint --quiet --cache --ext .ts,.js,.tsx,.jsx .",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests",
+    "yalc:react-lib": "yalc link @dolthub/react-hooks && yalc link @dolthub/web-utils",
+    "yalc:clean": "yalc remove --all"
   },
   "engines": {
     "node": ">=10.3.0"
   },
   "dependencies": {
     "@apollo/server": "^4.7.3",
+    "@dolthub/web-utils": "^0.1.2",
     "@nestjs/apollo": "^12.0.11",
     "@nestjs/cli": "^10.1.7",
     "@nestjs/common": "^10.3.0",
@@ -68,7 +71,8 @@
     "ts-node": "^10.5.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.2.2",
-    "webpack": "^5.88.1"
+    "webpack": "^5.88.1",
+    "yalc": "^1.0.0-pre.53"
   },
   "jest": {
     "moduleFileExtensions": [

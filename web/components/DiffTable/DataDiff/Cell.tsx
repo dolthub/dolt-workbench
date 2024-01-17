@@ -4,14 +4,18 @@ import EditCell from "@components/CellButtons/EditCell";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
 import CellDropdown from "@components/CellDropdown";
 import EditCellInput from "@components/EditCellInput";
-import { excerpt, prettyJSONText } from "@dolthub/web-utils";
+import {
+  excerpt,
+  getDisplayValue,
+  isNullValue,
+  prettyJSONText,
+} from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   ColumnValueForTableListFragment,
   RowDiffForTableListFragment,
 } from "@gen/graphql-types";
 import { getBitDisplayValue, isLongContentType } from "@lib/dataTable";
-import { getDisplayValue, isNullValue } from "@lib/null";
 import { CellStatusActionType, ColumnStatus } from "@lib/tableTypes";
 import { IoReturnDownForwardSharp } from "@react-icons/all-files/io5/IoReturnDownForwardSharp";
 import { MdKeyboardTab } from "@react-icons/all-files/md/MdKeyboardTab";

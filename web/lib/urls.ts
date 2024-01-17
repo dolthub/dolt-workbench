@@ -1,6 +1,5 @@
-import { Maybe } from "@dolthub/web-utils";
+import { Maybe, Route } from "@dolthub/web-utils";
 import * as ps from "./params";
-import { Route } from "./urlUtils";
 
 const ENCODE = true;
 export type DatabaseUrl = (p: ps.DatabaseParams) => Route;

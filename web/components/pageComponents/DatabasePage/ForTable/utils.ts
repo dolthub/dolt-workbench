@@ -1,7 +1,6 @@
-import { nTimes } from "@dolthub/web-utils";
+import { getDateString, getTimeWithSeconds, nTimes } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { ColumnValue } from "@hooks/useSqlBuilder/util";
-import { getDateString, getTimeWithSeconds } from "@lib/dateConversions";
 import { loremer } from "@lib/loremer";
 
 export function mapColTypeToFakeValue(

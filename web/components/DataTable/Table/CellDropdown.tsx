@@ -7,12 +7,12 @@ import HistoryButton from "@components/CellButtons/HistoryButton";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
 import Dropdown from "@components/CellDropdown";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { isNullValue } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { isLongContentType } from "@lib/dataTable";
-import { isNullValue } from "@lib/null";
 import { CellStatusActionType, SetCellStatusAction } from "@lib/tableTypes";
 import css from "./index.module.css";
 

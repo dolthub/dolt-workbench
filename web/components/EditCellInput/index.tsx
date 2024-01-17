@@ -3,13 +3,13 @@ import { toPKColsMapQueryCols } from "@components/CellButtons/queryHelpers";
 import SmallLoader from "@components/SmallLoader";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { isNullValue } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { getBitDisplayValue } from "@lib/dataTable";
-import { isNullValue } from "@lib/null";
 import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { BiText } from "@react-icons/all-files/bi/BiText";

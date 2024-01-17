@@ -1,5 +1,5 @@
+import { isNullValue } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
-import { isNullValue } from "@lib/null";
 import {
   Alter,
   Column,

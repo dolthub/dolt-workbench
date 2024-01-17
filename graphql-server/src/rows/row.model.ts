@@ -1,10 +1,7 @@
+import { getUTCDateAndTimeString } from "@dolthub/web-utils";
 import { Field, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
-import {
-  ROW_LIMIT,
-  convertDateToUTCDatetimeString,
-  getNextOffset,
-} from "../utils";
+import { ROW_LIMIT, getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 
 // Using an unprintable string for null values so we can distinguish between
@@ -45,7 +42,7 @@ export function getCellValue(value: any): string {
   }
   if (typeof value === "object") {
     if (Object.prototype.toString.call(value) === "[object Date]") {
-      return convertDateToUTCDatetimeString(value);
+      return getUTCDateAndTimeString(value);
     }
     if (Buffer.isBuffer(value)) {
       return value.toString("utf8");

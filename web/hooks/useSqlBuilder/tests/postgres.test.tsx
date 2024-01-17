@@ -1,9 +1,9 @@
 import { toPKCols } from "@components/CellButtons/queryHelpers";
+import { NULL_VALUE } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { NULL_VALUE } from "@lib/null";
 import { TableParams } from "@lib/params";
 import { Conditions } from "../util";
 import { renderUseSqlBuilder } from "./render.test";

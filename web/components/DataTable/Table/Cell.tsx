@@ -1,10 +1,10 @@
 import EditCellInput from "@components/EditCellInput";
+import { getDisplayValue, isNullValue } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   ColumnValue,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { getDisplayValue, isNullValue } from "@lib/null";
 import { CellStatusActionType, ColumnStatus } from "@lib/tableTypes";
 import cx from "classnames";
 import { useRouter } from "next/router";

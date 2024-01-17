@@ -46,3 +46,6 @@ lerna-debug.log*
 !.yarn/versions
 node_modules
 store
+
+.yalc
+yalc.lock

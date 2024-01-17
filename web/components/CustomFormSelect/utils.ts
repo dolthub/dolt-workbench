@@ -1,6 +1,5 @@
-import { excerpt } from "@dolthub/web-utils";
+import { excerpt, getTimeAgoString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
-import { getTimeAgoString } from "@lib/dateConversions";
 
 const maxCommitMsgChars = 78;
 

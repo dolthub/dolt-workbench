@@ -1,5 +1,5 @@
+import { formatNumber } from "@dolthub/web-utils";
 import cx from "classnames";
-import { numToStringWithCommas } from "@lib/numToStringConversions";
 import css from "./index.module.css";
 
 type Props = {
@@ -33,7 +33,7 @@ export default function SummaryStat({
   return (
     <div className={cx(css.stat, { [css.smallStat]: small })}>
       <span className={cx(css.num, { [css.green]: green, [css.red]: red })}>
-        {numToStringWithCommas(Math.abs(value))}
+        {formatNumber(Math.abs(value))}
       </span>{" "}
       {stat}{" "}
       {count !== undefined && (

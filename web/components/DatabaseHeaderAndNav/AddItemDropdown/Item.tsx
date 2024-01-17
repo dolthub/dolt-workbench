@@ -1,5 +1,5 @@
 import Link from "@components/links/Link";
-import { Route } from "@lib/urlUtils";
+import { Route } from "@dolthub/web-utils";
 import cx from "classnames";
 import { ReactNode } from "react";
 import css from "./index.module.css";

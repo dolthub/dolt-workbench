@@ -1,8 +1,8 @@
 import SmallLoader from "@components/SmallLoader";
+import { pluralize } from "@dolthub/web-utils";
 import { SchemaType } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { RefParams } from "@lib/params";
-import { pluralize } from "@lib/pluralize";
 import { useEffect } from "react";
 import Item from "./Item";
 import NotFound from "./NotFound";
