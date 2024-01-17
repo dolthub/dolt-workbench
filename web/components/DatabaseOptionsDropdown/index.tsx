@@ -1,8 +1,8 @@
 import Btn from "@components/Btn";
 import Popup from "@components/Popup";
 import { useEffectOnMount } from "@dolthub/react-hooks";
+import { fakeEscapePress } from "@dolthub/web-utils";
 import useSqlParser from "@hooks/useSqlParser";
-import fakeEscapePress from "@lib/fakeEscapePress";
 import { SqlQueryParams } from "@lib/params";
 import { CgArrowsH } from "@react-icons//all-files/cg/CgArrowsH";
 import { CgCompress } from "@react-icons//all-files/cg/CgCompress";

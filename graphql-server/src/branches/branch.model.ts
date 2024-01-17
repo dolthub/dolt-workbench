@@ -1,7 +1,7 @@
+import { convertToUTCDate } from "@dolthub/web-utils";
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
 import * as table from "../tables/table.model";
-import { convertToUTCDate } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()

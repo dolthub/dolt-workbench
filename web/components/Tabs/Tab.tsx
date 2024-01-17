@@ -1,6 +1,6 @@
 import Btn from "@components/Btn";
 import Link from "@components/links/Link";
-import { Route } from "@lib/urlUtils";
+import { Route } from "@dolthub/web-utils";
 import cx from "classnames";
 import { ReactNode } from "react";
 import { useTabsContext } from "./context";

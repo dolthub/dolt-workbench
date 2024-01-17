@@ -1,7 +1,7 @@
+import { convertToUTCDate } from "@dolthub/web-utils";
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import * as doltWriter from "../commits/doltWriter.model";
 import { RawRow } from "../queryFactory/types";
-import { convertToUTCDate } from "../utils";
 
 @ObjectType()
 export class Tag {

@@ -1,6 +1,6 @@
-import ReactTimeago from "react-timeago";
-import { format } from "timeago.js";
+import { areTimeAgosEqual } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
+import ReactTimeago from "react-timeago";
 import css from "./index.module.css";
 
 type Props = {
@@ -13,7 +13,7 @@ export default function CommitHeader(props: Props) {
   // `lastCommit`) or if the timeago of `commit` does not match the timeago of `lastCommit`
   const shouldShowHeader =
     !props.lastCommit ||
-    format(props.commit.committedAt) !== format(props.lastCommit.committedAt);
+    !areTimeAgosEqual(props.commit.committedAt, props.lastCommit.committedAt);
 
   if (!shouldShowHeader) return null;
 

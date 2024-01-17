@@ -1,6 +1,6 @@
 import Link from "@components/links/Link";
+import { getLongDateTimeString } from "@dolthub/web-utils";
 import { PullDetailCommitFragment } from "@gen/graphql-types";
-import { longDateTimeString } from "@lib/dateConversions";
 import { PullDiffParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import { IoGitCommitOutline } from "@react-icons/all-files/io5/IoGitCommitOutline";
@@ -39,7 +39,7 @@ export default function PullCommit({ commit, params }: Props) {
           <Link {...commitLink} className={css.message}>
             {commit.message}
           </Link>
-          <span className={css.date}>{longDateTimeString(date)}</span>
+          <span className={css.date}>{getLongDateTimeString(date)}</span>
         </div>
       </div>
       <Link {...commitLink} className={cx(css.hash, css.desktop)}>

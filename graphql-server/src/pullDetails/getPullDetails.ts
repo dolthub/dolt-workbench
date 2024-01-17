@@ -1,4 +1,4 @@
-import { format } from "timeago.js";
+import { areTimeAgosEqual } from "@dolthub/web-utils";
 import { Commit } from "../commits/commit.model";
 import { PullSummary } from "../pullSummaries/pullSummary.model";
 import {
@@ -51,7 +51,7 @@ function getSummaries(sorted: PullDetail[]): PullDetailSummary[] {
   sorted.forEach(d => {
     // Only update summary for commits
     if ("commitId" in d) {
-      const timeagosEqual = format(d.createdAt) === format(summary.createdAt);
+      const timeagosEqual = areTimeAgosEqual(d.createdAt, summary.createdAt);
       const needToUpdate = d.username !== summary.username || !timeagosEqual;
 
       if (needToUpdate) {

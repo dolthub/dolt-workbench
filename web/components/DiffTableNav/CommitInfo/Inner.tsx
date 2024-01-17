@@ -1,7 +1,7 @@
 import CommitLink from "@components/links/CommitLink";
+import { pluralize } from "@dolthub/web-utils";
 import { CommitForAfterCommitHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
-import { pluralize } from "@lib/pluralize";
 import ReactTimeago from "react-timeago";
 import css from "./index.module.css";
 

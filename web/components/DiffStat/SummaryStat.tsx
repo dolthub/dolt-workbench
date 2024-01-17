@@ -1,4 +1,4 @@
-import { numToStringWithCommas } from "@lib/numToStringConversions";
+import { formatNumber } from "@dolthub/web-utils";
 import cx from "classnames";
 import css from "./SummaryStat.module.css";
 
@@ -43,7 +43,7 @@ export default function SummaryStat({
       })}
     >
       {getPlusOrMinus(green, red)}
-      {numToStringWithCommas(Math.abs(value))}
+      {formatNumber(Math.abs(value))}
     </span>
   );
 

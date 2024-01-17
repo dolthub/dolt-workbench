@@ -1282,7 +1282,7 @@ __metadata:
   dependencies:
     "@apollo/client": ^3.7.0
     "@dolthub/react-hooks": ^0.1.6
-    "@dolthub/web-utils": ^0.1.0
+    "@dolthub/web-utils": ^0.1.2
     "@graphql-codegen/cli": ^5.0.0
     "@graphql-codegen/fragment-matcher": ^5.0.0
     "@graphql-codegen/typescript-operations": ^4.0.1
@@ -1362,7 +1362,6 @@ __metadata:
     stylelint: ^15.11.0
     stylelint-config-recommended: ^13.0.0
     tailwindcss: ^3.3.5
-    timeago.js: ^4.0.2
     ts-jest: ^29.1.1
     typescript: ^5.2.2
     yalc: ^1.0.0-pre.53
@@ -1382,10 +1381,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.1.0":
-  version: 0.1.0
-  resolution: "@dolthub/web-utils@npm:0.1.0"
-  checksum: c9be832068836fa98f4133ce7b07af7743cf9bbcd455b337d4d5a3e0d5fbdf49cf73d0d554e7b47ab076fe4c5273c5952b7c50a52c5b07430edc09b1f2650bb9
+"@dolthub/web-utils@npm:^0.1.2":
+  version: 0.1.2
+  resolution: "@dolthub/web-utils@npm:0.1.2"
+  dependencies:
+    node-sql-parser: ^4.17.0
+    timeago.js: ^4.0.2
+  checksum: 4b794a3d128305009e6da98769c7fc146a74952e87a894a3f8e8b7a2f09aea999de0d35e6d0632f147bd993496a0e4a3a450d947d4a6af470b368d2ac1fd4c93
   languageName: node
   linkType: hard
 

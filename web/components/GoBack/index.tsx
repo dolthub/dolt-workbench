@@ -1,5 +1,5 @@
 import Link from "@components/links/Link";
-import { Route } from "@lib/urlUtils";
+import { Route } from "@dolthub/web-utils";
 import { IoIosArrowDropleftCircle } from "@react-icons/all-files/io/IoIosArrowDropleftCircle";
 import cx from "classnames";
 import css from "./index.module.css";

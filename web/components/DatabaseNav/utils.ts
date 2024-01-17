@@ -1,3 +1,4 @@
+import { Route } from "@dolthub/web-utils";
 import { OptionalRefParams } from "@lib/params";
 import {
   commitLog,
@@ -9,7 +10,6 @@ import {
   RefUrl,
   releases,
 } from "@lib/urls";
-import { Route } from "@lib/urlUtils";
 
 function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
   switch (name) {
