@@ -47,7 +47,6 @@
     "pg-copy-streams": "^6.0.6",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.5.4",
-    "timeago.js": "^4.0.2",
     "typeorm": "^0.3.12"
   },
   "devDependencies": {
