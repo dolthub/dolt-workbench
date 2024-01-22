@@ -2,7 +2,7 @@ name: Run graphql CI
 on:
   pull_request:
     paths:
-      - 'graphql-server/**'
+      - "graphql-server/**"
   workflow_dispatch:
 
 concurrency:
@@ -15,9 +15,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Enable Corepack
+        run: corepack enable
       - uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: "18"
       - name: Install and run graphql CI
         working-directory: ./graphql-server
         run: |
