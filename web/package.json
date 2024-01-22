@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "author": "DoltHub",
   "private": true,
+  "packageManager": "yarn@4.0.2",
   "scripts": {
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
     "clean": "tsc -b --clean && yarn yalc:clean",
