@@ -13,6 +13,7 @@ COPY --chown=node:node graphql-server/.yarn ./.yarn
 COPY --chown=node:node graphql-server/yarn.lock graphql-server/package.json graphql-server/.yarnrc.yml ./
 
 # Install dependencies
+RUN corepack enable
 RUN yarn install --immutable
 
 # Copy the GraphQL server source code
@@ -53,6 +54,7 @@ COPY web/.yarn ./.yarn
 COPY web/yarn.lock web/package.json web/.yarnrc.yml ./
 
 # Install dependencies
+RUN corepack enable
 RUN yarn install --immutable
 
 # Copy the Next.js web server source code
