@@ -741,7 +741,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.29.0"
     eslint-plugin-jest: "npm:^27.6.0"
     graphql: "npm:^16.7.1"
-    graphql-upload: "npm:13"
+    graphql-upload: "npm:15.0.0"
     jest: "npm:^29.5.0"
     mysql2: "npm:^3.6.5"
     pg: "npm:^8.11.3"
@@ -1822,6 +1822,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/busboy@npm:^1.5.0":
+  version: 1.5.3
+  resolution: "@types/busboy@npm:1.5.3"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: f766aebd29773828dbe69ca2f8edfbc578568aade8a34214cd1c3f817b098ac000e6e8fcf652eed81b60bcf0b184b399821909709c16b4432bf92e5afc794761
+  languageName: node
+  linkType: hard
+
 "@types/connect@npm:*":
   version: 3.4.38
   resolution: "@types/connect@npm:3.4.38"
@@ -1992,6 +2001,13 @@ __metadata:
   dependencies:
     undici-types: "npm:~5.26.4"
   checksum: 755d07de735eafda4e20af75ad9d03bdbfddef327d790e9a896142eac7493db5d8501591376e1c8227aa12eeb88e522bc727c6024504842ed40e539e8a466db9
+  languageName: node
+  linkType: hard
+
+"@types/object-path@npm:^0.11.1":
+  version: 0.11.4
+  resolution: "@types/object-path@npm:0.11.4"
+  checksum: fb7f71b170013cf23d323782f12d25e8fa3e2d4048ee3d4d71ca7fe9c553ceeaaa720560bae9925a1c6b893f6d02bbaefad6d68be52c0bd6b136722a5baba77d
   languageName: node
   linkType: hard
 
@@ -3103,16 +3119,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"busboy@npm:^0.3.1":
-  version: 0.3.1
-  resolution: "busboy@npm:0.3.1"
-  dependencies:
-    dicer: "npm:0.3.0"
-  checksum: 15b3382816f657302956ba68e48342891b4f36ae1164f1ad47d96302dd2cda634672513d03c7e5dde0dc90e2889becf3fa32f9b3b391d0f8ab4a5a675b5b5581
-  languageName: node
-  linkType: hard
-
-"busboy@npm:^1.0.0":
+"busboy@npm:^1.0.0, busboy@npm:^1.6.0":
   version: 1.6.0
   resolution: "busboy@npm:1.6.0"
   dependencies:
@@ -3756,13 +3763,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"depd@npm:~1.1.2":
-  version: 1.1.2
-  resolution: "depd@npm:1.1.2"
-  checksum: acb24aaf936ef9a227b6be6d495f0d2eb20108a9a6ad40585c5bda1a897031512fef6484e4fdbb80bd249fdaa82841fa1039f416ece03188e677ba11bcfda249
-  languageName: node
-  linkType: hard
-
 "destroy@npm:1.2.0":
   version: 1.2.0
   resolution: "destroy@npm:1.2.0"
@@ -3791,15 +3791,6 @@ __metadata:
     asap: "npm:^2.0.0"
     wrappy: "npm:1"
   checksum: 8a870ed42eade9a397e6141fe5c025148a59ed52f1f28b1db5de216b4d57f0af7a257070c3af7ce3d5508c1ce9dd5009028a76f4b2cc9370dc56551d2355fad8
-  languageName: node
-  linkType: hard
-
-"dicer@npm:0.3.0":
-  version: 0.3.0
-  resolution: "dicer@npm:0.3.0"
-  dependencies:
-    streamsearch: "npm:0.1.2"
-  checksum: 4486f0448233145216cfadd5f6bbb4c26c3a28824da5344322b06051632e99d6af2b44f893fa8b30f1749ad175b4e565d301c760d0437226d9e41ccdb6546f35
   languageName: node
   linkType: hard
 
@@ -5034,17 +5025,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-upload@npm:13":
-  version: 13.0.0
-  resolution: "graphql-upload@npm:13.0.0"
+"graphql-upload@npm:15.0.0":
+  version: 15.0.0
+  resolution: "graphql-upload@npm:15.0.0"
   dependencies:
-    busboy: "npm:^0.3.1"
+    "@types/busboy": "npm:^1.5.0"
+    "@types/node": "npm:*"
+    "@types/object-path": "npm:^0.11.1"
+    busboy: "npm:^1.6.0"
     fs-capacitor: "npm:^6.2.0"
-    http-errors: "npm:^1.8.1"
+    http-errors: "npm:^2.0.0"
     object-path: "npm:^0.11.8"
   peerDependencies:
-    graphql: 0.13.1 - 16
-  checksum: 487936b1cbeead5e630b057355b408e4852e5d605bf452dd21bc1a1cf29923d4c3ee567257c4469bcd18989f983bdb608b8c9319d3fa738e43fff318ea6f96e8
+    "@types/express": ^4.0.29
+    "@types/koa": ^2.11.4
+    graphql: ^16.3.0
+  peerDependenciesMeta:
+    "@types/express":
+      optional: true
+    "@types/koa":
+      optional: true
+  checksum: b9cc5a51b479a4d0914bb4285e7b586b857bc8bde010da57789ece3b8f0bef7582acc6e6599523e5175a430816d0173d0b5a57453583be5427d3e46b66206272
   languageName: node
   linkType: hard
 
@@ -5161,7 +5162,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-errors@npm:2.0.0":
+"http-errors@npm:2.0.0, http-errors@npm:^2.0.0":
   version: 2.0.0
   resolution: "http-errors@npm:2.0.0"
   dependencies:
@@ -5171,19 +5172,6 @@ __metadata:
     statuses: "npm:2.0.1"
     toidentifier: "npm:1.0.1"
   checksum: fc6f2715fe188d091274b5ffc8b3657bd85c63e969daa68ccb77afb05b071a4b62841acb7a21e417b5539014dff2ebf9550f0b14a9ff126f2734a7c1387f8e19
-  languageName: node
-  linkType: hard
-
-"http-errors@npm:^1.8.1":
-  version: 1.8.1
-  resolution: "http-errors@npm:1.8.1"
-  dependencies:
-    depd: "npm:~1.1.2"
-    inherits: "npm:2.0.4"
-    setprototypeof: "npm:1.2.0"
-    statuses: "npm:>= 1.5.0 < 2"
-    toidentifier: "npm:1.0.1"
-  checksum: f01aeecd76260a6fe7f08e192fcbe9b2f39ed20fc717b852669a69930167053b01790998275c6297d44f435cf0e30edd50c05223d1bec9bc484e6cf35b2d6f43
   languageName: node
   linkType: hard
 
@@ -8267,20 +8255,6 @@ __metadata:
   version: 2.0.1
   resolution: "statuses@npm:2.0.1"
   checksum: 34378b207a1620a24804ce8b5d230fea0c279f00b18a7209646d5d47e419d1cc23e7cbf33a25a1e51ac38973dc2ac2e1e9c647a8e481ef365f77668d72becfd0
-  languageName: node
-  linkType: hard
-
-"statuses@npm:>= 1.5.0 < 2":
-  version: 1.5.0
-  resolution: "statuses@npm:1.5.0"
-  checksum: e433900956357b3efd79b1c547da4d291799ac836960c016d10a98f6a810b1b5c0dcc13b5a7aa609a58239b5190e1ea176ad9221c2157d2fd1c747393e6b2940
-  languageName: node
-  linkType: hard
-
-"streamsearch@npm:0.1.2":
-  version: 0.1.2
-  resolution: "streamsearch@npm:0.1.2"
-  checksum: 408a3db5b5643c1d6eb65c9d8ccc011b4857bfca41946d808b7f165b5b85f47755b2ff56ec1c4bbbeb5a496afcde9adfea12f9f67bd09ff3f04ae3f1f58d37c6
   languageName: node
   linkType: hard
 
