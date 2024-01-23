@@ -19,6 +19,7 @@ RUN yarn install --immutable
 # Copy the GraphQL server source code
 FROM graphql-base AS graphql-build
 WORKDIR /app/graphql-server
+RUN corepack enable
 RUN apk update && apk add curl
 COPY --chown=node:node --from=graphql-deps /app/graphql-server/node_modules ./node_modules
 COPY --chown=node:node ./graphql-server .
