@@ -1,7 +1,8 @@
 import { NestFactory } from "@nestjs/core";
-import * as cookieParser from "cookie-parser";
-import * as cors from "cors";
-import { graphqlUploadExpress } from "graphql-upload";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+// eslint-disable-next-line import/extensions
+import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 import { AppModule } from "./app.module";
 
 const oneMB = 1024 * 1024;
@@ -11,7 +12,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.use(cookieParser());
   app.use(graphqlUploadExpress({ maxFileSize, maxFiles: 1 }));
-  // TODO: Figure out CORS for production builds
   app.use(
     "/graphql",
     cors<cors.CorsRequest>({
