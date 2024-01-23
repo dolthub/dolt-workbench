@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { ReadStream } from "fs";
-// eslint-disable-next-line import/extensions
+// eslint-disable-next-line import/extensions, @typescript-eslint/naming-convention
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { from as copyFrom } from "pg-copy-streams";
 import { pipeline } from "stream/promises";
