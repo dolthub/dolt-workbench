@@ -9,7 +9,6 @@ WORKDIR /app/graphql-server
 VOLUME /app/graphql-server/store
 
 # Copy the package.json and yarn files
-COPY --chown=node:node graphql-server/.yarn ./.yarn
 COPY --chown=node:node graphql-server/yarn.lock graphql-server/package.json graphql-server/.yarnrc.yml ./
 
 # Install dependencies
@@ -51,7 +50,6 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app/web
 
 # Copy the package.json and package-lock.json files
-COPY web/.yarn ./.yarn
 COPY web/yarn.lock web/package.json web/.yarnrc.yml ./
 
 # Install dependencies
