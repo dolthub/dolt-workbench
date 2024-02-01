@@ -715,7 +715,7 @@ __metadata:
     "@nestjs/graphql": "npm:^12.0.7"
     "@nestjs/platform-express": "npm:^10.2.7"
     "@nestjs/schematics": "npm:^10.0.1"
-    "@nestjs/terminus": "npm:^10.2.0"
+    "@nestjs/terminus": "npm:^10.2.1"
     "@nestjs/typeorm": "npm:^10.0.0"
     "@types/cookie-parser": "npm:^1"
     "@types/cors": "npm:^2"
@@ -1490,9 +1490,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/terminus@npm:^10.2.0":
-  version: 10.2.0
-  resolution: "@nestjs/terminus@npm:10.2.0"
+"@nestjs/terminus@npm:^10.2.1":
+  version: 10.2.1
+  resolution: "@nestjs/terminus@npm:10.2.1"
   dependencies:
     boxen: "npm:5.1.2"
     check-disk-space: "npm:3.4.0"
@@ -1541,7 +1541,7 @@ __metadata:
       optional: true
     typeorm:
       optional: true
-  checksum: 83949827ba0afb28f50df176e53ab6b966c2549bd126e5e3a1e2c09914a1b2ffd4717e209ff28b0e431466451cd3ffce469c502a49b3131932d965015ebfee44
+  checksum: eded64de294f4cba35157e1a62776946c1c2d6dc8fdadb7d2b0534e2e8446f33d74cbf809355ffe15422df505147e0615d3a904e4021c59129cd2a333df7b88a
   languageName: node
   linkType: hard
 
