@@ -1355,7 +1355,7 @@ __metadata:
     react-select: "npm:^5.7.7"
     react-select-event: "npm:^5.5.1"
     react-timeago: "npm:^7.2.0"
-    react-tooltip: "npm:5.25.1"
+    react-tooltip: "npm:5.26.0"
     reactflow: "npm:^11.10.1"
     reactjs-popup: "npm:^2.0.6"
     sharp: "npm:^0.33.1"
@@ -11779,16 +11779,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:5.25.1":
-  version: 5.25.1
-  resolution: "react-tooltip@npm:5.25.1"
+"react-tooltip@npm:5.26.0":
+  version: 5.26.0
+  resolution: "react-tooltip@npm:5.26.0"
   dependencies:
     "@floating-ui/dom": "npm:^1.0.0"
     classnames: "npm:^2.3.0"
   peerDependencies:
     react: ">=16.14.0"
     react-dom: ">=16.14.0"
-  checksum: db417c8b49dcead170d6a30cb0f8f26aa0e4b6ccc2d9bdfc03b0bf8e128652b105ace811ef92b41c2fb1cc45dc81da13c2ebf8d5606576e6713a92bd53482b85
+  checksum: 7bae47df14958be169f969e7d5e56d6ad9f294acedd6905c58af44d1e2c6123b4debb373f94f68c25a9d92256668970803e2ebcf3f9e7243786d2923866a43b9
   languageName: node
   linkType: hard
 
