@@ -8,6 +8,7 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { ConnectionResolver } from "../connections/connection.resolver";
+import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs, SchemaArgs } from "../utils/commonTypes";
 import { DatabaseType } from "./database.enum";
@@ -67,6 +68,7 @@ export class DatabaseResolver {
   constructor(
     private readonly conn: ConnectionResolver,
     private readonly fileStoreService: FileStoreService,
+    private readonly dataStoreService: DataStoreService,
   ) {}
 
   @Query(_returns => String, { nullable: true })
@@ -77,6 +79,9 @@ export class DatabaseResolver {
 
   @Query(_returns => [DatabaseConnection])
   async storedConnections(): Promise<DatabaseConnection[]> {
+    if (this.dataStoreService.hasDataStoreConfig()) {
+      return this.dataStoreService.getStoredConnections();
+    }
     return this.fileStoreService.getStore();
   }
 
@@ -124,6 +129,7 @@ export class DatabaseResolver {
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<CurrentDatabaseState> {
     const type = args.type ?? DatabaseType.Mysql;
+
     const workbenchConfig = {
       connectionUrl: args.connectionUrl,
       hideDoltFeatures: !!args.hideDoltFeatures,
@@ -131,12 +137,16 @@ export class DatabaseResolver {
       type,
       schema: args.schema,
     };
-    await this.conn.addConnection(workbenchConfig);
 
-    this.fileStoreService.addItemToStore({
-      ...workbenchConfig,
-      name: args.name,
-    });
+    const storeArgs = { ...workbenchConfig, name: args.name };
+
+    if (this.dataStoreService.hasDataStoreConfig()) {
+      await this.dataStoreService.addStoredConnection(storeArgs);
+    } else {
+      this.fileStoreService.addItemToStore(storeArgs);
+    }
+
+    await this.conn.addConnection(workbenchConfig);
 
     const db = await this.currentDatabase();
     if (type === DatabaseType.Mysql) {
@@ -152,7 +162,11 @@ export class DatabaseResolver {
   async removeDatabaseConnection(
     @Args() args: RemoveDatabaseConnectionArgs,
   ): Promise<boolean> {
-    this.fileStoreService.removeItemFromStore(args.name);
+    if (this.dataStoreService.hasDataStoreConfig()) {
+      await this.dataStoreService.removeStoredConnection(args.name);
+    } else {
+      this.fileStoreService.removeItemFromStore(args.name);
+    }
     return true;
   }
 
