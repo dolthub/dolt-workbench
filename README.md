@@ -133,6 +133,9 @@ DW_DB_HOST=host.docker.internal
 
 # Or use a connection URI:
 DW_DB_CONNECTION_URI=mysql://<username>:<password>@host.docker.internal:3306/dolt_workbench
+
+# For databases that require secure connections
+DW_DB_USE_SSL=true
 ```
 
 ```bash
