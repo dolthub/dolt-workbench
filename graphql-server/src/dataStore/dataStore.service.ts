@@ -15,7 +15,7 @@ export class DataStoreService {
     const uri = this.configService.get<string | undefined>(
       "DW_DB_CONNECTION_URI",
     );
-    return !!(host || uri);
+    return !!(host ?? uri);
   }
 
   getEnvConfig(): DataSourceOptions {
