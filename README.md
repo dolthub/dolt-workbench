@@ -107,11 +107,49 @@ Docker installed databases.
 
 ### Saving connection information between runs
 
-If you want to save connection information between Docker runs, you can mount a local
+#### Using the file store
+
+If you want to save connection metadata between Docker runs, you can mount a local
 directory to the `store` directory in `/app/graphql-server` in the container.
 
-```
+```bash
 % docker run -p 9002:9002 -p 3000:3000 -v ~/path/to/store:/app/graphql-server/store dolthub/dolt-workbench:latest
+```
+
+#### Using a MySQL database
+
+You can also persist connection metadata in a MySQL-compatible database by providing
+database connection information through environment variables.
+
+Using a `.env` file:
+
+```bash
+# Specify individual fields:
+DW_DB_DBNAME=dolt_workbench
+DW_DB_PORT=3306
+DW_DB_USER=<username>
+DW_DB_PASS=<password>
+DW_DB_HOST=host.docker.internal
+
+# Or use a connection URI:
+DW_DB_CONNECTION_URI=mysql://<username>:<password>@host.docker.internal:3306/dolt_workbench
+```
+
+```bash
+% docker run -p 9002:9002 -p 3000:3000 --env-file <env_file_name> dolthub/dolt-workbench:latest
+```
+
+Or use the `-e` flag:
+
+```bash
+% docker run -p 9002:9002 -p 3000:3000 -e DW_DB_CONNECTION_URI="mysql://<username>:<password>@host.docker.internal:3306/dolt_workbench" dolthub/dolt-workbench:latest
+```
+
+Note that we do not create the database `dolt_workbench` for you. You must create it
+yourself:
+
+```sql
+CREATE DATABASE dolt_workbench;
 ```
 
 ## Getting started from source
