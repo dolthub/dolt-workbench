@@ -22,6 +22,8 @@ export class DataStoreService {
     if (!this.hasDataStoreConfig()) {
       throw new Error("Data store config not found");
     }
+    const useSSL =
+      this.configService.get<string | undefined>("DW_DB_USE_SSL") === "true";
     return {
       type: "mysql",
       connectorPackage: "mysql2",
@@ -34,6 +36,11 @@ export class DataStoreService {
       entities: [DatabaseConnectionsEntity],
       synchronize: true,
       logging: "all",
+      ssl: useSSL
+        ? {
+            rejectUnauthorized: false,
+          }
+        : undefined,
     };
   }
 
