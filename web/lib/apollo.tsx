@@ -10,7 +10,7 @@ import { IncomingMessage } from "http";
 import fetch from "isomorphic-unfetch";
 import { NextPage, NextPageContext } from "next";
 
-const graphqlApiUrl = "http://localhost:9002/graphql";
+const defaultGraphqlApiUrl = "http://localhost:9002/graphql";
 
 export function createApolloClient(
   uri: string,
@@ -50,6 +50,7 @@ let globalApolloClient: ApolloClient<NormalizedCacheObject> | undefined;
 export const initApolloClient = (
   initialState?: NormalizedCacheObject,
   req?: IncomingMessage,
+  graphqlApiUrl = defaultGraphqlApiUrl,
 ): ApolloClient<NormalizedCacheObject> => {
   // Make sure to create a new client for every server-side request so that data
   // isn't shared between connections (which would be bad)
@@ -108,7 +109,7 @@ export const initOnContext = (ctx: NextPageContext): ContextWithClient => {
  */
 export function withApollo<
   P extends Record<string, unknown> = Record<string, unknown>,
->() {
+>(graphqlApiUrl = defaultGraphqlApiUrl) {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   return (PageComponent: NextPage<P>) => {
     const WithApollo = ({
@@ -122,7 +123,7 @@ export function withApollo<
         client = apolloClient;
       } else {
         // Happens on: next.js csr
-        client = initApolloClient(apolloState, undefined);
+        client = initApolloClient(apolloState, undefined, graphqlApiUrl);
       }
       return (
         <ApolloProvider client={client}>

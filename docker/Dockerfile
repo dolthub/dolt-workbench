@@ -49,7 +49,7 @@ FROM web-base AS web-deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app/web
 
-# Copy the package.json and package-lock.json files
+# Copy the package.json and yarn.lock files
 COPY web/yarn.lock web/package.json web/.yarnrc.yml ./
 
 # Install dependencies
