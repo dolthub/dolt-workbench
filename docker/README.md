@@ -90,7 +90,7 @@ different url to route GraphQL API requests, and you can do so using the followi
 environment variable:
 
 ```bash
-% docker run -p 9002:9002 -p 3000:3000 -e GRAPHQLAPI_URL="[your-url]" dolthub/dolt-workbench:latest
+% docker run -p 9002:9002 -p 3000:3000 -e GRAPHQLAPI_URL="[your-host]:9002/graphql" dolthub/dolt-workbench:latest
 ```
 
 ## Connecting to an internet accessible database
