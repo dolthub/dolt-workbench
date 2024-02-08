@@ -1281,6 +1281,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.7.0"
+    "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.6"
     "@dolthub/web-utils": "npm:^0.1.2"
     "@graphql-codegen/cli": "npm:^5.0.0"
@@ -1361,12 +1362,25 @@ __metadata:
     sharp: "npm:^0.33.1"
     stylelint: "npm:^15.11.0"
     stylelint-config-recommended: "npm:^14.0.0"
+    swr: "npm:^2.2.4"
     tailwindcss: "npm:^3.3.5"
     ts-jest: "npm:^29.1.1"
     typescript: "npm:^5.2.2"
     yalc: "npm:^1.0.0-pre.53"
   languageName: unknown
   linkType: soft
+
+"@dolthub/react-contexts@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@dolthub/react-contexts@npm:0.1.0"
+  dependencies:
+    "@dolthub/react-hooks": "npm:^0.1.6"
+  peerDependencies:
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 6c28e440d845546440e590887fffc683f210fe761fa6e7dbf0d56063f4ad9825ed991dd4146de9c6d6e6c47b78ee1d234146aaf3d4455f26d755eaf941fabc02
+  languageName: node
+  linkType: hard
 
 "@dolthub/react-hooks@npm:^0.1.6":
   version: 0.1.6
@@ -5305,7 +5319,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"client-only@npm:0.0.1":
+"client-only@npm:0.0.1, client-only@npm:^0.0.1":
   version: 0.0.1
   resolution: "client-only@npm:0.0.1"
   checksum: 9d6cfd0c19e1c96a434605added99dff48482152af791ec4172fb912a71cff9027ff174efd8cdb2160cc7f377543e0537ffc462d4f279bc4701de3f2a3c4b358
@@ -13054,6 +13068,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"swr@npm:^2.2.4":
+  version: 2.2.4
+  resolution: "swr@npm:2.2.4"
+  dependencies:
+    client-only: "npm:^0.0.1"
+    use-sync-external-store: "npm:^1.2.0"
+  peerDependencies:
+    react: ^16.11.0 || ^17.0.0 || ^18.0.0
+  checksum: ad7d3205f2b4969f6727b25819f2f999af792083b63a25c54fae10bc841c94827fb06652764ef94fa7a46cf9dda25a41f088809919d070dd0fec5b0005a3e839
+  languageName: node
+  linkType: hard
+
 "symbol-observable@npm:^4.0.0":
   version: 4.0.0
   resolution: "symbol-observable@npm:4.0.0"
@@ -13718,7 +13744,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"use-sync-external-store@npm:1.2.0":
+"use-sync-external-store@npm:1.2.0, use-sync-external-store@npm:^1.2.0":
   version: 1.2.0
   resolution: "use-sync-external-store@npm:1.2.0"
   peerDependencies:

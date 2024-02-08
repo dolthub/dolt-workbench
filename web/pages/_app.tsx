@@ -1,12 +1,29 @@
 import "@components/AceEditor/ace-editor.css";
 import "@components/util/KeyNav/index.css";
+import { ServerConfigProvider, useServerConfig } from "@contexts/serverConfig";
 import { withApollo } from "@lib/apollo";
 import { colors } from "@lib/tailwind";
 import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
 import Head from "next/head";
 import "react-tooltip/dist/react-tooltip.css";
+import { SWRConfig } from "swr";
 import "../styles/global.css";
+
+// configure fetch for use with SWR
+const fetcher = async (input: RequestInfo, init: RequestInit) => {
+  const res = await fetch(input, init);
+  if (!res.ok) {
+    throw await res.json();
+  }
+  return res.json();
+};
+
+function Inner(props: { pageProps: any; Component: any }) {
+  const { graphqlApiUrl } = useServerConfig();
+  const WrappedPage = withApollo(graphqlApiUrl)(props.Component);
+  return <WrappedPage {...props.pageProps} />;
+}
 
 export default class DoltSQLWorkbench extends App {
   public render() {
@@ -19,7 +36,6 @@ export default class DoltSQLWorkbench extends App {
       ...router.query,
     };
 
-    const WrappedPage = withApollo()(Component);
     return (
       <>
         <Head>
@@ -57,7 +73,11 @@ export default class DoltSQLWorkbench extends App {
           />
           <meta name="theme-color" content={colors["ld-mediumblue"]} />
         </Head>
-        <WrappedPage {...pageProps} />
+        <SWRConfig value={{ fetcher }}>
+          <ServerConfigProvider>
+            <Inner pageProps={pageProps} Component={Component} />
+          </ServerConfigProvider>
+        </SWRConfig>
       </>
     );
   }
