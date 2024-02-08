@@ -82,6 +82,17 @@ yourself:
 CREATE DATABASE dolt_workbench;
 ```
 
+### Specifying a different GraphQL API URL
+
+When running this Docker image locally, GraphQL API requests are routed to the GraphQL
+server running at `http://localhost:9002/graphql`. In some cases you may want to specify a
+different url to route GraphQL API requests, and you can do so using the following
+environment variable:
+
+```bash
+% docker run -p 9002:9002 -p 3000:3000 -e GRAPHQLAPI_URL="[your-url]" dolthub/dolt-workbench:latest
+```
+
 ## Connecting to an internet accessible database
 
 If your database is already internet accessible (i.e. your database is hosted on a service like [AWS RDS](https://aws.amazon.com/rds/) or [Hosted Dolt](https://hosted.doltdb.com)), simply enter your database connection information through the UI.
