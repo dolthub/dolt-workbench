@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
-    "@dolthub/react-components": "^0.1.0",
+    "@dolthub/react-components": "^0.1.1",
     "@dolthub/react-contexts": "^0.1.0",
     "@dolthub/react-hooks": "^0.1.6",
     "@dolthub/web-utils": "^0.1.2",
