@@ -3,7 +3,7 @@ import ButtonsWithError from "@components/ButtonsWithError";
 import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
 import FormInput from "@components/FormInput";
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import { useCreateBranchMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";

@@ -1,6 +1,6 @@
 import DocsLink from "@components/links/DocsLink";
-import ExternalLink from "@components/links/ExternalLink";
 import Link from "@components/links/Link";
+import { ExternalLink } from "@dolthub/react-components";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";

@@ -1,4 +1,4 @@
-import SmallLoader from "@components/SmallLoader";
+import { SmallLoader } from "@dolthub/react-components";
 import { pluralize } from "@dolthub/web-utils";
 import { SchemaType } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";

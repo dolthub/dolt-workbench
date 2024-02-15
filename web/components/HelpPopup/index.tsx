@@ -1,8 +1,7 @@
-import Popup from "@components/Popup";
+import { Popup, PopupProps } from "@dolthub/react-components";
 import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
 import cx from "classnames";
 import { ReactNode } from "react";
-import { PopupProps } from "reactjs-popup/dist/types";
 import css from "./index.module.css";
 
 type Props = {

@@ -1,7 +1,7 @@
 import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
 import DatabaseLink from "@components/links/DatabaseLink";
+import { Loader } from "@dolthub/react-components";
 import StepLayout from "../../StepLayout";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import { UploadStage } from "../../enums";

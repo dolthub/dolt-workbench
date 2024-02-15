@@ -1,5 +1,5 @@
 import Section from "@components/DatabaseTableNav/Section";
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { SchemaItemFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import NoViews from "./NoViews";

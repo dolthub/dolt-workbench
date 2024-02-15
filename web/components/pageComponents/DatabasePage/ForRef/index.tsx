@@ -1,4 +1,4 @@
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { useRefPageQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import ForEmpty from "../ForEmpty";

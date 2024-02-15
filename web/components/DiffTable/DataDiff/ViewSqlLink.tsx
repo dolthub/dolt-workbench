@@ -1,6 +1,6 @@
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
-import SmallLoader from "@components/SmallLoader";
 import Link from "@components/links/Link";
+import { SmallLoader } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   CommitDiffType,

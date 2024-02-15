@@ -1,4 +1,4 @@
-import SmallLoader from "@components/SmallLoader";
+import { SmallLoader } from "@dolthub/react-components";
 import { useDocsRowsForDocPageQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";

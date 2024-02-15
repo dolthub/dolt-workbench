@@ -1,4 +1,4 @@
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { DatabaseType, useDoltDatabaseDetailsQuery } from "@gen/graphql-types";
 import cx from "classnames";
 import css from "./index.module.css";

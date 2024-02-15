@@ -1,7 +1,7 @@
+import { ExternalLink } from "@dolthub/react-components";
 import { docsLink } from "@lib/constants";
 import cx from "classnames";
 import { ReactNode } from "react";
-import ExternalLink from "./ExternalLink";
 import css from "./index.module.css";
 
 type Props = {

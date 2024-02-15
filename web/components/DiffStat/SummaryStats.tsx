@@ -1,5 +1,5 @@
 import { ApolloError } from "@apollo/client";
-import SmallLoader from "@components/SmallLoader";
+import { SmallLoader } from "@dolthub/react-components";
 import { DiffStatForDiffsFragment } from "@gen/graphql-types";
 import cx from "classnames";
 import SummaryStat from "./SummaryStat";

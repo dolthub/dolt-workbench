@@ -1,5 +1,5 @@
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import React, { ReactElement } from "react";
 import NotDoltMsg from "./NotDoltMsg";

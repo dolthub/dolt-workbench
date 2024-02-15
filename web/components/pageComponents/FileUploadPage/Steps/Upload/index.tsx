@@ -1,5 +1,5 @@
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import StepLayout from "../../StepLayout";
 import Summary from "../../Summary";
 import UploadQueryInfo from "../../UploadQueryInfo";

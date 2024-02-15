@@ -1,6 +1,6 @@
+import { ExternalLink } from "@dolthub/react-components";
 import { doltGithubRepo } from "@lib/constants";
 import { ReactNode } from "react";
-import ExternalLink from "./ExternalLink";
 
 type Props = {
   path?: string;

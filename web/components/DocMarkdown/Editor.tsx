@@ -1,7 +1,7 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
-import Loader from "@components/Loader";
 import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
+import { Loader } from "@dolthub/react-components";
 import useEditDoc from "@hooks/useEditDoc";
 import { DocParams } from "@lib/params";
 import toDocType from "@lib/toDocType";

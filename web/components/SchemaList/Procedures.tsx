@@ -1,5 +1,5 @@
-import SmallLoader from "@components/SmallLoader";
 import QueryHandler from "@components/util/QueryHandler";
+import { SmallLoader } from "@dolthub/react-components";
 import { SchemaType, useRowsForDoltProceduresQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import List from "./List";

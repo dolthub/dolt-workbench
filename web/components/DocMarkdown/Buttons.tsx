@@ -1,6 +1,6 @@
 import Button from "@components/Button";
-import Loader from "@components/Loader";
 import Link from "@components/links/Link";
+import { Loader } from "@dolthub/react-components";
 import useEditDoc from "@hooks/useEditDoc";
 import { DocParams, RefParams } from "@lib/params";
 import toDocType from "@lib/toDocType";

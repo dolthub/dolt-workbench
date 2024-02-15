@@ -1,7 +1,7 @@
 import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { Loader } from "@dolthub/react-components";
 import {
   PullDetailsFragment,
   PullState,

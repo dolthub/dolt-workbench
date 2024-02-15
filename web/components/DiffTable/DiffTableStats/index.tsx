@@ -1,6 +1,6 @@
 import ErrorMsg from "@components/ErrorMsg";
-import SmallLoader from "@components/SmallLoader";
 import { useDiffContext } from "@contexts/diff";
+import { SmallLoader } from "@dolthub/react-components";
 import { DiffSummaryFragment, useDiffStatQuery } from "@gen/graphql-types";
 import { gqlErrorPrimaryKeyChange } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
