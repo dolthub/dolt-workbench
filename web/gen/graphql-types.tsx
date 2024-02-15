@@ -1629,7 +1629,7 @@ export const BranchesForSelectorDocument = gql`
  *   },
  * });
  */
-export function useBranchesForSelectorQuery(baseOptions: Apollo.QueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+export function useBranchesForSelectorQuery(baseOptions: Apollo.QueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables> & ({ variables: BranchesForSelectorQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
       }
@@ -1669,7 +1669,7 @@ export const TagListDocument = gql`
  *   },
  * });
  */
-export function useTagListQuery(baseOptions: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables>) {
+export function useTagListQuery(baseOptions: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables> & ({ variables: TagListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
       }
@@ -1777,7 +1777,7 @@ export const GetTagDocument = gql`
  *   },
  * });
  */
-export function useGetTagQuery(baseOptions: Apollo.QueryHookOptions<GetTagQuery, GetTagQueryVariables>) {
+export function useGetTagQuery(baseOptions: Apollo.QueryHookOptions<GetTagQuery, GetTagQueryVariables> & ({ variables: GetTagQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetTagQuery, GetTagQueryVariables>(GetTagDocument, options);
       }
@@ -1818,7 +1818,7 @@ export const GetBranchDocument = gql`
  *   },
  * });
  */
-export function useGetBranchQuery(baseOptions: Apollo.QueryHookOptions<GetBranchQuery, GetBranchQueryVariables>) {
+export function useGetBranchQuery(baseOptions: Apollo.QueryHookOptions<GetBranchQuery, GetBranchQueryVariables> & ({ variables: GetBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetBranchQuery, GetBranchQueryVariables>(GetBranchDocument, options);
       }
@@ -1862,7 +1862,7 @@ export const SqlSelectForCsvDownloadDocument = gql`
  *   },
  * });
  */
-export function useSqlSelectForCsvDownloadQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>) {
+export function useSqlSelectForCsvDownloadQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables> & ({ variables: SqlSelectForCsvDownloadQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>(SqlSelectForCsvDownloadDocument, options);
       }
@@ -1940,7 +1940,7 @@ export const CommitsForDiffSelectorDocument = gql`
  *   },
  * });
  */
-export function useCommitsForDiffSelectorQuery(baseOptions: Apollo.QueryHookOptions<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>) {
+export function useCommitsForDiffSelectorQuery(baseOptions: Apollo.QueryHookOptions<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables> & ({ variables: CommitsForDiffSelectorQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>(CommitsForDiffSelectorDocument, options);
       }
@@ -1992,7 +1992,7 @@ export const DiffStatDocument = gql`
  *   },
  * });
  */
-export function useDiffStatQuery(baseOptions: Apollo.QueryHookOptions<DiffStatQuery, DiffStatQueryVariables>) {
+export function useDiffStatQuery(baseOptions: Apollo.QueryHookOptions<DiffStatQuery, DiffStatQueryVariables> & ({ variables: DiffStatQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DiffStatQuery, DiffStatQueryVariables>(DiffStatDocument, options);
       }
@@ -2048,7 +2048,7 @@ export const RowDiffsDocument = gql`
  *   },
  * });
  */
-export function useRowDiffsQuery(baseOptions: Apollo.QueryHookOptions<RowDiffsQuery, RowDiffsQueryVariables>) {
+export function useRowDiffsQuery(baseOptions: Apollo.QueryHookOptions<RowDiffsQuery, RowDiffsQueryVariables> & ({ variables: RowDiffsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RowDiffsQuery, RowDiffsQueryVariables>(RowDiffsDocument, options);
       }
@@ -2100,7 +2100,7 @@ export const SchemaDiffDocument = gql`
  *   },
  * });
  */
-export function useSchemaDiffQuery(baseOptions: Apollo.QueryHookOptions<SchemaDiffQuery, SchemaDiffQueryVariables>) {
+export function useSchemaDiffQuery(baseOptions: Apollo.QueryHookOptions<SchemaDiffQuery, SchemaDiffQueryVariables> & ({ variables: SchemaDiffQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SchemaDiffQuery, SchemaDiffQueryVariables>(SchemaDiffDocument, options);
       }
@@ -2141,7 +2141,7 @@ export const TableListForSchemasDocument = gql`
  *   },
  * });
  */
-export function useTableListForSchemasQuery(baseOptions: Apollo.QueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables>) {
+export function useTableListForSchemasQuery(baseOptions: Apollo.QueryHookOptions<TableListForSchemasQuery, TableListForSchemasQueryVariables> & ({ variables: TableListForSchemasQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TableListForSchemasQuery, TableListForSchemasQueryVariables>(TableListForSchemasDocument, options);
       }
@@ -2182,7 +2182,7 @@ export const RowsForDoltSchemasDocument = gql`
  *   },
  * });
  */
-export function useRowsForDoltSchemasQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
+export function useRowsForDoltSchemasQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables> & ({ variables: RowsForDoltSchemasQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
       }
@@ -2223,7 +2223,7 @@ export const RowsForDoltProceduresDocument = gql`
  *   },
  * });
  */
-export function useRowsForDoltProceduresQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
+export function useRowsForDoltProceduresQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables> & ({ variables: RowsForDoltProceduresQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
       }
@@ -2277,7 +2277,7 @@ ${RowForSqlDataTableFragmentDoc}`;
  *   },
  * });
  */
-export function useSqlSelectForSqlDataTableQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>) {
+export function useSqlSelectForSqlDataTableQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables> & ({ variables: SqlSelectForSqlDataTableQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
       }
@@ -2318,7 +2318,7 @@ export const GetStatusDocument = gql`
  *   },
  * });
  */
-export function useGetStatusQuery(baseOptions: Apollo.QueryHookOptions<GetStatusQuery, GetStatusQueryVariables>) {
+export function useGetStatusQuery(baseOptions: Apollo.QueryHookOptions<GetStatusQuery, GetStatusQueryVariables> & ({ variables: GetStatusQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
       }
@@ -2360,7 +2360,7 @@ export const TableForBranchDocument = gql`
  *   },
  * });
  */
-export function useTableForBranchQuery(baseOptions: Apollo.QueryHookOptions<TableForBranchQuery, TableForBranchQueryVariables>) {
+export function useTableForBranchQuery(baseOptions: Apollo.QueryHookOptions<TableForBranchQuery, TableForBranchQueryVariables> & ({ variables: TableForBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TableForBranchQuery, TableForBranchQueryVariables>(TableForBranchDocument, options);
       }
@@ -2401,7 +2401,7 @@ export const RowsForViewsDocument = gql`
  *   },
  * });
  */
-export function useRowsForViewsQuery(baseOptions: Apollo.QueryHookOptions<RowsForViewsQuery, RowsForViewsQueryVariables>) {
+export function useRowsForViewsQuery(baseOptions: Apollo.QueryHookOptions<RowsForViewsQuery, RowsForViewsQueryVariables> & ({ variables: RowsForViewsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RowsForViewsQuery, RowsForViewsQueryVariables>(RowsForViewsDocument, options);
       }
@@ -2562,7 +2562,7 @@ export const BranchListDocument = gql`
  *   },
  * });
  */
-export function useBranchListQuery(baseOptions: Apollo.QueryHookOptions<BranchListQuery, BranchListQueryVariables>) {
+export function useBranchListQuery(baseOptions: Apollo.QueryHookOptions<BranchListQuery, BranchListQueryVariables> & ({ variables: BranchListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<BranchListQuery, BranchListQueryVariables>(BranchListDocument, options);
       }
@@ -2674,7 +2674,7 @@ export const HistoryForCommitDocument = gql`
  *   },
  * });
  */
-export function useHistoryForCommitQuery(baseOptions: Apollo.QueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables>) {
+export function useHistoryForCommitQuery(baseOptions: Apollo.QueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables> & ({ variables: HistoryForCommitQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
       }
@@ -2717,7 +2717,7 @@ export const DefaultBranchPageQueryDocument = gql`
  *   },
  * });
  */
-export function useDefaultBranchPageQuery(baseOptions: Apollo.QueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+export function useDefaultBranchPageQuery(baseOptions: Apollo.QueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables> & ({ variables: DefaultBranchPageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
       }
@@ -2758,7 +2758,7 @@ export const DocsRowsForDocPageQueryDocument = gql`
  *   },
  * });
  */
-export function useDocsRowsForDocPageQuery(baseOptions: Apollo.QueryHookOptions<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>) {
+export function useDocsRowsForDocPageQuery(baseOptions: Apollo.QueryHookOptions<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables> & ({ variables: DocsRowsForDocPageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>(DocsRowsForDocPageQueryDocument, options);
       }
@@ -2806,7 +2806,7 @@ export const DocDataForDocPageDocument = gql`
  *   },
  * });
  */
-export function useDocDataForDocPageQuery(baseOptions: Apollo.QueryHookOptions<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>) {
+export function useDocDataForDocPageQuery(baseOptions: Apollo.QueryHookOptions<DocDataForDocPageQuery, DocDataForDocPageQueryVariables> & ({ variables: DocDataForDocPageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>(DocDataForDocPageDocument, options);
       }
@@ -2847,7 +2847,7 @@ export const DocPageQueryNoBranchDocument = gql`
  *   },
  * });
  */
-export function useDocPageQueryNoBranch(baseOptions: Apollo.QueryHookOptions<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>) {
+export function useDocPageQueryNoBranch(baseOptions: Apollo.QueryHookOptions<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables> & ({ variables: DocPageQueryNoBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>(DocPageQueryNoBranchDocument, options);
       }
@@ -2888,7 +2888,7 @@ export const GetBranchForPullDocument = gql`
  *   },
  * });
  */
-export function useGetBranchForPullQuery(baseOptions: Apollo.QueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables>) {
+export function useGetBranchForPullQuery(baseOptions: Apollo.QueryHookOptions<GetBranchForPullQuery, GetBranchForPullQueryVariables> & ({ variables: GetBranchForPullQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetBranchForPullQuery, GetBranchForPullQueryVariables>(GetBranchForPullDocument, options);
       }
@@ -2971,7 +2971,7 @@ export const PullDetailsForPullDetailsDocument = gql`
  *   },
  * });
  */
-export function usePullDetailsForPullDetailsQuery(baseOptions: Apollo.QueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+export function usePullDetailsForPullDetailsQuery(baseOptions: Apollo.QueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables> & ({ variables: PullDetailsForPullDetailsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
       }
@@ -3020,7 +3020,7 @@ export const RefPageQueryDocument = gql`
  *   },
  * });
  */
-export function useRefPageQuery(baseOptions: Apollo.QueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+export function useRefPageQuery(baseOptions: Apollo.QueryHookOptions<RefPageQuery, RefPageQueryVariables> & ({ variables: RefPageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
       }
@@ -3263,7 +3263,7 @@ ${ForeignKeysForDataTableFragmentDoc}`;
  *   },
  * });
  */
-export function useDataTableQuery(baseOptions: Apollo.QueryHookOptions<DataTableQuery, DataTableQueryVariables>) {
+export function useDataTableQuery(baseOptions: Apollo.QueryHookOptions<DataTableQuery, DataTableQueryVariables> & ({ variables: DataTableQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DataTableQuery, DataTableQueryVariables>(DataTableQueryDocument, options);
       }
@@ -3311,7 +3311,7 @@ export const RowsForDataTableQueryDocument = gql`
  *   },
  * });
  */
-export function useRowsForDataTableQuery(baseOptions: Apollo.QueryHookOptions<RowsForDataTableQuery, RowsForDataTableQueryVariables>) {
+export function useRowsForDataTableQuery(baseOptions: Apollo.QueryHookOptions<RowsForDataTableQuery, RowsForDataTableQueryVariables> & ({ variables: RowsForDataTableQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<RowsForDataTableQuery, RowsForDataTableQueryVariables>(RowsForDataTableQueryDocument, options);
       }
@@ -3361,7 +3361,7 @@ export const DiffSummariesDocument = gql`
  *   },
  * });
  */
-export function useDiffSummariesQuery(baseOptions: Apollo.QueryHookOptions<DiffSummariesQuery, DiffSummariesQueryVariables>) {
+export function useDiffSummariesQuery(baseOptions: Apollo.QueryHookOptions<DiffSummariesQuery, DiffSummariesQueryVariables> & ({ variables: DiffSummariesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DiffSummariesQuery, DiffSummariesQueryVariables>(DiffSummariesDocument, options);
       }
@@ -3403,7 +3403,7 @@ export const HistoryForBranchDocument = gql`
  *   },
  * });
  */
-export function useHistoryForBranchQuery(baseOptions: Apollo.QueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables>) {
+export function useHistoryForBranchQuery(baseOptions: Apollo.QueryHookOptions<HistoryForBranchQuery, HistoryForBranchQueryVariables> & ({ variables: HistoryForBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<HistoryForBranchQuery, HistoryForBranchQueryVariables>(HistoryForBranchDocument, options);
       }
@@ -3447,7 +3447,7 @@ export const BranchListForCommitGraphDocument = gql`
  *   },
  * });
  */
-export function useBranchListForCommitGraphQuery(baseOptions: Apollo.QueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>) {
+export function useBranchListForCommitGraphQuery(baseOptions: Apollo.QueryHookOptions<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables> & ({ variables: BranchListForCommitGraphQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>(BranchListForCommitGraphDocument, options);
       }
@@ -3493,7 +3493,7 @@ export const TableNamesDocument = gql`
  *   },
  * });
  */
-export function useTableNamesQuery(baseOptions: Apollo.QueryHookOptions<TableNamesQuery, TableNamesQueryVariables>) {
+export function useTableNamesQuery(baseOptions: Apollo.QueryHookOptions<TableNamesQuery, TableNamesQueryVariables> & ({ variables: TableNamesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<TableNamesQuery, TableNamesQueryVariables>(TableNamesDocument, options);
       }
