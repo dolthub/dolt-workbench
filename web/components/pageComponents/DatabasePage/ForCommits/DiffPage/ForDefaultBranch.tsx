@@ -1,4 +1,4 @@
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import ForEmpty from "../../ForEmpty";

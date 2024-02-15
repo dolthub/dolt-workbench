@@ -1,6 +1,6 @@
 import Button from "@components/Button";
+import { Loader } from "@dolthub/react-components";
 import { useState } from "react";
-import ReactLoader from "react-loader";
 import css from "./index.module.css";
 
 type Props = {
@@ -11,7 +11,7 @@ export default function ExportButton({ onExport }: Props) {
   const [exporting, setExporting] = useState(false);
   return (
     <div className={css.exportButton}>
-      <ReactLoader loaded={!exporting} />
+      <Loader loaded={!exporting} />
       <Button
         disabled={exporting}
         onClick={async () => {

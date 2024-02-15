@@ -1,7 +1,6 @@
 import Btn from "@components/Btn";
-import Popup from "@components/Popup";
-import SmallLoader from "@components/SmallLoader";
 import QueryHandler from "@components/util/QueryHandler";
+import { Popup, SmallLoader } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import {
   Column,

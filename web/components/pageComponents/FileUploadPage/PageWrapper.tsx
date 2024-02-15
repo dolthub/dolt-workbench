@@ -1,11 +1,11 @@
+import Page404 from "@components/Page404";
+import QueryHandler from "@components/util/QueryHandler";
+import { Loader } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useRole from "@hooks/useRole";
 import { DatabaseParams, UploadParams } from "@lib/params";
 import { ReactNode } from "react";
-import Loader from "../../Loader";
-import Page404 from "../../Page404";
-import QueryHandler from "../../util/QueryHandler";
 import Layout from "./Layout";
 import { FileUploadLocalForageProvider } from "./contexts/fileUploadLocalForage";
 import css from "./index.module.css";

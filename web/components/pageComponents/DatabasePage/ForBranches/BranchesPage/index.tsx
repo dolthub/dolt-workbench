@@ -2,10 +2,10 @@ import Button from "@components/Button";
 import { Database404 } from "@components/Database404";
 import DeleteModal from "@components/DeleteModal";
 import FormSelect from "@components/FormSelect";
-import Loader from "@components/Loader";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import QueryHandler from "@components/util/QueryHandler";
+import { Loader } from "@dolthub/react-components";
 import {
   BranchFragment,
   SortBranchesBy,

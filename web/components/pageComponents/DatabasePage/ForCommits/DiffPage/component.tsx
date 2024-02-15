@@ -1,7 +1,7 @@
 import DiffTable from "@components/DiffTable";
 import DiffTableNav from "@components/DiffTableNav";
-import Loader from "@components/Loader";
 import { DiffProvider, useDiffContext } from "@contexts/diff";
+import { Loader } from "@dolthub/react-components";
 import { RefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
 import { ReactNode } from "react";

@@ -1,4 +1,4 @@
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import { OptionalRefParams, RefParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";

@@ -1,8 +1,8 @@
 import CreateDatabase from "@components/CreateDatabase";
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
 import MainLayout from "@components/layouts/MainLayout";
 import Link from "@components/links/Link";
+import { Loader } from "@dolthub/react-components";
 import { useDatabasesQuery } from "@gen/graphql-types";
 import { database } from "@lib/urls";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";

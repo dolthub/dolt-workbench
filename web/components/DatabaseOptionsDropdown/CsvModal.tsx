@@ -1,7 +1,7 @@
 import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
 import FormInput from "@components/FormInput";
-import SmallLoader from "@components/SmallLoader";
+import { SmallLoader } from "@dolthub/react-components";
 import { useSqlSelectForCsvDownloadQuery } from "@gen/graphql-types";
 import { isTimeoutError } from "@lib/errors/helpers";
 import { ModalProps } from "@lib/modalProps";

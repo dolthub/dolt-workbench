@@ -1,9 +1,8 @@
-import Popup from "@components/Popup";
+import { Popup, PopupProps } from "@dolthub/react-components";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import cx from "classnames";
 import { ReactNode } from "react";
-import { PopupProps } from "reactjs-popup/dist/types";
 import css from "./index.module.css";
 
 type Props = Partial<PopupProps> & {

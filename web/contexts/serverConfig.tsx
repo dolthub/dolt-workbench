@@ -1,5 +1,5 @@
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
+import { Loader } from "@dolthub/react-components";
 import { createContextWithDisplayName } from "@dolthub/react-contexts";
 import { ReactNode, useContext } from "react";
 import useSWR from "swr";

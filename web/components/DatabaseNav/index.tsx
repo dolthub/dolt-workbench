@@ -1,6 +1,6 @@
-import SmallLoader from "@components/SmallLoader";
 import Tooltip from "@components/Tooltip";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { SmallLoader } from "@dolthub/react-components";
 import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useDefaultBranch from "@hooks/useDefaultBranch";

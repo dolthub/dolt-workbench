@@ -1,6 +1,6 @@
 import Button from "@components/Button";
-import Loader from "@components/Loader";
 import Modal from "@components/Modal";
+import { Loader } from "@dolthub/react-components";
 import { DatabasesDocument, useCreateSchemaMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { database } from "@lib/urls";

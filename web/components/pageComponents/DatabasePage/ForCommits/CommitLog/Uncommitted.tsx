@@ -1,5 +1,5 @@
-import Loader from "@components/Loader";
 import Link from "@components/links/Link";
+import { Loader } from "@dolthub/react-components";
 import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
 import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";

@@ -1,5 +1,5 @@
-import Loader from "@components/Loader";
 import Page404 from "@components/Page404";
+import { Loader } from "@dolthub/react-components";
 import { useAnchorTag, useReactiveWidth } from "@dolthub/react-hooks";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";

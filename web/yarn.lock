@@ -1281,6 +1281,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.7.0"
+    "@dolthub/react-components": "npm:^0.1.0"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.6"
     "@dolthub/web-utils": "npm:^0.1.2"
@@ -1303,7 +1304,6 @@ __metadata:
     "@types/react-copy-to-clipboard": "npm:^5.0.6"
     "@types/react-dom": "npm:^18.2.18"
     "@types/react-infinite-scroller": "npm:^1.2.3"
-    "@types/react-loader": "npm:^2.4.7"
     "@types/react-timeago": "npm:^4.1.4"
     "@typescript-eslint/eslint-plugin": "npm:^6.10.0"
     "@typescript-eslint/parser": "npm:^6.10.0"
@@ -1351,14 +1351,12 @@ __metadata:
     react-diff-viewer: "npm:^3.1.1"
     react-dom: "npm:^18.2.0"
     react-infinite-scroller: "npm:^1.2.6"
-    react-loader: "npm:^2.4.7"
     react-markdown: "npm:^5.0.0"
     react-select: "npm:^5.7.7"
     react-select-event: "npm:^5.5.1"
     react-timeago: "npm:^7.2.0"
     react-tooltip: "npm:5.26.0"
     reactflow: "npm:^11.10.1"
-    reactjs-popup: "npm:^2.0.6"
     sharp: "npm:^0.33.1"
     stylelint: "npm:^15.11.0"
     stylelint-config-recommended: "npm:^14.0.0"
@@ -1369,6 +1367,20 @@ __metadata:
     yalc: "npm:^1.0.0-pre.53"
   languageName: unknown
   linkType: soft
+
+"@dolthub/react-components@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@dolthub/react-components@npm:0.1.0"
+  dependencies:
+    classnames: "npm:^2.5.1"
+    react-loader: "npm:^2.4.7"
+    reactjs-popup: "npm:^2.0.6"
+  peerDependencies:
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 74ceb448c2db7fda998e6f3974f1784c6c4972d2aeffa79a56d11e01bf64baa4882fe1deb8ade9c79ae5f9cbcda213395ffdc05f0dc6455d282001a6751517b1
+  languageName: node
+  linkType: hard
 
 "@dolthub/react-contexts@npm:^0.1.0":
   version: 0.1.0
@@ -3833,15 +3845,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-loader@npm:^2.4.7":
-  version: 2.4.8
-  resolution: "@types/react-loader@npm:2.4.8"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 8c89f053ac0b7c6f52bfb015fb2e049bae11c46c388ce8f596071d3b9f9b7179fa0d6368bfaf9bf7cc8edd4f7f029a6875d4274cf64eb808ad402dc5e92309de
-  languageName: node
-  linkType: hard
-
 "@types/react-timeago@npm:^4.1.4":
   version: 4.1.6
   resolution: "@types/react-timeago@npm:4.1.6"
@@ -5276,6 +5279,13 @@ __metadata:
   version: 2.3.2
   resolution: "classnames@npm:2.3.2"
   checksum: cd50ead57b4f97436aaa9f9885c6926323efc7c2bea8e3d4eb10e4e972aa6a1cfca1c7a0e06f8a199ca7498d4339e30bb6002e589e61c9f21248cbf3e8b0b18d
+  languageName: node
+  linkType: hard
+
+"classnames@npm:^2.5.1":
+  version: 2.5.1
+  resolution: "classnames@npm:2.5.1"
+  checksum: afff4f77e62cea2d79c39962980bf316bacb0d7c49e13a21adaadb9221e1c6b9d3cdb829d8bb1b23c406f4e740507f37e1dcf506f7e3b7113d17c5bab787aa69
   languageName: node
   linkType: hard
 

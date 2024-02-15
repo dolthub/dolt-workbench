@@ -1,7 +1,7 @@
 import { ApolloError } from "@apollo/client";
 import ErrorMsg from "@components/ErrorMsg";
-import Loader from "@components/Loader";
 import { useDataTableContext } from "@contexts/dataTable";
+import { Loader } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,

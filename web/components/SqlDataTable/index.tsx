@@ -5,8 +5,8 @@ import {
 } from "@apollo/client";
 import Button from "@components/Button";
 import { Inner as InnerDataTable } from "@components/DataTable";
-import Loader from "@components/Loader";
 import DataTableLayout from "@components/layouts/DataTableLayout";
+import { Loader } from "@dolthub/react-components";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import {
   ColumnForSqlDataTableFragment,

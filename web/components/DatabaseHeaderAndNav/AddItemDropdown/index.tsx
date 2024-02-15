@@ -1,5 +1,5 @@
-import Popup from "@components/Popup";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { Popup } from "@dolthub/react-components";
 import useRole from "@hooks/useRole";
 import { DatabaseParams } from "@lib/params";
 import { newRelease, upload } from "@lib/urls";

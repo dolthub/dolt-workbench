@@ -1,6 +1,6 @@
 import CustomRadio from "@components/CustomRadio";
 import HelpPopup from "@components/HelpPopup";
-import ExternalLink from "@components/links/ExternalLink";
+import { ExternalLink } from "@dolthub/react-components";
 import { LoadDataModifier } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { useFileUploadContext } from "./contexts/fileUploadLocalForage";

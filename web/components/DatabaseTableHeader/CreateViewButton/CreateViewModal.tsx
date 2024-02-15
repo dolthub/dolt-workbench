@@ -1,10 +1,10 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import FormInput from "@components/FormInput";
-import Loader from "@components/Loader";
 import Modal from "@components/Modal";
 import DocsLink from "@components/links/DocsLink";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Loader } from "@dolthub/react-components";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { DatabaseParams } from "@lib/params";

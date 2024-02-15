@@ -1,6 +1,6 @@
 import { Database404Inner } from "@components/Database404";
-import Loader from "@components/Loader";
 import Page404 from "@components/Page404";
+import { Loader } from "@dolthub/react-components";
 import { useCommitListForCommitGraph } from "@hooks/useCommitListForCommitGraph";
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";

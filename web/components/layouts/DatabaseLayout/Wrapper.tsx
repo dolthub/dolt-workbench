@@ -1,6 +1,6 @@
-import Loader from "@components/Loader";
 import Navbar from "@components/Navbar";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Loader } from "@dolthub/react-components";
 import { GlobalHotKeys, useHotKeysForToggle } from "@dolthub/react-hooks";
 import { useCurrentDatabaseQuery } from "@gen/graphql-types";
 import { gqlDatabaseNotFoundErr } from "@lib/errors/graphql";
