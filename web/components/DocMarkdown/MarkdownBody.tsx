@@ -1,4 +1,4 @@
-import Markdown from "@components/Markdown";
+import { Markdown } from "@dolthub/react-components";
 import { RefParams } from "@lib/params";
 import Editor from "./Editor";
 import css from "./index.module.css";

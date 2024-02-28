@@ -18,7 +18,3 @@
 .textarea {
   @apply max-w-none;
 }
-
-.textarea > textarea {
-  @apply bg-white;
-}
