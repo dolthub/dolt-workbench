@@ -49,7 +49,7 @@ export default function customStyles<
     dropdownIndicator: styles => {
       return {
         ...styles,
-        color: colors.primary,
+        color: colors["ld-darkblue"],
         paddingTop: small ? "3px" : styles.paddingTop,
       };
     },
@@ -69,7 +69,7 @@ export default function customStyles<
     input: styles => {
       return {
         ...styles,
-        color: colors.primary,
+        color: colors["ld-darkblue"],
         fontSize: getFontSize(small, mono),
         fontFamily: getFontFamily(mono),
       };
@@ -79,7 +79,7 @@ export default function customStyles<
         ...styles,
         display: "flex",
         alignItems: "center",
-        color: isDisabled ? tailwindColors.gray["400"] : colors.primary,
+        color: isDisabled ? tailwindColors.gray["400"] : colors["ld-darkblue"],
         backgroundColor:
           isFocused || isSelected ? colors["ld-lightpurple"] : undefined,
         fontFamily: getFontFamily(mono),
@@ -89,7 +89,7 @@ export default function customStyles<
     singleValue: styles => {
       return {
         ...styles,
-        color: colors.primary,
+        color: colors["ld-darkblue"],
         fontFamily: getFontFamily(mono),
         fontSize: getFontSize(small, mono),
         top: small ? "45%" : styles.top,
@@ -98,7 +98,7 @@ export default function customStyles<
     menu: styles => {
       return {
         ...styles,
-        color: colors.primary,
+        color: colors["ld-darkblue"],
         fontFamily: getFontFamily(mono),
         fontSize: getFontSize(small, mono),
       };

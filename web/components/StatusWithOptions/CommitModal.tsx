@@ -1,7 +1,7 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import Modal from "@components/Modal";
-import Textarea from "@components/Textarea";
+import { Textarea } from "@dolthub/react-components";
 import { StatusFragment } from "@gen/graphql-types";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
