@@ -1,9 +1,8 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import CustomCheckbox from "@components/CustomCheckbox";
-import FormInput from "@components/FormInput";
 import FormSelect from "@components/FormSelect";
-import { ExternalLink, Loader } from "@dolthub/react-components";
+import { ExternalLink, FormInput, Loader } from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";
 import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
