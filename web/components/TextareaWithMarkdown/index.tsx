@@ -1,6 +1,5 @@
-import Markdown from "@components/Markdown";
 import { Tab, TabList, TabPanel, Tabs } from "@components/Tabs";
-import Textarea from "@components/Textarea";
+import { Markdown, Textarea } from "@dolthub/react-components";
 import cx from "classnames";
 import css from "./index.module.css";
 

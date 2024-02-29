@@ -1,11 +1,13 @@
 import "@components/AceEditor/ace-editor.css";
 import "@components/util/KeyNav/index.css";
 import { ServerConfigProvider, useServerConfig } from "@contexts/serverConfig";
+import {
+  ThemeProvider,
+  workbenchTailwindColorTheme,
+} from "@dolthub/react-components";
 import { withApollo } from "@lib/apollo";
-import { colors } from "@lib/tailwind";
 import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
-import Head from "next/head";
 import "react-tooltip/dist/react-tooltip.css";
 import { SWRConfig } from "swr";
 import "../styles/global.css";
@@ -37,48 +39,13 @@ export default class DoltSQLWorkbench extends App {
     };
 
     return (
-      <>
-        <Head>
-          <link
-            rel="apple-touch-icon"
-            sizes="76x76"
-            href="/favicon/apple-touch-icon.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/favicon/favicon-32x32.png"
-          />
-          <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/favicon/favicon-16x16.png"
-          />
-          <link rel="manifest" href="/favicon/site.webmanifest" />
-          <link
-            rel="mask-icon"
-            href="/favicon/safari-pinned-tab.svg"
-            color={colors["ld-mediumblue"]}
-          />
-          <link rel="shortcut icon" href="/favicon/favicon.ico" />
-          <meta
-            name="msapplication-TileColor"
-            content={colors["ld-mediumblue"]}
-          />
-          <meta
-            name="msapplication-config"
-            content="/favicon/browserconfig.xml"
-          />
-          <meta name="theme-color" content={colors["ld-mediumblue"]} />
-        </Head>
-        <SWRConfig value={{ fetcher }}>
-          <ServerConfigProvider>
+      <SWRConfig value={{ fetcher }}>
+        <ServerConfigProvider>
+          <ThemeProvider themeRGBOverrides={workbenchTailwindColorTheme}>
             <Inner pageProps={pageProps} Component={Component} />
-          </ServerConfigProvider>
-        </SWRConfig>
-      </>
+          </ThemeProvider>
+        </ServerConfigProvider>
+      </SWRConfig>
     );
   }
 }

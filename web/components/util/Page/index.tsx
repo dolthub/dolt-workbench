@@ -13,8 +13,8 @@ type Props = {
 // Should be used as the outermost component for every page. Defines the page meta,
 // including the title and description
 export default function Page(props: Props) {
-  // check that Page is the outermost component
   useEffectOnMount(() => {
+    // Check that Page is the outermost component
     const pageNode = document.getElementById("page");
     if (!pageNode) {
       return;

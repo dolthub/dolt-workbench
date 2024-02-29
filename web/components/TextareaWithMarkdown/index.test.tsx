@@ -8,7 +8,7 @@ describe("test TextareaWithMarkdown", () => {
 
     const input = screen.getByRole("textbox");
     expect(input).toBeVisible();
-    expect(input).toHaveClass("textarea");
+    expect(input).toHaveAttribute("aria-label", "textarea");
     expect(input).toHaveTextContent("Hello");
 
     fireEvent.change(input, { target: { value: "Test" } });
@@ -31,7 +31,8 @@ describe("test TextareaWithMarkdown", () => {
     expect(preview).toHaveClass("tab", "activeTab");
   });
 
-  it("corrently renders markdown", () => {
+  // Skipping until we don't need the ReactMarkdown mock https://github.com/remarkjs/react-markdown/issues/635
+  it.skip("correctly renders markdown", () => {
     const onChange = jest.fn();
     render(
       <TextareaWithMarkdown
