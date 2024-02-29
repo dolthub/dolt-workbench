@@ -1,7 +1,3 @@
-import {
-  applyTailwindTheme,
-  workbenchTailwindColorTheme,
-} from "@dolthub/react-components";
 import { useEffectOnMount } from "@dolthub/react-hooks";
 import { ReactNode } from "react";
 import Meta from "./Meta";
@@ -18,9 +14,6 @@ type Props = {
 // including the title and description
 export default function Page(props: Props) {
   useEffectOnMount(() => {
-    // Applies hosted tailwind theme
-    applyTailwindTheme(workbenchTailwindColorTheme);
-
     // Check that Page is the outermost component
     const pageNode = document.getElementById("page");
     if (!pageNode) {

@@ -1,3 +1,4 @@
+import { colors } from "@lib/tailwind";
 import Head from "next/head";
 
 type Props = {
@@ -13,6 +14,7 @@ export default function Meta(props: Props) {
     ? `${props.title} | Dolt SQL Workbench`
     : `Dolt SQL Workbench`;
   const image = "/images/dolt-workbench.png";
+  const blue = colors["ld-mediumblue"];
   return (
     <Head>
       <title>{title}</title>
@@ -45,6 +47,34 @@ export default function Meta(props: Props) {
       <meta name="twitter:image" content={image} />
 
       {/* <link rel="canonical" href={url} /> */}
+
+      <link
+        rel="apple-touch-icon"
+        sizes="76x76"
+        href="/favicon/apple-touch-icon.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="32x32"
+        href="/favicon/favicon-32x32.png"
+      />
+      <link
+        rel="icon"
+        type="image/png"
+        sizes="16x16"
+        href="/favicon/favicon-16x16.png"
+      />
+      <link rel="manifest" href="/favicon/site.webmanifest" />
+      <link
+        rel="mask-icon"
+        href="/favicon/safari-pinned-tab.svg"
+        color={blue}
+      />
+      <link rel="shortcut icon" href="/favicon/favicon.ico" />
+      <meta name="msapplication-TileColor" content={blue} />
+      <meta name="msapplication-config" content="/favicon/browserconfig.xml" />
+      <meta name="theme-color" content={blue} />
     </Head>
   );
 }
