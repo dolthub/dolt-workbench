@@ -39,15 +39,13 @@ export default class DoltSQLWorkbench extends App {
     };
 
     return (
-      <>
-        <SWRConfig value={{ fetcher }}>
-          <ServerConfigProvider>
-            <ThemeProvider themeRGBOverrides={workbenchTailwindColorTheme}>
-              <Inner pageProps={pageProps} Component={Component} />
-            </ThemeProvider>
-          </ServerConfigProvider>
-        </SWRConfig>
-      </>
+      <SWRConfig value={{ fetcher }}>
+        <ServerConfigProvider>
+          <ThemeProvider themeRGBOverrides={workbenchTailwindColorTheme}>
+            <Inner pageProps={pageProps} Component={Component} />
+          </ThemeProvider>
+        </ServerConfigProvider>
+      </SWRConfig>
     );
   }
 }
