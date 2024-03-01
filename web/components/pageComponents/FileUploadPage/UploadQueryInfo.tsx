@@ -1,6 +1,5 @@
-import CustomRadio from "@components/CustomRadio";
 import HelpPopup from "@components/HelpPopup";
-import { ExternalLink } from "@dolthub/react-components";
+import { ExternalLink, Radio } from "@dolthub/react-components";
 import { LoadDataModifier } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { useFileUploadContext } from "./contexts/fileUploadLocalForage";
@@ -60,34 +59,36 @@ function ModifierOptions() {
         ?
       </p>
       <div className={css.modifierOptions}>
-        <CustomRadio
-          name="ignore"
-          checked={!state.modifier}
-          onChange={() => setState({ modifier: undefined })}
-        >
-          IGNORE
-        </CustomRadio>
-        <HelpPopup className={css.radioHelp}>
-          With IGNORE, new rows that duplicate an existing row on a unique key
-          value are discarded. This is the default behavior.{" "}
-          <ExternalLink href="https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html#ignore-effect-on-execution">
-            See more information.
-          </ExternalLink>
-        </HelpPopup>
-        <CustomRadio
-          name="replace"
-          checked={state.modifier === LoadDataModifier.Replace}
-          onChange={() => setState({ modifier: LoadDataModifier.Replace })}
-        >
-          REPLACE
-        </CustomRadio>
-        <HelpPopup className={css.radioHelp}>
-          With REPLACE, new rows that have the same value as a unique key value
-          in an existing row replace the existing row.{" "}
-          <ExternalLink href="https://dev.mysql.com/doc/refman/8.0/en/replace.html">
-            See more information.
-          </ExternalLink>
-        </HelpPopup>
+        <div>
+          <Radio
+            name="ignore"
+            checked={!state.modifier}
+            onChange={() => setState({ modifier: undefined })}
+            label="IGNORE"
+          />
+          <HelpPopup className={css.radioHelp}>
+            With IGNORE, new rows that duplicate an existing row on a unique key
+            value are discarded. This is the default behavior.{" "}
+            <ExternalLink href="https://dev.mysql.com/doc/refman/8.0/en/sql-mode.html#ignore-effect-on-execution">
+              See more information.
+            </ExternalLink>
+          </HelpPopup>
+        </div>
+        <div>
+          <Radio
+            name="replace"
+            checked={state.modifier === LoadDataModifier.Replace}
+            onChange={() => setState({ modifier: LoadDataModifier.Replace })}
+            label="REPLACE"
+          />
+          <HelpPopup className={css.radioHelp}>
+            With REPLACE, new rows that have the same value as a unique key
+            value in an existing row replace the existing row.{" "}
+            <ExternalLink href="https://dev.mysql.com/doc/refman/8.0/en/replace.html">
+              See more information.
+            </ExternalLink>
+          </HelpPopup>
+        </div>
       </div>
     </div>
   );
