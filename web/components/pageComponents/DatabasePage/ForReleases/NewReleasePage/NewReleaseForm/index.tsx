@@ -2,8 +2,7 @@ import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
-import FormInput from "@components/FormInput";
-import { Loader, Textarea } from "@dolthub/react-components";
+import { FormInput, Loader, Textarea } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { releases } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -61,7 +60,7 @@ export default function NewTagForm(props: Props): JSX.Element {
             data-cy="new-tag-description-textarea"
           />
           {/* <div>
-            <CustomCheckbox
+            <Checkbox
               name="add-author"
               label="Use my name and email as tag author"
               checked={createTagRes.formData.addTagAuthor}
@@ -69,7 +68,7 @@ export default function NewTagForm(props: Props): JSX.Element {
                 createTagRes.setFormData({ addTagAuthor: e.target.checked })
               }
               description="Recommended. If unchecked, Dolt System Account will be used as tag author."
-            />
+              />
           </div> */}
           <ButtonsWithError
             data-cy="new-tag-button-group"

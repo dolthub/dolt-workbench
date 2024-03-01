@@ -1,9 +1,12 @@
 import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
-import CustomCheckbox from "@components/CustomCheckbox";
-import FormInput from "@components/FormInput";
 import FormSelect from "@components/FormSelect";
-import { ExternalLink, Loader } from "@dolthub/react-components";
+import {
+  Checkbox,
+  ExternalLink,
+  FormInput,
+  Loader,
+} from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";
 import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
@@ -145,7 +148,7 @@ export default function NewConnection(props: Props) {
             </Button.Link>
             {state.showAdvancedSettings && (
               <div>
-                <CustomCheckbox
+                <Checkbox
                   checked={state.useSSL}
                   onChange={() => setState({ useSSL: !state.useSSL })}
                   name="use-ssl"
@@ -153,7 +156,7 @@ export default function NewConnection(props: Props) {
                   description="If server does not allow insecure connections, client must use SSL/TLS."
                   className={css.checkbox}
                 />
-                <CustomCheckbox
+                <Checkbox
                   checked={state.hideDoltFeatures}
                   onChange={() =>
                     setState({ hideDoltFeatures: !state.hideDoltFeatures })

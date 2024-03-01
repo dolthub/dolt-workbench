@@ -51,7 +51,7 @@ export default function CommitModal(props: Props) {
             required
           />
           {/* <div>
-            <CustomCheckbox
+            <Checkbox
               name="add-commit-author"
               label="Use my name and email as commit author"
               checked={addCommitAuthor}

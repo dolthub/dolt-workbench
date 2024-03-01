@@ -26,12 +26,12 @@
 
 .modifierOptions {
   @apply flex justify-center;
+
+  > div {
+    @apply flex mx-4;
+  }
 }
 
 .radioHelp {
   @apply ml-3;
-
-  &:first-of-type {
-    @apply mr-14;
-  }
 }
