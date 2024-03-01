@@ -51,13 +51,14 @@ export default function CommitModal(props: Props) {
             required
           />
           {/* <div>
-            <CustomCheckbox
+            <Checkbox
               name="add-commit-author"
               label="Use my name and email as commit author"
               checked={addCommitAuthor}
               onChange={e => setAddCommitAuthor(e.target.checked)}
               description="Recommended. If unchecked, Dolt System Account will be used as
               commit author."
+              blue
             />
           </div> */}
           <ButtonsWithError onCancel={onClose}>

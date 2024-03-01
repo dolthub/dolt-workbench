@@ -60,7 +60,7 @@ export default function NewTagForm(props: Props): JSX.Element {
             data-cy="new-tag-description-textarea"
           />
           {/* <div>
-            <CustomCheckbox
+            <Checkbox
               name="add-author"
               label="Use my name and email as tag author"
               checked={createTagRes.formData.addTagAuthor}
@@ -68,7 +68,8 @@ export default function NewTagForm(props: Props): JSX.Element {
                 createTagRes.setFormData({ addTagAuthor: e.target.checked })
               }
               description="Recommended. If unchecked, Dolt System Account will be used as tag author."
-            />
+              blue
+              />
           </div> */}
           <ButtonsWithError
             data-cy="new-tag-button-group"
