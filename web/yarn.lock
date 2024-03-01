@@ -1355,7 +1355,7 @@ __metadata:
     react-select: "npm:^5.7.7"
     react-select-event: "npm:^5.5.1"
     react-timeago: "npm:^7.2.0"
-    react-tooltip: "npm:5.26.0"
+    react-tooltip: "npm:5.26.3"
     reactflow: "npm:^11.10.1"
     sharp: "npm:^0.33.1"
     stylelint: "npm:^16.2.1"
@@ -1674,7 +1674,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@floating-ui/dom@npm:^1.0.0, @floating-ui/dom@npm:^1.0.1, @floating-ui/dom@npm:^1.6.1":
+"@floating-ui/dom@npm:^1.0.1, @floating-ui/dom@npm:^1.6.1":
   version: 1.6.3
   resolution: "@floating-ui/dom@npm:1.6.3"
   dependencies:
@@ -12369,16 +12369,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:5.26.0":
-  version: 5.26.0
-  resolution: "react-tooltip@npm:5.26.0"
+"react-tooltip@npm:5.26.3":
+  version: 5.26.3
+  resolution: "react-tooltip@npm:5.26.3"
   dependencies:
-    "@floating-ui/dom": "npm:^1.0.0"
+    "@floating-ui/dom": "npm:^1.6.1"
     classnames: "npm:^2.3.0"
   peerDependencies:
     react: ">=16.14.0"
     react-dom: ">=16.14.0"
-  checksum: 7bae47df14958be169f969e7d5e56d6ad9f294acedd6905c58af44d1e2c6123b4debb373f94f68c25a9d92256668970803e2ebcf3f9e7243786d2923866a43b9
+  checksum: fcce843ebfda0a74ddaf90b7d322879c9070bd180e490ae4634ff02052b1cd39158a0af3a27621a9ffe62a1a8ad246633908a1d214998aea0403ec7aeca874fb
   languageName: node
   linkType: hard
 
