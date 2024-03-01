@@ -155,7 +155,6 @@ export default function NewConnection(props: Props) {
                   label="Use SSL"
                   description="If server does not allow insecure connections, client must use SSL/TLS."
                   className={css.checkbox}
-                  blue
                 />
                 <Checkbox
                   checked={state.hideDoltFeatures}
@@ -166,7 +165,6 @@ export default function NewConnection(props: Props) {
                   label="Hide Dolt features"
                   description="Hides Dolt features like branches, logs, and commits for non-Dolt databases. Will otherwise be disabled."
                   className={css.checkbox}
-                  blue
                 />
               </div>
             )}

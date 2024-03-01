@@ -58,7 +58,6 @@ export default function CommitModal(props: Props) {
               onChange={e => setAddCommitAuthor(e.target.checked)}
               description="Recommended. If unchecked, Dolt System Account will be used as
               commit author."
-              blue
             />
           </div> */}
           <ButtonsWithError onCancel={onClose}>
