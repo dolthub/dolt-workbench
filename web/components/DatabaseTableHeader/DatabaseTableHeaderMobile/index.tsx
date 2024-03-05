@@ -1,7 +1,6 @@
-import Btn from "@components/Btn";
 import MobileSqlViewer from "@components/SqlEditor/MobileSqlViewer";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Loader } from "@dolthub/react-components";
+import { Btn, Loader } from "@dolthub/react-components";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
 import Errors from "../Errors";

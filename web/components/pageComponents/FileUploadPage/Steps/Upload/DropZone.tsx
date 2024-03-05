@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
+import { Button } from "@dolthub/react-components";
 import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
 import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
 import cx from "classnames";

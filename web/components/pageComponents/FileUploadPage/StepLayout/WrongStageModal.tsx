@@ -1,6 +1,6 @@
-import Button from "@components/Button";
 import Modal from "@components/Modal";
 import Link from "@components/links/Link";
+import { Button } from "@dolthub/react-components";
 import { ModalProps } from "@lib/modalProps";
 import { upload } from "@lib/urls";
 import { useFileUploadContext } from "../contexts/fileUploadLocalForage";

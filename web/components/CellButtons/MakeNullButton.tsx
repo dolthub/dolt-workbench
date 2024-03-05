@@ -1,7 +1,7 @@
-import Button from "@components/Button";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,

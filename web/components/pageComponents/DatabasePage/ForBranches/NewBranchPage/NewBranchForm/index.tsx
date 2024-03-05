@@ -1,8 +1,7 @@
-import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
-import { FormInput, Loader } from "@dolthub/react-components";
+import { Button, FormInput, Loader } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import { useCreateBranchMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";

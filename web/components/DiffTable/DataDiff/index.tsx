@@ -1,10 +1,9 @@
-import Button from "@components/Button";
 import DatabaseOptionsDropdown from "@components/DatabaseOptionsDropdown";
 import Errors from "@components/DatabaseTableHeader/Errors";
 import ErrorMsg from "@components/ErrorMsg";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useDiffContext } from "@contexts/diff";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import { useFocus } from "@dolthub/react-hooks";
 import { DiffRowType } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";

@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { FiFile } from "@react-icons/all-files/fi/FiFile";
 import cx from "classnames";
 import { ReactNode } from "react";

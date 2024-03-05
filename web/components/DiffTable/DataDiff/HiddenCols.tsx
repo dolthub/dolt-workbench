@@ -1,4 +1,4 @@
-import Btn from "@components/Btn";
+import { Btn } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import css from "./index.module.css";

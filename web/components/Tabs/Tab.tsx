@@ -1,5 +1,5 @@
-import Btn from "@components/Btn";
 import Link from "@components/links/Link";
+import { Btn } from "@dolthub/react-components";
 import { Route } from "@dolthub/web-utils";
 import cx from "classnames";
 import { ReactNode } from "react";

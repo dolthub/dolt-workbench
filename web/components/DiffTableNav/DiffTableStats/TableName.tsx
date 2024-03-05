@@ -1,6 +1,6 @@
-import Button from "@components/Button";
 import Link from "@components/links/Link";
 import { useDiffContext } from "@contexts/diff";
+import { Button } from "@dolthub/react-components";
 import { DiffSummaryFragment, TableDiffType } from "@gen/graphql-types";
 import { useRouter } from "next/router";
 import css from "./index.module.css";

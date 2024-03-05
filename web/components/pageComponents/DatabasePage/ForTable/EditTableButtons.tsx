@@ -1,9 +1,9 @@
-import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
 import DatabaseUploadStageLink from "@components/links/DatabaseUploadStageLink";
 import Link from "@components/links/Link";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button } from "@dolthub/react-components";
 import { useTagListQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlBuilder from "@hooks/useSqlBuilder";
@@ -101,7 +101,9 @@ function Inner(props: InnerProps) {
         <AiOutlineDelete /> Drop Table
       </Button.Link>
       <Link {...table(props.params)}>
-        <Button.Underlined className={css.cancel}>Cancel</Button.Underlined>
+        <Button.Link underlined className={css.cancel}>
+          Cancel
+        </Button.Link>
       </Link>
     </div>
   );

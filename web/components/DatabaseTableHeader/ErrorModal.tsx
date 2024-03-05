@@ -1,7 +1,7 @@
-import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
 import Modal from "@components/Modal";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button } from "@dolthub/react-components";
 import { ModalProps } from "@lib/modalProps";
 import css from "./index.module.css";
 

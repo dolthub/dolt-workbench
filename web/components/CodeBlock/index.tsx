@@ -1,4 +1,4 @@
-import Btn from "@components/Btn";
+import { Btn } from "@dolthub/react-components";
 import { useDelay } from "@dolthub/react-hooks";
 import { FaRegClone } from "@react-icons/all-files/fa/FaRegClone";
 import cx from "classnames";

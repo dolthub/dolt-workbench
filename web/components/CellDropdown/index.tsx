@@ -1,4 +1,4 @@
-import Btn from "@components/Btn";
+import { Btn } from "@dolthub/react-components";
 import { useOnClickOutside } from "@dolthub/react-hooks";
 import { RiMenu5Line } from "@react-icons/all-files/ri/RiMenu5Line";
 import cx from "classnames";

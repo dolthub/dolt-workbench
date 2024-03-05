@@ -1,6 +1,6 @@
-import Button from "@components/Button";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,

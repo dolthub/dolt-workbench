@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
+import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { ErrorType } from "@lib/errors/types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";

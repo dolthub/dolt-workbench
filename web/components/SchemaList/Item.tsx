@@ -1,5 +1,5 @@
-import Btn from "@components/Btn";
 import Link from "@components/links/Link";
+import { Btn } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";

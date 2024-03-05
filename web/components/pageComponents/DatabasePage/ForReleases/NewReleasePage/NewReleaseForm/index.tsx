@@ -1,8 +1,7 @@
-import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
-import { FormInput, Loader, Textarea } from "@dolthub/react-components";
+import { Button, FormInput, Loader, Textarea } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { releases } from "@lib/urls";
 import { useRouter } from "next/router";

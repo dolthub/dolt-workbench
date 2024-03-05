@@ -1,6 +1,6 @@
-import Button from "@components/Button";
 import Modal from "@components/Modal";
 import Link from "@components/links/Link";
+import { Button } from "@dolthub/react-components";
 import { StatusFragment } from "@gen/graphql-types";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";

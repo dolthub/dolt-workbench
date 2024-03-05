@@ -1,8 +1,8 @@
-import Button from "@components/Button";
 import { sampleCreateQueryForEmpty } from "@components/DatabaseTableHeader/useSqlStrings";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { database } from "@lib/urls";
 import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
@@ -55,13 +55,14 @@ export default function CreateTableOptions(props: Props) {
         </div>
       </HideForNoWritesWrapper>
       <Link {...database(props.params)}>
-        <Button.Underlined
+        <Button.Link
+          underlined
           className={cx(css.cancel, {
             [css.removeForGetStarted]: props.getStarted,
           })}
         >
           Cancel
-        </Button.Underlined>
+        </Button.Link>
       </Link>
     </div>
   );

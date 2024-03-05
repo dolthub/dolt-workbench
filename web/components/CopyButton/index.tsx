@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { useDelay } from "@dolthub/react-hooks";
 import { IoCopyOutline } from "@react-icons/all-files/io5/IoCopyOutline";
 import cx from "classnames";

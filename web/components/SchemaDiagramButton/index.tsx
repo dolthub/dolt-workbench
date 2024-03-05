@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import Link from "@components/links/Link";
+import { Button } from "@dolthub/react-components";
 import { RefParams } from "@lib/params";
 import { ref, schemaDiagram } from "@lib/urls";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";

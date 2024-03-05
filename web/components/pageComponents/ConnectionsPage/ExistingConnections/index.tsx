@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import DeleteModal from "@components/DeleteModal";
+import { Button } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
   StoredConnectionsDocument,

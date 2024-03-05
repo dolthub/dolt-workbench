@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { GrTable } from "@react-icons/all-files/gr/GrTable";
 import cx from "classnames";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";

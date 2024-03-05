@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { useOnClickOutside } from "@dolthub/react-hooks";
 import { handleCaughtError } from "@lib/errors/helpers";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";

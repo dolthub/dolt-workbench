@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { Button } from "@dolthub/react-components";
 import { DatabaseParams } from "@lib/params";
 import { useState } from "react";
 import CreateViewModal from "./CreateViewModal";

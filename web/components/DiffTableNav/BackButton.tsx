@@ -1,7 +1,6 @@
-import Button from "@components/Button";
 import CommitLogLink from "@components/links/CommitLogLink";
 import PullLink from "@components/links/PullLink";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { DatabaseParams } from "@lib/params";
 import { FaChevronLeft } from "@react-icons/all-files/fa/FaChevronLeft";

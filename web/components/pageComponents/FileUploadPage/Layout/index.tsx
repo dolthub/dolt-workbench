@@ -1,7 +1,7 @@
-import Button from "@components/Button";
 import { DatabaseLayoutWrapperOuter } from "@components/layouts/DatabaseLayout/Wrapper";
 import DatabaseLink from "@components/links/DatabaseLink";
 import KeyNav from "@components/util/KeyNav";
+import { Button } from "@dolthub/react-components";
 import { DatabaseParams } from "@lib/params";
 import { GoChevronLeft } from "@react-icons/all-files/go/GoChevronLeft";
 import { ReactNode } from "react";

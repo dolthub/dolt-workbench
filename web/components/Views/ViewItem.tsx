@@ -1,5 +1,5 @@
-import Btn from "@components/Btn";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Btn } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import { SchemaItemFragment } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";

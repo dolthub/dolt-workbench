@@ -1,7 +1,7 @@
-import Button from "@components/Button";
 import CommitLink from "@components/links/CommitLink";
 import RefLink from "@components/links/RefLink";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { Button } from "@dolthub/react-components";
 import { TagForListFragment } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
