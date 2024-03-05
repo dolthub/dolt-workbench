@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import { serializeCellValue } from "@components/pageComponents/FileUploadPage/Steps/Upload/EditableTable/TableGrid/utils";
+import { Button } from "@dolthub/react-components";
 import { useDelay } from "@dolthub/react-hooks";
 import {
   ColumnForDataTableFragment,

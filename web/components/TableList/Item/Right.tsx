@@ -1,5 +1,5 @@
-import Btn from "@components/Btn";
 import Link from "@components/links/Link";
+import { Btn } from "@dolthub/react-components";
 import { TableParams } from "@lib/params";
 import { editTable, table as tableUrl } from "@lib/urls";
 import { BiPencil } from "@react-icons/all-files/bi/BiPencil";

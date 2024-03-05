@@ -1,6 +1,6 @@
-import Button from "@components/Button";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button } from "@dolthub/react-components";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import useSqlParser from "@hooks/useSqlParser";
 import css from "./index.module.css";
@@ -24,8 +24,8 @@ export default function ShowAllColumns() {
   };
 
   return (
-    <Button.Underlined className={css.colsButton} onClick={onClick}>
+    <Button.Link underlined className={css.colsButton} onClick={onClick}>
       Show all columns
-    </Button.Underlined>
+    </Button.Link>
   );
 }

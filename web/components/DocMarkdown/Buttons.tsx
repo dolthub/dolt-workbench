@@ -1,6 +1,5 @@
-import Button from "@components/Button";
 import Link from "@components/links/Link";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import useEditDoc from "@hooks/useEditDoc";
 import { DocParams, RefParams } from "@lib/params";
 import toDocType from "@lib/toDocType";
@@ -37,9 +36,9 @@ function Inner(props: InnerProps) {
         >
           edit
         </Button>
-        <Button.Underlined onClick={onSubmit} red>
+        <Button.Link underlined onClick={onSubmit} red>
           delete
-        </Button.Underlined>
+        </Button.Link>
       </Button.Group>
     </div>
   );

@@ -1,5 +1,4 @@
-import Button from "@components/Button";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import { useState } from "react";
 import css from "./index.module.css";
 

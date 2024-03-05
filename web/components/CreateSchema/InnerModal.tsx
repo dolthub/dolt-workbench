@@ -1,6 +1,5 @@
-import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
-import { FormInput } from "@dolthub/react-components";
+import { Button, FormInput } from "@dolthub/react-components";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent } from "react";

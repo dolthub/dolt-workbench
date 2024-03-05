@@ -1,6 +1,5 @@
-import Btn from "@components/Btn";
-import Button from "@components/Button";
 import CopyButton from "@components/CopyButton";
+import { Btn, Button } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { BsPencil } from "@react-icons/all-files/bs/BsPencil";
 import dynamic from "next/dynamic";

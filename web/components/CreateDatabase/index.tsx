@@ -1,6 +1,5 @@
-import Button from "@components/Button";
 import Modal from "@components/Modal";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import {
   DatabasesDocument,
   useCreateDatabaseMutation,

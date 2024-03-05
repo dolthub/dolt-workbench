@@ -1,9 +1,9 @@
-import Button from "@components/Button";
 import PullStateLabel from "@components/PullStateLabel";
 import PullsBreadcrumbs from "@components/breadcrumbs/PullsBreadcrumbs";
 import Link from "@components/links/Link";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import QueryHandler from "@components/util/QueryHandler";
+import { Button } from "@dolthub/react-components";
 import {
   PullState,
   usePullDetailsForPullDetailsQuery,

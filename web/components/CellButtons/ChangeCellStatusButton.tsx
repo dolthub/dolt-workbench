@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { CellStatusActionType, SetCellStatusAction } from "@lib/tableTypes";
 import css from "./index.module.css";
 

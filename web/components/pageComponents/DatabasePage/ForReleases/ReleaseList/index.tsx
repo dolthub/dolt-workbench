@@ -1,10 +1,9 @@
-import Button from "@components/Button";
 import { Database404Inner } from "@components/Database404";
 import DeleteModal from "@components/DeleteModal";
 import Page404 from "@components/Page404";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import { TagForListFragment, useDeleteTagMutation } from "@gen/graphql-types";
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";

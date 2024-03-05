@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import Link from "@components/links/Link";
+import { Button } from "@dolthub/react-components";
 import { RefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
 import { TiFlowChildren } from "@react-icons/all-files/ti/TiFlowChildren";

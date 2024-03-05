@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import css from "./index.module.css";
 

@@ -1,8 +1,8 @@
-import Button from "@components/Button";
 import Tooltip from "@components/Tooltip";
 import UserNameWithIcon from "@components/UserNameWithIcon";
 import RefLink from "@components/links/RefLink";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { Button } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import { BranchFragment } from "@gen/graphql-types";
 import { FaLock } from "@react-icons/all-files/fa/FaLock";

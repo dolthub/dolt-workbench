@@ -1,4 +1,4 @@
-import Btn from "@components/Btn";
+import { Btn } from "@dolthub/react-components";
 import { useOnClickOutside } from "@dolthub/react-hooks";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import cx from "classnames";

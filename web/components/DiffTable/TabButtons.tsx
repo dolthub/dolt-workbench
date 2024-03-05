@@ -1,4 +1,4 @@
-import Btn from "@components/Btn";
+import { Btn } from "@dolthub/react-components";
 import cx from "classnames";
 import css from "./index.module.css";
 

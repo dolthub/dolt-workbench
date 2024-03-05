@@ -1,6 +1,6 @@
-import Button from "@components/Button";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
+import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import css from "./index.module.css";

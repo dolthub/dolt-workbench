@@ -1,8 +1,7 @@
 import { MutationHookOptions, MutationTuple } from "@apollo/client";
-import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import Modal from "@components/Modal";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import useMutation from "@hooks/useMutation";
 import { RefetchQueries } from "@lib/refetchQueries";
 import { ReactNode } from "react";

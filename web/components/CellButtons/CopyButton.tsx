@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { useDelay } from "@dolthub/react-hooks";
 import { getBitDisplayValue } from "@lib/dataTable";
 import CopyToClipboard from "react-copy-to-clipboard";

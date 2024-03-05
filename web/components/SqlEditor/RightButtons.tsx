@@ -1,5 +1,5 @@
-import Btn from "@components/Btn";
 import Tooltip from "@components/Tooltip";
+import { Btn } from "@dolthub/react-components";
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import css from "./index.module.css";
 

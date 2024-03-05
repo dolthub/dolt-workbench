@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
+import { Button } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
   DatabaseType,

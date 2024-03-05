@@ -1,5 +1,5 @@
-import Button from "@components/Button";
 import ErrorMsg from "@components/ErrorMsg";
+import { Button } from "@dolthub/react-components";
 import { ApolloErrorType } from "@lib/errors/types";
 import cx from "classnames";
 import { ReactNode } from "react";

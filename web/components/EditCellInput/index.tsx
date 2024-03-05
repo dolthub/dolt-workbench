@@ -1,8 +1,7 @@
-import Btn from "@components/Btn";
 import { toPKColsMapQueryCols } from "@components/CellButtons/queryHelpers";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { SmallLoader } from "@dolthub/react-components";
+import { Btn, SmallLoader } from "@dolthub/react-components";
 import { isNullValue } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,

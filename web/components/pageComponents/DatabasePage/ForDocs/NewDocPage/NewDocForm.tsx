@@ -1,8 +1,7 @@
-import Button from "@components/Button";
 import FormSelect, { Option } from "@components/FormSelect";
 import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import {
   DocForDocPageFragment,
   DocType,

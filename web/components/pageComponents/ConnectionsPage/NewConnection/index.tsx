@@ -1,7 +1,7 @@
-import Button from "@components/Button";
 import ButtonsWithError from "@components/ButtonsWithError";
 import FormSelect from "@components/FormSelect";
 import {
+  Button,
   Checkbox,
   ExternalLink,
   FormInput,

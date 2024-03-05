@@ -1,4 +1,4 @@
-import Btn from "@components/Btn";
+import { Btn } from "@dolthub/react-components";
 import { DatabaseParams } from "@lib/params";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import AddItemDropdown from "./AddItemDropdown";

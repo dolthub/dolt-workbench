@@ -1,4 +1,4 @@
-import Button from "@components/Button";
+import { Button } from "@dolthub/react-components";
 import { fireEvent, render, screen } from "@testing-library/react";
 import ButtonsWithError from ".";
 import css from "./index.module.css";
