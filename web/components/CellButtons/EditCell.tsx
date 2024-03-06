@@ -23,14 +23,12 @@ export default function EditCell(props: Props) {
 
   return (
     <HideForNoWritesWrapper params={params}>
-      <div>
-        <Button.Link
-          onClick={() => props.setEditing(true)}
-          className={css.button}
-        >
-          Edit Cell Value
-        </Button.Link>
-      </div>
+      <Button.Link
+        onClick={() => props.setEditing(true)}
+        className={css.button}
+      >
+        Edit Cell Value
+      </Button.Link>
     </HideForNoWritesWrapper>
   );
 }

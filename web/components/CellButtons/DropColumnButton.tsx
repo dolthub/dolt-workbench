@@ -37,11 +37,9 @@ export default function DropColumnButton({ col, refName }: Props) {
 
   return (
     <HideForNoWritesWrapper params={params}>
-      <div>
-        <Button.Link onClick={onClick} className={css.button}>
-          Drop column
-        </Button.Link>
-      </div>
+      <Button.Link onClick={onClick} className={css.button}>
+        Drop column
+      </Button.Link>
     </HideForNoWritesWrapper>
   );
 }

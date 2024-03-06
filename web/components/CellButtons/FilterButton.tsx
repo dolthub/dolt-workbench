@@ -36,10 +36,8 @@ export default function FilterButton({ col, value }: Props) {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        Filter By Cell
-      </Button.Link>
-    </div>
+    <Button.Link onClick={onClick} className={css.button}>
+      Filter By Cell
+    </Button.Link>
   );
 }

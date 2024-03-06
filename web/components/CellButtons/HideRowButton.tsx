@@ -31,10 +31,8 @@ export default function HideRowButton(props: Props) {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        Hide row
-      </Button.Link>
-    </div>
+    <Button.Link onClick={onClick} className={css.button}>
+      Hide row
+    </Button.Link>
   );
 }
