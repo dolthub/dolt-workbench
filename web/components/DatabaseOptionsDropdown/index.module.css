@@ -6,16 +6,8 @@
   }
 }
 
-.button {
-  @apply flex justify-center pl-1.5 pr-2 pt-[5px] h-[30px] text-primary text-xs font-normal bg-transparent border rounded border-primary w-[4.5rem] sticky right-4;
-
-  &:hover {
-    @apply button-shadow;
-  }
-
-  &:focus {
-    @apply outline-none;
-  }
+.triggerButton {
+  @apply font-normal text-xs px-2 py-1.5;
 }
 
 .option {
@@ -32,10 +24,6 @@
 
 .optionButton {
   @apply flex items-center;
-}
-
-.caret {
-  @apply pr-1 pt-0.5;
 }
 
 .plus {

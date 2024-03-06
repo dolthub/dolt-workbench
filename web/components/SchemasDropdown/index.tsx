@@ -1,7 +1,7 @@
-import ButtonWithPopup from "@components/ButtonWithPopup";
 import CreateSchema from "@components/CreateSchema";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { ButtonWithPopup } from "@dolthub/react-components";
 import { useDatabaseSchemasQuery } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import { database } from "@lib/urls";
