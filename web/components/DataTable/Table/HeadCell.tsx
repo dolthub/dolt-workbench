@@ -2,7 +2,7 @@ import ChangeColumnStatusButton from "@components/CellButtons/ChangeColumnStatus
 import DropColumnButton from "@components/CellButtons/DropColumnButton";
 import HideColumnButton from "@components/CellButtons/HideColumnButton";
 import SortButton from "@components/CellButtons/SortButton";
-import CellDropdown from "@components/CellDropdown";
+import { CellDropdown } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { isLongContentType } from "@lib/dataTable";
 import {
@@ -49,8 +49,6 @@ export default function HeadCell({
         showDropdown={showDropdown}
         setShowDropdown={setShowDropdown}
         buttonClassName={css.menu}
-        data-cy={`${col.name}-column-button-dropdown`}
-        isMobile={isMobile}
       >
         <SortButton dir="ASC" col={col} />
         <SortButton dir="DESC" col={col} />

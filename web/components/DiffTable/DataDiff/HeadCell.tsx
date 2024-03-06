@@ -1,7 +1,7 @@
 import ChangeColumnStatusButton from "@components/CellButtons/ChangeColumnStatusButton";
 import DropColumnButton from "@components/CellButtons/DropColumnButton";
 import HideDiffColumnButton from "@components/CellButtons/HideDiffColumnButton";
-import CellDropdown from "@components/CellDropdown";
+import { CellDropdown } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { isLongContentType } from "@lib/dataTable";
 import {
@@ -41,8 +41,7 @@ export default function HeadCell(props: Props) {
       <CellDropdown
         showDropdown={showDropdown}
         setShowDropdown={setShowDropdown}
-        buttonClassName={css.menu}
-        data-cy={`${props.col.name}-column-button-dropdown`}
+        buttonClassName={css.dropdownButton}
       >
         <HideDiffColumnButton
           onClick={() => hideColumn(props.index, props.setHiddenColIndexes)}

@@ -2,8 +2,8 @@ import ChangeCellStatusButton from "@components/CellButtons/ChangeCellStatusButt
 import CopyButton from "@components/CellButtons/CopyButton";
 import EditCell from "@components/CellButtons/EditCell";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
-import CellDropdown from "@components/CellDropdown";
 import EditCellInput from "@components/EditCellInput";
+import { CellDropdown } from "@dolthub/react-components";
 import {
   excerpt,
   getDisplayValue,
@@ -116,10 +116,7 @@ export default function Cell(props: Props) {
               <CellDropdown
                 showDropdown={showDropdown}
                 setShowDropdown={setShowDropdown}
-                buttonClassName={css.menu}
-                data-cy={`${currCol ? currCol.name : "column"}-${
-                  props.type
-                }-dropdown-button-${props.ridx}`}
+                buttonClassName={css.dropdownButton}
               >
                 <CopyButton
                   value={getDisplayValue(thisVal)}

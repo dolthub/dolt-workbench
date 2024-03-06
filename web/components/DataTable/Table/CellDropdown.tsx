@@ -5,8 +5,8 @@ import FilterButton from "@components/CellButtons/FilterButton";
 import ForeignKeyButton from "@components/CellButtons/ForeignKeyButton";
 import HistoryButton from "@components/CellButtons/HistoryButton";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
-import Dropdown from "@components/CellDropdown";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { CellDropdown as Dropdown } from "@dolthub/react-components";
 import { isNullValue } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
@@ -40,8 +40,6 @@ export default function CellDropdown(props: Props) {
       showDropdown={props.showDropdown}
       setShowDropdown={props.setShowDropdown}
       buttonClassName={css.menu}
-      isMobile={props.isMobile}
-      data-cy={`${props.currentCol.name}-dropdown-button-${props.ridx}`}
     >
       <CopyButton
         value={props.value}

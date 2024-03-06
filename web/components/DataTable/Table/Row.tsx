@@ -1,7 +1,7 @@
 import CopyRowButton from "@components/CellButtons/CopyRowButton";
 import DeleteRowButton from "@components/CellButtons/DeleteRowButton";
 import HideRowButton from "@components/CellButtons/HideRowButton";
-import CellDropdown from "@components/CellDropdown";
+import { CellDropdown } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
@@ -38,7 +38,6 @@ export default function Row(props: Props) {
             setShowDropdown={setShowDropdown}
             buttonClassName={css.rowDropdown}
             forRow
-            isMobile={props.isMobile}
           >
             <HideRowButton {...props} />
             <DeleteRowButton {...props} />

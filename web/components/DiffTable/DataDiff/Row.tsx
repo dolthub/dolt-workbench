@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import DeleteRowButton from "@components/CellButtons/DeleteRowButton";
-import CellDropdown from "@components/CellDropdown";
+import { CellDropdown } from "@dolthub/react-components";
 import {
   ColumnForDiffTableListFragment,
   RowDiffForTableListFragment,
@@ -64,13 +64,13 @@ export default function Row(props: Props) {
           [css.clicked]: showDropdown,
         })}
       >
-        <span className={css.flexCenter}>
+        <span className={css.firstCell}>
           {!props.hideCellButtons && props.userCanWrite && (
             <CellDropdown
               showDropdown={showDropdown}
               setShowDropdown={setShowDropdown}
-              buttonClassName={css.rowDropdown}
-              padding
+              buttonClassName={css.rowDropdownButton}
+              dropdownClassName={css.rowDropdown}
               forRow
             >
               <DeleteRowButton
