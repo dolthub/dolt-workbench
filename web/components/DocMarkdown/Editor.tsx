@@ -9,7 +9,6 @@ type Props = {
   markdown: string;
   params: DocParams;
   setShowEditor: (s: boolean) => void;
-  isDoc?: boolean;
 };
 
 export default function Editor(props: Props) {
@@ -33,7 +32,6 @@ export default function Editor(props: Props) {
         rows={15}
         value={state.markdown}
         onChange={setMarkdown}
-        isDoc={props.isDoc}
       />
       <ButtonsWithError onCancel={onCancel}>
         <Button type="submit" data-cy="submit-edit-docs-button">

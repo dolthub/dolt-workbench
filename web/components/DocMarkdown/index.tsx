@@ -44,7 +44,6 @@ export default function DocMarkdown({ params, rowData }: Props) {
           markdown={markdown}
           showEditor={showEditor}
           setShowEditor={setShowEditor}
-          isDoc
         />
       </div>
     </div>
