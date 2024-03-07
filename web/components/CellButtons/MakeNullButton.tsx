@@ -57,15 +57,13 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
 
   return (
     <HideForNoWritesWrapper params={params}>
-      <div>
-        <Button.Link
-          onClick={onClick}
-          className={css.button}
-          disabled={notNullConstraint || props.isNull}
-        >
-          Make NULL
-        </Button.Link>
-      </div>
+      <Button.Link
+        onClick={onClick}
+        className={css.button}
+        disabled={notNullConstraint || props.isNull}
+      >
+        Make NULL
+      </Button.Link>
     </HideForNoWritesWrapper>
   );
 }

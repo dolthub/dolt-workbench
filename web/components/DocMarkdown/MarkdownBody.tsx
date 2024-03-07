@@ -10,7 +10,6 @@ type Props = {
   markdown?: string;
   showEditor: boolean;
   setShowEditor: (s: boolean) => void;
-  isDoc?: boolean;
 };
 
 export default function MarkdownBody(props: Props) {
@@ -37,7 +36,6 @@ export default function MarkdownBody(props: Props) {
             ...props.params,
             docName: props.doltDocsQueryDocName || props.params.docName || "",
           }}
-          isDoc={props.isDoc}
         />
       </div>
     );
@@ -49,7 +47,6 @@ export default function MarkdownBody(props: Props) {
       value={props.markdown ?? ""}
       baseTextSize
       data-cy="doc-markdown"
-      isDoc={props.isDoc}
     />
   );
 }

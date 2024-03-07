@@ -96,7 +96,13 @@ function Inner(props: InnerProps) {
           getScrollParent={() => document.getElementById("main-content")}
           className={css.infiniteScrollContainer}
         >
-          <Table {...props} state={state} refName={refName} error={res.error} />
+          <Table
+            {...props}
+            state={state}
+            refName={refName}
+            error={res.error}
+            isPKTable={isPKTable}
+          />
         </InfiniteScroll>
       ) : (
         <p className={css.noChanges}>No changes to this table in this diff</p>

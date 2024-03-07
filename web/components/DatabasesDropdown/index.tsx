@@ -1,7 +1,7 @@
-import ButtonWithPopup from "@components/ButtonWithPopup";
 import CreateDatabase from "@components/CreateDatabase";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { ButtonWithPopup } from "@dolthub/react-components";
 import { useDatabasesQuery } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import { database } from "@lib/urls";
@@ -29,7 +29,7 @@ function Inner(props: InnerProps) {
         setIsOpen={setIsOpen}
         position="bottom left"
         offsetX={0}
-        contentStyle={{ width: "12rem", padding: 0 }}
+        contentStyle={{ width: "8rem", padding: 0 }}
         arrow={false}
       >
         <ul>

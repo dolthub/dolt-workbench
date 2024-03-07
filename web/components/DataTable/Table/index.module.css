@@ -142,27 +142,19 @@
 .active .menu,
 .cell:hover .menu {
   @screen lg {
-    @apply block absolute bg-white rounded-full right-2 top-[0.35rem];
-
-    &:focus {
-      @apply outline-none widget-shadow-lightblue;
-    }
+    @apply block absolute right-2 top-[0.35rem];
   }
 }
 
 .rowDropdown {
   @apply hidden;
   @screen lg {
-    @apply invisible mx-2 text-xl flex;
+    @apply invisible mx-2 flex;
   }
 }
 
 .row:hover .rowDropdown {
-  @apply visible rounded-full bg-ld-lightgrey text-ld-darkergrey;
-
-  &:focus {
-    @apply outline-none widget-shadow-lightblue;
-  }
+  @apply visible;
 }
 
 .tableDropdown {

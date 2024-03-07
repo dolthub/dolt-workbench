@@ -40,11 +40,9 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
 
   return (
     <HideForNoWritesWrapper params={params}>
-      <div>
-        <Button.Link onClick={onClick} className={css.button}>
-          Delete row
-        </Button.Link>
-      </div>
+      <Button.Link onClick={onClick} className={css.button}>
+        Delete row
+      </Button.Link>
     </HideForNoWritesWrapper>
   );
 }

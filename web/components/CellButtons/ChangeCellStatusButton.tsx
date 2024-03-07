@@ -15,10 +15,8 @@ export default function ChangeCellStatusButton(props: Props) {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        {props.statusAction}
-      </Button.Link>
-    </div>
+    <Button.Link onClick={onClick} className={css.button}>
+      {props.statusAction}
+    </Button.Link>
   );
 }

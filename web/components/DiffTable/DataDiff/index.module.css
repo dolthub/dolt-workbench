@@ -82,44 +82,22 @@
   @apply text-acc-grey;
 }
 
-.menu {
+.dropdownButton {
   @apply hidden;
 }
-@screen lg {
-  .clicked .menu,
-  .cell:hover .menu,
-  .added:hover .menu {
-    @apply block absolute bg-white rounded-full right-2 top-[0.35rem];
 
-    &:focus {
-      @apply outline-none widget-shadow-lightblue;
-    }
-  }
-}
-
-.headCell:hover,
-.cell:hover,
-.clicked {
-  @screen lg {
-    /* Applies background color to full column on hover */
-    &::after {
-      @apply bg-ld-lightblue absolute left-0 w-full h-[10000px] -top-[5000px];
-      content: "\00a0";
-      z-index: -5;
-    }
+.clicked .dropdownButton,
+.cell:hover .dropdownButton,
+.headCell:hover .dropdownButton {
+  @screen md {
+    @apply block absolute right-2 top-[0.35rem];
   }
 }
 
 .clicked:hover,
 .headCell:hover,
 .clicked:focus-within {
-  .menu {
-    @apply block absolute bg-white rounded-full right-2 top-[0.35rem];
-
-    &:focus {
-      @apply outline-none widget-shadow-lightblue;
-    }
-  }
+  @apply bg-ld-lightblue;
 }
 
 .minus {
@@ -142,15 +120,15 @@
 }
 
 .rowDeleted {
-  background-color: #ffeaec;
+  @apply bg-[#ffeaec];
 }
 
 .rowAdded {
-  background-color: #defbe4;
+  @apply bg-[#defbe4];
 }
 
 .hiddenContainer {
-  @apply mb-3 pt-3 absolute w-full inline-flex	items-center;
+  @apply mb-3 pt-3 absolute w-full inline-flex items-center;
 
   ol {
     @apply flex overflow-x-scroll mx-1 h-[3.5rem] px-2;
@@ -249,40 +227,30 @@
   @apply font-thin text-primary hover:text-primary;
 }
 
-.rowDropdown {
+.rowDropdownButton {
   @apply hidden;
-  @screen lg {
-    @apply invisible mx-2 text-xl flex;
+  @screen md {
+    @apply invisible mx-2 flex;
   }
 }
 
-.clicked .rowDropdown,
-.addedRow:hover .rowDropdown {
-  @apply visible rounded-full bg-ld-lightgrey text-ld-darkergrey;
+.clicked .rowDropdownButton,
+.addedRow:hover .rowDropdownButton {
+  @apply visible;
+}
 
-  &:focus {
-    @apply outline-none widget-shadow-lightblue;
-  }
+.rowDropdown {
+  @apply top-[1.8rem] -right-16;
 }
 
 .deletedRow:hover {
-  @apply visible rounded-full text-ld-darkergrey bg-opacity-50;
-  background-color: #ffeaec;
-
-  &:focus {
-    @apply outline-none widget-shadow-lightblue;
-  }
+  @apply visible rounded-full text-ld-darkergrey bg-opacity-50 bg-[#ffeaec];
 }
 
 .addedRow:hover {
-  @apply visible rounded-full bg-opacity-50 text-ld-darkergrey;
-  background-color: #defbe4;
-
-  &:focus {
-    @apply outline-none widget-shadow-lightblue;
-  }
+  @apply visible rounded-full bg-opacity-50 text-ld-darkergrey bg-[#defbe4];
 }
 
-.flexCenter {
-  @apply flex items-center;
+.firstCell {
+  @apply flex items-center relative;
 }

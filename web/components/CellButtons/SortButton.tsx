@@ -29,12 +29,10 @@ export default function SortButton({ col, dir }: Props) {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button} disabled={checked}>
-        Sort {getDirection(dir, col.type)}
-        {checked && <FiCheck className={css.check} />}
-      </Button.Link>
-    </div>
+    <Button.Link onClick={onClick} className={css.button} disabled={checked}>
+      Sort {getDirection(dir, col.type)}
+      {checked && <FiCheck className={css.check} />}
+    </Button.Link>
   );
 }
 

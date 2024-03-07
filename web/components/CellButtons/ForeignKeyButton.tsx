@@ -28,13 +28,13 @@ export default function ForeignKeyButton(props: Props) {
   );
   const hasForeignKey = !!Object.keys(foreignKeyMap).length;
   const [showTableDropdown, setShowTableDropdown] = useState(false);
-  const tableDropdownRef = useRef<HTMLDivElement>(null);
+  const tableDropdownRef = useRef<HTMLSpanElement>(null);
   useOnClickOutside(tableDropdownRef, () => setShowTableDropdown(false));
 
   if (!hasForeignKey) return null;
 
   return (
-    <div ref={tableDropdownRef} className={css.foreignKey}>
+    <span ref={tableDropdownRef} className={css.foreignKey}>
       <Button.Link
         onClick={() => setShowTableDropdown(true)}
         className={cx(css.button, css.foreignKeyButton)}
@@ -43,7 +43,7 @@ export default function ForeignKeyButton(props: Props) {
         <BiCaretRight />
       </Button.Link>
       {showTableDropdown && (
-        <div className={css.foreignKeyDropdown}>
+        <span className={css.foreignKeyDropdown}>
           {Object.keys(foreignKeyMap).map(table => (
             <FKTableLink
               params={params}
@@ -52,9 +52,9 @@ export default function ForeignKeyButton(props: Props) {
               key={table}
             />
           ))}
-        </div>
+        </span>
       )}
-    </div>
+    </span>
   );
 }
 
@@ -75,8 +75,8 @@ function FKTableLink(props: FKTableLinkProps) {
   );
 
   return (
-    <div key={props.table}>
+    <span key={props.table}>
       <Link {...sqlQuery({ ...props.params, q })}>{props.table}</Link>
-    </div>
+    </span>
   );
 }

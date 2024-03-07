@@ -1,5 +1,5 @@
 .button {
-  @apply w-full text-left pr-2 font-sans;
+  @apply w-full text-left pr-2 font-sans leading-6;
 }
 
 .notTable {
@@ -31,10 +31,10 @@
   @apply absolute -top-[0.3rem] left-[8.2rem] bg-white widget-shadow-hover z-100 rounded px-3 py-1 border border-ld-lightgrey w-fit;
 
   a {
-    @apply text-acc-hoverlinkblue font-semibold font-sans;
+    @apply text-acc-linkblue font-semibold font-sans;
 
     &:hover {
-      @apply text-acc-linkblue;
+      @apply text-acc-hoverlinkblue;
     }
   }
 }

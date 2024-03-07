@@ -22,10 +22,8 @@ export default function HideColumnButton({ col, columns }: Props) {
   };
 
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        Hide column
-      </Button.Link>
-    </div>
+    <Button.Link onClick={onClick} className={css.button}>
+      Hide column
+    </Button.Link>
   );
 }

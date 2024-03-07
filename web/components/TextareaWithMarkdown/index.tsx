@@ -21,7 +21,6 @@ type Props = {
   className?: string;
   mobileComment?: boolean;
   tallForm?: boolean;
-  isDoc?: boolean;
   unRoundBottom?: boolean;
   name?: string;
 };
@@ -75,7 +74,6 @@ export default function TextareaWithMarkdown({
                 [css.mobileCommentTextarea]: mobileComment,
               })}
               forModal={forModal}
-              isDoc={props.isDoc}
             />
           </TabPanel>
         </Tabs>

@@ -1344,7 +1344,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.7.0"
-    "@dolthub/react-components": "npm:^0.1.7"
+    "@dolthub/react-components": "npm:^0.1.8"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.6"
     "@dolthub/web-utils": "npm:^0.1.2"
@@ -1430,15 +1430,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/react-components@npm:^0.1.7":
-  version: 0.1.7
-  resolution: "@dolthub/react-components@npm:0.1.7"
+"@dolthub/react-components@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "@dolthub/react-components@npm:0.1.8"
   dependencies:
+    "@dolthub/react-hooks": "npm:^0.1.7"
     "@dolthub/web-utils": "npm:^0.1.3"
     "@react-icons/all-files": "npm:^4.1.0"
     classnames: "npm:^2.5.1"
     deepmerge: "npm:^4.3.1"
     github-markdown-css: "npm:^5.5.1"
+    react-copy-to-clipboard: "npm:^5.1.0"
     react-loader: "npm:^2.4.7"
     react-markdown: "npm:^9.0.1"
     reactjs-popup: "npm:^2.0.6"
@@ -1447,7 +1449,7 @@ __metadata:
   peerDependencies:
     react: ^18
     react-dom: ^18
-  checksum: f34e2253beb385ad63153debf22416839f84a73e578b25e3fa2bd9e7d32df70cf7c2f2c5c4a341cfee81f73f77000f2d7c0808826408d7cd541c615a00d1df40
+  checksum: 7fa2018b6c64edc4e274401535ec6bf0cf7bfbe24f6cd621f6c95a43e41074aaff878fb98f5b03262897c17a4d7fd29b36c747f419ff1e79d7dfbf1b39f83926
   languageName: node
   linkType: hard
 
@@ -1473,6 +1475,20 @@ __metadata:
     react: ^18.2.0
     react-dom: ^18.2.0
   checksum: fcb19dbaa3b10cb41f9ce71a71aad6c7e45a88824f14249ba847e644d1666c95d73bc3ee44fb99d710e5a5ed5fc0ac0523b5d924cb3e5039ab4bbbc0521db35f
+  languageName: node
+  linkType: hard
+
+"@dolthub/react-hooks@npm:^0.1.7":
+  version: 0.1.7
+  resolution: "@dolthub/react-hooks@npm:0.1.7"
+  dependencies:
+    "@dolthub/web-utils": "npm:^0.1.2"
+    js-cookie: "npm:^3.0.5"
+    react-hotkeys: "npm:^2.0.0"
+  peerDependencies:
+    react: ^18.2.0
+    react-dom: ^18.2.0
+  checksum: 82327eaaf2d4a7782170b7c1480d790dbd38e3c5c17248083f7f3b72887bc755277ddce75929e05086ba38cd9c8727dc773f6e6ca84c46111078229b3c3a76a6
   languageName: node
   linkType: hard
 

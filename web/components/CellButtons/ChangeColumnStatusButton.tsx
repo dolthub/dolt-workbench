@@ -24,10 +24,8 @@ export default function ChangeColumnStatusButton(props: Props) {
   };
   const buttonText = props.newStatus.replace("Cell", "Column");
   return (
-    <div>
-      <Button.Link onClick={onClick} className={css.button}>
-        {buttonText}
-      </Button.Link>
-    </div>
+    <Button.Link onClick={onClick} className={css.button}>
+      {buttonText}
+    </Button.Link>
   );
 }

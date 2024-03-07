@@ -47,7 +47,7 @@ function Inner(props: InnerProps) {
   }, [submitting, props.params, executeQuery, isPK, props]);
 
   return (
-    <div className={css.history}>
+    <span className={css.history}>
       <Loader loaded={!submitting} />
       <Button.Link
         onClick={() => setSubmitting(true)}
@@ -57,8 +57,8 @@ function Inner(props: InnerProps) {
         {isPK ? "Row History" : "Cell History"}
         {props.disabled && <BsFillQuestionCircleFill className={css.help} />}
       </Button.Link>
-      <div className={css.popup}>{props.disabledPopup}</div>
-    </div>
+      <span className={css.popup}>{props.disabledPopup}</span>
+    </span>
   );
 }
 
@@ -70,7 +70,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
 
   if (loading) {
     return (
-      <div className={cx(css.button, css.loading)}>Loading history...</div>
+      <span className={cx(css.button, css.loading)}>Loading history...</span>
     );
   }
 
@@ -99,7 +99,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
       columns={getTableColsFromQueryCols(props.columns, columns)}
       disabled={disabled}
       disabledPopup={
-        <div className={css.notTable}>
+        <span className={css.notTable}>
           <Button.Link disabled>
             History not available{" "}
             <HistoryNotAvailableReason
@@ -111,7 +111,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
               doltDisabled={props.doltDisabled}
             />
           </Button.Link>
-        </div>
+        </span>
       }
     />
   );

@@ -1,12 +1,10 @@
-import { Btn, Popup } from "@dolthub/react-components";
+import { Btn, ButtonWithPopup } from "@dolthub/react-components";
 import { useEffectOnMount } from "@dolthub/react-hooks";
 import { fakeEscapePress } from "@dolthub/web-utils";
 import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
 import { CgArrowsH } from "@react-icons//all-files/cg/CgArrowsH";
 import { CgCompress } from "@react-icons//all-files/cg/CgCompress";
-import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
-import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { RiFileDownloadLine } from "@react-icons/all-files/ri/RiFileDownloadLine";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
@@ -42,26 +40,16 @@ export default function DatabaseOptionsDropdown({
       className={cx(css.optionsDropdown, props.className)}
       data-cy="db-options-dropdown"
     >
-      <Popup
+      <ButtonWithPopup
         position="bottom right"
         keepTooltipInside
-        on={["click"]}
         contentStyle={{ width: "fit-content" }}
         offsetX={9}
-        closeOnDocumentClick
         closeOnEscape
+        buttonClassName={css.triggerButton}
         onOpen={() => setOpen(true)}
         onClose={() => setOpen(false)}
-        trigger={
-          <div>
-            <Btn data-cy="options-button" className={css.button}>
-              <span className={css.caret}>
-                {open ? <FaCaretUp /> : <FaCaretDown />}
-              </span>
-              <span>Options</span>
-            </Btn>
-          </div>
-        }
+        triggerText="Options"
         open={open}
       >
         <div>
@@ -93,7 +81,7 @@ export default function DatabaseOptionsDropdown({
               <DropdownItem
                 data-cy="open-download-csv-modal-button"
                 onClick={() => {
-                  setOpen(false);
+                  // setOpen(false);
                   setModalOpen(true);
                 }}
                 icon={
@@ -108,7 +96,7 @@ export default function DatabaseOptionsDropdown({
             {props.children}
           </ul>
         </div>
-      </Popup>
+      </ButtonWithPopup>
       {props.params && (
         <CsvModal
           params={props.params}
