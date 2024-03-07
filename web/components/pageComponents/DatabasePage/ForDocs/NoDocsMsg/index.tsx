@@ -1,8 +1,7 @@
-import CodeBlock from "@components/CodeBlock";
 import DocsLink from "@components/links/DocsLink";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button } from "@dolthub/react-components";
+import { Button, CodeBlock } from "@dolthub/react-components";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
 import css from "./index.module.css";

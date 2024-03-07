@@ -1,5 +1,5 @@
-import CodeBlock from "@components/CodeBlock";
 import DocsLink from "@components/links/DocsLink";
+import { CodeBlock } from "@dolthub/react-components";
 import { PullDiffParams } from "@lib/params";
 import { getMergeCommands } from "../utils";
 import css from "./index.module.css";
