@@ -1,4 +1,4 @@
-import { CSSObjectWithLabel, FormSelect } from "@dolthub/react-components";
+import { FormSelect } from "@dolthub/react-components";
 import { splitEnumOptions } from "@lib/dataTable";
 import cx from "classnames";
 import css from "./index.module.css";
@@ -50,7 +50,7 @@ export default function Input(props: Props) {
         customStyles={s => {
           return {
             ...s,
-            singleValue: (styles: CSSObjectWithLabel) => {
+            singleValue: styles => {
               return { ...styles, marginBottom: "6px" };
             },
           };
