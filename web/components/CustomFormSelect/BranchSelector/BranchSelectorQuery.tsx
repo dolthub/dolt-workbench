@@ -1,4 +1,5 @@
 import QueryHandler from "@components/util/QueryHandler";
+import { Maybe } from "@dolthub/web-utils";
 import { useBranchesForSelectorQuery } from "@gen/graphql-types";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { database } from "@lib/urls";
@@ -16,7 +17,8 @@ export default function BranchSelectorQuery(props: BranchSelectorForRepoProps) {
   });
   const router = useRouter();
 
-  const handleChangeBranch = async (branchName: string) => {
+  const handleChangeBranch = async (branchName: Maybe<string>) => {
+    if (!branchName) return;
     const { href, as } = props.routeRefChangeTo
       ? props.routeRefChangeTo({
           ...props.params,

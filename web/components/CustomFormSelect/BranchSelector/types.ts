@@ -1,3 +1,4 @@
+import { Maybe } from "@dolthub/web-utils";
 import { BranchForBranchSelectorFragment } from "@gen/graphql-types";
 import { OptionalRefParams, TableParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
@@ -12,7 +13,7 @@ export type BranchSelectorForRepoProps = BaseFormSelectorProps & {
 
 export type BranchSelectorProps<B extends BranchForBranchSelectorFragment> =
   BranchSelectorForRepoProps & {
-    onChangeValue: (e: string) => void;
+    onChangeValue: (e: Maybe<string>) => void;
     branches: B[];
   };
 

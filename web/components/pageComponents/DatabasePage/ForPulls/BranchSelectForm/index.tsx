@@ -32,7 +32,7 @@ function Inner(props: InnerProps) {
                 currentBranchName={props.params.refName ?? ""}
                 label="Base branch"
                 onChange={b => {
-                  const p = pulls({ ...props.params, refName: b });
+                  const p = pulls({ ...props.params, refName: b ?? undefined });
                   router.push(p.href, p.as).catch(console.error);
                 }}
               />
@@ -46,7 +46,10 @@ function Inner(props: InnerProps) {
                 currentBranchName={props.params.fromBranchName ?? ""}
                 label="From branch"
                 onChange={b => {
-                  const p = pulls({ ...props.params, fromBranchName: b });
+                  const p = pulls({
+                    ...props.params,
+                    fromBranchName: b ?? undefined,
+                  });
                   router.push(p.href, p.as).catch(console.error);
                 }}
               />

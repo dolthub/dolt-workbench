@@ -58,12 +58,13 @@ export default function NewConnection(props: Props) {
               outerClassName={css.typeSelect}
               label="Type"
               val={state.type}
-              onChangeValue={t =>
+              onChangeValue={t => {
+                if (!t) return;
                 setState({
                   type: t,
                   port: t === DatabaseType.Mysql ? "3306" : "5432",
-                })
-              }
+                });
+              }}
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
                 { label: "PostgreSQL", value: DatabaseType.Postgres },

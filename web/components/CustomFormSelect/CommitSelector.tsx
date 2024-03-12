@@ -1,7 +1,9 @@
 import QueryHandler from "@components/util/QueryHandler";
+import { Maybe } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";
 import { RefParams } from "@lib/params";
+import { commitLog } from "@lib/urls";
 import Selector from "./component";
 import { BaseFormSelectorProps, Tab } from "./types";
 import { getCommitLabel } from "./utils";
@@ -9,7 +11,7 @@ import { getCommitLabel } from "./utils";
 type Props = BaseFormSelectorProps & {
   params: RefParams;
   tabs: Tab[];
-  onChangeValue: (e: string) => void;
+  onChangeValue: (e: Maybe<string>) => void;
 };
 
 type InnerProps = {
@@ -34,10 +36,10 @@ function Inner({ commits, ...props }: InnerProps) {
             label: getCommitLabel(c),
           };
         })}
-        // footerLink={{
-        //   urlString: "View all commits",
-        //   urlParams: commitLog(props.params),
-        // }}
+        footerLink={{
+          urlString: "View all commits",
+          urlParams: commitLog(props.params),
+        }}
       />
     </div>
   );

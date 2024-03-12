@@ -1,4 +1,5 @@
 import { FormSelect, FormSelectTypes } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import {
   getDatabasePageName,
@@ -16,7 +17,7 @@ type Props = {
 const getTabOptions = (
   isDolt: boolean,
   hideDoltFeature: boolean,
-): FormSelectTypes.Option[] => {
+): Array<FormSelectTypes.Option<string>> => {
   if (hideDoltFeature) return [{ value: "ref", label: "Database" }];
   return [
     { value: "ref", label: "Database" },
@@ -31,7 +32,8 @@ export default function MobileHeaderSelector(props: Props) {
   const res = useDatabaseDetails();
   const router = useRouter();
 
-  const handleChangeTab = (pageName: string) => {
+  const handleChangeTab = (pageName: Maybe<string>) => {
+    if (!pageName) return;
     const { href, as } = getDatabasePageRedirectInfo(pageName, props.params);
     router.push(href, as).catch(console.error);
   };

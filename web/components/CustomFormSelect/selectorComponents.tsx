@@ -12,15 +12,15 @@ import SelectTabs from "./SelectTabs";
 import css from "./index.module.css";
 import { FooterProps, FormSelectorProps } from "./types";
 
+type Option = FormSelectTypes.Option<string>;
+
 function SingleValueComponent(
-  props: SingleValueProps<FormSelectTypes.Option, false>,
+  props: SingleValueProps<Option, false>,
 ): JSX.Element {
   return <div className={css.singleValue}>{props.data.label}</div>;
 }
 
-function OptionComponent(
-  props: OptionProps<FormSelectTypes.Option, false>,
-): JSX.Element {
+function OptionComponent(props: OptionProps<Option, false>): JSX.Element {
   return (
     <components.Option
       {...props}
@@ -66,11 +66,8 @@ function FooterLink(
 function menuComponent(
   header?: JSX.Element,
   footer?: JSX.Element,
-): (props: MenuProps<FormSelectTypes.Option, false>) => JSX.Element {
-  const menu = ({
-    children,
-    ...props
-  }: MenuProps<FormSelectTypes.Option, false>) => (
+): (props: MenuProps<Option, false>) => JSX.Element {
+  const menu = ({ children, ...props }: MenuProps<Option, false>) => (
     <components.Menu {...props}>
       {
         <div>

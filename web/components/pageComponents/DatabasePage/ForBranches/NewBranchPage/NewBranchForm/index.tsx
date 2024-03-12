@@ -3,6 +3,7 @@ import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
 import { Button, FormInput, Loader } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import { useCreateBranchMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { OptionalRefParams } from "@lib/params";
@@ -19,7 +20,7 @@ type Props = {
 export default function NewBranchForm(props: Props): JSX.Element {
   const router = useRouter();
   const [newBranchName, setNewBranchName] = useState("");
-  const [fromRefName, setFromRefName] = useState("");
+  const [fromRefName, setFromRefName] = useState<Maybe<string>>(null);
   const {
     mutateFn: createBranch,
     err,
@@ -37,6 +38,7 @@ export default function NewBranchForm(props: Props): JSX.Element {
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    if (!newBranchName || !fromRefName) return;
 
     const { data } = await createBranch({
       variables: { ...props.params, newBranchName, fromRefName },

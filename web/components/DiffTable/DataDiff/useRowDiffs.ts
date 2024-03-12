@@ -18,7 +18,7 @@ import { RowDiffState, getDefaultState } from "./state";
 
 type ReturnType = {
   fetchMore: () => Promise<void>;
-  setFilter: (d: DiffRowType | undefined) => void;
+  setFilter: (d: Maybe<DiffRowType>) => void;
   state: RowDiffState;
   hasMore: boolean;
   loading: boolean;
@@ -48,7 +48,7 @@ export default function useRowDiffs(
   const handleQuery = async (
     setRowDiffs: (rd: RowDiffForTableListFragment[]) => void,
     offset: Maybe<number>,
-    filterByRowType?: DiffRowType,
+    filterByRowType: Maybe<DiffRowType>,
   ) => {
     if (err) setErr(undefined);
     if (offset === undefined || offset === null) {
@@ -74,7 +74,7 @@ export default function useRowDiffs(
   };
 
   // Changes diff row filter, starts with first page diffs
-  const setFilter = async (rowType?: DiffRowType) => {
+  const setFilter = async (rowType: Maybe<DiffRowType>) => {
     setState({ filter: rowType });
     const setRowDiffs = (rd: RowDiffForTableListFragment[]) =>
       setState({ rowDiffs: rd });

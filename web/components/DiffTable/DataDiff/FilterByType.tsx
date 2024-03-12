@@ -1,10 +1,11 @@
 import { FormSelect } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import { DiffRowType } from "@gen/graphql-types";
 import css from "./index.module.css";
 
 type Props = {
-  filter?: DiffRowType;
-  setFilter: (f?: DiffRowType) => void;
+  filter: Maybe<DiffRowType>;
+  setFilter: (f: Maybe<DiffRowType>) => void;
 };
 
 export default function FilterByType(props: Props) {

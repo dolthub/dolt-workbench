@@ -88,10 +88,10 @@ export default function NewDocForm(props: Props) {
   return <Inner {...props} docRows={res.data?.docs.list} />;
 }
 
-function getOptions(
-  docRows?: DocForDocPageFragment[],
-): FormSelectTypes.Option[] {
-  const options: FormSelectTypes.Option[] = [
+type Option = FormSelectTypes.Option<DocType>;
+
+function getOptions(docRows?: DocForDocPageFragment[]): Option[] {
+  const options: Option[] = [
     { label: "README", value: DocType.Readme },
     { label: "LICENSE", value: DocType.License },
   ];
@@ -104,9 +104,9 @@ function getOptions(
 }
 
 function disableExistingDocs(
-  o: FormSelectTypes.Option,
+  o: Option,
   docRows?: DocForDocPageFragment[],
-): FormSelectTypes.Option {
+): Option {
   const alreadyExists = docRows?.some(
     r => r.docRow?.columnValues[0].displayValue === `${o.label}.md`,
   );

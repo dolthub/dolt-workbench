@@ -27,9 +27,9 @@ export type FooterProps = {
 };
 
 export type FormSelectorProps = BaseFormSelectorProps & {
-  onChangeValue: (e: string) => void;
-  val?: Maybe<string>;
-  options: FormSelectTypes.Option[];
+  onChangeValue: (e: Maybe<string>) => void;
+  val: Maybe<string>;
+  options: Array<FormSelectTypes.Option<string>>;
   label: string;
   dataCySuffix?: string;
   noneFoundMsg?: string;
