@@ -1,4 +1,4 @@
-import FormSelect from "@components/FormSelect";
+import { FormSelect } from "@dolthub/react-components";
 import { BranchForBranchSelectorFragment } from "@gen/graphql-types";
 import css from "./index.module.css";
 

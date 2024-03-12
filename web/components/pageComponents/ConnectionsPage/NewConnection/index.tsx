@@ -1,10 +1,10 @@
 import ButtonsWithError from "@components/ButtonsWithError";
-import FormSelect from "@components/FormSelect";
 import {
   Button,
   Checkbox,
   ExternalLink,
   FormInput,
+  FormSelect,
   Loader,
 } from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";

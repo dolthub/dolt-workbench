@@ -1,5 +1,5 @@
-import FormSelect from "@components/FormSelect";
 import QueryHandler from "@components/util/QueryHandler";
+import { FormSelect } from "@dolthub/react-components";
 import {
   CommitListForDiffSelectorFragment,
   useCommitsForDiffSelectorQuery,

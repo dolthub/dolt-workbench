@@ -28,7 +28,7 @@
 }
 
 .right {
-  @apply flex justify-end items-center mr-6 w-1/3;
+  @apply hidden lg:flex justify-end items-center mr-6 w-1/3;
 }
 
 .closeIcon {

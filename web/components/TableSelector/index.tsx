@@ -1,5 +1,5 @@
-import FormSelect from "@components/FormSelect";
 import QueryHandler from "@components/util/QueryHandler";
+import { FormSelect } from "@dolthub/react-components";
 import { useTableNamesQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 

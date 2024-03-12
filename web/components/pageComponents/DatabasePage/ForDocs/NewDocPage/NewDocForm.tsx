@@ -1,7 +1,11 @@
-import FormSelect, { Option } from "@components/FormSelect";
 import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, Loader } from "@dolthub/react-components";
+import {
+  Button,
+  FormSelect,
+  FormSelectTypes,
+  Loader,
+} from "@dolthub/react-components";
 import {
   DocForDocPageFragment,
   DocType,
@@ -84,8 +88,10 @@ export default function NewDocForm(props: Props) {
   return <Inner {...props} docRows={res.data?.docs.list} />;
 }
 
-function getOptions(docRows?: DocForDocPageFragment[]): Option[] {
-  const options: Option[] = [
+function getOptions(
+  docRows?: DocForDocPageFragment[],
+): FormSelectTypes.Option[] {
+  const options: FormSelectTypes.Option[] = [
     { label: "README", value: DocType.Readme },
     { label: "LICENSE", value: DocType.License },
   ];
@@ -98,9 +104,9 @@ function getOptions(docRows?: DocForDocPageFragment[]): Option[] {
 }
 
 function disableExistingDocs(
-  o: Option,
+  o: FormSelectTypes.Option,
   docRows?: DocForDocPageFragment[],
-): Option {
+): FormSelectTypes.Option {
   const alreadyExists = docRows?.some(
     r => r.docRow?.columnValues[0].displayValue === `${o.label}.md`,
   );

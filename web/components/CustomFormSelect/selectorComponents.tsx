@@ -1,24 +1,26 @@
-import { Option } from "@components/FormSelect";
 import Link from "@components/links/Link";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-import cx from "classnames";
 import {
+  FormSelectTypes,
   MenuProps,
   OptionProps,
   SingleValueProps,
   components,
-} from "react-select";
+} from "@dolthub/react-components";
+import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import cx from "classnames";
 import SelectTabs from "./SelectTabs";
 import css from "./index.module.css";
 import { FooterProps, FormSelectorProps } from "./types";
 
 function SingleValueComponent(
-  props: SingleValueProps<Option, false>,
+  props: SingleValueProps<FormSelectTypes.Option, false>,
 ): JSX.Element {
   return <div className={css.singleValue}>{props.data.label}</div>;
 }
 
-function OptionComponent(props: OptionProps<Option, false>): JSX.Element {
+function OptionComponent(
+  props: OptionProps<FormSelectTypes.Option, false>,
+): JSX.Element {
   return (
     <components.Option
       {...props}
@@ -64,8 +66,11 @@ function FooterLink(
 function menuComponent(
   header?: JSX.Element,
   footer?: JSX.Element,
-): (props: MenuProps<Option, false>) => JSX.Element {
-  const menu = ({ children, ...props }: MenuProps<Option, false>) => (
+): (props: MenuProps<FormSelectTypes.Option, false>) => JSX.Element {
+  const menu = ({
+    children,
+    ...props
+  }: MenuProps<FormSelectTypes.Option, false>) => (
     <components.Menu {...props}>
       {
         <div>

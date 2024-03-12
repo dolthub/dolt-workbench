@@ -1,4 +1,4 @@
-import FormSelect from "@components/FormSelect";
+import { FormSelect } from "@dolthub/react-components";
 import { splitEnumOptions } from "@lib/dataTable";
 import cx from "classnames";
 import css from "./index.module.css";
@@ -44,8 +44,17 @@ export default function Input(props: Props) {
           };
         })}
         onChangeValue={props.setNewValue}
-        className={css.editSelect}
+        outerClassName={css.editSelect}
         mono
+        small
+        customStyles={s => {
+          return {
+            ...s,
+            singleValue: styles => {
+              return { ...styles, marginBottom: "6px" };
+            },
+          };
+        }}
       />
     );
   }

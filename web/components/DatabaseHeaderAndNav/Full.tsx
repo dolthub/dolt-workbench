@@ -34,7 +34,7 @@ export default function Full(props: Props) {
             {...props}
             onMenuClick={() => props.setShowSmall(true)}
           />
-          <MobileHeaderSelector {...props} className={css.mobileSelector} />
+          <MobileHeaderSelector {...props} />
         </div>
       </div>
       <DatabaseNav {...props} />

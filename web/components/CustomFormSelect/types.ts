@@ -1,4 +1,4 @@
-import { Option } from "@components/FormSelect";
+import { FormSelectTypes } from "@dolthub/react-components";
 import { Maybe, Route } from "@dolthub/web-utils";
 
 export type Tab = {
@@ -29,7 +29,7 @@ export type FooterProps = {
 export type FormSelectorProps = BaseFormSelectorProps & {
   onChangeValue: (e: string) => void;
   val?: Maybe<string>;
-  options: Option[];
+  options: FormSelectTypes.Option[];
   label: string;
   dataCySuffix?: string;
   noneFoundMsg?: string;
