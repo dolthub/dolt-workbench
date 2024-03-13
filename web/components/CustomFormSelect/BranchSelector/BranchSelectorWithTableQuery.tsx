@@ -1,4 +1,5 @@
 import QueryHandler from "@components/util/QueryHandler";
+import { Maybe } from "@dolthub/web-utils";
 import {
   useBranchesForSelectorQuery,
   useTableNamesLazyQuery,
@@ -23,7 +24,8 @@ export default function BranchSelectorWithTableQuery(
   });
   const router = useRouter();
 
-  const handleChangeBranch = async (branchName: string) => {
+  const handleChangeBranch = async (branchName: Maybe<string>) => {
+    if (!branchName) return;
     const variables = {
       databaseName: props.params.databaseName,
       refName: branchName,

@@ -1,4 +1,5 @@
 import QueryHandler from "@components/util/QueryHandler";
+import { Maybe } from "@dolthub/web-utils";
 import { useBranchesForSelectorQuery } from "@gen/graphql-types";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { RefUrl } from "@lib/urls";
@@ -18,7 +19,7 @@ export function BranchSelector(props: BranchSelectorForRepoProps) {
 }
 
 type CustomProps = BranchSelectorForRepoProps & {
-  onChangeValue: (e: string) => void;
+  onChangeValue: (e: Maybe<string>) => void;
   routeRefChangeTo?: RefUrl;
 };
 

@@ -1,4 +1,5 @@
 import { useSetState } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import { DocType } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
@@ -7,7 +8,7 @@ import { SyntheticEvent } from "react";
 import { getDocsQuery } from "./utils";
 
 type DocState = {
-  docType?: DocType;
+  docType: Maybe<DocType>;
   markdown: string;
   loading: boolean;
 };
@@ -20,7 +21,7 @@ type ReturnType = {
 
 export default function useEditDoc(
   params: RefParams,
-  defaultDocType: DocType,
+  defaultDocType: Maybe<DocType>,
   defaultMarkdown = "",
 ): ReturnType {
   const [state, setState] = useSetState({
@@ -32,6 +33,7 @@ export default function useEditDoc(
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    if (!state.docType) return;
     setState({ loading: true });
 
     const { href, as } = sqlQuery({

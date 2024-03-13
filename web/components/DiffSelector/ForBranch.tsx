@@ -1,5 +1,6 @@
-import FormSelect from "@components/FormSelect";
 import QueryHandler from "@components/util/QueryHandler";
+import { FormSelect } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import {
   CommitListForDiffSelectorFragment,
   useCommitsForDiffSelectorQuery,
@@ -32,8 +33,8 @@ function Inner(props: InnerProps) {
     };
   });
 
-  const setFromCommitId = (id?: string) => {
-    const diffPaths = diff({ ...props.params, fromCommitId: id });
+  const setFromCommitId = (id: Maybe<string>) => {
+    const diffPaths = diff({ ...props.params, fromCommitId: id ?? undefined });
     router.push(diffPaths.href, diffPaths.as).catch(console.error);
   };
 

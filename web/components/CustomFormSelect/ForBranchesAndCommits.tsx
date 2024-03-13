@@ -1,4 +1,5 @@
 import { useEffectOnMount } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { OptionalRefParams } from "@lib/params";
 import { useEffect, useState } from "react";
@@ -8,8 +9,8 @@ import TabWrapper from "./TabWrapper";
 
 type Props = {
   params: OptionalRefParams;
-  selectedValue: string;
-  onChangeValue: (s: string) => void;
+  selectedValue: Maybe<string>;
+  onChangeValue: (s: Maybe<string>) => void;
 };
 
 export default function ForBranchesAndCommits(props: Props) {

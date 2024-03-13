@@ -1,11 +1,12 @@
-import FormSelect from "@components/FormSelect";
+import { FormSelect } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import { BranchForBranchSelectorFragment } from "@gen/graphql-types";
 import css from "./index.module.css";
 
 type Props = {
   branchList: BranchForBranchSelectorFragment[];
   currentBranchName: string;
-  onChange: (b: string) => void;
+  onChange: (b: Maybe<string>) => void;
   label: string;
 };
 

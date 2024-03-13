@@ -1,71 +1,39 @@
-import FormSelect from "@components/FormSelect";
-import { Option } from "@components/FormSelect/types";
+import { FormSelect, FormSelectTypes } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import {
   getDatabasePageName,
   getDatabasePageRedirectInfo,
 } from "@lib/mobileUtils";
 import { OptionalRefParams } from "@lib/params";
-import { colors } from "@lib/tailwind";
 import { useRouter } from "next/router";
-import { GroupBase, StylesConfig } from "react-select";
+import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
-  className?: string;
   title?: string;
 };
 
-const getTabOptions = (isDolt: boolean, hideDoltFeature: boolean): Option[] => {
+const getTabOptions = (
+  isDolt: boolean,
+  hideDoltFeature: boolean,
+): Array<FormSelectTypes.Option<string>> => {
   if (hideDoltFeature) return [{ value: "ref", label: "Database" }];
   return [
     { value: "ref", label: "Database" },
     { value: "about", label: "About", isDisabled: !isDolt },
     { value: "commitLog", label: "Commit Log", isDisabled: !isDolt },
     { value: "releases", label: "Releases", isDisabled: !isDolt },
-    // { value: "pulls", label: "Pull Requests", isDisabled: !isDolt },
+    { value: "pulls", label: "Pull Requests", isDisabled: !isDolt },
   ];
-};
-
-const mobileSelectorStyle: StylesConfig<Option, boolean, GroupBase<Option>> = {
-  placeholder: styles => {
-    return {
-      ...styles,
-      color: "#FFFFFFE5",
-    };
-  },
-  control: styles => {
-    return {
-      ...styles,
-      backgroundColor: "rgba(255, 255, 255, 0.1)",
-      borderColor: "rgba(255, 255, 255, 0.1)",
-      marginTop: "1rem",
-    };
-  },
-  menu: styles => {
-    return {
-      ...styles,
-      color: colors["ld-darkergrey"],
-    };
-  },
-  singleValue: styles => {
-    return {
-      ...styles,
-      color: "#FFFFFFE5",
-    };
-  },
-  dropdownIndicator: styles => {
-    return {
-      ...styles,
-    };
-  },
 };
 
 export default function MobileHeaderSelector(props: Props) {
   const res = useDatabaseDetails();
   const router = useRouter();
 
-  const handleChangeTab = (pageName: string) => {
+  const handleChangeTab = (pageName: Maybe<string>) => {
+    if (!pageName) return;
     const { href, as } = getDatabasePageRedirectInfo(pageName, props.params);
     router.push(href, as).catch(console.error);
   };
@@ -77,9 +45,8 @@ export default function MobileHeaderSelector(props: Props) {
       options={getTabOptions(res.isDolt, res.hideDoltFeature)}
       val={pageName}
       hideSelectedOptions
-      styles={mobileSelectorStyle}
-      className={props.className}
-      isMobile
+      outerClassName={css.mobileSelector}
+      forMobile
     />
   );
 }

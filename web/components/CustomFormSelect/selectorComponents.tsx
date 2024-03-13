@@ -1,16 +1,18 @@
-import { Option } from "@components/FormSelect";
 import Link from "@components/links/Link";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-import cx from "classnames";
 import {
+  FormSelectTypes,
   MenuProps,
   OptionProps,
   SingleValueProps,
   components,
-} from "react-select";
+} from "@dolthub/react-components";
+import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import cx from "classnames";
 import SelectTabs from "./SelectTabs";
 import css from "./index.module.css";
 import { FooterProps, FormSelectorProps } from "./types";
+
+type Option = FormSelectTypes.Option<string>;
 
 function SingleValueComponent(
   props: SingleValueProps<Option, false>,

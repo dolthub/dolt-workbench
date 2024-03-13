@@ -1,4 +1,4 @@
-import FormSelect from "@components/FormSelect";
+import { FormSelect } from "@dolthub/react-components";
 import cx from "classnames";
 import DoltDisabledSelector from "./DoltDisabledSelector";
 import css from "./index.module.css";

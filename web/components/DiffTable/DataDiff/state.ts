@@ -11,7 +11,7 @@ export const defaultState = {
   offset: undefined as Maybe<number>,
   rowDiffs: [] as RowDiffForTableListFragment[],
   cols: [] as ColumnForDiffTableListFragment[],
-  filter: undefined as DiffRowType | undefined,
+  filter: null as Maybe<DiffRowType>,
 };
 
 export type RowDiffState = typeof defaultState;

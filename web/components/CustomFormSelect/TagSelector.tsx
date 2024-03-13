@@ -1,6 +1,7 @@
+import { Maybe } from "@dolthub/web-utils";
 import { TagForListFragment } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
-import { RefUrl, database } from "@lib/urls";
+import { RefUrl, database, releases } from "@lib/urls";
 import { useRouter } from "next/router";
 import Selector from "./component";
 import { BaseFormSelectorProps, Tab } from "./types";
@@ -15,7 +16,8 @@ type Props = BaseFormSelectorProps & {
 export default function TagSelector(props: Props) {
   const router = useRouter();
 
-  const handleChangeRef = async (refName: string) => {
+  const handleChangeRef = async (refName: Maybe<string>) => {
+    if (!refName) return;
     const { href, as } = props.routeRefChangeTo
       ? props.routeRefChangeTo({
           ...props.params,
@@ -41,10 +43,10 @@ export default function TagSelector(props: Props) {
             label: t.tagName,
           };
         })}
-        // footerLink={{
-        //   urlString: "View all tags",
-        //   urlParams: releases(props.params),
-        // }}
+        footerLink={{
+          urlString: "View all tags",
+          urlParams: releases(props.params),
+        }}
       />
     </div>
   );

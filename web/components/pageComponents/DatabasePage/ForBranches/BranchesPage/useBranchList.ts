@@ -20,8 +20,8 @@ type ReturnType = {
   loading: boolean;
   error?: ApolloErrorType;
   refetch: () => Promise<void>;
-  sortBranches: (sortBy?: SortBranchesBy) => Promise<void>;
-  sortBy?: SortBranchesBy;
+  sortBranches: (sortBy: Maybe<SortBranchesBy>) => Promise<void>;
+  sortBy: Maybe<SortBranchesBy>;
 };
 
 export function useBranchList(params: DatabaseParams): ReturnType {
@@ -30,7 +30,7 @@ export function useBranchList(params: DatabaseParams): ReturnType {
     fetchPolicy: "cache-and-network",
   });
   const [branches, setBranches] = useState(data?.branches.list);
-  const [sortBy, setSortBy] = useState<SortBranchesBy | undefined>(undefined);
+  const [sortBy, setSortBy] = useState<Maybe<SortBranchesBy>>(null);
   const [offset, setOffset] = useState(data?.branches.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
   const [err, setErr] = useApolloError(res.error);
@@ -71,7 +71,7 @@ export function useBranchList(params: DatabaseParams): ReturnType {
     }
   };
 
-  const sortBranches = async (sb?: SortBranchesBy) => {
+  const sortBranches = async (sb: Maybe<SortBranchesBy>) => {
     setSortBy(sb);
     try {
       const result = await res.client.query<

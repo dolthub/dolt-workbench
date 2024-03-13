@@ -5,6 +5,7 @@ import { useDataTableContext } from "@contexts/dataTable";
 import { useDiffContext } from "@contexts/diff";
 import { Button, Loader } from "@dolthub/react-components";
 import { useFocus } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import { DiffRowType } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
 import { RequiredRefsParams } from "@lib/params";
@@ -32,7 +33,7 @@ type Props = {
 
 type InnerProps = Props & {
   fetchMore: () => Promise<void>;
-  setFilter: (d: DiffRowType | undefined) => void;
+  setFilter: (d: Maybe<DiffRowType>) => void;
   state: RowDiffState;
   hasMore: boolean;
   error?: ApolloErrorType;

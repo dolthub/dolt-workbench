@@ -164,7 +164,7 @@
   @apply absolute mb-6 right-2 ml-14 hidden -top-20;
 
   @screen lg {
-    @apply flex -top-10;
+    @apply flex items-center -top-10;
   }
 
   a {
@@ -172,16 +172,12 @@
   }
 }
 
-.filterContainer {
-  @apply flex ml-4;
-
-  > span {
-    @apply mr-4 mt-0.5;
-  }
+.filterLabel {
+  @apply font-normal ml-4;
 }
 
 .filterSelect {
-  @apply w-40;
+  @apply w-36;
 }
 
 .err {

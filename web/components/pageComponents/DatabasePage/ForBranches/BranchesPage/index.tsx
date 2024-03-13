@@ -1,10 +1,10 @@
 import { Database404 } from "@components/Database404";
 import DeleteModal from "@components/DeleteModal";
-import FormSelect from "@components/FormSelect";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import QueryHandler from "@components/util/QueryHandler";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button, FormSelect, Loader } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import {
   BranchFragment,
   SortBranchesBy,
@@ -28,8 +28,8 @@ type InnerProps = {
   branches: BranchFragment[];
   loadMore: () => Promise<void>;
   hasMore: boolean;
-  sortBranches: (sortBy?: SortBranchesBy) => Promise<void>;
-  sortBy?: SortBranchesBy;
+  sortBranches: (sortBy: Maybe<SortBranchesBy>) => Promise<void>;
+  sortBy: Maybe<SortBranchesBy>;
 } & Props;
 
 function Inner(props: InnerProps): JSX.Element {

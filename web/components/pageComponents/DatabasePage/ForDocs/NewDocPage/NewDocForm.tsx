@@ -1,7 +1,11 @@
-import FormSelect, { Option } from "@components/FormSelect";
 import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, Loader } from "@dolthub/react-components";
+import {
+  Button,
+  FormSelect,
+  FormSelectTypes,
+  Loader,
+} from "@dolthub/react-components";
 import {
   DocForDocPageFragment,
   DocType,
@@ -83,6 +87,8 @@ export default function NewDocForm(props: Props) {
   if (res.loading) return <Loader loaded={false} />;
   return <Inner {...props} docRows={res.data?.docs.list} />;
 }
+
+type Option = FormSelectTypes.Option<DocType>;
 
 function getOptions(docRows?: DocForDocPageFragment[]): Option[] {
   const options: Option[] = [

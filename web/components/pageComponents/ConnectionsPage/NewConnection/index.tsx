@@ -1,10 +1,10 @@
 import ButtonsWithError from "@components/ButtonsWithError";
-import FormSelect from "@components/FormSelect";
 import {
   Button,
   Checkbox,
   ExternalLink,
   FormInput,
+  FormSelect,
   Loader,
 } from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";
@@ -58,12 +58,13 @@ export default function NewConnection(props: Props) {
               outerClassName={css.typeSelect}
               label="Type"
               val={state.type}
-              onChangeValue={t =>
+              onChangeValue={t => {
+                if (!t) return;
                 setState({
                   type: t,
                   port: t === DatabaseType.Mysql ? "3306" : "5432",
-                })
-              }
+                });
+              }}
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
                 { label: "PostgreSQL", value: DatabaseType.Postgres },

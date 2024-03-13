@@ -46,7 +46,7 @@ function Inner() {
               <TableSelector
                 params={{ ...dbParams, refName: branchName }}
                 selectedTable={state.existingTable}
-                onChangeTable={t => setState({ existingTable: t })}
+                onChangeTable={t => setState({ existingTable: t ?? undefined })}
                 light
               />
               <UploadQueryInfo />

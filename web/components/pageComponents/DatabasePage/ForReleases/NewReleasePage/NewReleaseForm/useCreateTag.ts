@@ -1,4 +1,5 @@
 import { useSetState } from "@dolthub/react-hooks";
+import { Maybe } from "@dolthub/web-utils";
 import { useCreateTagMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { ApolloErrorType } from "@lib/errors/types";
@@ -9,7 +10,7 @@ import { Dispatch, useState } from "react";
 type FormData = {
   tagName: string;
   message: string;
-  fromRefName: string;
+  fromRefName: Maybe<string>;
   addTagAuthor: boolean;
 };
 
@@ -28,7 +29,7 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
   const [formData, setFormData] = useSetState({
     tagName: "",
     message: "",
-    fromRefName: "",
+    fromRefName: null as Maybe<string>,
     addTagAuthor: false,
   });
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,7 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
   });
 
   const createTag = async (): Promise<string | undefined> => {
+    if (!formData.fromRefName) return undefined;
     setLoading(true);
     try {
       const { data } = await createTagMutation({
