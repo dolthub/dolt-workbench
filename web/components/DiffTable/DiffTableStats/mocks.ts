@@ -1,4 +1,4 @@
-import { fakeCommitId } from "@components/CustomFormSelect/mocks";
+import { fakeCommitId } from "@components/FormSelectForRefs/mocks";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { RequiredRefsParams, TableParams } from "@lib/params";
 

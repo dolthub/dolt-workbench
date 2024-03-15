@@ -1,3 +1,7 @@
-.selector {
+.outerSelector {
   @apply text-left mx-auto w-72 my-8;
+}
+
+.selector {
+  @apply min-w-64;
 }

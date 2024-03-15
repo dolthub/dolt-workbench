@@ -16,7 +16,3 @@
     }
   }
 }
-
-.error {
-  @apply text-center max-w-xs;
-}

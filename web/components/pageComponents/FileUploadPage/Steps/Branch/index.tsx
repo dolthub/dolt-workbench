@@ -1,7 +1,7 @@
-import CustomFormSelect from "@components/CustomFormSelect";
 import ErrorMsg from "@components/ErrorMsg";
+import useGetBranchOptionsForSelect from "@components/FormSelectForRefs/useGetBranchOptionsForSelect";
 import DatabaseLink from "@components/links/DatabaseLink";
-import { Loader } from "@dolthub/react-components";
+import { FormSelect, Loader } from "@dolthub/react-components";
 import StepLayout from "../../StepLayout";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import { UploadStage } from "../../enums";
@@ -17,6 +17,7 @@ export default function Branch() {
 function Inner() {
   const { state, error, updateLoad, setItem, dbParams, getUploadUrl } =
     useFileUploadContext();
+  const { branchOptions } = useGetBranchOptionsForSelect(dbParams);
 
   return (
     <StepLayout
@@ -36,15 +37,18 @@ function Inner() {
             </DatabaseLink>{" "}
             to base your changes on.
           </p>
-          <div className={css.selector}>
-            <CustomFormSelect.ForBranches
-              params={dbParams}
-              selectedValue={state.branchName}
-              onChangeValue={b => setItem("branchName", b)}
-              showLabel
-              mono
-            />
-          </div>
+          <FormSelect
+            placeholder="select a branch..."
+            outerClassName={css.outerSelector}
+            className={css.selector}
+            options={branchOptions}
+            val={state.branchName}
+            onChangeValue={b => setItem("branchName", b)}
+            label="Branch"
+            selectedOptionFirst
+            horizontal
+            mono
+          />
         </div>
         <ErrorMsg err={error} />
       </div>

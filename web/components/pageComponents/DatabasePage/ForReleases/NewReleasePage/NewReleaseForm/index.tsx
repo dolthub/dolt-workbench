@@ -1,6 +1,5 @@
 import ButtonsWithError from "@components/ButtonsWithError";
-import CustomFormSelect from "@components/CustomFormSelect";
-import ErrorMsg from "@components/ErrorMsg";
+import BranchAndCommitSelector from "@components/FormSelectForRefs/BranchAndCommitSelector";
 import { Button, FormInput, Loader, Textarea } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { releases } from "@lib/urls";
@@ -36,7 +35,7 @@ export default function NewTagForm(props: Props): JSX.Element {
     <div>
       <form data-cy="new-tag-form" onSubmit={onSubmit}>
         <div className={css.container}>
-          <CustomFormSelect.ForBranchesAndCommits
+          <BranchAndCommitSelector
             {...props}
             selectedValue={createTagRes.formData.fromRefName}
             onChangeValue={s => createTagRes.setFormData({ fromRefName: s })}
@@ -72,6 +71,7 @@ export default function NewTagForm(props: Props): JSX.Element {
           <ButtonsWithError
             data-cy="new-tag-button-group"
             onCancel={goToReleases}
+            error={createTagRes.creationErr}
           >
             <Button
               type="submit"
@@ -83,7 +83,6 @@ export default function NewTagForm(props: Props): JSX.Element {
           </ButtonsWithError>
         </div>
         <Loader loaded={!createTagRes.loading} />
-        <ErrorMsg className={css.error} err={createTagRes.creationErr} />
       </form>
     </div>
   );

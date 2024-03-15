@@ -1,5 +1,5 @@
 import { MockedResponse } from "@apollo/client/testing";
-import { fakeCommitId } from "@components/CustomFormSelect/mocks";
+import { fakeCommitId } from "@components/FormSelectForRefs/mocks";
 import {
   CommitForAfterCommitHistoryFragment,
   HistoryForCommitDocument,
