@@ -7,7 +7,7 @@ import {
 import {
   BranchForBranchSelectorFragment,
   BranchesForSelectorDocument,
-  TableListForBranchDocument,
+  TableNamesForBranchDocument,
 } from "@gen/graphql-types";
 import {
   commitMock,
@@ -119,34 +119,26 @@ export const getBranchAndTagMocks = (
 export const tableListEmptyMock = (params: RefParams): MockedResponse => {
   return {
     request: {
-      query: TableListForBranchDocument,
+      query: TableNamesForBranchDocument,
       variables: params,
     },
     result: {
       data: {
-        tables: [],
+        tableNames: { list: [] },
       },
     },
-  };
-};
-
-const tableMock = (params: TableParams) => {
-  return {
-    __typename: "Table",
-    tableName: params.tableName,
-    _id: `databases/${params.databaseName}/refs/${params.refName}/tables/${params.tableName}`,
   };
 };
 
 export const tableListMock = (params: TableParams): MockedResponse => {
   return {
     request: {
-      query: TableListForBranchDocument,
+      query: TableNamesForBranchDocument,
       variables: params,
     },
     result: {
       data: {
-        tables: [tableMock(params)],
+        tableNames: { list: [params.tableName] },
       },
     },
   };

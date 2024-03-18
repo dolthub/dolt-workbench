@@ -1,6 +1,6 @@
 import { FormSelect } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
-import { useTableListForBranchLazyQuery } from "@gen/graphql-types";
+import { useTableNamesForBranchLazyQuery } from "@gen/graphql-types";
 import { DatabasePageParams } from "@lib/params";
 import { RefUrl, branches, ref, releases } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -19,7 +19,7 @@ type Props = {
 export default function BranchAndTagSelector(props: Props) {
   const router = useRouter();
 
-  const [getTableList] = useTableListForBranchLazyQuery();
+  const [getTableNames] = useTableNamesForBranchLazyQuery();
 
   const { tagOptions, error: tagErr } = useGetTagOptionsForSelect(props.params);
   const { branchOptions, error: branchErr } = useGetBranchOptionsForSelect(
@@ -36,9 +36,9 @@ export default function BranchAndTagSelector(props: Props) {
     // If on a table page, check if the table exists on the new branch. If not,
     // route to ref.
     if (props.params.tableName) {
-      const tableRes = await getTableList({ variables });
-      const tableExists = tableRes.data?.tables.some(
-        v => v.tableName === props.params.tableName,
+      const tableRes = await getTableNames({ variables });
+      const tableExists = tableRes.data?.tableNames.list.some(
+        t => t === props.params.tableName,
       );
       if (!tableExists) {
         const { href, as } = ref({ ...props.params, refName });

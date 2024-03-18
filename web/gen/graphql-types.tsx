@@ -816,13 +816,13 @@ export type TagListQueryVariables = Exact<{
 
 export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
 
-export type TableListForBranchQueryVariables = Exact<{
+export type TableNamesForBranchQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
 
 
-export type TableListForBranchQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string }> };
+export type TableNamesForBranchQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
 export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
 
@@ -2124,48 +2124,51 @@ export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
 export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListSuspenseQueryHookResult = ReturnType<typeof useTagListSuspenseQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
-export const TableListForBranchDocument = gql`
-    query TableListForBranch($databaseName: String!, $refName: String!) {
-  tables(databaseName: $databaseName, refName: $refName, filterSystemTables: true) {
-    _id
-    tableName
+export const TableNamesForBranchDocument = gql`
+    query TableNamesForBranch($databaseName: String!, $refName: String!) {
+  tableNames(
+    databaseName: $databaseName
+    refName: $refName
+    filterSystemTables: true
+  ) {
+    list
   }
 }
     `;
 
 /**
- * __useTableListForBranchQuery__
+ * __useTableNamesForBranchQuery__
  *
- * To run a query within a React component, call `useTableListForBranchQuery` and pass it any options that fit your needs.
- * When your component renders, `useTableListForBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useTableNamesForBranchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTableNamesForBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useTableListForBranchQuery({
+ * const { data, loading, error } = useTableNamesForBranchQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *   },
  * });
  */
-export function useTableListForBranchQuery(baseOptions: Apollo.QueryHookOptions<TableListForBranchQuery, TableListForBranchQueryVariables> & ({ variables: TableListForBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useTableNamesForBranchQuery(baseOptions: Apollo.QueryHookOptions<TableNamesForBranchQuery, TableNamesForBranchQueryVariables> & ({ variables: TableNamesForBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TableListForBranchQuery, TableListForBranchQueryVariables>(TableListForBranchDocument, options);
+        return Apollo.useQuery<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>(TableNamesForBranchDocument, options);
       }
-export function useTableListForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableListForBranchQuery, TableListForBranchQueryVariables>) {
+export function useTableNamesForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TableListForBranchQuery, TableListForBranchQueryVariables>(TableListForBranchDocument, options);
+          return Apollo.useLazyQuery<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>(TableNamesForBranchDocument, options);
         }
-export function useTableListForBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableListForBranchQuery, TableListForBranchQueryVariables>) {
+export function useTableNamesForBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<TableListForBranchQuery, TableListForBranchQueryVariables>(TableListForBranchDocument, options);
+          return Apollo.useSuspenseQuery<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>(TableNamesForBranchDocument, options);
         }
-export type TableListForBranchQueryHookResult = ReturnType<typeof useTableListForBranchQuery>;
-export type TableListForBranchLazyQueryHookResult = ReturnType<typeof useTableListForBranchLazyQuery>;
-export type TableListForBranchSuspenseQueryHookResult = ReturnType<typeof useTableListForBranchSuspenseQuery>;
-export type TableListForBranchQueryResult = Apollo.QueryResult<TableListForBranchQuery, TableListForBranchQueryVariables>;
+export type TableNamesForBranchQueryHookResult = ReturnType<typeof useTableNamesForBranchQuery>;
+export type TableNamesForBranchLazyQueryHookResult = ReturnType<typeof useTableNamesForBranchLazyQuery>;
+export type TableNamesForBranchSuspenseQueryHookResult = ReturnType<typeof useTableNamesForBranchSuspenseQuery>;
+export type TableNamesForBranchQueryResult = Apollo.QueryResult<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!, $refName: String!) {
   tables(databaseName: $databaseName, refName: $refName, filterSystemTables: true) {

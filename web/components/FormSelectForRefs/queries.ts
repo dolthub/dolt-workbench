@@ -36,14 +36,13 @@ export const TAG_LIST_QUERY = gql`
 `;
 
 export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
-  query TableListForBranch($databaseName: String!, $refName: String!) {
-    tables(
+  query TableNamesForBranch($databaseName: String!, $refName: String!) {
+    tableNames(
       databaseName: $databaseName
       refName: $refName
       filterSystemTables: true
     ) {
-      _id
-      tableName
+      list
     }
   }
 `;
