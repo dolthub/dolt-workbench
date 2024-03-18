@@ -2,7 +2,7 @@ import { FormSelect } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import { useTableListForBranchLazyQuery } from "@gen/graphql-types";
 import { DatabasePageParams } from "@lib/params";
-import { RefUrl, branches, database, ref, releases } from "@lib/urls";
+import { RefUrl, branches, ref, releases } from "@lib/urls";
 import { useRouter } from "next/router";
 import getGroupOption from "./getGroupOption";
 import css from "./index.module.css";
@@ -44,12 +44,10 @@ export default function BranchAndTagSelector(props: Props) {
       }
     }
 
-    const { href, as } = props.routeRefChangeTo
-      ? props.routeRefChangeTo({
-          ...props.params,
-          refName,
-        })
-      : database(props.params);
+    const { href, as } = props.routeRefChangeTo({
+      ...props.params,
+      refName,
+    });
 
     router.push(href, as).catch(console.error);
   };

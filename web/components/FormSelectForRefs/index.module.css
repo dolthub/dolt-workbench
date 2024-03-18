@@ -1,5 +1,5 @@
 .branchAndTagSelect {
-  @apply min-w-[275px] max-w-[275px] w-full;
+  @apply min-w-[270px] max-w-[270px] w-full;
 }
 
 .branchAndCommitSelect {
@@ -8,10 +8,6 @@
   @screen md {
     @apply w-auto;
   }
-}
-
-.commitDetails {
-  @apply text-acc-darkgrey text-xs mt-1;
 }
 
 .commitTimeAgo {

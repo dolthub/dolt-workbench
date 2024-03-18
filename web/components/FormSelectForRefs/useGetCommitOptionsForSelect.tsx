@@ -41,7 +41,7 @@ const maxCommitMsgChars = 90;
 
 function CommitDetails(props: { commit: CommitForHistoryFragment }) {
   return (
-    <div className={css.commitDetails}>
+    <div>
       <div>{limitTwoLines(props.commit.message, maxCommitMsgChars)}</div>
       <div className={css.commitTimeAgo}>
         {getTimeAgoString(props.commit.committedAt)}

@@ -63,7 +63,7 @@ export default function NewBranchForm(props: Props): JSX.Element {
             value={newBranchName}
             onChangeString={setNewBranchName}
             label="New branch name"
-            placeholder=""
+            placeholder="i.e. feature-branch"
             className={css.input}
           />
           <ButtonsWithError
