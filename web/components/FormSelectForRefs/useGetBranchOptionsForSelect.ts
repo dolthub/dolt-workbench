@@ -1,10 +1,12 @@
 import { FormSelectTypes } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import { useBranchesForSelectorQuery } from "@gen/graphql-types";
+import { ApolloErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
 
 type ReturnType = {
   branchOptions: Array<FormSelectTypes.Option<string>>;
+  error?: ApolloErrorType;
 };
 
 export default function useGetBranchOptionsForSelect(
@@ -23,5 +25,5 @@ export default function useGetBranchOptionsForSelect(
       };
     }) ?? [];
 
-  return { branchOptions };
+  return { branchOptions, error: branchRes.error };
 }

@@ -1,9 +1,11 @@
 import { FormSelectTypes } from "@dolthub/react-components";
 import { useTagListQuery } from "@gen/graphql-types";
+import { ApolloErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
 
 type ReturnType = {
   tagOptions: Array<FormSelectTypes.Option<string>>;
+  error?: ApolloErrorType;
 };
 
 export default function useGetTagOptionsForSelect(
@@ -19,5 +21,5 @@ export default function useGetTagOptionsForSelect(
       };
     }) ?? [];
 
-  return { tagOptions };
+  return { tagOptions, error: tagRes.error };
 }

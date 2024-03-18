@@ -14,10 +14,14 @@ type Props = {
 };
 
 export default function BranchAndCommitSelector(props: Props) {
-  const { branchOptions } = useGetBranchOptionsForSelect(props.params);
-  const { commitOptions, refParams } = useGetCommitOptionsForSelect(
+  const { branchOptions, error: branchErr } = useGetBranchOptionsForSelect(
     props.params,
   );
+  const {
+    commitOptions,
+    refParams,
+    error: commitErr,
+  } = useGetCommitOptionsForSelect(props.params);
 
   const handleChangeRef = async (refName: Maybe<string>) => {
     if (!refName) return;
@@ -25,8 +29,8 @@ export default function BranchAndCommitSelector(props: Props) {
   };
 
   const options = [
-    getGroupOption(branchOptions, "Branches", branches(refParams)),
-    getGroupOption(commitOptions, "Commits", commitLog(refParams)),
+    getGroupOption(branchOptions, "Branches", branches(refParams), branchErr),
+    getGroupOption(commitOptions, "Commits", commitLog(refParams), commitErr),
   ];
 
   return (

@@ -2,9 +2,8 @@ import { MockedResponse } from "@apollo/client/testing";
 import {
   branchSelectorMock,
   mainBranch,
-} from "@components/FormSelectForRefs/mocks";
+} from "@components/FormSelectForRefs/tests/mocks";
 import { CreateTagDocument } from "@gen/graphql-types";
-import { loremer } from "@lib/loremer";
 import { defaultBranchMock } from "../../../ForDefaultBranch/mocks";
 import { generateFakeTag } from "../../ReleaseList/mocks";
 
@@ -13,9 +12,9 @@ export const fromBranch = mainBranch(dbParams);
 export const fromRefName: string = fromBranch.branchName;
 
 export const tagParams = { ...dbParams, tagName: "v1" };
-export const message = loremer.sentence();
 export const { tagName } = tagParams;
-export const returnedTag = generateFakeTag(tagParams, message);
+export const returnedTag = generateFakeTag(tagParams);
+export const { message } = returnedTag;
 
 // QUERY MOCKS
 

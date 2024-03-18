@@ -21,8 +21,10 @@ export default function BranchAndTagSelector(props: Props) {
 
   const [getTableList] = useTableListForBranchLazyQuery();
 
-  const { tagOptions } = useGetTagOptionsForSelect(props.params);
-  const { branchOptions } = useGetBranchOptionsForSelect(props.params);
+  const { tagOptions, error: tagErr } = useGetTagOptionsForSelect(props.params);
+  const { branchOptions, error: branchErr } = useGetBranchOptionsForSelect(
+    props.params,
+  );
 
   const handleChangeRef = async (refName: Maybe<string>) => {
     if (!refName) return;
@@ -31,7 +33,8 @@ export default function BranchAndTagSelector(props: Props) {
       refName,
     };
 
-    // If on a table page, check if the table exists on the new branch. If not, route to ref.
+    // If on a table page, check if the table exists on the new branch. If not,
+    // route to ref.
     if (props.params.tableName) {
       const tableRes = await getTableList({ variables });
       const tableExists = tableRes.data?.tables.some(
@@ -57,8 +60,9 @@ export default function BranchAndTagSelector(props: Props) {
       branchOptions,
       "Branches",
       branches({ ...props.params, refName: props.selectedValue }),
+      branchErr,
     ),
-    getGroupOption(tagOptions, "Tags", releases(props.params)),
+    getGroupOption(tagOptions, "Tags", releases(props.params), tagErr),
   ];
 
   return (

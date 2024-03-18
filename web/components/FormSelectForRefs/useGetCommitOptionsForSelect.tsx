@@ -3,12 +3,14 @@ import { excerpt, getTimeAgoString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";
 import useDefaultBranch from "@hooks/useDefaultBranch";
+import { ApolloErrorType } from "@lib/errors/types";
 import { OptionalRefParams, RefParams } from "@lib/params";
 import css from "./index.module.css";
 
 type ReturnType = {
   commitOptions: Array<FormSelectTypes.Option<string>>;
   refParams: RefParams;
+  error?: ApolloErrorType;
 };
 
 export default function useGetCommitOptionsForSelect(
@@ -30,7 +32,7 @@ export default function useGetCommitOptionsForSelect(
       };
     }) ?? [];
 
-  return { commitOptions, refParams };
+  return { commitOptions, refParams, error: commitRes.error };
 }
 
 function limitTwoLines(s: string, maxChars: number): string {

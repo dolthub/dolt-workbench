@@ -2,7 +2,7 @@ import { MockedResponse } from "@apollo/client/testing";
 import {
   branchSelectorMock,
   mainBranch,
-} from "@components/FormSelectForRefs/mocks";
+} from "@components/FormSelectForRefs/tests/mocks";
 import { CreateBranchDocument } from "@gen/graphql-types";
 import { loremer } from "@lib/loremer";
 import { DatabaseParams } from "@lib/params";

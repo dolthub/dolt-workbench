@@ -10,8 +10,8 @@ import { DatabaseParams } from "@lib/params";
 
 export function generateFakeTag(
   params: DatabaseParams & { tagName: string },
-  message: string,
 ): TagForListFragment {
+  const message = chance.sentence();
   const email = chance.email();
   const doltWriter: DoltWriterForHistoryFragment = {
     __typename: "DoltWriter",
@@ -54,25 +54,40 @@ export const databaseParams = {
 //   RepoRole.Unspecified,
 // );
 
-const request = {
-  query: TagListDocument,
-  variables: databaseParams,
+const getRequest = (params: DatabaseParams) => {
+  return {
+    query: TagListDocument,
+    variables: params,
+  };
 };
 
-export const tag1 = generateFakeTag(
-  { ...databaseParams, tagName: "v1" },
-  chance.sentence(),
-);
-export const tag2 = generateFakeTag(
-  { ...databaseParams, tagName: "v2" },
-  chance.sentence(),
+export const tag1 = generateFakeTag({ ...databaseParams, tagName: "v1" });
+export const tag2 = generateFakeTag({ ...databaseParams, tagName: "v2" });
+
+export const getTagsListQueryMock = (
+  params: DatabaseParams,
+  list: TagForListFragment[],
+): MockedResponse => {
+  return {
+    request: getRequest(params),
+    result: {
+      data: buildFakeData(list),
+    },
+  };
+};
+
+export const tagsListQueryMock: MockedResponse = getTagsListQueryMock(
+  databaseParams,
+  [tag1, tag2],
 );
 
-export const tagsListQueryMock: MockedResponse = {
-  request,
-  result: {
-    data: buildFakeData([tag1, tag2]),
-  },
+export const tagError = "Tag Error";
+
+export const tagsListErrorMock = (params: DatabaseParams): MockedResponse => {
+  return {
+    request: getRequest(params),
+    error: new Error(tagError),
+  };
 };
 
 // // MUTATION MOCKS
