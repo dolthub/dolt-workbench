@@ -1,0 +1,19 @@
+.branchAndTagSelect {
+  @apply min-w-[270px] max-w-[270px] w-full;
+}
+
+.branchAndCommitSelect {
+  @apply max-w-md;
+
+  @screen md {
+    @apply w-auto;
+  }
+}
+
+.commitTimeAgo {
+  @apply mt-0.5;
+}
+
+.doltDisabled {
+  @apply bg-ld-lightblue border border-ld-darkgrey px-2.5 py-2 rounded text-sm;
+}

@@ -7,7 +7,6 @@ import {
 } from "@lib/mobileUtils";
 import { OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
-import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
@@ -45,7 +44,6 @@ export default function MobileHeaderSelector(props: Props) {
       options={getTabOptions(res.isDolt, res.hideDoltFeature)}
       val={pageName}
       hideSelectedOptions
-      outerClassName={css.mobileSelector}
       forMobile
     />
   );

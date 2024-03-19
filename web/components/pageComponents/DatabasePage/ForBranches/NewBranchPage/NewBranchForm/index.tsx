@@ -1,6 +1,5 @@
 import ButtonsWithError from "@components/ButtonsWithError";
-import CustomFormSelect from "@components/CustomFormSelect";
-import ErrorMsg from "@components/ErrorMsg";
+import BranchAndCommitSelector from "@components/FormSelectForRefs/BranchAndCommitSelector";
 import { Button, FormInput, Loader } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
@@ -55,7 +54,7 @@ export default function NewBranchForm(props: Props): JSX.Element {
     <div>
       <form onSubmit={onSubmit}>
         <div className={css.container}>
-          <CustomFormSelect.ForBranchesAndCommits
+          <BranchAndCommitSelector
             {...props}
             selectedValue={fromRefName}
             onChangeValue={setFromRefName}
@@ -64,13 +63,14 @@ export default function NewBranchForm(props: Props): JSX.Element {
             value={newBranchName}
             onChangeString={setNewBranchName}
             label="New branch name"
-            placeholder=""
+            placeholder="i.e. feature-branch"
             className={css.input}
           />
           <ButtonsWithError
             onCancel={goToBranchesPage}
             left
             stackedButton={isMobile}
+            error={err}
           >
             <Button type="submit" disabled={!newBranchName || !fromRefName}>
               Create branch
@@ -78,7 +78,6 @@ export default function NewBranchForm(props: Props): JSX.Element {
           </ButtonsWithError>
         </div>
         <Loader loaded={!loading} />
-        <ErrorMsg className={css.error} err={err} />
       </form>
     </div>
   );

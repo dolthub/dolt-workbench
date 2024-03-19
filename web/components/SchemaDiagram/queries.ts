@@ -1,6 +1,6 @@
 import { gql } from "@apollo/client";
 
-export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
+export const TABLE_LIST_FOR_SCHEMAS_QUERY = gql`
   fragment ColumnsListForTableList on IndexColumn {
     name
     sqlType

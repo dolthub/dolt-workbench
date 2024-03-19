@@ -1,9 +1,9 @@
 import { MockedResponse } from "@apollo/client/testing";
-import { fakeCommitId } from "@components/CustomFormSelect/mocks";
 import {
   CommitForAfterCommitHistoryFragment,
   HistoryForCommitDocument,
 } from "@gen/graphql-types";
+import { fakeCommitId } from "@hooks/useCommitListForBranch/mocks";
 import chance from "@lib/chance";
 import { RefParams } from "@lib/params";
 

@@ -1,4 +1,5 @@
-import CustomFormSelect from "@components/CustomFormSelect";
+import BranchAndTagSelector from "@components/FormSelectForRefs/BranchAndTagSelector";
+import NotDoltSelectWrapper from "@components/FormSelectForRefs/NotDoltSelectWrapper";
 import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
@@ -51,14 +52,17 @@ function Nav({
       )}
     >
       <div className={css.top}>
-        <NotDoltWrapper>
-          <CustomFormSelect.ForBranchesAndTags
-            routeRefChangeTo={routeRefChangeTo}
-            params={params}
-            selectedValue={params.refName}
-            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
-          />
-        </NotDoltWrapper>
+        <div
+          className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
+        >
+          <NotDoltSelectWrapper val={params.refName}>
+            <BranchAndTagSelector
+              routeRefChangeTo={routeRefChangeTo}
+              params={params}
+              selectedValue={params.refName}
+            />
+          </NotDoltSelectWrapper>
+        </div>
         <HideForNoWritesWrapper params={params}>
           <NotDoltWrapper>
             <NewBranchLink params={params} open={open} />

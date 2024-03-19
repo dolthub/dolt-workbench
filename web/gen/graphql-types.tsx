@@ -690,26 +690,6 @@ export type CreateSchemaMutationVariables = Exact<{
 
 export type CreateSchemaMutation = { __typename?: 'Mutation', createSchema: boolean };
 
-export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
-
-export type BranchesForSelectorQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-}>;
-
-
-export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> };
-
-export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
-
-export type TagListForTagListFragment = { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
-
-export type TagListQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-}>;
-
-
-export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
-
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -815,6 +795,34 @@ export type SchemaDiffQueryVariables = Exact<{
 
 
 export type SchemaDiffQuery = { __typename?: 'Query', schemaDiff?: { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null } | null };
+
+export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
+
+export type BranchesForSelectorQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> };
+
+export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
+
+export type TagListForTagListFragment = { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
+
+export type TagListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
+
+export type TableNamesForBranchQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type TableNamesForBranchQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
 export type ColumnsListForTableListFragment = { __typename?: 'IndexColumn', name: string, sqlType?: string | null };
 
@@ -1160,39 +1168,6 @@ export type TableNamesQueryVariables = Exact<{
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
-export const BranchForBranchSelectorFragmentDoc = gql`
-    fragment BranchForBranchSelector on Branch {
-  branchName
-  databaseName
-}
-    `;
-export const DoltWriterForHistoryFragmentDoc = gql`
-    fragment DoltWriterForHistory on DoltWriter {
-  _id
-  username
-  displayName
-  emailAddress
-}
-    `;
-export const TagForListFragmentDoc = gql`
-    fragment TagForList on Tag {
-  _id
-  tagName
-  message
-  taggedAt
-  tagger {
-    ...DoltWriterForHistory
-  }
-  commitId
-}
-    ${DoltWriterForHistoryFragmentDoc}`;
-export const TagListForTagListFragmentDoc = gql`
-    fragment TagListForTagList on TagList {
-  list {
-    ...TagForList
-  }
-}
-    ${TagForListFragmentDoc}`;
 export const CommitForDiffSelectorFragmentDoc = gql`
     fragment CommitForDiffSelector on Commit {
   _id
@@ -1283,6 +1258,39 @@ export const SchemaDiffFragmentDoc = gql`
   schemaPatch
 }
     ${SchemaDiffForTableListFragmentDoc}`;
+export const BranchForBranchSelectorFragmentDoc = gql`
+    fragment BranchForBranchSelector on Branch {
+  branchName
+  databaseName
+}
+    `;
+export const DoltWriterForHistoryFragmentDoc = gql`
+    fragment DoltWriterForHistory on DoltWriter {
+  _id
+  username
+  displayName
+  emailAddress
+}
+    `;
+export const TagForListFragmentDoc = gql`
+    fragment TagForList on Tag {
+  _id
+  tagName
+  message
+  taggedAt
+  tagger {
+    ...DoltWriterForHistory
+  }
+  commitId
+}
+    ${DoltWriterForHistoryFragmentDoc}`;
+export const TagListForTagListFragmentDoc = gql`
+    fragment TagListForTagList on TagList {
+  list {
+    ...TagForList
+  }
+}
+    ${TagForListFragmentDoc}`;
 export const ForeignKeyColumnForDataTableFragmentDoc = gql`
     fragment ForeignKeyColumnForDataTable on ForeignKeyColumn {
   referencedColumnName
@@ -1605,86 +1613,6 @@ export function useCreateSchemaMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateSchemaMutationHookResult = ReturnType<typeof useCreateSchemaMutation>;
 export type CreateSchemaMutationResult = Apollo.MutationResult<CreateSchemaMutation>;
 export type CreateSchemaMutationOptions = Apollo.BaseMutationOptions<CreateSchemaMutation, CreateSchemaMutationVariables>;
-export const BranchesForSelectorDocument = gql`
-    query BranchesForSelector($databaseName: String!) {
-  allBranches(databaseName: $databaseName) {
-    ...BranchForBranchSelector
-  }
-}
-    ${BranchForBranchSelectorFragmentDoc}`;
-
-/**
- * __useBranchesForSelectorQuery__
- *
- * To run a query within a React component, call `useBranchesForSelectorQuery` and pass it any options that fit your needs.
- * When your component renders, `useBranchesForSelectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useBranchesForSelectorQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *   },
- * });
- */
-export function useBranchesForSelectorQuery(baseOptions: Apollo.QueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables> & ({ variables: BranchesForSelectorQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
-      }
-export function useBranchesForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
-        }
-export function useBranchesForSelectorSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
-        }
-export type BranchesForSelectorQueryHookResult = ReturnType<typeof useBranchesForSelectorQuery>;
-export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranchesForSelectorLazyQuery>;
-export type BranchesForSelectorSuspenseQueryHookResult = ReturnType<typeof useBranchesForSelectorSuspenseQuery>;
-export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
-export const TagListDocument = gql`
-    query TagList($databaseName: String!) {
-  tags(databaseName: $databaseName) {
-    ...TagListForTagList
-  }
-}
-    ${TagListForTagListFragmentDoc}`;
-
-/**
- * __useTagListQuery__
- *
- * To run a query within a React component, call `useTagListQuery` and pass it any options that fit your needs.
- * When your component renders, `useTagListQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useTagListQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *   },
- * });
- */
-export function useTagListQuery(baseOptions: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables> & ({ variables: TagListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
-      }
-export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
-        }
-export function useTagListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TagListQuery, TagListQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
-        }
-export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
-export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
-export type TagListSuspenseQueryHookResult = ReturnType<typeof useTagListSuspenseQuery>;
-export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase
@@ -2116,6 +2044,131 @@ export type SchemaDiffQueryHookResult = ReturnType<typeof useSchemaDiffQuery>;
 export type SchemaDiffLazyQueryHookResult = ReturnType<typeof useSchemaDiffLazyQuery>;
 export type SchemaDiffSuspenseQueryHookResult = ReturnType<typeof useSchemaDiffSuspenseQuery>;
 export type SchemaDiffQueryResult = Apollo.QueryResult<SchemaDiffQuery, SchemaDiffQueryVariables>;
+export const BranchesForSelectorDocument = gql`
+    query BranchesForSelector($databaseName: String!) {
+  allBranches(databaseName: $databaseName) {
+    ...BranchForBranchSelector
+  }
+}
+    ${BranchForBranchSelectorFragmentDoc}`;
+
+/**
+ * __useBranchesForSelectorQuery__
+ *
+ * To run a query within a React component, call `useBranchesForSelectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBranchesForSelectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBranchesForSelectorQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useBranchesForSelectorQuery(baseOptions: Apollo.QueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables> & ({ variables: BranchesForSelectorQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+      }
+export function useBranchesForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+        }
+export function useBranchesForSelectorSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>(BranchesForSelectorDocument, options);
+        }
+export type BranchesForSelectorQueryHookResult = ReturnType<typeof useBranchesForSelectorQuery>;
+export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranchesForSelectorLazyQuery>;
+export type BranchesForSelectorSuspenseQueryHookResult = ReturnType<typeof useBranchesForSelectorSuspenseQuery>;
+export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
+export const TagListDocument = gql`
+    query TagList($databaseName: String!) {
+  tags(databaseName: $databaseName) {
+    ...TagListForTagList
+  }
+}
+    ${TagListForTagListFragmentDoc}`;
+
+/**
+ * __useTagListQuery__
+ *
+ * To run a query within a React component, call `useTagListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTagListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTagListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useTagListQuery(baseOptions: Apollo.QueryHookOptions<TagListQuery, TagListQueryVariables> & ({ variables: TagListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+      }
+export function useTagListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        }
+export function useTagListSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TagListQuery, TagListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TagListQuery, TagListQueryVariables>(TagListDocument, options);
+        }
+export type TagListQueryHookResult = ReturnType<typeof useTagListQuery>;
+export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
+export type TagListSuspenseQueryHookResult = ReturnType<typeof useTagListSuspenseQuery>;
+export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
+export const TableNamesForBranchDocument = gql`
+    query TableNamesForBranch($databaseName: String!, $refName: String!) {
+  tableNames(
+    databaseName: $databaseName
+    refName: $refName
+    filterSystemTables: true
+  ) {
+    list
+  }
+}
+    `;
+
+/**
+ * __useTableNamesForBranchQuery__
+ *
+ * To run a query within a React component, call `useTableNamesForBranchQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTableNamesForBranchQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTableNamesForBranchQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useTableNamesForBranchQuery(baseOptions: Apollo.QueryHookOptions<TableNamesForBranchQuery, TableNamesForBranchQueryVariables> & ({ variables: TableNamesForBranchQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>(TableNamesForBranchDocument, options);
+      }
+export function useTableNamesForBranchLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>(TableNamesForBranchDocument, options);
+        }
+export function useTableNamesForBranchSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>(TableNamesForBranchDocument, options);
+        }
+export type TableNamesForBranchQueryHookResult = ReturnType<typeof useTableNamesForBranchQuery>;
+export type TableNamesForBranchLazyQueryHookResult = ReturnType<typeof useTableNamesForBranchLazyQuery>;
+export type TableNamesForBranchSuspenseQueryHookResult = ReturnType<typeof useTableNamesForBranchSuspenseQuery>;
+export type TableNamesForBranchQueryResult = Apollo.QueryResult<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>;
 export const TableListForSchemasDocument = gql`
     query TableListForSchemas($databaseName: String!, $refName: String!) {
   tables(databaseName: $databaseName, refName: $refName, filterSystemTables: true) {
