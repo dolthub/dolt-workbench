@@ -6,6 +6,7 @@ import { DatabaseParams } from "@lib/params";
 type ReturnType = {
   tagOptions: Array<FormSelectTypes.Option<string>>;
   error?: ApolloErrorType;
+  loading: boolean;
 };
 
 export default function useGetTagOptionsForSelect(
@@ -21,5 +22,5 @@ export default function useGetTagOptionsForSelect(
       };
     }) ?? [];
 
-  return { tagOptions, error: tagRes.error };
+  return { tagOptions, error: tagRes.error, loading: tagRes.loading };
 }

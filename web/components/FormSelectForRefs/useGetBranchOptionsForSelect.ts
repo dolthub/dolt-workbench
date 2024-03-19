@@ -7,6 +7,7 @@ import { DatabaseParams } from "@lib/params";
 type ReturnType = {
   branchOptions: Array<FormSelectTypes.Option<string>>;
   error?: ApolloErrorType;
+  loading: boolean;
 };
 
 export default function useGetBranchOptionsForSelect(
@@ -25,5 +26,5 @@ export default function useGetBranchOptionsForSelect(
       };
     }) ?? [];
 
-  return { branchOptions, error: branchRes.error };
+  return { branchOptions, error: branchRes.error, loading: branchRes.loading };
 }

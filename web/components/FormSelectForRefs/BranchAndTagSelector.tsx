@@ -21,10 +21,16 @@ export default function BranchAndTagSelector(props: Props) {
 
   const [getTableNames] = useTableNamesForBranchLazyQuery();
 
-  const { tagOptions, error: tagErr } = useGetTagOptionsForSelect(props.params);
-  const { branchOptions, error: branchErr } = useGetBranchOptionsForSelect(
-    props.params,
-  );
+  const {
+    tagOptions,
+    error: tagErr,
+    loading: tagLoading,
+  } = useGetTagOptionsForSelect(props.params);
+  const {
+    branchOptions,
+    error: branchErr,
+    loading: branchLoading,
+  } = useGetBranchOptionsForSelect(props.params);
 
   const handleChangeRef = async (refName: Maybe<string>) => {
     if (!refName) return;
@@ -67,6 +73,7 @@ export default function BranchAndTagSelector(props: Props) {
 
   return (
     <FormSelect.Grouped
+      isLoading={branchLoading || tagLoading}
       data-cy="branch-and-tag-selector"
       value={[...branchOptions, ...tagOptions].find(
         t => t.value === props.selectedValue,

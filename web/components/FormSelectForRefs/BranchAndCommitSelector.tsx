@@ -14,13 +14,16 @@ type Props = {
 };
 
 export default function BranchAndCommitSelector(props: Props) {
-  const { branchOptions, error: branchErr } = useGetBranchOptionsForSelect(
-    props.params,
-  );
+  const {
+    branchOptions,
+    error: branchErr,
+    loading: branchLoading,
+  } = useGetBranchOptionsForSelect(props.params);
   const {
     commitOptions,
     refParams,
     error: commitErr,
+    loading: commitLoading,
   } = useGetCommitOptionsForSelect(props.params);
 
   const handleChangeRef = async (refName: Maybe<string>) => {
@@ -35,6 +38,7 @@ export default function BranchAndCommitSelector(props: Props) {
 
   return (
     <FormSelect.Grouped
+      isLoading={branchLoading || commitLoading}
       value={[...branchOptions, ...commitOptions].find(
         t => t.value === props.selectedValue,
       )}

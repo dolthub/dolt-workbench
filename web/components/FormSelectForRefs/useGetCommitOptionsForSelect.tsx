@@ -11,6 +11,7 @@ type ReturnType = {
   commitOptions: Array<FormSelectTypes.Option<string>>;
   refParams: RefParams;
   error?: ApolloErrorType;
+  loading: boolean;
 };
 
 export default function useGetCommitOptionsForSelect(
@@ -32,7 +33,12 @@ export default function useGetCommitOptionsForSelect(
       };
     }) ?? [];
 
-  return { commitOptions, refParams, error: commitRes.error };
+  return {
+    commitOptions,
+    refParams,
+    error: commitRes.error,
+    loading: commitRes.loading,
+  };
 }
 
 function limitTwoLines(s: string, maxChars: number): string {
