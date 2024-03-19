@@ -1353,7 +1353,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.7.0"
-    "@dolthub/react-components": "npm:^0.1.9"
+    "@dolthub/react-components": "npm:^0.1.10"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.6"
     "@dolthub/web-utils": "npm:^0.1.2"
@@ -1438,9 +1438,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/react-components@npm:^0.1.9":
-  version: 0.1.9
-  resolution: "@dolthub/react-components@npm:0.1.9"
+"@dolthub/react-components@npm:^0.1.10":
+  version: 0.1.10
+  resolution: "@dolthub/react-components@npm:0.1.10"
   dependencies:
     "@dolthub/react-hooks": "npm:^0.1.7"
     "@dolthub/web-utils": "npm:^0.1.3"
@@ -1458,7 +1458,7 @@ __metadata:
   peerDependencies:
     react: ^18
     react-dom: ^18
-  checksum: 2b734b91e689c8d84f709bbe9d2697f6360d2bbb09897ccc95cb279590f7a26ce4514e273184f46510ef58ac381dc80451bd17e17113f31396065d39efe240e4
+  checksum: e1ba35a01b1d8f6bb7af3a2e1f8863f8708411b20ec3e99921f1c06c55200afe3b3822989df3d4df01af7ac4c21812787ff78e437efe1ad7b20cfe562d1c5727
   languageName: node
   linkType: hard
 
