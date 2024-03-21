@@ -1,9 +1,5 @@
 .markdown {
   @apply font-sans z-0;
-
-  button {
-    @apply text-base;
-  }
 }
 
 .bodyContainer {

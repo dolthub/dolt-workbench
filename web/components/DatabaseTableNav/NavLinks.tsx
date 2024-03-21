@@ -1,8 +1,7 @@
 import SchemaList from "@components/SchemaList";
 import TableList from "@components/TableList";
-import { Tab, TabList, TabPanel } from "@components/Tabs";
-import { TabsProvider } from "@components/Tabs/context";
 import Views from "@components/Views";
+import { Tab, TabList, TabPanel, Tabs } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
@@ -16,62 +15,72 @@ type Props = {
   };
 };
 
+const tabs = ["Tables", "Views", "Schemas"];
+
 export default function NavLinks({ className, params }: Props) {
   const router = useRouter();
   const initialActiveIndex = getActiveIndexFromRouterQuery(router.query.active);
-  const tabs = ["Tables", "Views", "Schemas"];
 
   return (
     <div data-cy="db-page-table-nav" className={className}>
-      <TabsProvider initialActiveIndex={initialActiveIndex}>
+      <Tabs initialActiveIndex={initialActiveIndex}>
         <TabList className={css.tabList}>
           {tabs.map((tab, i) => (
-            <Tab key={tab} data-cy={`tab-${tab.toLowerCase()}`} index={i}>
+            <Tab key={tab} name={tab.toLowerCase()} index={i} dark>
               {tab}
             </Tab>
           ))}
         </TabList>
-        <CustomTabPanel index={0}>
-          {params.refName ? (
+        <CustomTabPanel
+          index={0}
+          params={params}
+          name="tables"
+          renderChildren={refName => (
             <TableList
               params={{
-                ...params,
-                refName: params.refName,
+                databaseName: params.databaseName,
+                tableName: params.tableName,
+                refName,
               }}
             />
-          ) : (
-            <p className={css.empty} data-cy="db-tables-empty">
-              No tables to show
-            </p>
           )}
-        </CustomTabPanel>
-        <CustomTabPanel index={1}>
-          {params.refName ? (
-            <Views params={{ ...params, refName: params.refName }} />
-          ) : (
-            <p className={css.empty} data-cy="db-views-empty">
-              No views to show
-            </p>
+        />
+        <CustomTabPanel
+          index={1}
+          params={params}
+          name="views"
+          renderChildren={refName => <Views params={{ ...params, refName }} />}
+        />
+        <CustomTabPanel
+          index={2}
+          name="schemas"
+          params={params}
+          renderChildren={refName => (
+            <SchemaList params={{ ...params, refName }} />
           )}
-        </CustomTabPanel>
-        <CustomTabPanel index={2}>
-          {params.refName ? (
-            <SchemaList params={{ ...params, refName: params.refName }} />
-          ) : (
-            <p className={css.empty} data-cy="db-schemas-empty">
-              No schemas to show
-            </p>
-          )}
-        </CustomTabPanel>
-      </TabsProvider>
+        />
+      </Tabs>
     </div>
   );
 }
 
-function CustomTabPanel(props: { children: ReactNode; index: number }) {
+type PanelProps = {
+  renderChildren: (refName: string) => ReactNode;
+  params: OptionalRefParams;
+  name: string;
+  index: number;
+};
+
+function CustomTabPanel(props: PanelProps) {
   return (
     <TabPanel index={props.index} className={css.tabPanel}>
-      {props.children}
+      {props.params.refName ? (
+        props.renderChildren(props.params.refName)
+      ) : (
+        <p className={css.empty} data-cy={`db-${props.name}-empty`}>
+          No {props.name} to show
+        </p>
+      )}
     </TabPanel>
   );
 }

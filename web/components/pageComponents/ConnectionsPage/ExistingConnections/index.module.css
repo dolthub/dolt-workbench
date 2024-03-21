@@ -12,6 +12,10 @@
 
 .connection {
   @apply my-3 border rounded py-1.5 px-3 flex justify-between;
+
+  button {
+    @apply text-base;
+  }
 }
 
 .err {

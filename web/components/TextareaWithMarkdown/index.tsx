@@ -1,5 +1,11 @@
-import { Tab, TabList, TabPanel, Tabs } from "@components/Tabs";
-import { Markdown, Textarea } from "@dolthub/react-components";
+import {
+  Markdown,
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
+  Textarea,
+} from "@dolthub/react-components";
 import cx from "classnames";
 import css from "./index.module.css";
 
@@ -43,10 +49,10 @@ export default function TextareaWithMarkdown({
       >
         <Tabs>
           <TabList className={css.tabList}>
-            <Tab index={0} data-cy="markdown-write">
+            <Tab index={0} name="markdown-write">
               Write
             </Tab>
-            <Tab index={1} data-cy="markdown-preview">
+            <Tab index={1} name="markdown-preview">
               Preview
             </Tab>
           </TabList>
