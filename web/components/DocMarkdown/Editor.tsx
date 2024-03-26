@@ -1,6 +1,9 @@
 import ButtonsWithError from "@components/ButtonsWithError";
-import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
-import { Button, Loader } from "@dolthub/react-components";
+import {
+  Button,
+  Loader,
+  TextareaWithMarkdown,
+} from "@dolthub/react-components";
 import useEditDoc from "@hooks/useEditDoc";
 import { DocParams } from "@lib/params";
 import toDocType from "@lib/toDocType";

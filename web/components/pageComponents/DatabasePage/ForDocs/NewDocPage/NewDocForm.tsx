@@ -1,10 +1,10 @@
-import TextareaWithMarkdown from "@components/TextareaWithMarkdown";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import {
   Button,
   FormSelect,
   FormSelectTypes,
   Loader,
+  TextareaWithMarkdown,
 } from "@dolthub/react-components";
 import {
   DocForDocPageFragment,
