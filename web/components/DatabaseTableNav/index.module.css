@@ -79,7 +79,7 @@
   @apply text-sm;
 
   li {
-    @apply mx-4 px-2;
+    @apply mx-4 px-2 text-acc-hoverlinkblue;
   }
 }
 
