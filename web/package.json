@@ -26,10 +26,10 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.0",
-    "@dolthub/react-components": "^0.1.10",
+    "@dolthub/react-components": "^0.1.11",
     "@dolthub/react-contexts": "^0.1.0",
-    "@dolthub/react-hooks": "^0.1.6",
-    "@dolthub/web-utils": "^0.1.2",
+    "@dolthub/react-hooks": "^0.1.7",
+    "@dolthub/web-utils": "^0.1.4",
     "@react-icons/all-files": "^4.1.0",
     "ace-builds": "^1.32.0",
     "apollo-upload-client": "^17.0.0",
