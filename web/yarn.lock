@@ -1385,7 +1385,7 @@ __metadata:
     babel-jest: "npm:^29.7.0"
     chance: "npm:^1.1.11"
     classnames: "npm:^2.3.2"
-    commit-graph: "npm:^1.6.11"
+    commit-graph: "npm:^1.7.0"
     cssnano: "npm:^6.0.3"
     diff: "npm:^5.1.0"
     eslint: "npm:^8.57.0"
@@ -5673,15 +5673,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commit-graph@npm:^1.6.11":
-  version: 1.6.15
-  resolution: "commit-graph@npm:1.6.15"
+"commit-graph@npm:^1.7.0":
+  version: 1.7.0
+  resolution: "commit-graph@npm:1.7.0"
   dependencies:
     classnames: "npm:^2.3.2"
-    react: "npm:^18.2.0"
-    react-dom: "npm:^18.2.0"
-    react-tooltip: "npm:^5.19.0"
-  checksum: 464385d02fc0c202bc05ef095f586000d7ebb878b29e861f95dd18edf891d2cac37415e2df8663a4560cda980d915e798ed3a6bf33a17e775de46317f64966ce
+    react: "npm:>=18.0.0"
+    react-dom: "npm:>=18.0.0"
+    react-tooltip: "npm:^5.26.3"
+  peerDependencies:
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 002bf8cf5fc0a44fb64a03b5b8698a09fe995c2d56cab31368c40daca649df9c0d76e51157e5c8332e723728143be4114f0cbd55a31a6a3957b6cd244b1a31b2
   languageName: node
   linkType: hard
 
@@ -12347,7 +12350,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^18.2.0":
+"react-dom@npm:>=18.0.0, react-dom@npm:^18.2.0":
   version: 18.2.0
   resolution: "react-dom@npm:18.2.0"
   dependencies:
@@ -12475,7 +12478,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:5.26.3":
+"react-tooltip@npm:5.26.3, react-tooltip@npm:^5.26.3":
   version: 5.26.3
   resolution: "react-tooltip@npm:5.26.3"
   dependencies:
@@ -12485,19 +12488,6 @@ __metadata:
     react: ">=16.14.0"
     react-dom: ">=16.14.0"
   checksum: fcce843ebfda0a74ddaf90b7d322879c9070bd180e490ae4634ff02052b1cd39158a0af3a27621a9ffe62a1a8ad246633908a1d214998aea0403ec7aeca874fb
-  languageName: node
-  linkType: hard
-
-"react-tooltip@npm:^5.19.0":
-  version: 5.26.2
-  resolution: "react-tooltip@npm:5.26.2"
-  dependencies:
-    "@floating-ui/dom": "npm:^1.6.1"
-    classnames: "npm:^2.3.0"
-  peerDependencies:
-    react: ">=16.14.0"
-    react-dom: ">=16.14.0"
-  checksum: 36f9747345b7cf0a2551ad2cfb77eebd8d2c2a98b069aa76ccabc121f23672510fe64dcd5808924b5fb94fc2ad6f2fd2c03c754a2d5e4fe51361a8b55f456574
   languageName: node
   linkType: hard
 
@@ -12516,7 +12506,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^18.2.0":
+"react@npm:>=18.0.0, react@npm:^18.2.0":
   version: 18.2.0
   resolution: "react@npm:18.2.0"
   dependencies:
