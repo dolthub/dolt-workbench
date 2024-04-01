@@ -1,12 +1,10 @@
 import Tooltip from "@components/Tooltip";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import { SmallLoader } from "@dolthub/react-components";
-import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
-import useDatabaseDetails from "@hooks/useDatabaseDetails";
-import useDefaultBranch from "@hooks/useDefaultBranch";
-import { OptionalRefParams, RefParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import NavItem from "./Item";
+import Wrapper from "./Wrapper";
 import css from "./index.module.css";
+import { tabs } from "./tabs";
 
 type Props = {
   params: OptionalRefParams & {
@@ -16,61 +14,13 @@ type Props = {
   initialTabIndex: number;
 };
 
-type QueryProps = Props & {
-  params: RefParams & {
-    tableName?: string;
-    active?: string;
-  };
-};
-
-const tabs = ["Database", "About", "Commit Log", "Releases", "Pull Requests"];
-
 export default function DatabaseNav(props: Props) {
-  const { isDolt } = useDatabaseDetails();
-  if (props.params.refName && isDolt) {
-    return (
-      <Query
-        {...props}
-        params={{ ...props.params, refName: props.params.refName }}
-      />
-    );
-  }
-
-  return <Inner {...props} />;
-}
-
-function Query(props: QueryProps) {
-  const { defaultBranchName } = useDefaultBranch(props.params);
-
-  const checkBranchExistRes = useGetBranchQuery({
-    variables: {
-      databaseName: props.params.databaseName,
-      branchName: props.params.refName,
-    },
-  });
-
-  const tagRes = useGetTagQuery({
-    variables: {
-      databaseName: props.params.databaseName,
-      tagName: props.params.refName,
-    },
-  });
-
-  if (tagRes.loading || checkBranchExistRes.loading) {
-    return (
-      <SmallLoader loaded={!tagRes.loading || !checkBranchExistRes.loading} />
-    );
-  }
-
-  const params = {
-    ...props.params,
-    refName:
-      checkBranchExistRes.data?.branch || tagRes.data?.tag
-        ? props.params.refName
-        : defaultBranchName,
-  };
-
-  return <Inner {...props} params={params} />;
+  return (
+    <Wrapper
+      params={props.params}
+      renderChild={params => <Inner {...props} params={params} />}
+    />
+  );
 }
 
 function Inner(props: Props) {

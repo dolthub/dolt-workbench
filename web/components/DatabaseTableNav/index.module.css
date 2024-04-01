@@ -88,9 +88,10 @@
 }
 
 .tableNavTrigger {
-  @apply fixed right-5 bottom-5 z-100 w-14 h-14 rounded-full bg-acc-hoverlinkblue flex justify-center items-center;
+  @apply fixed right-5 bottom-5 z-50 w-14 h-14 rounded-full bg-acc-hoverlinkblue flex justify-center items-center;
 
-  span {
+  span,
+  svg {
     @apply text-white text-2xl;
   }
 }

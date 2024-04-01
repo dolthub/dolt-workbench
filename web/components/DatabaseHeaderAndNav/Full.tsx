@@ -1,9 +1,9 @@
 import DatabaseNav from "@components/DatabaseNav";
+import MobileDatabaseNav from "@components/DatabaseNav/ForMobile";
 import DatabaseTypeLabel from "@components/DatabaseTypeLabel";
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
 import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
-import MobileHeaderSelector from "./MobileHeaderSelector";
 import RightHeaderButtons from "./RightHeaderButtons";
 import css from "./index.module.css";
 
@@ -35,7 +35,7 @@ export default function Full(props: Props) {
             onMenuClick={() => props.setShowSmall(true)}
           />
           <div className={css.mobileSelector}>
-            <MobileHeaderSelector {...props} />
+            <MobileDatabaseNav {...props} />
           </div>
         </div>
       </div>
