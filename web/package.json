@@ -25,7 +25,7 @@
     "yalc:clean": "yalc remove --all"
   },
   "dependencies": {
-    "@apollo/client": "^3.7.0",
+    "@apollo/client": "^3.9.9",
     "@dolthub/react-components": "^0.1.12",
     "@dolthub/react-contexts": "^0.1.0",
     "@dolthub/react-hooks": "^0.1.7",
