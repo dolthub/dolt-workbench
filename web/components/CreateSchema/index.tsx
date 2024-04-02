@@ -18,7 +18,7 @@ export default function CreateSchema(props: Props) {
       loading={res.loading}
       setErr={res.setErr}
       name="schema"
-      create={n => createSchema({ variables: { schemaName: n } })}
+      create={async n => createSchema({ variables: { schemaName: n } })}
     />
   );
 }

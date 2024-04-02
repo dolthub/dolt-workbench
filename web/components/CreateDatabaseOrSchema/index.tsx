@@ -23,11 +23,6 @@ export default function CreateDatabaseOrSchema(props: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [databaseName, setDatabaseName] = useState("");
 
-  // const { mutateFn: createDB, ...res } = useMutation({
-  //   hook: useCreateDatabaseMutation,
-  //   refetchQueries: [{ query: DatabasesDocument }],
-  // });
-
   const onClose = () => {
     setIsOpen(false);
     props.setErr(undefined);
@@ -37,7 +32,6 @@ export default function CreateDatabaseOrSchema(props: Props) {
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const { success } = await props.create(databaseName);
-    // const { errors } = await createDB({ variables: params });
     if (!success) return;
     const { href, as } = database({ databaseName });
     router.push(href, as).catch(console.error);

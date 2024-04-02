@@ -21,7 +21,7 @@ export default function CreateDatabase(props: Props) {
       loading={res.loading}
       setErr={res.setErr}
       name="database"
-      create={n => createDB({ variables: { databaseName: n } })}
+      create={async n => createDB({ variables: { databaseName: n } })}
     />
   );
 }

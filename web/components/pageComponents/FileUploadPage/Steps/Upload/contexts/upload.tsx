@@ -69,7 +69,7 @@ export function UploadProvider(props: Props) {
 
     try {
       setState({ loading: true });
-      const { errors } = await loadData({
+      const { success } = await loadData({
         variables: {
           ...tableParams,
           file: fuState.selectedFile,
@@ -78,7 +78,7 @@ export function UploadProvider(props: Props) {
           modifier: fuState.modifier,
         },
       });
-      if (errors?.length) return;
+      if (!success) return;
       const { href, as } = table(tableParams);
       router.push(href, as).catch(console.error);
     } catch (e) {

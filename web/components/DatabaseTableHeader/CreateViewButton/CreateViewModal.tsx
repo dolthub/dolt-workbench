@@ -2,6 +2,7 @@ import Modal from "@components/Modal";
 import DocsLink from "@components/links/DocsLink";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, FormInput, Loader } from "@dolthub/react-components";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { DatabaseParams } from "@lib/params";
 import dynamic from "next/dynamic";
@@ -22,8 +23,10 @@ export default function CreateViewModal({
   ...props
 }: Props): JSX.Element {
   const { executeQuery, error } = useSqlEditorContext("Views");
+  const { createView } = useSqlBuilder();
   const [name, setName] = useState("your_name_here");
   const [loading, setLoading] = useState(false);
+  const query = createView(name, props.query);
 
   const onClose = () => {
     setIsOpen(false);
@@ -34,7 +37,7 @@ export default function CreateViewModal({
     setLoading(true);
     await executeQuery({
       ...props.params,
-      query: `CREATE VIEW \`${name}\` AS ${props.query}`,
+      query,
     });
     setLoading(false);
   };
@@ -46,11 +49,7 @@ export default function CreateViewModal({
         onRequestClose={onClose}
         title="Create view"
         button={
-          <Button
-            disabled={!name}
-            type="submit"
-            data-cy="modal-create-view-button"
-          >
+          <Button disabled={!name} type="submit">
             Create
           </Button>
         }
@@ -64,14 +63,14 @@ export default function CreateViewModal({
         <div className={css.query}>
           <div className={css.label}>Query</div>
           <AceEditor
-            className="ace-view"
-            value={`CREATE VIEW \`${name}\` AS ${props.query}`}
+            value={query}
             name="AceViewer"
             fontSize={13}
             readOnly
             wrapEnabled
             showGutter={false}
             maxLines={6}
+            light
           />
         </div>
         <FormInput

@@ -56,6 +56,7 @@ export default function CommitModal(props: Props) {
             onChangeString={setMsg}
             rows={4}
             required
+            light
           />
           {/* <div>
             <Checkbox
