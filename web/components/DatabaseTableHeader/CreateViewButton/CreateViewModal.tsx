@@ -1,4 +1,3 @@
-import ButtonsWithError from "@components/ButtonsWithError";
 import Modal from "@components/Modal";
 import DocsLink from "@components/links/DocsLink";
 import { useSqlEditorContext } from "@contexts/sqleditor";
@@ -44,18 +43,23 @@ export default function CreateViewModal({
   };
 
   return (
-    <Modal
-      isOpen={props.isOpen}
-      onRequestClose={onClose}
-      title="Create view"
-      className={css.modal}
-    >
-      <p>
-        Learn more about views{" "}
-        <DocsLink systemTableType="schemas">here</DocsLink>.
-      </p>
-      <Loader loaded={!loading} />
-      <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
+      <Modal
+        isOpen={props.isOpen}
+        onRequestClose={onClose}
+        title="Create view"
+        button={
+          <Button disabled={!name} type="submit">
+            Create
+          </Button>
+        }
+        err={error}
+      >
+        <Loader loaded={!loading} />
+        <p>
+          Learn more about views{" "}
+          <DocsLink systemTableType="schemas">here</DocsLink>.
+        </p>
         <div className={css.query}>
           <div className={css.label}>Query</div>
           <AceEditor
@@ -75,17 +79,9 @@ export default function CreateViewModal({
           value={name}
           onChangeString={setName}
           data-cy="query-name"
+          light
         />
-        <ButtonsWithError onCancel={onClose} error={error}>
-          <Button
-            disabled={!name}
-            type="submit"
-            data-cy="modal-create-view-button"
-          >
-            Create
-          </Button>
-        </ButtonsWithError>
-      </form>
-    </Modal>
+      </Modal>
+    </form>
   );
 }

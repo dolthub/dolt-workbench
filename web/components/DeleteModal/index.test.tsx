@@ -16,7 +16,6 @@ describe("tests DeleteModal", () => {
       <MockedProvider mocks={[mocks.deleteBranchMutationMock]}>
         <DeleteModal
           title="Delete Object"
-          btnText="Delete object"
           isOpen
           setIsOpen={(_: boolean) => {}}
           mutationProps={{
@@ -35,14 +34,14 @@ describe("tests DeleteModal", () => {
     renderModal();
 
     await screen.findByText("Delete Object");
-    expect(screen.getByText("Delete object")).toBeInTheDocument();
+    expect(screen.getByText("Delete")).toBeInTheDocument();
     expect(screen.getByText(mocks.deleteMessage)).toBeInTheDocument();
   });
 
   it("deletes when delete is pressed", async () => {
     const { user } = renderModal();
 
-    await user.click(screen.getByText("Delete object"));
+    await user.click(screen.getByText("Delete"));
 
     await waitFor(() => {
       expect(mocks.deleteBranchNewData.mock.calls).toHaveLength(1);

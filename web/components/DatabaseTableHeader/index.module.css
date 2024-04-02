@@ -81,14 +81,6 @@
   }
 }
 
-.modal {
-  @apply text-center;
-}
-
-.innerModal {
-  @apply text-base max-w-lg px-10;
-}
-
 .err {
   @apply pt-0 mb-4;
 }

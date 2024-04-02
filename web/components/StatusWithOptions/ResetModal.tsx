@@ -20,10 +20,10 @@ export default function ResetModal(props: Props) {
 
   return (
     <Modal
-      title="Reset Uncommitted Changes"
+      title="Reset uncommitted changes"
       isOpen={props.isOpen}
       onRequestClose={onClose}
-      className={css.resetModal}
+      button={<Button onClick={onClose}>Done</Button>}
     >
       <div>
         <p>
@@ -68,7 +68,6 @@ export default function ResetModal(props: Props) {
             ))}
           </tbody>
         </table>
-        <Button onClick={onClose}>Done</Button>
       </div>
     </Modal>
   );

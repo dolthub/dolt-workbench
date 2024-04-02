@@ -29,7 +29,3 @@
     }
   }
 }
-
-.modal {
-  @apply max-w-md;
-}

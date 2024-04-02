@@ -1,0 +1,7 @@
+.createDB {
+  @apply text-sm flex items-center;
+
+  svg {
+    @apply mr-1;
+  }
+}

@@ -83,8 +83,7 @@ function Inner(props: InnerProps): JSX.Element {
         <DeleteModal
           isOpen={isDeleteModalOpen}
           setIsOpen={setDeleteModalOpen}
-          title="Delete Branch"
-          btnText="Delete branch"
+          title="Delete branch"
           mutationProps={{
             hook: useDeleteBranchMutation,
             variables: { ...props.params, branchName: branchNameToDelete },

@@ -2,10 +2,6 @@
   @apply px-3 py-0 ml-4 h-6 border;
 }
 
-.modal {
-  @apply w-[30rem] px-6;
-}
-
 .query {
   @apply mb-3;
 }

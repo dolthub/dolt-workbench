@@ -4,7 +4,6 @@ import { Button } from "@dolthub/react-components";
 import { ModalProps } from "@lib/modalProps";
 import { upload } from "@lib/urls";
 import { useFileUploadContext } from "../contexts/fileUploadLocalForage";
-import css from "./index.module.css";
 
 export default function WrongStageModal(props: ModalProps) {
   const { dbParams } = useFileUploadContext();
@@ -13,15 +12,17 @@ export default function WrongStageModal(props: ModalProps) {
       title="This page is stale"
       isOpen={props.isOpen}
       onRequestClose={() => props.setIsOpen(false)}
+      button={
+        <Link {...upload(dbParams)}>
+          <Button>Start over</Button>
+        </Link>
+      }
     >
-      <div className={css.modal}>
+      <div>
         <p>
           We did not find the expected information on this page. Please start
           the file upload process from the beginning.
         </p>
-        <Link {...upload(dbParams)}>
-          <Button>Start over</Button>
-        </Link>
       </div>
     </Modal>
   );

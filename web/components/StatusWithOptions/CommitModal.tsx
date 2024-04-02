@@ -1,4 +1,3 @@
-import ButtonsWithError from "@components/ButtonsWithError";
 import Modal from "@components/Modal";
 import { Button, Textarea } from "@dolthub/react-components";
 import { StatusFragment } from "@gen/graphql-types";
@@ -33,7 +32,16 @@ export default function CommitModal(props: Props) {
   };
 
   return (
-    <Modal title="Create Commit" isOpen={props.isOpen} onRequestClose={onClose}>
+    <Modal
+      title="Create commit"
+      isOpen={props.isOpen}
+      onRequestClose={onClose}
+      button={
+        <Button type="submit" disabled={!msg.length}>
+          Commit
+        </Button>
+      }
+    >
       <div>
         <p>
           Stages all tables and commits to{" "}
@@ -48,6 +56,7 @@ export default function CommitModal(props: Props) {
             onChangeString={setMsg}
             rows={4}
             required
+            light
           />
           {/* <div>
             <Checkbox
@@ -59,11 +68,6 @@ export default function CommitModal(props: Props) {
               commit author."
             />
           </div> */}
-          <ButtonsWithError onCancel={onClose}>
-            <Button type="submit" disabled={!msg.length}>
-              Commit
-            </Button>
-          </ButtonsWithError>
         </form>
       </div>
     </Modal>

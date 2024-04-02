@@ -3,36 +3,41 @@
 }
 
 .overlay {
-  @apply fixed top-0 left-0 w-full h-full z-100;
-  background: rgba(0, 0, 0, 0.6);
+  @apply fixed top-0 left-0 w-full h-full z-100 bg-acc-darkgrey/70;
 }
 
 .modal {
-  @apply fixed bg-white w-auto h-auto top-1/2 left-1/2 rounded -translate-x-1/2 -translate-y-1/2;
+  @apply fixed bg-white h-auto top-1/2 left-1/2 rounded-lg -translate-x-1/2 -translate-y-1/2 w-[325px] md:w-[500px];
+}
+
+.top {
+  @apply flex justify-between items-center py-4 px-6 border-b;
 }
 
 .inner {
-  @apply py-12 px-4 min-w-[20rem];
-
-  h2 {
-    @apply mb-4;
-  }
+  @apply p-6 bg-ld-grey;
   p {
-    @apply mb-4;
+    @apply mb-6;
   }
   form {
     @apply text-left;
   }
+}
 
-  @media md {
-    @apply px-12;
-  }
+.buttons {
+  @apply flex justify-end items-center py-4 px-6 border-t;
 }
 
 .close {
-  @apply float-right mt-5 mr-5;
-
   svg {
-    @apply text-xl;
+    @apply text-lg;
   }
+}
+
+.error {
+  @apply pt-0 max-w-[275px] pr-4;
+}
+
+.cancel {
+  @apply pr-4;
 }

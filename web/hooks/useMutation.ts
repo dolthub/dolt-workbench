@@ -6,9 +6,9 @@ import {
   MutationFunctionOptions,
   MutationHookOptions,
   MutationTuple,
+  MutationUpdaterFunction,
   NormalizedCacheObject,
 } from "@apollo/client";
-import { GraphQLError } from "graphql";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType, SetApolloErrorType } from "@lib/errors/types";
 import { RefetchQueries } from "@lib/refetchQueries";
@@ -16,13 +16,27 @@ import useApolloError from "./useApolloError";
 
 type ImproveErrFn = ((e: ApolloErrorType) => ApolloErrorType) | undefined;
 
-type Args<TData, TVariables> = {
+export type MutationArgs<TData, TVariables> = {
   hook: (
     baseOptions?: MutationHookOptions<TData, TVariables> | undefined,
   ) => MutationTuple<TData, TVariables>;
   refetchQueries?: RefetchQueries;
   improveErr?: ImproveErrFn;
+  update?:
+    | MutationUpdaterFunction<
+        TData,
+        TVariables,
+        DefaultContext,
+        ApolloCache<any>
+      >
+    | undefined;
 };
+
+type FnResult<TData> = FetchResult<
+  TData,
+  Record<string, any>,
+  Record<string, any>
+> & { success: boolean };
 
 export type MutationResultType<TData, TVariables> = {
   loading: boolean;
@@ -31,7 +45,7 @@ export type MutationResultType<TData, TVariables> = {
   called: boolean;
   mutateFn: (
     options?: MutationFunctionOptions<TData, TVariables> | undefined,
-  ) => Promise<FetchResult<TData, Record<string, any>, Record<string, any>>>;
+  ) => Promise<FnResult<TData>>;
   client: ApolloClient<object>;
 };
 
@@ -39,8 +53,12 @@ export default function useMutation<TData, TVariables>({
   hook,
   refetchQueries,
   improveErr,
-}: Args<TData, TVariables>): MutationResultType<TData, TVariables> {
-  const [fn, { error, loading, called, client }] = hook({ refetchQueries });
+  update,
+}: MutationArgs<TData, TVariables>): MutationResultType<TData, TVariables> {
+  const [fn, { error, loading, called, client }] = hook({
+    refetchQueries,
+    update,
+  });
   const [err, setErr] = useApolloError(handleErr(error, improveErr));
   const mutateFn = async (
     options?: MutationFunctionOptions<
@@ -49,15 +67,13 @@ export default function useMutation<TData, TVariables>({
       DefaultContext,
       ApolloCache<NormalizedCacheObject>
     >,
-  ): Promise<FetchResult<TData, Record<string, any>, Record<string, any>>> => {
+  ): Promise<FnResult<TData>> => {
     try {
-      return await fn(options);
+      const res = await fn(options);
+      return { ...res, success: true };
     } catch (e) {
       handleCaughtApolloError(e, er => setErr(handleErr(er, improveErr)));
-      // Should not be used to render error, but to check if error exists
-      const gqlErr =
-        e instanceof Error ? [new GraphQLError(e.message)] : undefined;
-      return { data: undefined, errors: gqlErr };
+      return { data: undefined, success: false };
     }
   };
   return { loading, called, mutateFn, err, setErr, client };

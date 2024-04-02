@@ -22,10 +22,6 @@
   @apply ml-3;
 }
 
-.resetModal {
-  @apply px-4 py-2 max-w-lg;
-}
-
 .resetTable {
   @apply mb-6;
 
