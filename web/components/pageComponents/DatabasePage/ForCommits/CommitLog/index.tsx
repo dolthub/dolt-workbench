@@ -5,6 +5,7 @@ import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
 import CommitGraphButton from "./CommitGraphButton";
 import CommitHeader from "./CommitHeader";
@@ -26,6 +27,22 @@ function Inner({ commits, ...props }: InnerProps) {
   const router = useRouter();
   useAnchorTag();
   const { isMobile } = useReactiveWidth(1024);
+  const [activeHash, setActiveHash] = useState(
+    router.asPath.split("#")[1] || "",
+  );
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace("#", "");
+      setActiveHash(hash);
+    };
+
+    window.addEventListener("hashchange", handleHashChange, false);
+
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange, false);
+    };
+  }, []);
 
   return (
     <div>
@@ -63,7 +80,7 @@ function Inner({ commits, ...props }: InnerProps) {
                       {...props}
                       key={c._id}
                       commit={c}
-                      activeHash={router.asPath.split("#")[1]}
+                      activeHash={activeHash}
                     />
                   </>
                 );

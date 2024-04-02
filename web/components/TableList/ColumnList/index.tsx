@@ -66,7 +66,7 @@ function ColumnItem({ col }: { col: ColumnForTableListFragment }) {
   );
 }
 
-const collateRegex = /COLLATE UTF8MB4_0900_(AI_CI|BIN)/;
+const collateRegex = /\s+COLLATE\s+\w+/i;
 
 function getConstraints(c: Column): string {
   return c.constraints?.some(con => con.notNull) ? " NOT NULL" : "";
