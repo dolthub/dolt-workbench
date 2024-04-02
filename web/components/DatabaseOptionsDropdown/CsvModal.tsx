@@ -5,7 +5,7 @@ import { isTimeoutError } from "@lib/errors/helpers";
 import { ModalProps } from "@lib/modalProps";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
-import Modal from "../Modal";
+import { ModalButtons, ModalInner, ModalOuter } from "../Modal";
 import DownloadForExcelHelpPopup from "./DownloadForExcelHelpPopup";
 import css from "./index.module.css";
 import { exportToCsv } from "./utils";
@@ -57,36 +57,39 @@ function Inner(props: Props) {
 
   return (
     <div>
-      <p>
-        There are {data.sqlSelectForCsvDownload.split("\r\n").length - 1} rows
-        available for download.
-      </p>
-      <FormInput
-        value={fileName}
-        onChangeString={setFileName}
-        label="File Name"
-        className={css.fileName}
-      />
-      <Button.Group>
+      <ModalInner>
+        <p>
+          There are {data.sqlSelectForCsvDownload.split("\r\n").length - 1} rows
+          available for download.
+        </p>
+        <FormInput
+          value={fileName}
+          onChangeString={setFileName}
+          label="File name"
+          className={css.fileName}
+          light
+        />
+      </ModalInner>
+      <ModalButtons onRequestClose={() => props.setIsOpen(false)}>
         <Button onClick={async () => exportSql()}>Export to CSV</Button>
         <Button onClick={async () => exportSql(true)}>
           Export to CSV for Excel
           <DownloadForExcelHelpPopup id={`${props.params.refName}-query`} />
         </Button>
-      </Button.Group>
+      </ModalButtons>
     </div>
   );
 }
 
 export default function CsvModal(props: Props) {
   return (
-    <Modal
+    <ModalOuter
       onRequestClose={() => props.setIsOpen(false)}
       isOpen={props.isOpen}
       className={css.downloadCsv}
       title="Download query results"
     >
       <Inner {...props} />
-    </Modal>
+    </ModalOuter>
   );
 }

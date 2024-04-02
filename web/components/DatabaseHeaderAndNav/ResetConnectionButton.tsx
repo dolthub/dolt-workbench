@@ -39,9 +39,9 @@ export default function ResetConnectionButton() {
         isOpen={errorModalOpen}
         onRequestClose={onClose}
         title="Error resetting connection"
+        button={<Button onClick={onClose}>OK</Button>}
       >
         <ErrorMsg err={err} />
-        <Button onClick={onClose}>Close</Button>
       </Modal>
     </>
   );

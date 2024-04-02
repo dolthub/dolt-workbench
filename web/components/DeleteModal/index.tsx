@@ -1,5 +1,4 @@
 import { MutationHookOptions, MutationTuple } from "@apollo/client";
-import ButtonsWithError from "@components/ButtonsWithError";
 import Modal from "@components/Modal";
 import { Button, Loader } from "@dolthub/react-components";
 import useMutation from "@hooks/useMutation";
@@ -18,7 +17,6 @@ type Props<TData, TVariables> = {
   isOpen: boolean;
   setIsOpen: (b: boolean) => void;
   title: string;
-  btnText: string;
   mutationProps: MutationProps<TData, TVariables>;
   callback?: (d: TData) => void;
   children: ReactNode;
@@ -29,7 +27,6 @@ export default function DeleteModal<TData, TVariables>({
   isOpen,
   setIsOpen,
   title,
-  btnText,
   mutationProps,
   callback,
   children,
@@ -65,14 +62,15 @@ export default function DeleteModal<TData, TVariables>({
       onRequestClose={onClose}
       title={title}
       className={className}
+      button={
+        <Button onClick={onDelete} red>
+          Delete
+        </Button>
+      }
+      err={err}
     >
       <Loader loaded={!loading} />
       {children}
-      <ButtonsWithError onCancel={onClose} error={err}>
-        <Button onClick={onDelete} red>
-          {btnText}
-        </Button>
-      </ButtonsWithError>
     </Modal>
   );
 }

@@ -19,12 +19,11 @@ export default function ErrorModal(props: Props) {
     <Modal
       isOpen={props.isOpen}
       onRequestClose={onClose}
-      title="Query Error"
-      className={css.modal}
+      title="Query error"
+      button={<Button onClick={onClose}>Got it</Button>}
     >
-      <div data-cy="error-modal" className={css.innerModal}>
+      <div data-cy="error-modal">
         <QueryError err={error} />
-        <Button onClick={onClose}>Got it</Button>
       </div>
     </Modal>
   );

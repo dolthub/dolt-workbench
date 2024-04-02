@@ -40,8 +40,7 @@ export default function ExistingConnections(props: Props) {
         <DeleteModal
           isOpen={deleteModalOpen}
           setIsOpen={setDeleteModalOpen}
-          title="Delete Connection"
-          btnText="Delete connection"
+          title="Delete connection"
           mutationProps={{
             hook: useRemoveConnectionMutation,
             variables: { name: connectionNameToDelete },

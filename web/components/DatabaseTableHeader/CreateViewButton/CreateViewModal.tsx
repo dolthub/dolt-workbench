@@ -1,9 +1,7 @@
-import ButtonsWithError from "@components/ButtonsWithError";
 import Modal from "@components/Modal";
 import DocsLink from "@components/links/DocsLink";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, FormInput, Loader } from "@dolthub/react-components";
-import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { DatabaseParams } from "@lib/params";
 import dynamic from "next/dynamic";
@@ -24,10 +22,8 @@ export default function CreateViewModal({
   ...props
 }: Props): JSX.Element {
   const { executeQuery, error } = useSqlEditorContext("Views");
-  const { createView } = useSqlBuilder();
   const [name, setName] = useState("your_name_here");
   const [loading, setLoading] = useState(false);
-  const query = createView(name, props.query);
 
   const onClose = () => {
     setIsOpen(false);
@@ -38,35 +34,44 @@ export default function CreateViewModal({
     setLoading(true);
     await executeQuery({
       ...props.params,
-      query,
+      query: `CREATE VIEW \`${name}\` AS ${props.query}`,
     });
     setLoading(false);
   };
 
   return (
-    <Modal
-      isOpen={props.isOpen}
-      onRequestClose={onClose}
-      title="Create view"
-      className={css.modal}
-    >
-      <p>
-        Learn more about views{" "}
-        <DocsLink systemTableType="schemas">here</DocsLink>.
-      </p>
-      <Loader loaded={!loading} />
-      <form onSubmit={onSubmit}>
+    <form onSubmit={onSubmit}>
+      <Modal
+        isOpen={props.isOpen}
+        onRequestClose={onClose}
+        title="Create view"
+        button={
+          <Button
+            disabled={!name}
+            type="submit"
+            data-cy="modal-create-view-button"
+          >
+            Create
+          </Button>
+        }
+        err={error}
+      >
+        <Loader loaded={!loading} />
+        <p>
+          Learn more about views{" "}
+          <DocsLink systemTableType="schemas">here</DocsLink>.
+        </p>
         <div className={css.query}>
           <div className={css.label}>Query</div>
           <AceEditor
-            value={query}
+            className="ace-view"
+            value={`CREATE VIEW \`${name}\` AS ${props.query}`}
             name="AceViewer"
             fontSize={13}
             readOnly
             wrapEnabled
             showGutter={false}
             maxLines={6}
-            light
           />
         </div>
         <FormInput
@@ -75,17 +80,9 @@ export default function CreateViewModal({
           value={name}
           onChangeString={setName}
           data-cy="query-name"
+          light
         />
-        <ButtonsWithError onCancel={onClose} error={error}>
-          <Button
-            disabled={!name}
-            type="submit"
-            data-cy="modal-create-view-button"
-          >
-            Create
-          </Button>
-        </ButtonsWithError>
-      </form>
-    </Modal>
+      </Modal>
+    </form>
   );
 }

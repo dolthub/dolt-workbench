@@ -62,8 +62,7 @@ function Inner({ tags, ...props }: InnerProps) {
       <DeleteModal
         isOpen={deleteModalOpen}
         setIsOpen={setDeleteModalOpen}
-        title="Delete Release"
-        btnText="Delete release"
+        title="Delete release"
         mutationProps={{
           hook: useDeleteTagMutation,
           variables: { ...props.params, tagName: tagNameToDelete },

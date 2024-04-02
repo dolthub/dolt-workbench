@@ -8,8 +8,3 @@ export const vcci = validClientCredentialIdPattern;
 export const vcid = validCommitIdResourceSegmentPattern;
 export const ve = validEmailPattern;
 export const vin = validInvitationNamePattern;
-
-export function initialUppercase(s: string) {
-  const [first, ...rest] = s;
-  return [first.toLocaleUpperCase(), ...rest].join("");
-}

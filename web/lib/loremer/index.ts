@@ -1,5 +1,5 @@
-import { nTimes, randomArrayItem } from "@dolthub/web-utils";
-import { initialUppercase, validResourceSegmentPattern } from "./utils";
+import { initialUppercase, nTimes, randomArrayItem } from "@dolthub/web-utils";
+import { validResourceSegmentPattern } from "./utils";
 import defaultWords from "./words";
 
 type LoremerOptions = { words: string[] | string };
