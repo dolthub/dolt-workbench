@@ -36,9 +36,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.7.0":
-  version: 3.9.5
-  resolution: "@apollo/client@npm:3.9.5"
+"@apollo/client@npm:^3.7.0, @apollo/client@npm:^3.9.9":
+  version: 3.9.10
+  resolution: "@apollo/client@npm:3.9.10"
   dependencies:
     "@graphql-typed-document-node/core": "npm:^3.1.1"
     "@wry/caches": "npm:^1.0.0"
@@ -48,7 +48,7 @@ __metadata:
     hoist-non-react-statics: "npm:^3.3.2"
     optimism: "npm:^0.18.0"
     prop-types: "npm:^15.7.2"
-    rehackt: "npm:0.0.5"
+    rehackt: "npm:0.0.6"
     response-iterator: "npm:^0.2.6"
     symbol-observable: "npm:^4.0.0"
     ts-invariant: "npm:^0.10.3"
@@ -69,7 +69,7 @@ __metadata:
       optional: true
     subscriptions-transport-ws:
       optional: true
-  checksum: ede8ea975ba12cbf11d1b88074808ff7c8677321b5780c952c4b7d7672a4bdda24f27a6a1fed79cc6e6d9787b083f12afed0033c2fee06a2d226faadf3f44aec
+  checksum: 4bec40c73a4acc8aac0341e944e06a67b22008a5f42c9b8bcc1d5f0a1ebe5fef5614ccba163e9c58f945fea5ce89e7d1c8f12f281ab3e423b81c24e6c96dd8d3
   languageName: node
   linkType: hard
 
@@ -814,16 +814,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.9.2":
-  version: 7.23.9
-  resolution: "@babel/runtime@npm:7.23.9"
-  dependencies:
-    regenerator-runtime: "npm:^0.14.0"
-  checksum: e71205fdd7082b2656512cc98e647d9ea7e222e4fe5c36e9e5adc026446fcc3ba7b3cdff8b0b694a0b78bb85db83e7b1e3d4c56ef90726682b74f13249cf952d
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.8.7":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.12.0, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.18.3, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.5.5, @babel/runtime@npm:^7.7.2, @babel/runtime@npm:^7.8.7, @babel/runtime@npm:^7.9.2":
   version: 7.24.0
   resolution: "@babel/runtime@npm:7.24.0"
   dependencies:
@@ -919,16 +910,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/css-parser-algorithms@npm:^2.6.0":
-  version: 2.6.0
-  resolution: "@csstools/css-parser-algorithms@npm:2.6.0"
-  peerDependencies:
-    "@csstools/css-tokenizer": ^2.2.3
-  checksum: 3f614089a76e7613e50319aafab41a62b0eeaacedb10149e8b560489ac7aef7f8bf99d429837c0dc8eb0ee175d7a244d310dc2ffa9780d8f2bcf440249bc63d4
-  languageName: node
-  linkType: hard
-
-"@csstools/css-parser-algorithms@npm:^2.6.1":
+"@csstools/css-parser-algorithms@npm:^2.6.0, @csstools/css-parser-algorithms@npm:^2.6.1":
   version: 2.6.1
   resolution: "@csstools/css-parser-algorithms@npm:2.6.1"
   peerDependencies:
@@ -937,31 +919,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@csstools/css-tokenizer@npm:^2.2.3":
-  version: 2.2.3
-  resolution: "@csstools/css-tokenizer@npm:2.2.3"
-  checksum: 557266ec52e8b36c19008a5bbd7151effba085cdd6d68270c01afebf914981caac698eda754b2a530a8a9947a3dd70e3f3a39a5e037c4170bb2a055a92754acb
-  languageName: node
-  linkType: hard
-
-"@csstools/css-tokenizer@npm:^2.2.4":
+"@csstools/css-tokenizer@npm:^2.2.3, @csstools/css-tokenizer@npm:^2.2.4":
   version: 2.2.4
   resolution: "@csstools/css-tokenizer@npm:2.2.4"
   checksum: 23997db5874514f4b951ebd215e1e6cc8baf03adf9a35fc6fd028b84cb52aa2dc053860722108c09859a9b37b455f62b84181fe15539cd37797ea699b9ff85f0
   languageName: node
   linkType: hard
 
-"@csstools/media-query-list-parser@npm:^2.1.8":
-  version: 2.1.8
-  resolution: "@csstools/media-query-list-parser@npm:2.1.8"
-  peerDependencies:
-    "@csstools/css-parser-algorithms": ^2.6.0
-    "@csstools/css-tokenizer": ^2.2.3
-  checksum: 4e12f2bf7d70eef41861769cef0e3258f57fb6351e42b479a2679a9f95db2c62107b88237fb7e2aa940ac4e2ddcb335ffe6aa197ee9805547486453a72cac315
-  languageName: node
-  linkType: hard
-
-"@csstools/media-query-list-parser@npm:^2.1.9":
+"@csstools/media-query-list-parser@npm:^2.1.8, @csstools/media-query-list-parser@npm:^2.1.9":
   version: 2.1.9
   resolution: "@csstools/media-query-list-parser@npm:2.1.9"
   peerDependencies:
@@ -1350,7 +1315,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
-    "@apollo/client": "npm:^3.7.0"
+    "@apollo/client": "npm:^3.9.9"
     "@dolthub/react-components": "npm:^0.1.12"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
@@ -1364,7 +1329,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.1.6"
     "@testing-library/react": "npm:^14.1.2"
     "@testing-library/user-event": "npm:^14.5.1"
-    "@types/apollo-upload-client": "npm:^17.0.4"
+    "@types/apollo-upload-client": "npm:^17"
     "@types/chance": "npm:^1.1.5"
     "@types/diff": "npm:^5.0.9"
     "@types/jest": "npm:^29.5.6"
@@ -1473,20 +1438,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/react-hooks@npm:^0.1.6":
-  version: 0.1.6
-  resolution: "@dolthub/react-hooks@npm:0.1.6"
-  dependencies:
-    js-cookie: "npm:^3.0.5"
-    react-hotkeys: "npm:^2.0.0"
-  peerDependencies:
-    react: ^18.2.0
-    react-dom: ^18.2.0
-  checksum: fcb19dbaa3b10cb41f9ce71a71aad6c7e45a88824f14249ba847e644d1666c95d73bc3ee44fb99d710e5a5ed5fc0ac0523b5d924cb3e5039ab4bbbc0521db35f
-  languageName: node
-  linkType: hard
-
-"@dolthub/react-hooks@npm:^0.1.7":
+"@dolthub/react-hooks@npm:^0.1.6, @dolthub/react-hooks@npm:^0.1.7":
   version: 0.1.7
   resolution: "@dolthub/react-hooks@npm:0.1.7"
   dependencies:
@@ -1500,17 +1452,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.3":
-  version: 0.1.3
-  resolution: "@dolthub/web-utils@npm:0.1.3"
-  dependencies:
-    node-sql-parser: "npm:^4.17.0"
-    timeago.js: "npm:^4.0.2"
-  checksum: 24613b28d62d6eac2204dbda86e0a065891acf2e8b3bb9bd0d47b72c32afbd8b8cc64e25c28b85b4745d7632ad37151380cf4fc5de58c7314ec68ae18e07727c
-  languageName: node
-  linkType: hard
-
-"@dolthub/web-utils@npm:^0.1.4":
+"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.3, @dolthub/web-utils@npm:^0.1.4":
   version: 0.1.4
   resolution: "@dolthub/web-utils@npm:0.1.4"
   dependencies:
@@ -3433,7 +3375,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/apollo-upload-client@npm:^17.0.4":
+"@types/apollo-upload-client@npm:^17":
   version: 17.0.5
   resolution: "@types/apollo-upload-client@npm:17.0.5"
   dependencies:
@@ -4822,25 +4764,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"autoprefixer@npm:^10.4.17":
-  version: 10.4.17
-  resolution: "autoprefixer@npm:10.4.17"
-  dependencies:
-    browserslist: "npm:^4.22.2"
-    caniuse-lite: "npm:^1.0.30001578"
-    fraction.js: "npm:^4.3.7"
-    normalize-range: "npm:^0.1.2"
-    picocolors: "npm:^1.0.0"
-    postcss-value-parser: "npm:^4.2.0"
-  peerDependencies:
-    postcss: ^8.1.0
-  bin:
-    autoprefixer: bin/autoprefixer
-  checksum: 1d21cc8edb7bf993682094ceed03a32c18f5293f071182a64c2c6defb44bbe91d576ad775d2347469a81997b80cea0bbc4ad3eeb5b12710f9feacf2e6c04bb51
-  languageName: node
-  linkType: hard
-
-"autoprefixer@npm:^10.4.19":
+"autoprefixer@npm:^10.4.17, autoprefixer@npm:^10.4.19":
   version: 10.4.19
   resolution: "autoprefixer@npm:10.4.19"
   dependencies:
@@ -5277,14 +5201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001578, caniuse-lite@npm:^1.0.30001579, caniuse-lite@npm:^1.0.30001587":
-  version: 1.0.30001587
-  resolution: "caniuse-lite@npm:1.0.30001587"
-  checksum: c7a34cb758a24fa1d948e164de3c5873e7e607b46db0e530ba160a281cb619c9d6a1b85bb334894bc8e629a59db99f3de4521593b08142d317a529e80a856385
-  languageName: node
-  linkType: hard
-
-"caniuse-lite@npm:^1.0.30001599":
+"caniuse-lite@npm:^1.0.0, caniuse-lite@npm:^1.0.30001579, caniuse-lite@npm:^1.0.30001587, caniuse-lite@npm:^1.0.30001599":
   version: 1.0.30001603
   resolution: "caniuse-lite@npm:1.0.30001603"
   checksum: 6564da28297a64e88302ddab0768fa72ff383213dd9c02bd113d14eeb22ba30fd00bc171bdbf4f6ff1159c138ed3b37ecc952f172d5153d6ab6118c572992374
@@ -12111,17 +12028,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss-selector-parser@npm:^6.0.11, postcss-selector-parser@npm:^6.0.13, postcss-selector-parser@npm:^6.0.15":
-  version: 6.0.15
-  resolution: "postcss-selector-parser@npm:6.0.15"
-  dependencies:
-    cssesc: "npm:^3.0.0"
-    util-deprecate: "npm:^1.0.2"
-  checksum: 48b425d6cef497bcf6b7d136f6fd95cfca43026955e07ec9290d3c15457de3a862dbf251dd36f42c07a0d5b5ab6f31e41acefeff02528995a989b955505e440b
-  languageName: node
-  linkType: hard
-
-"postcss-selector-parser@npm:^6.0.16":
+"postcss-selector-parser@npm:^6.0.11, postcss-selector-parser@npm:^6.0.13, postcss-selector-parser@npm:^6.0.15, postcss-selector-parser@npm:^6.0.16":
   version: 6.0.16
   resolution: "postcss-selector-parser@npm:6.0.16"
   dependencies:
@@ -12172,18 +12079,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.23, postcss@npm:^8.4.31":
-  version: 8.4.35
-  resolution: "postcss@npm:8.4.35"
-  dependencies:
-    nanoid: "npm:^3.3.7"
-    picocolors: "npm:^1.0.0"
-    source-map-js: "npm:^1.0.2"
-  checksum: e8dd04e48001eb5857abc9475365bf08f4e508ddf9bc0b8525449a95d190f10d025acebc5b56ac2e94b3c7146790e4ae78989bb9633cb7ee20d1cc9b7dc909b2
-  languageName: node
-  linkType: hard
-
-"postcss@npm:^8.4.38":
+"postcss@npm:^8.4.23, postcss@npm:^8.4.31, postcss@npm:^8.4.38":
   version: 8.4.38
   resolution: "postcss@npm:8.4.38"
   dependencies:
@@ -12666,9 +12562,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rehackt@npm:0.0.5":
-  version: 0.0.5
-  resolution: "rehackt@npm:0.0.5"
+"rehackt@npm:0.0.6":
+  version: 0.0.6
+  resolution: "rehackt@npm:0.0.6"
   peerDependencies:
     "@types/react": "*"
     react: "*"
@@ -12677,7 +12573,7 @@ __metadata:
       optional: true
     react:
       optional: true
-  checksum: 6123188b6cae82441e2e670ec1dbd741a11874958479b44a69323429bc038398a0b431ffd845c69fc60cc0c0939252ffd2cb37255c314eda38f6a4072bf81b56
+  checksum: 814c9b80b2680dc0572639ecad1ed1961b23b606e53a00976ee4c4876f6ed736ea702381235ac40ed2a5c826fb55641b46ae23343e4ddd6378ced1da3d51ada7
   languageName: node
   linkType: hard
 
@@ -13312,14 +13208,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"source-map-js@npm:^1.0.1, source-map-js@npm:^1.0.2":
-  version: 1.0.2
-  resolution: "source-map-js@npm:1.0.2"
-  checksum: 32f2dfd1e9b7168f9a9715eb1b4e21905850f3b50cf02cf476e47e4eebe8e6b762b63a64357896aa29b37e24922b4282df0f492e0d2ace572b43d15525976ff8
-  languageName: node
-  linkType: hard
-
-"source-map-js@npm:^1.2.0":
+"source-map-js@npm:^1.0.1, source-map-js@npm:^1.0.2, source-map-js@npm:^1.2.0":
   version: 1.2.0
   resolution: "source-map-js@npm:1.2.0"
   checksum: 7e5f896ac10a3a50fe2898e5009c58ff0dc102dcb056ed27a354623a0ece8954d4b2649e1a1b2b52ef2e161d26f8859c7710350930751640e71e374fe2d321a4
