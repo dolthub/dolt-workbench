@@ -62,21 +62,15 @@ function Inner({ tags, ...props }: InnerProps) {
       <DeleteModal
         isOpen={deleteModalOpen}
         setIsOpen={setDeleteModalOpen}
-        title="Delete release"
+        asset="release"
+        assetId={tagNameToDelete}
         mutationProps={{
           hook: useDeleteTagMutation,
           variables: { ...props.params, tagName: tagNameToDelete },
           refetchQueries: refetchTagQueries(props.params),
         }}
-      >
-        <p>
-          Are you sure you want to delete the{" "}
-          <span className={css.releaseToDelete}>{tagNameToDelete}</span>{" "}
-          release?
-          <br />
-          This cannot be undone.
-        </p>
-      </DeleteModal>
+        cannotBeUndone
+      />
     </div>
   );
 }

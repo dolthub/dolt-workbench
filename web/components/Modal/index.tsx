@@ -9,7 +9,7 @@ import css from "./index.module.css";
 
 type ButtonProps = {
   onRequestClose: () => void | Promise<void>;
-  children: ReactNode;
+  children?: ReactNode;
   err?: ApolloErrorType;
 };
 
@@ -73,7 +73,7 @@ export function ModalButtons(props: ButtonProps) {
         <Button.Link className={css.cancel} onClick={props.onRequestClose}>
           Cancel
         </Button.Link>
-        {props.children}
+        {props.children ?? <Button onClick={props.onRequestClose}>OK</Button>}
       </Button.Group>
     </div>
   );

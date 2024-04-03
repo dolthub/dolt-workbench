@@ -1,36 +1,32 @@
-import { MutationHookOptions, MutationTuple } from "@apollo/client";
 import Modal from "@components/Modal";
 import { Button, Loader } from "@dolthub/react-components";
-import useMutation from "@hooks/useMutation";
-import { RefetchQueries } from "@lib/refetchQueries";
+import useMutation, { MutationArgs } from "@hooks/useMutation";
 import { ReactNode } from "react";
+import css from "./index.module.css";
 
-type MutationProps<TData, TVariables> = {
-  hook: (
-    baseOptions?: MutationHookOptions<TData, TVariables> | undefined,
-  ) => MutationTuple<TData, TVariables>;
+type MutationProps<TData, TVariables> = MutationArgs<TData, TVariables> & {
   variables: TVariables; // Variables to pass to the mutation
-  refetchQueries?: RefetchQueries;
 };
 
 type Props<TData, TVariables> = {
   isOpen: boolean;
   setIsOpen: (b: boolean) => void;
-  title: string;
+  cannotBeUndone?: boolean;
+  asset: string;
+  assetId?: string;
+  btnText?: string;
   mutationProps: MutationProps<TData, TVariables>;
   callback?: (d: TData) => void;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
+  buttonDataCy?: string;
 };
 
 export default function DeleteModal<TData, TVariables>({
-  isOpen,
-  setIsOpen,
-  title,
-  mutationProps,
-  callback,
   children,
   className,
+  mutationProps,
+  ...props
 }: Props<TData, TVariables>): JSX.Element {
   const {
     mutateFn: deleteMutation,
@@ -40,36 +36,49 @@ export default function DeleteModal<TData, TVariables>({
   } = useMutation<TData, TVariables>({
     hook: mutationProps.hook,
     refetchQueries: mutationProps.refetchQueries,
+    update: mutationProps.update,
   });
 
   const onClose = () => {
     setErr(undefined);
-    setIsOpen(false);
+    props.setIsOpen(false);
   };
 
   const onDelete = async () => {
-    const { data } = await deleteMutation({
+    const { success, data } = await deleteMutation({
       variables: mutationProps.variables,
     });
-    if (!data) return;
-    if (callback) callback(data);
+    if (!success || !data) return;
+    if (props.callback) props.callback(data);
     onClose();
   };
 
   return (
     <Modal
-      isOpen={isOpen}
+      isOpen={props.isOpen}
       onRequestClose={onClose}
-      title={title}
+      title={`Delete ${props.asset}`}
       className={className}
+      err={err}
       button={
-        <Button onClick={onDelete} red>
-          Delete
+        <Button
+          onClick={onDelete}
+          red
+          disabled={loading}
+          data-cy={props.buttonDataCy}
+        >
+          {props.btnText ?? "Delete"}
         </Button>
       }
-      err={err}
     >
       <Loader loaded={!loading} />
+      {props.assetId && (
+        <p>
+          Are you sure you want to delete {props.asset}{" "}
+          <span className={css.bold}>{props.assetId}</span>?
+          {props.cannotBeUndone && " This cannot be undone."}
+        </p>
+      )}
       {children}
     </Modal>
   );

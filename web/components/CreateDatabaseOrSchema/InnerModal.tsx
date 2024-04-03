@@ -23,9 +23,7 @@ export default function InnerModal(props: InnerProps) {
         <ModalInner>
           <p>You must have write permissions to create a new {props.name}.</p>
         </ModalInner>
-        <ModalButtons onRequestClose={props.onClose}>
-          <Button onClick={props.onClose}>OK</Button>
-        </ModalButtons>
+        <ModalButtons onRequestClose={props.onClose} />
       </div>
     );
   }
@@ -36,9 +34,7 @@ export default function InnerModal(props: InnerProps) {
         <ModalInner>
           <p>You must enable writes to create a new {props.name}.</p>
         </ModalInner>
-        <ModalButtons onRequestClose={props.onClose}>
-          <Button onClick={props.onClose}>OK</Button>
-        </ModalButtons>
+        <ModalButtons onRequestClose={props.onClose} />
       </div>
     );
   }

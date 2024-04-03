@@ -14,7 +14,7 @@ import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { OptionalRefParams } from "@lib/params";
 import { refetchBranchQueries } from "@lib/refetchQueries";
-import { newBranch, ref } from "@lib/urls";
+import { newBranch } from "@lib/urls";
 import { useState } from "react";
 import BranchList from "./BranchList";
 import css from "./index.module.css";
@@ -83,23 +83,15 @@ function Inner(props: InnerProps): JSX.Element {
         <DeleteModal
           isOpen={isDeleteModalOpen}
           setIsOpen={setDeleteModalOpen}
-          title="Delete branch"
+          asset="branch"
+          assetId={branchNameToDelete}
           mutationProps={{
             hook: useDeleteBranchMutation,
             variables: { ...props.params, branchName: branchNameToDelete },
             refetchQueries: refetchBranchQueries(props.params),
           }}
-        >
-          <p>
-            Are you sure you want to delete the{" "}
-            <Link {...ref({ ...props.params, refName: branchNameToDelete })}>
-              {branchNameToDelete}{" "}
-            </Link>
-            branch?
-            <br />
-            This cannot be undone.
-          </p>
-        </DeleteModal>
+          cannotBeUndone
+        />
       </div>
     </div>
   );

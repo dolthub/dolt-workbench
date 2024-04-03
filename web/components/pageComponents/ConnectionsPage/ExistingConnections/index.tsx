@@ -40,18 +40,14 @@ export default function ExistingConnections(props: Props) {
         <DeleteModal
           isOpen={deleteModalOpen}
           setIsOpen={setDeleteModalOpen}
-          title="Delete connection"
+          asset="connection"
+          assetId={connectionNameToDelete}
           mutationProps={{
             hook: useRemoveConnectionMutation,
             variables: { name: connectionNameToDelete },
             refetchQueries: [{ query: StoredConnectionsDocument }],
           }}
-        >
-          <p>
-            Are you sure you want to delete the &quot;{connectionNameToDelete}
-            &quot; connection?
-          </p>
-        </DeleteModal>
+        />
         <Button
           onClick={() => props.setShowForm(true)}
           className={css.newConnection}
