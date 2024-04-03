@@ -1,7 +1,6 @@
-import ErrorMsg from "@components/ErrorMsg";
 import Modal from "@components/Modal";
 import Tooltip from "@components/Tooltip";
-import { Button, SmallLoader } from "@dolthub/react-components";
+import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import { useResetDatabaseMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { IoReloadSharp } from "@react-icons/all-files/io5/IoReloadSharp";

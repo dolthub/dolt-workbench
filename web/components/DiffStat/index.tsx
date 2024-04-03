@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client";
-import ErrorMsg from "@components/ErrorMsg";
 import { useDiffContext } from "@contexts/diff";
+import { ErrorMsg } from "@dolthub/react-components";
 import { DiffStatForDiffsFragment, useDiffStatQuery } from "@gen/graphql-types";
 import { gqlErrorPrimaryKeyChange } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";

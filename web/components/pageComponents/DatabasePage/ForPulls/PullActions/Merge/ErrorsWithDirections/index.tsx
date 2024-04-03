@@ -1,4 +1,4 @@
-import ErrorMsg from "@components/ErrorMsg";
+import { ErrorMsg } from "@dolthub/react-components";
 import { ApolloErrorType } from "@lib/errors/types";
 import cx from "classnames";
 import { useEffect } from "react";

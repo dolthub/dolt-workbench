@@ -1,5 +1,4 @@
-import ErrorMsg from "@components/ErrorMsg";
-import { Btn, Button } from "@dolthub/react-components";
+import { Btn, Button, ErrorMsg } from "@dolthub/react-components";
 import { useOnClickOutside } from "@dolthub/react-hooks";
 import { ApolloErrorType } from "@lib/errors/types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";

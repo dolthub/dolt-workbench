@@ -1,5 +1,6 @@
+import { isTimeoutError } from "@dolthub/react-components";
 import { gqlPullHasConflicts } from "@lib/errors/graphql";
-import { errorMatches, isTimeoutError } from "@lib/errors/helpers";
+import { errorMatches } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 
 type MergeError = {

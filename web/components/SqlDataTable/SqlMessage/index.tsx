@@ -1,8 +1,7 @@
 import { ApolloError } from "@apollo/client";
-import ErrorMsg from "@components/ErrorMsg";
+import { ErrorMsg, isTimeoutError } from "@dolthub/react-components";
 import { QueryExecutionStatus } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import { isTimeoutError } from "@lib/errors/helpers";
 import { SqlQueryParams } from "@lib/params";
 import SuccessMsg from "./SuccessMsg";
 import TimeoutMessage from "./TimeoutMsg";

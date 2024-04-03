@@ -1,6 +1,5 @@
-import ErrorMsg from "@components/ErrorMsg";
 import TableSelector from "@components/TableSelector";
-import { Loader } from "@dolthub/react-components";
+import { ErrorMsg, Loader } from "@dolthub/react-components";
 import StepLayout from "../../StepLayout";
 import UploadQueryInfo from "../../UploadQueryInfo";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";

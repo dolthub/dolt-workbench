@@ -1,7 +1,6 @@
-import ErrorMsg from "@components/ErrorMsg";
 import useGetBranchOptionsForSelect from "@components/FormSelectForRefs/useGetBranchOptionsForSelect";
 import DatabaseLink from "@components/links/DatabaseLink";
-import { FormSelect, Loader } from "@dolthub/react-components";
+import { ErrorMsg, FormSelect, Loader } from "@dolthub/react-components";
 import StepLayout from "../../StepLayout";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import { UploadStage } from "../../enums";

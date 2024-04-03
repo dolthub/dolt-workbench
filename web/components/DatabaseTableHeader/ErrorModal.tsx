@@ -1,6 +1,6 @@
-import ErrorMsg from "@components/ErrorMsg";
 import Modal from "@components/Modal";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { ErrorMsg } from "@dolthub/react-components";
 import { ModalProps } from "@lib/modalProps";
 import css from "./index.module.css";
 

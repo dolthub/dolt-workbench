@@ -1,5 +1,8 @@
+import { ErrorMsgProvider } from "@dolthub/react-components";
 import { useEffectOnMount } from "@dolthub/react-hooks";
+import { improveErrorMsg } from "@lib/errors/helpers";
 import { ReactNode } from "react";
+import renderCustomErrorMsg from "./CustomErrorMsg";
 import Meta from "./Meta";
 
 type Props = {
@@ -26,13 +29,18 @@ export default function Page(props: Props) {
   });
 
   return (
-    <div className={props.className} id="page">
-      <Meta
-        title={props.title}
-        description={props.description}
-        noIndex={props.noIndex}
-      />
-      {props.children}
-    </div>
+    <ErrorMsgProvider
+      improveErrorMsgFn={improveErrorMsg}
+      renderDifferentComp={renderCustomErrorMsg}
+    >
+      <div className={props.className} id="page">
+        <Meta
+          title={props.title}
+          description={props.description}
+          noIndex={props.noIndex}
+        />
+        {props.children}
+      </div>
+    </ErrorMsgProvider>
   );
 }

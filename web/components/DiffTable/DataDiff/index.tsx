@@ -1,9 +1,8 @@
 import DatabaseOptionsDropdown from "@components/DatabaseOptionsDropdown";
 import Errors from "@components/DatabaseTableHeader/Errors";
-import ErrorMsg from "@components/ErrorMsg";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useDiffContext } from "@contexts/diff";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { useFocus } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import { DiffRowType } from "@gen/graphql-types";

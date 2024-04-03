@@ -1,6 +1,5 @@
-import ErrorMsg from "@components/ErrorMsg";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import {
   PullDetailsFragment,
   PullState,

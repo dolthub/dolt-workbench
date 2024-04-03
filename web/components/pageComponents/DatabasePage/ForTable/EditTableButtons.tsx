@@ -1,9 +1,8 @@
-import ErrorMsg from "@components/ErrorMsg";
 import DatabaseUploadStageLink from "@components/links/DatabaseUploadStageLink";
 import Link from "@components/links/Link";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Button } from "@dolthub/react-components";
+import { Button, ErrorMsg } from "@dolthub/react-components";
 import { useTagListQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlBuilder from "@hooks/useSqlBuilder";

@@ -1,7 +1,6 @@
 import SummaryStat from "@components/DiffStat/SummaryStat";
-import ErrorMsg from "@components/ErrorMsg";
 import { useDiffContext } from "@contexts/diff";
-import { SmallLoader } from "@dolthub/react-components";
+import { ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import {
   DiffStatForDiffsFragment,
   DiffSummaryFragment,
