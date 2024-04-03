@@ -101,10 +101,6 @@
   @apply font-semibold;
 }
 
-.releaseToDelete {
-  @apply font-bold;
-}
-
 .delete {
   @apply hidden;
 

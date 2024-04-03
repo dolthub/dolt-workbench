@@ -62,13 +62,7 @@ export default function DatabaseOptionsDropdown({
                   fakeEscapePress();
                 }}
                 icon={
-                  <div className={css.iconsDiv}>
-                    {props.showingHideUnchangedCol ? (
-                      <CgArrowsH />
-                    ) : (
-                      <CgCompress />
-                    )}
-                  </div>
+                  props.showingHideUnchangedCol ? <CgArrowsH /> : <CgCompress />
                 }
               >
                 <>
@@ -81,14 +75,10 @@ export default function DatabaseOptionsDropdown({
               <DropdownItem
                 data-cy="open-download-csv-modal-button"
                 onClick={() => {
-                  // setOpen(false);
                   setModalOpen(true);
+                  fakeEscapePress();
                 }}
-                icon={
-                  <div className={css.iconsDiv}>
-                    <RiFileDownloadLine />
-                  </div>
-                }
+                icon={<RiFileDownloadLine />}
               >
                 Download query results as CSV
               </DropdownItem>
@@ -117,7 +107,7 @@ type ItemProps = {
 
 export function DropdownItem(props: ItemProps) {
   return (
-    <li className={css.option}>
+    <li>
       <Btn
         onClick={props.onClick}
         className={css.optionButton}

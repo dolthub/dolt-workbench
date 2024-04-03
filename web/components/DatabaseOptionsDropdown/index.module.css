@@ -10,28 +10,16 @@
   @apply font-normal text-xs px-2 py-1.5;
 }
 
-.option {
-  @apply flex mx-2 my-3 text-sm;
+.optionButton {
+  @apply flex items-center text-xs mx-2 my-3 py-0.5 font-semibold hover:text-acc-hoverblue;
+
+  .help {
+    @apply mb-1;
+  }
 
   svg {
-    @apply inline-block mr-2.5 mt-0.5;
+    @apply mr-2.5 text-sm;
   }
-
-  button {
-    @apply text-xs;
-  }
-}
-
-.optionButton {
-  @apply flex items-center;
-}
-
-.plus {
-  @apply pr-1.5 pt-0.5;
-}
-
-.iconsDiv {
-  @apply grid justify-items-center items-center justify-center w-6 h-6;
 }
 
 .downloadCsv {
