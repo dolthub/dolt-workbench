@@ -1,7 +1,6 @@
 import ErrorMsg from "@components/ErrorMsg";
 import Modal from "@components/Modal";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Button } from "@dolthub/react-components";
 import { ModalProps } from "@lib/modalProps";
 import css from "./index.module.css";
 
@@ -16,12 +15,7 @@ export default function ErrorModal(props: Props) {
   };
 
   return (
-    <Modal
-      isOpen={props.isOpen}
-      onRequestClose={onClose}
-      title="Query error"
-      button={<Button onClick={onClose}>Got it</Button>}
-    >
+    <Modal isOpen={props.isOpen} onRequestClose={onClose} title="Query error">
       <div data-cy="error-modal">
         <QueryError err={error} />
       </div>
