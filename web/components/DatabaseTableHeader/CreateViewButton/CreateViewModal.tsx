@@ -1,6 +1,6 @@
 import DocsLink from "@components/links/DocsLink";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Button, FormInput, Loader, Modal } from "@dolthub/react-components";
+import { FormInput, FormModal, Loader } from "@dolthub/react-components";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { DatabaseParams } from "@lib/params";
@@ -42,45 +42,41 @@ export default function CreateViewModal({
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <Modal
-        isOpen={props.isOpen}
-        onRequestClose={onClose}
-        title="Create view"
-        button={
-          <Button disabled={!name} type="submit">
-            Create
-          </Button>
-        }
-        err={error}
-      >
-        <Loader loaded={!loading} />
-        <p>
-          Learn more about views{" "}
-          <DocsLink systemTableType="schemas">here</DocsLink>.
-        </p>
-        <div className={css.query}>
-          <div className={css.label}>Query</div>
-          <AceEditor
-            value={query}
-            name="AceViewer"
-            fontSize={13}
-            readOnly
-            wrapEnabled
-            showGutter={false}
-            maxLines={6}
-            light
-          />
-        </div>
-        <FormInput
-          label="Name"
-          placeholder="Name your view"
-          value={name}
-          onChangeString={setName}
-          data-cy="query-name"
+    <FormModal
+      onSubmit={onSubmit}
+      isOpen={props.isOpen}
+      onRequestClose={onClose}
+      title="Create view"
+      disabled={!name}
+      btnText="Create"
+      err={error}
+    >
+      <Loader loaded={!loading} />
+      <p>
+        Learn more about views{" "}
+        <DocsLink systemTableType="schemas">here</DocsLink>.
+      </p>
+      <div className={css.query}>
+        <div className={css.label}>Query</div>
+        <AceEditor
+          value={query}
+          name="AceViewer"
+          fontSize={13}
+          readOnly
+          wrapEnabled
+          showGutter={false}
+          maxLines={6}
           light
         />
-      </Modal>
-    </form>
+      </div>
+      <FormInput
+        label="Name"
+        placeholder="Name your view"
+        value={name}
+        onChangeString={setName}
+        data-cy="query-name"
+        light
+      />
+    </FormModal>
   );
 }
