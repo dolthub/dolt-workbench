@@ -3,7 +3,7 @@ import SchemaDiagramButton from "@components/SchemaDiagramButton";
 import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import useTableNames from "@hooks/useTableNames";
 import { RefParams } from "@lib/params";

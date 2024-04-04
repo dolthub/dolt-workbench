@@ -1,4 +1,4 @@
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import {
   DocListForDocPageFragment,
   useDocsRowsForDocPageQuery,

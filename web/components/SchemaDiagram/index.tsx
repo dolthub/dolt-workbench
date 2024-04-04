@@ -1,4 +1,4 @@
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import { TableForSchemaListFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { ref } from "@lib/urls";

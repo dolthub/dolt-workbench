@@ -1,5 +1,4 @@
-import QueryHandler from "@components/util/QueryHandler";
-import { FormSelect } from "@dolthub/react-components";
+import { FormSelect, QueryHandler } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import { useTableNamesQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
