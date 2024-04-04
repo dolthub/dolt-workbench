@@ -1,5 +1,4 @@
-import CopyButton from "@components/CopyButton";
-import { Btn, Button } from "@dolthub/react-components";
+import { Btn, Button, CopyButton } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { BsPencil } from "@react-icons/all-files/bs/BsPencil";
 import dynamic from "next/dynamic";
@@ -50,9 +49,7 @@ export default function MobileSqlViewer(props: Props) {
             <BsPencil />
             Edit Query
           </Button>
-          {!!props.sqlString && (
-            <CopyButton text={props.sqlString} mobileCopyQuery />
-          )}
+          {!!props.sqlString && <CopyButton text={props.sqlString} light />}
         </div>
       </div>
       {openSqlEditor && (

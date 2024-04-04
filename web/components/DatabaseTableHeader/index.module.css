@@ -47,6 +47,10 @@
 
 .buttons {
   @apply flex text-sm;
+
+  button {
+    @apply py-0;
+  }
 }
 
 .edit {

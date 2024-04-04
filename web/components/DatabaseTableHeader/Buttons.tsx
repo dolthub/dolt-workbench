@@ -1,5 +1,5 @@
-import CopyButton from "@components/CopyButton";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import { CopyButton } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";

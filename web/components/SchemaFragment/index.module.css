@@ -8,7 +8,7 @@
 .buttons {
   @apply flex text-sm;
   button {
-    @apply h-10 w-40;
+    @apply h-10 w-40 py-0;
     @screen lg {
       @apply h-6 w-auto;
     }
