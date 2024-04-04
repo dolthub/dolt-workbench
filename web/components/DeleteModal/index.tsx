@@ -1,5 +1,4 @@
-import Modal from "@components/Modal";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button, Loader, Modal } from "@dolthub/react-components";
 import useMutation, { MutationArgs } from "@hooks/useMutation";
 import { ReactNode } from "react";
 import css from "./index.module.css";

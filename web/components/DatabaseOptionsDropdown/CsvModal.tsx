@@ -2,6 +2,9 @@ import {
   Button,
   ErrorMsg,
   FormInput,
+  ModalButtons,
+  ModalInner,
+  ModalOuter,
   SmallLoader,
   isTimeoutError,
 } from "@dolthub/react-components";
@@ -9,7 +12,6 @@ import { useSqlSelectForCsvDownloadQuery } from "@gen/graphql-types";
 import { ModalProps } from "@lib/modalProps";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
-import { ModalButtons, ModalInner, ModalOuter } from "../Modal";
 import DownloadForExcelHelpPopup from "./DownloadForExcelHelpPopup";
 import css from "./index.module.css";
 import { exportToCsv } from "./utils";
