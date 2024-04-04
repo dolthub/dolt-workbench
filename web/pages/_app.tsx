@@ -8,7 +8,6 @@ import {
 import { withApollo } from "@lib/apollo";
 import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
-import "react-tooltip/dist/react-tooltip.css";
 import { SWRConfig } from "swr";
 import "../styles/global.css";
 

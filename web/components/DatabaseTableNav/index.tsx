@@ -1,9 +1,9 @@
 import BranchAndTagSelector from "@components/FormSelectForRefs/BranchAndTagSelector";
 import NotDoltSelectWrapper from "@components/FormSelectForRefs/NotDoltSelectWrapper";
-import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { Tooltip } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl, newBranch } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";

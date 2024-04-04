@@ -1388,7 +1388,6 @@ __metadata:
     react-infinite-scroller: "npm:^1.2.6"
     react-select-event: "npm:^5.5.1"
     react-timeago: "npm:^7.2.0"
-    react-tooltip: "npm:5.26.3"
     reactflow: "npm:^11.10.1"
     sharp: "npm:^0.33.1"
     stylelint: "npm:^16.3.1"
@@ -12425,7 +12424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:5.26.3, react-tooltip@npm:^5.26.3":
+"react-tooltip@npm:^5.26.3":
   version: 5.26.3
   resolution: "react-tooltip@npm:5.26.3"
   dependencies:

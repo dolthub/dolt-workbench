@@ -1,4 +1,4 @@
-import Tooltip from "@components/Tooltip";
+import { Tooltip } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import css from "./index.module.css";
 
