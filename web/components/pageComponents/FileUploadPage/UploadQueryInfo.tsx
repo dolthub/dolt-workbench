@@ -1,5 +1,4 @@
-import HelpPopup from "@components/HelpPopup";
-import { ExternalLink, Radio } from "@dolthub/react-components";
+import { ExternalLink, HelpPopup, Radio } from "@dolthub/react-components";
 import { LoadDataModifier } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { useFileUploadContext } from "./contexts/fileUploadLocalForage";
