@@ -1,6 +1,6 @@
-import ButtonsWithError from "@components/ButtonsWithError";
 import {
   Button,
+  ButtonsWithError,
   Loader,
   TextareaWithMarkdown,
 } from "@dolthub/react-components";

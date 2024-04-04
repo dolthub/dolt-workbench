@@ -1,6 +1,10 @@
-import ButtonsWithError from "@components/ButtonsWithError";
 import BranchAndCommitSelector from "@components/FormSelectForRefs/BranchAndCommitSelector";
-import { Button, FormInput, Loader } from "@dolthub/react-components";
+import {
+  Button,
+  ButtonsWithError,
+  FormInput,
+  Loader,
+} from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import { useCreateBranchMutation } from "@gen/graphql-types";
