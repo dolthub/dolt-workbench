@@ -1,5 +1,9 @@
-import { ModalButtons, ModalInner } from "@components/Modal";
-import { Button, FormInput } from "@dolthub/react-components";
+import {
+  Button,
+  FormInput,
+  ModalButtons,
+  ModalInner,
+} from "@dolthub/react-components";
 import { initialUppercase } from "@dolthub/web-utils";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";

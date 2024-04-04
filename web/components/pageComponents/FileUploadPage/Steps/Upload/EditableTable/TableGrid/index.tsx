@@ -1,4 +1,4 @@
-import ErrorMsg from "@components/ErrorMsg";
+import { ErrorMsg } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import cx from "classnames";
 import { useEffect } from "react";

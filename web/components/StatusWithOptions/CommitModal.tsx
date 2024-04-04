@@ -1,5 +1,4 @@
-import Modal from "@components/Modal";
-import { Button, Textarea } from "@dolthub/react-components";
+import { FormModal, Textarea } from "@dolthub/react-components";
 import { StatusFragment } from "@gen/graphql-types";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
@@ -32,15 +31,13 @@ export default function CommitModal(props: Props) {
   };
 
   return (
-    <Modal
+    <FormModal
+      onSubmit={onSubmit}
       title="Create commit"
       isOpen={props.isOpen}
       onRequestClose={onClose}
-      button={
-        <Button type="submit" disabled={!msg.length}>
-          Commit
-        </Button>
-      }
+      disabled={!msg.length}
+      btnText="Commit"
     >
       <div>
         <p>
@@ -48,17 +45,16 @@ export default function CommitModal(props: Props) {
           <span className={css.bold}>{props.params.refName}</span> with the
           provided message.
         </p>
-        <form onSubmit={onSubmit}>
-          <Textarea
-            label="Message"
-            placeholder="Your commit message here"
-            value={msg}
-            onChangeString={setMsg}
-            rows={4}
-            required
-            light
-          />
-          {/* <div>
+        <Textarea
+          label="Message"
+          placeholder="Your commit message here"
+          value={msg}
+          onChangeString={setMsg}
+          rows={4}
+          required
+          light
+        />
+        {/* <div>
             <Checkbox
               name="add-commit-author"
               label="Use my name and email as commit author"
@@ -68,9 +64,8 @@ export default function CommitModal(props: Props) {
               commit author."
             />
           </div> */}
-        </form>
       </div>
-    </Modal>
+    </FormModal>
   );
 }
 

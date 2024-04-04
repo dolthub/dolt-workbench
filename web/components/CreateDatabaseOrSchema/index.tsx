@@ -1,5 +1,4 @@
-import { ModalOuter } from "@components/Modal";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button, Loader, ModalOuter } from "@dolthub/react-components";
 import { ApolloErrorType } from "@lib/errors/types";
 import { database } from "@lib/urls";
 import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";

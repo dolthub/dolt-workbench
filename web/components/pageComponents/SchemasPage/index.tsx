@@ -1,8 +1,7 @@
 import CreateSchema from "@components/CreateSchema";
-import ErrorMsg from "@components/ErrorMsg";
 import MainLayout from "@components/layouts/MainLayout";
 import Link from "@components/links/Link";
-import { Loader } from "@dolthub/react-components";
+import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { useDatabaseSchemasQuery } from "@gen/graphql-types";
 import { database } from "@lib/urls";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";

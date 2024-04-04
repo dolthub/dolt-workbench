@@ -1,5 +1,5 @@
-import ErrorMsg from "@components/ErrorMsg";
 import Link from "@components/links/Link";
+import { ErrorMsg } from "@dolthub/react-components";
 import { ApolloErrorType } from "@lib/errors/types";
 import { ReactElement, ReactNode } from "react";
 import Code404 from "./Code404";

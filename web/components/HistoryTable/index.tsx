@@ -1,7 +1,6 @@
-import ErrorMsg from "@components/ErrorMsg";
 import SqlDataTable from "@components/SqlDataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Button } from "@dolthub/react-components";
+import { Button, ErrorMsg } from "@dolthub/react-components";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import css from "./index.module.css";
