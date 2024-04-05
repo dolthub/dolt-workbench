@@ -1,5 +1,4 @@
-import QueryHandler from "@components/util/QueryHandler";
-import { SmallLoader } from "@dolthub/react-components";
+import { QueryHandler, SmallLoader } from "@dolthub/react-components";
 import { SchemaType } from "@gen/graphql-types";
 import useTableNames from "@hooks/useTableNames";
 import { RefParams } from "@lib/params";

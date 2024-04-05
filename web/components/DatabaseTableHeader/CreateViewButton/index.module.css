@@ -1,5 +1,5 @@
 .button {
-  @apply px-3 py-0 ml-4 h-6 border;
+  @apply ml-4 h-6;
 }
 
 .query {

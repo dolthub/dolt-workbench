@@ -1,5 +1,5 @@
-import Tooltip from "@components/Tooltip";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { Tooltip } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import NavItem from "./Item";
 import Wrapper from "./Wrapper";

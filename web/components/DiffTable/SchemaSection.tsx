@@ -1,5 +1,5 @@
-import QueryHandler from "@components/util/QueryHandler";
 import { useDiffContext } from "@contexts/diff";
+import { QueryHandler } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import {
   DiffSummaryFragment,

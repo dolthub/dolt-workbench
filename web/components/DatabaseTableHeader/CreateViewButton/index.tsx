@@ -16,7 +16,11 @@ export default function CreateViewButton(props: Props) {
   return (
     <HideForNoWritesWrapper params={props.params}>
       <div>
-        <Button onClick={() => setIsOpen(true)} className={css.button}>
+        <Button
+          onClick={() => setIsOpen(true)}
+          className={css.button}
+          size="small"
+        >
           Create View
         </Button>
         <CreateViewModal {...props} isOpen={isOpen} setIsOpen={setIsOpen} />

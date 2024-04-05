@@ -13,6 +13,14 @@
   @apply font-semibold text-lg pb-1;
 }
 
+.buttons {
+  @apply flex text-sm;
+
+  button {
+    @apply py-0;
+  }
+}
+
 .sampleQueryDir {
   @apply text-sm text-ld-darkgrey ml-4 font-normal;
 
@@ -43,10 +51,6 @@
   &:focus {
     @apply outline-none widget-shadow-lightblue;
   }
-}
-
-.buttons {
-  @apply flex text-sm;
 }
 
 .edit {

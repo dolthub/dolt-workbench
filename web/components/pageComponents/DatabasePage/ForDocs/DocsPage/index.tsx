@@ -2,7 +2,7 @@ import DocMarkdown from "@components/DocMarkdown";
 import Page404 from "@components/Page404";
 import DocBreadcrumbs from "@components/breadcrumbs/DocBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import {
   DocForDocPageFragment,
   useDocDataForDocPageQuery,

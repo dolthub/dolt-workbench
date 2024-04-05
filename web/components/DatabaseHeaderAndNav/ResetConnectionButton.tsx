@@ -1,9 +1,9 @@
-import Tooltip from "@components/Tooltip";
 import {
   Button,
   ErrorMsg,
   Modal,
   SmallLoader,
+  Tooltip,
 } from "@dolthub/react-components";
 import { useResetDatabaseMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";

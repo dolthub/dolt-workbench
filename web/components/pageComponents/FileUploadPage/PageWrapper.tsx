@@ -1,6 +1,5 @@
 import Page404 from "@components/Page404";
-import QueryHandler from "@components/util/QueryHandler";
-import { Loader } from "@dolthub/react-components";
+import { Loader, QueryHandler } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useRole from "@hooks/useRole";

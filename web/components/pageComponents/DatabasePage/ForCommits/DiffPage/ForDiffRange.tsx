@@ -1,5 +1,5 @@
 import CommitDiffBreadcrumbs from "@components/breadcrumbs/CommitDiffBreadcrumbs";
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import { useHistoryForCommitQuery } from "@gen/graphql-types";
 import splitDiffRange from "@lib/diffRange";
 import { DiffRangeParams, RefParams } from "@lib/params";

@@ -1,4 +1,4 @@
-import HelpPopup from "@components/HelpPopup";
+import { HelpPopup } from "@dolthub/react-components";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 

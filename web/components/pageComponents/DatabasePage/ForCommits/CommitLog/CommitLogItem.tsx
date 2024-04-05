@@ -1,5 +1,5 @@
-import Tooltip from "@components/Tooltip";
 import CommitLink from "@components/links/CommitLink";
+import { Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";

@@ -1,6 +1,6 @@
 import MainLayout from "@components/layouts/MainLayout";
 import DoltLink from "@components/links/DoltLink";
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
   useStoredConnectionsQuery,

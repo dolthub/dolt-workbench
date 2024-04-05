@@ -1,7 +1,6 @@
-import Tooltip from "@components/Tooltip";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button, Loader, Tooltip } from "@dolthub/react-components";
 import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
 import useRole from "@hooks/useRole";
 import { RefParams } from "@lib/params";

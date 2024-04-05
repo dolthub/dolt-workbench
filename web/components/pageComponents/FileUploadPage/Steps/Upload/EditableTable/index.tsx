@@ -1,5 +1,5 @@
 import { useFileUploadContext } from "@components/pageComponents/FileUploadPage/contexts/fileUploadLocalForage";
-import QueryHandler from "@components/util/QueryHandler";
+import { QueryHandler } from "@dolthub/react-components";
 import { useDataTableQuery } from "@gen/graphql-types";
 import { TableParams } from "@lib/params";
 import useUploadContext from "../contexts/upload";

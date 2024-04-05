@@ -1,7 +1,10 @@
-import CopyButton from "@components/CopyButton";
-import QueryHandler from "@components/util/QueryHandler";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Btn, ErrorMsg } from "@dolthub/react-components";
+import {
+  Btn,
+  CopyButton,
+  ErrorMsg,
+  QueryHandler,
+} from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import {
   RowForDataTableFragment,
