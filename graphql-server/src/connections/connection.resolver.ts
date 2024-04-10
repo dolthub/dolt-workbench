@@ -43,9 +43,11 @@ export class ConnectionResolver {
 
     const options: mysql.ConnectionOptions = {
       uri: workbenchConfig.connectionUrl,
-      ssl: {
-        rejectUnauthorized: false,
-      },
+      ssl: workbenchConfig.useSSL
+        ? {
+            rejectUnauthorized: false,
+          }
+        : undefined,
       connectionLimit: 1,
       dateStrings: ["DATE"],
 

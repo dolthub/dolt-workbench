@@ -48,8 +48,8 @@ export class TagResolver {
   async tag(@Args() args: TagArgs): Promise<Tag | undefined> {
     const conn = this.conn.connection();
     const res = await conn.getTag(args);
-    if (!res?.length) return undefined;
-    return fromDoltRowRes(args.databaseName, res[0]);
+    if (!res) return undefined;
+    return fromDoltRowRes(args.databaseName, res);
   }
 
   @Mutation(_returns => String)

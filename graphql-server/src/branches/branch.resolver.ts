@@ -61,8 +61,8 @@ export class BranchResolver {
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
     const conn = this.conn.connection();
     const res = await conn.getBranch(args);
-    if (!res?.length) return undefined;
-    return fromDoltBranchesRow(args.databaseName, res[0]);
+    if (!res) return undefined;
+    return fromDoltBranchesRow(args.databaseName, res);
   }
 
   @Query(_returns => Branch, { nullable: true })

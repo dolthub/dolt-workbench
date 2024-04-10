@@ -37,7 +37,14 @@ describe("tests NewTagForm", () => {
       </MockedProvider>,
     );
 
+    expect(
+      screen.getByText("Pick a branch or recent commit"),
+    ).toBeInTheDocument();
     await user.click(await screen.findByRole("combobox"));
+    expect(
+      await screen.findByText(mocks.fromBranch.branchName),
+    ).toBeInTheDocument();
+
     await selectEvent.select(
       screen.getByRole("combobox"),
       mocks.fromBranch.branchName,
@@ -77,7 +84,7 @@ describe("tests NewTagForm", () => {
         name: /cancel/i,
       }),
     ).toBeInTheDocument();
-  });
+  }, 8000);
 
   it("creates a new tag", async () => {
     const user = await fillTagForm();

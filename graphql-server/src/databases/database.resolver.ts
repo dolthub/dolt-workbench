@@ -140,13 +140,13 @@ export class DatabaseResolver {
 
     const storeArgs = { ...workbenchConfig, name: args.name };
 
+    await this.conn.addConnection(workbenchConfig);
+
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);
     } else {
       this.fileStoreService.addItemToStore(storeArgs);
     }
-
-    await this.conn.addConnection(workbenchConfig);
 
     const db = await this.currentDatabase();
     if (type === DatabaseType.Mysql) {

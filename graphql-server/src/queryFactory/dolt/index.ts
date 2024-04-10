@@ -322,7 +322,7 @@ export class DoltQueryFactory
           .createQueryBuilder()
           .select("*")
           .from("dolt_tags", "")
-          .where("dolt_tags.tag_name", { tag_name: args.tagName })
+          .where("dolt_tags.tag_name = :name", { name: args.tagName })
           .getRawOne(),
       args.databaseName,
     );
