@@ -1,11 +1,11 @@
-import { useGetBranchForPullQuery, useGetTagQuery } from "@gen/graphql-types";
+import { useGetBranchQuery, useGetTagQuery } from "@gen/graphql-types";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { RefParams } from "@lib/params";
 
 export default function useGetRefParams(params: RefParams) {
   const { defaultBranchName } = useDefaultBranch(params);
 
-  const checkBranchExistRes = useGetBranchForPullQuery({
+  const checkBranchExistRes = useGetBranchQuery({
     variables: {
       databaseName: params.databaseName,
       branchName: params.refName,
