@@ -1,11 +1,14 @@
+import { Maybe } from "@dolthub/web-utils";
 import { Column } from "../columns/column.model";
 import { DiffRowType } from "./rowDiff.enums";
 
 export function canShowDroppedOrAddedRows(
   type: "added" | "dropped",
-  filter?: DiffRowType,
+  filter: Maybe<DiffRowType>,
 ): boolean {
-  if (filter === undefined || filter === DiffRowType.All) return true;
+  if (filter === undefined || filter === null || filter === DiffRowType.All) {
+    return true;
+  }
   if (type === "added" && filter === DiffRowType.Added) return true;
   if (type === "dropped" && filter === DiffRowType.Removed) return true;
   return false;
