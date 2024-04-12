@@ -1,3 +1,4 @@
+import { Maybe } from "@dolthub/web-utils";
 import { Field, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
 import { Column } from "../columns/column.model";
@@ -73,7 +74,7 @@ export function fromDoltListRowWithColsRes(
 export function fromOneSidedTable(
   rows: RowListWithCols,
   type: "added" | "dropped",
-  filter?: DiffRowType,
+  filter: Maybe<DiffRowType>,
 ): RowDiffList {
   const emptyList = { list: [], columns: [] };
   if (!canShowDroppedOrAddedRows(type, filter)) {
