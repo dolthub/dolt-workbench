@@ -42,7 +42,7 @@
     "cors": "^2.8.5",
     "graphql": "^16.7.1",
     "graphql-upload": "15.0.0",
-    "mysql2": "^3.9.2",
+    "mysql2": "^3.9.4",
     "pg": "^8.11.3",
     "pg-copy-streams": "^6.0.6",
     "reflect-metadata": "^0.1.13",
