@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { RawRows } from "../queryFactory/types";
 import { getCellValue } from "../rows/row.model";
 import { RefArgs } from "../utils/commonTypes";
@@ -13,7 +13,7 @@ export class SqlSelectArgs extends RefArgs {
 
 @Resolver(_of => SqlSelect)
 export class SqlSelectResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {

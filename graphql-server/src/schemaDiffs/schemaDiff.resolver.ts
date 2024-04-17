@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DBArgs } from "../utils/commonTypes";
 import { SchemaDiff, fromDoltSchemaDiffRows } from "./schemaDiff.model";
@@ -24,7 +24,7 @@ class SchemaDiffArgs extends DBArgs {
 
 @Resolver(_of => SchemaDiff)
 export class SchemaDiffResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => SchemaDiff, { nullable: true })
   async schemaDiff(

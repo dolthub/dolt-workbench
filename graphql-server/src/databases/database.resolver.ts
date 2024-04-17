@@ -7,7 +7,7 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs, SchemaArgs } from "../utils/commonTypes";
@@ -66,7 +66,7 @@ class RemoveDatabaseConnectionArgs {
 @Resolver(_of => DatabaseConnection)
 export class DatabaseResolver {
   constructor(
-    private readonly conn: ConnectionResolver,
+    private readonly conn: ConnectionProvider,
     private readonly fileStoreService: FileStoreService,
     private readonly dataStoreService: DataStoreService,
   ) {}

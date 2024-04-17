@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { RawRow } from "../queryFactory/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { DBArgsWithOffset } from "../utils/commonTypes";
@@ -23,7 +23,7 @@ export class ListCommitsArgs extends DBArgsWithOffset {
 
 @Resolver(_of => Commit)
 export class CommitResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => CommitList)
   async commits(

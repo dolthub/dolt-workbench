@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { handleTableNotFound } from "../utils";
 import { RefArgs, TableArgs } from "../utils/commonTypes";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
@@ -12,7 +12,7 @@ class ListTableArgs extends RefArgs {
 
 @Resolver(_of => Table)
 export class TableResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => Table)
   async table(@Args() args: TableArgs): Promise<Table> {

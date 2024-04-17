@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { RefArgs } from "../utils/commonTypes";
 import { Row, RowList, fromDoltListRowRes } from "./row.model";
 
@@ -14,7 +14,7 @@ export class ListRowsArgs extends RefArgs {
 
 @Resolver(_of => Row)
 export class RowResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {

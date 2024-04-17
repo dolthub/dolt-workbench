@@ -41,3 +41,4 @@ export type ParQuery = (q: string, p?: Params) => PR;
 export type TableRowPagination = { pkCols: string[]; offset: number };
 export type DiffRes = Promise<{ colsUnion: RawRows; diff: RawRows }>;
 export type CommitsRes = Promise<{ fromCommitId: string; toCommitId: string }>;
+export type CommitAuthor = { name: string; email: string };

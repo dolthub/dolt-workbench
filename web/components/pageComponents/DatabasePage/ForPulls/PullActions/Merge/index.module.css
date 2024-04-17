@@ -51,6 +51,10 @@
   @apply px-6 py-2 border-x border-b rounded-b-xl  bg-white border-acc-green;
 }
 
+.userCheckbox {
+  @apply text-sm mt-4;
+}
+
 .note {
   @apply font-normal text-ld-darkgrey mt-0.5 py-1 block;
 }

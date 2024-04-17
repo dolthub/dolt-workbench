@@ -1,12 +1,12 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { RefArgs } from "../utils/commonTypes";
 import { SchemaType } from "./schema.enums";
 import { SchemaItem } from "./schema.model";
 
 @Resolver(_of => SchemaItem)
 export class SchemaResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => [SchemaItem])
   async doltSchemas(

@@ -7,8 +7,8 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { CommitResolver } from "../commits/commit.resolver";
-import { ConnectionResolver } from "../connections/connection.resolver";
-import { DBArgs } from "../utils/commonTypes";
+import { ConnectionProvider } from "../connections/connection.provider";
+import { AuthorInfo, DBArgs } from "../utils/commonTypes";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
 
 @ArgsType()
@@ -20,10 +20,16 @@ class PullArgs extends DBArgs {
   toBranchName: string;
 }
 
+@ArgsType()
+class MergePullArgs extends PullArgs {
+  @Field({ nullable: true })
+  author?: AuthorInfo;
+}
+
 @Resolver(_of => PullWithDetails)
 export class PullResolver {
   constructor(
-    private readonly conn: ConnectionResolver,
+    private readonly conn: ConnectionProvider,
     private readonly commitResolver: CommitResolver,
   ) {}
 
@@ -41,7 +47,7 @@ export class PullResolver {
   }
 
   @Mutation(_returns => Boolean)
-  async mergePull(@Args() args: PullArgs): Promise<boolean> {
+  async mergePull(@Args() args: MergePullArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.callMerge({
       databaseName: args.databaseName,

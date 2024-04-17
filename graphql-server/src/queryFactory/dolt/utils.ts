@@ -1,4 +1,4 @@
-import { RawRows } from "../types";
+import { CommitAuthor, RawRows } from "../types";
 
 export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   try {
@@ -23,4 +23,11 @@ export function unionCols(a: RawRows, b: RawRows): RawRows {
     return false;
   }, set);
   return unionArray;
+}
+
+export function getAuthorString(
+  commitAuthor?: CommitAuthor,
+): string | undefined {
+  if (!commitAuthor) return undefined;
+  return `${commitAuthor.name} <${commitAuthor.email}>`;
 }

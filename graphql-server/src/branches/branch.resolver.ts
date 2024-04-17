@@ -8,7 +8,7 @@ import {
   ResolveField,
   Resolver,
 } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { RawRow } from "../queryFactory/types";
 import { Table } from "../tables/table.model";
 import { TableResolver } from "../tables/table.resolver";
@@ -53,7 +53,7 @@ class ListBranchesArgs extends DBArgsWithOffset {
 @Resolver(_of => Branch)
 export class BranchResolver {
   constructor(
-    private readonly conn: ConnectionResolver,
+    private readonly conn: ConnectionProvider,
     private readonly tableResolver: TableResolver,
   ) {}
 

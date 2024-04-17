@@ -123,12 +123,15 @@ export declare class QueryFactory {
     args: t.TagArgs & {
       fromRefName: string;
       message?: string;
+      author?: t.CommitAuthor;
     },
   ): t.PR;
 
   callDeleteTag(args: t.TagArgs): t.PR;
 
-  callMerge(args: t.BranchesArgs): Promise<boolean>;
+  callMerge(
+    args: t.BranchesArgs & { author?: t.CommitAuthor },
+  ): Promise<boolean>;
 
   resolveRefs(
     args: t.RefsArgs & { type?: CommitDiffType },

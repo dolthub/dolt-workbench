@@ -3,6 +3,7 @@ import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
 import { TerminusModule } from "@nestjs/terminus";
+import { ConnectionProvider } from "./connections/connection.provider";
 import { DataStoreModule } from "./dataStore/dataStore.module";
 import { FileStoreModule } from "./fileStore/fileStore.module";
 import resolvers from "./resolvers";
@@ -19,6 +20,6 @@ import resolvers from "./resolvers";
     ConfigModule.forRoot({ isGlobal: true }),
     DataStoreModule,
   ],
-  providers: resolvers,
+  providers: [ConnectionProvider, ...resolvers],
 })
 export class AppModule {}

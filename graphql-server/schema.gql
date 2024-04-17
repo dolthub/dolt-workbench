@@ -346,8 +346,8 @@ type Mutation {
   createSchema(schemaName: String!): Boolean!
   resetDatabase: Boolean!
   loadDataFile(tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
-  mergePull(databaseName: String!, fromBranchName: String!, toBranchName: String!): Boolean!
-  createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!): String!
+  mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
+  createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!
 }
 
@@ -366,4 +366,9 @@ scalar Upload
 enum LoadDataModifier {
   Ignore
   Replace
+}
+
+input AuthorInfo {
+  name: String!
+  email: String!
 }
