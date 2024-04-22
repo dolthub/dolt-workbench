@@ -1,5 +1,6 @@
 import { Checkbox } from "@dolthub/react-components";
 import { UserHeaders } from "@hooks/useUserHeaders";
+import { useEffect } from "react";
 
 type Props = {
   shouldAddAuthor: boolean;
@@ -12,6 +13,12 @@ type Props = {
 export default function HeaderUserCheckbox(props: Props) {
   const disabled = !props.userHeaders;
   const authorKind = props.kind ? `${props.kind} author` : "author";
+
+  useEffect(() => {
+    if (!props.userHeaders?.email || !props.userHeaders.user) return;
+    props.setShouldAddAuthor(true);
+  }, [props.userHeaders]);
+
   return (
     <Checkbox
       name="add-author"

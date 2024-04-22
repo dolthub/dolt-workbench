@@ -53,6 +53,7 @@ export class PullResolver {
       databaseName: args.databaseName,
       fromBranchName: args.fromBranchName,
       toBranchName: args.toBranchName,
+      author: args.author,
     });
     return true;
   }
