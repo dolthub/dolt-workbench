@@ -25,9 +25,6 @@ export function unionCols(a: RawRows, b: RawRows): RawRows {
   return unionArray;
 }
 
-export function getAuthorString(
-  commitAuthor?: CommitAuthor,
-): string | undefined {
-  if (!commitAuthor) return undefined;
+export function getAuthorString(commitAuthor: CommitAuthor): string {
   return `${commitAuthor.name} <${commitAuthor.email}>`;
 }

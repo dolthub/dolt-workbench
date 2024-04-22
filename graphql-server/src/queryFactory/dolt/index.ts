@@ -348,14 +348,16 @@ export class DoltQueryFactory
       author?: t.CommitAuthor;
     },
   ): t.PR {
+    const params = [args.tagName, args.fromRefName];
+    if (args.message) {
+      params.push(args.message);
+    }
+    if (args.author) {
+      params.push(getAuthorString(args.author));
+    }
     return this.query(
       qh.getCallNewTag(!!args.message, !!args.author),
-      [
-        args.tagName,
-        args.fromRefName,
-        args.message,
-        getAuthorString(args.author),
-      ],
+      params,
       args.databaseName,
     );
   }
@@ -371,11 +373,14 @@ export class DoltQueryFactory
       async query => {
         await query("BEGIN");
 
-        const res = await query(qh.getCallMerge(!!args.author), [
+        const params = [
           args.fromBranchName,
           `Merge branch ${args.fromBranchName}`,
-          getAuthorString(args.author),
-        ]);
+        ];
+        if (args.author) {
+          params.push(getAuthorString(args.author));
+        }
+        const res = await query(qh.getCallMerge(!!args.author), params);
 
         if (res.length && res[0].conflicts !== "0") {
           await query("ROLLBACK");
