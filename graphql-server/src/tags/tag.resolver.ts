@@ -6,18 +6,9 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
-import { DBArgs, TagArgs } from "../utils/commonTypes";
+import { ConnectionProvider } from "../connections/connection.provider";
+import { AuthorInfo, DBArgs, TagArgs } from "../utils/commonTypes";
 import { Tag, TagList, fromDoltRowRes } from "./tag.model";
-
-// @InputType()
-// class AuthorInfo {
-//   @Field()
-//   name: string;
-
-//   @Field()
-//   email: string;
-// }
 
 @ArgsType()
 class CreateTagArgs extends TagArgs {
@@ -27,13 +18,13 @@ class CreateTagArgs extends TagArgs {
   @Field()
   fromRefName: string;
 
-  // @Field({ nullable: true })
-  // author?: AuthorInfo;
+  @Field({ nullable: true })
+  author?: AuthorInfo;
 }
 
 @Resolver(_of => Tag)
 export class TagResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => TagList)
   async tags(@Args() args: DBArgs): Promise<TagList> {
@@ -66,11 +57,3 @@ export class TagResolver {
     return true;
   }
 }
-
-// TODO: commit author
-// export type CommitAuthor = { name: string; email: string };
-
-// function getAuthorString(commitAuthor?: CommitAuthor): string {
-//   if (!commitAuthor) return "";
-//   return `${commitAuthor.name} <${commitAuthor.email}>`;
-// }

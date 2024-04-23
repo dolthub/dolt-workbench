@@ -1,0 +1,19 @@
+services:
+  combined:
+    build:
+      context: ../../../
+      dockerfile: docker/Dockerfile
+    ports:
+      - 3000:3000
+      - 9002:9002
+    image: docker.io/dolthub/dolt-workbench:latest
+
+  proxy:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./.htpasswd:/etc/nginx/.htpasswd:ro
+    depends_on:
+      - combined

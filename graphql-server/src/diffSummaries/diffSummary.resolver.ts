@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { checkArgs } from "../diffStats/diffStat.resolver";
 import { QueryFactory } from "../queryFactory";
 import { DBArgs } from "../utils/commonTypes";
@@ -26,7 +26,7 @@ class DiffSummaryArgs extends DBArgs {
 
 @Resolver(_of => DiffSummary)
 export class DiffSummaryResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => [DiffSummary])
   async diffSummaries(@Args() args: DiffSummaryArgs): Promise<DiffSummary[]> {

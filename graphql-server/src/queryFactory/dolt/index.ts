@@ -18,7 +18,7 @@ import * as myqh from "../mysql/queries";
 import { mapTablesRes } from "../mysql/utils";
 import * as t from "../types";
 import * as qh from "./queries";
-import { handleRefNotFound, unionCols } from "./utils";
+import { getAuthorString, handleRefNotFound, unionCols } from "./utils";
 
 export class DoltQueryFactory
   extends MySQLQueryFactory
@@ -345,11 +345,19 @@ export class DoltQueryFactory
     args: t.TagArgs & {
       fromRefName: string;
       message?: string;
+      author?: t.CommitAuthor;
     },
   ): t.PR {
+    const params = [args.tagName, args.fromRefName];
+    if (args.message) {
+      params.push(args.message);
+    }
+    if (args.author) {
+      params.push(getAuthorString(args.author));
+    }
     return this.query(
-      qh.getCallNewTag(!!args.message),
-      [args.tagName, args.fromRefName, args.message],
+      qh.getCallNewTag(!!args.message, !!args.author),
+      params,
       args.databaseName,
     );
   }
@@ -358,20 +366,21 @@ export class DoltQueryFactory
     return this.query(qh.callDeleteTag, [args.tagName], args.databaseName);
   }
 
-  async callMerge(args: t.BranchesArgs): Promise<boolean> {
+  async callMerge(
+    args: t.BranchesArgs & { author?: t.CommitAuthor },
+  ): Promise<boolean> {
     return this.queryMultiple(
       async query => {
         await query("BEGIN");
 
-        const res = await query(qh.callMerge, [
+        const params = [
           args.fromBranchName,
           `Merge branch ${args.fromBranchName}`,
-          // TODO: add commit author
-          //  commitAuthor: {
-          //    name: currentUser.username,
-          //    email: currentUser.emailAddressesList[0].address,
-          //   },
-        ]);
+        ];
+        if (args.author) {
+          params.push(getAuthorString(args.author));
+        }
+        const res = await query(qh.getCallMerge(!!args.author), params);
 
         if (res.length && res[0].conflicts !== "0") {
           await query("ROLLBACK");

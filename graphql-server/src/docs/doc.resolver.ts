@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { RefArgs } from "../utils/commonTypes";
 import { DocType } from "./doc.enum";
 import { Doc, DocList, fromDoltDocsRow } from "./doc.model";
@@ -12,7 +12,7 @@ class GetDefaultDocArgs extends RefArgs {
 
 @Resolver(_of => Doc)
 export class DocsResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => DocList)
   async docs(

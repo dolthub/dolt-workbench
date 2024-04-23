@@ -4,7 +4,7 @@ import { ReadStream } from "fs";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { from as copyFrom } from "pg-copy-streams";
 import { pipeline } from "stream/promises";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { DatabaseType } from "../databases/database.enum";
 import { useDB } from "../queryFactory/mysql/queries";
 import { setSearchPath } from "../queryFactory/postgres/queries";
@@ -36,7 +36,7 @@ class TableImportArgs extends TableArgs {
 
 @Resolver(_of => Table)
 export class FileUploadResolver {
-  constructor(private readonly connResolver: ConnectionResolver) {}
+  constructor(private readonly connResolver: ConnectionProvider) {}
 
   @Mutation(_returns => Boolean)
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {

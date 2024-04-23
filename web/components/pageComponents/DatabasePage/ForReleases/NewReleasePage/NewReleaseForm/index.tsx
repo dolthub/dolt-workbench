@@ -1,4 +1,5 @@
 import BranchAndCommitSelector from "@components/FormSelectForRefs/BranchAndCommitSelector";
+import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import {
   Button,
   ButtonsWithError,
@@ -62,17 +63,14 @@ export default function NewTagForm(props: Props): JSX.Element {
             className={css.textarea}
             data-cy="new-tag-description-textarea"
           />
-          {/* <div>
-            <Checkbox
-              name="add-author"
-              label="Use my name and email as tag author"
-              checked={createTagRes.formData.addTagAuthor}
-              onChange={e =>
-                createTagRes.setFormData({ addTagAuthor: e.target.checked })
-              }
-              description="Recommended. If unchecked, Dolt System Account will be used as tag author."
-              />
-          </div> */}
+          <HeaderUserCheckbox
+            shouldAddAuthor={createTagRes.formData.addTagAuthor}
+            setShouldAddAuthor={s =>
+              createTagRes.setFormData({ addTagAuthor: s })
+            }
+            userHeaders={createTagRes.userHeaders}
+            kind="tag"
+          />
           <ButtonsWithError
             data-cy="new-tag-button-group"
             onCancel={goToReleases}

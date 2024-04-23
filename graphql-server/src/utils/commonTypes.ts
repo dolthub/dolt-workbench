@@ -1,4 +1,4 @@
-import { ArgsType, Field, Int, ObjectType } from "@nestjs/graphql";
+import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class ListOffsetRes {
@@ -46,4 +46,13 @@ export class DBArgsWithOffset extends DBArgs {
 export class TagArgs extends DBArgs {
   @Field()
   tagName: string;
+}
+
+@InputType()
+export class AuthorInfo {
+  @Field()
+  name: string;
+
+  @Field()
+  email: string;
 }

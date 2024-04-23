@@ -19,6 +19,11 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type AuthorInfo = {
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+};
+
 export type Branch = {
   __typename?: 'Branch';
   _id: Scalars['ID']['output'];
@@ -258,6 +263,7 @@ export type MutationCreateSchemaArgs = {
 
 
 export type MutationCreateTagArgs = {
+  author?: InputMaybe<AuthorInfo>;
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
@@ -289,6 +295,7 @@ export type MutationLoadDataFileArgs = {
 
 
 export type MutationMergePullArgs = {
+  author?: InputMaybe<AuthorInfo>;
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
@@ -1016,6 +1023,7 @@ export type MergePullMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
+  author?: InputMaybe<AuthorInfo>;
 }>;
 
 
@@ -1056,6 +1064,7 @@ export type CreateTagMutationVariables = Exact<{
   tagName: Scalars['String']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
   fromRefName: Scalars['String']['input'];
+  author?: InputMaybe<AuthorInfo>;
 }>;
 
 
@@ -2958,11 +2967,12 @@ export type GetBranchForPullLazyQueryHookResult = ReturnType<typeof useGetBranch
 export type GetBranchForPullSuspenseQueryHookResult = ReturnType<typeof useGetBranchForPullSuspenseQuery>;
 export type GetBranchForPullQueryResult = Apollo.QueryResult<GetBranchForPullQuery, GetBranchForPullQueryVariables>;
 export const MergePullDocument = gql`
-    mutation MergePull($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+    mutation MergePull($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $author: AuthorInfo) {
   mergePull(
     databaseName: $databaseName
     fromBranchName: $fromBranchName
     toBranchName: $toBranchName
+    author: $author
   )
 }
     `;
@@ -2984,6 +2994,7 @@ export type MergePullMutationFn = Apollo.MutationFunction<MergePullMutation, Mer
  *      databaseName: // value for 'databaseName'
  *      fromBranchName: // value for 'fromBranchName'
  *      toBranchName: // value for 'toBranchName'
+ *      author: // value for 'author'
  *   },
  * });
  */
@@ -3090,12 +3101,13 @@ export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryL
 export type RefPageQuerySuspenseQueryHookResult = ReturnType<typeof useRefPageQuerySuspenseQuery>;
 export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!) {
+    mutation CreateTag($databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!, $author: AuthorInfo) {
   createTag(
     databaseName: $databaseName
     tagName: $tagName
     message: $message
     fromRefName: $fromRefName
+    author: $author
   )
 }
     `;
@@ -3118,6 +3130,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  *      tagName: // value for 'tagName'
  *      message: // value for 'message'
  *      fromRefName: // value for 'fromRefName'
+ *      author: // value for 'author'
  *   },
  * });
  */

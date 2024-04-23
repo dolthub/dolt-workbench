@@ -1,6 +1,5 @@
 import { BranchResolver } from "./branches/branch.resolver";
 import { CommitResolver } from "./commits/commit.resolver";
-import { ConnectionResolver } from "./connections/connection.resolver";
 import { DatabaseResolver } from "./databases/database.resolver";
 import { DiffStatResolver } from "./diffStats/diffStat.resolver";
 import { DiffSummaryResolver } from "./diffSummaries/diffSummary.resolver";
@@ -19,7 +18,6 @@ import { TagResolver } from "./tags/tag.resolver";
 const resolvers = [
   BranchResolver,
   CommitResolver,
-  ConnectionResolver,
   DatabaseResolver,
   DiffStatResolver,
   DiffSummaryResolver,

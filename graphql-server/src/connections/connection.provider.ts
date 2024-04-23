@@ -1,4 +1,4 @@
-import { Resolver } from "@nestjs/graphql";
+import { Injectable } from "@nestjs/common";
 import * as mysql from "mysql2/promise";
 import { DataSource } from "typeorm";
 import { DatabaseType } from "../databases/database.enum";
@@ -19,8 +19,8 @@ export class WorkbenchConfig {
   schema?: string; // Postgres only
 }
 
-@Resolver()
-export class ConnectionResolver {
+@Injectable()
+export class ConnectionProvider {
   private ds: DataSource | undefined;
 
   private qf: QueryFactory | undefined;

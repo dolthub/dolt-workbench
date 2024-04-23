@@ -71,7 +71,8 @@ export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF(?, ?)`;
 
 // PULLS
 
-export const callMerge = `CALL DOLT_MERGE(?, "--no-ff", "-m", ?)`;
+export const getCallMerge = (hasAuthor = false) =>
+  `CALL DOLT_MERGE(?, "--no-ff", "-m", ?${getAuthorNameString(hasAuthor)})`;
 
 // TAGS
 

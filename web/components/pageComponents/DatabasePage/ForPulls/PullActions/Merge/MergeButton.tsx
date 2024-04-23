@@ -1,3 +1,4 @@
+import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { Button } from "@dolthub/react-components";
 import {
   PullDetailsForPullDetailsDocument,
@@ -5,6 +6,7 @@ import {
   useMergePullMutation,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
+import { useUserHeaders } from "@hooks/useUserHeaders";
 import { gqlPullHasConflicts } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { PullDiffParams } from "@lib/params";
@@ -24,7 +26,10 @@ type Props = {
 };
 
 export default function MergeButton(props: Props) {
-  // const { setState } = usePullDetailsContext();
+  const userHeaders = useUserHeaders();
+  const [addAuthor, setAddAuthor] = useState(
+    !!(userHeaders?.email && userHeaders.user),
+  );
   const [showDirections, setShowDirections] = useState(false);
   const variables = { ...props.params, toBranchName: props.params.refName };
   const { mutateFn: merge, ...res } = useMutation({
@@ -38,8 +43,15 @@ export default function MergeButton(props: Props) {
   const red = hasConflicts;
 
   const onClick = async () => {
-    await merge({ variables });
-    // setState({ isMerging: true });
+    await merge({
+      variables: {
+        ...variables,
+        author:
+          addAuthor && userHeaders?.email && userHeaders.user
+            ? { name: userHeaders.user, email: userHeaders.email }
+            : undefined,
+      },
+    });
   };
 
   return (
@@ -70,6 +82,13 @@ export default function MergeButton(props: Props) {
           )}
         </div>
         <div className={cx(css.msg, { [css.msgRed]: red })}>
+          <HeaderUserCheckbox
+            shouldAddAuthor={addAuthor}
+            setShouldAddAuthor={setAddAuthor}
+            userHeaders={userHeaders}
+            className={css.userCheckbox}
+            kind="merge commit"
+          />
           <MergeMessage hasConflicts={hasConflicts} />
           <span className={css.toggle}>
             View{" "}

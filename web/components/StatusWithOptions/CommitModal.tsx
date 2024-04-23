@@ -1,5 +1,8 @@
+import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { FormModal, Textarea } from "@dolthub/react-components";
+import { Maybe } from "@dolthub/web-utils";
 import { StatusFragment } from "@gen/graphql-types";
+import { useUserHeaders } from "@hooks/useUserHeaders";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
@@ -16,11 +19,16 @@ export default function CommitModal(props: Props) {
   const router = useRouter();
   const defaultMsg = getDefaultCommitMsg(props.params.refName, props.status);
   const [msg, setMsg] = useState(defaultMsg);
-  // const [addCommitAuthor, setAddCommitAuthor] = useState(true);
+  const userHeaders = useUserHeaders();
+  const [addCommitAuthor, setAddCommitAuthor] = useState(!!userHeaders);
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const q = `CALL DOLT_COMMIT("-Am", "${msg}")`;
+    const q = `CALL DOLT_COMMIT("-Am", "${msg}"${
+      addCommitAuthor
+        ? getAuthorInfo(userHeaders?.user, userHeaders?.email)
+        : ""
+    })`;
     const { href, as } = sqlQuery({ ...props.params, q });
     router.push(href, as).catch(console.error);
   };
@@ -54,16 +62,12 @@ export default function CommitModal(props: Props) {
           required
           light
         />
-        {/* <div>
-            <Checkbox
-              name="add-commit-author"
-              label="Use my name and email as commit author"
-              checked={addCommitAuthor}
-              onChange={e => setAddCommitAuthor(e.target.checked)}
-              description="Recommended. If unchecked, Dolt System Account will be used as
-              commit author."
-            />
-          </div> */}
+        <HeaderUserCheckbox
+          shouldAddAuthor={addCommitAuthor}
+          setShouldAddAuthor={setAddCommitAuthor}
+          userHeaders={userHeaders}
+          kind="commit"
+        />
       </div>
     </FormModal>
   );
@@ -78,7 +82,7 @@ function getDefaultCommitMsg(
     .join(", ")} from ${refName}`;
 }
 
-// function getAuthorInfo(currentUser?: CurrentUserFragment): string {
-//   if (!currentUser) return "";
-//   return `, "--author", "${currentUser.username} <${currentUser.emailAddressesList[0].address}>"`;
-// }
+function getAuthorInfo(name: Maybe<string>, email: Maybe<string>): string {
+  if (!name && !email) return "";
+  return `, "--author", "${name} <${email}>"`;
+}

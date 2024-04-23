@@ -2,6 +2,7 @@ import { useSetState } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import { useCreateTagMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
+import { UserHeaders, useUserHeaders } from "@hooks/useUserHeaders";
 import { ApolloErrorType } from "@lib/errors/types";
 import { DatabaseParams } from "@lib/params";
 import { refetchTagQueries } from "@lib/refetchQueries";
@@ -22,15 +23,17 @@ type ReturnType = {
   canCreateTag: boolean;
   formData: FormData;
   setFormData: Dispatch<Partial<FormData>>;
+  userHeaders: UserHeaders | null;
 };
 
 // A helper function to create a tag using a specific revision type
 export default function useCreateTag(params: DatabaseParams): ReturnType {
+  const userHeaders = useUserHeaders();
   const [formData, setFormData] = useSetState({
     tagName: "",
     message: "",
     fromRefName: null as Maybe<string>,
-    addTagAuthor: false,
+    addTagAuthor: !!(userHeaders?.user && userHeaders.email),
   });
   const [loading, setLoading] = useState(false);
 
@@ -51,13 +54,13 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
           tagName: formData.tagName,
           message: formData.message,
           fromRefName: formData.fromRefName,
-          // author:
-          //  formData.addTagAuthor && currentUser
-          //    ? {
-          //        name: currentUser.username,
-          //        email: currentUser.emailAddressesList[0].address,
-          //      } :
-          //   undefined,
+          author:
+            formData.addTagAuthor && userHeaders?.user && userHeaders.email
+              ? {
+                  name: userHeaders.user,
+                  email: userHeaders.email,
+                }
+              : undefined,
         },
       });
       return data?.createTag;
@@ -73,5 +76,6 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
     canCreateTag,
     formData,
     setFormData,
+    userHeaders,
   };
 }

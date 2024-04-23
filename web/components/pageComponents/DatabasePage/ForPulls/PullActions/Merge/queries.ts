@@ -5,11 +5,13 @@ export const MERGE_PULL = gql`
     $databaseName: String!
     $fromBranchName: String!
     $toBranchName: String!
+    $author: AuthorInfo
   ) {
     mergePull(
       databaseName: $databaseName
       fromBranchName: $fromBranchName
       toBranchName: $toBranchName
+      author: $author
     )
   }
 `;

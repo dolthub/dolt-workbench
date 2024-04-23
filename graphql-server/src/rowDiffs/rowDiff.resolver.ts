@@ -1,5 +1,5 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionResolver } from "../connections/connection.resolver";
+import { ConnectionProvider } from "../connections/connection.provider";
 import {
   CommitDiffType,
   TableDiffType,
@@ -38,7 +38,7 @@ class ListRowDiffsArgs extends DBArgsWithOffset {
 
 @Resolver(_of => RowDiff)
 export class RowDiffResolver {
-  constructor(private readonly conn: ConnectionResolver) {}
+  constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => RowDiffList)
   async rowDiffs(

@@ -190,6 +190,46 @@ Or you can run a Dolt SQL server for an existing database on your local machine:
 
 When you enter your database configuration from the UI, you can use `my-doltdb` as the host name to connect to the database running in that container.
 
+## Using a reverse proxy
+
+In some circumstances you may want to add a reverse proxy in front of the Dolt Workbench
+for authentication or other purposes. If you'd like to use the authenticated user from the
+proxy as the author for commits or tags, you can pass through the user headers.
+
+For example, given this [NGINX](https://www.nginx.com/) configuration that implements basic authentication:
+
+```conf
+events {}
+
+http {
+  server {
+    listen 80;
+    server_name localhost;
+
+    location / {
+      auth_basic "Restricted Access";
+      auth_basic_user_file /etc/nginx/.htpasswd;
+
+      proxy_pass http://workbench:3000;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $host;
+      proxy_set_header X-Forwarded-Proto $scheme;
+      proxy_set_header X-Forwarded-User $remote_user;
+      proxy_set_header X-Forwarded-Email $remote_user@dolthub.com;
+    }
+  }
+}
+```
+
+The `X-Forwarded-User` and `X-Forwarded-Email` headers are passed through to the workbench
+and can used as the
+[author](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#options-6)
+when creating a commit. Simply check the "Use name and email from headers as commit
+author" checkbox. The commit will be created with the user and email.
+
+You can also utilize this checkbox when creating releases and merging pull requests. If
+the headers are not properly configured the checkbox will be disabled.
+
 ## Contact
 
 You can reach us on [Discord](https://discord.com/invite/RFwfYpu) or [file a GitHub issue](https://github.com/dolthub/dolt-workbench/issues).
