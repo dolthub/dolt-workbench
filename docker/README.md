@@ -210,7 +210,7 @@ http {
       auth_basic "Restricted Access";
       auth_basic_user_file /etc/nginx/.htpasswd;
 
-      proxy_pass http://combined:3000;
+      proxy_pass http://workbench:3000;
       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
       proxy_set_header Host $host;
       proxy_set_header X-Forwarded-Proto $scheme;
@@ -221,7 +221,8 @@ http {
 }
 ```
 
-If `X-Forwarded-User` and `X-Forwarded-Email` headers are found, they can be used as the
+The `X-Forwarded-User` and `X-Forwarded-Email` headers are passed through to the workbench
+and can used as the
 [author](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#options-6)
 when creating a commit. Simply check the "Use name and email from headers as commit
 author" checkbox. The commit will be created with the user and email.

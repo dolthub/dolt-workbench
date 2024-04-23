@@ -48,7 +48,7 @@ export default function MergeButton(props: Props) {
         ...variables,
         author:
           addAuthor && userHeaders?.email && userHeaders.user
-            ? { name: userHeaders?.user, email: userHeaders?.email }
+            ? { name: userHeaders.user, email: userHeaders.email }
             : undefined,
       },
     });

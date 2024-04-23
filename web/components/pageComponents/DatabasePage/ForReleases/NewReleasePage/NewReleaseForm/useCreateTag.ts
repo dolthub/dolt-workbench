@@ -33,7 +33,7 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
     tagName: "",
     message: "",
     fromRefName: null as Maybe<string>,
-    addTagAuthor: !!(userHeaders?.user && userHeaders?.email),
+    addTagAuthor: !!(userHeaders?.user && userHeaders.email),
   });
   const [loading, setLoading] = useState(false);
 
@@ -55,7 +55,7 @@ export default function useCreateTag(params: DatabaseParams): ReturnType {
           message: formData.message,
           fromRefName: formData.fromRefName,
           author:
-            formData.addTagAuthor && userHeaders?.user && userHeaders?.email
+            formData.addTagAuthor && userHeaders?.user && userHeaders.email
               ? {
                   name: userHeaders.user,
                   email: userHeaders.email,
