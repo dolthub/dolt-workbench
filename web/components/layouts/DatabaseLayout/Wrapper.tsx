@@ -13,6 +13,7 @@ type Props = {
   children: ReactNode;
 };
 
+// eslint-disable-next-line @typescript-eslint/promise-function-async
 function Inner(props: Props) {
   const router = useRouter();
   const res = useCurrentDatabaseQuery();

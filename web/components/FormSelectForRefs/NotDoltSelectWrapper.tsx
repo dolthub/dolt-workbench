@@ -1,10 +1,9 @@
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Maybe } from "@dolthub/web-utils";
-import { ReactNode } from "react";
 import DoltDisabledSelector from "./DoltDisabledSelector";
 
 type Props = {
-  children: ReactNode;
+  children: JSX.Element;
   val: Maybe<string>;
 };
 
