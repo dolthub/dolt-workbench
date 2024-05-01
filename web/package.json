@@ -104,7 +104,7 @@
     "postcss-preset-env": "^9.4.0",
     "prettier": "^3.1.0",
     "react-select-event": "^5.5.1",
-    "stylelint": "^16.3.1",
+    "stylelint": "^16.4.0",
     "stylelint-config-recommended": "^14.0.0",
     "ts-jest": "^29.1.1",
     "typescript": "^5.2.2",
