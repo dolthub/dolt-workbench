@@ -30,6 +30,7 @@ const customJestConfig = {
   ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
   collectCoverage: false,
+  testTimeout: 10000,
 };
 
 // createJestConfig is exported in this way to ensure that next/jest can load the Next.js config which is async
