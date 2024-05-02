@@ -84,7 +84,7 @@ describe("tests NewTagForm", () => {
         name: /cancel/i,
       }),
     ).toBeInTheDocument();
-  }, 8000);
+  });
 
   it("creates a new tag", async () => {
     const user = await fillTagForm();
