@@ -179,7 +179,8 @@ export type DoltWriter = {
 
 export enum FileType {
   Csv = 'Csv',
-  Psv = 'Psv'
+  Psv = 'Psv',
+  Tsv = 'Tsv'
 }
 
 export type ForeignKey = {

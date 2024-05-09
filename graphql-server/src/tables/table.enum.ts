@@ -12,6 +12,7 @@ registerEnumType(ImportOperation, { name: "ImportOperation" });
 export enum FileType {
   Csv,
   Psv,
+  Tsv,
   // Xlsx,
   // Json,
   // Sql,
