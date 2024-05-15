@@ -10,7 +10,7 @@ const oneMB = 1024 * 1024;
 const numMB = 400;
 const maxFileSize = numMB * oneMB; // ~ 150MB
 
-export const validTypes = ["csv", "psv"];
+export const validTypes = ["csv", "psv", "tsv"];
 
 type ReturnType = {
   dragOver: (e: DragEvent<HTMLDivElement>) => void;
@@ -119,6 +119,8 @@ function toFileType(extension: string): FileType {
       return FileType.Csv;
     case "psv":
       return FileType.Psv;
+    case "tsv":
+      return FileType.Tsv;
     default:
       throw new Error("invalid file type");
   }

@@ -358,6 +358,7 @@ enum ImportOperation {
 enum FileType {
   Csv
   Psv
+  Tsv
 }
 
 """The `Upload` scalar type represents a file upload."""

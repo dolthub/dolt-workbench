@@ -132,5 +132,8 @@ function getDelim(ft: FileType): string {
   if (ft === FileType.Psv) {
     return "|";
   }
+  if (ft === FileType.Tsv) {
+    return "\t";
+  }
   return ",";
 }
