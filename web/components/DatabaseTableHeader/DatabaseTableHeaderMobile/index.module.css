@@ -1,5 +1,5 @@
 .editorContainer {
-  @apply block pt-4 px-6 pb-2 border-b-2 border-ld-lightgrey bg-ld-lightpurple;
+  @apply block pt-4 px-6 pb-2 border-b-2 border-stone-100 bg-stone-50;
   @screen lg {
     @apply px-6;
   }
@@ -14,14 +14,14 @@
 }
 
 .sampleQueryDir {
-  @apply text-sm text-ld-darkgrey font-normal;
+  @apply text-sm text-storm-200 font-normal;
   @screen lg {
     @apply ml-4;
   }
 }
 
 .caret {
-  @apply text-lg text-acc-hoverlinkblue mt-0.5 mr-4 ml-8;
+  @apply text-lg text-link-1 mt-0.5 mr-4 ml-8;
 }
 
 .err {
@@ -29,5 +29,5 @@
 }
 
 .empty {
-  @apply p-6 bg-acc-hoverlinkblue text-white;
+  @apply p-6 bg-link-1 text-white;
 }

@@ -15,7 +15,7 @@
 }
 
 .list {
-  @apply pl-6 border-ld-lightgrey border-l-[1.5px] mr-4 ml-6 py-2;
+  @apply pl-6 border-stone-100 border-l-[1.5px] mr-4 ml-6 py-2;
 
   @screen lg {
     @apply ml-32 mr-10 px-10;
@@ -36,12 +36,12 @@
   @apply relative rounded-lg my-3 py-4 text-sm;
 
   @screen lg {
-    @apply border border-ld-lightblue px-6;
+    @apply border border-stone-50 px-6;
   }
 }
 
 .activeItem {
-  @apply border-ld-orange;
+  @apply border-coral-400;
 }
 
 .header {
@@ -52,17 +52,17 @@
 }
 
 .bullet {
-  @apply border-ld-lightgrey h-3 w-3 absolute bg-white rounded-full -left-[1.9rem] border-[1.5px] top-[0.4rem];
+  @apply border-stone-100 h-3 w-3 absolute bg-white rounded-full -left-[1.9rem] border-[1.5px] top-[0.4rem];
   @screen lg {
     @apply -left-[2.9rem];
   }
 }
 
 .commitId {
-  @apply font-semibold text-ld-darkgrey;
+  @apply font-semibold text-storm-200;
   @screen lg {
     &:hover {
-      @apply text-acc-lightgrey;
+      @apply text-stone-100;
     }
   }
 }
@@ -83,7 +83,7 @@
   width: calc(100% - 30px);
 
   .showForMobile {
-    @apply text-acc-hoverblue break-words font-semibold mb-0;
+    @apply text-sky-900 break-words font-semibold mb-0;
   }
 }
 
@@ -92,7 +92,7 @@
 }
 
 .timeago {
-  @apply text-ld-darkgrey;
+  @apply text-storm-200;
 }
 
 .loading {

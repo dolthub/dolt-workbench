@@ -3,7 +3,7 @@
  */
 
 .ace-github-dark .ace_gutter {
-  @apply text-white bg-ld-darkerblue;
+  @apply text-white bg-storm-600;
 }
 
 .ace-github-dark .ace_print-margin {
@@ -41,12 +41,12 @@
 .ace-github-dark .ace_keyword,
 .ace-github-dark .ace_meta.ace_tag,
 .ace-github-dark .ace_storage {
-  @apply text-ld-orange;
+  @apply text-coral-400;
 }
 
 .ace-github .ace_constant.ace_buildin,
 .ace-github .ace_support.ace_function {
-  @apply text-acc-hoverlinkblue;
+  @apply text-sky-600;
 }
 
 .ace-github-dark .ace_constant.ace_buildin,

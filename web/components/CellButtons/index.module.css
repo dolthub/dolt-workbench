@@ -10,7 +10,7 @@
 }
 
 .check {
-  @apply inline-block h-5 w-5 ml-1.5 mb-1 text-acc-green;
+  @apply inline-block h-5 w-5 ml-1.5 mb-1 text-green-500;
 }
 
 .error {
@@ -28,13 +28,13 @@
 }
 
 .foreignKeyDropdown {
-  @apply absolute -top-[0.3rem] left-[8.2rem] bg-white widget-shadow-hover z-100 rounded px-3 py-1 border border-ld-lightgrey w-fit;
+  @apply absolute -top-[0.3rem] left-[8.2rem] bg-white widget-shadow-hover z-100 rounded px-3 py-1 border border-stone-100 w-fit;
 
   a {
-    @apply text-acc-linkblue font-semibold font-sans;
+    @apply text-link-1 font-semibold font-sans;
 
     &:hover {
-      @apply text-acc-hoverlinkblue;
+      @apply text-link-2;
     }
   }
 }
@@ -52,9 +52,9 @@
 }
 
 .history:hover .button:disabled ~ .popup {
-  @apply block absolute -top-0.5 left-24 bg-white widget-shadow-hover z-100 rounded px-3 py-2 border border-ld-lightgrey max-w-[12rem];
+  @apply block absolute -top-0.5 left-24 bg-white widget-shadow-hover z-100 rounded px-3 py-2 border border-stone-100 max-w-[12rem];
 }
 
 .loading {
-  @apply italic text-ld-darkgrey;
+  @apply italic text-storm-200;
 }

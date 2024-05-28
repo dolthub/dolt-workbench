@@ -1,7 +1,7 @@
 .editorContainer {
   @apply hidden;
   @screen lg {
-    @apply block px-6 pt-4 pb-2 border-b-2 border-ld-lightgrey bg-ld-lightpurple;
+    @apply block px-6 pt-4 pb-2 border-b-2 border-stone-100 bg-stone-50;
   }
 }
 
@@ -22,13 +22,13 @@
 }
 
 .sampleQueryDir {
-  @apply text-sm text-ld-darkgrey ml-4 font-normal;
+  @apply text-sm text-storm-200 ml-4 font-normal;
 
   button {
     @apply font-semibold;
 
     &:hover {
-      @apply text-acc-linkblue;
+      @apply text-button-2;
     }
 
     &:focus {

@@ -19,7 +19,7 @@
 }
 
 .disabledItem {
-  @apply text-ld-darkgrey font-semibold;
+  @apply text-storm-200 font-semibold;
 }
 
 .button {

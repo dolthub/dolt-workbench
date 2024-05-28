@@ -11,7 +11,7 @@
 }
 
 .cancel {
-  @apply mt-10 text-base text-ld-darkgrey;
+  @apply mt-10 text-base text-storm-200;
 }
 
 .getStartedContainer {

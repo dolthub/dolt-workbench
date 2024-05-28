@@ -19,7 +19,7 @@
 }
 
 .gradientOverlay {
-  @apply sticky right-0 w-12 bg-gradient-to-r from-transparent to-ld-darkgrey opacity-10;
+  @apply sticky right-0 w-12 bg-gradient-to-r from-transparent to-storm-200 opacity-10;
   @screen lg {
     @apply hidden;
   }

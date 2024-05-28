@@ -15,7 +15,7 @@
 }
 
 .schemaSection {
-  @apply mx-6 pt-7 border-t border-ld-lightgrey overflow-x-auto lg:overflow-x-visible;
+  @apply mx-6 pt-7 border-t border-stone-100 overflow-x-auto lg:overflow-x-visible;
 
   h2 {
     @apply mb-2;
@@ -23,7 +23,7 @@
 }
 
 .buttons {
-  @apply mx-2 text-acc-hoverlinkblue;
+  @apply mx-2 text-button-1;
 
   button {
     @apply pb-2 mr-4 px-6 font-semibold;
@@ -33,11 +33,11 @@
     }
 
     &:disabled {
-      @apply text-ld-darkgrey cursor-default;
+      @apply text-storm-200 cursor-default;
     }
   }
 }
 
 .active {
-  @apply text-ld-orange border-b-3 border-ld-orange;
+  @apply text-coral-400 border-b-3 border-coral-400;
 }

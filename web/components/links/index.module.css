@@ -1,7 +1,7 @@
 .link {
-  @apply text-acc-hoverlinkblue font-semibold no-underline;
+  @apply text-link-1 font-semibold no-underline;
 
   &:hover {
-    @apply text-acc-linkblue;
+    @apply text-link-2;
   }
 }

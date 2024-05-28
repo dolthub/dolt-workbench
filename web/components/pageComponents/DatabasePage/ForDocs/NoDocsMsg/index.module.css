@@ -40,5 +40,5 @@
 }
 
 .code {
-  @apply bg-ld-lightblue p-1 m-1 rounded;
+  @apply bg-stone-50 p-1 m-1 rounded;
 }

@@ -4,7 +4,7 @@
     @apply pl-14 justify-between pr-2 flex-row;
   }
   svg {
-    @apply min-w-[1.5rem]  w-4 h-4 text-ld-darkgrey;
+    @apply min-w-[1.5rem]  w-4 h-4 text-storm-200;
   }
 }
 
@@ -22,7 +22,7 @@
 }
 
 .bull {
-  @apply text-acc-grey text-lg  leading-tight;
+  @apply text-stone-300 text-lg  leading-tight;
   @screen lg {
     @apply hidden ml-[0.65rem];
   }
@@ -62,16 +62,16 @@
 }
 
 .date {
-  @apply block mt-2 text-ld-darkgrey font-mono text-xs whitespace-nowrap;
+  @apply block mt-2 text-storm-200 font-mono text-xs whitespace-nowrap;
 }
 
 .hash {
-  @apply text-ld-darkgrey font-normal text-xs font-mono;
+  @apply text-storm-200 font-normal text-xs font-mono;
   @screen lg {
     @apply ml-6 min-w-[4rem];
   }
   &:hover {
-    @apply text-acc-linkblue;
+    @apply text-link-2;
   }
 }
 

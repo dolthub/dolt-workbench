@@ -1,5 +1,5 @@
 .editor {
-  @apply fixed top-0 bottom-0 right-0 left-0 flex flex-col bg-ld-lightpurple z-100 p-6;
+  @apply fixed top-0 bottom-0 right-0 left-0 flex flex-col bg-stone-50 z-100 p-6;
 }
 .bottom {
   @apply flex mt-20;
@@ -14,5 +14,5 @@
   @apply text-white mr-2 h-3 w-3;
 }
 .cancel {
-  @apply ml-8 bg-opacity-0 border-none text-acc-hoverlinkblue shadow-none;
+  @apply ml-8 bg-opacity-0 border-none text-link-1 shadow-none;
 }

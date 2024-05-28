@@ -1,10 +1,10 @@
 .addTable {
   @apply hidden;
   @screen lg {
-    @apply flex my-8 mx-3 text-sm text-acc-hoverblue;
+    @apply flex my-8 mx-3 text-sm text-sky-900;
 
     &:hover {
-      @apply text-acc-linkblue;
+      @apply text-link-2;
     }
 
     svg {

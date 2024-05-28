@@ -23,7 +23,7 @@
 }
 
 .details {
-  @apply mt-1 text-ld-darkgrey mb-4;
+  @apply mt-1 text-storm-200 mb-4;
   @screen md {
     span {
       @apply hidden;

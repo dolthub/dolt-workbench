@@ -15,5 +15,5 @@
 }
 
 .doltDisabled {
-  @apply bg-ld-lightblue border border-ld-darkgrey px-2.5 py-2 rounded text-sm;
+  @apply bg-stone-50 border border-storm-200 px-2.5 py-2 rounded text-sm;
 }

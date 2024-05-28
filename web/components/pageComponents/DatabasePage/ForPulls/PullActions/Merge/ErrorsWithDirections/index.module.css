@@ -3,7 +3,7 @@
 }
 
 .red {
-  @apply text-acc-red;
+  @apply text-red-400;
 }
 
 .err {

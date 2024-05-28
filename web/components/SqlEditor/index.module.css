@@ -1,5 +1,5 @@
 .ace {
-  @apply pt-4 pb-6 pr-5 pl-2 mb-0 mx-1 rounded-sm flex flex-nowrap flex-grow bg-ld-darkerblue max-w-full relative;
+  @apply pt-4 pb-6 pr-5 pl-2 mb-0 mx-1 rounded-sm flex flex-nowrap flex-grow bg-storm-600 max-w-full relative;
 
   &:focus-within {
     @apply widget-shadow;
@@ -7,7 +7,7 @@
 }
 
 .editor {
-  @apply overflow-hidden w-full bg-ld-darkerblue;
+  @apply overflow-hidden w-full bg-storm-600;
 }
 
 .sidebar {

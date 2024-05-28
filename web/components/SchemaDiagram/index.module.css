@@ -3,11 +3,11 @@
 }
 
 .node {
-  @apply leading-loose text-sm font-mono border-ld-lightgrey bg-ld-lightgrey border p-3 rounded-md z-1 overflow-x-auto relative max-w-[200px];
+  @apply leading-loose text-sm font-mono border-stone-100 bg-stone-100 border p-3 rounded-md z-1 overflow-x-auto relative max-w-[200px];
   border-spacing: 0;
   td,
   th {
-    @apply pr-6 pl-6 border-b border-ld-lightgrey relative;
+    @apply pr-6 pl-6 border-b border-stone-100 relative;
     @screen md {
       @apply pl-2;
     }
@@ -15,7 +15,7 @@
   th {
     @apply font-bold whitespace-nowrap;
     &:first-of-type {
-      @apply pl-2 pr-1 border-none bg-acc-hoverblue text-white min-w-0;
+      @apply pl-2 pr-1 border-none bg-sky-900 text-white min-w-0;
     }
   }
 
@@ -24,14 +24,14 @@
       @apply pl-2 pr-1 border-none bg-white min-w-0;
     }
     &:hover {
-      @apply bg-ld-lightblue;
+      @apply bg-stone-50;
     }
   }
   thead {
     @apply text-left text-primary;
   }
   tbody {
-    @apply whitespace-nowrap text-ld-darkergrey;
+    @apply whitespace-nowrap text-stone-500;
   }
 }
 

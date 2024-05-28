@@ -35,7 +35,7 @@
 }
 
 .disabledTab {
-  @apply flex justify-center ml-4 mr-12 text-acc-lightgrey;
+  @apply flex justify-center ml-4 mr-12 text-stone-100;
 }
 
 .innerTab {

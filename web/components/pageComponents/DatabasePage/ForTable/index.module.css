@@ -23,7 +23,7 @@
 }
 
 .cancel {
-  @apply mt-6 text-base text-ld-darkgrey;
+  @apply mt-6 text-base text-storm-200;
 }
 
 .square {
@@ -35,15 +35,15 @@
 
   a,
   button {
-    @apply text-lg text-acc-hoverlinkblue;
+    @apply text-lg text-button-1;
   }
 }
 
 .disabledSquare {
-  @apply text-acc-darkgrey;
+  @apply text-stone-500;
 
   a,
   button {
-    @apply text-acc-darkgrey;
+    @apply text-stone-500;
   }
 }

@@ -7,10 +7,10 @@
 }
 
 .createButton {
-  @apply text-white bg-acc-hoverlinkblue px-1 w-full py-1 rounded-b-lg;
+  @apply text-white bg-button-1 px-1 w-full py-1 rounded-b-lg;
 
   &:hover {
-    @apply text-white bg-acc-linkblue;
+    @apply text-white bg-button-2;
   }
 }
 

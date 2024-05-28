@@ -3,7 +3,7 @@
 }
 
 .line {
-  @apply absolute top-0 w-full border-t border-ld-lightgrey h-2;
+  @apply absolute top-0 w-full border-t border-stone-100 h-2;
 }
 
 .topPadding {
@@ -23,7 +23,7 @@
 }
 
 .diffTable {
-  @apply leading-loose text-sm font-mono border-separate z-1 pt-2 pr-10 border-ld-lightgrey overflow-hidden pb-4 lg:pb-40;
+  @apply leading-loose text-sm font-mono border-separate z-1 pt-2 pr-10 border-stone-100 overflow-hidden pb-4 lg:pb-40;
   border-spacing: 0;
 
   th {
@@ -31,7 +31,7 @@
   }
   th,
   td {
-    @apply pr-8 pl-2 border-b border-ld-lightgrey relative;
+    @apply pr-8 pl-2 border-b border-stone-100 relative;
 
     &:first-of-type {
       @apply min-w-0;
@@ -41,7 +41,7 @@
     @apply text-left text-primary;
   }
   tbody {
-    @apply whitespace-nowrap text-ld-darkgrey relative;
+    @apply whitespace-nowrap text-storm-200 relative;
 
     &::after {
       @apply bg-white absolute left-0 w-[10000px] h-40 -bottom-40;
@@ -60,7 +60,7 @@
 }
 
 .key {
-  @apply inline-block ml-2 text-ld-darkgrey mb-0.5;
+  @apply inline-block ml-2 text-storm-200 mb-0.5;
 }
 
 .diffTableColsHidden {
@@ -68,7 +68,7 @@
 }
 
 .cell {
-  @apply text-ld-darkgrey min-w-[130px] max-w-[400px];
+  @apply text-storm-200 min-w-[130px] max-w-[400px];
 }
 
 .longContent {
@@ -79,7 +79,7 @@
 }
 
 .isNull {
-  @apply text-acc-grey;
+  @apply text-stone-300;
 }
 
 .dropdownButton {
@@ -97,18 +97,18 @@
 .clicked:hover,
 .headCell:hover,
 .clicked:focus-within {
-  @apply bg-ld-lightblue;
+  @apply bg-stone-50;
 }
 
 .minus {
-  @apply text-acc-red text-right;
+  @apply text-red-400 text-right;
 }
 .deleted {
-  @apply text-acc-red;
+  @apply text-red-400;
 }
 
 .added {
-  @apply text-acc-green;
+  @apply text-green-500;
 }
 
 .toTop {
@@ -145,10 +145,10 @@
 }
 
 .hiddenCol {
-  @apply bg-ld-lightpurple rounded mx-[.2rem] my-[.6rem] pl-2 border border-ld-lightgrey inline-flex items-center;
+  @apply bg-stone-50 rounded mx-[.2rem] my-[.6rem] pl-2 border border-stone-100 inline-flex items-center;
 
   &:hover {
-    @apply bg-ld-lightblue;
+    @apply bg-stone-50;
   }
 
   button {
@@ -240,11 +240,11 @@
 }
 
 .deletedRow:hover {
-  @apply visible rounded-full text-ld-darkergrey bg-opacity-50 bg-[#ffeaec];
+  @apply visible rounded-full text-stone-500 bg-opacity-50 bg-[#ffeaec];
 }
 
 .addedRow:hover {
-  @apply visible rounded-full bg-opacity-50 text-ld-darkergrey bg-[#defbe4];
+  @apply visible rounded-full bg-opacity-50 text-stone-500 bg-[#defbe4];
 }
 
 .firstCell {

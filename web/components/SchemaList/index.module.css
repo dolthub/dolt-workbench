@@ -26,7 +26,7 @@
   @apply opacity-100;
 
   &:hover {
-    @apply text-acc-hoverblue;
+    @apply text-sky-900;
   }
 }
 
@@ -40,15 +40,15 @@
 
 .selected,
 .item:hover {
-  @apply bg-white text-acc-linkblue;
+  @apply bg-white text-link-2;
 }
 
 .name {
-  @apply text-acc-hoverlinkblue text-sm font-semibold;
+  @apply text-link-1 text-sm font-semibold;
 }
 
 .viewing {
-  @apply py-0.5 mr-4 text-ld-orange font-semibold text-sm;
+  @apply py-0.5 mr-4 text-coral-400 font-semibold text-sm;
 }
 
 .smallLoader {
