@@ -120,11 +120,11 @@
 }
 
 .rowDeleted {
-  @apply bg-[#ffeaec];
+  @apply bg-red-50;
 }
 
 .rowAdded {
-  @apply bg-[#defbe4];
+  @apply bg-green-50;
 }
 
 .hiddenContainer {
@@ -240,11 +240,11 @@
 }
 
 .deletedRow:hover {
-  @apply visible rounded-full text-stone-500 bg-opacity-50 bg-[#ffeaec];
+  @apply visible rounded-full text-stone-500 bg-opacity-50 bg-red-50;
 }
 
 .addedRow:hover {
-  @apply visible rounded-full bg-opacity-50 text-stone-500 bg-[#defbe4];
+  @apply visible rounded-full bg-opacity-50 text-stone-500 bg-green-50;
 }
 
 .firstCell {

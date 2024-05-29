@@ -41,7 +41,7 @@
 }
 
 .rowIndex {
-  @apply font-semibold text-center bg-[#f9f9f9];
+  @apply font-semibold text-center bg-stone-50;
 }
 
 .loading {

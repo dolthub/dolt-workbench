@@ -60,10 +60,10 @@
   }
 
   tr.addedRow:hover {
-    @apply bg-[#ebffef];
+    @apply bg-mint-50;
   }
   tr.removedRow:hover {
-    @apply bg-[#fff3f4];
+    @apply bg-coral-50;
   }
   td.added:hover {
     @apply text-green-500;
@@ -90,11 +90,11 @@
 }
 
 .addedRow {
-  @apply bg-[#defbe4];
+  @apply bg-green-50;
 }
 
 .removedRow {
-  @apply bg-[#ffeaec];
+  @apply bg-red-50;
 }
 
 .cell {
