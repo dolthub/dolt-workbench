@@ -1325,7 +1325,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/web@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.9.9"
-    "@dolthub/react-components": "npm:^0.1.14"
+    "@dolthub/react-components": "npm:^0.2.0"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
     "@dolthub/web-utils": "npm:^0.1.4"
@@ -1409,17 +1409,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/react-components@npm:^0.1.14":
-  version: 0.1.14
-  resolution: "@dolthub/react-components@npm:0.1.14"
+"@dolthub/react-components@npm:^0.2.0":
+  version: 0.2.0
+  resolution: "@dolthub/react-components@npm:0.2.0"
   dependencies:
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
-    "@dolthub/web-utils": "npm:^0.1.3"
+    "@dolthub/web-utils": "npm:^0.1.5"
     "@react-icons/all-files": "npm:^4.1.0"
     classnames: "npm:^2.5.1"
     deepmerge: "npm:^4.3.1"
     github-markdown-css: "npm:^5.5.1"
+    numeral: "npm:^2.0.6"
     react-copy-to-clipboard: "npm:^5.1.0"
     react-loader: "npm:^2.4.7"
     react-markdown: "npm:^9.0.1"
@@ -1431,7 +1432,7 @@ __metadata:
   peerDependencies:
     react: ^18
     react-dom: ^18
-  checksum: 30f1a14acba5041f5f71486e83627dc5078658e737edd9bf2c949adbda2c613fa712b9b56d76629bea6e7653faae517c494d7afc086d259e99ed8e523d46512b
+  checksum: 5230982799a6bb0feca1c0565dc86976236670323195996c189472f7a6942a77a19618dc024bb695e8ab4641d390e13d004c42876f66aac827bcab5b9a72eaa2
   languageName: node
   linkType: hard
 
@@ -1461,13 +1462,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.3, @dolthub/web-utils@npm:^0.1.4":
+"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.4":
   version: 0.1.4
   resolution: "@dolthub/web-utils@npm:0.1.4"
   dependencies:
     node-sql-parser: "npm:^4.18.0"
     timeago.js: "npm:^4.0.2"
   checksum: 445adb55f69bbfce1ba9d5f0e2f3386243082e1df05513e16b5bfeaaaf485d98333856fdfea99b436bd42211f755309c1c5d66a4d639e58fd27fb705d2e9db97
+  languageName: node
+  linkType: hard
+
+"@dolthub/web-utils@npm:^0.1.5":
+  version: 0.1.5
+  resolution: "@dolthub/web-utils@npm:0.1.5"
+  dependencies:
+    node-sql-parser: "npm:^5.0.0"
+    timeago.js: "npm:^4.0.2"
+  checksum: 51724aaf9ee12386bb48c8d2386278dbdb37b94df73272a3579e6f9b08c7474473cb33520cd0674a1052af253004f3af7a5520696630d512d490bd3272bfc73a
   languageName: node
   linkType: hard
 
@@ -3924,6 +3935,13 @@ __metadata:
   version: 4.0.2
   resolution: "@types/parse-json@npm:4.0.2"
   checksum: b1b863ac34a2c2172fbe0807a1ec4d5cb684e48d422d15ec95980b81475fac4fdb3768a8b13eef39130203a7c04340fc167bae057c7ebcafd7dec9fe6c36aeb1
+  languageName: node
+  linkType: hard
+
+"@types/pegjs@npm:^0.10.0":
+  version: 0.10.6
+  resolution: "@types/pegjs@npm:0.10.6"
+  checksum: ee4a31cf07679ae5422fec95e499ad059483a9ab2815af1ada0ee858a00af6c7e6579a8e172810c1c9db04005941bef96d0dd2c28648769211f57df330f9c30f
   languageName: node
   linkType: hard
 
@@ -10860,6 +10878,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"node-sql-parser@npm:^5.0.0":
+  version: 5.1.0
+  resolution: "node-sql-parser@npm:5.1.0"
+  dependencies:
+    "@types/pegjs": "npm:^0.10.0"
+    big-integer: "npm:^1.6.48"
+  checksum: de6caf97e5495b7d22370bf84a75d2c07541bec44de95516b804904285d314ad4412a8c956d30dffa99bbd667d9f28e8083c8833bafa9723d4f96ae960b73124
+  languageName: node
+  linkType: hard
+
 "nopt@npm:^7.0.0":
   version: 7.2.0
   resolution: "nopt@npm:7.2.0"
@@ -10946,6 +10974,13 @@ __metadata:
   version: 1.1.1
   resolution: "nullthrows@npm:1.1.1"
   checksum: 56f34bd7c3dcb3bd23481a277fa22918120459d3e9d95ca72976c72e9cac33a97483f0b95fc420e2eb546b9fe6db398273aba9a938650cdb8c98ee8f159dcb30
+  languageName: node
+  linkType: hard
+
+"numeral@npm:^2.0.6":
+  version: 2.0.6
+  resolution: "numeral@npm:2.0.6"
+  checksum: 5ed008d3fae05cfa4986b77a85ca10bff29ae6e1fa41a04cce05ea21f08a8a104226f88868930e2a94e3239708d6985d111b5d1291e8b9a3049ffc5365c332d4
   languageName: node
   linkType: hard
 
