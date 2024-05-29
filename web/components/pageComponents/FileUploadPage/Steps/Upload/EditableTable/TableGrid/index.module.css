@@ -18,7 +18,7 @@
   height: 75vh;
 
   :global(.rdg-cell-dragged-over) {
-    @apply bg-blue-100;
+    @apply bg-sky-50;
   }
 
   :global(.index-cell > .rdg-cell-drag-handle) {
@@ -27,7 +27,7 @@
 
   :global(.index-cell[aria-selected="true"]),
   :global(.rdg-cell[role="columnheader"][aria-selected="true"]) {
-    @apply bg-gray-300;
+    @apply bg-stone-100;
     box-shadow: 2px 0 5px -2px rgb(136 136 136 / 30%);
   }
 }

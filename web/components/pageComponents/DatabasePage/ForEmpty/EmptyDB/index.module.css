@@ -32,5 +32,5 @@
 }
 
 .blueBox {
-  @apply text-sm leading-5 p-4 bg-blue-100;
+  @apply text-sm leading-5 p-4 bg-sky-50;
 }

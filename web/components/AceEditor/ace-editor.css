@@ -29,12 +29,12 @@
 
 .ace-github-dark .ace_marker-layer .ace_selection {
   @screen lg {
-    @apply bg-gray-600;
+    @apply bg-stone-500;
   }
 }
 
 .ace-github-dark .ace_gutter-active-line {
-  @apply bg-gray-600;
+  @apply bg-stone-500;
 }
 
 .ace-github-dark .ace_entity.ace_name.ace_tag,

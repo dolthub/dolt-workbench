@@ -26,7 +26,7 @@
   @apply text-white font-normal;
 
   &:hover {
-    @apply text-blue-200;
+    @apply text-sky-100;
   }
 }
 

@@ -18,6 +18,13 @@ const config = mergeConfig({
     "./pages/**/*.tsx",
     "./styles/**/*.css",
   ],
+  theme: {
+    extend: {
+      borderColor: {
+        DEFAULT: "#D7D8DF",
+      },
+    },
+  },
 });
 
 export default config;

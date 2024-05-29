@@ -131,7 +131,7 @@
     @apply min-w-[20rem];
   }
   &:hover {
-    @apply bg-gray-100;
+    @apply bg-stone-50;
   }
 }
 
