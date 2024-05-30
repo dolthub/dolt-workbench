@@ -11,7 +11,7 @@
 }
 
 .headerDetails {
-  @apply inline-block h-fit py-6 px-8 justify-between bg-ld-mediumblue relative;
+  @apply inline-block h-fit py-6 px-8 justify-between bg-storm-500 relative;
 
   @screen lg {
     @apply flex pt-6 h-28;
@@ -53,7 +53,7 @@
   }
 
   a {
-    @apply px-0.5 hover:text-ld-blue;
+    @apply px-0.5 hover:text-sky-300;
   }
 
   @screen lg {
@@ -92,5 +92,5 @@
 }
 
 .resetButton {
-  @apply mr-5 text-xl text-white hover:text-ld-lightblue hidden lg:block;
+  @apply mr-5 text-xl text-white hover:text-stone-50 hidden lg:block;
 }

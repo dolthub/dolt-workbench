@@ -15,6 +15,6 @@
 
 .link {
   a {
-    @apply leading-5 font-normal text-ld-blue;
+    @apply leading-5 font-normal text-sky-300;
   }
 }

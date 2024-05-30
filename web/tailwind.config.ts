@@ -1,4 +1,4 @@
-import { mergeConfig, workbenchColors } from "@dolthub/react-components";
+import { mergeConfig } from "@dolthub/react-components";
 
 const config = mergeConfig({
   corePlugins: {
@@ -20,8 +20,9 @@ const config = mergeConfig({
   ],
   theme: {
     extend: {
-      gradientColorStops: workbenchColors,
-      colors: workbenchColors,
+      borderColor: {
+        DEFAULT: "#D7D8DF",
+      },
     },
   },
 });

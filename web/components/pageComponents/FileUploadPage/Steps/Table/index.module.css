@@ -3,11 +3,11 @@
 }
 
 .title {
-  @apply mx-1 px-6 py-4 border-b border-ld-lightgrey flex;
+  @apply mx-1 px-6 py-4 border-b border-stone-100 flex;
 }
 
 .inner {
-  @apply bg-ld-lightblue px-16 py-8 border-b border-ld-lightgrey;
+  @apply bg-stone-50 px-16 py-8 border-b border-stone-100;
 }
 
 .closed {

@@ -39,7 +39,7 @@
 
   th,
   td {
-    @apply border-b border-ld-lightgrey relative pr-10 pl-6 lg:pl-2;
+    @apply border-b border-stone-100 relative pr-10 pl-6 lg:pl-2;
 
     &:first-of-type {
       @apply pl-0 pr-1 border-none bg-white min-w-0;
@@ -50,7 +50,7 @@
     @apply text-left text-primary;
   }
   tbody {
-    @apply whitespace-nowrap text-ld-darkergrey;
+    @apply whitespace-nowrap text-stone-500;
 
     &::after {
       @apply bg-white absolute left-0  h-80 bottom-0 lg:w-[10000px];
@@ -60,16 +60,16 @@
   }
 
   tr.addedRow:hover {
-    @apply bg-[#ebffef];
+    @apply bg-mint-50;
   }
   tr.removedRow:hover {
-    @apply bg-[#fff3f4];
+    @apply bg-coral-50;
   }
   td.added:hover {
-    @apply text-acc-green;
+    @apply text-green-500;
   }
   tr:hover {
-    @apply bg-ld-lightblue;
+    @apply bg-stone-50;
   }
 }
 
@@ -78,23 +78,23 @@
 }
 
 .key {
-  @apply inline-block ml-2 text-ld-darkgrey mb-0.5;
+  @apply inline-block ml-2 text-storm-200 mb-0.5;
 }
 
 .added {
-  @apply text-acc-green;
+  @apply text-green-500;
 }
 
 .removed {
-  @apply text-acc-hoverred;
+  @apply text-red-500;
 }
 
 .addedRow {
-  @apply bg-[#defbe4];
+  @apply bg-green-50;
 }
 
 .removedRow {
-  @apply bg-[#ffeaec];
+  @apply bg-red-50/70;
 }
 
 .cell {
@@ -109,16 +109,16 @@
 }
 
 .cellIsNull {
-  @apply text-acc-grey;
+  @apply text-stone-300;
 }
 .cell:hover,
 .active {
-  @apply bg-ld-lightgrey text-primary;
+  @apply bg-stone-100 text-primary;
 
   @screen lg {
     /* Applies background color to full column on hover */
     &::after {
-      @apply bg-ld-lightblue absolute left-0 w-full h-[10000px] -top-[5000px];
+      @apply bg-stone-50 absolute left-0 w-full h-[10000px] -top-[5000px];
       content: "\00a0";
       z-index: -5;
     }
@@ -131,7 +131,7 @@
     @apply min-w-[20rem];
   }
   &:hover {
-    @apply bg-gray-100;
+    @apply bg-stone-50;
   }
 }
 
@@ -162,12 +162,12 @@
 }
 
 .primaryKey {
-  @apply text-acc-hoverblue;
+  @apply text-sky-900;
 }
 
 .added .cell:hover,
 .added .active {
-  @apply text-acc-green;
+  @apply text-green-500;
 }
 
 .addedRow .cell:hover,
@@ -177,7 +177,7 @@
 
 .removed .cell:hover,
 .removed .active {
-  @apply text-acc-red;
+  @apply text-red-400;
 }
 
 .removedRow .cell:hover,

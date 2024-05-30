@@ -3,16 +3,16 @@
   max-height: calc(100vh - 80px);
 
   @screen lg {
-    @apply relative h-screen overflow-hidden bg-ld-lightpurple max-h-full;
+    @apply relative h-screen overflow-hidden bg-stone-50 max-h-full;
   }
 }
 
 .layoutWrapperContainer {
-  @apply bg-ld-lightpurple;
+  @apply bg-stone-50;
 }
 
 .content {
-  @apply flex flex-col relative bottom-0 left-0 right-0 top-0 bg-ld-lightpurple;
+  @apply flex flex-col relative bottom-0 left-0 right-0 top-0 bg-stone-50;
 
   @screen lg {
     @apply flex-row absolute top-40;
@@ -28,7 +28,7 @@
 }
 
 .rightContent {
-  @apply flex flex-col flex-grow min-w-0 min-h-0 border-l-0 border-ld-lightgrey;
+  @apply flex flex-col flex-grow min-w-0 min-h-0 border-l-0 border-stone-100;
 
   @screen lg {
     @apply border-l-2;

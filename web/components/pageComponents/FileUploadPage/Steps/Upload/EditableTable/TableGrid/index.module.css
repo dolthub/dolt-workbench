@@ -1,15 +1,15 @@
 .contextMenu {
-  @apply bg-white text-primary border border-ld-darkgrey rounded;
+  @apply bg-white text-primary border border-storm-200 rounded;
 
   div[role="menuitem"] {
     @apply py-1.5 px-3 text-sm;
 
     &:hover {
-      @apply text-acc-hoverblue cursor-auto;
+      @apply text-sky-900 cursor-auto;
     }
   }
   div[role="menuitem"]:not(:last-child) {
-    @apply border-b border-ld-darkgrey;
+    @apply border-b border-storm-200;
   }
 }
 
@@ -18,7 +18,7 @@
   height: 75vh;
 
   :global(.rdg-cell-dragged-over) {
-    @apply bg-blue-100;
+    @apply bg-sky-50;
   }
 
   :global(.index-cell > .rdg-cell-drag-handle) {
@@ -27,7 +27,7 @@
 
   :global(.index-cell[aria-selected="true"]),
   :global(.rdg-cell[role="columnheader"][aria-selected="true"]) {
-    @apply bg-gray-300;
+    @apply bg-stone-100;
     box-shadow: 2px 0 5px -2px rgb(136 136 136 / 30%);
   }
 }
@@ -41,18 +41,18 @@
 }
 
 .rowIndex {
-  @apply font-semibold text-center bg-[#f9f9f9];
+  @apply font-semibold text-center bg-stone-50;
 }
 
 .loading {
-  @apply absolute -bottom-3 right-4 text-white px-2 bg-ld-darkgrey bg-opacity-50;
+  @apply absolute -bottom-3 right-4 text-white px-2 bg-storm-200 bg-opacity-50;
 }
 
 .cellError {
-  @apply bg-acc-hoverred relative;
+  @apply bg-red-500 relative;
 
   &:hover::before {
-    @apply absolute top-1.5 right-1.5 bg-acc-hoverred text-white opacity-90 text-xs;
+    @apply absolute top-1.5 right-1.5 bg-red-500 text-white opacity-90 text-xs;
     content: attr(data-text);
   }
 }

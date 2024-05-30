@@ -23,14 +23,14 @@
 }
 
 .committer {
-  @apply mt-0.5 mb-2.5 text-ld-darkgrey;
+  @apply mt-0.5 mb-2.5 text-storm-200;
 }
 
 .userLink {
-  @apply text-ld-darkgrey;
+  @apply text-storm-200;
 
   &:hover {
-    @apply text-ld-darkergrey;
+    @apply text-stone-500;
   }
 }
 
@@ -41,7 +41,7 @@
     @apply text-primary;
 
     &:hover {
-      @apply text-acc-hoverblue;
+      @apply text-sky-900;
     }
   }
 }

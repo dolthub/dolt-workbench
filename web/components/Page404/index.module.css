@@ -15,7 +15,7 @@
 }
 
 .code {
-  @apply bg-gray-600 mx-auto font-mono pb-3 rounded-xl text-white tracking-tighter w-[350px] text-[0.3rem];
+  @apply bg-stone-500 mx-auto font-mono pb-3 rounded-xl text-white tracking-tighter w-[350px] text-[0.3rem];
 
   code {
     @apply text-center;

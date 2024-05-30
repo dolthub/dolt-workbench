@@ -1,5 +1,5 @@
 .container {
-  @apply flex flex-col justify-between rounded-lg bg-ld-lightpurple max-w-[46rem] mx-auto p-2 pb-4 my-6 border;
+  @apply flex flex-col justify-between rounded-lg bg-stone-50 max-w-[46rem] mx-auto p-2 pb-4 my-6 border;
 
   @screen lg {
     @apply mb-0 flex-row pb-2;
@@ -7,7 +7,7 @@
 }
 
 .mergedContainer {
-  @apply border-acc-pink;
+  @apply border-purple-400;
 }
 
 .deleteMsg {
@@ -23,7 +23,7 @@
 }
 
 .merged {
-  @apply bg-acc-pink;
+  @apply bg-purple-400 hover:bg-purple-200;
 }
 
 .err {

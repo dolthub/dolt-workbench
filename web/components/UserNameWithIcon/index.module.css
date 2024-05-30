@@ -9,13 +9,13 @@
 .A,
 .B,
 .C {
-  @apply bg-red-200;
+  @apply bg-red-50;
 }
 
 .D,
 .E,
 .F {
-  @apply bg-orange-200;
+  @apply bg-orange-50;
 }
 
 .G,
@@ -27,25 +27,25 @@
 .J,
 .K,
 .L {
-  @apply bg-green-200;
+  @apply bg-green-100;
 }
 
 .M,
 .N,
 .O {
-  @apply bg-blue-200;
+  @apply bg-sky-100;
 }
 
 .P,
 .Q,
 .R {
-  @apply bg-purple-200;
+  @apply bg-purple-100;
 }
 
 .S,
 .T,
 .U {
-  @apply bg-pink-200;
+  @apply bg-pink-50;
 }
 
 .V,
@@ -56,5 +56,5 @@
 
 .Y,
 .Z {
-  @apply bg-teal-200;
+  @apply bg-mint-50;
 }

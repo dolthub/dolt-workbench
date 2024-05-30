@@ -22,7 +22,7 @@
   }
 
   &:hover {
-    @apply text-acc-hoverblue;
+    @apply text-sky-900;
   }
 
   &:focus {

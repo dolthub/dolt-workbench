@@ -1,5 +1,5 @@
 .header {
-  @apply w-full bg-ld-mediumblue text-center p-4 justify-between hidden lg:flex;
+  @apply w-full bg-storm-500 text-center p-4 justify-between hidden lg:flex;
 
   h1 {
     @apply text-white text-2xl font-normal;
@@ -14,7 +14,7 @@
   @apply flex justify-start items-center ml-3 mt-0.5;
 
   svg {
-    @apply text-white hover:text-ld-blue;
+    @apply text-white hover:text-sky-300;
   }
 }
 
@@ -26,7 +26,7 @@
   @apply text-white font-normal;
 
   &:hover {
-    @apply text-blue-200;
+    @apply text-sky-100;
   }
 }
 
@@ -37,7 +37,7 @@
     @apply text-white bg-transparent border border-white text-sm;
 
     &:hover {
-      @apply border-ld-blue text-ld-blue bg-transparent;
+      @apply border-sky-300 text-sky-300 bg-transparent;
     }
   }
 }

@@ -15,7 +15,7 @@
 }
 
 .fileSize {
-  @apply mx-3 text-ld-darkgrey;
+  @apply mx-3 text-storm-200;
 }
 
 .buttons {

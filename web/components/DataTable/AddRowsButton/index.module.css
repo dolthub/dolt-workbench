@@ -4,10 +4,10 @@
   @screen lg {
     @apply block fixed right-5 bottom-5 z-10;
     a {
-      @apply text-ld-darkgrey font-normal text-sm;
+      @apply text-storm-200 font-normal text-sm;
     }
     svg {
-      @apply text-ld-darkgrey bg-white rounded-full;
+      @apply text-storm-200 bg-white rounded-full;
     }
   }
 }
@@ -17,7 +17,7 @@
 }
 
 .expand {
-  @apply hidden border border-ld-darkgrey rounded-2xl px-2 pb-[0.1rem] bg-white;
+  @apply hidden border border-storm-200 rounded-2xl px-2 pb-[0.1rem] bg-white;
 
   svg {
     @apply inline-block mb-[0.2rem] mr-1;

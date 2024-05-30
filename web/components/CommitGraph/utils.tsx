@@ -20,14 +20,14 @@ export function getCommits(
 
 // colors to choose from for branch paths
 export const branchPathColors = [
-  customColors["ld-darkblue"],
-  customColors["ld-orange"],
-  customColors["acc-hoverlinkblue"],
-  customColors["ld-brightgreen"],
+  customColors.ocean["700"],
+  customColors.coral["400"],
+  customColors.sky["600"],
+  customColors.mint["200"],
   "#C5A15A",
   "#FA7978",
-  customColors["acc-darkgrey"],
-  customColors["acc-green"],
+  customColors.stone["500"],
+  customColors.green["500"],
   "#5C5AC5",
   "#EB7340",
 ];

@@ -11,7 +11,7 @@ export default function Nav() {
       logo={<Logo />}
       leftLinks={<LeftLinks />}
       rightLinks={<RightLinks />}
-      bgColor="bg-ld-darkerblue"
+      bgColor="bg-storm-600"
     />
   );
 }

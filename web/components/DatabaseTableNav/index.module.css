@@ -1,7 +1,7 @@
 .container {
   @apply hidden;
   @screen lg {
-    @apply bg-ld-lightpurple pt-5 flex flex-col;
+    @apply bg-stone-50 pt-5 flex flex-col;
   }
 }
 
@@ -16,9 +16,9 @@
 }
 
 .showForMobile {
-  @apply flex flex-col fixed top-0 right-0 left-0 bottom-0 bg-ld-lightpurple z-50 w-full py-6;
+  @apply flex flex-col fixed top-0 right-0 left-0 bottom-0 bg-stone-50 z-50 w-full py-6;
   ol {
-    @apply bg-ld-lightpurple;
+    @apply bg-stone-50;
   }
 }
 
@@ -49,10 +49,10 @@
 }
 
 .createBranchDisabled a {
-  @apply text-acc-darkgrey;
+  @apply text-stone-500;
 
   &:hover {
-    @apply text-acc-darkgrey;
+    @apply text-stone-500;
   }
 }
 
@@ -79,7 +79,7 @@
   @apply text-sm;
 
   li {
-    @apply mx-4 px-2 text-acc-hoverlinkblue;
+    @apply mx-4 px-2 text-link-1;
   }
 }
 
@@ -88,7 +88,7 @@
 }
 
 .tableNavTrigger {
-  @apply fixed right-5 bottom-5 z-50 w-14 h-14 rounded-full bg-acc-hoverlinkblue flex justify-center items-center;
+  @apply fixed right-5 bottom-5 z-50 w-14 h-14 rounded-full bg-link-1 flex justify-center items-center;
 
   span,
   svg {

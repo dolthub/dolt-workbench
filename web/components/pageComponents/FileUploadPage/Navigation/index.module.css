@@ -1,5 +1,5 @@
 .nav {
-  @apply relative bg-ld-lightpurple w-full mx-auto text-center flex pt-6 border-b border-ld-lightgrey;
+  @apply relative bg-stone-50 w-full mx-auto text-center flex pt-6 border-b border-stone-100;
 
   ol {
     @apply flex mx-auto;
@@ -10,7 +10,7 @@
   @apply relative px-6 mx-10 pb-2;
 
   a {
-    @apply text-ld-darkgrey;
+    @apply text-storm-200;
   }
 
   button {
@@ -21,20 +21,20 @@
     }
 
     &:disabled {
-      @apply cursor-default text-ld-darkgrey;
+      @apply cursor-default text-storm-200;
     }
   }
 }
 
 .active {
-  @apply border-b-4 border-acc-hoverlinkblue;
+  @apply border-b-4 border-link-1;
 
   button:disabled,
   a {
-    @apply text-acc-hoverlinkblue;
+    @apply text-link-1;
   }
 }
 
 .complete a {
-  @apply text-acc-green;
+  @apply text-green-500;
 }

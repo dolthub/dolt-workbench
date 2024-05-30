@@ -23,7 +23,7 @@
   @apply opacity-100;
 
   &:hover {
-    @apply text-acc-hoverblue;
+    @apply text-sky-900;
   }
 }
 
@@ -39,14 +39,14 @@
   @apply hidden;
 
   @screen lg {
-    @apply flex p-3 text-acc-hoverlinkblue font-semibold w-full text-sm;
+    @apply flex p-3 text-link-1 font-semibold w-full text-sm;
 
     svg {
       @apply inline-block text-sm mt-1 mr-2;
     }
 
     &:hover {
-      @apply text-acc-linkblue;
+      @apply text-link-2;
     }
 
     &:focus {
@@ -60,7 +60,7 @@
 }
 
 .mobileTableLink {
-  @apply flex justify-between mx-2 p-3 text-acc-hoverlinkblue font-semibold w-full text-sm lg:hidden;
+  @apply flex justify-between mx-2 p-3 text-link-1 font-semibold w-full text-sm lg:hidden;
 }
 
 .right {
@@ -72,5 +72,5 @@
 }
 
 .tableStatus {
-  @apply text-ld-orange pr-4 mr-1 font-semibold;
+  @apply text-coral-400 pr-4 mr-1 font-semibold;
 }

@@ -1,5 +1,5 @@
 .summary {
-  @apply relative text-sm text-primary overflow-x-auto whitespace-nowrap border-b border-ld-lightgrey mx-3 pb-5 px-2 lg:px-0;
+  @apply relative text-sm text-primary overflow-x-auto whitespace-nowrap border-b border-stone-100 mx-3 pb-5 px-2 lg:px-0;
   -ms-overflow-style: none;
   scrollbar-width: none;
   &::-webkit-scrollbar {

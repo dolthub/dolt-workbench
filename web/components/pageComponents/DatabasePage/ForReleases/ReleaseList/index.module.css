@@ -7,7 +7,7 @@
 }
 
 .tagContainer {
-  @apply mr-4 pb-4 text-primary border-ld-lightgrey border-l-[1.5px];
+  @apply mr-4 pb-4 text-primary border-stone-100 border-l-[1.5px];
 
   @screen lg {
     @apply ml-16;
@@ -23,7 +23,7 @@
 }
 
 .item {
-  @apply border border-ld-lightblue rounded-lg my-3 py-4 px-6 text-sm relative;
+  @apply border border-stone-50 rounded-lg my-3 py-4 px-6 text-sm relative;
 }
 
 .header {
@@ -31,7 +31,7 @@
 }
 
 .bullet {
-  @apply border-ld-lightgrey h-3 w-3 absolute bg-white rounded-full border-[1.5px] -left-[1.9rem] top-[0.4rem];
+  @apply border-stone-100 h-3 w-3 absolute bg-white rounded-full border-[1.5px] -left-[1.9rem] top-[0.4rem];
 
   @screen lg {
     @apply -left-[2.9rem];
@@ -39,7 +39,7 @@
 }
 
 .latest {
-  @apply inline-block px-4 mx-4 rounded-full bg-white border-2 border-acc-green text-acc-green text-sm font-semibold py-[0.05rem];
+  @apply inline-block px-4 mx-4 rounded-full bg-white border-2 border-green-400 text-green-400 text-sm font-semibold py-[0.05rem];
 }
 
 .itemTop {
@@ -47,14 +47,14 @@
 }
 
 .timeago {
-  @apply text-ld-darkgrey;
+  @apply text-storm-200;
 }
 
 .commitId {
-  @apply font-semibold text-ld-darkgrey mb-1.5;
+  @apply font-semibold text-storm-200 mb-1.5;
 
   &:hover {
-    @apply text-acc-lightgrey;
+    @apply text-stone-100;
   }
 
   @screen lg {
@@ -87,7 +87,7 @@
 }
 
 .itemBottom {
-  @apply text-ld-darkgrey font-normal flex flex-col-reverse;
+  @apply text-storm-200 font-normal flex flex-col-reverse;
   a {
     @apply font-normal;
   }

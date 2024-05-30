@@ -11,7 +11,7 @@
 }
 
 .optionButton {
-  @apply flex items-center text-xs mx-2 my-3 py-0.5 font-semibold hover:text-acc-hoverblue;
+  @apply flex items-center text-xs mx-2 my-3 py-0.5 font-semibold hover:text-sky-900;
 
   .help {
     @apply mb-1;

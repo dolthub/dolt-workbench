@@ -4,7 +4,7 @@
 
 .dropContainer,
 .editableTable {
-  @apply px-3 rounded-xl border border-dashed border-ld-darkgrey bg-ld-lightpurple h-56 pt-8;
+  @apply px-3 rounded-xl border border-dashed border-storm-200 bg-stone-50 h-56 pt-8;
   min-width: 250px;
 }
 
@@ -17,12 +17,12 @@
 }
 
 .hover {
-  @apply border-acc-hoverlinkblue;
+  @apply border-link-1;
   background: rgba(61, 145, 240, 0.1);
 }
 
 .dropped {
-  @apply bg-acc-hovergreen bg-opacity-20 border-acc-hoverblue;
+  @apply bg-green-600 bg-opacity-20 border-sky-900;
 }
 
 .faded {
@@ -70,11 +70,11 @@
 }
 
 .fileTypes {
-  @apply text-sm flex text-ld-darkgrey mt-1 mx-3;
+  @apply text-sm flex text-storm-200 mt-1 mx-3;
 }
 
 .success {
-  @apply text-acc-green font-semibold text-base flex mt-6 ml-7;
+  @apply text-green-500 font-semibold text-base flex mt-6 ml-7;
 
   svg {
     @apply text-lg mr-2 mt-1;

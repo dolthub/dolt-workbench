@@ -14,7 +14,7 @@ export default function Meta(props: Props) {
     ? `${props.title} | Dolt SQL Workbench`
     : `Dolt SQL Workbench`;
   const image = "/images/dolt-workbench.png";
-  const blue = colors["ld-mediumblue"];
+  const blue = colors.storm["500"];
   return (
     <Head>
       <title>{title}</title>

@@ -18,20 +18,20 @@
   }
 
   button:last-child {
-    @apply text-acc-red;
+    @apply text-red-400;
   }
 }
 
 .textButton {
-  @apply text-ld-darkgrey;
+  @apply text-storm-200;
 }
 
 .noTextIcon {
-  @apply absolute text-base top-[0.2rem] -left-[0.1rem] text-acc-hoverred;
+  @apply absolute text-base top-[0.2rem] -left-[0.1rem] text-red-500;
 }
 
 .editInput {
-  @apply text-primary px-2 border border-ld-lightgrey rounded-sm bg-ld-lightblue mr-3;
+  @apply text-primary px-2 border border-stone-100 rounded-sm bg-stone-50 mr-3;
 
   &:focus {
     @apply outline-none widget-shadow-lightblue;

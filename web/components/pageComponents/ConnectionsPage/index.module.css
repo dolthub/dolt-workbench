@@ -1,5 +1,5 @@
 .container {
-  @apply max-w-6xl py-24 bg-ld-grey;
+  @apply max-w-6xl py-24 bg-stone-50;
 }
 
 .inner {

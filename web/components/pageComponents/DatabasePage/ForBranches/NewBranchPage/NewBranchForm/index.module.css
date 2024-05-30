@@ -9,7 +9,7 @@
 .input {
   @apply mt-4 px-0;
   input {
-    @apply text-sm rounded bg-ld-lightblue border border-acc-lightgrey;
+    @apply text-sm rounded bg-stone-50 border border-stone-100;
 
     &:focus {
       @apply bg-white;

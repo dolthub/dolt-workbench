@@ -1,5 +1,5 @@
 .summary {
-  @apply relative flex items-start text-sm text-ld-darkgrey pr-4;
+  @apply relative flex items-start text-sm text-storm-200 pr-4;
   @screen lg {
     @apply ml-[3.25rem] pr-12;
   }
@@ -10,9 +10,9 @@
 }
 
 .icon {
-  @apply w-7 h-7 inline-block rounded-full text-lg bg-ld-lightgrey flex-shrink-0 p-[0.35rem] md:p-[0.4rem];
+  @apply w-7 h-7 inline-block rounded-full text-lg bg-stone-100 flex-shrink-0 p-[0.35rem] md:p-[0.4rem];
   svg {
-    @apply w-4 h-4 text-ld-darkgrey;
+    @apply w-4 h-4 text-storm-200;
   }
 }
 

@@ -84,6 +84,7 @@ export default function BranchAndTagSelector(props: Props) {
       outerClassName={props.className}
       className={css.branchAndTagSelect}
       selectedOptionFirst
+      light
     />
   );
 }
