@@ -26,7 +26,7 @@
 }
 
 .picContainer {
-  @apply w-7 h-7 mb-4 mr-1 text-white relative rounded-full bg-green-500 flex-shrink-0;
+  @apply w-7 h-7 mb-4 mr-1 text-white relative rounded-full bg-green-400 flex-shrink-0;
 
   @screen lg {
     @apply mb-0 mt-3 ml-2;
@@ -37,7 +37,7 @@
 }
 
 .redIcon {
-  @apply bg-red-400;
+  @apply bg-red-300;
 }
 
 .merge {

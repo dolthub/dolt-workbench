@@ -7,7 +7,7 @@
 }
 
 .mergedContainer {
-  @apply border-red-300;
+  @apply border-purple-400;
 }
 
 .deleteMsg {
@@ -23,7 +23,7 @@
 }
 
 .merged {
-  @apply bg-red-300;
+  @apply bg-purple-400 hover:bg-purple-200;
 }
 
 .err {

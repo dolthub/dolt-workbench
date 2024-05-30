@@ -120,7 +120,7 @@
 }
 
 .rowDeleted {
-  @apply bg-red-50;
+  @apply bg-red-50/70;
 }
 
 .rowAdded {

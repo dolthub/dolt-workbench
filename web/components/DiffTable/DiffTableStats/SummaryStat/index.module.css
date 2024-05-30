@@ -12,11 +12,11 @@
 }
 
 .green {
-  @apply text-green-500;
+  @apply text-green-400;
 }
 
 .red {
-  @apply text-red-400;
+  @apply text-red-300;
 }
 
 .percent {

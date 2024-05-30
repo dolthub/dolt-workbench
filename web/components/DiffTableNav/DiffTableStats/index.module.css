@@ -31,11 +31,11 @@
 }
 
 .iconAdded {
-  @apply text-green-500;
+  @apply text-green-400;
 }
 
 .iconDropped {
-  @apply text-red-400;
+  @apply text-red-300;
 }
 
 .iconModified {

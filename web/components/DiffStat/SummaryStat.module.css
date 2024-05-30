@@ -19,13 +19,13 @@
 }
 
 .green {
-  @apply text-green-500;
+  @apply text-green-400;
 }
 
 .red {
-  @apply text-red-400;
+  @apply text-red-300;
 }
 
 .blue {
-  @apply text-storm-500;
+  @apply text-sky-600;
 }

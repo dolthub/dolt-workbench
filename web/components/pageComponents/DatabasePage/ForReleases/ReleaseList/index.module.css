@@ -39,7 +39,7 @@
 }
 
 .latest {
-  @apply inline-block px-4 mx-4 rounded-full bg-white border-2 border-green-500 text-green-500 text-sm font-semibold py-[0.05rem];
+  @apply inline-block px-4 mx-4 rounded-full bg-white border-2 border-green-400 text-green-400 text-sm font-semibold py-[0.05rem];
 }
 
 .itemTop {
