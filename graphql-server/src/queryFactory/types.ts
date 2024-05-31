@@ -1,3 +1,4 @@
+import { SortBranchesBy } from "../branches/branch.enum";
 import { DiffRowType } from "../rowDiffs/rowDiff.enums";
 
 export type DBArgs = { databaseName: string };
@@ -11,6 +12,10 @@ export type BranchesArgs = DBArgs & {
   fromBranchName: string;
   toBranchName: string;
   refName?: string;
+};
+export type ListBranchesArgs = DBArgs & {
+  sortBy?: SortBranchesBy;
+  offset: number;
 };
 export type RefsArgs = DBArgs & {
   fromRefName: string;

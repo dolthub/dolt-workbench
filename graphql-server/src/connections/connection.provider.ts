@@ -4,6 +4,7 @@ import { DataSource } from "typeorm";
 import { DatabaseType } from "../databases/database.enum";
 import { QueryFactory } from "../queryFactory";
 import { DoltQueryFactory } from "../queryFactory/dolt";
+import { DoltgresQueryFactory } from "../queryFactory/doltgres";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
 import { PostgresQueryFactory } from "../queryFactory/postgres";
 
@@ -97,8 +98,17 @@ export class ConnectionProvider {
 
   async newQueryFactory(type: DatabaseType): Promise<QueryFactory> {
     if (type === DatabaseType.Postgres) {
-      return new PostgresQueryFactory(this.ds);
+      try {
+        const res = await this.ds?.query("SELECT dolt_version()");
+        if (res) {
+          return new DoltgresQueryFactory(this.ds);
+        }
+        return new PostgresQueryFactory(this.ds);
+      } catch (_) {
+        return new PostgresQueryFactory(this.ds);
+      }
     }
+
     try {
       const res = await this.ds?.query("SELECT dolt_version()");
       if (res) {

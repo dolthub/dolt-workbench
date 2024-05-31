@@ -1,92 +1,31 @@
 import { QueryFactory } from "..";
-import * as column from "../../columns/column.model";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
-import * as foreignKey from "../../indexes/foreignKey.model";
-import * as index from "../../indexes/index.model";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
-import { systemTableValues } from "../../systemTables/systemTable.enums";
-import { TableDetails } from "../../tables/table.model";
-import { ROW_LIMIT, handleTableNotFound } from "../../utils";
-import { MySQLQueryFactory } from "../mysql";
-import * as myqh from "../mysql/queries";
-import { mapTablesRes } from "../mysql/utils";
+import { ROW_LIMIT } from "../../utils";
+import * as dem from "../dolt/doltEntityManager";
+import { getAuthorString, handleRefNotFound, unionCols } from "../dolt/utils";
+import { PostgresQueryFactory } from "../postgres";
 import * as t from "../types";
-import * as dem from "./doltEntityManager";
 import * as qh from "./queries";
-import { getAuthorString, handleRefNotFound, unionCols } from "./utils";
 
-export class DoltQueryFactory
-  extends MySQLQueryFactory
+export class DoltgresQueryFactory
+  extends PostgresQueryFactory
   implements QueryFactory
 {
   isDolt = true;
 
-  async getTableNames(
-    args: t.RefArgs,
-    filterSystemTables?: boolean,
-  ): Promise<string[]> {
-    return this.queryMultiple(
-      async query => {
-        const res: t.RawRows = await query(myqh.listTablesQuery, []);
-        const tables = mapTablesRes(res);
-        if (filterSystemTables) return tables;
-
-        const systemTables: Array<string | undefined> = await Promise.all(
-          systemTableValues.map(async st => {
-            const cols = await handleTableNotFound(async () =>
-              query(qh.columnsQuery, [st]),
-            );
-            if (cols) {
-              return `${st}`;
-            }
-            return undefined;
-          }),
-        );
-        return [...tables, ...(systemTables.filter(st => !!st) as string[])];
-      },
-      args.databaseName,
-      args.refName,
-    );
-  }
-
-  // TODO: Why does qr.getTable() not work for foreign keys for Dolt?
-  async getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined> {
-    return this.queryMultiple(
-      async query => getTableInfoWithQR(query, args),
-      args.databaseName,
-      args.refName,
-    );
-  }
-
-  async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
-    return this.queryMultiple(
-      async query => {
-        const tableInfos = await Promise.all(
-          tns.map(async name => {
-            const tableInfo = await getTableInfoWithQR(query, {
-              ...args,
-              tableName: name,
-            });
-            return tableInfo;
-          }),
-        );
-        return tableInfos;
-      },
-      args.databaseName,
-      args.refName,
-    );
-  }
-
   async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
-    const res: t.RawRows = await this.query(
-      qh.tableColsQuery,
-      [args.tableName],
-      args.databaseName,
-      args.refName,
-    );
-    return res.filter(c => c.Key === "PRI").map(c => c.Field);
+    console.log(args, this.ds);
+    // const res: t.RawRows = await this.query(
+    //   qh.tableColsQuery,
+    //   [args.tableName],
+    //   args.databaseName,
+    //   args.refName,
+    // );
+    // return res.filter(c => c.Key === "PRI").map(c => c.Field);
+    return [];
   }
 
   async getSchemas(args: t.RefArgs, type?: SchemaType): Promise<SchemaItem[]> {
@@ -349,9 +288,9 @@ export class DoltQueryFactory
         args.tableName,
         args.refName,
       ]);
-      const { q, cols } = qh.getRowsQueryAsOf(columns);
+      const { q, cols } = qh.getRowsQueryAsOf(columns, args.tableName);
       const rows = await query(q, [
-        args.tableName,
+        // args.tableName,
         args.refName,
         ...cols,
         ROW_LIMIT + 1,
@@ -388,22 +327,4 @@ export class DoltQueryFactory
       args.refName,
     );
   }
-}
-
-async function getTableInfoWithQR(
-  query: t.ParQuery,
-  args: t.TableArgs,
-): Promise<TableDetails> {
-  const columns = await query(qh.columnsQuery, [args.tableName]);
-  const fkRows = await query(qh.foreignKeysQuery, [
-    args.tableName,
-    `${args.databaseName}/${args.refName}`,
-  ]);
-  const idxRows = await query(qh.indexQuery, [args.tableName]);
-  return {
-    tableName: args.tableName,
-    columns: columns.map(c => column.fromDoltRowRes(c, args.tableName)),
-    foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
-    indexes: index.fromDoltRowsRes(idxRows),
-  };
 }
