@@ -22,8 +22,11 @@ export type CommitWithHead = CommitForHistoryFragment & {
 };
 
 export type BranchHeads = {
-  branchName: string;
-  headCommitHash: string;
+  name: string;
+  commit: {
+    sha: string;
+  };
+  link: string;
 };
 
 type ReturnType = {
@@ -127,9 +130,9 @@ export function useCommitListForCommitGraph(
   const branchHeads =
     branches?.map(b => {
       return {
-        branchName: b.branchName,
-        headCommitHash: b.head || "",
-        branchLink: ref({ ...params, refName: b.branchName }).as,
+        name: b.branchName,
+        commit: { sha: b.head || "" },
+        link: ref({ ...params, refName: b.branchName }).asPathname(),
       };
     }) || [];
 
