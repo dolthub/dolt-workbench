@@ -9,11 +9,19 @@ export function getCommits(
 ) {
   return commits.map(c => {
     return {
-      ...c,
-      hash: c.commitId,
-      commitLink: commit({ ...params, commitId: c.commitId }).asPathname(),
-      ownerName: "",
-      repoName: params.databaseName,
+      sha: c.commitId,
+      commit: {
+        author: {
+          name: c.committer.username,
+          date: c.committedAt,
+          email: c.committer.emailAddress,
+        },
+        message: c.message,
+      },
+      parents: c.parents.map(p => {
+        return { sha: p };
+      }),
+      html_url: commit({ ...params, commitId: c.commitId }).asPathname(),
     };
   });
 }
