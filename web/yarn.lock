@@ -1383,7 +1383,7 @@ __metadata:
     babel-jest: "npm:^29.7.0"
     chance: "npm:^1.1.11"
     classnames: "npm:^2.3.2"
-    commit-graph: "npm:^2.0.2"
+    commit-graph: "npm:^2.1.1"
     cssnano: "npm:^6.0.3"
     diff: "npm:^5.1.0"
     eslint: "npm:^8.57.0"
@@ -5721,9 +5721,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commit-graph@npm:^2.0.2":
-  version: 2.0.2
-  resolution: "commit-graph@npm:2.0.2"
+"commit-graph@npm:^2.1.1":
+  version: 2.1.1
+  resolution: "commit-graph@npm:2.1.1"
   dependencies:
     "@dolthub/web-utils": "npm:^0.1.5"
     classnames: "npm:^2.3.2"
@@ -5731,10 +5731,11 @@ __metadata:
     react-dom: "npm:>=18.0.0"
     react-infinite-scroller: "npm:^1.2.6"
     react-tooltip: "npm:^5.26.3"
+    reactjs-popup: "npm:^2.0.6"
   peerDependencies:
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-  checksum: fd84d7bdcfd06f05272b7807b02332b458a66387d66b8f22d58e63bec97213bd3f23ca905247874b23b5aa55d3805c9e82b747598230db8cca3b776f2452e406
+  checksum: f2ea93a6574f1ef91a0280e0877c3189e5d2335f51153da8bdc71b8540704c29760fbb7cd8ae1d5c33ec54da3bfe68b950010c045205e33b83ee8c935ca131ab
   languageName: node
   linkType: hard
 

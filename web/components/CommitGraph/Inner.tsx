@@ -19,6 +19,7 @@ export default function Inner(props: Props) {
       <Graph.WithInfiniteScroll
         commits={getCommits(props.commits, props.params)}
         branchHeads={props.branchHeads}
+        currentBranch={props.params.refName}
         graphStyle={{
           commitSpacing: 72,
           branchSpacing: 20,
