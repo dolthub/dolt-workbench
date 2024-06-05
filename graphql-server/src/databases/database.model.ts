@@ -20,4 +20,7 @@ export class DatabaseConnection {
 
   @Field({ nullable: true })
   schema?: string;
+
+  @Field({ nullable: true })
+  isDolt?: boolean;
 }

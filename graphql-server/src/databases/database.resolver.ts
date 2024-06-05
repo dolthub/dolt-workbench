@@ -138,9 +138,8 @@ export class DatabaseResolver {
       schema: args.schema,
     };
 
-    const storeArgs = { ...workbenchConfig, name: args.name };
-
-    await this.conn.addConnection(workbenchConfig);
+    const { isDolt } = await this.conn.addConnection(workbenchConfig);
+    const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
 
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);

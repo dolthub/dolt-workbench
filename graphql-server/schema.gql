@@ -102,6 +102,7 @@ type DatabaseConnection {
   useSSL: Boolean
   type: DatabaseType
   schema: String
+  isDolt: Boolean
 }
 
 enum DatabaseType {
