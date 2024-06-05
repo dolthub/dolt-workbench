@@ -1,3 +1,4 @@
+import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
@@ -6,6 +7,7 @@ import {
 } from "@gen/graphql-types";
 import { maybeDatabase, maybeSchema } from "@lib/urls";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import cx from "classnames";
 import { useRouter } from "next/router";
 import css from "./index.module.css";
 
@@ -39,11 +41,23 @@ export default function Item({ conn, onDeleteClicked }: Props) {
     <>
       <li key={conn.name} className={css.connection}>
         <Button.Link onClick={onClick}>{conn.name}</Button.Link>
-        <Button.Link onClick={() => onDeleteClicked(conn.name)}>
-          <IoMdClose />
-        </Button.Link>
+        <span className={css.right}>
+          <DatabaseTypeLabel conn={conn} />
+          <Button.Link onClick={() => onDeleteClicked(conn.name)}>
+            <IoMdClose />
+          </Button.Link>
+        </span>
       </li>
       <ErrorMsg err={res.error} className={css.err} />
     </>
   );
+}
+
+type LabelProps = {
+  conn: DatabaseConnectionFragment;
+};
+
+function DatabaseTypeLabel({ conn }: LabelProps) {
+  const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
+  return <span className={cx(css.label, css[type.toLowerCase()])}>{type}</span>;
 }

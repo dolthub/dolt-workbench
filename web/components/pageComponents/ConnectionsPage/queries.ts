@@ -31,6 +31,7 @@ export const STORED_CONNECTIONS = gql`
     hideDoltFeatures
     type
     schema
+    isDolt
   }
   query StoredConnections {
     storedConnections {

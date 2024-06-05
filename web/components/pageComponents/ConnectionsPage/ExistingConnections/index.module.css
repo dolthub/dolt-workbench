@@ -18,6 +18,10 @@
   }
 }
 
+.right {
+  @apply flex;
+}
+
 .err {
   @apply text-center;
 }
@@ -28,4 +32,24 @@
   svg {
     @apply mr-2;
   }
+}
+
+.label {
+  @apply text-sm w-24 rounded-full flex items-center justify-center mr-5;
+}
+
+.mysql {
+  @apply text-[#00758f] bg-[#00758f]/20;
+}
+
+.dolt {
+  @apply bg-mint-50 text-green-500;
+}
+
+.doltgresql {
+  @apply bg-orange-50 text-orange-500;
+}
+
+.postgresql {
+  @apply bg-[#0064a5]/20 text-[#0064a5];
 }
