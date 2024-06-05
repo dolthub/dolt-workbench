@@ -17,15 +17,11 @@ export class DoltgresQueryFactory
   isDolt = true;
 
   async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
-    console.log(args, this.ds);
-    // const res: t.RawRows = await this.query(
-    //   qh.tableColsQuery,
-    //   [args.tableName],
-    //   args.databaseName,
-    //   args.refName,
-    // );
-    // return res.filter(c => c.Key === "PRI").map(c => c.Field);
-    return [];
+    return this.queryQR(async qr => {
+      const table = await qr.getTable(`${args.databaseName}.${args.tableName}`);
+      if (!table) return [];
+      return table.columns.filter(c => c.isPrimary).map(c => c.name);
+    }, args.databaseName);
   }
 
   async getSchemas(args: t.RefArgs, type?: SchemaType): Promise<SchemaItem[]> {
