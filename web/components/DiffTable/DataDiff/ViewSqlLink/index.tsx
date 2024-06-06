@@ -6,12 +6,12 @@ import {
   CommitDiffType,
   useDataTableQuery,
 } from "@gen/graphql-types";
+import { useGetDoltCommitDiffQuery } from "@hooks/useDoltQueryBuilder/useGetDoltCommitDiffQuery";
 import { RequiredRefsParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
 import { HiddenColIndexes } from "../utils";
 import css from "./index.module.css";
-import { useGetDoltCommitDiffQuery } from "./useGetDoltCommitDiffQuery";
 
 type Props = {
   params: RequiredRefsParams & {
@@ -27,7 +27,7 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const generateQuery = useGetDoltCommitDiffQuery(props);
+  const { generateQuery } = useGetDoltCommitDiffQuery(props);
 
   return (
     <DropdownItem

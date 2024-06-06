@@ -6,7 +6,9 @@ import useSqlBuilder from "@hooks/useSqlBuilder";
 import { getSqlOrderBy, mapColsToColumnNames } from "@hooks/useSqlBuilder/util";
 import useSqlParser from "@hooks/useSqlParser";
 import { TableParams } from "@lib/params";
-import { convertTimestamp } from "./utils";
+import { convertTimestamp } from "../../components/CellButtons/utils";
+import { ReturnType } from "./types";
+import { diffColumns, getAllSelectColumns, getToAndFromCols } from "./utils";
 
 export type Props = {
   cidx: number;
@@ -20,18 +22,6 @@ type ColumnWithNamesAndValue = {
   column: ColumnForDataTableFragment;
   names: string[];
   value: string;
-};
-
-const diffColumns = [
-  "from_commit",
-  "from_commit_date",
-  "to_commit",
-  "to_commit_date",
-];
-
-export type ReturnType = {
-  generateQuery: () => string;
-  isPostgres: boolean;
 };
 
 export function useGetDoltDiffQuery(props: Props): ReturnType {
@@ -95,27 +85,6 @@ function getSelectColumns(
   return ["diff_type"]
     .concat(getToAndFromCols(currCol.names))
     .concat(diffColumns);
-}
-
-export function getAllSelectColumns(
-  cols: Array<{ names: string[] }>,
-): string[] {
-  const allCols: string[] = [];
-  const reduced = cols.reduce(
-    (all, c) => all.concat(getToAndFromCols(c.names)),
-    allCols,
-  );
-
-  return ["diff_type"].concat(reduced).concat(diffColumns);
-}
-
-// For every name add to_ and from_ prefixes
-function getToAndFromCols(names: string[]): string[] {
-  const allCols: string[] = [];
-  return names.reduce(
-    (all, name) => all.concat(`from_${name}`, `to_${name}`),
-    allCols,
-  );
 }
 
 function getWhereClause(

@@ -2,7 +2,7 @@ import { ColumnForDataTableFragment, CommitDiffType } from "@gen/graphql-types";
 import { fakeCommitId } from "@hooks/useCommitListForBranch/mocks";
 import { RequiredRefsParams, TableParams } from "@lib/params";
 import { sprintf } from "@lib/sprintf";
-import { Props } from "./useGetDoltCommitDiffQuery";
+import { Props } from "../useGetDoltCommitDiffQuery";
 
 type Params = RequiredRefsParams & { tableName: string; refName: string };
 

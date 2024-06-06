@@ -4,7 +4,7 @@ import {
 } from "@gen/graphql-types";
 import { TableParams } from "@lib/params";
 import { sprintf } from "@lib/sprintf";
-import { Props } from "./useGetDoltDiffQuery";
+import { Props } from "../useGetDoltDiffQuery";
 
 // dolt_diff constants for all tables
 const doltDiffColumns: ColumnForDataTableFragment[] = [

@@ -7,6 +7,7 @@ import {
   RowForDataTableFragment,
   SchemaItemFragment,
 } from "@gen/graphql-types";
+import { useGetDoltDiffQuery } from "@hooks/useDoltQueryBuilder/useGetDoltDiffQuery";
 import useSqlParser from "@hooks/useSqlParser";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableParams } from "@lib/params";
@@ -15,7 +16,6 @@ import cx from "classnames";
 import { ReactNode, useEffect, useState } from "react";
 import TableType from "./TableType";
 import css from "./index.module.css";
-import { useGetDoltDiffQuery } from "./useGetDoltDiffQuery";
 import { getTableColsFromQueryCols, isKeyless, queryShowingPKs } from "./utils";
 
 type Props = {

@@ -10,10 +10,11 @@ import {
 import useSqlParser from "@hooks/useSqlParser";
 import { removeClauses } from "@lib/doltSystemTables";
 import { Column, Expr, Select, Function as SqlFunction } from "node-sql-parser";
+import { ReturnType } from "./types";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
-export function useGetDoltHistoryQuery(q: string): () => string {
+export function useGetDoltHistoryQuery(q: string): ReturnType {
   const { getTableName, parseSelectQuery } = useSqlParser();
   const { convertToSqlSelect, isPostgres } = useSqlBuilder();
   const queryWithoutClauses = removeClauses(q);
@@ -38,7 +39,7 @@ export function useGetDoltHistoryQuery(q: string): () => string {
     });
   };
 
-  return generate;
+  return { generateQuery: generate, isPostgres };
 }
 
 function getHistoryTableName(

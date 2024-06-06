@@ -1,4 +1,4 @@
-import { getAllSelectColumns } from "@components/CellButtons/useGetDoltDiffQuery";
+import { isHiddenColumn } from "@components/DiffTable/DataDiff/utils";
 import { ColumnForDataTableFragment, CommitDiffType } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import {
@@ -9,7 +9,8 @@ import {
 } from "@hooks/useSqlBuilder/util";
 import { RefsParams, RequiredRefsParams } from "@lib/params";
 import { Expr, Function as SqlFunction } from "node-sql-parser";
-import { isHiddenColumn } from "../utils";
+import { ReturnType } from "./types";
+import { getAllSelectColumns } from "./utils";
 
 export type Props = {
   params: RequiredRefsParams & {
@@ -25,8 +26,8 @@ export type Props = {
 // SELECT diff_type, `from_[col]`, `to_[col]`, [...], from_commit, from_commit_date, to_commit, to_commit_date
 // FROM dolt_commit_diff_[tableName]
 // WHERE from_commit="[fromCommitId]" AND to_commit="[toCommitId]"
-export function useGetDoltCommitDiffQuery(props: Props): () => string {
-  const { convertToSqlSelect } = useSqlBuilder();
+export function useGetDoltCommitDiffQuery(props: Props): ReturnType {
+  const { convertToSqlSelect, isPostgres } = useSqlBuilder();
 
   const generate = () => {
     const colsWithNamesAndVals = transformColsFromDiffCols(
@@ -42,7 +43,7 @@ export function useGetDoltCommitDiffQuery(props: Props): () => string {
     });
   };
 
-  return generate;
+  return { generateQuery: generate, isPostgres };
 }
 
 function getWhereClause(
@@ -75,7 +76,7 @@ function getWhereClause(
 
 // Get names and values for every column based on row value and dolt_commit_diff table
 // column names, excluding hidden columns
-export function transformColsFromDiffCols(
+function transformColsFromDiffCols(
   cols: ColumnForDataTableFragment[],
   hiddenColIndexes: number[],
 ): Array<{ names: string[] }> {
