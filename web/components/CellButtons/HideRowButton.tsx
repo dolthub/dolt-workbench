@@ -7,7 +7,7 @@ import {
 } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import css from "./index.module.css";
-import { toPKColsMapQueryCols } from "./queryHelpers";
+import { toPKColsMapQueryCols } from "./utils";
 
 type Props = {
   row: RowForDataTableFragment;

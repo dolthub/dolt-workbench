@@ -4,7 +4,7 @@ import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import css from "./index.module.css";
-import { convertTimestamp } from "./queryHelpers";
+import { convertTimestamp } from "./utils";
 
 type Props = {
   col?: ColumnForDataTableFragment;

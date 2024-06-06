@@ -4,7 +4,7 @@ import { Button, ErrorMsg } from "@dolthub/react-components";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import css from "./index.module.css";
-import { useGetDoltHistoryQuery } from "./queryHelpers";
+import { useGetDoltHistoryQuery } from "./useGetDoltHistoryQuery";
 
 type Props = {
   params: SqlQueryParams;
@@ -19,6 +19,7 @@ export default function HistoryTable(props: Props) {
   const generateQuery = useGetDoltHistoryQuery(props.params.q);
 
   const onClick = async () => {
+    // TODO(doltgres): Move to sql builder
     const query = generateQuery();
     if (query === "") {
       setErr("Error generating history query. We are working on a fix.");

@@ -1,4 +1,4 @@
-import { getAllSelectColumns } from "@components/CellButtons/queryHelpers";
+import { getAllSelectColumns } from "@components/CellButtons/useGetDoltDiffQuery";
 import { ColumnForDataTableFragment, CommitDiffType } from "@gen/graphql-types";
 import { RefsParams, RequiredRefsParams } from "@lib/params";
 import { isHiddenColumn } from "../DataDiff/utils";

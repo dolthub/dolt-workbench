@@ -2,8 +2,11 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { Conditions } from "@hooks/useSqlBuilder/util";
+import useSqlBuilder from "@hooks/useSqlBuilder";
+import { mapColsToColumnNames } from "@hooks/useSqlBuilder/util";
+import useSqlParser from "@hooks/useSqlParser";
 import { TableParams } from "@lib/params";
+import { convertTimestamp } from "./utils";
 
 export type Props = {
   cidx: number;
@@ -19,40 +22,52 @@ type ColumnWithNamesAndValue = {
   value: string;
 };
 
-export const diffColumns = [
+const diffColumns = [
   "from_commit",
   "from_commit_date",
   "to_commit",
   "to_commit_date",
 ];
 
-const orderBy = "ORDER BY to_commit_date DESC";
+export function useGetDoltDiffQuery(props: Props): () => string {
+  const { convertToSqlSelect } = useSqlBuilder();
+  const { parseSelectQuery } = useSqlParser();
 
-export function getDoltDiffQuery(props: Props): string {
-  const tableName = `dolt_diff_${props.params.tableName}`;
-  const colsWithNamesAndVals = transformColsFromDiffCols(
-    props.columns,
-    props.row,
-  );
-  const columns = getSelectColumns(
-    colsWithNamesAndVals,
-    props.cidx,
-    props.isPK,
-  );
-  const pkConditions = getConditionsForPKs(colsWithNamesAndVals);
-  const cellsNotEqualCondition = getCellsNotEqualCondition(
-    colsWithNamesAndVals[props.cidx],
-    props.isPK,
-  );
-  const conditions = cellsNotEqualCondition
-    ? `(${pkConditions}) ${cellsNotEqualCondition}`
-    : pkConditions;
+  const generate = (): string => {
+    const tableName = `dolt_diff_${props.params.tableName}`;
+    const colsWithNamesAndVals = transformColsFromDiffCols(
+      props.columns,
+      props.row,
+    );
+    const selectCols = getSelectColumns(
+      colsWithNamesAndVals,
+      props.cidx,
+      props.isPK,
+    );
+    const sel = convertToSqlSelect({
+      columns: mapColsToColumnNames(selectCols),
+      from: [{ table: tableName }],
+    });
+    const withWhere = `${sel} WHERE ${getWhereClause(colsWithNamesAndVals, props.cidx, props.isPK)}`;
+    console.log("WITH WHERE", withWhere);
+    const parsed = parseSelectQuery(withWhere);
+    if (!parsed) return "";
 
-  return `SELECT ${columns}\nFROM \`${tableName}\`\nWHERE ${conditions}\n${orderBy}`;
+    return convertToSqlSelect({
+      ...parsed,
+      orderby: [
+        {
+          type: "DESC",
+          expr: { type: "column_ref", column: "to_commit_date" },
+        },
+      ],
+    });
+  };
+  return generate;
 }
 
 // Get names and values for every column based on row value
-export function transformColsFromDiffCols(
+function transformColsFromDiffCols(
   cols: ColumnForDataTableFragment[],
   row: RowForDataTableFragment,
 ): ColumnWithNamesAndValue[] {
@@ -68,7 +83,7 @@ function getSelectColumns(
   cols: ColumnWithNamesAndValue[],
   cidx: number,
   isPK: boolean,
-): string {
+): string[] {
   // Gets all column names for row
   if (isPK) {
     return getAllSelectColumns(cols);
@@ -78,27 +93,40 @@ function getSelectColumns(
   const currCol = cols[cidx];
   return ["diff_type"]
     .concat(getToAndFromCols(currCol.names))
-    .concat(diffColumns)
-    .join(", ");
+    .concat(diffColumns);
 }
 
-export function getAllSelectColumns(cols: Array<{ names: string[] }>): string {
+export function getAllSelectColumns(
+  cols: Array<{ names: string[] }>,
+): string[] {
   const allCols: string[] = [];
   const reduced = cols.reduce(
     (all, c) => all.concat(getToAndFromCols(c.names)),
     allCols,
   );
 
-  return ["diff_type"].concat(reduced).concat(diffColumns).join(", ");
+  return ["diff_type"].concat(reduced).concat(diffColumns);
 }
 
 // For every name add to_ and from_ prefixes
 function getToAndFromCols(names: string[]): string[] {
   const allCols: string[] = [];
   return names.reduce(
-    (all, name) => all.concat(`\`from_${name}\``, `\`to_${name}\``),
+    (all, name) => all.concat(`from_${name}`, `to_${name}`),
     allCols,
   );
+}
+
+function getWhereClause(
+  cols: ColumnWithNamesAndValue[],
+  cidx: number,
+  isPK: boolean,
+): string {
+  const pkConditions = getConditionsForPKs(cols);
+  const cellsNotEqualCondition = getCellsNotEqualCondition(cols[cidx], isPK);
+  return cellsNotEqualCondition
+    ? `(${pkConditions}) ${cellsNotEqualCondition}`
+    : pkConditions;
 }
 
 // Looks like "(to_pk1=val1 AND to_pk2=val2...) OR (from_pk1=val1 AND from_pk2=val2...)"
@@ -158,43 +186,4 @@ function getCellsNotEqualCondition(
     return `${colsNotEqual} OR (${fromIsNull}) OR (${toIsNull})`;
   });
   return `AND (${names.join(" OR ")})`;
-}
-
-// Gets timestamp format "YYYY-MM-DD HH:MM:SS"
-export function convertTimestamp(ts: string): string {
-  const date = new Date(ts);
-  // ISO date looks like "2020-01-22T00:00:00.000Z"
-  const [day, time] = date.toISOString().split("T");
-  const [formattedTime] = time.split(".");
-  return `${day} ${formattedTime}`;
-}
-
-export function toPKCols(
-  row: RowForDataTableFragment,
-  cols: ColumnForDataTableFragment[],
-): Conditions {
-  return cols
-    .filter(c => c.isPrimaryKey)
-    .map((col, i) => {
-      return { col: col.name, val: row.columnValues[i].displayValue };
-    });
-}
-
-export function toPKColsMapQueryCols(
-  row: RowForDataTableFragment,
-  queryCols: ColumnForDataTableFragment[],
-  cols?: ColumnForDataTableFragment[],
-): Conditions {
-  return toPKCols(row, mapQueryColsToAllCols(queryCols, cols));
-}
-
-function mapQueryColsToAllCols(
-  queryCols: ColumnForDataTableFragment[],
-  allCols?: ColumnForDataTableFragment[],
-): ColumnForDataTableFragment[] {
-  if (!allCols) return queryCols;
-  return queryCols.map(qCol => {
-    const matchedCol = allCols.find(aCol => aCol.name === qCol.name);
-    return matchedCol ?? qCol;
-  });
 }

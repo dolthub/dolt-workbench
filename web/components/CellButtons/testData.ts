@@ -3,7 +3,7 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { TableParams } from "@lib/params";
-import { Props } from "./queryHelpers";
+import { Props } from "./useGetDoltDiffQuery";
 
 const replaceToken = "$";
 // eslint-disable-next-line no-return-assign
@@ -37,8 +37,8 @@ const doltDiffColumns: ColumnForDataTableFragment[] = [
   },
 ];
 
-const diffColString = doltDiffColumns.map(c => c.name).join(", ");
-const diffOrderBy = "ORDER BY to_commit_date DESC";
+const diffColString = doltDiffColumns.map(c => `\`${c.name}\``).join(", ");
+const diffOrderBy = "ORDER BY `to_commit_date` DESC";
 const historyCols = "`commit_hash`, `committer`, `commit_date`";
 const historyOrderBy = "ORDER BY `commit_date` DESC";
 
@@ -92,7 +92,7 @@ export const lpCellProps: Props = {
 const lpCellClicked = lpCellProps.columns[lpCellProps.cidx].name;
 
 export const lpCellDiffQuery = sprintf(
-  'SELECT diff_type, `from_$`, `to_$`, $\nFROM `dolt_diff_$`\nWHERE (`to_$` = "$" OR `from_$` = "$") AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL))\n$',
+  'SELECT `diff_type`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE (`to_$` = "$" OR `from_$` = "$") AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL)) $',
   lpCellClicked,
   lpCellClicked,
   diffColString,
@@ -110,7 +110,15 @@ export const lpCellDiffQuery = sprintf(
   diffOrderBy,
 );
 
-export const lpCellHistoryQuery = `SELECT \`${lpCellClicked}\`, ${historyCols} FROM \`dolt_history_${lpTableName}\` WHERE (\`${lpPK1}\` = "${lpPK1Val}") ${historyOrderBy}`;
+export const lpCellHistoryQuery = sprintf(
+  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
+  lpCellClicked,
+  historyCols,
+  lpTableName,
+  lpPK1,
+  lpPK1Val,
+  historyOrderBy,
+);
 
 export const lpRowProps: Props = {
   cidx: 0,
@@ -121,7 +129,7 @@ export const lpRowProps: Props = {
 };
 
 export const lpRowDiffQuery = sprintf(
-  `SELECT diff_type, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, $\nFROM \`dolt_diff_$\`\nWHERE \`to_$\` = "$" OR \`from_$\` = "$"\n$`,
+  'SELECT `diff_type`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE `to_$` = "$" OR `from_$` = "$" $',
   lpPK1,
   lpPK1,
   lpCol2,
@@ -138,7 +146,7 @@ export const lpRowDiffQuery = sprintf(
 );
 
 export const lpRowHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = "$" $`,
+  `SELECT \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
   lpPK1,
   lpCol2,
   lpCol3,
@@ -211,7 +219,7 @@ export const saCellProps: Props = {
 const saClickedCell = saCellProps.columns[saCellProps.cidx].name;
 
 export const saCellDiffQuery = sprintf(
-  `SELECT diff_type, \`from_$\`, \`to_$\`, $\nFROM \`dolt_diff_$\`\nWHERE ((\`to_$\` = "$" AND \`to_$\` = "$" AND \`to_$\` = "$") OR (\`from_$\` = "$" AND \`from_$\` = "$" AND \`from_$\` = "$")) AND (\`from_$\` <> \`to_$\` OR (\`from_$\` IS NULL AND \`to_$\` IS NOT NULL) OR (\`from_$\` IS NOT NULL AND \`to_$\` IS NULL))\n$`,
+  'SELECT `diff_type`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE ((`to_$` = "$" AND `to_$` = "$" AND `to_$` = "$") OR (`from_$` = "$" AND `from_$` = "$" AND `from_$` = "$")) AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL)) $',
   saClickedCell,
   saClickedCell,
   diffColString,
@@ -238,7 +246,7 @@ export const saCellDiffQuery = sprintf(
 );
 
 export const saCellHistoryQuery = sprintf(
-  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE (\`$\` = "$" AND \`$\` = "$" AND \`$\` = "$") $`,
+  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' AND \`$\` = '$' AND \`$\` = '$' $`,
   saClickedCell,
   historyCols,
   saTableName,
@@ -260,7 +268,7 @@ export const saRowProps: Props = {
 };
 
 export const saRowDiffQuery = sprintf(
-  `SELECT diff_type, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, $\nFROM \`dolt_diff_$\`\nWHERE (\`to_$\` = "$" AND \`to_$\` = "$" AND \`to_$\` = "$") OR (\`from_$\` = "$" AND \`from_$\` = "$" AND \`from_$\` = "$")\n$`,
+  'SELECT `diff_type`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE (`to_$` = "$" AND `to_$` = "$" AND `to_$` = "$") OR (`from_$` = "$" AND `from_$` = "$" AND `from_$` = "$") $',
   saPK1,
   saPK1,
   saPK2,
@@ -287,7 +295,7 @@ export const saRowDiffQuery = sprintf(
 );
 
 export const saRowHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE (\`$\` = "$" AND \`$\` = "$" AND \`$\` = "$") $`,
+  `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' AND \`$\` = '$' AND \`$\` = '$' $`,
   saPK1,
   saPK2,
   saPK3,
@@ -335,7 +343,7 @@ export const saCommitDiffForCommitsQuery = sprintf(
   saToCommit,
 );
 
-export const saDiffHistoryQuery = sprintf(
+const saBaseDiffHistoryQuery = sprintf(
   `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\``,
   saPK1,
   saPK2,
@@ -343,6 +351,12 @@ export const saDiffHistoryQuery = sprintf(
   saCol4,
   historyCols,
   saTableName,
+);
+
+export const saDiffHistoryQuery = sprintf(
+  `$ $`,
+  saBaseDiffHistoryQuery,
+  historyOrderBy,
 );
 
 export const saDiffForCommitsWithClausesQuery = sprintf(
@@ -355,7 +369,7 @@ export const saDiffForCommitsWithClausesQuery = sprintf(
 
 export const saDiffHistoryWithClausesQuery = sprintf(
   `$ WHERE \`$\` = '$' $`,
-  saDiffHistoryQuery,
+  saBaseDiffHistoryQuery,
   saPK1,
   saPK1Val,
   historyOrderBy,

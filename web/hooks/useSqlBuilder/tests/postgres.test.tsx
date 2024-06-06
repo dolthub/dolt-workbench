@@ -1,4 +1,4 @@
-import { toPKCols } from "@components/CellButtons/queryHelpers";
+import { toPKCols } from "@components/CellButtons/utils";
 import { NULL_VALUE } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
