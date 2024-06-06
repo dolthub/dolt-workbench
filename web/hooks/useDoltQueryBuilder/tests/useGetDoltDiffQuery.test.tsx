@@ -1,16 +1,7 @@
 import { ReturnType } from "../types";
 import { Props, useGetDoltDiffQuery } from "../useGetDoltDiffQuery";
 import { renderHookForMaybePostgres } from "./renderHookForMaybePostgres.test";
-import {
-  getLpCellDiffQuery,
-  getLpRowDiffQuery,
-  getSaCellDiffQuery,
-  getSaRowDiffQuery,
-  lpCellProps,
-  lpRowProps,
-  saCellProps,
-  saRowProps,
-} from "./testDataDiff";
+import * as td from "./testDataDiff";
 import { Test, Tests } from "./types";
 
 async function renderUseGetDoltDiffQuery(
@@ -23,19 +14,19 @@ async function renderUseGetDoltDiffQuery(
 const tests = (isPG = false): Tests<Props> => [
   {
     desc: "cell",
-    args: lpCellProps,
-    expected: getLpCellDiffQuery(isPG),
+    args: td.lpCellProps,
+    expected: td.getLpCellDiffQuery(isPG),
   },
-  { desc: "row", args: lpRowProps, expected: getLpRowDiffQuery(isPG) },
+  { desc: "row", args: td.lpRowProps, expected: td.getLpRowDiffQuery(isPG) },
   {
     desc: "cell with multiple PKs and PK with timestamp type",
-    args: saCellProps,
-    expected: getSaCellDiffQuery(isPG),
+    args: td.saCellProps,
+    expected: td.getSaCellDiffQuery(isPG),
   },
   {
     desc: "row with multiple PKs and PK with timestamp type",
-    args: saRowProps,
-    expected: getSaRowDiffQuery(isPG),
+    args: td.saRowProps,
+    expected: td.getSaRowDiffQuery(isPG),
   },
 ];
 
@@ -50,10 +41,12 @@ function executeTest(test: Test<Props>, isPostgres = false) {
 }
 
 describe("query conversions work for cell buttons", () => {
+  // MySQL
   tests().forEach(test => {
     executeTest(test);
   });
 
+  // Postgres
   tests(true).forEach(test => {
     executeTest(test, true);
   });

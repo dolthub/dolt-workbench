@@ -5,6 +5,7 @@ import {
 import { TableParams } from "@lib/params";
 import { sprintf } from "@lib/sprintf";
 import { Props } from "../useGetDoltDiffQuery";
+import { maybeConvertToPG } from "./utils";
 
 // dolt_diff constants for all tables
 const doltDiffColumns: ColumnForDataTableFragment[] = [
@@ -387,8 +388,3 @@ export const saDiffHistoryWithClausesQuery = sprintf(
   saPK1Val,
   historyOrderBy(),
 );
-
-function maybeConvertToPG(plan: string, isPG = false): string {
-  if (!isPG) return plan;
-  return plan.replace(/`/g, '"');
-}

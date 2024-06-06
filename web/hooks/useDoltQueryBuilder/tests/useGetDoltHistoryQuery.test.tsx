@@ -1,21 +1,7 @@
 import { ReturnType } from "../types";
 import { useGetDoltHistoryQuery } from "../useGetDoltHistoryQuery";
 import { renderHookForMaybePostgres } from "./renderHookForMaybePostgres.test";
-import {
-  getLpCellDiffQuery,
-  getLpRowDiffQuery,
-  getSaCellDiffQuery,
-  getSaRowDiffQuery,
-  lpCellHistoryQuery,
-  lpRowHistoryQuery,
-  saCellHistoryQuery,
-  saCommitDiffForCommitsQuery,
-  saDiffForCommitsQuery,
-  saDiffForCommitsWithClausesQuery,
-  saDiffHistoryQuery,
-  saDiffHistoryWithClausesQuery,
-  saRowHistoryQuery,
-} from "./testDataDiff";
+import * as td from "./testDataDiff";
 import { Tests } from "./types";
 
 async function renderUseGetDoltHistoryQuery(
@@ -26,32 +12,36 @@ async function renderUseGetDoltHistoryQuery(
 }
 
 const tests: Tests<string> = [
-  { desc: "cell", args: getLpCellDiffQuery(), expected: lpCellHistoryQuery },
-  { desc: "row", args: getLpRowDiffQuery(), expected: lpRowHistoryQuery },
+  {
+    desc: "cell",
+    args: td.getLpCellDiffQuery(),
+    expected: td.lpCellHistoryQuery,
+  },
+  { desc: "row", args: td.getLpRowDiffQuery(), expected: td.lpRowHistoryQuery },
   {
     desc: "cell with multiple PKs",
-    args: getSaCellDiffQuery(),
-    expected: saCellHistoryQuery,
+    args: td.getSaCellDiffQuery(),
+    expected: td.saCellHistoryQuery,
   },
   {
     desc: "row with multiple PKs",
-    args: getSaRowDiffQuery(),
-    expected: saRowHistoryQuery,
+    args: td.getSaRowDiffQuery(),
+    expected: td.saRowHistoryQuery,
   },
   {
     desc: "commit diff",
-    args: saDiffForCommitsQuery,
-    expected: saDiffHistoryQuery,
+    args: td.saDiffForCommitsQuery,
+    expected: td.saDiffHistoryQuery,
   },
   {
     desc: "commit diff with where and order by clause",
-    args: saDiffForCommitsWithClausesQuery,
-    expected: saDiffHistoryWithClausesQuery,
+    args: td.saDiffForCommitsWithClausesQuery,
+    expected: td.saDiffHistoryWithClausesQuery,
   },
   {
     desc: "commit diff for commits",
-    args: saCommitDiffForCommitsQuery,
-    expected: saDiffHistoryQuery,
+    args: td.saCommitDiffForCommitsQuery,
+    expected: td.saDiffHistoryQuery,
   },
 ];
 

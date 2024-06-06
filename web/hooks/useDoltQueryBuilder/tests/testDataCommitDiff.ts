@@ -3,6 +3,7 @@ import { fakeCommitId } from "@hooks/useCommitListForBranch/mocks";
 import { RequiredRefsParams, TableParams } from "@lib/params";
 import { sprintf } from "@lib/sprintf";
 import { Props } from "../useGetDoltCommitDiffQuery";
+import { maybeConvertToPG } from "./utils";
 
 type Params = RequiredRefsParams & { tableName: string; refName: string };
 
@@ -39,12 +40,16 @@ export const noDiffTagsOrRemovedColsProps: Props = {
   hiddenColIndexes: [],
 };
 
-export const noDiffTagsOrRemovedColsExpected = sprintf(
-  "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_$` WHERE `from_commit` = '$' AND `to_commit` = '$'",
-  params.tableName,
-  params.fromRefName,
-  params.toRefName,
-);
+export const getNoDiffTagsOrRemovedColsExpected = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_$` WHERE `from_commit` = '$' AND `to_commit` = '$'",
+      isPG,
+    ),
+    params.tableName,
+    params.fromRefName,
+    params.toRefName,
+  );
 
 export const noDiffTagsAndRemovedColsProps: Props = {
   params,
@@ -52,12 +57,16 @@ export const noDiffTagsAndRemovedColsProps: Props = {
   hiddenColIndexes: [1],
 };
 
-export const noDiffTagsAndRemovedColsExpected = sprintf(
-  "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_$` WHERE `from_commit` = '$' AND `to_commit` = '$'",
-  params.tableName,
-  params.fromRefName,
-  params.toRefName,
-);
+export const getNoDiffTagsAndRemovedColsExpected = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_$` WHERE `from_commit` = '$' AND `to_commit` = '$'",
+      isPG,
+    ),
+    params.tableName,
+    params.fromRefName,
+    params.toRefName,
+  );
 
 export const noDiffTagsAndRemovedColsForPullProps: Props = {
   params,
@@ -66,10 +75,14 @@ export const noDiffTagsAndRemovedColsForPullProps: Props = {
   type: CommitDiffType.ThreeDot,
 };
 
-export const noDiffTagsAndRemovedColsForPullExpected = sprintf(
-  "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_$` WHERE `from_commit` = DOLT_MERGE_BASE('$', '$') AND `to_commit` = HASHOF('$')",
-  params.tableName,
-  params.toRefName,
-  params.fromRefName,
-  params.fromRefName,
-);
+export const getNoDiffTagsAndRemovedColsForPullExpected = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_$` WHERE `from_commit` = DOLT_MERGE_BASE('$', '$') AND `to_commit` = HASHOF('$')",
+      isPG,
+    ),
+    params.tableName,
+    params.toRefName,
+    params.fromRefName,
+    params.fromRefName,
+  );
