@@ -3,7 +3,7 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { mapColsToColumnNames } from "@hooks/useSqlBuilder/util";
+import { getSqlOrderBy, mapColsToColumnNames } from "@hooks/useSqlBuilder/util";
 import useSqlParser from "@hooks/useSqlParser";
 import { TableParams } from "@lib/params";
 import { convertTimestamp } from "./utils";
@@ -49,18 +49,13 @@ export function useGetDoltDiffQuery(props: Props): () => string {
       from: [{ table: tableName }],
     });
     const withWhere = `${sel} WHERE ${getWhereClause(colsWithNamesAndVals, props.cidx, props.isPK)}`;
-    console.log("WITH WHERE", withWhere);
     const parsed = parseSelectQuery(withWhere);
+
     if (!parsed) return "";
 
     return convertToSqlSelect({
       ...parsed,
-      orderby: [
-        {
-          type: "DESC",
-          expr: { type: "column_ref", column: "to_commit_date" },
-        },
-      ],
+      orderby: [getSqlOrderBy("to_commit_date", "DESC")],
     });
   };
   return generate;

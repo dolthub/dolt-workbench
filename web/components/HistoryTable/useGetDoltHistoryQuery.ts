@@ -3,11 +3,13 @@ import useSqlBuilder from "@hooks/useSqlBuilder";
 import {
   Conditions,
   addToExistingWhereFromPKCols,
+  getSqlFromTable,
+  getSqlOrderBy,
   mapColsToColumnNames,
 } from "@hooks/useSqlBuilder/util";
 import useSqlParser from "@hooks/useSqlParser";
 import { removeClauses } from "@lib/doltSystemTables";
-import { Column, Expr, Function, Select } from "node-sql-parser";
+import { Column, Expr, Select, Function as SqlFunction } from "node-sql-parser";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
@@ -30,11 +32,9 @@ export function useGetDoltHistoryQuery(q: string): () => string {
 
     return convertToSqlSelect({
       columns,
-      from: [{ db: null, table: tableName, as: null }],
+      from: getSqlFromTable(tableName),
       where,
-      orderby: [
-        { expr: { type: "column_ref", column: "commit_date" }, type: "DESC" },
-      ],
+      orderby: [getSqlOrderBy("commit_date", "DESC")],
     });
   };
 
@@ -45,13 +45,13 @@ function getHistoryTableName(
   parsed: Select,
   backupTable: Maybe<string>,
 ): string {
-  const tableName = parsed?.from ? parsed.from[0].table : backupTable;
+  const tableName = parsed.from ? parsed.from[0].table : backupTable;
   if (!tableName) return "";
   return tableName.replace(/dolt_diff|dolt_commit_diff/, "dolt_history");
 }
 
 function getHistoryColumns(parsed: Select): Column[] {
-  const convertedCols = convertDiffColsToHistoryCols(parsed?.columns);
+  const convertedCols = convertDiffColsToHistoryCols(parsed.columns);
   const cols = [...convertedCols, "commit_hash", "committer", "commit_date"];
   return mapColsToColumnNames(cols);
 }
@@ -59,7 +59,7 @@ function getHistoryColumns(parsed: Select): Column[] {
 function getHistoryWhereClause(
   parsed: Select,
   isPostgres: boolean,
-): Expr | Function | null {
+): Expr | SqlFunction | null {
   const whereColVals = extractColumnValues(parsed.where);
   return addToExistingWhereFromPKCols(whereColVals, isPostgres);
 }

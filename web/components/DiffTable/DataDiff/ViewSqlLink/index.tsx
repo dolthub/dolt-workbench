@@ -9,9 +9,9 @@ import {
 import { RequiredRefsParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
-import { getDoltCommitDiffQuery } from "../DiffTableStats/utils";
+import { HiddenColIndexes } from "../utils";
 import css from "./index.module.css";
-import { HiddenColIndexes } from "./utils";
+import { useGetDoltCommitDiffQuery } from "./useGetDoltCommitDiffQuery";
 
 type Props = {
   params: RequiredRefsParams & {
@@ -27,6 +27,8 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
+  const generateQuery = useGetDoltCommitDiffQuery(props);
+
   return (
     <DropdownItem
       icon={<AiOutlineConsoleSql className={css.sqlIcon} />}
@@ -35,7 +37,7 @@ function Inner(props: InnerProps) {
       <Link
         {...sqlQuery({
           ...props.params,
-          q: getDoltCommitDiffQuery(props),
+          q: generateQuery(),
         })}
         className={css.sqlLink}
       >

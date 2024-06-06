@@ -1,3 +1,4 @@
+import { getSqlColumnRef } from "@hooks/useSqlBuilder/util";
 import { Column } from "node-sql-parser";
 
 export const invalidQuery = `this is not a valid query`;
@@ -123,11 +124,7 @@ export function getParserCol(
   table?: string,
 ): Column {
   return {
-    expr: {
-      column: name,
-      table: table ?? null,
-      type: "column_ref",
-    },
+    expr: getSqlColumnRef(name, table),
     as: null,
     type: includeType ? "expr" : undefined,
   };

@@ -3,15 +3,8 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { TableParams } from "@lib/params";
+import { sprintf } from "@lib/sprintf";
 import { Props } from "./useGetDoltDiffQuery";
-
-const replaceToken = "$";
-// eslint-disable-next-line no-return-assign
-const sprintf = (str: string, ...argv: any[]): string =>
-  !argv.length
-    ? str
-    : // eslint-disable-next-line no-param-reassign
-      sprintf((str = str.replace(replaceToken, argv.shift())), ...argv);
 
 // dolt_diff constants for all tables
 const doltDiffColumns: ColumnForDataTableFragment[] = [
@@ -246,7 +239,7 @@ export const saCellDiffQuery = sprintf(
 );
 
 export const saCellHistoryQuery = sprintf(
-  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' AND \`$\` = '$' AND \`$\` = '$' $`,
+  "SELECT `$`, $ FROM `dolt_history_$` WHERE `$` = '$' AND `$` = '$' AND `$` = '$' $",
   saClickedCell,
   historyCols,
   saTableName,
@@ -295,7 +288,7 @@ export const saRowDiffQuery = sprintf(
 );
 
 export const saRowHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' AND \`$\` = '$' AND \`$\` = '$' $`,
+  "SELECT `$`, `$`, `$`, `$`, $ FROM `dolt_history_$` WHERE `$` = '$' AND `$` = '$' AND `$` = '$' $",
   saPK1,
   saPK2,
   saPK3,
@@ -312,7 +305,7 @@ export const saRowHistoryQuery = sprintf(
 );
 
 export const saDiffForCommitsQuery = sprintf(
-  `SELECT diff_type, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, $\nFROM \`dolt_diff_$\`\nWHERE from_commit="$" AND to_commit="$"`,
+  'SELECT diff_type, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $\nFROM `dolt_diff_$`\nWHERE from_commit="$" AND to_commit="$"',
   saPK1,
   saPK1,
   saPK2,
@@ -328,7 +321,7 @@ export const saDiffForCommitsQuery = sprintf(
 );
 
 export const saCommitDiffForCommitsQuery = sprintf(
-  `SELECT diff_type, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, \`from_$\`, \`to_$\`, $\nFROM \`dolt_commit_diff_$\`\nWHERE from_commit="$" AND to_commit="$"`,
+  'SELECT diff_type, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $\nFROM `dolt_commit_diff_$`\nWHERE from_commit="$" AND to_commit="$"',
   saPK1,
   saPK1,
   saPK2,
@@ -344,7 +337,7 @@ export const saCommitDiffForCommitsQuery = sprintf(
 );
 
 const saBaseDiffHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\``,
+  "SELECT `$`, `$`, `$`, `$`, $ FROM `dolt_history_$`",
   saPK1,
   saPK2,
   saPK3,
@@ -354,13 +347,13 @@ const saBaseDiffHistoryQuery = sprintf(
 );
 
 export const saDiffHistoryQuery = sprintf(
-  `$ $`,
+  "$ $",
   saBaseDiffHistoryQuery,
   historyOrderBy,
 );
 
 export const saDiffForCommitsWithClausesQuery = sprintf(
-  `$ AND \`diff_type\` = 'added' AND \`to_$\` = '$'\n$`,
+  "$ AND `diff_type` = 'added' AND `to_$` = '$'\n$",
   saDiffForCommitsQuery,
   saPK1,
   saPK1Val,
@@ -368,7 +361,7 @@ export const saDiffForCommitsWithClausesQuery = sprintf(
 );
 
 export const saDiffHistoryWithClausesQuery = sprintf(
-  `$ WHERE \`$\` = '$' $`,
+  "$ WHERE `$` = '$' $",
   saBaseDiffHistoryQuery,
   saPK1,
   saPK1Val,
