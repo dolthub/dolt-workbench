@@ -104,6 +104,7 @@ export type DatabaseConnection = {
   __typename?: 'DatabaseConnection';
   connectionUrl: Scalars['String']['output'];
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
+  isDolt?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
   schema?: Maybe<Scalars['String']['output']>;
   type?: Maybe<DatabaseType>;
