@@ -36,7 +36,11 @@ function Inner(props: InnerProps) {
   const { executeQuery } = useSqlEditorContext();
   const [submitting, setSubmitting] = useState(false);
   const isPK = currCol.isPrimaryKey;
-  const generateQuery = useGetDoltDiffQuery({ ...props, row: props.row, isPK });
+  const { generateQuery } = useGetDoltDiffQuery({
+    ...props,
+    row: props.row,
+    isPK,
+  });
 
   useEffect(() => {
     if (!submitting) {

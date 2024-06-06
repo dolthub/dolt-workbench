@@ -29,9 +29,14 @@ const diffColumns = [
   "to_commit_date",
 ];
 
-export function useGetDoltDiffQuery(props: Props): () => string {
+export type ReturnType = {
+  generateQuery: () => string;
+  isPostgres: boolean;
+};
+
+export function useGetDoltDiffQuery(props: Props): ReturnType {
   const { convertToSqlSelect } = useSqlBuilder();
-  const { parseSelectQuery } = useSqlParser();
+  const { parseSelectQuery, isPostgres } = useSqlParser();
 
   const generate = (): string => {
     const tableName = `dolt_diff_${props.params.tableName}`;
@@ -58,7 +63,8 @@ export function useGetDoltDiffQuery(props: Props): () => string {
       orderby: [getSqlOrderBy("to_commit_date", "DESC")],
     });
   };
-  return generate;
+
+  return { generateQuery: generate, isPostgres };
 }
 
 // Get names and values for every column based on row value

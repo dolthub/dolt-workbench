@@ -1,23 +1,23 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
-import { renderHook } from "@testing-library/react";
+import { renderHook, waitFor } from "@testing-library/react";
 import { ReactNode } from "react";
 import {
-  lpCellDiffQuery,
+  getLpCellDiffQuery,
+  getLpRowDiffQuery,
+  getSaCellDiffQuery,
+  getSaRowDiffQuery,
   lpCellProps,
-  lpRowDiffQuery,
   lpRowProps,
-  saCellDiffQuery,
   saCellProps,
-  saRowDiffQuery,
   saRowProps,
 } from "./testData";
-import { Props, useGetDoltDiffQuery } from "./useGetDoltDiffQuery";
+import { Props, ReturnType, useGetDoltDiffQuery } from "./useGetDoltDiffQuery";
 
-function renderUseGetDoltDiffQuery(
+async function renderUseGetDoltDiffQuery(
   props: Props,
   isPostgres = false,
-): () => string {
+): Promise<ReturnType> {
   const wrapper = ({ children }: { children: ReactNode }) => (
     <MockedProvider mocks={[databaseDetailsMock(true, true, isPostgres)]}>
       {children}
@@ -25,36 +25,47 @@ function renderUseGetDoltDiffQuery(
   );
 
   const { result } = renderHook(() => useGetDoltDiffQuery(props), { wrapper });
+  await waitFor(() => result.current.isPostgres === isPostgres);
   return result.current;
 }
 
-const tests: Array<{ props: Props; expected: string; desc: string }> = [
-  { desc: "cell", props: lpCellProps, expected: lpCellDiffQuery },
-  { desc: "row", props: lpRowProps, expected: lpRowDiffQuery },
+type Test = { props: Props; expected: string; desc: string };
+
+const tests = (isPG = false): Array<Test> => [
+  {
+    desc: "cell",
+    props: lpCellProps,
+    expected: getLpCellDiffQuery(isPG),
+  },
+  { desc: "row", props: lpRowProps, expected: getLpRowDiffQuery(isPG) },
   {
     desc: "cell with multiple PKs and PK with timestamp type",
     props: saCellProps,
-    expected: saCellDiffQuery,
+    expected: getSaCellDiffQuery(isPG),
   },
   {
     desc: "row with multiple PKs and PK with timestamp type",
     props: saRowProps,
-    expected: saRowDiffQuery,
+    expected: getSaRowDiffQuery(isPG),
   },
 ];
 
+function executeTest(test: Test, isPostgres = false) {
+  it(`[${isPostgres ? "postgres" : "mysql"}] converts table information to dolt_diff query for ${test.desc}`, async () => {
+    const { generateQuery } = await renderUseGetDoltDiffQuery(
+      test.props,
+      isPostgres,
+    );
+    expect(generateQuery()).toBe(test.expected);
+  });
+}
+
 describe("query conversions work for cell buttons", () => {
-  tests.forEach(({ desc, props, expected }) => {
-    it(`[mysql] converts table information to dolt_diff query for ${desc}`, () => {
-      const generateQuery = renderUseGetDoltDiffQuery(props);
-      expect(generateQuery()).toBe(expected);
-    });
+  tests().forEach(test => {
+    executeTest(test);
   });
 
-  tests.forEach(({ desc, props, expected }) => {
-    it(`[postgres] converts table information to dolt_diff query for ${desc}`, () => {
-      const generateQuery = renderUseGetDoltDiffQuery(props);
-      expect(generateQuery()).toBe(expected);
-    });
+  tests(true).forEach(test => {
+    executeTest(test, true);
   });
 });

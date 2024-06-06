@@ -1,17 +1,17 @@
 import { MockedProvider } from "@apollo/client/testing";
 import {
-  lpCellDiffQuery,
+  getLpCellDiffQuery,
+  getLpRowDiffQuery,
+  getSaCellDiffQuery,
+  getSaRowDiffQuery,
   lpCellHistoryQuery,
-  lpRowDiffQuery,
   lpRowHistoryQuery,
-  saCellDiffQuery,
   saCellHistoryQuery,
   saCommitDiffForCommitsQuery,
   saDiffForCommitsQuery,
   saDiffForCommitsWithClausesQuery,
   saDiffHistoryQuery,
   saDiffHistoryWithClausesQuery,
-  saRowDiffQuery,
   saRowHistoryQuery,
 } from "@components/CellButtons/testData";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
@@ -31,16 +31,16 @@ function renderUseGetDoltHistoryQuery(q: string): () => string {
 }
 
 const tests: Array<{ query: string; expected: string; desc: string }> = [
-  { desc: "cell", query: lpCellDiffQuery, expected: lpCellHistoryQuery },
-  { desc: "row", query: lpRowDiffQuery, expected: lpRowHistoryQuery },
+  { desc: "cell", query: getLpCellDiffQuery(), expected: lpCellHistoryQuery },
+  { desc: "row", query: getLpRowDiffQuery(), expected: lpRowHistoryQuery },
   {
     desc: "cell with multiple PKs",
-    query: saCellDiffQuery,
+    query: getSaCellDiffQuery(),
     expected: saCellHistoryQuery,
   },
   {
     desc: "row with multiple PKs",
-    query: saRowDiffQuery,
+    query: getSaRowDiffQuery(),
     expected: saRowHistoryQuery,
   },
   {
