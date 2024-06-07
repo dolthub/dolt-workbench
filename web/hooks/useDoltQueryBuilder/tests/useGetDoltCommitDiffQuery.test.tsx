@@ -1,14 +1,7 @@
 import { ReturnType } from "../types";
 import { Props, useGetDoltCommitDiffQuery } from "../useGetDoltCommitDiffQuery";
 import { renderHookForMaybePostgres } from "./renderHookForMaybePostgres.test";
-import {
-  noDiffTagsAndRemovedColsExpected,
-  noDiffTagsAndRemovedColsForPullExpected,
-  noDiffTagsAndRemovedColsForPullProps,
-  noDiffTagsAndRemovedColsProps,
-  noDiffTagsOrRemovedColsExpected,
-  noDiffTagsOrRemovedColsProps,
-} from "./testDataCommitDiff";
+import * as td from "./testDataCommitDiff";
 import { Tests } from "./types";
 
 async function renderUseGetDoltCommitDiffQuery(
@@ -25,26 +18,36 @@ async function renderUseGetDoltCommitDiffQuery(
 const tests: Tests<Props> = [
   {
     desc: "no diff tags or removed columns",
-    args: noDiffTagsOrRemovedColsProps,
-    expected: noDiffTagsOrRemovedColsExpected,
+    args: td.noDiffTagsOrRemovedColsProps,
+    expected: td.getNoDiffTagsOrRemovedColsExpected,
   },
   {
     desc: "no diff tags and removed columns",
-    args: noDiffTagsAndRemovedColsProps,
-    expected: noDiffTagsAndRemovedColsExpected,
+    args: td.noDiffTagsAndRemovedColsProps,
+    expected: td.getNoDiffTagsAndRemovedColsExpected,
   },
   {
     desc: "no diff tags and removed columns for pull",
-    args: noDiffTagsAndRemovedColsForPullProps,
-    expected: noDiffTagsAndRemovedColsForPullExpected,
+    args: td.noDiffTagsAndRemovedColsForPullProps,
+    expected: td.getNoDiffTagsAndRemovedColsForPullExpected,
   },
 ];
 
-describe("test getDoltCommitDiffQuery for diff tables", () => {
-  tests.forEach(({ desc, args, expected }) => {
-    it(`[mysql] generates dolt_commit_diff query for ${desc}`, async () => {
-      const { generateQuery } = await renderUseGetDoltCommitDiffQuery(args);
-      expect(generateQuery()).toBe(expected);
+function executeTest(isPG = false) {
+  tests.forEach(test => {
+    it(`[${isPG ? "postgres" : "mysql"}] generates dolt_commit_diff query for ${test.desc}`, async () => {
+      const { generateQuery } = await renderUseGetDoltCommitDiffQuery(
+        test.args,
+        isPG,
+      );
+      expect(generateQuery()).toBe(test.expected(isPG));
     });
   });
+}
+
+describe("test useGetDoltCommitDiffQuery", () => {
+  // MySQL
+  executeTest();
+  // Postgres
+  executeTest(true);
 });

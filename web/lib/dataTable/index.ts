@@ -6,6 +6,10 @@ export function escapeDoubleQuotes(s: string): string {
   return s.replace(/"/g, `\\"`);
 }
 
+export function escapeSingleQuotes(s: string): string {
+  return s.replace(/'/g, `\\'`);
+}
+
 export function isLongContentType(currentColType?: string): boolean {
   if (!currentColType) return false;
   const colType = currentColType.toLowerCase();
