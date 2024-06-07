@@ -1,5 +1,4 @@
 import { DataSource, EntityManager, QueryRunner } from "typeorm";
-import { SortBranchesBy } from "../branches/branch.enum";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { SchemaType } from "../schemas/schema.enums";
 import { SchemaItem } from "../schemas/schema.model";
@@ -81,9 +80,7 @@ export declare class QueryFactory {
 
   getBranch(args: t.BranchArgs): t.UPR;
 
-  getBranches(
-    args: t.DBArgs & { sortBy?: SortBranchesBy; offset: number },
-  ): t.PR;
+  getBranches(args: t.ListBranchesArgs): t.PR;
 
   getAllBranches(args: t.DBArgs): t.PR;
 

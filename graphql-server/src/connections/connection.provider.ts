@@ -4,6 +4,7 @@ import { DataSource } from "typeorm";
 import { DatabaseType } from "../databases/database.enum";
 import { QueryFactory } from "../queryFactory";
 import { DoltQueryFactory } from "../queryFactory/dolt";
+import { DoltgresQueryFactory } from "../queryFactory/doltgres";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
 import { PostgresQueryFactory } from "../queryFactory/postgres";
 
@@ -58,7 +59,7 @@ export class ConnectionProvider {
     return mysql.createConnection(options);
   }
 
-  async addConnection(config: WorkbenchConfig): Promise<void> {
+  async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }
@@ -87,27 +88,39 @@ export class ConnectionProvider {
 
     await this.ds.initialize();
 
-    const qf = await this.newQueryFactory(config.type);
-    this.qf = qf;
+    const res = await this.newQueryFactory(config.type);
+    this.qf = res.qf;
+    return { isDolt: res.isDolt };
   }
 
   getWorkbenchConfig(): WorkbenchConfig | undefined {
     return this.workbenchConfig;
   }
 
-  async newQueryFactory(type: DatabaseType): Promise<QueryFactory> {
+  async newQueryFactory(
+    type: DatabaseType,
+  ): Promise<{ qf: QueryFactory; isDolt: boolean }> {
     if (type === DatabaseType.Postgres) {
-      return new PostgresQueryFactory(this.ds);
+      try {
+        const res = await this.ds?.query("SELECT dolt_version()");
+        if (res) {
+          return { qf: new DoltgresQueryFactory(this.ds), isDolt: true };
+        }
+      } catch (_) {
+        // do nothing
+      }
+      return { qf: new PostgresQueryFactory(this.ds), isDolt: false };
     }
+
     try {
       const res = await this.ds?.query("SELECT dolt_version()");
       if (res) {
-        return new DoltQueryFactory(this.ds);
+        return { qf: new DoltQueryFactory(this.ds), isDolt: true };
       }
-      return new MySQLQueryFactory(this.ds);
     } catch (_) {
-      return new MySQLQueryFactory(this.ds);
+      // do nothing
     }
+    return { qf: new MySQLQueryFactory(this.ds), isDolt: false };
   }
 
   async resetDS(): Promise<void> {

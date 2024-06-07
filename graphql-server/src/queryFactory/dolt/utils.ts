@@ -1,4 +1,4 @@
-import { CommitAuthor, RawRows } from "../types";
+import * as t from "../types";
 
 export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   try {
@@ -12,7 +12,7 @@ export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   }
 }
 
-export function unionCols(a: RawRows, b: RawRows): RawRows {
+export function unionCols(a: t.RawRows, b: t.RawRows): t.RawRows {
   const mergedArray = [...a, ...b];
   const set = new Set();
   const unionArray = mergedArray.filter(item => {
@@ -25,6 +25,6 @@ export function unionCols(a: RawRows, b: RawRows): RawRows {
   return unionArray;
 }
 
-export function getAuthorString(commitAuthor: CommitAuthor): string {
+export function getAuthorString(commitAuthor: t.CommitAuthor): string {
   return `${commitAuthor.name} <${commitAuthor.email}>`;
 }
