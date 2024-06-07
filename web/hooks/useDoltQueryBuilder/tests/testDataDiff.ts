@@ -92,7 +92,7 @@ const lpCellClicked = lpCellProps.columns[lpCellProps.cidx].name;
 export const getLpCellDiffQuery = (isPG = false) =>
   sprintf(
     maybeConvertToPG(
-      'SELECT `diff_type`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE (`to_$` = "$" OR `from_$` = "$") AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL)) $',
+      "SELECT `diff_type`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE (`to_$` = '$' OR `from_$` = '$') AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL)) $",
       isPG,
     ),
     lpCellClicked,
@@ -112,15 +112,19 @@ export const getLpCellDiffQuery = (isPG = false) =>
     diffOrderBy(isPG),
   );
 
-export const lpCellHistoryQuery = sprintf(
-  `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
-  lpCellClicked,
-  historyCols(),
-  lpTableName,
-  lpPK1,
-  lpPK1Val,
-  historyOrderBy(),
-);
+export const getLpCellHistoryQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      `SELECT \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
+      isPG,
+    ),
+    lpCellClicked,
+    historyCols(isPG),
+    lpTableName,
+    lpPK1,
+    lpPK1Val,
+    historyOrderBy(isPG),
+  );
 
 export const lpRowProps: Props = {
   cidx: 0,
@@ -133,7 +137,7 @@ export const lpRowProps: Props = {
 export const getLpRowDiffQuery = (isPG = false) =>
   sprintf(
     maybeConvertToPG(
-      'SELECT `diff_type`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE `to_$` = "$" OR `from_$` = "$" $',
+      "SELECT `diff_type`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE `to_$` = '$' OR `from_$` = '$' $",
       isPG,
     ),
     lpPK1,
@@ -151,17 +155,21 @@ export const getLpRowDiffQuery = (isPG = false) =>
     diffOrderBy(isPG),
   );
 
-export const lpRowHistoryQuery = sprintf(
-  `SELECT \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
-  lpPK1,
-  lpCol2,
-  lpCol3,
-  historyCols(),
-  lpTableName,
-  lpPK1,
-  lpPK1Val,
-  historyOrderBy(),
-);
+export const getLpRowHistoryQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      `SELECT \`$\`, \`$\`, \`$\`, $ FROM \`dolt_history_$\` WHERE \`$\` = '$' $`,
+      isPG,
+    ),
+    lpPK1,
+    lpCol2,
+    lpCol3,
+    historyCols(isPG),
+    lpTableName,
+    lpPK1,
+    lpPK1Val,
+    historyOrderBy(isPG),
+  );
 
 // Props and expected query for corona-virus-state-action
 const saTableName = "state_actions";
@@ -227,7 +235,7 @@ const saClickedCell = saCellProps.columns[saCellProps.cidx].name;
 export const getSaCellDiffQuery = (isPG = false) =>
   sprintf(
     maybeConvertToPG(
-      'SELECT `diff_type`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE ((`to_$` = "$" AND `to_$` = "$" AND `to_$` = "$") OR (`from_$` = "$" AND `from_$` = "$" AND `from_$` = "$")) AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL)) $',
+      "SELECT `diff_type`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE ((`to_$` = '$' AND `to_$` = '$' AND `to_$` = '$') OR (`from_$` = '$' AND `from_$` = '$' AND `from_$` = '$')) AND (`from_$` <> `to_$` OR (`from_$` IS NULL AND `to_$` IS NOT NULL) OR (`from_$` IS NOT NULL AND `to_$` IS NULL)) $",
       isPG,
     ),
     saClickedCell,
@@ -255,19 +263,23 @@ export const getSaCellDiffQuery = (isPG = false) =>
     diffOrderBy(isPG),
   );
 
-export const saCellHistoryQuery = sprintf(
-  "SELECT `$`, $ FROM `dolt_history_$` WHERE `$` = '$' AND `$` = '$' AND `$` = '$' $",
-  saClickedCell,
-  historyCols(),
-  saTableName,
-  saPK1,
-  saPK1Val,
-  saPK2,
-  saPK2ValAdjusted,
-  saPK3,
-  saPK3Val,
-  historyOrderBy(),
-);
+export const getSaCellHistoryQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      "SELECT `$`, $ FROM `dolt_history_$` WHERE `$` = '$' AND `$` = '$' AND `$` = '$' $",
+      isPG,
+    ),
+    saClickedCell,
+    historyCols(isPG),
+    saTableName,
+    saPK1,
+    saPK1Val,
+    saPK2,
+    saPK2ValAdjusted,
+    saPK3,
+    saPK3Val,
+    historyOrderBy(isPG),
+  );
 
 export const saRowProps: Props = {
   cidx: 1,
@@ -280,7 +292,7 @@ export const saRowProps: Props = {
 export const getSaRowDiffQuery = (isPG = false) =>
   sprintf(
     maybeConvertToPG(
-      'SELECT `diff_type`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE (`to_$` = "$" AND `to_$` = "$" AND `to_$` = "$") OR (`from_$` = "$" AND `from_$` = "$" AND `from_$` = "$") $',
+      "SELECT `diff_type`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $ FROM `dolt_diff_$` WHERE (`to_$` = '$' AND `to_$` = '$' AND `to_$` = '$') OR (`from_$` = '$' AND `from_$` = '$' AND `from_$` = '$') $",
       isPG,
     ),
     saPK1,
@@ -308,83 +320,98 @@ export const getSaRowDiffQuery = (isPG = false) =>
     diffOrderBy(isPG),
   );
 
-export const saRowHistoryQuery = sprintf(
-  "SELECT `$`, `$`, `$`, `$`, $ FROM `dolt_history_$` WHERE `$` = '$' AND `$` = '$' AND `$` = '$' $",
-  saPK1,
-  saPK2,
-  saPK3,
-  saCol4,
-  historyCols(),
-  saTableName,
-  saPK1,
-  saPK1Val,
-  saPK2,
-  saPK2ValAdjusted,
-  saPK3,
-  saPK3Val,
-  historyOrderBy(),
-);
+export const getSaRowHistoryQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      "SELECT `$`, `$`, `$`, `$`, $ FROM `dolt_history_$` WHERE `$` = '$' AND `$` = '$' AND `$` = '$' $",
+      isPG,
+    ),
+    saPK1,
+    saPK2,
+    saPK3,
+    saCol4,
+    historyCols(isPG),
+    saTableName,
+    saPK1,
+    saPK1Val,
+    saPK2,
+    saPK2ValAdjusted,
+    saPK3,
+    saPK3Val,
+    historyOrderBy(isPG),
+  );
 
-export const saDiffForCommitsQuery = sprintf(
-  'SELECT diff_type, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $\nFROM `dolt_diff_$`\nWHERE from_commit="$" AND to_commit="$"',
-  saPK1,
-  saPK1,
-  saPK2,
-  saPK2,
-  saPK3,
-  saPK3,
-  saCol4,
-  saCol4,
-  diffColString(),
-  saTableName,
-  saFromCommit,
-  saToCommit,
-);
+export const getSaDiffForCommitsQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      'SELECT diff_type, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $\nFROM `dolt_diff_$`\nWHERE from_commit="$" AND to_commit="$"',
+      isPG,
+    ),
+    saPK1,
+    saPK1,
+    saPK2,
+    saPK2,
+    saPK3,
+    saPK3,
+    saCol4,
+    saCol4,
+    diffColString(isPG),
+    saTableName,
+    saFromCommit,
+    saToCommit,
+  );
 
-export const saCommitDiffForCommitsQuery = sprintf(
-  'SELECT diff_type, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $\nFROM `dolt_commit_diff_$`\nWHERE from_commit="$" AND to_commit="$"',
-  saPK1,
-  saPK1,
-  saPK2,
-  saPK2,
-  saPK3,
-  saPK3,
-  saCol4,
-  saCol4,
-  diffColString(),
-  saTableName,
-  saFromCommit,
-  saToCommit,
-);
+export const getSaCommitDiffForCommitsQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      'SELECT diff_type, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, `from_$`, `to_$`, $\nFROM `dolt_commit_diff_$`\nWHERE from_commit="$" AND to_commit="$"',
+      isPG,
+    ),
+    saPK1,
+    saPK1,
+    saPK2,
+    saPK2,
+    saPK3,
+    saPK3,
+    saCol4,
+    saCol4,
+    diffColString(isPG),
+    saTableName,
+    saFromCommit,
+    saToCommit,
+  );
 
-const saBaseDiffHistoryQuery = sprintf(
-  "SELECT `$`, `$`, `$`, `$`, $ FROM `dolt_history_$`",
-  saPK1,
-  saPK2,
-  saPK3,
-  saCol4,
-  historyCols(),
-  saTableName,
-);
+const getSaBaseDiffHistoryQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG(
+      "SELECT `$`, `$`, `$`, `$`, $ FROM `dolt_history_$`",
+      isPG,
+    ),
+    saPK1,
+    saPK2,
+    saPK3,
+    saCol4,
+    historyCols(isPG),
+    saTableName,
+  );
 
-export const saDiffHistoryQuery = sprintf(
-  "$ $",
-  saBaseDiffHistoryQuery,
-  historyOrderBy(),
-);
+export const getSaDiffHistoryQuery = (isPG = false) =>
+  sprintf("$ $", getSaBaseDiffHistoryQuery(isPG), historyOrderBy(isPG));
 
-export const saDiffForCommitsWithClausesQuery = sprintf(
-  "$ AND `diff_type` = 'added' AND `to_$` = '$'\n$",
-  saDiffForCommitsQuery,
-  saPK1,
-  saPK1Val,
-  diffOrderBy(),
-);
+export const getSaDiffForCommitsWithClausesQuery = (isPG = false) =>
+  sprintf(
+    "$ AND `diff_type` = 'added' AND `to_$` = '$'\n$",
+    getSaDiffForCommitsQuery(isPG),
+    saPK1,
+    saPK1Val,
+    diffOrderBy(isPG),
+  );
 
-export const saDiffHistoryWithClausesQuery = sprintf(
-  "$ WHERE `$` = '$' $",
-  saBaseDiffHistoryQuery,
-  saPK1,
-  saPK1Val,
-  historyOrderBy(),
-);
+export const getSaDiffHistoryWithClausesQuery = (isPG = false) =>
+  sprintf(
+    maybeConvertToPG("$ WHERE `$` = '$' $", isPG),
+    getSaBaseDiffHistoryQuery(isPG),
+    saPK1,
+    saPK1Val,
+    historyOrderBy(isPG),
+  );

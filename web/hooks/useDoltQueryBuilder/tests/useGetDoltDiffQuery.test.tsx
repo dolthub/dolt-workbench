@@ -2,7 +2,7 @@ import { ReturnType } from "../types";
 import { Props, useGetDoltDiffQuery } from "../useGetDoltDiffQuery";
 import { renderHookForMaybePostgres } from "./renderHookForMaybePostgres.test";
 import * as td from "./testDataDiff";
-import { Test, Tests } from "./types";
+import { Tests } from "./types";
 
 async function renderUseGetDoltDiffQuery(
   args: Props,
@@ -11,43 +11,40 @@ async function renderUseGetDoltDiffQuery(
   return renderHookForMaybePostgres(args, useGetDoltDiffQuery, isPostgres);
 }
 
-const tests = (isPG = false): Tests<Props> => [
+const tests: Tests<Props> = [
   {
     desc: "cell",
     args: td.lpCellProps,
-    expected: td.getLpCellDiffQuery(isPG),
+    expected: td.getLpCellDiffQuery,
   },
-  { desc: "row", args: td.lpRowProps, expected: td.getLpRowDiffQuery(isPG) },
+  { desc: "row", args: td.lpRowProps, expected: td.getLpRowDiffQuery },
   {
     desc: "cell with multiple PKs and PK with timestamp type",
     args: td.saCellProps,
-    expected: td.getSaCellDiffQuery(isPG),
+    expected: td.getSaCellDiffQuery,
   },
   {
     desc: "row with multiple PKs and PK with timestamp type",
     args: td.saRowProps,
-    expected: td.getSaRowDiffQuery(isPG),
+    expected: td.getSaRowDiffQuery,
   },
 ];
 
-function executeTest(test: Test<Props>, isPostgres = false) {
-  it(`[${isPostgres ? "postgres" : "mysql"}] converts table information to dolt_diff query for ${test.desc}`, async () => {
-    const { generateQuery } = await renderUseGetDoltDiffQuery(
-      test.args,
-      isPostgres,
-    );
-    expect(generateQuery()).toBe(test.expected);
+function executeTests(isPG = false) {
+  tests.forEach(test => {
+    it(`[${isPG ? "postgres" : "mysql"}] converts table information to dolt_diff query for ${test.desc}`, async () => {
+      const { generateQuery } = await renderUseGetDoltDiffQuery(
+        test.args,
+        isPG,
+      );
+      expect(generateQuery()).toBe(test.expected(isPG));
+    });
   });
 }
 
-describe("query conversions work for cell buttons", () => {
+describe("test useGetDoltDiffQuery", () => {
   // MySQL
-  tests().forEach(test => {
-    executeTest(test);
-  });
-
+  executeTests();
   // Postgres
-  tests(true).forEach(test => {
-    executeTest(test, true);
-  });
+  executeTests(true);
 });

@@ -5,6 +5,7 @@ import {
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { getSqlOrderBy, mapColsToColumnNames } from "@hooks/useSqlBuilder/util";
 import useSqlParser from "@hooks/useSqlParser";
+import { escapeSingleQuotes } from "@lib/dataTable";
 import { TableParams } from "@lib/params";
 import { convertTimestamp } from "../../components/CellButtons/utils";
 import { ReturnType } from "./types";
@@ -130,7 +131,7 @@ function getConditionForPK(
   const conditions = col.names.map(name => {
     const value =
       col.column.type === "TIMESTAMP" ? convertTimestamp(col.value) : col.value;
-    return `\`${prefix}_${name}\` = "${value}"`;
+    return `\`${prefix}_${name}\` = '${escapeSingleQuotes(value)}'`;
   });
 
   if (conditions.length === 1) {

@@ -62,6 +62,7 @@ function getHistoryWhereClause(
   isPostgres: boolean,
 ): Expr | SqlFunction | null {
   const whereColVals = extractColumnValues(parsed.where);
+  // console.log("VALS", whereColVals);
   return addToExistingWhereFromPKCols(whereColVals, isPostgres);
 }
 
@@ -74,16 +75,19 @@ function shouldAddColToConditions(col: string): boolean {
 // Iterates `where` AST and extracts column names and values
 function extractColumnValues(where: Expr | any): Conditions {
   const result: Conditions = [];
+  // console.log("WHERE", prettyJSON(where));
 
   function traverse(node?: Expr | any) {
     if (!node) return;
     if (node.type === "binary_expr" && node.operator === "=") {
       if (
-        node.left?.type === "column_ref" &&
+        (node.left?.type === "column_ref" ||
+          // TODO: Remove when https://github.com/taozhi8833998/node-sql-parser/issues/1941 is resolved
+          node.left?.type === "double_quote_string") &&
         (node.right?.type === "double_quote_string" ||
           node.right.type === "single_quote_string")
       ) {
-        const col = node.left.column;
+        const col = node.left.column || node.left.value;
         if (shouldAddColToConditions(col)) {
           result.push({ col: col.replace("to_", ""), val: node.right.value });
         }
