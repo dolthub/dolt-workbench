@@ -1,0 +1,7 @@
+.sqlIcon {
+  @apply text-lg font-normal;
+}
+
+.sqlLink {
+  @apply font-thin text-primary hover:text-primary;
+}

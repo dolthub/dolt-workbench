@@ -27,12 +27,12 @@ export default function DatabaseTypeLabel({ className }: InnerProps) {
   );
 }
 
-function getDatabaseType(t?: DatabaseType, isDolt?: boolean): string {
+export function getDatabaseType(t?: DatabaseType, isDolt?: boolean): string {
   switch (t) {
     case DatabaseType.Mysql:
       return isDolt ? "Dolt" : "MySQL";
     case DatabaseType.Postgres:
-      return "PostgreSQL";
+      return isDolt ? "DoltgreSQL" : "PostgreSQL";
     default:
       return isDolt ? "Dolt" : "MySQL";
   }

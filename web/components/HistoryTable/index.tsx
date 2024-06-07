@@ -1,10 +1,10 @@
 import SqlDataTable from "@components/SqlDataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, ErrorMsg } from "@dolthub/react-components";
+import { useGetDoltHistoryQuery } from "@hooks/useDoltQueryBuilder/useGetDoltHistoryQuery";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import css from "./index.module.css";
-import { useGetDoltHistoryQuery } from "./queryHelpers";
 
 type Props = {
   params: SqlQueryParams;
@@ -16,9 +16,10 @@ export default function HistoryTable(props: Props) {
   const { executeQuery } = useSqlEditorContext();
   const forRow = props.params.q.split(whitespace)[1] === "*";
   const [err, setErr] = useState("");
-  const generateQuery = useGetDoltHistoryQuery(props.params.q);
+  const { generateQuery } = useGetDoltHistoryQuery(props.params.q);
 
   const onClick = async () => {
+    // TODO(doltgres): Move to sql builder
     const query = generateQuery();
     if (query === "") {
       setErr("Error generating history query. We are working on a fix.");

@@ -56,6 +56,7 @@ export default function NewConnection(props: Props) {
             />
             <FormSelect
               outerClassName={css.typeSelect}
+              className={css.typeSelectInner}
               label="Type"
               val={state.type}
               onChangeValue={t => {
@@ -67,8 +68,14 @@ export default function NewConnection(props: Props) {
               }}
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
-                { label: "PostgreSQL", value: DatabaseType.Postgres },
+                {
+                  label: "Postgres",
+                  // TODO(doltgres): Uncomment when ready
+                  // label: "Postgres/Doltgres",
+                  value: DatabaseType.Postgres,
+                },
               ]}
+              hideSelectedOptions
               horizontal
               light
             />

@@ -7,6 +7,7 @@ import {
   RowForDataTableFragment,
   SchemaItemFragment,
 } from "@gen/graphql-types";
+import { useGetDoltDiffQuery } from "@hooks/useDoltQueryBuilder/useGetDoltDiffQuery";
 import useSqlParser from "@hooks/useSqlParser";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableParams } from "@lib/params";
@@ -15,7 +16,6 @@ import cx from "classnames";
 import { ReactNode, useEffect, useState } from "react";
 import TableType from "./TableType";
 import css from "./index.module.css";
-import { getDoltDiffQuery } from "./queryHelpers";
 import { getTableColsFromQueryCols, isKeyless, queryShowingPKs } from "./utils";
 
 type Props = {
@@ -36,12 +36,18 @@ function Inner(props: InnerProps) {
   const { executeQuery } = useSqlEditorContext();
   const [submitting, setSubmitting] = useState(false);
   const isPK = currCol.isPrimaryKey;
+  const { generateQuery } = useGetDoltDiffQuery({
+    ...props,
+    row: props.row,
+    isPK,
+  });
 
   useEffect(() => {
     if (!submitting) {
       return;
     }
-    const query = getDoltDiffQuery({ ...props, row: props.row, isPK });
+
+    const query = generateQuery();
     executeQuery({ ...props.params, query }).catch(console.error);
     setSubmitting(false);
   }, [submitting, props.params, executeQuery, isPK, props]);

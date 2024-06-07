@@ -1,4 +1,4 @@
-import { toPKColsMapQueryCols } from "@components/CellButtons/queryHelpers";
+import { toPKColsMapQueryCols } from "@components/CellButtons/utils";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Btn, SmallLoader } from "@dolthub/react-components";

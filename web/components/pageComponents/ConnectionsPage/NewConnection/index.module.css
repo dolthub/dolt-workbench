@@ -25,6 +25,10 @@
   @apply ml-8 mb-4;
 }
 
+.typeSelectInner {
+  @apply w-full;
+}
+
 .middle {
   @apply border-y pt-8;
 }

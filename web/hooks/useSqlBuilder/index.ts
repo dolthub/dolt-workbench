@@ -8,47 +8,30 @@ import {
   Select,
   Update,
 } from "node-sql-parser";
-import {
-  ColumnValue,
-  Conditions,
-  addToExistingWhereFromPKCols,
-  escapeSingleQuotes,
-  escapeSingleQuotesInWhereObj,
-  getOrderByArr,
-  getPostgresSchemaDefQuery,
-  getSqlAlter,
-  getSqlColumn,
-  getSqlDelete,
-  getSqlInsert,
-  getSqlSelect,
-  getSqlUpdate,
-  getWhereFromPKCols,
-  mapColsToColumnNames,
-  mapColsToColumnRef,
-} from "./util";
+import * as u from "./util";
 
 export default function useSqlBuilder() {
   const { sqlify, isPostgres, parseSelectQuery, getTableNames } =
     useSqlParser();
 
   function convertToSqlInsert(ins: Partial<Insert_Replace>): string {
-    return sqlify(getSqlInsert(ins));
+    return sqlify(u.getSqlInsert(ins));
   }
 
   function convertToSqlDelete(del: Partial<Delete>): string {
-    return sqlify(getSqlDelete(del));
+    return sqlify(u.getSqlDelete(del));
   }
 
   function convertToSqlAlter(alt: Partial<Alter>): string {
-    return sqlify(getSqlAlter(alt));
+    return sqlify(u.getSqlAlter(alt));
   }
 
   function convertToSqlUpdate(upd: Partial<Update>): string {
-    return sqlify(getSqlUpdate(upd));
+    return sqlify(u.getSqlUpdate(upd));
   }
 
   function convertToSqlSelect(select: Partial<Select>): string {
-    return sqlify(getSqlSelect(select));
+    return sqlify(u.getSqlSelect(select));
   }
 
   // Converts query string to sql with new table name and columns
@@ -59,24 +42,22 @@ export default function useSqlBuilder() {
   ): string {
     const ast = parseSelectQuery(q);
     const isJoinClause = tableNames && tableNames.length > 1;
-    const columns = mapColsToColumnRef(cols, !!isJoinClause);
+    const columns = u.mapColsToColumnRef(cols, !!isJoinClause);
 
     if (!ast) return "";
     if (!tableNames || tableNames.length === 0) {
       return convertToSqlSelect({
         ...ast,
         columns,
-        from: [{ db: null, table: null, as: null }],
-        where: escapeSingleQuotesInWhereObj(ast.where, isPostgres),
+        from: u.getSqlFromTable(null),
+        where: u.escapeSingleQuotesInWhereObj(ast.where, isPostgres),
       });
     }
     const newAst: Select = {
       ...ast,
       columns,
-      from: tableNames.map(table => {
-        return { db: null, table, as: null };
-      }),
-      where: escapeSingleQuotesInWhereObj(ast.where, isPostgres),
+      from: tableNames.map(table => u.getSqlTable(table)),
+      where: u.escapeSingleQuotesInWhereObj(ast.where, isPostgres),
     };
     return convertToSqlSelect(newAst);
   }
@@ -88,13 +69,13 @@ export default function useSqlBuilder() {
     tableNames: string,
   ): string {
     const ast = parseSelectQuery(q);
-    const columns = mapColsToColumnNames(cols);
+    const columns = u.mapColsToColumnNames(cols);
     if (!ast) return "";
     const newAst: Select = {
       ...ast,
       columns,
-      from: [{ db: null, table: tableNames, as: null }],
-      where: escapeSingleQuotesInWhereObj(ast.where, isPostgres),
+      from: u.getSqlFromTable(tableNames),
+      where: u.escapeSingleQuotesInWhereObj(ast.where, isPostgres),
     };
     return convertToSqlSelect(newAst);
   }
@@ -109,7 +90,7 @@ export default function useSqlBuilder() {
     if (!parsed) {
       return query;
     }
-    const orderby = getOrderByArr(parsed, column, type);
+    const orderby = u.getOrderByArr(parsed, column, type);
     return convertToSqlSelect({ ...parsed, orderby });
   }
 
@@ -126,33 +107,35 @@ export default function useSqlBuilder() {
 
   function selectFromTable(tableName: string, limit?: number): string {
     return convertToSqlSelect({
-      from: [{ table: tableName }],
-      limit: limit
-        ? { seperator: "", value: [{ type: "number", value: limit }] }
-        : null,
+      from: u.getSqlFromTable(tableName),
+      limit: limit ? u.getSqlLimit(limit) : null,
     });
   }
 
   function addWhereClauseToSelect(
     tableName: string,
-    conditions: Conditions,
+    conditions: u.Conditions,
     q?: string,
   ): string {
-    let sel: Partial<Select> = { from: [{ table: tableName }] };
+    let sel: Partial<Select> = { from: u.getSqlFromTable(tableName) };
     if (q) {
       const parsed = parseSelectQuery(q);
       if (parsed !== null) {
         sel = parsed;
       }
     }
-    sel.where = addToExistingWhereFromPKCols(conditions, isPostgres, sel.where);
+    sel.where = u.addToExistingWhereFromPKCols(
+      conditions,
+      isPostgres,
+      sel.where,
+    );
     return convertToSqlSelect(sel);
   }
 
   function insertIntoTable(
     tableName: string,
     cols: string[],
-    vals: ColumnValue[],
+    vals: u.ColumnValue[],
   ): string {
     return convertToSqlInsert({
       table: [{ table: tableName }],
@@ -164,7 +147,7 @@ export default function useSqlBuilder() {
             if (v.type === "single_quote_string") {
               return {
                 type: v.type,
-                value: escapeSingleQuotes(v.value, isPostgres),
+                value: u.escapeSingleQuotes(v.value, isPostgres),
               };
             }
             return v;
@@ -174,10 +157,10 @@ export default function useSqlBuilder() {
     });
   }
 
-  function deleteFromTable(tableName: string, cond: Conditions): string {
+  function deleteFromTable(tableName: string, cond: u.Conditions): string {
     return convertToSqlDelete({
       from: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(cond, isPostgres),
+      where: u.getWhereAndFromConditions(cond, isPostgres),
     });
   }
 
@@ -190,10 +173,10 @@ where schemaname='${dbName}';`;
     return "SHOW TABLES;";
   }
 
-  function hideRowQuery(tableName: string, conditions: Conditions): string {
-    const whereVals = getWhereFromPKCols(conditions, isPostgres);
+  function hideRowQuery(tableName: string, conditions: u.Conditions): string {
+    const whereVals = u.getWhereAndFromConditions(conditions, isPostgres);
     const sel: Partial<Select> = {
-      columns: [getSqlColumn("*")],
+      columns: [u.getSqlColumn("*")],
       type: "select",
       from: [{ table: tableName }],
     };
@@ -216,7 +199,7 @@ where schemaname='${dbName}';`;
       expr: [
         {
           action: "drop",
-          column: { type: "column_ref", table: null, column },
+          column: u.getSqlColumnRef(column),
           keyword: "COLUMN",
           resource: "column",
           type: "alter",
@@ -230,17 +213,17 @@ where schemaname='${dbName}';`;
     tableName: string,
     setCol: string,
     setVal: string,
-    conditions: Conditions,
+    conditions: u.Conditions,
   ): string {
     return convertToSqlUpdate({
       table: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(conditions, isPostgres),
+      where: u.getWhereAndFromConditions(conditions, isPostgres),
       set: [
         {
           column: setCol,
           value: {
             type: "single_quote_string",
-            value: escapeSingleQuotes(setVal, isPostgres),
+            value: u.escapeSingleQuotes(setVal, isPostgres),
           },
           table: null,
         },
@@ -251,11 +234,11 @@ where schemaname='${dbName}';`;
   function updateTableMakeNullQuery(
     tableName: string,
     setCol: string,
-    conditions: Conditions,
+    conditions: u.Conditions,
   ): string {
     return convertToSqlUpdate({
       table: [{ table: tableName, db: null, as: null }],
-      where: getWhereFromPKCols(conditions, isPostgres),
+      where: u.getWhereAndFromConditions(conditions, isPostgres),
       set: [
         { column: setCol, value: { type: "null", value: null }, table: null },
       ],
@@ -282,13 +265,14 @@ where schemaname='${dbName}';`;
     kind: SchemaType,
   ): string {
     return isPostgres
-      ? getPostgresSchemaDefQuery(dbName, name, kind)
+      ? u.getPostgresSchemaDefQuery(dbName, name, kind)
       : `SHOW CREATE ${kind.toUpperCase()} \`${name}\``;
   }
 
   return {
     addWhereClauseToSelect,
     alterTableDropColQuery,
+    convertToSqlSelect,
     convertToSqlWithNewCols,
     convertToSqlWithNewColNames,
     convertToSqlWithOrderBy,

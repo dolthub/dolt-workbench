@@ -3,9 +3,13 @@ import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import {
   Alter,
   Column,
+  ColumnRef,
   Delete,
+  Dual,
   Expr,
+  From,
   Insert_Replace,
+  Limit,
   OrderBy,
   Function as ParserFunction,
   Select,
@@ -15,8 +19,37 @@ import {
 export type Conditions = Array<{ col: string; val: string }>;
 export type ColumnValue = { type: string; value: any };
 
-export function getSqlColumn(column: string): Column {
-  return { expr: { column, type: "column_ref", table: null }, as: "" };
+export function getSqlColumnRef(
+  column: string,
+  table: string | null = null,
+): ColumnRef {
+  return { type: "column_ref", table, column };
+}
+
+export function getSqlColumn(
+  column: string,
+  table: string | null = null,
+): Column {
+  return { expr: getSqlColumnRef(column, table), as: "" };
+}
+
+export function getSqlOrderBy(col: string, type: "ASC" | "DESC"): OrderBy {
+  return { expr: getSqlColumnRef(col), type };
+}
+
+export function getSqlTable(table: string): From | Dual {
+  return { db: null, table, as: null };
+}
+
+export function getSqlFromTable(
+  tableName: string | null,
+): Array<From | Dual> | null {
+  if (!tableName) return null;
+  return [getSqlTable(tableName)];
+}
+
+export function getSqlLimit(limit: number): Limit {
+  return { seperator: "", value: [{ type: "number", value: limit }] };
 }
 
 export function getSqlSelect(sel: Partial<Select>): Select {
@@ -79,16 +112,7 @@ export function getSqlUpdate(upd: Partial<Update>): Update {
 
 export function mapColsToColumnNames(cols: string[] | "*"): Column[] {
   if (cols === "*") return [getSqlColumn("*")];
-  return cols.map(c => {
-    return {
-      expr: {
-        type: "column_ref",
-        table: null,
-        column: c,
-      },
-      as: "",
-    };
-  });
+  return cols.map(c => getSqlColumn(c));
 }
 
 export function mapColsToColumnRef(
@@ -96,16 +120,9 @@ export function mapColsToColumnRef(
   isJoinClause: boolean,
 ): Column[] {
   if (cols === "*") return [getSqlColumn("*")];
-  return cols.map(c => {
-    return {
-      expr: {
-        type: "column_ref",
-        table: isJoinClause && c.sourceTable ? c.sourceTable : null,
-        column: c.name,
-      },
-      as: "",
-    };
-  });
+  return cols.map(c =>
+    getSqlColumn(c.name, isJoinClause ? c.sourceTable : null),
+  );
 }
 
 // The where object is a binary tree with 'left' and 'right' nodes
@@ -155,6 +172,35 @@ export function escapeSingleQuotes(value: string, isPostgres: boolean): string {
   return value.replace(/'/g, "\\'");
 }
 
+function getExprFunction(name: string, vals: string[]): ParserFunction | any {
+  return {
+    type: "function",
+    name,
+    args: {
+      type: "expr_list",
+      value: vals.map(v => {
+        return {
+          type: "single_quote_string",
+          value: v,
+        };
+      }),
+    },
+  };
+}
+
+export function getNewWhereFunctionCondition(
+  column: string,
+  fnName: string,
+  vals: string[],
+): Expr {
+  return {
+    type: "binary_expr",
+    operator: "=",
+    left: getSqlColumnRef(column),
+    right: getExprFunction(fnName, vals),
+  };
+}
+
 function getNewWhereCondition(
   column: string,
   value: string,
@@ -165,11 +211,7 @@ function getNewWhereCondition(
   return {
     type: "binary_expr",
     operator: valIsNull ? "IS" : "=",
-    left: {
-      type: "column_ref",
-      table: null,
-      column,
-    },
+    left: getSqlColumnRef(column),
     right: {
       type: valIsNull ? "null" : "string",
       value: valIsNull ? null : escapedVal,
@@ -225,14 +267,11 @@ export function getOrderByArr(
     return parsed.orderby;
   }
   // Otherwise, add new order by clause
-  const newOrderby = {
-    expr: { type: "column_ref", column },
-    type,
-  };
+  const newOrderby = getSqlOrderBy(column, type);
   return parsed.orderby ? [...parsed.orderby, newOrderby] : [newOrderby];
 }
 
-export function getWhereFromPKCols(
+export function getWhereAndFromConditions(
   conditions: Conditions,
   isPostgres: boolean,
 ): Expr | null {
