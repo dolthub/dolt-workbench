@@ -1,6 +1,5 @@
 import MainLayout from "@components/layouts/MainLayout";
 import DoltLink from "@components/links/DoltLink";
-import DoltgresLink from "@components/links/DoltgresLink";
 import { QueryHandler } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
@@ -42,8 +41,10 @@ export default function ConfigurationPage() {
           <h1>Welcome to the Dolt Workbench</h1>
           <p>
             Connect the workbench to any MySQL or PostgreSQL compatible
-            database. Use <DoltLink /> or <DoltgresLink /> to unlock version
-            control features.
+            database. Use <DoltLink />{" "}
+            {/* TODO(doltgres): Uncomment when ready */}
+            {/* or <DoltgresLink /> */}
+            to unlock version control features.
           </p>
         </div>
         <QueryHandler

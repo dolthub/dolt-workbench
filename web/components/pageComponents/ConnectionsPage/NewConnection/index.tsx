@@ -69,7 +69,9 @@ export default function NewConnection(props: Props) {
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
                 {
-                  label: "Postgres/Doltgres",
+                  label: "Postgres",
+                  // TODO(doltgres): Uncomment when ready
+                  // label: "Postgres/Doltgres",
                   value: DatabaseType.Postgres,
                 },
               ]}
