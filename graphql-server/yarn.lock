@@ -713,7 +713,7 @@ __metadata:
     "@nestjs/config": "npm:^3.2.3"
     "@nestjs/core": "npm:^10.3.8"
     "@nestjs/graphql": "npm:^12.1.1"
-    "@nestjs/platform-express": "npm:^10.3.7"
+    "@nestjs/platform-express": "npm:^10.3.10"
     "@nestjs/schematics": "npm:^10.1.1"
     "@nestjs/terminus": "npm:^10.2.3"
     "@nestjs/typeorm": "npm:^10.0.2"
@@ -1478,19 +1478,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:^10.3.7":
-  version: 10.3.7
-  resolution: "@nestjs/platform-express@npm:10.3.7"
+"@nestjs/platform-express@npm:^10.3.10":
+  version: 10.3.10
+  resolution: "@nestjs/platform-express@npm:10.3.10"
   dependencies:
     body-parser: "npm:1.20.2"
     cors: "npm:2.8.5"
     express: "npm:4.19.2"
     multer: "npm:1.4.4-lts.1"
-    tslib: "npm:2.6.2"
+    tslib: "npm:2.6.3"
   peerDependencies:
     "@nestjs/common": ^10.0.0
     "@nestjs/core": ^10.0.0
-  checksum: 281ce6149bb9c7288dda3eabe6d3732d6874c9c47ad923a74022659ec765c1c76d1c05323d6f570faf6f976014b7bc8dabd328e4e86e0db9e4f0f1752c6df7d1
+  checksum: bd1ca58e1faaef8fd30dfec7c7c4105f45e2ad76a4ca3ed3a29abdc3b3ea809823d73cd41cef82d054c2eadf207944af77e8288c5a4d00782e8c95a020e442c2
   languageName: node
   linkType: hard
 
@@ -8722,6 +8722,13 @@ __metadata:
   version: 2.6.2
   resolution: "tslib@npm:2.6.2"
   checksum: e03a8a4271152c8b26604ed45535954c0a45296e32445b4b87f8a5abdb2421f40b59b4ca437c4346af0f28179780d604094eb64546bee2019d903d01c6c19bdb
+  languageName: node
+  linkType: hard
+
+"tslib@npm:2.6.3":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 2598aef53d9dbe711af75522464b2104724d6467b26a60f2bdac8297d2b5f1f6b86a71f61717384aa8fd897240467aaa7bcc36a0700a0faf751293d1331db39a
   languageName: node
   linkType: hard
 
