@@ -1366,7 +1366,7 @@ __metadata:
     "@testing-library/user-event": "npm:^14.5.2"
     "@types/apollo-upload-client": "npm:^17"
     "@types/chance": "npm:^1.1.5"
-    "@types/diff": "npm:^5.0.9"
+    "@types/diff": "npm:^5.2.1"
     "@types/jest": "npm:^29.5.6"
     "@types/lodash": "npm:^4.14.202"
     "@types/node": "npm:^20.10.1"
@@ -3798,10 +3798,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/diff@npm:^5.0.9":
-  version: 5.0.9
-  resolution: "@types/diff@npm:5.0.9"
-  checksum: 038e4d831f6d9826f0019fa07ec821a1f966160cd0d62aede6fc6ab269fc969ac6e665f7849fb2189fb92f7865488dcaabcb278c3df877d0d3581f2a7e1a67b2
+"@types/diff@npm:^5.2.1":
+  version: 5.2.1
+  resolution: "@types/diff@npm:5.2.1"
+  checksum: 62dcab32197ac67f212939cdd79aa3953327a482bec55c6a38ad9de8a0662a9f920b59504609a322fc242593bd9afb3d2704702f4bc98087a13171234b952361
   languageName: node
   linkType: hard
 
