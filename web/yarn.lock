@@ -1354,7 +1354,7 @@ __metadata:
     "@dolthub/react-components": "npm:^0.2.3"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
-    "@dolthub/web-utils": "npm:^0.1.4"
+    "@dolthub/web-utils": "npm:^0.1.8"
     "@graphql-codegen/cli": "npm:^5.0.0"
     "@graphql-codegen/fragment-matcher": "npm:^5.0.0"
     "@graphql-codegen/typescript-operations": "npm:^4.0.1"
@@ -1488,7 +1488,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.4":
+"@dolthub/web-utils@npm:^0.1.2":
   version: 0.1.4
   resolution: "@dolthub/web-utils@npm:0.1.4"
   dependencies:
@@ -1505,6 +1505,16 @@ __metadata:
     node-sql-parser: "npm:^5.0.0"
     timeago.js: "npm:^4.0.2"
   checksum: 51724aaf9ee12386bb48c8d2386278dbdb37b94df73272a3579e6f9b08c7474473cb33520cd0674a1052af253004f3af7a5520696630d512d490bd3272bfc73a
+  languageName: node
+  linkType: hard
+
+"@dolthub/web-utils@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "@dolthub/web-utils@npm:0.1.8"
+  dependencies:
+    node-sql-parser: "npm:^5.0.0"
+    timeago.js: "npm:^4.0.2"
+  checksum: a865139e7724797cf4fa4cca2b9fb155100119489e51def778e391d39649eaa4781e02a9996bb7b6aa6b0ae336660c1ef8095457e185428e45c43ae9500ccb31
   languageName: node
   linkType: hard
 
