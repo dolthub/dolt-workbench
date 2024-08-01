@@ -1410,7 +1410,7 @@ __metadata:
     lodash: "npm:^4.17.21"
     next: "npm:^14.2.4"
     next-useragent: "npm:^2.8.0"
-    node-sql-parser: "npm:^4.17.0"
+    node-sql-parser: "npm:^5.3.0"
     postcss: "npm:^8.4.31"
     postcss-preset-env: "npm:^9.4.0"
     prettier: "npm:^3.1.0"
@@ -11007,7 +11007,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-sql-parser@npm:^4.17.0, node-sql-parser@npm:^4.18.0":
+"node-sql-parser@npm:^4.18.0":
   version: 4.18.0
   resolution: "node-sql-parser@npm:4.18.0"
   dependencies:
@@ -11023,6 +11023,16 @@ __metadata:
     "@types/pegjs": "npm:^0.10.0"
     big-integer: "npm:^1.6.48"
   checksum: de6caf97e5495b7d22370bf84a75d2c07541bec44de95516b804904285d314ad4412a8c956d30dffa99bbd667d9f28e8083c8833bafa9723d4f96ae960b73124
+  languageName: node
+  linkType: hard
+
+"node-sql-parser@npm:^5.3.0":
+  version: 5.3.0
+  resolution: "node-sql-parser@npm:5.3.0"
+  dependencies:
+    "@types/pegjs": "npm:^0.10.0"
+    big-integer: "npm:^1.6.48"
+  checksum: 46c51f3449b3359c014f151da9ab1eebeaa8c93eb589231739502775c3dd77ca76983aef6ad039c7df4355321c4a00047debf24ffd8d2fddb83d9a914599878a
   languageName: node
   linkType: hard
 
