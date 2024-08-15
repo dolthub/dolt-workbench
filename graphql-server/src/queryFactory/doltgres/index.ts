@@ -66,16 +66,16 @@ export class DoltgresQueryFactory
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
     return this.query(
-      qh.callNewBranch,
-      [args.branchName, args.fromRefName],
+      `SELECT DOLT_BRANCH('${args.branchName}', '${args.fromRefName}')`,
+      [],
       args.databaseName,
     );
   }
 
   async callDeleteBranch(args: t.BranchArgs): t.PR {
     return this.query(
-      qh.callDeleteBranch,
-      [args.branchName],
+      `SELECT DOLT_BRANCH('-D', '${args.branchName}')`,
+      [],
       args.databaseName,
     );
   }
@@ -83,8 +83,8 @@ export class DoltgresQueryFactory
   async getLogs(args: t.RefArgs, offset: number): t.PR {
     return handleRefNotFound(async () =>
       this.query(
-        qh.doltLogsQuery,
-        [args.refName, ROW_LIMIT + 1, offset],
+        `SELECT * FROM DOLT_LOG('${args.refName}', '--parents') LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`,
+        [],
         args.databaseName,
       ),
     );
@@ -93,8 +93,8 @@ export class DoltgresQueryFactory
   async getTwoDotLogs(args: t.RefsArgs): t.PR {
     return handleRefNotFound(async () =>
       this.query(
-        qh.twoDotDoltLogsQuery,
-        [`${args.toRefName}..${args.fromRefName}`],
+        `SELECT * FROM DOLT_LOG('${args.toRefName}..${args.fromRefName}', '--parents')`,
+        [],
         args.databaseName,
       ),
     );
@@ -102,8 +102,8 @@ export class DoltgresQueryFactory
 
   async getDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      qh.getDiffStatQuery(!!args.tableName),
-      [args.fromRefName, args.toRefName, args.tableName],
+      `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -111,8 +111,8 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      qh.getThreeDotDiffStatQuery(!!args.tableName),
-      [`${args.toRefName}...${args.fromRefName}`, args.tableName],
+      `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -120,8 +120,8 @@ export class DoltgresQueryFactory
 
   async getDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      qh.getDiffSummaryQuery(!!args.tableName),
-      [args.fromRefName, args.toRefName, args.tableName],
+      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -129,8 +129,8 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      qh.getThreeDotDiffSummaryQuery(!!args.tableName),
-      [`${args.toRefName}...${args.fromRefName}`, args.tableName],
+      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -138,8 +138,8 @@ export class DoltgresQueryFactory
 
   async getSchemaPatch(args: t.RefsTableArgs): t.PR {
     return this.query(
-      qh.schemaPatchQuery,
-      [args.fromRefName, args.toRefName, args.tableName],
+      `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${args.tableName}') WHERE diff_type='schema'`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -147,8 +147,8 @@ export class DoltgresQueryFactory
 
   async getThreeDotSchemaPatch(args: t.RefsTableArgs): t.PR {
     return this.query(
-      qh.threeDotSchemaPatchQuery,
-      [`${args.toRefName}...${args.fromRefName}`, args.tableName],
+      `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${args.tableName}') WHERE diff_type='schema'`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -156,8 +156,8 @@ export class DoltgresQueryFactory
 
   async getSchemaDiff(args: t.RefsTableArgs): t.PR {
     return this.query(
-      qh.schemaDiffQuery,
-      [args.fromRefName, args.toRefName, args.tableName],
+      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${args.tableName}')`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -165,8 +165,8 @@ export class DoltgresQueryFactory
 
   async getThreeDotSchemaDiff(args: t.RefsTableArgs): t.PR {
     return this.query(
-      qh.threeDotSchemaDiffQuery,
-      [`${args.toRefName}...${args.fromRefName}`, args.tableName],
+      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${args.tableName}')`,
+      [],
       args.databaseName,
       args.refName,
     );
@@ -217,14 +217,21 @@ export class DoltgresQueryFactory
       params.push(getAuthorString(args.author));
     }
     return this.query(
-      qh.getCallNewTag(!!args.message, !!args.author),
+      `SELECT DOLT_TAG('${args.tagName}', '${args.fromRefName}'${args.message ? `, '-m', '${args.message}'` : ""}${qh.getAuthorNameString(
+        !!args.author,
+        `'${args.author}'`,
+      )})`,
       params,
       args.databaseName,
     );
   }
 
   async callDeleteTag(args: t.TagArgs): t.PR {
-    return this.query(qh.callDeleteTag, [args.tagName], args.databaseName);
+    return this.query(
+      `SELECT DOLT_TAG('-d', '${args.tagName}')`,
+      [],
+      args.databaseName,
+    );
   }
 
   async callMerge(
@@ -241,7 +248,10 @@ export class DoltgresQueryFactory
         if (args.author) {
           params.push(getAuthorString(args.author));
         }
-        const res = await query(qh.getCallMerge(!!args.author), params);
+        const res = await query(
+          `SELECT DOLT_MERGE('${args.fromBranchName}', '--no-ff', '-m', 'Merge branch ${args.fromBranchName}'${qh.getAuthorNameString(!!args.author, `'${args.author}'`)})`,
+          params,
+        );
 
         if (res.length && res[0].conflicts !== "0") {
           await query("ROLLBACK");

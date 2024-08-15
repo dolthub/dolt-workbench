@@ -58,7 +58,7 @@ export class PostgresQueryFactory
   }
 
   async changeSchema(qr: QueryRunner, schemaName: string): Promise<void> {
-    await qr.query(qh.setSearchPath(schemaName, this.isDolt));
+    await qr.query(qh.setSearchPath(schemaName));
   }
 
   async getTableNames(args: t.RefMaybeSchemaArgs): Promise<string[]> {

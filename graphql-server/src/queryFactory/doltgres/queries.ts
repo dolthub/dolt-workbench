@@ -23,9 +23,9 @@ import { RawRows } from "../types";
 
 // BRANCHES
 
-export const callNewBranch = `CALL DOLT_BRANCH($1, $2)`;
+export const callNewBranch = `SELECT DOLT_BRANCH($1, $2)`;
 
-export const callDeleteBranch = `CALL DOLT_BRANCH('-D', $1)`;
+export const callDeleteBranch = `SELECT DOLT_BRANCH('-D', $1)`;
 
 // COMMITS
 
@@ -61,21 +61,21 @@ export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF($1, $2)`;
 // PULLS
 
 export const getCallMerge = (hasAuthor = false) =>
-  `CALL DOLT_MERGE($1, '--no-ff', '-m', $2${getAuthorNameString(hasAuthor, 3)})`;
+  `SELECT DOLT_MERGE($1, '--no-ff', '-m', $2${getAuthorNameString(hasAuthor, "$3")})`;
 
 // TAGS
 
-export const callDeleteTag = `CALL DOLT_TAG('-d', $1)`;
+export const callDeleteTag = `SELECT DOLT_TAG('-d', $1)`;
 
 export const getCallNewTag = (hasMessage = false, hasAuthor = false) =>
-  `CALL DOLT_TAG($1, $2${hasMessage ? `, '-m', $3` : ""}${getAuthorNameString(
+  `SELECT DOLT_TAG($1, $2${hasMessage ? `, '-m', $3` : ""}${getAuthorNameString(
     hasAuthor,
-    hasMessage ? 4 : 3,
+    hasMessage ? "$4" : "$3",
   )})`;
 
-function getAuthorNameString(hasAuthor: boolean, n: number): string {
+export function getAuthorNameString(hasAuthor: boolean, n: string): string {
   if (!hasAuthor) return "";
-  return `, '--author', $${n}`;
+  return `, '--author', ${n}`;
 }
 
 // TODO: Columns

@@ -79,6 +79,17 @@ export class FileUploadResolver {
     const qr = conn.getQR();
     const pgConnection = await qr.connect();
 
+    let isDolt = false;
+    try {
+      const res = await pgConnection.query("SELECT dolt_version()");
+      isDolt = !!res;
+    } catch (_) {
+      // ignore
+    }
+
+    if (isDolt) {
+      await pgConnection.query(`SELECT dolt_checkout('${args.refName}')`);
+    }
     const schema = await getSchema(qr, args);
     await pgConnection.query(setSearchPath(schema));
 
