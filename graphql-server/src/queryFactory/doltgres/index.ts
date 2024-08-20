@@ -24,7 +24,10 @@ export class DoltgresQueryFactory
     }, args.databaseName);
   }
 
-  async getSchemas(args: t.RefArgs, type?: SchemaType): Promise<SchemaItem[]> {
+  async getSchemas(
+    args: t.RefMaybeSchemaArgs,
+    type?: SchemaType,
+  ): Promise<SchemaItem[]> {
     return this.queryForBuilder(
       async em => dem.getDoltSchemas(em, type),
       args.databaseName,
@@ -40,7 +43,7 @@ export class DoltgresQueryFactory
     );
   }
 
-  async getBranch(args: t.BranchArgs): t.UPR {
+  async getBranch(args: t.BranchArgs): t.USPR {
     return this.queryForBuilder(
       async em => dem.getDoltBranch(em, args),
       args.databaseName,

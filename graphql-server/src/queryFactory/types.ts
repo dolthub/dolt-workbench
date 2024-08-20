@@ -4,9 +4,11 @@ import { DiffRowType } from "../rowDiffs/rowDiff.enums";
 export type DBArgs = { databaseName: string };
 export type SchemaArgs = { schemaName: string };
 export type RefArgs = DBArgs & { refName: string };
+export type RefMaybeSchemaArgs = RefArgs & { schemaName?: string };
 export type BranchArgs = DBArgs & { branchName: string };
 export type TagArgs = DBArgs & { tagName: string };
 export type TableArgs = RefArgs & { tableName: string };
+export type TableMaybeSchemaArgs = TableArgs & { schemaName?: string };
 
 export type BranchesArgs = DBArgs & {
   fromBranchName: string;
@@ -40,6 +42,7 @@ export type RawRows = RawRow[];
 export type PR = Promise<RawRows>;
 export type SPR = Promise<RawRow>;
 export type UPR = Promise<RawRows | undefined>;
+export type USPR = Promise<RawRow | undefined>;
 export type Params = Array<string | number | undefined> | undefined;
 export type ParQuery = (q: string, p?: Params) => PR;
 

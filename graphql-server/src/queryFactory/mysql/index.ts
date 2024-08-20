@@ -185,15 +185,13 @@ export class MySQLQueryFactory
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL
 
   // Returns static branch
-  async getBranch(args: t.BranchArgs): t.UPR {
-    return [
-      {
-        name: args.branchName,
-        latest_commit_date: new Date(),
-        latest_committer: "",
-        head: "",
-      },
-    ];
+  async getBranch(args: t.BranchArgs): t.USPR {
+    return {
+      name: args.branchName,
+      latest_commit_date: new Date(),
+      latest_committer: "",
+      head: "",
+    };
   }
 
   async getBranches(args: t.DBArgs & { offset: number }): t.PR {
@@ -202,7 +200,7 @@ export class MySQLQueryFactory
 
   async getAllBranches(args: t.DBArgs): t.PR {
     const branch = await this.getBranch({ ...args, branchName: "main" });
-    return branch ?? [];
+    return branch ? [branch] : [];
   }
 
   async createNewBranch(_: t.BranchArgs & { fromRefName: string }): t.PR {

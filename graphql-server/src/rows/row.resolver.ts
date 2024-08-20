@@ -1,10 +1,10 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
-import { RefArgs } from "../utils/commonTypes";
+import { RefMaybeSchemaArgs } from "../utils/commonTypes";
 import { Row, RowList, fromDoltListRowRes } from "./row.model";
 
 @ArgsType()
-export class ListRowsArgs extends RefArgs {
+export class ListRowsArgs extends RefMaybeSchemaArgs {
   @Field()
   tableName: string;
 

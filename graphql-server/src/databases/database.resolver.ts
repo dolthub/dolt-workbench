@@ -151,9 +151,9 @@ export class DatabaseResolver {
     if (type === DatabaseType.Mysql) {
       return { currentDatabase: db };
     }
-    if (!db) {
-      throw new Error("Must provide database for Postgres connection");
-    }
+    // if (!db) {
+    //   throw new Error("Must provide database for Postgres connection");
+    // }
     return { currentDatabase: db, currentSchema: args.schema };
   }
 
