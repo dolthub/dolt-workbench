@@ -8,6 +8,10 @@ export type RefParams = DatabaseParams & {
   refName: string;
 };
 
+export type RefMaybeSchemaParams = RefParams & {
+  schemaName?: string;
+};
+
 export type BranchParams = DatabaseParams & {
   branchName: string;
 };
@@ -28,10 +32,15 @@ export type DatabasePageParams = OptionalRefParams & {
 export type SqlQueryParams = RefParams & {
   q: string;
   active?: string;
+  schemaName?: string;
 };
 
 export type TableParams = RefParams & {
   tableName: string;
+};
+
+export type TableMaybeSchemaParams = TableParams & {
+  schemaName?: string;
 };
 
 export type DocParams = RefParams & {

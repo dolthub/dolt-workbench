@@ -6,7 +6,7 @@ import ForError from "../ForError";
 import ForTable from "../ForTable";
 
 type Props = {
-  params: RefParams;
+  params: RefParams & { schemaName?: string };
 };
 
 export default function ForRef({ params }: Props) {

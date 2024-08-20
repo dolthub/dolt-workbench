@@ -16,7 +16,7 @@ import { createCustomContext } from "@lib/createCustomContext";
 import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
-type DataTableParams = TableParams & { offset?: number };
+type DataTableParams = TableParams & { offset?: number; schemaName?: string };
 
 // This context handles data tables on the database page (for tables and queries)
 type DataTableContextType = {

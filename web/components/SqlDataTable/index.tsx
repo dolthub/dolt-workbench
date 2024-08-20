@@ -61,6 +61,7 @@ function Query(props: Props) {
       databaseName: props.params.databaseName,
       refName: props.params.refName,
       queryString: props.params.q,
+      schemaName: props.params.schemaName,
     },
     fetchPolicy: "cache-and-network",
   });

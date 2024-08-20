@@ -3,7 +3,7 @@ import * as ps from "./params";
 
 const ENCODE = true;
 export type DatabaseUrl = (p: ps.DatabaseParams) => Route;
-export type RefUrl = (p: ps.RefParams) => Route;
+export type RefUrl = (p: ps.RefMaybeSchemaParams) => Route;
 
 export const databases = new Route("/database");
 
@@ -22,28 +22,38 @@ export const query = (p: ps.RefParams): Route =>
   database(p).addStatic("query").addDynamic("refName", p.refName, ENCODE);
 
 export const sqlQuery = (p: ps.SqlQueryParams): Route =>
-  query(p).withQuery({ q: p.q, active: p.active });
+  query(p).withQuery({ q: p.q, active: p.active, schemaName: p.schemaName });
 
-export const ref = (p: ps.RefParams): Route =>
-  database(p).addStatic("data").addDynamic("refName", p.refName, ENCODE);
+export const ref = (p: ps.RefParams & { schemaName?: string }): Route =>
+  database(p)
+    .addStatic("data")
+    .addDynamic("refName", p.refName, ENCODE)
+    .withQuery({ schemaName: p.schemaName });
 
-export const table = (p: ps.TableParams): Route =>
-  ref(p).addDynamic("tableName", p.tableName);
+export const table = (p: ps.TableParams & { schemaName?: string }): Route =>
+  ref(p).addDynamic(
+    "tableName",
+    p.schemaName ? `${p.schemaName}.${p.tableName}` : p.tableName,
+  );
 
 export const editTable = (p: ps.TableParams): Route =>
   table(p).withQuery({ edit: "true" });
 
-export const schemaDiagram = (p: ps.RefParams & { active?: string }): Route =>
+export const schemaDiagram = (
+  p: ps.RefMaybeSchemaParams & { active?: string },
+): Route =>
   database(p)
     .addStatic("schema")
     .addDynamic("refName", p.refName, ENCODE)
-    .withQuery({ active: p.active });
+    .withQuery({ active: p.active, schemaName: p.schemaName });
 
-export const createTable = (p: ps.OptionalRefParams): Route =>
+export const createTable = (
+  p: ps.OptionalRefParams & { schemaName?: string },
+): Route =>
   database(p)
     .addStatic("data")
     .addStatic("create")
-    .withQuery({ refName: p.refName });
+    .withQuery({ refName: p.refName, schemaName: p.schemaName });
 
 export const branches = (p: ps.MaybeRefParams): Route =>
   database(p).addStatic("branches").withQuery({ refName: p.refName });

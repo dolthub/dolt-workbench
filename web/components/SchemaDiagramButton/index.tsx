@@ -1,6 +1,6 @@
 import Link from "@components/links/Link";
 import { Button } from "@dolthub/react-components";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import { ref, schemaDiagram } from "@lib/urls";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { FaProjectDiagram } from "@react-icons/all-files/fa/FaProjectDiagram";
@@ -8,13 +8,13 @@ import { useRouter } from "next/router";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefParams;
+  params: RefMaybeSchemaParams;
 };
 
 export default function SchemaDiagramButton(props: Props) {
   const router = useRouter();
   const isShowingSchemaDiagram =
-    router.pathname === "/database/schema/[refName]";
+    router.pathname === "/database/[databaseName]/schema/[refName]";
 
   const url = isShowingSchemaDiagram ? ref : schemaDiagram;
 

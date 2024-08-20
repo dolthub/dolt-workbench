@@ -4,7 +4,7 @@ import {
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
-import { maybeDatabase, maybeSchema } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
 import { Dispatch, SyntheticEvent } from "react";
 
@@ -81,10 +81,9 @@ export default function useConfig(): ReturnType {
       if (!db.data) {
         return;
       }
-      const { href, as } =
-        state.type === DatabaseType.Mysql
-          ? maybeDatabase(db.data.addDatabaseConnection.currentDatabase)
-          : maybeSchema(db.data.addDatabaseConnection.currentSchema);
+      const { href, as } = maybeDatabase(
+        db.data.addDatabaseConnection.currentDatabase,
+      );
       await router.push(href, as);
     } catch (_) {
       // Handled by res.error

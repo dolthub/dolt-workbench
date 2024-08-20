@@ -295,13 +295,15 @@ export function addToExistingWhereFromPKCols(
 }
 
 export function getPostgresSchemaDefQuery(
-  dbName: string,
   name: string,
   kind: SchemaType,
+  schemaName?: string,
 ): string {
   switch (kind) {
     case SchemaType.Table:
-      return `SELECT ordinal_position, column_name, udt_name as data_type, is_nullable, column_default FROM information_schema.columns WHERE table_schema = '${dbName}' AND table_name = '${name}'`;
+      const q = `SELECT ordinal_position, column_name, udt_name as data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = '${name}'`;
+      if (!schemaName) return q;
+      return `${q} AND table_schema = '${schemaName}'`;
     case SchemaType.View:
       return `SELECT pg_get_viewdef('${name}', true)`;
     case SchemaType.Trigger:

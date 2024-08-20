@@ -6,6 +6,7 @@ import { GetServerSideProps, NextPage } from "next";
 type Props = {
   params: RefParams & {
     active?: string;
+    schemaName?: string;
   };
 };
 
@@ -23,6 +24,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     props: {
       params: {
         ...(params as RefParams),
+        schemaName: query.schemaName ? String(query.schemaName) : "",
         active: query.active ? String(query.active) : "",
       },
     },

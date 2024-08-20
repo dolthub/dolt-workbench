@@ -1,18 +1,19 @@
 import { QueryHandler, SmallLoader } from "@dolthub/react-components";
 import { SchemaType } from "@gen/graphql-types";
 import useTableNames from "@hooks/useTableNames";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import List from "./List";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefParams & { q?: string };
+  params: RefMaybeSchemaParams & { q?: string };
 };
 
 export default function Tables(props: Props) {
   const res = useTableNames({
     databaseName: props.params.databaseName,
     refName: props.params.refName,
+    schemaName: props.params.schemaName,
   });
 
   return (

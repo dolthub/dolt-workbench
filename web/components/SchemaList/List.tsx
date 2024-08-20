@@ -2,7 +2,7 @@ import { SmallLoader } from "@dolthub/react-components";
 import { pluralize } from "@dolthub/web-utils";
 import { SchemaType } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import { useEffect } from "react";
 import Item from "./Item";
 import NotFound from "./NotFound";
@@ -10,7 +10,7 @@ import css from "./index.module.css";
 import { getActiveItem } from "./utils";
 
 type InnerProps = {
-  params: RefParams & { q?: string };
+  params: RefMaybeSchemaParams & { q?: string };
   items: string[];
   kind: SchemaType;
   loading?: boolean;
@@ -46,7 +46,7 @@ export default function List(props: InnerProps) {
               name={t}
               params={props.params}
               isActive={t === activeItem}
-              query={showCreateQuery(props.params.databaseName, t, props.kind)}
+              query={showCreateQuery(t, props.kind, props.params.schemaName)}
             />
           ))}
         </ol>

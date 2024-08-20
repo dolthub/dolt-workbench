@@ -1,6 +1,6 @@
 import Section from "@components/DatabaseTableNav/Section";
 import { SchemaType, useRowsForDoltSchemasQuery } from "@gen/graphql-types";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import List from "./List";
 import Procedures from "./Procedures";
 import Tables from "./Tables";
@@ -8,7 +8,7 @@ import css from "./index.module.css";
 import { getSchemaItemsFromRows } from "./utils";
 
 type Props = {
-  params: RefParams & { q?: string };
+  params: RefMaybeSchemaParams & { q?: string };
 };
 
 function Inner(props: Props) {

@@ -10,6 +10,7 @@ import css from "./index.module.css";
 type Props = {
   className?: string;
   params: OptionalRefParams & {
+    schemaName?: string;
     tableName?: string;
     q?: string;
   };
@@ -41,6 +42,7 @@ export default function NavLinks({ className, params }: Props) {
                 databaseName: params.databaseName,
                 tableName: params.tableName,
                 refName,
+                schemaName: params.schemaName,
               }}
             />
           )}

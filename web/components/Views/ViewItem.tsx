@@ -3,13 +3,13 @@ import { Btn } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import { SchemaItemFragment } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import cx from "classnames";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefParams & { q?: string };
+  params: RefMaybeSchemaParams & { q?: string };
   view: SchemaItemFragment;
 };
 

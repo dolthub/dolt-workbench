@@ -7,6 +7,7 @@ import ForDefaultBranch from "../ForDefaultBranch";
 type Props = {
   params: DatabaseParams & {
     refName?: string | null;
+    schemaName?: string;
     active?: string;
     edit?: boolean;
   };

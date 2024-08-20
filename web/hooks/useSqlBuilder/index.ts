@@ -164,11 +164,11 @@ export default function useSqlBuilder() {
     });
   }
 
-  function getDefaultQueryString(dbName: string): string {
+  function getDefaultQueryString(schemaName?: string): string {
     if (isPostgres) {
       return `SELECT *
 FROM pg_catalog.pg_tables
-where schemaname='${dbName}';`;
+where schemaname='${schemaName ?? "public"}';`;
     }
     return "SHOW TABLES;";
   }
@@ -260,12 +260,12 @@ where schemaname='${dbName}';`;
   }
 
   function showCreateQuery(
-    dbName: string,
     name: string,
     kind: SchemaType,
+    schemaName?: string,
   ): string {
     return isPostgres
-      ? u.getPostgresSchemaDefQuery(dbName, name, kind)
+      ? u.getPostgresSchemaDefQuery(name, kind, schemaName)
       : `SHOW CREATE ${kind.toUpperCase()} \`${name}\``;
   }
 

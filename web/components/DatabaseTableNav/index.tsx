@@ -1,9 +1,11 @@
 import BranchAndTagSelector from "@components/FormSelectForRefs/BranchAndTagSelector";
 import NotDoltSelectWrapper from "@components/FormSelectForRefs/NotDoltSelectWrapper";
+import SchemasSelector from "@components/SchemasSelector";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Tooltip } from "@dolthub/react-components";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { OptionalRefParams } from "@lib/params";
 import { RefUrl, newBranch } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
@@ -16,6 +18,7 @@ import css from "./index.module.css";
 
 type Params = OptionalRefParams & {
   tableName?: string;
+  schemaName?: string;
   q?: string;
 };
 
@@ -37,6 +40,7 @@ function Nav({
   initiallyOpen = false,
   isMobile = false,
 }: NavProps) {
+  const { isPostgres } = useDatabaseDetails();
   const [open, setOpen] = useState(initiallyOpen || isInitiallyOpen(params));
   const toggleMenu = () => {
     setOpen(!open);
@@ -44,12 +48,11 @@ function Nav({
 
   return (
     <div
-      className={cx(
-        css.container,
-        { [css.openContainer]: open },
-        { [css.closedContainer]: !open },
-        { [css.showForMobile]: isMobile },
-      )}
+      className={cx(css.container, {
+        [css.openContainer]: open,
+        [css.closedContainer]: !open,
+        [css.showForMobile]: isMobile,
+      })}
     >
       <div className={css.top}>
         <div
@@ -74,8 +77,18 @@ function Nav({
           data-cy="left-nav-toggle-icon"
         />
       </div>
+      {isPostgres && params.refName && (
+        <div
+          className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
+        >
+          <SchemasSelector
+            params={{ ...params, refName: params.refName }}
+            routeRefChangeTo={routeRefChangeTo}
+          />
+        </div>
+      )}
       <NavLinks
-        className={cx({ [css.openNav]: open }, { [css.closedItem]: !open })}
+        className={cx(css.openNav, { [css.closedItem]: !open })}
         params={params}
       />
     </div>

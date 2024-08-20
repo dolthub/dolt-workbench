@@ -1,5 +1,5 @@
 .wrapper {
-  @apply hidden lg:inline-block;
+  @apply hidden lg:flex mb-1;
 }
 
 .schItem {

@@ -26,10 +26,15 @@ export const TABLE_LIST_FOR_SCHEMAS_QUERY = gql`
       ...IndexForTableList
     }
   }
-  query TableListForSchemas($databaseName: String!, $refName: String!) {
+  query TableListForSchemas(
+    $databaseName: String!
+    $refName: String!
+    $schemaName: String
+  ) {
     tables(
       databaseName: $databaseName
       refName: $refName
+      schemaName: $schemaName
       filterSystemTables: true
     ) {
       ...TableForSchemaList

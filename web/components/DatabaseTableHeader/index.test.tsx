@@ -13,6 +13,7 @@ import {
 
 const dbParams = {
   databaseName: "test",
+  schemaName: "mysch",
 };
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");
@@ -64,7 +65,7 @@ describe("test DatabaseTableHeader", () => {
       expected: "SHOW TABLES;\n\n\n\n",
       expectedPostgres: `SELECT *
 FROM pg_catalog.pg_tables
-where schemaname='${dbParams.databaseName}';\n\n\n\n`,
+where schemaname='${dbParams.schemaName}';\n\n\n\n`,
     },
     {
       desc: "with table",
@@ -78,7 +79,7 @@ where schemaname='${dbParams.databaseName}';\n\n\n\n`,
       expected: "SHOW TABLES;\n\n\n\n",
       expectedPostgres: `SELECT *
 FROM pg_catalog.pg_tables
-where schemaname='${dbParams.databaseName}';\n\n\n\n`,
+where schemaname='${dbParams.schemaName}';\n\n\n\n`,
     },
     {
       desc: "with query and table",

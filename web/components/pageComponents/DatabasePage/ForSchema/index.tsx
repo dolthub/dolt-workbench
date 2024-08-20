@@ -1,12 +1,12 @@
 import SchemaDiagram from "@components/SchemaDiagram";
 import SchemaDiagramBreadcrumbs from "@components/breadcrumbs/SchemaDiagramBreadcrumbs";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import { schemaDiagram } from "@lib/urls";
 import DatabaseDesktopOnly from "../DatabaseDesktopOnly";
 import DatabasePage from "../component";
 
 type Props = {
-  params: RefParams & { active?: string };
+  params: RefMaybeSchemaParams & { active?: string };
 };
 
 export default function ForSchema({ params }: Props) {

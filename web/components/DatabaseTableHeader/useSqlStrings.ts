@@ -10,6 +10,7 @@ const exampleCreateTable = `CREATE TABLE tablename (pk INT, col1 VARCHAR(255), P
 export type Params = OptionalRefParams & {
   q?: string;
   tableName?: string;
+  schemaName?: string;
 };
 
 export function useSqlStrings(
@@ -19,7 +20,7 @@ export function useSqlStrings(
   const { getDefaultQueryString, selectFromTable, isPostgres } =
     useSqlBuilder();
   const { editorString, setEditorString } = useSqlEditorContext();
-  const defaultQuery = getDefaultQueryString(params.databaseName);
+  const defaultQuery = getDefaultQueryString(params.schemaName);
 
   const getSqlString = (): string => {
     if (empty) {

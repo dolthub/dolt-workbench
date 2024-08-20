@@ -1,5 +1,4 @@
 import DatabasesDropdown from "@components/DatabasesDropdown";
-import SchemasDropdown from "@components/SchemasDropdown";
 import CommitLogLink from "@components/links/CommitLogLink";
 import Link from "@components/links/Link";
 import PullLink from "@components/links/PullLink";
@@ -27,20 +26,6 @@ export function databaseBreadcrumbs(
   currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   return [
-    ...(currentDBForPostgres
-      ? [
-          {
-            child: (
-              <span className={css.withIcon}>
-                <FiDatabase />
-                <span>{currentDBForPostgres}</span>
-              </span>
-            ),
-            name: BreadcrumbName.DatabasePostgres,
-            type: BreadcrumbType.Text,
-          },
-        ]
-      : []),
     {
       child: (
         <span className={css.withIcon}>
@@ -52,11 +37,7 @@ export function databaseBreadcrumbs(
       type: BreadcrumbType.Link,
     },
     {
-      child: currentDBForPostgres ? (
-        <SchemasDropdown params={params} />
-      ) : (
-        <DatabasesDropdown params={params} />
-      ),
+      child: <DatabasesDropdown params={params} />,
       name: BreadcrumbName.DatabaseDrop,
       type: BreadcrumbType.Button,
     },

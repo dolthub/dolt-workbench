@@ -2,10 +2,9 @@ import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
-  DatabaseType,
   useAddDatabaseConnectionMutation,
 } from "@gen/graphql-types";
-import { maybeDatabase, maybeSchema } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import cx from "classnames";
 import { useRouter } from "next/router";
@@ -27,10 +26,9 @@ export default function Item({ conn, onDeleteClicked }: Props) {
       if (!db.data) {
         return;
       }
-      const { href, as } =
-        conn.type === DatabaseType.Postgres
-          ? maybeSchema(db.data.addDatabaseConnection.currentSchema)
-          : maybeDatabase(db.data.addDatabaseConnection.currentDatabase);
+      const { href, as } = maybeDatabase(
+        db.data.addDatabaseConnection.currentDatabase,
+      );
       router.push(href, as).catch(console.error);
     } catch (_) {
       // Handled by res.error

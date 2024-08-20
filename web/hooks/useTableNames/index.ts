@@ -12,7 +12,9 @@ type ReturnType = {
   refetch: () => Promise<void>;
 };
 
-export default function useTableNames(params: RefParams): ReturnType {
+export default function useTableNames(
+  params: RefParams & { schemaName?: string },
+): ReturnType {
   const variables = { ...params, filterSystemTables: true };
   const { data, ...res } = useTableNamesQuery({
     variables,

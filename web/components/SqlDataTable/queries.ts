@@ -16,11 +16,13 @@ export const SQL_SELECT_QUERY = gql`
     $databaseName: String!
     $refName: String!
     $queryString: String!
+    $schemaName: String
   ) {
     sqlSelect(
       databaseName: $databaseName
       refName: $refName
       queryString: $queryString
+      schemaName: $schemaName
     ) {
       queryExecutionStatus
       queryExecutionMessage

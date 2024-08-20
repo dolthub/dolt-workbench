@@ -1,6 +1,6 @@
 import { ApolloError } from "@apollo/client";
 import { SchemaItemFragment, useRowsForViewsQuery } from "@gen/graphql-types";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 import { useEffect, useState } from "react";
 
 type ReturnType = {
@@ -10,7 +10,7 @@ type ReturnType = {
   refetch: () => Promise<void>;
 };
 
-export default function useViewList(params: RefParams): ReturnType {
+export default function useViewList(params: RefMaybeSchemaParams): ReturnType {
   const { data, ...res } = useRowsForViewsQuery({
     variables: params,
   });
