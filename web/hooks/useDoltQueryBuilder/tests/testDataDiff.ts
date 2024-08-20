@@ -1,9 +1,9 @@
+import { sprintf } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { TableParams } from "@lib/params";
-import { sprintf } from "@lib/sprintf";
 import { Props } from "../useGetDoltDiffQuery";
 import { maybeConvertToPG } from "./utils";
 

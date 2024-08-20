@@ -1,7 +1,7 @@
+import { sprintf } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment, CommitDiffType } from "@gen/graphql-types";
 import { fakeCommitId } from "@hooks/useCommitListForBranch/mocks";
 import { RequiredRefsParams, TableParams } from "@lib/params";
-import { sprintf } from "@lib/sprintf";
 import { Props } from "../useGetDoltCommitDiffQuery";
 import { maybeConvertToPG } from "./utils";
 
