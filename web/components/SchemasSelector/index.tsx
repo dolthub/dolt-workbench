@@ -1,16 +1,13 @@
-import CreateDatabaseOrSchema from "@components/CreateDatabaseOrSchema";
 import { FormSelect } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import {
-  DatabasesDocument,
-  useCreateSchemaMutation,
   useDatabaseSchemasQuery,
   useTableNamesForBranchLazyQuery,
 } from "@gen/graphql-types";
-import useMutation from "@hooks/useMutation";
 import { RefMaybeSchemaParams } from "@lib/params";
 import { RefUrl, ref } from "@lib/urls";
 import { useRouter } from "next/router";
+import CreateSchema from "./CreateSchema";
 import css from "./index.module.css";
 
 type Props = {
@@ -23,10 +20,6 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const { mutateFn: createSchema, ...res } = useMutation({
-    hook: useCreateSchemaMutation,
-    refetchQueries: [{ query: DatabasesDocument }],
-  });
   const router = useRouter();
   const [getTableNames] = useTableNamesForBranchLazyQuery();
 
@@ -63,6 +56,7 @@ function Inner(props: InnerProps) {
     <span className={css.wrapper}>
       <FormSelect
         val={props.params.schemaName ?? props.schemas[0]}
+        className={css.selector}
         onChangeValue={handleChangeRef}
         options={props.schemas.map(v => {
           return {
@@ -74,14 +68,7 @@ function Inner(props: InnerProps) {
         horizontal
         light
       />
-      <CreateDatabaseOrSchema
-        {...props}
-        err={res.err}
-        loading={res.loading}
-        setErr={res.setErr}
-        name="schema"
-        create={async n => createSchema({ variables: { schemaName: n } })}
-      />
+      <CreateSchema {...props} />
     </span>
   );
 }

@@ -26,6 +26,7 @@ export type MaybeRefParams = DatabaseParams & {
 
 export type DatabasePageParams = OptionalRefParams & {
   tableName?: string;
+  schemaName?: string;
   q?: string;
 };
 

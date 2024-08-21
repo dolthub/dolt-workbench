@@ -1,41 +1,38 @@
 import CreateDatabaseOrSchemaModal from "@components/CreateDatabaseOrSchemaModal";
-import { Button, Loader, ModalOuter } from "@dolthub/react-components";
-import {
-  DatabasesDocument,
-  useCreateDatabaseMutation,
-} from "@gen/graphql-types";
+import { Button, Loader, ModalOuter, Tooltip } from "@dolthub/react-components";
+import { DatabasesDocument, useCreateSchemaMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
-import { database } from "@lib/urls";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
-import cx from "classnames";
+import { RefParams } from "@lib/params";
+import { ref } from "@lib/urls";
+import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import css from "./index.module.css";
 
 type Props = {
-  buttonClassName?: string;
+  params: RefParams;
 };
 
-export default function CreateDatabase(props: Props) {
-  const { mutateFn: createDB, ...res } = useMutation({
-    hook: useCreateDatabaseMutation,
+export default function CreateSchema(props: Props) {
+  const { mutateFn: createSchema, ...res } = useMutation({
+    hook: useCreateSchemaMutation,
     refetchQueries: [{ query: DatabasesDocument }],
   });
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
-  const [databaseName, setDatabaseName] = useState("");
+  const [schemaName, setSchemaName] = useState("");
 
   const onClose = () => {
     setIsOpen(false);
     res.setErr(undefined);
-    setDatabaseName("");
+    setSchemaName("");
   };
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { success } = await createDB({ variables: { databaseName } });
+    const { success } = await createSchema({ variables: { schemaName } });
     if (!success) return;
-    const { href, as } = database({ databaseName });
+    const { href, as } = ref({ ...props.params, schemaName });
     router.push(href, as).catch(console.error);
   };
 
@@ -44,24 +41,27 @@ export default function CreateDatabase(props: Props) {
       <Loader loaded={!res.loading} />
       <Button.Link
         onClick={() => setIsOpen(true)}
-        className={cx(css.createDB, props.buttonClassName)}
+        className={css.createSch}
+        data-tooltip-id="create-schema"
+        data-tooltip-content="Create new schema"
+        data-tooltip-place="bottom"
       >
-        <AiOutlinePlus />
-        Create database
+        <IoAddOutline />
       </Button.Link>
+      <Tooltip id="create-schema" />
       <ModalOuter
         isOpen={isOpen}
         onRequestClose={onClose}
-        title="Create new database"
+        title="Create new schema"
       >
         <CreateDatabaseOrSchemaModal
           {...props}
           onClose={onClose}
           onSubmit={onSubmit}
-          name={databaseName}
-          setName={setDatabaseName}
+          name={schemaName}
+          setName={setSchemaName}
           err={res.err}
-          label="database"
+          label="schema"
         />
       </ModalOuter>
     </div>

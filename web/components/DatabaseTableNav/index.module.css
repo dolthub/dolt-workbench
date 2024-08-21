@@ -23,9 +23,13 @@
 }
 
 .top {
-  @apply flex justify-between items-start w-full pb-4 px-4;
+  @apply pb-4 -mt-2;
+}
+
+.topLine {
+  @apply flex justify-between items-start w-full pb-2 px-4;
   @screen lg {
-    @apply px-3 -mt-2;
+    @apply px-3;
   }
 }
 
