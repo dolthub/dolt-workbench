@@ -114,13 +114,14 @@ export const pullDiff = (p: ps.PullDiffParams): Route =>
 export const newRelease = (p: ps.OptionalRefParams): Route =>
   releases(p).addStatic("new").withQuery({ refName: p.refName });
 
-export const upload = (p: ps.DatabaseParams): Route =>
-  database(p).addStatic("upload");
+export const upload = (p: ps.DatabaseParams & { schemaName?: string }): Route =>
+  database(p).addStatic("upload").withQuery({ schemaName: p.schemaName });
 
 export const uploadStage = (
   p: ps.UploadParams & {
     refName?: string;
     tableName?: string;
+    schemaName?: string;
     spreadsheet?: boolean;
     stage: string;
   },
@@ -129,6 +130,7 @@ export const uploadStage = (
     ? {
         branchName: p.refName,
         tableName: p.tableName,
+        schemaName: p.schemaName,
         spreadsheet: p.spreadsheet ? "true" : undefined,
       }
     : {};

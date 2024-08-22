@@ -28,6 +28,7 @@ function WithQuery() {
     ...dbParams,
     refName: state.branchName,
     tableName: state.tableName,
+    schemaName: state.schemaName,
   };
   return <Inner params={params} />;
 }

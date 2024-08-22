@@ -1,10 +1,10 @@
 import { ApolloError } from "@apollo/client";
 import { useContextWithError, useSetState } from "@dolthub/react-hooks";
-import { useLoadDataMutation } from "@gen/graphql-types";
+import { FileType, useLoadDataMutation } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useMutation from "@hooks/useMutation";
 import { createCustomContext } from "@lib/createCustomContext";
-import { TableParams } from "@lib/params";
+import { TableMaybeSchemaParams } from "@lib/params";
 import { refetchTableUploadQueries } from "@lib/refetchQueries";
 import { table } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -23,7 +23,7 @@ export type UploadDispatch = Dispatch<Partial<UploadState>>;
 type UploadContextType = {
   state: UploadState;
   setState: UploadDispatch;
-  onUpload: () => Promise<void>;
+  onUpload: (f: File, ft: FileType) => Promise<void>;
 };
 
 export const UploadContext =
@@ -44,8 +44,9 @@ export function UploadProvider(props: Props) {
       !!router.query.branchName &&
       !!router.query.tableName,
   });
-  const tableParams: TableParams = {
+  const tableParams: TableMaybeSchemaParams = {
     ...dbParams,
+    schemaName: fuState.schemaName,
     refName: fuState.branchName,
     tableName: fuState.tableName,
   };
@@ -64,17 +65,15 @@ export function UploadProvider(props: Props) {
     }
   }, [err, setState]);
 
-  const onUpload = async () => {
-    if (!fuState.selectedFile) return;
-
+  const onUpload = async (file: File, fileType: FileType) => {
     try {
       setState({ loading: true });
       const { success } = await loadData({
         variables: {
           ...tableParams,
-          file: fuState.selectedFile,
+          fileType,
+          file,
           importOp: fuState.importOp,
-          fileType: fuState.fileType,
           modifier: fuState.modifier,
         },
       });

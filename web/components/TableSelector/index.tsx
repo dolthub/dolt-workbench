@@ -1,10 +1,10 @@
 import { FormSelect, QueryHandler } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import { useTableNamesQuery } from "@gen/graphql-types";
-import { RefParams } from "@lib/params";
+import { RefMaybeSchemaParams } from "@lib/params";
 
 type Props = {
-  params: RefParams;
+  params: RefMaybeSchemaParams;
   onChangeTable: (t: Maybe<string>) => void;
   selectedTable: string;
   light?: boolean;

@@ -16,6 +16,7 @@ type Props = InnerProps & {
   params: UploadParams & {
     tableName?: string;
     branchName?: string;
+    schemaName?: string;
   };
 };
 

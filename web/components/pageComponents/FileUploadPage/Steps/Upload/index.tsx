@@ -34,7 +34,10 @@ function Inner() {
       disabled={
         !!uState.error || !state.selectedFile || updateLoad || uState.loading
       }
-      onNext={onUpload}
+      onNext={async () => {
+        if (!state.selectedFile) return;
+        await onUpload(state.selectedFile, state.fileType);
+      }}
       backUrl={getUploadUrl("table")}
       onWrongStage={!state.tableName}
       dataCy="upload"

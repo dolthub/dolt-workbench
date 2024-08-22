@@ -6,6 +6,7 @@ import { GetServerSideProps, NextPage } from "next";
 type Props = {
   params: DatabaseParams & {
     tableName?: string | null;
+    schemaName?: string | null;
     branchName?: string | null;
   };
 };
@@ -17,6 +18,7 @@ const DatabaseUploadPage: NextPage<Props> = ({ params }) => (
         ...params,
         uploadId: String(Date.now()),
         branchName: params.branchName ?? undefined,
+        schemaName: params.schemaName ?? undefined,
         tableName: params.tableName ?? undefined,
       }}
     />
@@ -32,6 +34,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
       params: {
         ...(params as DatabaseParams),
         branchName: query.branchName ? String(query.branchName) : null,
+        schemaName: query.schemaName ? String(query.schemaName) : null,
         tableName: query.tableName ? String(query.tableName) : null,
       },
     },

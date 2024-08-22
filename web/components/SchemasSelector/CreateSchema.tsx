@@ -1,6 +1,9 @@
 import CreateDatabaseOrSchemaModal from "@components/CreateDatabaseOrSchemaModal";
 import { Button, Loader, ModalOuter, Tooltip } from "@dolthub/react-components";
-import { DatabasesDocument, useCreateSchemaMutation } from "@gen/graphql-types";
+import {
+  DatabaseSchemasDocument,
+  useCreateSchemaMutation,
+} from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { RefParams } from "@lib/params";
 import { ref } from "@lib/urls";
@@ -16,7 +19,9 @@ type Props = {
 export default function CreateSchema(props: Props) {
   const { mutateFn: createSchema, ...res } = useMutation({
     hook: useCreateSchemaMutation,
-    refetchQueries: [{ query: DatabasesDocument }],
+    refetchQueries: [
+      { query: DatabaseSchemasDocument, variables: props.params },
+    ],
   });
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
@@ -30,7 +35,9 @@ export default function CreateSchema(props: Props) {
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { success } = await createSchema({ variables: { schemaName } });
+    const { success } = await createSchema({
+      variables: { schemaName, databaseName: props.params.databaseName },
+    });
     if (!success) return;
     const { href, as } = ref({ ...props.params, schemaName });
     router.push(href, as).catch(console.error);

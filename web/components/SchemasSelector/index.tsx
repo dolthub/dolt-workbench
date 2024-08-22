@@ -64,6 +64,7 @@ function Inner(props: InnerProps) {
             label: v,
           };
         })}
+        hideSelectedOptions
         label="Schema"
         horizontal
         light
@@ -74,7 +75,9 @@ function Inner(props: InnerProps) {
 }
 
 export default function SchemasSelector(props: Props) {
-  const res = useDatabaseSchemasQuery();
+  const res = useDatabaseSchemasQuery({
+    variables: { databaseName: props.params.databaseName },
+  });
   if (res.loading || res.error || !res.data) return null;
   return <Inner {...props} schemas={res.data.schemas} />;
 }

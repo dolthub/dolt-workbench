@@ -15,10 +15,7 @@ export default function FileInfo(props: Props) {
   const { setState, state } = useFileUploadContext();
 
   const removeFile = () => {
-    setState({
-      selectedFile: undefined,
-      colNames: "",
-    });
+    setState({ selectedFile: undefined });
     if (props.onRemove) props.onRemove();
   };
 

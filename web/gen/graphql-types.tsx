@@ -44,6 +44,7 @@ export type BranchTableArgs = {
 
 export type BranchTableNamesArgs = {
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+  schemaName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type BranchList = {
@@ -260,6 +261,7 @@ export type MutationCreateDatabaseArgs = {
 
 
 export type MutationCreateSchemaArgs = {
+  databaseName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
 };
 
@@ -292,6 +294,7 @@ export type MutationLoadDataFileArgs = {
   importOp: ImportOperation;
   modifier?: InputMaybe<LoadDataModifier>;
   refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
 };
 
@@ -505,6 +508,11 @@ export type QuerySchemaDiffArgs = {
   tableName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
   type?: InputMaybe<CommitDiffType>;
+};
+
+
+export type QuerySchemasArgs = {
+  databaseName: Scalars['String']['input'];
 };
 
 
@@ -869,12 +877,15 @@ export type RowsForDoltProceduresQueryVariables = Exact<{
 
 export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
-export type DatabaseSchemasQueryVariables = Exact<{ [key: string]: never; }>;
+export type DatabaseSchemasQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+}>;
 
 
 export type DatabaseSchemasQuery = { __typename?: 'Query', schemas: Array<string> };
 
 export type CreateSchemaMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
 }>;
 
@@ -994,6 +1005,7 @@ export type HistoryForCommitQuery = { __typename?: 'Query', commits: { __typenam
 
 export type DefaultBranchPageQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
@@ -1103,6 +1115,7 @@ export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
   importOp: ImportOperation;
   fileType: FileType;
@@ -2305,8 +2318,8 @@ export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRows
 export type RowsForDoltProceduresSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltProceduresSuspenseQuery>;
 export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
 export const DatabaseSchemasDocument = gql`
-    query DatabaseSchemas {
-  schemas
+    query DatabaseSchemas($databaseName: String!) {
+  schemas(databaseName: $databaseName)
 }
     `;
 
@@ -2322,10 +2335,11 @@ export const DatabaseSchemasDocument = gql`
  * @example
  * const { data, loading, error } = useDatabaseSchemasQuery({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *   },
  * });
  */
-export function useDatabaseSchemasQuery(baseOptions?: Apollo.QueryHookOptions<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>) {
+export function useDatabaseSchemasQuery(baseOptions: Apollo.QueryHookOptions<DatabaseSchemasQuery, DatabaseSchemasQueryVariables> & ({ variables: DatabaseSchemasQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>(DatabaseSchemasDocument, options);
       }
@@ -2342,8 +2356,8 @@ export type DatabaseSchemasLazyQueryHookResult = ReturnType<typeof useDatabaseSc
 export type DatabaseSchemasSuspenseQueryHookResult = ReturnType<typeof useDatabaseSchemasSuspenseQuery>;
 export type DatabaseSchemasQueryResult = Apollo.QueryResult<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>;
 export const CreateSchemaDocument = gql`
-    mutation CreateSchema($schemaName: String!) {
-  createSchema(schemaName: $schemaName)
+    mutation CreateSchema($databaseName: String!, $schemaName: String!) {
+  createSchema(databaseName: $databaseName, schemaName: $schemaName)
 }
     `;
 export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutation, CreateSchemaMutationVariables>;
@@ -2361,6 +2375,7 @@ export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutatio
  * @example
  * const [createSchemaMutation, { data, loading, error }] = useCreateSchemaMutation({
  *   variables: {
+ *      databaseName: // value for 'databaseName'
  *      schemaName: // value for 'schemaName'
  *   },
  * });
@@ -2833,11 +2848,11 @@ export type HistoryForCommitLazyQueryHookResult = ReturnType<typeof useHistoryFo
 export type HistoryForCommitSuspenseQueryHookResult = ReturnType<typeof useHistoryForCommitSuspenseQuery>;
 export type HistoryForCommitQueryResult = Apollo.QueryResult<HistoryForCommitQuery, HistoryForCommitQueryVariables>;
 export const DefaultBranchPageQueryDocument = gql`
-    query DefaultBranchPageQuery($databaseName: String!, $filterSystemTables: Boolean) {
+    query DefaultBranchPageQuery($databaseName: String!, $schemaName: String, $filterSystemTables: Boolean) {
   defaultBranch(databaseName: $databaseName) {
     _id
     branchName
-    tableNames(filterSystemTables: $filterSystemTables)
+    tableNames(schemaName: $schemaName, filterSystemTables: $filterSystemTables)
   }
 }
     `;
@@ -2855,6 +2870,7 @@ export const DefaultBranchPageQueryDocument = gql`
  * const { data, loading, error } = useDefaultBranchPageQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      schemaName: // value for 'schemaName'
  *      filterSystemTables: // value for 'filterSystemTables'
  *   },
  * });
@@ -3256,10 +3272,11 @@ export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
 export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
 export const LoadDataDocument = gql`
-    mutation LoadData($databaseName: String!, $refName: String!, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
+    mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(
     databaseName: $databaseName
     refName: $refName
+    schemaName: $schemaName
     tableName: $tableName
     importOp: $importOp
     fileType: $fileType
@@ -3285,6 +3302,7 @@ export type LoadDataMutationFn = Apollo.MutationFunction<LoadDataMutation, LoadD
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
  *      tableName: // value for 'tableName'
  *      importOp: // value for 'importOp'
  *      fileType: // value for 'fileType'

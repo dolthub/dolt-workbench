@@ -12,6 +12,7 @@ import Wrapper from "./Wrapper";
 import css from "./index.module.css";
 
 type DatabaseLayoutParams = OptionalRefParams & {
+  schemaName?: string;
   tableName?: string;
   q?: string;
 };

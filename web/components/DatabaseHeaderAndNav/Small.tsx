@@ -1,12 +1,12 @@
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
 import { ReactNode } from "react";
 import RightHeaderButtons from "./RightHeaderButtons";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams & { refName?: string };
+  params: OptionalRefParams & { schemaName?: string };
   breadcrumbs?: ReactNode;
   setShowSmall: (s: boolean) => void;
   showSmall: boolean;
@@ -21,12 +21,6 @@ export default function SmallDBHeader(props: Props) {
       <div className={cx(css.headerDetails, css.smallHeader)}>
         <div>
           <div className={css.topLeft}>
-            {/* <span className={css.visibility}>
-              <RiGitRepositoryPrivateLine
-                aria-label="private-lock-icon"
-                className={css.icon}
-              />
-            </span> */}
             <span className={css.databaseBreadcrumbs}>
               {props.breadcrumbs ?? (
                 <DatabaseBreadcrumbs params={props.params} />

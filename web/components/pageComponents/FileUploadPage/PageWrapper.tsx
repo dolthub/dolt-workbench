@@ -13,6 +13,7 @@ type Props = {
   params: UploadParams & {
     branchName?: string;
     tableName?: string;
+    schemaName?: string;
   };
   children: ReactNode;
 };
