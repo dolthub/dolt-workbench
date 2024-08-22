@@ -3,12 +3,16 @@ import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
-import { ROW_LIMIT } from "../../utils";
 import { MySQLQueryFactory } from "../mysql";
-import { convertToTableDetails } from "../mysql/utils";
+import {
+  getTableInfo,
+  getTablePKColumns,
+  getTableRows,
+  getTables,
+} from "../mysql/utils";
 import * as t from "../types";
 import * as qh from "./queries";
-import { getSchema } from "./util";
+import { getSchema } from "./utils";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -66,9 +70,7 @@ export class PostgresQueryFactory
   ): Promise<TableDetails | undefined> {
     return this.queryQR(async qr => {
       const schema = await getSchema(qr, args);
-      const table = await qr.getTable(`${schema}.${args.tableName}`);
-      if (!table) return undefined;
-      return convertToTableDetails(table);
+      return getTableInfo(qr, `${schema}.${args.tableName}`);
     }, args.databaseName);
   }
 
@@ -79,17 +81,14 @@ export class PostgresQueryFactory
     return this.queryQR(async qr => {
       const schema = await getSchema(qr, args);
       const names = tns.map(tn => `${schema}.${tn}`);
-      const tables = await qr.getTables(names);
-      return tables.map(convertToTableDetails);
+      return getTables(qr, names);
     }, args.databaseName);
   }
 
   async getTablePKColumns(args: t.TableMaybeSchemaArgs): Promise<string[]> {
     return this.queryQR(async qr => {
       const schema = await getSchema(qr, args);
-      const table = await qr.getTable(`${schema}.${args.tableName}`);
-      if (!table) return [];
-      return table.columns.filter(c => c.isPrimary).map(c => c.name);
+      return getTablePKColumns(qr, `${schema}.${args.tableName}`);
     }, args.databaseName);
   }
 
@@ -97,24 +96,14 @@ export class PostgresQueryFactory
     args: t.TableMaybeSchemaArgs,
     page: t.TableRowPagination,
   ): t.PR {
-    return this.queryQR(async qr => {
-      const schema = await getSchema(qr, args);
-
-      const em = qr.manager;
-      let build = em
-        .createQueryBuilder()
-        .select("*")
-        .from(`${schema}.${args.tableName}`, args.tableName);
-
-      page.pkCols.forEach(col => {
-        build = build.addOrderBy(col, "ASC");
-      });
-
-      return build
-        .limit(ROW_LIMIT + 1)
-        .offset(page.offset)
-        .getRawMany();
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => {
+        const schema = await getSchema(qr, args);
+        return getTableRows(qr.manager, `${schema}.${args.tableName}`, page);
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getSqlSelect(

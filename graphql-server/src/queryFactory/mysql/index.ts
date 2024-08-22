@@ -5,11 +5,17 @@ import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
-import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
 import * as t from "../types";
 import * as qh from "./queries";
-import { convertToTableDetails, mapTablesRes, notDoltError } from "./utils";
+import {
+  getTableInfo,
+  getTablePKColumns,
+  getTableRows,
+  getTables,
+  mapTablesRes,
+  notDoltError,
+} from "./utils";
 
 export class MySQLQueryFactory
   extends BaseQueryFactory
@@ -103,44 +109,29 @@ export class MySQLQueryFactory
   }
 
   async getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined> {
-    return this.queryQR(async qr => {
-      const table = await qr.getTable(args.tableName);
-      if (!table) return undefined;
-      return convertToTableDetails(table);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => getTableInfo(qr, args.tableName),
+      args.databaseName,
+    );
   }
 
   async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
-    return this.queryQR(async qr => {
-      const tables = await qr.getTables(tns);
-      return tables.map(convertToTableDetails);
-    }, args.databaseName);
+    return this.queryQR(async qr => getTables(qr, tns), args.databaseName);
   }
 
   async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
-    return this.queryQR(async qr => {
-      const table = await qr.getTable(args.tableName);
-      if (!table) return [];
-      return table.columns.filter(c => c.isPrimary).map(c => c.name);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => getTablePKColumns(qr, args.tableName),
+      args.databaseName,
+    );
   }
 
   async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
-    return this.queryForBuilder(async em => {
-      let build = em
-        .createQueryBuilder()
-        .select("*")
-        .from(args.tableName, args.tableName);
-
-      page.pkCols.forEach(col => {
-        build = build.addOrderBy(col, "ASC");
-      });
-
-      return build
-        .limit(ROW_LIMIT + 1)
-        .offset(page.offset)
-        .getRawMany();
-    });
+    return this.queryForBuilder(
+      async em => getTableRows(em, args.tableName, page),
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR {

@@ -3,12 +3,12 @@ import { ReadStream } from "fs";
 // eslint-disable-next-line import/extensions, @typescript-eslint/naming-convention
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { from as copyFrom } from "pg-copy-streams";
-import { getSchema } from "src/queryFactory/postgres/util";
 import { pipeline } from "stream/promises";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DatabaseType } from "../databases/database.enum";
 import { useDB } from "../queryFactory/mysql/queries";
 import { setSearchPath } from "../queryFactory/postgres/queries";
+import { getSchema } from "../queryFactory/postgres/utils";
 import { TableMaybeSchemaArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";
