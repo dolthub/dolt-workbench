@@ -262,6 +262,7 @@ export type MutationCreateDatabaseArgs = {
 
 export type MutationCreateSchemaArgs = {
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
 };
 
@@ -518,6 +519,7 @@ export type QuerySchemaDiffArgs = {
 
 export type QuerySchemasArgs = {
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 };
 
 
@@ -886,6 +888,7 @@ export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ _
 
 export type DatabaseSchemasQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -894,6 +897,7 @@ export type DatabaseSchemasQuery = { __typename?: 'Query', schemas: Array<string
 export type CreateSchemaMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -2326,8 +2330,8 @@ export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableL
 export type TableListForSchemasSuspenseQueryHookResult = ReturnType<typeof useTableListForSchemasSuspenseQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const DatabaseSchemasDocument = gql`
-    query DatabaseSchemas($databaseName: String!) {
-  schemas(databaseName: $databaseName)
+    query DatabaseSchemas($databaseName: String!, $refName: String!) {
+  schemas(databaseName: $databaseName, refName: $refName)
 }
     `;
 
@@ -2344,6 +2348,7 @@ export const DatabaseSchemasDocument = gql`
  * const { data, loading, error } = useDatabaseSchemasQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */
@@ -2364,8 +2369,12 @@ export type DatabaseSchemasLazyQueryHookResult = ReturnType<typeof useDatabaseSc
 export type DatabaseSchemasSuspenseQueryHookResult = ReturnType<typeof useDatabaseSchemasSuspenseQuery>;
 export type DatabaseSchemasQueryResult = Apollo.QueryResult<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>;
 export const CreateSchemaDocument = gql`
-    mutation CreateSchema($databaseName: String!, $schemaName: String!) {
-  createSchema(databaseName: $databaseName, schemaName: $schemaName)
+    mutation CreateSchema($databaseName: String!, $schemaName: String!, $refName: String!) {
+  createSchema(
+    databaseName: $databaseName
+    schemaName: $schemaName
+    refName: $refName
+  )
 }
     `;
 export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutation, CreateSchemaMutationVariables>;
@@ -2385,6 +2394,7 @@ export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutatio
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      schemaName: // value for 'schemaName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */

@@ -36,7 +36,7 @@ export default function CreateSchema(props: Props) {
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const { success } = await createSchema({
-      variables: { schemaName, databaseName: props.params.databaseName },
+      variables: { ...props.params, schemaName },
     });
     if (!success) return;
     const { href, as } = ref({ ...props.params, schemaName });

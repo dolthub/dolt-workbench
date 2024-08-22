@@ -10,7 +10,7 @@ import {
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
-import { DBArgs, SchemaArgs } from "../utils/commonTypes";
+import { DBArgs, RefArgs, RefSchemaArgs } from "../utils/commonTypes";
 import { DatabaseType } from "./database.enum";
 import { DatabaseConnection } from "./database.model";
 
@@ -99,7 +99,7 @@ export class DatabaseResolver {
   }
 
   @Query(_returns => [String])
-  async schemas(@Args() args: DBArgs): Promise<string[]> {
+  async schemas(@Args() args: RefArgs): Promise<string[]> {
     const conn = this.conn.connection();
     if (!conn.schemas) return [];
     const schemas = await conn.schemas(args);
@@ -169,7 +169,7 @@ export class DatabaseResolver {
   }
 
   @Mutation(_returns => Boolean)
-  async createSchema(@Args() args: SchemaArgs): Promise<boolean> {
+  async createSchema(@Args() args: RefSchemaArgs): Promise<boolean> {
     const conn = this.conn.connection();
     if (!conn.createSchema) return false;
     await conn.createSchema(args);

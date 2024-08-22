@@ -12,7 +12,7 @@ import {
 } from "../mysql/utils";
 import * as t from "../types";
 import * as qh from "./queries";
-import { getSchema } from "./utils";
+import { changeSchema, getSchema } from "./utils";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -29,17 +29,21 @@ export class PostgresQueryFactory
       );
   }
 
-  async schemas(args: t.DBArgs): Promise<string[]> {
-    const res: t.RawRows = await this.query(qh.schemasQuery, [
+  async schemas(args: t.RefArgs): Promise<string[]> {
+    const res: t.RawRows = await this.query(
+      qh.schemasQuery,
+      [args.databaseName],
       args.databaseName,
-    ]);
+      args.refName,
+    );
     return res.map(r => r.schema_name);
   }
 
-  async createSchema(args: t.SchemaArgs): Promise<void> {
+  async createSchema(args: t.RefSchemaArgs): Promise<void> {
     return this.queryQR(
       async qr => qr.createSchema(args.schemaName),
       args.databaseName,
+      args.refName,
     );
   }
 
@@ -55,10 +59,6 @@ export class PostgresQueryFactory
     if (this.isDolt && refName) {
       await qr.query(`SELECT dolt_checkout('${refName}')`);
     }
-  }
-
-  async changeSchema(qr: QueryRunner, schemaName: string): Promise<void> {
-    await qr.query(qh.setSearchPath(schemaName));
   }
 
   async getTableNames(args: t.RefMaybeSchemaArgs): Promise<string[]> {
@@ -116,7 +116,7 @@ export class PostgresQueryFactory
     return this.queryQR(
       async qr => {
         if (args.schemaName) {
-          await this.changeSchema(qr, args.schemaName);
+          await changeSchema(qr, args.schemaName);
         }
         return qr.query(args.queryString, []);
       },

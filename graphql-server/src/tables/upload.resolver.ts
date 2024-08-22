@@ -49,13 +49,7 @@ export class FileUploadResolver {
     if (config.type === DatabaseType.Mysql) {
       const conn = await this.connResolver.mysqlConnection();
 
-      let isDolt = false;
-      try {
-        const res = await conn.query("SELECT dolt_version()");
-        isDolt = !!res;
-      } catch (_) {
-        // ignore
-      }
+      const isDolt = await getIsDolt(conn.query);
 
       await conn.query(useDB(args.databaseName, args.refName, isDolt));
       await conn.query("SET GLOBAL local_infile=ON;");
@@ -79,14 +73,7 @@ export class FileUploadResolver {
     const qr = conn.getQR();
     const pgConnection = await qr.connect();
 
-    let isDolt = false;
-    try {
-      const res = await pgConnection.query("SELECT dolt_version()");
-      isDolt = !!res;
-    } catch (_) {
-      // ignore
-    }
-
+    const isDolt = await getIsDolt(pgConnection.query);
     if (isDolt) {
       await pgConnection.query(`SELECT dolt_checkout('${args.refName}')`);
     }
@@ -106,6 +93,16 @@ export class FileUploadResolver {
 
     return true;
   }
+}
+
+async function getIsDolt(query: (s: string) => Promise<any>): Promise<boolean> {
+  try {
+    const res = await query("SELECT dolt_version()");
+    return !!res;
+  } catch (_) {
+    // ignore
+  }
+  return false;
 }
 
 function getCopyFromQuery(tableName: string, fileType: FileType): string {

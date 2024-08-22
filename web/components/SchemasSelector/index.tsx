@@ -76,7 +76,7 @@ function Inner(props: InnerProps) {
 
 export default function SchemasSelector(props: Props) {
   const res = useDatabaseSchemasQuery({
-    variables: { databaseName: props.params.databaseName },
+    variables: props.params,
   });
   if (res.loading || res.error || !res.data) return null;
   return <Inner {...props} schemas={res.data.schemas} />;
