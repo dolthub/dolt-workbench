@@ -4,23 +4,17 @@ import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseT
 import DatabaseTableNav from "@components/DatabaseTableNav";
 import KeyNav from "@components/util/KeyNav";
 import { useReactiveWidth } from "@dolthub/react-hooks";
-import { OptionalRefParams } from "@lib/params";
+import { DatabasePageParams } from "@lib/params";
 import { RefUrl, database } from "@lib/urls";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";
 
-type DatabaseLayoutParams = OptionalRefParams & {
-  schemaName?: string;
-  tableName?: string;
-  q?: string;
-};
-
 type Props = {
   title?: string;
   children: ReactNode;
-  params: DatabaseLayoutParams;
+  params: DatabasePageParams;
   leftNavInitiallyOpen?: boolean;
   wide?: boolean;
   showSqlConsole?: boolean;

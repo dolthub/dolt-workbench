@@ -5,7 +5,7 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { QueryHandler, Tooltip } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import useTableNames from "@hooks/useTableNames";
-import { RefMaybeSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { createTable } from "@lib/urls";
 import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import { useEffect } from "react";
@@ -13,7 +13,7 @@ import Item from "./Item";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefMaybeSchemaParams & {
+  params: RefOptionalSchemaParams & {
     tableName?: Maybe<string>;
   };
 };

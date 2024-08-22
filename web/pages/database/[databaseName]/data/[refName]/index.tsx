@@ -1,12 +1,11 @@
 import Page from "@components/util/Page";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams, RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: RefParams & {
+  params: RefOptionalSchemaParams & {
     active?: string;
-    schemaName?: string;
   };
 };
 

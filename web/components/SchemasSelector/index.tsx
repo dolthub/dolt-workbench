@@ -4,14 +4,14 @@ import {
   useDatabaseSchemasQuery,
   useTableNamesForBranchLazyQuery,
 } from "@gen/graphql-types";
-import { RefMaybeSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { RefUrl, ref } from "@lib/urls";
 import { useRouter } from "next/router";
 import CreateSchema from "./CreateSchema";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefMaybeSchemaParams & { tableName?: string };
+  params: RefOptionalSchemaParams & { tableName?: string };
   routeRefChangeTo: RefUrl;
 };
 

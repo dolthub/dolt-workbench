@@ -3,24 +3,19 @@ import * as ps from "./params";
 
 const ENCODE = true;
 export type DatabaseUrl = (p: ps.DatabaseParams) => Route;
-export type RefUrl = (p: ps.RefMaybeSchemaParams) => Route;
+export type RefUrl = (p: ps.RefOptionalSchemaParams) => Route;
 
 export const databases = new Route("/database");
 
-export const database = (p: ps.DatabaseMaybeSchemaParams): Route =>
+export const database = (p: ps.DatabaseOptionalSchemaParams): Route =>
   databases
     .addDynamic("databaseName", p.databaseName)
     .withQuery({ schemaName: p.schemaName });
-
-export const schemas = new Route("/schemas");
 
 export const maybeDatabase = (
   databaseName?: Maybe<string>,
   schemaName?: string,
 ): Route => (databaseName ? database({ databaseName, schemaName }) : databases);
-
-export const maybeSchema = (schemaName?: Maybe<string>): Route =>
-  schemaName ? database({ databaseName: schemaName }) : schemas;
 
 export const query = (p: ps.RefParams): Route =>
   database(p).addStatic("query").addDynamic("refName", p.refName, ENCODE);
@@ -28,13 +23,13 @@ export const query = (p: ps.RefParams): Route =>
 export const sqlQuery = (p: ps.SqlQueryParams): Route =>
   query(p).withQuery({ q: p.q, active: p.active, schemaName: p.schemaName });
 
-export const ref = (p: ps.RefParams & { schemaName?: string }): Route =>
+export const ref = (p: ps.RefOptionalSchemaParams): Route =>
   database(p)
     .addStatic("data")
     .addDynamic("refName", p.refName, ENCODE)
     .withQuery({ schemaName: p.schemaName });
 
-export const table = (p: ps.TableParams & { schemaName?: string }): Route =>
+export const table = (p: ps.TableOptionalSchemaParams): Route =>
   ref(p).addDynamic(
     "tableName",
     p.schemaName ? `${p.schemaName}.${p.tableName}` : p.tableName,
@@ -44,7 +39,7 @@ export const editTable = (p: ps.TableParams): Route =>
   table(p).withQuery({ edit: "true" });
 
 export const schemaDiagram = (
-  p: ps.RefMaybeSchemaParams & { active?: string },
+  p: ps.RefOptionalSchemaParams & { active?: string },
 ): Route =>
   database(p)
     .addStatic("schema")
@@ -122,17 +117,14 @@ export const upload = (p: ps.DatabaseParams & { schemaName?: string }): Route =>
   database(p).addStatic("upload").withQuery({ schemaName: p.schemaName });
 
 export const uploadStage = (
-  p: ps.UploadParams & {
-    refName?: string;
-    tableName?: string;
-    schemaName?: string;
+  p: ps.UploadParamsWithOptions & {
     spreadsheet?: boolean;
     stage: string;
   },
 ): Route => {
-  const q = p.refName
+  const q = p.branchName
     ? {
-        branchName: p.refName,
+        branchName: p.branchName,
         tableName: p.tableName,
         schemaName: p.schemaName,
         spreadsheet: p.spreadsheet ? "true" : undefined,

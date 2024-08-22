@@ -4,16 +4,12 @@ export type DatabaseParams = {
   databaseName: string;
 };
 
-export type DatabaseMaybeSchemaParams = DatabaseParams & {
+export type DatabaseOptionalSchemaParams = DatabaseParams & {
   schemaName?: string;
 };
 
 export type RefParams = DatabaseParams & {
   refName: string;
-};
-
-export type RefMaybeSchemaParams = RefParams & {
-  schemaName?: string;
 };
 
 export type BranchParams = DatabaseParams & {
@@ -24,27 +20,33 @@ export type OptionalRefParams = DatabaseParams & {
   refName?: string;
 };
 
+export type RefOptionalSchemaParams = RefParams & {
+  schemaName?: string;
+};
+
+export type OptionalRefAndSchemaParams = OptionalRefParams & {
+  schemaName?: string;
+};
+
 export type MaybeRefParams = DatabaseParams & {
   refName?: Maybe<string>;
 };
 
-export type DatabasePageParams = OptionalRefParams & {
+export type DatabasePageParams = OptionalRefAndSchemaParams & {
   tableName?: string;
-  schemaName?: string;
   q?: string;
 };
 
-export type SqlQueryParams = RefParams & {
+export type SqlQueryParams = RefOptionalSchemaParams & {
   q: string;
   active?: string;
-  schemaName?: string;
 };
 
 export type TableParams = RefParams & {
   tableName: string;
 };
 
-export type TableMaybeSchemaParams = TableParams & {
+export type TableOptionalSchemaParams = TableParams & {
   schemaName?: string;
 };
 
@@ -74,6 +76,12 @@ export type DiffParams = RefParams & CommitsParams;
 
 export type UploadParams = DatabaseParams & {
   uploadId: string;
+};
+
+export type UploadParamsWithOptions = UploadParams & {
+  branchName?: string;
+  tableName?: string;
+  schemaName?: string;
 };
 
 export type DiffRangeParams = RefParams & {

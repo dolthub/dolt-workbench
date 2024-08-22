@@ -2,7 +2,7 @@ import { SmallLoader } from "@dolthub/react-components";
 import { pluralize } from "@dolthub/web-utils";
 import { SchemaType } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { RefMaybeSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { useEffect } from "react";
 import Item from "./Item";
 import NotFound from "./NotFound";
@@ -10,7 +10,7 @@ import css from "./index.module.css";
 import { getActiveItem } from "./utils";
 
 type InnerProps = {
-  params: RefMaybeSchemaParams & { q?: string };
+  params: RefOptionalSchemaParams & { q?: string };
   items: string[];
   kind: SchemaType;
   loading?: boolean;

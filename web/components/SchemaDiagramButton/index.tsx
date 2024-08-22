@@ -1,6 +1,6 @@
 import Link from "@components/links/Link";
 import { Button } from "@dolthub/react-components";
-import { RefMaybeSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { ref, schemaDiagram } from "@lib/urls";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import { FaProjectDiagram } from "@react-icons/all-files/fa/FaProjectDiagram";
@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefMaybeSchemaParams;
+  params: RefOptionalSchemaParams;
 };
 
 export default function SchemaDiagramButton(props: Props) {

@@ -4,7 +4,7 @@ import SchemasSelector from "@components/SchemasSelector";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
-import { OptionalRefParams } from "@lib/params";
+import { DatabasePageParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import cx from "classnames";
@@ -14,14 +14,8 @@ import NavLinks from "./NavLinks";
 import NewBranchLink from "./NewBranchLink";
 import css from "./index.module.css";
 
-type Params = OptionalRefParams & {
-  tableName?: string;
-  schemaName?: string;
-  q?: string;
-};
-
 type NavProps = {
-  params: Params;
+  params: DatabasePageParams;
   initiallyOpen?: boolean;
   isMobile?: boolean;
   routeRefChangeTo: RefUrl;
@@ -110,6 +104,6 @@ export default function DatabaseTableNav(props: Props) {
   );
 }
 
-function isInitiallyOpen(params: Params): boolean {
+function isInitiallyOpen(params: DatabasePageParams): boolean {
   return !!params.tableName || !!params.q;
 }

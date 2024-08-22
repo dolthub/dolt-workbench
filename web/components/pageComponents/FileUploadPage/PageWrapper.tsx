@@ -3,18 +3,14 @@ import { Loader, QueryHandler } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useRole from "@hooks/useRole";
-import { DatabaseParams, UploadParams } from "@lib/params";
+import { DatabaseParams, UploadParamsWithOptions } from "@lib/params";
 import { ReactNode } from "react";
 import Layout from "./Layout";
 import { FileUploadLocalForageProvider } from "./contexts/fileUploadLocalForage";
 import css from "./index.module.css";
 
 type Props = {
-  params: UploadParams & {
-    branchName?: string;
-    tableName?: string;
-    schemaName?: string;
-  };
+  params: UploadParamsWithOptions;
   children: ReactNode;
 };
 

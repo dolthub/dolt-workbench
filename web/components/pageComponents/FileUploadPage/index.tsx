@@ -1,23 +1,19 @@
 import useOnRouteChange from "@hooks/useOnRouteChange";
-import { UploadParams } from "@lib/params";
-import { useFileUploadContext } from "./contexts/fileUploadLocalForage";
-import { getUploadStage, UploadStage } from "./enums";
+import { UploadParamsWithOptions } from "@lib/params";
 import Navigation from "./Navigation";
 import PageWrapper from "./PageWrapper";
 import Branch from "./Steps/Branch";
 import Table from "./Steps/Table";
 import Upload from "./Steps/Upload";
+import { useFileUploadContext } from "./contexts/fileUploadLocalForage";
+import { UploadStage, getUploadStage } from "./enums";
 
 type InnerProps = {
   stage?: string;
 };
 
 type Props = InnerProps & {
-  params: UploadParams & {
-    tableName?: string;
-    branchName?: string;
-    schemaName?: string;
-  };
+  params: UploadParamsWithOptions;
 };
 
 function Inner(props: InnerProps) {

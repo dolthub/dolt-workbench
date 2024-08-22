@@ -8,7 +8,6 @@ import css from "./index.module.css";
 type Props = {
   children: ReactNode;
   params: SqlQueryParams;
-  // tableName?: string;
 };
 
 export default function DataTableLayout(props: Props) {

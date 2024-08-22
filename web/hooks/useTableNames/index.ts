@@ -2,7 +2,7 @@ import { useTableNamesQuery } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { useEffect, useState } from "react";
 
 type ReturnType = {
@@ -13,7 +13,7 @@ type ReturnType = {
 };
 
 export default function useTableNames(
-  params: RefParams & { schemaName?: string },
+  params: RefOptionalSchemaParams,
 ): ReturnType {
   const variables = { ...params, filterSystemTables: true };
   const { data, ...res } = useTableNamesQuery({

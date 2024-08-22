@@ -1,13 +1,13 @@
 import DataTable from "@components/DataTable";
 import TableBreadcrumbs from "@components/breadcrumbs/TableBreadcrumbs";
 import { DataTableProvider } from "@contexts/dataTable";
-import { TableMaybeSchemaParams } from "@lib/params";
+import { TableOptionalSchemaParams } from "@lib/params";
 import { editTable, table } from "@lib/urls";
 import DatabasePage from "../component";
 import EditTableButtons from "./EditTableButtons";
 
 type Props = {
-  params: TableMaybeSchemaParams;
+  params: TableOptionalSchemaParams;
   edit?: boolean;
 };
 
@@ -37,7 +37,7 @@ export default function ForTable(props: Props) {
   );
 }
 
-function getSchemaAndTableName(params: TableMaybeSchemaParams): {
+function getSchemaAndTableName(params: TableOptionalSchemaParams): {
   schemaName?: string;
   tableName: string;
 } {

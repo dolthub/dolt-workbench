@@ -1,5 +1,5 @@
 import { Btn, Button, CopyButton } from "@dolthub/react-components";
-import { OptionalRefParams } from "@lib/params";
+import { DatabasePageParams } from "@lib/params";
 import { BsPencil } from "@react-icons/all-files/bs/BsPencil";
 import dynamic from "next/dynamic";
 import { useState } from "react";
@@ -11,10 +11,7 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 });
 
 type Props = {
-  params: OptionalRefParams & {
-    q?: string;
-    tableName?: string;
-  };
+  params: DatabasePageParams;
   empty?: boolean;
   sqlString: string;
 };

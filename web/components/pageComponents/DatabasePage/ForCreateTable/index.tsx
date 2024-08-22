@@ -1,13 +1,12 @@
-import { DatabaseParams } from "@lib/params";
+import { DatabaseOptionalSchemaParams } from "@lib/params";
 import { createTable } from "@lib/urls";
 import CreateTableOptions from "../CreateTableOptions";
 import DatabaseDesktopOnly from "../DatabaseDesktopOnly";
 import ForDefaultBranch from "../ForDefaultBranch";
 
 type Props = {
-  params: DatabaseParams & {
+  params: DatabaseOptionalSchemaParams & {
     refName?: string | null;
-    schemaName?: string;
     active?: string;
     edit?: boolean;
   };

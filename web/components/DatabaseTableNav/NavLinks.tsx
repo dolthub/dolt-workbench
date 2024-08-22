@@ -2,18 +2,14 @@ import DefinitionList from "@components/DefinitionList";
 import TableList from "@components/TableList";
 import Views from "@components/Views";
 import { Tab, TabList, TabPanel, Tabs } from "@dolthub/react-components";
-import { OptionalRefParams } from "@lib/params";
+import { DatabasePageParams, OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 
 type Props = {
   className?: string;
-  params: OptionalRefParams & {
-    schemaName?: string;
-    tableName?: string;
-    q?: string;
-  };
+  params: DatabasePageParams;
 };
 
 const tabs = ["Tables", "Views", "Definitions"];

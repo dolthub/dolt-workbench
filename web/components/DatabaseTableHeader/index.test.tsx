@@ -2,14 +2,11 @@ import { MockedProvider } from "@apollo/client/testing";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import { SqlEditorProvider } from "@contexts/sqleditor";
 import useMockRouter from "@hooks/useMockRouter";
+import { DatabasePageParams } from "@lib/params";
 import { setupAndWait } from "@lib/testUtils.test";
 import { screen } from "@testing-library/react";
 import DatabaseTableHeader from ".";
-import {
-  DEFAULT_LIMIT,
-  Params,
-  sampleCreateQueryForEmpty,
-} from "./useSqlStrings";
+import { DEFAULT_LIMIT, sampleCreateQueryForEmpty } from "./useSqlStrings";
 
 const dbParams = {
   databaseName: "test",
@@ -27,7 +24,7 @@ jest.mock("next/router", () => {
 });
 
 async function renderAndTestComponent(
-  params: Params,
+  params: DatabasePageParams,
   expectedCopiedQuery: string,
   empty = false,
   isPostgres = false,

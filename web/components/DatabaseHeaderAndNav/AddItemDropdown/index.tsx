@@ -17,7 +17,6 @@ type Props = {
 };
 
 export default function AddItemDropdown(props: Props) {
-  console.log(props.params);
   const { userHasWritePerms, canWriteToDB } = useRole();
 
   if (!canWriteToDB) return null;

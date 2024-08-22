@@ -1,10 +1,10 @@
 import Page from "@components/util/Page";
-import { RefMaybeSchemaParams, RefParams } from "@lib/params";
+import { RefOptionalSchemaParams, RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: RefMaybeSchemaParams & { active?: string };
+  params: RefOptionalSchemaParams & { active?: string };
 };
 
 const SchemaPage: NextPage<Props> = ({ params }) => (

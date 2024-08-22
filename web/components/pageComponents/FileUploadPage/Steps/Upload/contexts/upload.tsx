@@ -4,7 +4,7 @@ import { FileType, useLoadDataMutation } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useMutation from "@hooks/useMutation";
 import { createCustomContext } from "@lib/createCustomContext";
-import { TableMaybeSchemaParams } from "@lib/params";
+import { TableOptionalSchemaParams } from "@lib/params";
 import { refetchTableUploadQueries } from "@lib/refetchQueries";
 import { table } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -44,7 +44,7 @@ export function UploadProvider(props: Props) {
       !!router.query.branchName &&
       !!router.query.tableName,
   });
-  const tableParams: TableMaybeSchemaParams = {
+  const tableParams: TableOptionalSchemaParams = {
     ...dbParams,
     schemaName: fuState.schemaName,
     refName: fuState.branchName,

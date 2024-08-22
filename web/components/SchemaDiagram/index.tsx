@@ -1,6 +1,6 @@
 import { QueryHandler } from "@dolthub/react-components";
 import { TableForSchemaListFragment } from "@gen/graphql-types";
-import { RefMaybeSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { ref } from "@lib/urls";
 import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
 import Image from "next/legacy/image"; // TODO: Migrate to current next/image
@@ -29,7 +29,7 @@ import {
 } from "./utils";
 
 type Props = {
-  params: RefMaybeSchemaParams;
+  params: RefOptionalSchemaParams;
 };
 
 type InnerProps = {
