@@ -89,13 +89,7 @@ export class DatabaseResolver {
   async databases(): Promise<string[]> {
     const conn = await this.conn.connection();
     const dbs = await conn.databases();
-    return dbs.filter(
-      db =>
-        db !== "information_schema" &&
-        db !== "mysql" &&
-        db !== "dolt_cluster" &&
-        !db.includes("/"),
-    );
+    return dbs;
   }
 
   @Query(_returns => [String])

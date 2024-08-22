@@ -96,7 +96,15 @@ export class MySQLQueryFactory
 
   async databases(): Promise<string[]> {
     const res: t.RawRows = await this.query(qh.databasesQuery, []);
-    return res.map(r => r.Database);
+    return res
+      .map(r => r.Database)
+      .filter(
+        db =>
+          db !== "information_schema" &&
+          db !== "mysql" &&
+          db !== "dolt_cluster" &&
+          !db.includes("/"),
+      );
   }
 
   async getTableNames(args: t.RefArgs): Promise<string[]> {

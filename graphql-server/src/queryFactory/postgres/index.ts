@@ -22,7 +22,11 @@ export class PostgresQueryFactory
 
   async databases(): Promise<string[]> {
     const res: t.RawRows = await this.query(qh.databasesQuery, []);
-    return res.map(r => r.datname);
+    return res
+      .map(r => r.datname)
+      .filter(
+        d => d !== "template0" && d !== "template1" && d !== "dolt_cluster",
+      );
   }
 
   async schemas(args: t.DBArgs): Promise<string[]> {
