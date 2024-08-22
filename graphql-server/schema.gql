@@ -59,7 +59,7 @@ type Branch {
   lastCommitter: String!
   lastUpdated: Timestamp!
   table(tableName: String!): Table
-  tableNames(filterSystemTables: Boolean): [String!]!
+  tableNames(filterSystemTables: Boolean, schemaName: String): [String!]!
   head: String
 }
 
@@ -291,7 +291,7 @@ type Query {
   currentDatabase: String
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
-  schemas: [String!]!
+  schemas(databaseName: String!): [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
   diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
@@ -344,9 +344,9 @@ type Mutation {
   addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, schema: String): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
-  createSchema(schemaName: String!): Boolean!
+  createSchema(databaseName: String!, schemaName: String!): Boolean!
   resetDatabase: Boolean!
-  loadDataFile(tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
+  loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

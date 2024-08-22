@@ -8,6 +8,7 @@ import { MySQLQueryFactory } from "../mysql";
 import { convertToTableDetails } from "../mysql/utils";
 import * as t from "../types";
 import * as qh from "./queries";
+import { getSchema } from "./util";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -28,18 +29,24 @@ export class PostgresQueryFactory
   }
 
   async createSchema(args: t.SchemaArgs): Promise<void> {
-    return this.handleAsyncQuery(async qr => qr.createSchema(args.schemaName));
+    return this.queryQR(
+      async qr => qr.createSchema(args.schemaName),
+      args.databaseName,
+    );
   }
 
-  async getSchema(qr: QueryRunner, schemaName?: string): Promise<string> {
-    if (schemaName) return schemaName;
-    const currentSchema = await qr.getCurrentSchema();
-    if (!currentSchema) return "public";
-    return currentSchema;
-  }
-
-  async checkoutDatabase(_: QueryRunner, dbName: string): Promise<void> {
-    console.log("checkoutDatabase", dbName);
+  async checkoutDatabase(
+    qr: QueryRunner,
+    dbName: string,
+    refName?: string,
+  ): Promise<void> {
+    const currentDb = await qr.getCurrentDatabase();
+    if (dbName !== currentDb) {
+      throw new Error("Databases do not match");
+    }
+    if (this.isDolt && refName) {
+      await qr.query(`SELECT dolt_checkout('${refName}')`);
+    }
   }
 
   async changeSchema(qr: QueryRunner, schemaName: string): Promise<void> {
@@ -48,7 +55,7 @@ export class PostgresQueryFactory
 
   async getTableNames(args: t.RefMaybeSchemaArgs): Promise<string[]> {
     return this.queryQR(async qr => {
-      const schema = await this.getSchema(qr, args.schemaName);
+      const schema = await getSchema(qr, args);
       const res: t.RawRows = await qr.query(qh.listTablesQuery, [schema]);
       return res.map(r => r.tablename);
     }, args.databaseName);
@@ -58,7 +65,7 @@ export class PostgresQueryFactory
     args: t.TableMaybeSchemaArgs,
   ): Promise<TableDetails | undefined> {
     return this.queryQR(async qr => {
-      const schema = await this.getSchema(qr, args.schemaName);
+      const schema = await getSchema(qr, args);
       const table = await qr.getTable(`${schema}.${args.tableName}`);
       if (!table) return undefined;
       return convertToTableDetails(table);
@@ -70,7 +77,7 @@ export class PostgresQueryFactory
     tns: string[],
   ): Promise<TableDetails[]> {
     return this.queryQR(async qr => {
-      const schema = await this.getSchema(qr, args.schemaName);
+      const schema = await getSchema(qr, args);
       const names = tns.map(tn => `${schema}.${tn}`);
       const tables = await qr.getTables(names);
       return tables.map(convertToTableDetails);
@@ -79,7 +86,7 @@ export class PostgresQueryFactory
 
   async getTablePKColumns(args: t.TableMaybeSchemaArgs): Promise<string[]> {
     return this.queryQR(async qr => {
-      const schema = await this.getSchema(qr, args.schemaName);
+      const schema = await getSchema(qr, args);
       const table = await qr.getTable(`${schema}.${args.tableName}`);
       if (!table) return [];
       return table.columns.filter(c => c.isPrimary).map(c => c.name);
@@ -91,7 +98,7 @@ export class PostgresQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryQR(async qr => {
-      const schema = await this.getSchema(qr, args.schemaName);
+      const schema = await getSchema(qr, args);
 
       const em = qr.manager;
       let build = em
@@ -130,7 +137,7 @@ export class PostgresQueryFactory
     type?: SchemaType,
   ): Promise<SchemaItem[]> {
     return this.queryQR(async qr => {
-      const schema = await this.getSchema(qr, args.schemaName);
+      const schema = await getSchema(qr, args);
 
       const vRes = await qr.query(qh.getViewsQuery, [schema]);
       const views = vRes.map(v => {

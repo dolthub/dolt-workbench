@@ -33,6 +33,9 @@ class GetBranchTableArgs {
 class FilterSystemTablesArgs {
   @Field({ nullable: true })
   filterSystemTables?: boolean;
+
+  @Field({ nullable: true })
+  schemaName?: string;
 }
 
 @ArgsType()
@@ -59,7 +62,7 @@ export class BranchResolver {
 
   @Query(_returns => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
     const res = await conn.getBranch(args);
     if (!res) return undefined;
     return fromDoltBranchesRow(args.databaseName, res);
@@ -79,14 +82,14 @@ export class BranchResolver {
 
   @Query(_returns => BranchList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchList> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
     const res = await conn.getBranches({ ...args, offset: args.offset ?? 0 });
     return fromBranchListRes(res, args);
   }
 
   @Query(_returns => [Branch])
   async allBranches(@Args() args: ListBranchesArgs): Promise<Branch[]> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
     const res = await conn.getAllBranches(args);
     return res.map(b => fromDoltBranchesRow(args.databaseName, b));
   }
@@ -99,14 +102,14 @@ export class BranchResolver {
 
   @Mutation(_returns => String)
   async createBranch(@Args() args: CreateBranchArgs): Promise<string> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
     await conn.createNewBranch({ ...args, branchName: args.newBranchName });
     return args.newBranchName;
   }
 
   @Mutation(_returns => Boolean)
   async deleteBranch(@Args() args: BranchArgs): Promise<boolean> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
     await conn.callDeleteBranch(args);
     return true;
   }
@@ -126,11 +129,12 @@ export class BranchResolver {
   @ResolveField(_returns => [String])
   async tableNames(
     @Parent() branch: Branch,
-    @Args() { filterSystemTables }: FilterSystemTablesArgs,
+    @Args() { filterSystemTables, schemaName }: FilterSystemTablesArgs,
   ): Promise<string[]> {
     const { list } = await this.tableResolver.tableNames({
       ...branch,
       filterSystemTables,
+      schemaName,
       refName: branch.branchName,
     });
     return list;

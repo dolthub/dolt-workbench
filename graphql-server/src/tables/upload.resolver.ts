@@ -3,12 +3,13 @@ import { ReadStream } from "fs";
 // eslint-disable-next-line import/extensions, @typescript-eslint/naming-convention
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { from as copyFrom } from "pg-copy-streams";
+import { getSchema } from "src/queryFactory/postgres/util";
 import { pipeline } from "stream/promises";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DatabaseType } from "../databases/database.enum";
 import { useDB } from "../queryFactory/mysql/queries";
 import { setSearchPath } from "../queryFactory/postgres/queries";
-import { TableArgs } from "../utils/commonTypes";
+import { TableMaybeSchemaArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
 import { Table } from "./table.model";
 
@@ -20,7 +21,7 @@ export interface FileUpload {
 }
 
 @ArgsType()
-class TableImportArgs extends TableArgs {
+class TableImportArgs extends TableMaybeSchemaArgs {
   @Field(_type => ImportOperation)
   importOp: ImportOperation;
 
@@ -74,10 +75,12 @@ export class FileUploadResolver {
       return true;
     }
 
-    const qr = this.connResolver.connection().getQR();
+    const conn = await this.connResolver.connection(args.databaseName);
+    const qr = conn.getQR();
     const pgConnection = await qr.connect();
 
-    await pgConnection.query(setSearchPath(args.databaseName));
+    const schema = await getSchema(qr, args);
+    await pgConnection.query(setSearchPath(schema));
 
     try {
       await pipeline(

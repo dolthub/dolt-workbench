@@ -34,7 +34,7 @@ export class CommitResolver {
     if (err) throw err;
     const refName = args.refName ?? args.afterCommitId ?? "";
     const offset = args.offset ?? 0;
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
 
     if (args.twoDot && args.excludingCommitsFromRefName) {
       const logs = await conn.getTwoDotLogs({

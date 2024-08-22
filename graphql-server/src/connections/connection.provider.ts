@@ -7,6 +7,7 @@ import { DoltQueryFactory } from "../queryFactory/dolt";
 import { DoltgresQueryFactory } from "../queryFactory/doltgres";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
 import { PostgresQueryFactory } from "../queryFactory/postgres";
+import { replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
   hideDoltFeatures: boolean;
@@ -28,9 +29,21 @@ export class ConnectionProvider {
 
   private workbenchConfig: WorkbenchConfig | undefined;
 
-  connection(): QueryFactory {
+  async connection(dbName?: string): Promise<QueryFactory> {
     if (!this.qf) {
       throw new Error("Data source service not initialized");
+    }
+    if (dbName && this.workbenchConfig?.type === DatabaseType.Postgres) {
+      const currentDb = await this.qf.currentDatabase();
+      if (currentDb !== dbName) {
+        await this.addConnection({
+          ...this.workbenchConfig,
+          connectionUrl: replaceDatabaseInConnectionUrl(
+            this.workbenchConfig.connectionUrl,
+            dbName,
+          ),
+        });
+      }
     }
     return this.qf;
   }

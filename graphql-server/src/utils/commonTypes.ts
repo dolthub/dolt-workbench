@@ -13,7 +13,7 @@ export class DBArgs {
 }
 
 @ArgsType()
-export class SchemaArgs {
+export class SchemaArgs extends DBArgs {
   @Field()
   schemaName: string;
 }

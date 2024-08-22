@@ -73,7 +73,7 @@ export class DatabaseResolver {
 
   @Query(_returns => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection();
     return conn.currentDatabase();
   }
 
@@ -87,7 +87,7 @@ export class DatabaseResolver {
 
   @Query(_returns => [String])
   async databases(): Promise<string[]> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection();
     const dbs = await conn.databases();
     return dbs.filter(
       db =>
@@ -99,12 +99,10 @@ export class DatabaseResolver {
   }
 
   @Query(_returns => [String])
-  async schemas(): Promise<string[]> {
-    const conn = this.conn.connection();
+  async schemas(@Args() args: DBArgs): Promise<string[]> {
+    const conn = await this.conn.connection(args.databaseName);
     if (!conn.schemas) return [];
-    const db = await this.currentDatabase();
-    if (!db) return [];
-    const schemas = await conn.schemas({ databaseName: db });
+    const schemas = await conn.schemas(args);
     return schemas.filter(
       sch =>
         sch !== "information_schema" &&
@@ -116,7 +114,7 @@ export class DatabaseResolver {
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection();
     return {
       isDolt: conn.isDolt,
       hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
@@ -148,12 +146,6 @@ export class DatabaseResolver {
     }
 
     const db = await this.currentDatabase();
-    if (type === DatabaseType.Mysql) {
-      return { currentDatabase: db };
-    }
-    // if (!db) {
-    //   throw new Error("Must provide database for Postgres connection");
-    // }
     return { currentDatabase: db, currentSchema: args.schema };
   }
 
@@ -171,14 +163,14 @@ export class DatabaseResolver {
 
   @Mutation(_returns => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection();
     await conn.createDatabase(args);
     return true;
   }
 
   @Mutation(_returns => Boolean)
   async createSchema(@Args() args: SchemaArgs): Promise<boolean> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
     if (!conn.createSchema) return false;
     await conn.createSchema(args);
     return true;

@@ -30,7 +30,7 @@ export class SchemaDiffResolver {
   async schemaDiff(
     @Args() args: SchemaDiffArgs,
   ): Promise<SchemaDiff | undefined> {
-    const conn = this.conn.connection();
+    const conn = await this.conn.connection(args.databaseName);
 
     if (args.type === CommitDiffType.ThreeDot) {
       const patchRes = await conn.getThreeDotSchemaPatch(args);
