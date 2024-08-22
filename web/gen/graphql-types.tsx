@@ -748,6 +748,25 @@ export type DatabasesQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type DatabasesQuery = { __typename?: 'Query', databases: Array<string> };
 
+export type SchemaItemFragment = { __typename?: 'SchemaItem', name: string, type: SchemaType };
+
+export type RowsForDoltSchemasQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
+
+export type RowsForDoltProceduresQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
+
 export type CommitForDiffSelectorFragment = { __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
 export type CommitListForDiffSelectorFragment = { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } }> };
@@ -857,25 +876,6 @@ export type TableListForSchemasQueryVariables = Exact<{
 
 
 export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
-
-export type SchemaItemFragment = { __typename?: 'SchemaItem', name: string, type: SchemaType };
-
-export type RowsForDoltSchemasQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-  refName: Scalars['String']['input'];
-  schemaName?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
-
-export type RowsForDoltProceduresQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-  refName: Scalars['String']['input'];
-}>;
-
-
-export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type DatabaseSchemasQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1210,6 +1210,12 @@ export type TableNamesQueryVariables = Exact<{
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export const SchemaItemFragmentDoc = gql`
+    fragment SchemaItem on SchemaItem {
+  name
+  type
+}
+    `;
 export const CommitForDiffSelectorFragmentDoc = gql`
     fragment CommitForDiffSelector on Commit {
   _id
@@ -1392,12 +1398,6 @@ export const TableForSchemaListFragmentDoc = gql`
     ${ForeignKeysForDataTableFragmentDoc}
 ${ColumnForTableListFragmentDoc}
 ${IndexForTableListFragmentDoc}`;
-export const SchemaItemFragmentDoc = gql`
-    fragment SchemaItem on SchemaItem {
-  name
-  type
-}
-    `;
 export const RowForSqlDataTableFragmentDoc = gql`
     fragment RowForSqlDataTable on Row {
   columnValues {
@@ -1855,6 +1855,93 @@ export type DatabasesQueryHookResult = ReturnType<typeof useDatabasesQuery>;
 export type DatabasesLazyQueryHookResult = ReturnType<typeof useDatabasesLazyQuery>;
 export type DatabasesSuspenseQueryHookResult = ReturnType<typeof useDatabasesSuspenseQuery>;
 export type DatabasesQueryResult = Apollo.QueryResult<DatabasesQuery, DatabasesQueryVariables>;
+export const RowsForDoltSchemasDocument = gql`
+    query RowsForDoltSchemas($databaseName: String!, $refName: String!, $schemaName: String) {
+  doltSchemas(
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+  ) {
+    ...SchemaItem
+  }
+}
+    ${SchemaItemFragmentDoc}`;
+
+/**
+ * __useRowsForDoltSchemasQuery__
+ *
+ * To run a query within a React component, call `useRowsForDoltSchemasQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRowsForDoltSchemasQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRowsForDoltSchemasQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *   },
+ * });
+ */
+export function useRowsForDoltSchemasQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables> & ({ variables: RowsForDoltSchemasQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
+      }
+export function useRowsForDoltSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
+        }
+export function useRowsForDoltSchemasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
+        }
+export type RowsForDoltSchemasQueryHookResult = ReturnType<typeof useRowsForDoltSchemasQuery>;
+export type RowsForDoltSchemasLazyQueryHookResult = ReturnType<typeof useRowsForDoltSchemasLazyQuery>;
+export type RowsForDoltSchemasSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltSchemasSuspenseQuery>;
+export type RowsForDoltSchemasQueryResult = Apollo.QueryResult<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>;
+export const RowsForDoltProceduresDocument = gql`
+    query RowsForDoltProcedures($databaseName: String!, $refName: String!) {
+  doltProcedures(databaseName: $databaseName, refName: $refName) {
+    ...SchemaItem
+  }
+}
+    ${SchemaItemFragmentDoc}`;
+
+/**
+ * __useRowsForDoltProceduresQuery__
+ *
+ * To run a query within a React component, call `useRowsForDoltProceduresQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRowsForDoltProceduresQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRowsForDoltProceduresQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useRowsForDoltProceduresQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables> & ({ variables: RowsForDoltProceduresQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
+      }
+export function useRowsForDoltProceduresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
+        }
+export function useRowsForDoltProceduresSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
+        }
+export type RowsForDoltProceduresQueryHookResult = ReturnType<typeof useRowsForDoltProceduresQuery>;
+export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRowsForDoltProceduresLazyQuery>;
+export type RowsForDoltProceduresSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltProceduresSuspenseQuery>;
+export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
 export const CommitsForDiffSelectorDocument = gql`
     query CommitsForDiffSelector($refName: String!, $databaseName: String!) {
   commits(refName: $refName, databaseName: $databaseName) {
@@ -2230,93 +2317,6 @@ export type TableListForSchemasQueryHookResult = ReturnType<typeof useTableListF
 export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableListForSchemasLazyQuery>;
 export type TableListForSchemasSuspenseQueryHookResult = ReturnType<typeof useTableListForSchemasSuspenseQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
-export const RowsForDoltSchemasDocument = gql`
-    query RowsForDoltSchemas($databaseName: String!, $refName: String!, $schemaName: String) {
-  doltSchemas(
-    databaseName: $databaseName
-    refName: $refName
-    schemaName: $schemaName
-  ) {
-    ...SchemaItem
-  }
-}
-    ${SchemaItemFragmentDoc}`;
-
-/**
- * __useRowsForDoltSchemasQuery__
- *
- * To run a query within a React component, call `useRowsForDoltSchemasQuery` and pass it any options that fit your needs.
- * When your component renders, `useRowsForDoltSchemasQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRowsForDoltSchemasQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *      refName: // value for 'refName'
- *      schemaName: // value for 'schemaName'
- *   },
- * });
- */
-export function useRowsForDoltSchemasQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables> & ({ variables: RowsForDoltSchemasQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
-      }
-export function useRowsForDoltSchemasLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
-        }
-export function useRowsForDoltSchemasSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>(RowsForDoltSchemasDocument, options);
-        }
-export type RowsForDoltSchemasQueryHookResult = ReturnType<typeof useRowsForDoltSchemasQuery>;
-export type RowsForDoltSchemasLazyQueryHookResult = ReturnType<typeof useRowsForDoltSchemasLazyQuery>;
-export type RowsForDoltSchemasSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltSchemasSuspenseQuery>;
-export type RowsForDoltSchemasQueryResult = Apollo.QueryResult<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>;
-export const RowsForDoltProceduresDocument = gql`
-    query RowsForDoltProcedures($databaseName: String!, $refName: String!) {
-  doltProcedures(databaseName: $databaseName, refName: $refName) {
-    ...SchemaItem
-  }
-}
-    ${SchemaItemFragmentDoc}`;
-
-/**
- * __useRowsForDoltProceduresQuery__
- *
- * To run a query within a React component, call `useRowsForDoltProceduresQuery` and pass it any options that fit your needs.
- * When your component renders, `useRowsForDoltProceduresQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useRowsForDoltProceduresQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *      refName: // value for 'refName'
- *   },
- * });
- */
-export function useRowsForDoltProceduresQuery(baseOptions: Apollo.QueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables> & ({ variables: RowsForDoltProceduresQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
-      }
-export function useRowsForDoltProceduresLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
-        }
-export function useRowsForDoltProceduresSuspenseQuery(baseOptions?: Apollo.SuspenseQueryHookOptions<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>(RowsForDoltProceduresDocument, options);
-        }
-export type RowsForDoltProceduresQueryHookResult = ReturnType<typeof useRowsForDoltProceduresQuery>;
-export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRowsForDoltProceduresLazyQuery>;
-export type RowsForDoltProceduresSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltProceduresSuspenseQuery>;
-export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
 export const DatabaseSchemasDocument = gql`
     query DatabaseSchemas($databaseName: String!) {
   schemas(databaseName: $databaseName)

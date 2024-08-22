@@ -1,19 +1,17 @@
 import BranchAndTagSelector from "@components/FormSelectForRefs/BranchAndTagSelector";
 import NotDoltSelectWrapper from "@components/FormSelectForRefs/NotDoltSelectWrapper";
 import SchemasSelector from "@components/SchemasSelector";
-import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import { Tooltip } from "@dolthub/react-components";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { OptionalRefParams } from "@lib/params";
-import { RefUrl, newBranch } from "@lib/urls";
+import { RefUrl } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
-import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
 import cx from "classnames";
 import { useState } from "react";
 import MobileTableNavButton from "./MobileTableNavButton";
 import NavLinks from "./NavLinks";
+import NewBranchLink from "./NewBranchLink";
 import css from "./index.module.css";
 
 type Params = OptionalRefParams & {
@@ -114,34 +112,4 @@ export default function DatabaseTableNav(props: Props) {
 
 function isInitiallyOpen(params: Params): boolean {
   return !!params.tableName || !!params.q;
-}
-
-function NewBranchLink(props: {
-  params: Params;
-  open: boolean;
-  doltDisabled?: boolean;
-}) {
-  return (
-    <div
-      className={cx(css.createBranch, {
-        [css.createBranchDisabled]: !!props.doltDisabled,
-      })}
-    >
-      <Link
-        {...newBranch(props.params)}
-        data-tooltip-id="create-branch"
-        data-tooltip-content={
-          props.doltDisabled ? "Use Dolt to create branch" : "Create new branch"
-        }
-        data-tooltip-place="bottom"
-      >
-        <IoAddOutline
-          className={cx(css.createBranchIcon, {
-            [css.closedItem]: !props.open,
-          })}
-        />
-      </Link>
-      <Tooltip id="create-branch" />
-    </div>
-  );
 }

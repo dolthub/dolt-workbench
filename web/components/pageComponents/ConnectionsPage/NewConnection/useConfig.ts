@@ -6,7 +6,7 @@ import {
 import useMutation from "@hooks/useMutation";
 import { maybeDatabase } from "@lib/urls";
 import { useRouter } from "next/router";
-import { Dispatch, SyntheticEvent } from "react";
+import { Dispatch, SyntheticEvent, useEffect } from "react";
 
 const defaultState = {
   name: "",
@@ -57,6 +57,15 @@ export default function useConfig(): ReturnType {
     const isDocker = window.location.origin === "http://localhost:3000";
     setState(getDefaultState(isDocker));
   });
+
+  useEffect(() => {
+    if (!res.err) return;
+    if (
+      res.err.message.includes("The server does not support SSL connections")
+    ) {
+      setState({ showAdvancedSettings: true });
+    }
+  }, [res.err]);
 
   const clearState = () => {
     setState(defaultState);

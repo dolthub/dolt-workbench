@@ -7,7 +7,7 @@
 }
 
 .selectForPostgres {
-  @apply min-w-[220px] max-w-[220px];
+  @apply min-w-[210px] max-w-[210px];
 }
 
 .branchAndCommitSelect {

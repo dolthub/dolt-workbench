@@ -51,7 +51,7 @@ export default function CreateSchema(props: Props) {
         className={css.createSch}
         data-tooltip-id="create-schema"
         data-tooltip-content="Create new schema"
-        data-tooltip-place="bottom"
+        data-tooltip-place="top"
       >
         <IoAddOutline />
       </Button.Link>

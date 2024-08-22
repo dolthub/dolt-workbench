@@ -4,6 +4,10 @@ export type DatabaseParams = {
   databaseName: string;
 };
 
+export type DatabaseMaybeSchemaParams = DatabaseParams & {
+  schemaName?: string;
+};
+
 export type RefParams = DatabaseParams & {
   refName: string;
 };

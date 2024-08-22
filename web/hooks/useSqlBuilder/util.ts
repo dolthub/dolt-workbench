@@ -301,7 +301,7 @@ export function getPostgresSchemaDefQuery(
 ): string {
   switch (kind) {
     case SchemaType.Table:
-      return `SELECT ordinal_position, column_name, udt_name as data_type, is_nullable, column_default FROM information_schema.columns WHERE table_name = '${name}'${schemaName ? ` AND table_schema = '${schemaName}'` : ""}`;
+      return `SELECT ordinal_position, column_name, udt_name as data_type, is_nullable, column_default FROM information_schema.columns WHERE${schemaName ? ` table_schema = '${schemaName}' AND` : ""} table_name = '${name}'`;
     case SchemaType.View:
       return `SELECT pg_get_viewdef('${name}', true)`;
     case SchemaType.Trigger:

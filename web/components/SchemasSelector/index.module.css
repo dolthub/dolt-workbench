@@ -3,11 +3,11 @@
 }
 
 .selector {
-  @apply min-w-[220px] max-w-[220px];
+  @apply min-w-[210px] max-w-[210px];
 }
 
 .createSch {
-  @apply text-2xl ml-3 font-semibold;
+  @apply text-xl ml-2.5 mt-1 font-semibold;
 
   path {
     @apply stroke-[3.5rem];

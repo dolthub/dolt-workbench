@@ -9,6 +9,8 @@ export async function getSchema(
 ): Promise<string> {
   if (args.schemaName) return args.schemaName;
   const currentSchemas = await qr.getSchemas(args.databaseName);
+  const currentSchema = await qr.getCurrentSchema();
+  console.log("SCHEMAS", currentSchemas, currentSchema);
   if (!currentSchemas.length) return "public";
   return currentSchemas[0];
 }

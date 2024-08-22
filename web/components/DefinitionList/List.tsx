@@ -20,6 +20,7 @@ export default function List(props: InnerProps) {
   const { showCreateQuery, isPostgres } = useSqlBuilder();
   const activeItem = getActiveItem(props.kind, props.params.q, isPostgres);
   const pluralKind = pluralize(2, props.kind.toLowerCase());
+
   useEffect(() => {
     if (!activeItem) return;
     const el = document.getElementById(activeItem);
@@ -37,7 +38,7 @@ export default function List(props: InnerProps) {
   }
 
   return (
-    <div data-cy={`db-${pluralKind}-schema-list`}>
+    <div data-cy={`db-${pluralKind}-def-list`}>
       {props.items.length ? (
         <ol>
           {props.items.map(t => (

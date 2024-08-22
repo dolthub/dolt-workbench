@@ -5,7 +5,7 @@ import List from "./List";
 import Procedures from "./Procedures";
 import Tables from "./Tables";
 import css from "./index.module.css";
-import { getSchemaItemsFromRows } from "./utils";
+import { getDefItemsFromRows } from "./utils";
 
 type Props = {
   params: RefMaybeSchemaParams & { q?: string };
@@ -21,24 +21,21 @@ function Inner(props: Props) {
       <List
         params={props.params}
         kind={SchemaType.View}
-        items={getSchemaItemsFromRows(SchemaType.View, res.data?.doltSchemas)}
+        items={getDefItemsFromRows(SchemaType.View, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Triggers</h4>
       <List
         params={props.params}
         kind={SchemaType.Trigger}
-        items={getSchemaItemsFromRows(
-          SchemaType.Trigger,
-          res.data?.doltSchemas,
-        )}
+        items={getDefItemsFromRows(SchemaType.Trigger, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Events</h4>
       <List
         params={props.params}
         kind={SchemaType.Event}
-        items={getSchemaItemsFromRows(SchemaType.Event, res.data?.doltSchemas)}
+        items={getDefItemsFromRows(SchemaType.Event, res.data?.doltSchemas)}
         loading={res.loading}
       />
       <h4>Procedures</h4>
@@ -47,7 +44,7 @@ function Inner(props: Props) {
   );
 }
 
-export default function SchemaList(props: Props) {
+export default function DefinitionList(props: Props) {
   return (
     <Section tab={0}>
       <Inner {...props} />

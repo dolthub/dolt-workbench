@@ -7,13 +7,17 @@ export type RefUrl = (p: ps.RefMaybeSchemaParams) => Route;
 
 export const databases = new Route("/database");
 
-export const database = (p: ps.DatabaseParams): Route =>
-  databases.addDynamic("databaseName", p.databaseName);
+export const database = (p: ps.DatabaseMaybeSchemaParams): Route =>
+  databases
+    .addDynamic("databaseName", p.databaseName)
+    .withQuery({ schemaName: p.schemaName });
 
 export const schemas = new Route("/schemas");
 
-export const maybeDatabase = (databaseName?: Maybe<string>): Route =>
-  databaseName ? database({ databaseName }) : databases;
+export const maybeDatabase = (
+  databaseName?: Maybe<string>,
+  schemaName?: string,
+): Route => (databaseName ? database({ databaseName, schemaName }) : databases);
 
 export const maybeSchema = (schemaName?: Maybe<string>): Route =>
   schemaName ? database({ databaseName: schemaName }) : schemas;
