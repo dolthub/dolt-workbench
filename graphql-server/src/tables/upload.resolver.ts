@@ -75,7 +75,7 @@ export class FileUploadResolver {
       return true;
     }
 
-    const conn = await this.connResolver.connection(args.databaseName);
+    const conn = this.connResolver.connection();
     const qr = conn.getQR();
     const pgConnection = await qr.connect();
 

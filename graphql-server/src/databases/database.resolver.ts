@@ -63,6 +63,12 @@ class RemoveDatabaseConnectionArgs {
   name: string;
 }
 
+@ArgsType()
+class ResetConnectionArgs {
+  @Field({ nullable: true })
+  newDatabase?: string;
+}
+
 @Resolver(_of => DatabaseConnection)
 export class DatabaseResolver {
   constructor(
@@ -73,7 +79,7 @@ export class DatabaseResolver {
 
   @Query(_returns => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
-    const conn = await this.conn.connection();
+    const conn = this.conn.connection();
     return conn.currentDatabase();
   }
 
@@ -87,14 +93,14 @@ export class DatabaseResolver {
 
   @Query(_returns => [String])
   async databases(): Promise<string[]> {
-    const conn = await this.conn.connection();
+    const conn = this.conn.connection();
     const dbs = await conn.databases();
     return dbs;
   }
 
   @Query(_returns => [String])
   async schemas(@Args() args: DBArgs): Promise<string[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     if (!conn.schemas) return [];
     const schemas = await conn.schemas(args);
     return schemas.filter(
@@ -108,7 +114,7 @@ export class DatabaseResolver {
   @Query(_returns => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
-    const conn = await this.conn.connection();
+    const conn = this.conn.connection();
     return {
       isDolt: conn.isDolt,
       hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
@@ -157,22 +163,22 @@ export class DatabaseResolver {
 
   @Mutation(_returns => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
-    const conn = await this.conn.connection();
+    const conn = this.conn.connection();
     await conn.createDatabase(args);
     return true;
   }
 
   @Mutation(_returns => Boolean)
   async createSchema(@Args() args: SchemaArgs): Promise<boolean> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     if (!conn.createSchema) return false;
     await conn.createSchema(args);
     return true;
   }
 
   @Mutation(_returns => Boolean)
-  async resetDatabase(): Promise<boolean> {
-    await this.conn.resetDS();
+  async resetDatabase(@Args() args: ResetConnectionArgs): Promise<boolean> {
+    await this.conn.resetDS(args.newDatabase);
     return true;
   }
 }

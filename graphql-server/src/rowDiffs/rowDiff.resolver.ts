@@ -47,7 +47,7 @@ export class RowDiffResolver {
   ): Promise<RowDiffList> {
     const dbArgs = { databaseName, refName };
     const offset = args.offset ?? 0;
-    const conn = await this.conn.connection(databaseName);
+    const conn = this.conn.connection();
 
     const ds = await getDiffSummaries(conn, {
       ...dbArgs,

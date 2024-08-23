@@ -48,7 +48,7 @@ export class PullResolver {
 
   @Mutation(_returns => Boolean)
   async mergePull(@Args() args: MergePullArgs): Promise<boolean> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     await conn.callMerge({
       databaseName: args.databaseName,
       fromBranchName: args.fromBranchName,

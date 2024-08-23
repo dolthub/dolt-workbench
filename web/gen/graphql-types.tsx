@@ -311,6 +311,11 @@ export type MutationRemoveDatabaseConnectionArgs = {
   name: Scalars['String']['input'];
 };
 
+
+export type MutationResetDatabaseArgs = {
+  newDatabase?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type PullDetailCommit = {
   __typename?: 'PullDetailCommit';
   _id: Scalars['ID']['output'];
@@ -713,7 +718,9 @@ export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
 
-export type ResetDatabaseMutationVariables = Exact<{ [key: string]: never; }>;
+export type ResetDatabaseMutationVariables = Exact<{
+  newDatabase?: InputMaybe<Scalars['String']['input']>;
+}>;
 
 
 export type ResetDatabaseMutation = { __typename?: 'Mutation', resetDatabase: boolean };
@@ -1663,8 +1670,8 @@ export type CurrentDatabaseLazyQueryHookResult = ReturnType<typeof useCurrentDat
 export type CurrentDatabaseSuspenseQueryHookResult = ReturnType<typeof useCurrentDatabaseSuspenseQuery>;
 export type CurrentDatabaseQueryResult = Apollo.QueryResult<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>;
 export const ResetDatabaseDocument = gql`
-    mutation ResetDatabase {
-  resetDatabase
+    mutation ResetDatabase($newDatabase: String) {
+  resetDatabase(newDatabase: $newDatabase)
 }
     `;
 export type ResetDatabaseMutationFn = Apollo.MutationFunction<ResetDatabaseMutation, ResetDatabaseMutationVariables>;
@@ -1682,6 +1689,7 @@ export type ResetDatabaseMutationFn = Apollo.MutationFunction<ResetDatabaseMutat
  * @example
  * const [resetDatabaseMutation, { data, loading, error }] = useResetDatabaseMutation({
  *   variables: {
+ *      newDatabase: // value for 'newDatabase'
  *   },
  * });
  */

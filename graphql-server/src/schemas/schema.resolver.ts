@@ -13,7 +13,7 @@ export class SchemaResolver {
     @Args() args: RefMaybeSchemaArgs,
     type?: SchemaType,
   ): Promise<SchemaItem[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getSchemas(args, type);
     return res;
   }
@@ -25,7 +25,7 @@ export class SchemaResolver {
 
   @Query(_returns => [SchemaItem])
   async doltProcedures(@Args() args: RefArgs): Promise<SchemaItem[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getProcedures(args);
     return res;
   }

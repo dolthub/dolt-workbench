@@ -29,21 +29,9 @@ export class ConnectionProvider {
 
   private workbenchConfig: WorkbenchConfig | undefined;
 
-  async connection(dbName?: string): Promise<QueryFactory> {
+  connection(): QueryFactory {
     if (!this.qf) {
       throw new Error("Data source service not initialized");
-    }
-    if (dbName && this.workbenchConfig?.type === DatabaseType.Postgres) {
-      const currentDb = await this.qf.currentDatabase();
-      if (currentDb !== dbName) {
-        await this.addConnection({
-          ...this.workbenchConfig,
-          connectionUrl: replaceDatabaseInConnectionUrl(
-            this.workbenchConfig.connectionUrl,
-            dbName,
-          ),
-        });
-      }
     }
     return this.qf;
   }
@@ -136,12 +124,20 @@ export class ConnectionProvider {
     return { qf: new MySQLQueryFactory(this.ds), isDolt: false };
   }
 
-  async resetDS(): Promise<void> {
+  async resetDS(newDatabase?: string): Promise<void> {
     if (!this.workbenchConfig) {
       throw new Error(
         "Workbench config not found. Please add connectivity information.",
       );
     }
-    await this.addConnection(this.workbenchConfig);
+    await this.addConnection({
+      ...this.workbenchConfig,
+      connectionUrl: newDatabase
+        ? replaceDatabaseInConnectionUrl(
+            this.workbenchConfig.connectionUrl,
+            newDatabase,
+          )
+        : this.workbenchConfig.connectionUrl,
+    });
   }
 }

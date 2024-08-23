@@ -62,7 +62,7 @@ export class BranchResolver {
 
   @Query(_returns => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getBranch(args);
     if (!res) return undefined;
     return fromDoltBranchesRow(args.databaseName, res);
@@ -82,14 +82,14 @@ export class BranchResolver {
 
   @Query(_returns => BranchList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchList> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getBranches({ ...args, offset: args.offset ?? 0 });
     return fromBranchListRes(res, args);
   }
 
   @Query(_returns => [Branch])
   async allBranches(@Args() args: ListBranchesArgs): Promise<Branch[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getAllBranches(args);
     return res.map(b => fromDoltBranchesRow(args.databaseName, b));
   }
@@ -102,14 +102,14 @@ export class BranchResolver {
 
   @Mutation(_returns => String)
   async createBranch(@Args() args: CreateBranchArgs): Promise<string> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     await conn.createNewBranch({ ...args, branchName: args.newBranchName });
     return args.newBranchName;
   }
 
   @Mutation(_returns => Boolean)
   async deleteBranch(@Args() args: BranchArgs): Promise<boolean> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     await conn.callDeleteBranch(args);
     return true;
   }

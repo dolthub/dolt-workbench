@@ -16,7 +16,7 @@ export class TableResolver {
 
   @Query(_returns => Table)
   async table(@Args() args: TableMaybeSchemaArgs): Promise<Table> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getTableInfo(args);
     if (!res) {
       throw new Error("no such table in database");
@@ -26,14 +26,14 @@ export class TableResolver {
 
   @Query(_returns => TableNames)
   async tableNames(@Args() args: ListTableArgs): Promise<TableNames> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getTableNames(args, args.filterSystemTables);
     return { list: res };
   }
 
   @Query(_returns => [Table])
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const tableNames = await conn.getTableNames(args, args.filterSystemTables);
     const res = await conn.getTables(args, tableNames);
     return res.map(t => fromDoltRowRes(args.databaseName, args.refName, t));

@@ -28,7 +28,7 @@ export class DiffStatResolver {
 
   @Query(_returns => DiffStat)
   async diffStat(@Args() args: DiffStatArgs): Promise<DiffStat> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const type = args.type ?? CommitDiffType.TwoDot;
     checkArgs(args);
 

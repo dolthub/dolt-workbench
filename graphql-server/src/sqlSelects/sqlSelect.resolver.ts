@@ -17,7 +17,7 @@ export class SqlSelectResolver {
 
   @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getSqlSelect(args);
     return fromSqlSelectRow(
       args.databaseName,
@@ -29,7 +29,7 @@ export class SqlSelectResolver {
 
   @Query(_returns => String)
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getSqlSelect(args);
     return toCsvString(res);
   }

@@ -13,7 +13,7 @@ export default function PullsBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-pulls-breadcrumbs"
       data-cy="db-pulls-breadcrumbs"
-      breadcrumbs={db => pullsBreadcrumbs(params, db)}
+      breadcrumbs={pullsBreadcrumbs(params)}
     />
   );
 }

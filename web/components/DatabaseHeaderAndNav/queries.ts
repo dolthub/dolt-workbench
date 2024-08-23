@@ -7,7 +7,7 @@ export const CURRENT_DATABASE = gql`
 `;
 
 export const RESET_DATABASE = gql`
-  mutation ResetDatabase {
-    resetDatabase
+  mutation ResetDatabase($newDatabase: String) {
+    resetDatabase(newDatabase: $newDatabase)
   }
 `;

@@ -30,7 +30,7 @@ export class DiffSummaryResolver {
 
   @Query(_returns => [DiffSummary])
   async diffSummaries(@Args() args: DiffSummaryArgs): Promise<DiffSummary[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     return getDiffSummaries(conn, args);
   }
 }

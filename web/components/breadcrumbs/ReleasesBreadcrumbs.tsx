@@ -14,7 +14,7 @@ export default function ReleasesBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-releases-breadcrumbs"
       data-cy="db-releases-breadcrumbs"
-      breadcrumbs={db => releasesBreadcrumbsDetails(params, props.new, db)}
+      breadcrumbs={releasesBreadcrumbsDetails(params, props.new)}
     />
   );
 }

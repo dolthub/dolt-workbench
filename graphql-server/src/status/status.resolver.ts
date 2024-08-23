@@ -9,7 +9,7 @@ export class StatusResolver {
 
   @Query(_returns => [Status])
   async status(@Args() args: RefArgs): Promise<Status[]> {
-    const conn = await this.conn.connection(args.databaseName);
+    const conn = this.conn.connection();
     const res = await conn.getStatus(args);
     return fromStatusRows(res, args.databaseName, args.refName);
   }
