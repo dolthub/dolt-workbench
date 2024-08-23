@@ -105,7 +105,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getBranch(args: t.BranchArgs): t.UPR {
+  async getBranch(args: t.BranchArgs): t.USPR {
     return this.queryForBuilder(
       async em => dem.getDoltBranch(em, args),
       args.databaseName,

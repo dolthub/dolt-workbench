@@ -1,5 +1,4 @@
 import DatabasesDropdown from "@components/DatabasesDropdown";
-import SchemasDropdown from "@components/SchemasDropdown";
 import CommitLogLink from "@components/links/CommitLogLink";
 import Link from "@components/links/Link";
 import PullLink from "@components/links/PullLink";
@@ -24,27 +23,12 @@ const newBreadcrumb: BreadcrumbDetails = {
 
 export function databaseBreadcrumbs(
   params: DatabaseParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   return [
-    ...(currentDBForPostgres
-      ? [
-          {
-            child: (
-              <span className={css.withIcon}>
-                <FiDatabase />
-                <span>{currentDBForPostgres}</span>
-              </span>
-            ),
-            name: BreadcrumbName.DatabasePostgres,
-            type: BreadcrumbType.Text,
-          },
-        ]
-      : []),
     {
       child: (
         <span className={css.withIcon}>
-          {!currentDBForPostgres && <FiDatabase />}
+          <FiDatabase />
           <Link {...database(params)}>{params.databaseName}</Link>
         </span>
       ),
@@ -52,11 +36,7 @@ export function databaseBreadcrumbs(
       type: BreadcrumbType.Link,
     },
     {
-      child: currentDBForPostgres ? (
-        <SchemasDropdown params={params} />
-      ) : (
-        <DatabasesDropdown params={params} />
-      ),
+      child: <DatabasesDropdown params={params} />,
       name: BreadcrumbName.DatabaseDrop,
       type: BreadcrumbType.Button,
     },
@@ -65,10 +45,9 @@ export function databaseBreadcrumbs(
 
 export function queryBreadcrumbDetails(
   params: SqlQueryParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>query</span>,
       name: BreadcrumbName.DBQuery,
@@ -80,11 +59,10 @@ export function queryBreadcrumbDetails(
 export function branchesBreadcrumbsDetails(
   params: DatabaseParams,
   newBranch = false,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   if (newBranch) {
     return [
-      ...databaseBreadcrumbs(params, currentDBForPostgres),
+      ...databaseBreadcrumbs(params),
       {
         child: <Link {...branches(params)}>branches</Link>,
         name: BreadcrumbName.DBBranches,
@@ -94,7 +72,7 @@ export function branchesBreadcrumbsDetails(
     ];
   }
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>branches</span>,
       name: BreadcrumbName.DBBranches,
@@ -105,10 +83,9 @@ export function branchesBreadcrumbsDetails(
 
 export function commitGraphBreadcrumbDetails(
   params: RefParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <Link {...commitLog(params)}>commits</Link>,
       name: BreadcrumbName.DBCommitLog,
@@ -124,11 +101,10 @@ export function commitGraphBreadcrumbDetails(
 
 export function commitLogBreadcrumbDetails(
   params: RefParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   const commits = <span>commits</span>;
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: commits,
       name: BreadcrumbName.DBCommitLog,
@@ -139,10 +115,9 @@ export function commitLogBreadcrumbDetails(
 
 export function tableBreadcrumbsDetails(
   params: TableParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>{params.tableName}</span>,
       name: BreadcrumbName.DBTable,
@@ -154,11 +129,10 @@ export function tableBreadcrumbsDetails(
 export function releasesBreadcrumbsDetails(
   params: DatabaseParams,
   newRelease = false,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   if (newRelease) {
     return [
-      ...databaseBreadcrumbs(params, currentDBForPostgres),
+      ...databaseBreadcrumbs(params),
       {
         child: <Link {...releases(params)}>releases</Link>,
         name: BreadcrumbName.DBReleases,
@@ -168,7 +142,7 @@ export function releasesBreadcrumbsDetails(
     ];
   }
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>releases</span>,
       name: BreadcrumbName.DBReleases,
@@ -178,10 +152,9 @@ export function releasesBreadcrumbsDetails(
 }
 export function schemaBreadcrumbsDetails(
   params: DatabaseParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>schema</span>,
       name: BreadcrumbName.DBSchema,
@@ -192,11 +165,10 @@ export function schemaBreadcrumbsDetails(
 
 export function newDocBreadcrumbsDetails(
   params: RefParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   const docsLink = <Link {...defaultDoc(params)}>docs</Link>;
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: docsLink,
       name: BreadcrumbName.DBDocs,
@@ -208,11 +180,10 @@ export function newDocBreadcrumbsDetails(
 
 export function docBreadcrumbsDetails(
   params: RefParams & { docName?: string },
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   if (params.docName) {
     return [
-      ...databaseBreadcrumbs(params, currentDBForPostgres),
+      ...databaseBreadcrumbs(params),
       {
         child: <Link {...defaultDoc(params)}>docs</Link>,
         name: BreadcrumbName.DBDocs,
@@ -226,7 +197,7 @@ export function docBreadcrumbsDetails(
     ];
   }
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>docs</span>,
       name: BreadcrumbName.DBDocs,
@@ -237,12 +208,11 @@ export function docBreadcrumbsDetails(
 
 export function commitDiffBreadcrumbDetails(
   params: DiffRangeParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   const commitLogLink = <CommitLogLink params={params}>commits</CommitLogLink>;
   const commitDiffText = <span>{params.diffRange}</span>;
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: commitLogLink,
       name: BreadcrumbName.DBCommitLog,
@@ -256,12 +226,9 @@ export function commitDiffBreadcrumbDetails(
   ];
 }
 
-export function pullsBreadcrumbs(
-  params: DatabaseParams,
-  currentDBForPostgres?: string,
-): BreadcrumbDetails[] {
+export function pullsBreadcrumbs(params: DatabaseParams): BreadcrumbDetails[] {
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: <span>pull requests</span>,
       name: BreadcrumbName.DBPulls,
@@ -272,7 +239,6 @@ export function pullsBreadcrumbs(
 
 export function pullDiffBreadcrumbDetails(
   params: PullDiffParams,
-  currentDBForPostgres?: string,
 ): BreadcrumbDetails[] {
   const pullLink = <PullLink params={params}>pull request</PullLink>;
   const pullDiffText = <span>diff</span>;
@@ -283,7 +249,7 @@ export function pullDiffBreadcrumbDetails(
   );
 
   return [
-    ...databaseBreadcrumbs(params, currentDBForPostgres),
+    ...databaseBreadcrumbs(params),
     {
       child: pullLink,
       name: BreadcrumbName.DBPull,

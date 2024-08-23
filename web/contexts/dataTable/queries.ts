@@ -26,11 +26,13 @@ export const DATA_TABLE_QUERY = gql`
     $databaseName: String!
     $refName: String!
     $tableName: String!
+    $schemaName: String
   ) {
     table(
       databaseName: $databaseName
       refName: $refName
       tableName: $tableName
+      schemaName: $schemaName
     ) {
       _id
       columns {
@@ -59,12 +61,14 @@ export const ROWS_FOR_DATA_TABLE = gql`
     $databaseName: String!
     $refName: String!
     $tableName: String!
+    $schemaName: String
     $offset: Int
   ) {
     rows(
       databaseName: $databaseName
       refName: $refName
       tableName: $tableName
+      schemaName: $schemaName
       offset: $offset
     ) {
       ...RowListRows

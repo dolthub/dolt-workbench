@@ -33,6 +33,9 @@ class GetBranchTableArgs {
 class FilterSystemTablesArgs {
   @Field({ nullable: true })
   filterSystemTables?: boolean;
+
+  @Field({ nullable: true })
+  schemaName?: string;
 }
 
 @ArgsType()
@@ -126,11 +129,12 @@ export class BranchResolver {
   @ResolveField(_returns => [String])
   async tableNames(
     @Parent() branch: Branch,
-    @Args() { filterSystemTables }: FilterSystemTablesArgs,
+    @Args() { filterSystemTables, schemaName }: FilterSystemTablesArgs,
   ): Promise<string[]> {
     const { list } = await this.tableResolver.tableNames({
       ...branch,
       filterSystemTables,
+      schemaName,
       refName: branch.branchName,
     });
     return list;

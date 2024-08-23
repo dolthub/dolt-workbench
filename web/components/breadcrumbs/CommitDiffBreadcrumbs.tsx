@@ -20,9 +20,7 @@ export default function CommitDiffBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-commit-diff-breadcrumbs"
       data-cy="db-commit-diff-breadcrumbs"
-      breadcrumbs={db =>
-        commitDiffBreadcrumbDetails({ ...params, diffRange }, db)
-      }
+      breadcrumbs={commitDiffBreadcrumbDetails({ ...params, diffRange })}
     />
   );
 }

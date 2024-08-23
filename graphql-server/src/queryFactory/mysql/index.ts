@@ -5,11 +5,17 @@ import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
-import { ROW_LIMIT } from "../../utils";
 import { BaseQueryFactory } from "../base";
 import * as t from "../types";
 import * as qh from "./queries";
-import { convertToTableDetails, mapTablesRes, notDoltError } from "./utils";
+import {
+  getTableInfo,
+  getTablePKColumns,
+  getTableRows,
+  getTables,
+  mapTablesRes,
+  notDoltError,
+} from "./utils";
 
 export class MySQLQueryFactory
   extends BaseQueryFactory
@@ -90,7 +96,15 @@ export class MySQLQueryFactory
 
   async databases(): Promise<string[]> {
     const res: t.RawRows = await this.query(qh.databasesQuery, []);
-    return res.map(r => r.Database);
+    return res
+      .map(r => r.Database)
+      .filter(
+        db =>
+          db !== "information_schema" &&
+          db !== "mysql" &&
+          db !== "dolt_cluster" &&
+          !db.includes("/"),
+      );
   }
 
   async getTableNames(args: t.RefArgs): Promise<string[]> {
@@ -103,44 +117,29 @@ export class MySQLQueryFactory
   }
 
   async getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined> {
-    return this.queryQR(async qr => {
-      const table = await qr.getTable(args.tableName);
-      if (!table) return undefined;
-      return convertToTableDetails(table);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => getTableInfo(qr, args.tableName),
+      args.databaseName,
+    );
   }
 
   async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
-    return this.queryQR(async qr => {
-      const tables = await qr.getTables(tns);
-      return tables.map(convertToTableDetails);
-    }, args.databaseName);
+    return this.queryQR(async qr => getTables(qr, tns), args.databaseName);
   }
 
   async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
-    return this.queryQR(async qr => {
-      const table = await qr.getTable(args.tableName);
-      if (!table) return [];
-      return table.columns.filter(c => c.isPrimary).map(c => c.name);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => getTablePKColumns(qr, args.tableName),
+      args.databaseName,
+    );
   }
 
   async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
-    return this.queryForBuilder(async em => {
-      let build = em
-        .createQueryBuilder()
-        .select("*")
-        .from(args.tableName, args.tableName);
-
-      page.pkCols.forEach(col => {
-        build = build.addOrderBy(col, "ASC");
-      });
-
-      return build
-        .limit(ROW_LIMIT + 1)
-        .offset(page.offset)
-        .getRawMany();
-    });
+    return this.queryForBuilder(
+      async em => getTableRows(em, args.tableName, page),
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR {
@@ -185,15 +184,13 @@ export class MySQLQueryFactory
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL
 
   // Returns static branch
-  async getBranch(args: t.BranchArgs): t.UPR {
-    return [
-      {
-        name: args.branchName,
-        latest_commit_date: new Date(),
-        latest_committer: "",
-        head: "",
-      },
-    ];
+  async getBranch(args: t.BranchArgs): t.USPR {
+    return {
+      name: args.branchName,
+      latest_commit_date: new Date(),
+      latest_committer: "",
+      head: "",
+    };
   }
 
   async getBranches(args: t.DBArgs & { offset: number }): t.PR {
@@ -202,7 +199,7 @@ export class MySQLQueryFactory
 
   async getAllBranches(args: t.DBArgs): t.PR {
     const branch = await this.getBranch({ ...args, branchName: "main" });
-    return branch ?? [];
+    return branch ? [branch] : [];
   }
 
   async createNewBranch(_: t.BranchArgs & { fromRefName: string }): t.PR {

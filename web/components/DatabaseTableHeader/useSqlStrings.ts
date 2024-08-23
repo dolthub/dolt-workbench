@@ -1,25 +1,20 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
-import { OptionalRefParams } from "@lib/params";
+import { DatabasePageParams } from "@lib/params";
 import { useCallback, useEffect } from "react";
 
 export const DEFAULT_LIMIT = 1000;
 const exampleCreateTable = `CREATE TABLE tablename (pk INT, col1 VARCHAR(255), PRIMARY KEY (pk));`;
 
-export type Params = OptionalRefParams & {
-  q?: string;
-  tableName?: string;
-};
-
 export function useSqlStrings(
-  params: Params,
+  params: DatabasePageParams,
   empty = false,
 ): { sqlString: string; editorString: string } {
   const { getDefaultQueryString, selectFromTable, isPostgres } =
     useSqlBuilder();
   const { editorString, setEditorString } = useSqlEditorContext();
-  const defaultQuery = getDefaultQueryString(params.databaseName);
+  const defaultQuery = getDefaultQueryString(params.schemaName);
 
   const getSqlString = (): string => {
     if (empty) {

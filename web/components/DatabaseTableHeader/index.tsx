@@ -1,19 +1,20 @@
 import SqlEditor from "@components/SqlEditor";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Btn, Loader } from "@dolthub/react-components";
+import { DatabasePageParams } from "@lib/params";
 import { BiPencil } from "@react-icons/all-files/bi/BiPencil";
 import dynamic from "next/dynamic";
 import Buttons from "./Buttons";
 import Errors from "./Errors";
 import css from "./index.module.css";
-import { Params, useSqlStrings } from "./useSqlStrings";
+import { useSqlStrings } from "./useSqlStrings";
 
 const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
 });
 
 type Props = {
-  params: Params;
+  params: DatabasePageParams;
   empty?: boolean;
 };
 

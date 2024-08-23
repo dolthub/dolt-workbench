@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
-import { RefArgs } from "../utils/commonTypes";
+import { RefArgs, RefMaybeSchemaArgs } from "../utils/commonTypes";
 import { SchemaType } from "./schema.enums";
 import { SchemaItem } from "./schema.model";
 
@@ -10,7 +10,7 @@ export class SchemaResolver {
 
   @Query(_returns => [SchemaItem])
   async doltSchemas(
-    @Args() args: RefArgs,
+    @Args() args: RefMaybeSchemaArgs,
     type?: SchemaType,
   ): Promise<SchemaItem[]> {
     const conn = this.conn.connection();
@@ -19,7 +19,7 @@ export class SchemaResolver {
   }
 
   @Query(_returns => [SchemaItem])
-  async views(@Args() args: RefArgs): Promise<SchemaItem[]> {
+  async views(@Args() args: RefMaybeSchemaArgs): Promise<SchemaItem[]> {
     return this.doltSchemas(args, SchemaType.View);
   }
 

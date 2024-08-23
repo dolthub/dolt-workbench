@@ -58,27 +58,30 @@ export declare class QueryFactory {
   createSchema?(args: t.SchemaArgs): Promise<void>;
 
   getTableNames(
-    args: t.RefArgs,
+    args: t.RefMaybeSchemaArgs,
     filterSystemTables?: boolean,
   ): Promise<string[]>;
 
-  getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]>;
+  getTables(args: t.RefMaybeSchemaArgs, tns: string[]): Promise<TableDetails[]>;
 
-  getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined>;
+  getTableInfo(args: t.TableMaybeSchemaArgs): Promise<TableDetails | undefined>;
 
-  getTablePKColumns(args: t.TableArgs): Promise<string[]>;
+  getTablePKColumns(args: t.TableMaybeSchemaArgs): Promise<string[]>;
 
-  getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR;
+  getTableRows(args: t.TableMaybeSchemaArgs, page: t.TableRowPagination): t.PR;
 
-  getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR;
+  getSqlSelect(args: t.RefMaybeSchemaArgs & { queryString: string }): t.PR;
 
-  getSchemas(args: t.RefArgs, type?: SchemaType): Promise<SchemaItem[]>;
+  getSchemas(
+    args: t.RefMaybeSchemaArgs,
+    type?: SchemaType,
+  ): Promise<SchemaItem[]>;
 
   getProcedures(args: t.RefArgs): Promise<SchemaItem[]>;
 
   // DOLT-SPECIFIC QUERIES
 
-  getBranch(args: t.BranchArgs): t.UPR;
+  getBranch(args: t.BranchArgs): t.USPR;
 
   getBranches(args: t.ListBranchesArgs): t.PR;
 

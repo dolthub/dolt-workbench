@@ -2,7 +2,7 @@ import { SmallLoader } from "@dolthub/react-components";
 import { pluralize } from "@dolthub/web-utils";
 import { SchemaType } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import { useEffect } from "react";
 import Item from "./Item";
 import NotFound from "./NotFound";
@@ -10,7 +10,7 @@ import css from "./index.module.css";
 import { getActiveItem } from "./utils";
 
 type InnerProps = {
-  params: RefParams & { q?: string };
+  params: RefOptionalSchemaParams & { q?: string };
   items: string[];
   kind: SchemaType;
   loading?: boolean;
@@ -20,6 +20,7 @@ export default function List(props: InnerProps) {
   const { showCreateQuery, isPostgres } = useSqlBuilder();
   const activeItem = getActiveItem(props.kind, props.params.q, isPostgres);
   const pluralKind = pluralize(2, props.kind.toLowerCase());
+
   useEffect(() => {
     if (!activeItem) return;
     const el = document.getElementById(activeItem);
@@ -37,7 +38,7 @@ export default function List(props: InnerProps) {
   }
 
   return (
-    <div data-cy={`db-${pluralKind}-schema-list`}>
+    <div data-cy={`db-${pluralKind}-def-list`}>
       {props.items.length ? (
         <ol>
           {props.items.map(t => (
@@ -46,7 +47,7 @@ export default function List(props: InnerProps) {
               name={t}
               params={props.params}
               isActive={t === activeItem}
-              query={showCreateQuery(props.params.databaseName, t, props.kind)}
+              query={showCreateQuery(t, props.kind, props.params.schemaName)}
             />
           ))}
         </ol>

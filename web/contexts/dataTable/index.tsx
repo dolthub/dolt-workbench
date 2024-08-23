@@ -13,14 +13,18 @@ import {
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
 import { createCustomContext } from "@lib/createCustomContext";
-import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
+import {
+  RefOptionalSchemaParams,
+  SqlQueryParams,
+  TableParams,
+} from "@lib/params";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 
-type DataTableParams = TableParams & { offset?: number };
+type DataTableParams = TableParams & { offset?: number; schemaName?: string };
 
 // This context handles data tables on the database page (for tables and queries)
 type DataTableContextType = {
-  params: RefParams & { tableName?: string; q?: string };
+  params: RefOptionalSchemaParams & { tableName?: string; q?: string };
   loading: boolean;
   loadMore: () => Promise<void>;
   rows?: RowForDataTableFragment[];

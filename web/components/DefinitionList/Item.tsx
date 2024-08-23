@@ -20,12 +20,12 @@ export default function Item({ name, params, isActive, query }: Props) {
       className={cx(css.item, {
         [css.selected]: isActive,
       })}
-      data-cy={`db-schemas-${name}`}
+      data-cy={`db-defs-${name}`}
       id={name}
     >
       <Link
-        {...sqlQuery({ ...params, q: query, active: "Schemas" })}
-        data-cy={`db-schemas-${name}-play`}
+        {...sqlQuery({ ...params, q: query, active: "Definitions" })}
+        data-cy={`db-defs-${name}-play`}
       >
         <Btn className={css.button}>
           <span className={css.name}>{excerpt(name, 45)}</span>

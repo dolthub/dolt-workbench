@@ -14,7 +14,7 @@ export default function BranchesBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-branches-breadcrumbs"
       data-cy="db-branches-breadcrumbs"
-      breadcrumbs={db => branchesBreadcrumbsDetails(params, props.new, db)}
+      breadcrumbs={branchesBreadcrumbsDetails(params, props.new)}
     />
   );
 }

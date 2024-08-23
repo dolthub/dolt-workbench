@@ -7,6 +7,7 @@ import { DoltQueryFactory } from "../queryFactory/dolt";
 import { DoltgresQueryFactory } from "../queryFactory/doltgres";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
 import { PostgresQueryFactory } from "../queryFactory/postgres";
+import { replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
   hideDoltFeatures: boolean;
@@ -123,12 +124,20 @@ export class ConnectionProvider {
     return { qf: new MySQLQueryFactory(this.ds), isDolt: false };
   }
 
-  async resetDS(): Promise<void> {
+  async resetDS(newDatabase?: string): Promise<void> {
     if (!this.workbenchConfig) {
       throw new Error(
         "Workbench config not found. Please add connectivity information.",
       );
     }
-    await this.addConnection(this.workbenchConfig);
+    await this.addConnection({
+      ...this.workbenchConfig,
+      connectionUrl: newDatabase
+        ? replaceDatabaseInConnectionUrl(
+            this.workbenchConfig.connectionUrl,
+            newDatabase,
+          )
+        : this.workbenchConfig.connectionUrl,
+    });
   }
 }

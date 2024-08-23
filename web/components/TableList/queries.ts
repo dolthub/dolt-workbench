@@ -20,11 +20,13 @@ export const GET_TABLE = gql`
     $databaseName: String!
     $refName: String!
     $tableName: String!
+    $schemaName: String
   ) {
     table(
       databaseName: $databaseName
       refName: $refName
       tableName: $tableName
+      schemaName: $schemaName
     ) {
       ...TableWithColumns
     }

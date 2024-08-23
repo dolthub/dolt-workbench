@@ -1,0 +1,15 @@
+.wrapper {
+  @apply hidden lg:flex items-center mb-4 mx-4;
+}
+
+.selector {
+  @apply min-w-[210px] max-w-[210px];
+}
+
+.createSch {
+  @apply text-xl ml-2.5 mt-1 font-semibold;
+
+  path {
+    @apply stroke-[3.5rem];
+  }
+}

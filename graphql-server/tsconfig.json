@@ -19,7 +19,7 @@
     "moduleResolution": "nodenext",
     "resolveJsonModule": true,
     "maxNodeModuleJsDepth": 10,
-    "types": ["node"]
+    "types": ["node", "jest"]
   },
   "exclude": ["node_modules", "dist"],
   "include": ["./src/**/*", "./src/**/*.json"]

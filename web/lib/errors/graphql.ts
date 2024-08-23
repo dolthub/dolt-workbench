@@ -6,3 +6,4 @@ export const gqlPullHasConflicts = "Merge conflict detected";
 export const gqlErrorPrimaryKeyChange = "primary key set change";
 export const gqlConnectionLost = "Connection lost";
 export const gqlDatabaseNotFoundErr = "Database connection not found";
+export const gqlDatabasesDoNotMatch = "Databases do not match";

@@ -4,7 +4,7 @@ import Full from "./Full";
 import Small from "./Small";
 
 type Props = {
-  params: OptionalRefParams;
+  params: OptionalRefParams & { schemaName?: string };
   title?: string;
   initialTabIndex: number;
   breadcrumbs?: ReactNode;

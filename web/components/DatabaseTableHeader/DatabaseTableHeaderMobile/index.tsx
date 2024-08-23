@@ -1,14 +1,15 @@
 import MobileSqlViewer from "@components/SqlEditor/MobileSqlViewer";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Btn, Loader } from "@dolthub/react-components";
+import { DatabasePageParams } from "@lib/params";
 import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
 import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
 import Errors from "../Errors";
-import { Params, useSqlStrings } from "../useSqlStrings";
+import { useSqlStrings } from "../useSqlStrings";
 import css from "./index.module.css";
 
 type Props = {
-  params: Params;
+  params: DatabasePageParams;
   empty?: boolean;
 };
 

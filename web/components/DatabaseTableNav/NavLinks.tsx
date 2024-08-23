@@ -1,21 +1,18 @@
-import SchemaList from "@components/SchemaList";
+import DefinitionList from "@components/DefinitionList";
 import TableList from "@components/TableList";
 import Views from "@components/Views";
 import { Tab, TabList, TabPanel, Tabs } from "@dolthub/react-components";
-import { OptionalRefParams } from "@lib/params";
+import { DatabasePageParams, OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 
 type Props = {
   className?: string;
-  params: OptionalRefParams & {
-    tableName?: string;
-    q?: string;
-  };
+  params: DatabasePageParams;
 };
 
-const tabs = ["Tables", "Views", "Schemas"];
+const tabs = ["Tables", "Views", "Definitions"];
 
 export default function NavLinks({ className, params }: Props) {
   const router = useRouter();
@@ -41,6 +38,7 @@ export default function NavLinks({ className, params }: Props) {
                 databaseName: params.databaseName,
                 tableName: params.tableName,
                 refName,
+                schemaName: params.schemaName,
               }}
             />
           )}
@@ -53,10 +51,10 @@ export default function NavLinks({ className, params }: Props) {
         />
         <CustomTabPanel
           index={2}
-          name="schemas"
+          name="definitions"
           params={params}
           renderChildren={refName => (
-            <SchemaList params={{ ...params, refName }} />
+            <DefinitionList params={{ ...params, refName }} />
           )}
         />
       </Tabs>
@@ -93,7 +91,7 @@ function getActiveIndexFromRouterQuery(
       return 0;
     case "Views":
       return 1;
-    case "Schemas":
+    case "Definitions":
       return 2;
     default:
       return 0;

@@ -2,11 +2,11 @@ import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { RawRows } from "../queryFactory/types";
 import { getCellValue } from "../rows/row.model";
-import { RefArgs } from "../utils/commonTypes";
+import { RefMaybeSchemaArgs } from "../utils/commonTypes";
 import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";
 
 @ArgsType()
-export class SqlSelectArgs extends RefArgs {
+export class SqlSelectArgs extends RefMaybeSchemaArgs {
   @Field()
   queryString: string;
 }

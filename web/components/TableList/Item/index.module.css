@@ -3,7 +3,7 @@
 }
 
 .buttonIcon {
-  @apply text-primary opacity-25 text-2xl mr-4 h-6 rounded-full;
+  @apply text-primary opacity-25 text-2xl mr-4 h-6 mt-1 rounded-full;
 
   &:focus {
     @apply widget-shadow-lightblue outline-none;

@@ -2,17 +2,15 @@ import { MockedProvider } from "@apollo/client/testing";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import { SqlEditorProvider } from "@contexts/sqleditor";
 import useMockRouter from "@hooks/useMockRouter";
+import { DatabasePageParams } from "@lib/params";
 import { setupAndWait } from "@lib/testUtils.test";
 import { screen } from "@testing-library/react";
 import DatabaseTableHeader from ".";
-import {
-  DEFAULT_LIMIT,
-  Params,
-  sampleCreateQueryForEmpty,
-} from "./useSqlStrings";
+import { DEFAULT_LIMIT, sampleCreateQueryForEmpty } from "./useSqlStrings";
 
 const dbParams = {
   databaseName: "test",
+  schemaName: "mysch",
 };
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");
@@ -26,7 +24,7 @@ jest.mock("next/router", () => {
 });
 
 async function renderAndTestComponent(
-  params: Params,
+  params: DatabasePageParams,
   expectedCopiedQuery: string,
   empty = false,
   isPostgres = false,
@@ -64,7 +62,7 @@ describe("test DatabaseTableHeader", () => {
       expected: "SHOW TABLES;\n\n\n\n",
       expectedPostgres: `SELECT *
 FROM pg_catalog.pg_tables
-where schemaname='${dbParams.databaseName}';\n\n\n\n`,
+where schemaname='${dbParams.schemaName}';\n\n\n\n`,
     },
     {
       desc: "with table",
@@ -78,7 +76,7 @@ where schemaname='${dbParams.databaseName}';\n\n\n\n`,
       expected: "SHOW TABLES;\n\n\n\n",
       expectedPostgres: `SELECT *
 FROM pg_catalog.pg_tables
-where schemaname='${dbParams.databaseName}';\n\n\n\n`,
+where schemaname='${dbParams.schemaName}';\n\n\n\n`,
     },
     {
       desc: "with query and table",

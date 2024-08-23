@@ -13,7 +13,7 @@ export class DBArgs {
 }
 
 @ArgsType()
-export class SchemaArgs {
+export class SchemaArgs extends DBArgs {
   @Field()
   schemaName: string;
 }
@@ -31,9 +31,21 @@ export class RefArgs extends DBArgs {
 }
 
 @ArgsType()
+export class RefMaybeSchemaArgs extends RefArgs {
+  @Field({ nullable: true })
+  schemaName?: string;
+}
+
+@ArgsType()
 export class TableArgs extends RefArgs {
   @Field()
   tableName: string;
+}
+
+@ArgsType()
+export class TableMaybeSchemaArgs extends TableArgs {
+  @Field({ nullable: true })
+  schemaName?: string;
 }
 
 @ArgsType()

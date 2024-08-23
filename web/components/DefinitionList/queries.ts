@@ -5,8 +5,16 @@ export const ROWS_FOR_SCHEMAS = gql`
     name
     type
   }
-  query RowsForDoltSchemas($databaseName: String!, $refName: String!) {
-    doltSchemas(databaseName: $databaseName, refName: $refName) {
+  query RowsForDoltSchemas(
+    $databaseName: String!
+    $refName: String!
+    $schemaName: String
+  ) {
+    doltSchemas(
+      databaseName: $databaseName
+      refName: $refName
+      schemaName: $schemaName
+    ) {
       ...SchemaItem
     }
   }

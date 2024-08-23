@@ -9,8 +9,9 @@ import * as gen from "@gen/graphql-types";
 import {
   DatabaseParams,
   PullDiffParams,
-  RefParams,
+  RefOptionalSchemaParams,
   RequiredRefsParams,
+  TableOptionalSchemaParams,
   TableParams,
 } from "./params";
 
@@ -45,7 +46,7 @@ export const refetchBranchQueries = (
 ];
 
 export const refetchResetChangesQueries = (
-  variables: RefParams,
+  variables: RefOptionalSchemaParams,
   isDolt = false,
 ): RefetchQueries => {
   const diffVariables: RequiredRefsParams = {
@@ -75,7 +76,7 @@ export const refetchResetChangesQueries = (
   ];
 };
 
-export const refetchTableQueries = (variables: TableParams) => [
+export const refetchTableQueries = (variables: TableOptionalSchemaParams) => [
   { query: gen.DataTableQueryDocument, variables },
   {
     query: gen.RowsForDataTableQueryDocument,

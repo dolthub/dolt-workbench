@@ -1,14 +1,14 @@
 import Section from "@components/DatabaseTableNav/Section";
 import { Loader } from "@dolthub/react-components";
 import { SchemaItemFragment } from "@gen/graphql-types";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import NoViews from "./NoViews";
 import ViewItem from "./ViewItem";
 import css from "./index.module.css";
 import useViewList from "./useViewList";
 
 type ViewsProps = {
-  params: RefParams & { q?: string };
+  params: RefOptionalSchemaParams & { q?: string };
 };
 
 type Props = ViewsProps & {

@@ -1,12 +1,12 @@
 import { Loader } from "@dolthub/react-components";
 import { useRefPageQuery } from "@gen/graphql-types";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import ForEmpty from "../ForEmpty";
 import ForError from "../ForError";
 import ForTable from "../ForTable";
 
 type Props = {
-  params: RefParams;
+  params: RefOptionalSchemaParams;
 };
 
 export default function ForRef({ params }: Props) {

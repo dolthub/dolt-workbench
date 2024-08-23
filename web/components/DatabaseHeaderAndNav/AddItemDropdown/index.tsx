@@ -1,7 +1,7 @@
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Popup } from "@dolthub/react-components";
 import useRole from "@hooks/useRole";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import { newRelease, upload } from "@lib/urls";
 import { AiOutlineTag } from "@react-icons/all-files/ai/AiOutlineTag";
 import { AiOutlineUpload } from "@react-icons/all-files/ai/AiOutlineUpload";
@@ -13,7 +13,7 @@ import DropdownItem from "./Item";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams & { refName?: string };
+  params: OptionalRefParams & { schemaName?: string };
 };
 
 export default function AddItemDropdown(props: Props) {
@@ -40,13 +40,6 @@ export default function AddItemDropdown(props: Props) {
             >
               Upload a file
             </DropdownItem>
-            {/* <DropdownItem
-              url={newPull(props.params)}
-              icon={<AiOutlinePullRequest />}
-              data-cy="add-dropdown-new-pull-request-link"
-            >
-              New pull request
-            </DropdownItem> */}
             <NotDoltWrapper>
               <DropdownItem
                 url={newRelease(props.params)}

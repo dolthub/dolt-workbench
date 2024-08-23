@@ -36,10 +36,15 @@ export const TAG_LIST_QUERY = gql`
 `;
 
 export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
-  query TableNamesForBranch($databaseName: String!, $refName: String!) {
+  query TableNamesForBranch(
+    $databaseName: String!
+    $refName: String!
+    $schemaName: String
+  ) {
     tableNames(
       databaseName: $databaseName
       refName: $refName
+      schemaName: $schemaName
       filterSystemTables: true
     ) {
       list

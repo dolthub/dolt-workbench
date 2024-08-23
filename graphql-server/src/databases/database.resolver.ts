@@ -63,6 +63,12 @@ class RemoveDatabaseConnectionArgs {
   name: string;
 }
 
+@ArgsType()
+class ResetConnectionArgs {
+  @Field({ nullable: true })
+  newDatabase?: string;
+}
+
 @Resolver(_of => DatabaseConnection)
 export class DatabaseResolver {
   constructor(
@@ -89,22 +95,14 @@ export class DatabaseResolver {
   async databases(): Promise<string[]> {
     const conn = this.conn.connection();
     const dbs = await conn.databases();
-    return dbs.filter(
-      db =>
-        db !== "information_schema" &&
-        db !== "mysql" &&
-        db !== "dolt_cluster" &&
-        !db.includes("/"),
-    );
+    return dbs;
   }
 
   @Query(_returns => [String])
-  async schemas(): Promise<string[]> {
+  async schemas(@Args() args: DBArgs): Promise<string[]> {
     const conn = this.conn.connection();
     if (!conn.schemas) return [];
-    const db = await this.currentDatabase();
-    if (!db) return [];
-    const schemas = await conn.schemas({ databaseName: db });
+    const schemas = await conn.schemas(args);
     return schemas.filter(
       sch =>
         sch !== "information_schema" &&
@@ -148,12 +146,6 @@ export class DatabaseResolver {
     }
 
     const db = await this.currentDatabase();
-    if (type === DatabaseType.Mysql) {
-      return { currentDatabase: db };
-    }
-    if (!db) {
-      throw new Error("Must provide database for Postgres connection");
-    }
     return { currentDatabase: db, currentSchema: args.schema };
   }
 
@@ -185,8 +177,8 @@ export class DatabaseResolver {
   }
 
   @Mutation(_returns => Boolean)
-  async resetDatabase(): Promise<boolean> {
-    await this.conn.resetDS();
+  async resetDatabase(@Args() args: ResetConnectionArgs): Promise<boolean> {
+    await this.conn.resetDS(args.newDatabase);
     return true;
   }
 }

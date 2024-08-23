@@ -8,7 +8,7 @@ import { Route } from "@dolthub/web-utils";
 import { ImportOperation } from "@gen/graphql-types";
 import { createCustomContext } from "@lib/createCustomContext";
 import { handleCaughtError } from "@lib/errors/helpers";
-import { DatabaseParams, UploadParams } from "@lib/params";
+import { DatabaseParams, UploadParamsWithOptions } from "@lib/params";
 import { uploadStage } from "@lib/urls";
 import localForage from "localforage";
 import { extendPrototype } from "localforage-getitems";
@@ -28,10 +28,7 @@ export const FileUploadLocalForageContext =
   );
 
 type Props = {
-  params: UploadParams & {
-    tableName?: string;
-    branchName?: string;
-  };
+  params: UploadParamsWithOptions;
   children: ReactNode;
   isDolt: boolean;
 };
@@ -81,17 +78,18 @@ export function FileUploadLocalForageProvider(props: Props) {
         importOp: ImportOperation.Update,
       });
     }
-    if (!props.isDolt) {
-      setState({ branchName: "main" });
-    }
   });
 
   // Get local forage items on mount
   useEffectAsync(async ({ subscribed }) => {
     try {
       const res = await store.getItems();
+      const newState = { ...defaultState, ...res };
       if (subscribed) {
-        _setState({ ...defaultState, ...res });
+        _setState(newState);
+      }
+      if (!newState.branchName && !props.isDolt) {
+        _setState({ branchName: "main" });
       }
     } catch (err) {
       if (subscribed) handleCaughtError(err, setError);

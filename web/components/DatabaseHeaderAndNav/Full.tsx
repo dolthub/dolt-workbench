@@ -8,7 +8,7 @@ import RightHeaderButtons from "./RightHeaderButtons";
 import css from "./index.module.css";
 
 type Props = {
-  params: OptionalRefParams;
+  params: OptionalRefParams & { schemaName?: string };
   title?: string;
   initialTabIndex: number;
   setShowSmall: (s: boolean) => void;

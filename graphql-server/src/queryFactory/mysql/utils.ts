@@ -1,7 +1,8 @@
-import { Table, TableForeignKey } from "typeorm";
+import { EntityManager, QueryRunner, Table, TableForeignKey } from "typeorm";
 import { ForeignKey } from "../../indexes/foreignKey.model";
 import { TableDetails } from "../../tables/table.model";
-import { RawRows } from "../types";
+import { ROW_LIMIT } from "../../utils";
+import { PR, RawRows, TableRowPagination } from "../types";
 
 export function notDoltError(action: string): Error {
   return new Error(`Cannot ${action} on non-Dolt database`);
@@ -74,4 +75,47 @@ function convertForeignKeys(
     };
   });
   return Object.values(nameMap);
+}
+
+export async function getTableInfo(
+  qr: QueryRunner,
+  tableName: string,
+): Promise<TableDetails | undefined> {
+  const table = await qr.getTable(tableName);
+  if (!table) return undefined;
+  return convertToTableDetails(table);
+}
+
+export async function getTables(
+  qr: QueryRunner,
+  tns: string[],
+): Promise<TableDetails[]> {
+  const tables = await qr.getTables(tns);
+  return tables.map(convertToTableDetails);
+}
+
+export async function getTablePKColumns(
+  qr: QueryRunner,
+  tableName: string,
+): Promise<string[]> {
+  const table = await qr.getTable(tableName);
+  if (!table) return [];
+  return table.columns.filter(c => c.isPrimary).map(c => c.name);
+}
+
+export async function getTableRows(
+  em: EntityManager,
+  tableName: string,
+  page: TableRowPagination,
+): PR {
+  let build = em.createQueryBuilder().select("*").from(tableName, tableName);
+
+  page.pkCols.forEach(col => {
+    build = build.addOrderBy(col, "ASC");
+  });
+
+  return build
+    .limit(ROW_LIMIT + 1)
+    .offset(page.offset)
+    .getRawMany();
 }

@@ -1,10 +1,10 @@
 import Page from "@components/util/Page";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams, RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: RefParams & {
+  params: RefOptionalSchemaParams & {
     active?: string;
   };
 };
@@ -23,6 +23,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     props: {
       params: {
         ...(params as RefParams),
+        schemaName: query.schemaName ? String(query.schemaName) : "",
         active: query.active ? String(query.active) : "",
       },
     },

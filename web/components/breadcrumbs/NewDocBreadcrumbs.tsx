@@ -13,7 +13,7 @@ export default function NewDocBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-new-doc-breadcrumbs"
       data-cy="db-new-doc-breadcrumbs"
-      breadcrumbs={db => newDocBreadcrumbsDetails(params, db)}
+      breadcrumbs={newDocBreadcrumbsDetails(params)}
     />
   );
 }

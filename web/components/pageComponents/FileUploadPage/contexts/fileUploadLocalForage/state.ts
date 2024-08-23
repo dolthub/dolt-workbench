@@ -9,12 +9,12 @@ import { DatabaseParams } from "@lib/params";
 
 const defaultState = {
   branchName: "",
+  schemaName: undefined as string | undefined,
   tableName: "",
   importOp: ImportOperation.Update,
   selectedFile: undefined as File | undefined, // file upload only
   fileType: FileType.Csv,
   modifier: undefined as LoadDataModifier | undefined,
-  colNames: "",
 };
 
 export type FileUploadState = typeof defaultState;
@@ -22,6 +22,7 @@ export type FileUploadState = typeof defaultState;
 export function getDefaultState(p: {
   tableName?: string;
   branchName?: string;
+  schemaName?: string;
 }): FileUploadState {
   return { ...defaultState, ...p };
 }

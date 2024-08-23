@@ -9,6 +9,7 @@ type ModalState = {
 export type ExecuteProps = OptionalRefParams & {
   query: string;
   expandedSection?: string;
+  schemaName?: string;
 };
 
 export type SqlEditorContextType = {

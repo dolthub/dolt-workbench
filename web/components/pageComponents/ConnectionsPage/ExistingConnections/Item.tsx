@@ -1,15 +1,10 @@
 import { getDatabaseType } from "@components/DatabaseTypeLabel";
-import { Button, ErrorMsg } from "@dolthub/react-components";
-import {
-  DatabaseConnectionFragment,
-  DatabaseType,
-  useAddDatabaseConnectionMutation,
-} from "@gen/graphql-types";
-import { maybeDatabase, maybeSchema } from "@lib/urls";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
+import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import cx from "classnames";
-import { useRouter } from "next/router";
 import css from "./index.module.css";
+import useAddConnection from "./useAddConnection";
 
 type Props = {
   conn: DatabaseConnectionFragment;
@@ -17,30 +12,12 @@ type Props = {
 };
 
 export default function Item({ conn, onDeleteClicked }: Props) {
-  const router = useRouter();
-  const [addDb, res] = useAddDatabaseConnectionMutation();
-
-  const onClick = async () => {
-    try {
-      const db = await addDb({ variables: conn });
-      await res.client.clearStore();
-      if (!db.data) {
-        return;
-      }
-      const { href, as } =
-        conn.type === DatabaseType.Postgres
-          ? maybeSchema(db.data.addDatabaseConnection.currentSchema)
-          : maybeDatabase(db.data.addDatabaseConnection.currentDatabase);
-      router.push(href, as).catch(console.error);
-    } catch (_) {
-      // Handled by res.error
-    }
-  };
+  const { onAdd, err, loading } = useAddConnection(conn);
 
   return (
     <>
       <li key={conn.name} className={css.connection}>
-        <Button.Link onClick={onClick}>{conn.name}</Button.Link>
+        <Button.Link onClick={onAdd}>{conn.name}</Button.Link>
         <span className={css.right}>
           <DatabaseTypeLabel conn={conn} />
           <Button.Link onClick={() => onDeleteClicked(conn.name)}>
@@ -48,7 +25,8 @@ export default function Item({ conn, onDeleteClicked }: Props) {
           </Button.Link>
         </span>
       </li>
-      <ErrorMsg err={res.error} className={css.err} />
+      <Loader loaded={!loading} />
+      <ErrorMsg err={err} className={css.err} />
     </>
   );
 }

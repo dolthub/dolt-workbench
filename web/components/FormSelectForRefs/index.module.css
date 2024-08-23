@@ -1,5 +1,13 @@
+.outerForPostgres {
+  @apply ml-2.5;
+}
+
 .branchAndTagSelect {
   @apply min-w-[270px] max-w-[270px] w-full;
+}
+
+.selectForPostgres {
+  @apply min-w-[210px] max-w-[210px];
 }
 
 .branchAndCommitSelect {
@@ -12,6 +20,14 @@
 
 .commitTimeAgo {
   @apply mt-0.5;
+}
+
+.disabledWrapper {
+  @apply flex items-center;
+}
+
+.label {
+  @apply font-semibold inline-block mr-3 ml-2.5;
 }
 
 .doltDisabled {

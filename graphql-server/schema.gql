@@ -59,7 +59,7 @@ type Branch {
   lastCommitter: String!
   lastUpdated: Timestamp!
   table(tableName: String!): Table
-  tableNames(filterSystemTables: Boolean): [String!]!
+  tableNames(filterSystemTables: Boolean, schemaName: String): [String!]!
   head: String
 }
 
@@ -291,7 +291,7 @@ type Query {
   currentDatabase: String
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
-  schemas: [String!]!
+  schemas(databaseName: String!): [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
   diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
@@ -299,17 +299,17 @@ type Query {
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
-  rows(refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
-  doltSchemas(databaseName: String!, refName: String!): [SchemaItem!]!
-  views(databaseName: String!, refName: String!): [SchemaItem!]!
+  doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
+  views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
-  sqlSelect(refName: String!, databaseName: String!, queryString: String!): SqlSelect!
-  sqlSelectForCsvDownload(refName: String!, databaseName: String!, queryString: String!): String!
+  sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!): SqlSelect!
+  sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!): String!
   status(databaseName: String!, refName: String!): [Status!]!
-  table(refName: String!, databaseName: String!, tableName: String!): Table!
-  tableNames(refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
-  tables(refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
+  table(tableName: String!, refName: String!, databaseName: String!, schemaName: String): Table!
+  tableNames(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
+  tables(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
   tags(databaseName: String!): TagList!
   tag(databaseName: String!, tagName: String!): Tag
 }
@@ -344,9 +344,9 @@ type Mutation {
   addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, schema: String): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
-  createSchema(schemaName: String!): Boolean!
-  resetDatabase: Boolean!
-  loadDataFile(tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
+  createSchema(databaseName: String!, schemaName: String!): Boolean!
+  resetDatabase(newDatabase: String): Boolean!
+  loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

@@ -22,7 +22,7 @@ function Inner() {
     dbParams,
     updateLoad,
     error,
-    state: { branchName },
+    state: { branchName, schemaName },
     getUploadUrl,
   } = useFileUploadContext();
   const { onNext, disabled, state, setState } = useTable();
@@ -43,7 +43,7 @@ function Inner() {
           <TableOption title="Update an existing table">
             <div>
               <TableSelector
-                params={{ ...dbParams, refName: branchName }}
+                params={{ ...dbParams, refName: branchName, schemaName }}
                 selectedTable={state.existingTable}
                 onChangeTable={t => setState({ existingTable: t ?? undefined })}
                 light

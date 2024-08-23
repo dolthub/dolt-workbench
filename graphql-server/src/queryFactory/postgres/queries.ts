@@ -1,5 +1,5 @@
-export const setSearchPath = (dbName: string, _isDolt = false) =>
-  `SET SEARCH_PATH = '${dbName}'`;
+export const setSearchPath = (schemaName: string, _isDolt = false) =>
+  `SET SEARCH_PATH = '${schemaName}'`;
 
 export const databasesQuery = `SELECT datname FROM pg_database`;
 

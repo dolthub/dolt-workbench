@@ -46,7 +46,7 @@ export async function getDoltProcedures(
 export async function getDoltBranch(
   em: EntityManager,
   args: t.BranchArgs,
-): t.UPR {
+): t.USPR {
   return em
     .createQueryBuilder()
     .select("*")

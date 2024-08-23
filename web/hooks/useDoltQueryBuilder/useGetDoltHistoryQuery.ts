@@ -62,7 +62,6 @@ function getHistoryWhereClause(
   isPostgres: boolean,
 ): Expr | SqlFunction | null {
   const whereColVals = extractColumnValues(parsed.where);
-  // console.log("VALS", whereColVals);
   return addToExistingWhereFromPKCols(whereColVals, isPostgres);
 }
 
@@ -75,7 +74,6 @@ function shouldAddColToConditions(col: string): boolean {
 // Iterates `where` AST and extracts column names and values
 function extractColumnValues(where: Expr | any): Conditions {
   const result: Conditions = [];
-  // console.log("WHERE", prettyJSON(where));
 
   function traverse(node?: Expr | any) {
     if (!node) return;

@@ -13,7 +13,7 @@ export default function PullDiffBreadcrumbs({ params, ...props }: Props) {
       {...props}
       aria-label="db-pull-diff-breadcrumbs"
       data-cy="db-pull-diff-breadcrumbs"
-      breadcrumbs={db => pullDiffBreadcrumbDetails(params, db)}
+      breadcrumbs={pullDiffBreadcrumbDetails(params)}
     />
   );
 }

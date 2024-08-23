@@ -6,7 +6,7 @@ import { Button, ErrorMsg } from "@dolthub/react-components";
 import { useTagListQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { TableParams } from "@lib/params";
+import { TableParams, UploadParamsWithOptions } from "@lib/params";
 import { table } from "@lib/urls";
 import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
 import { AiOutlineDelete } from "@react-icons/all-files/ai/AiOutlineDelete";
@@ -30,7 +30,11 @@ function Inner(props: InnerProps) {
   const { dropTable, insertIntoTable } = useSqlBuilder();
   const { columns } = useDataTableContext();
 
-  const uploadParams = { ...props.params, uploadId: String(Date.now()) };
+  const uploadParams: UploadParamsWithOptions = {
+    ...props.params,
+    branchName: props.params.refName,
+    uploadId: String(Date.now()),
+  };
 
   const onWriteQuery = () => {
     const values = columns?.map(mapColTypeToFakeValue) ?? [];

@@ -1,4 +1,4 @@
-import { UploadParams } from "@lib/params";
+import { UploadParamsWithOptions } from "@lib/params";
 import { uploadStage } from "@lib/urls";
 import { ReactNode } from "react";
 import Link, { LinkProps } from "./Link";
@@ -7,10 +7,7 @@ type Props = LinkProps & {
   children: ReactNode;
   stage: string;
   dataCyPrefix?: string;
-
-  params: UploadParams & {
-    refName?: string;
-    tableName?: string;
+  params: UploadParamsWithOptions & {
     spreadsheet?: boolean;
   };
 };

@@ -1,4 +1,5 @@
 import { ApolloError } from "@apollo/client";
+import { gqlDatabasesDoNotMatch } from "./graphql";
 import { ApolloErrorType, ErrorType } from "./types";
 
 export function errorMatches(
@@ -14,6 +15,8 @@ export function improveErrorMsg(message: string): string {
       return "Error message empty";
     case "Server does not support secure connnection":
       return "Server does not support secure connection. See advanced settings to disable SSL.";
+    case gqlDatabasesDoNotMatch:
+      return "Current database does not match selected database. Choose a database from the database dropdown in the top navigation to proceed.";
     default:
       return message;
   }

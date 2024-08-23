@@ -1,6 +1,6 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { render, screen } from "@testing-library/react";
-import SchemaList from ".";
+import DefinitionList from ".";
 import * as mocks from "./mocks";
 
 const params = {
@@ -10,12 +10,12 @@ const params = {
 
 const tableList = [[], [mocks.tableOne], [mocks.tableOne, mocks.tableTwo]];
 
-describe("test SchemaList", () => {
+describe("test DefinitionList", () => {
   tableList.forEach(tables => {
-    it(`renders SchemaList component with ${tables.length} tables `, async () => {
+    it(`renders DefinitionList component with ${tables.length} tables `, async () => {
       render(
         <MockedProvider mocks={mocks.mocks(params, tables)}>
-          <SchemaList
+          <DefinitionList
             params={{
               ...params,
               q: mocks.getQ(tables),

@@ -1,11 +1,11 @@
 import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { handleTableNotFound } from "../utils";
-import { RefArgs, TableArgs } from "../utils/commonTypes";
+import { RefMaybeSchemaArgs, TableMaybeSchemaArgs } from "../utils/commonTypes";
 import { Table, TableNames, fromDoltRowRes } from "./table.model";
 
 @ArgsType()
-class ListTableArgs extends RefArgs {
+class ListTableArgs extends RefMaybeSchemaArgs {
   @Field({ nullable: true })
   filterSystemTables?: boolean;
 }
@@ -15,7 +15,7 @@ export class TableResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => Table)
-  async table(@Args() args: TableArgs): Promise<Table> {
+  async table(@Args() args: TableMaybeSchemaArgs): Promise<Table> {
     const conn = this.conn.connection();
     const res = await conn.getTableInfo(args);
     if (!res) {
@@ -40,7 +40,9 @@ export class TableResolver {
   }
 
   // Utils
-  async maybeTable(@Args() args: TableArgs): Promise<Table | undefined> {
+  async maybeTable(
+    @Args() args: TableMaybeSchemaArgs,
+  ): Promise<Table | undefined> {
     return handleTableNotFound(async () => this.table(args));
   }
 }
