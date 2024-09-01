@@ -1380,7 +1380,7 @@ __metadata:
     postcss-preset-env: "npm:^9.4.0"
     prettier: "npm:^3.1.0"
     react: "npm:^18.3.1"
-    react-ace: "npm:^11.0.1"
+    react-ace: "npm:^12.0.0"
     react-copy-to-clipboard: "npm:^5.1.0"
     react-data-grid: "npm:7.0.0-beta.44"
     react-diff-viewer: "npm:^3.1.1"
@@ -12284,9 +12284,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-ace@npm:^11.0.1":
-  version: 11.0.1
-  resolution: "react-ace@npm:11.0.1"
+"react-ace@npm:^12.0.0":
+  version: 12.0.0
+  resolution: "react-ace@npm:12.0.0"
   dependencies:
     ace-builds: "npm:^1.32.8"
     diff-match-patch: "npm:^1.0.5"
@@ -12296,7 +12296,7 @@ __metadata:
   peerDependencies:
     react: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^0.13.0 || ^0.14.0 || ^15.0.1 || ^16.0.0 || ^17.0.0 || ^18.0.0
-  checksum: fa8acd2dc977d5edf6d99e238429c696c3cb4f35fb9f78b296cff875a399b12c6672618f34495be00c6d96ca877c3e30f37c5235b9b3878f65d19aa0ed5dab69
+  checksum: e7f33d4f0910f482e939f321db8f5a8bb7fe0bf40a9db0cde12ed2b368e8c77fc2683b2fb0737cd88216f732258e363705f2c6cfbbcaabced3fba8eff7fb43ad
   languageName: node
   linkType: hard
 
