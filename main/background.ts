@@ -54,3 +54,10 @@ ipcMain.handle("get-headers", (event, arg) => {
   };
   return headers;
 });
+
+ipcMain.handle("api-config", async () => {
+  const cfg = {
+    graphqlApiUrl: process.env.GRAPHQLAPI_URL,
+  };
+  return cfg;
+});
