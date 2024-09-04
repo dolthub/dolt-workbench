@@ -47,6 +47,5 @@
     "downlevelIteration": true
 
   },
- 
   "exclude": ["node_modules", "web/next.config.js", "app", "dist"]
 }

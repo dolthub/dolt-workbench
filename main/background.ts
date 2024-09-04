@@ -46,13 +46,6 @@ app.on("window-all-closed", () => {
   app.quit();
 });
 
-ipcMain.handle("api-config", async () => {
-  const cfg = {
-    graphqlApiUrl: process.env.GRAPHQLAPI_URL,
-  };
-  return cfg;
-});
-
 // This does not work
 // TODO: add a way to get headers
 ipcMain.handle("get-headers", (event, arg) => {

@@ -169,5 +169,8 @@
     "typescript": "^5.4.5",
     "webpack": "^5.88.1",
     "yalc": "^1.0.0-pre.53"
+  },
+  "resolutions": {
+    "cliui": "^8.0.1"
   }
 }
