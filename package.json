@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "main": "app/background.js",
   "scripts": {
-    "dev": "nextron",
-    "build": "nextron build",
+    "dev": "cd graphql-server && nest build && cd .. && nextron",
+    "build": "cd graphql-server && nest build && cd .. && nextron build",
     "build:mac": "nextron build --mac",
     "postinstall": "electron-builder install-app-deps",
     "clean": "tsc -b --clean && yarn yalc:clean",
@@ -169,8 +169,5 @@
     "typescript": "^5.4.5",
     "webpack": "^5.88.1",
     "yalc": "^1.0.0-pre.53"
-  },
-  "resolutions": {
-    "cliui": "^8.0.1"
   }
 }

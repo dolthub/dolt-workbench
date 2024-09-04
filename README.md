@@ -13,13 +13,4 @@ First, clone this repository. Then run `yarn` in root directory to install depen
 Run `yarn dev` to start dev mode with dev tool.
 
 ### Build the app
-
-Build the graphql server first:
-```
-% yarn build:graphql
-```
-
-Then build the app:
-```
-% yarn build
-```
+Run `yarn build` to build the app, and the built app will be found under `dist`.
