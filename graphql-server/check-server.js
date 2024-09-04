@@ -41,7 +41,7 @@ function generateTypes() {
 
 // runServer runs the graphql server and exits with error if the
 // server writes to stderr or receives an error event
-function runServer() {
+export function runServer() {
   const server = spawn("node", ["dist/main.js"], {
     shell: true,
     cwd: __dirname,

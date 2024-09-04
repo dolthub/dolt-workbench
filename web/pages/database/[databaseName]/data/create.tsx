@@ -1,11 +1,10 @@
 import Page from "@components/util/Page";
-import { DatabaseParams, MaybeRefParams } from "@lib/params";
+import { MaybeRefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 
 type Props = {
   params: MaybeRefParams & {
-    schemaName?: string;
     active?: string;
     edit?: boolean;
   };
@@ -16,22 +15,5 @@ const CreateTablePage: NextPage<Props> = ({ params }) => (
     <DatabasePage.ForCreateTable params={params} />
   </Page>
 );
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  query,
-  params,
-}) => {
-  return {
-    props: {
-      params: {
-        ...(params as DatabaseParams),
-        refName: query.refName ? String(query.refName) : null,
-        active: query.active ? String(query.active) : "",
-        edit: !!query.edit,
-        schemaName: query.schemaName ? String(query.schemaName) : "",
-      },
-    },
-  };
-};
 
 export default CreateTablePage;

@@ -2,7 +2,7 @@ import DatabasePage from "@components/pageComponents/DatabasePage";
 import Page from "@components/util/Page";
 import { DatabaseParams } from "@lib/params";
 import { database } from "@lib/urls";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 
 type Props = {
   params: DatabaseParams & {
@@ -18,19 +18,5 @@ const DefaultBranch: NextPage<Props> = ({ params }) => (
     />
   </Page>
 );
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  return {
-    props: {
-      params: {
-        ...(params as DatabaseParams),
-        active: query.active ? String(query.active) : "",
-      },
-    },
-  };
-};
 
 export default DefaultBranch;

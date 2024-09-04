@@ -1,18 +1,18 @@
 import Page from "@components/util/Page";
 import { RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 
 type Params = RefParams & {
   diffRange: string;
+  tableName?: string;
 };
 
 type Props = {
   params: Params;
-  tableName?: string;
 };
 
-const DiffRangePage: NextPage<Props> = ({ params, tableName }) => (
+const DiffRangePage: NextPage<Props> = ({ params }) => (
   <Page
     title={`Viewing diffs for ${params.databaseName} - ${params.diffRange}`}
     noIndex
@@ -23,21 +23,9 @@ const DiffRangePage: NextPage<Props> = ({ params, tableName }) => (
         refName: params.refName,
         diffRange: params.diffRange,
       }}
-      tableName={tableName}
+      tableName={params.tableName}
     />
   </Page>
 );
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  return {
-    props: {
-      params: params as Params,
-      tableName: query.tableName ? String(query.tableName) : "",
-    },
-  };
-};
 
 export default DiffRangePage;

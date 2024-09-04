@@ -1,7 +1,9 @@
+const tailwindConfig = require("./tailwind.config.js");
+
 module.exports = {
   plugins: {
     "tailwindcss/nesting": {},
-    tailwindcss: {},
+    tailwindcss: { ...tailwindConfig },
     "postcss-preset-env": {},
     cssnano: {},
     autoprefixer: {},

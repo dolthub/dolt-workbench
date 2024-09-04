@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
 import { DocParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 
 type Props = {
   params: DocParams & {
@@ -14,19 +14,5 @@ const BranchAndDocPage: NextPage<Props> = ({ params }) => (
     <DatabasePage.ForDocs params={params} title="doc" />
   </Page>
 );
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  return {
-    props: {
-      params: {
-        ...(params as DocParams),
-        active: query.active ? String(query.active) : "",
-      },
-    },
-  };
-};
 
 export default BranchAndDocPage;

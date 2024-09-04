@@ -1,9 +1,9 @@
 import Page from "@components/util/Page";
-import { RefOptionalSchemaParams, RefParams } from "@lib/params";
+import { RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 
-type QueryPageQueryParams = RefOptionalSchemaParams & {
+type QueryPageQueryParams = RefParams & {
   q?: string;
   active?: string;
 };
@@ -12,7 +12,7 @@ type Props = {
   params: QueryPageQueryParams;
 };
 
-const QueryPage: NextPage<Props> = props => {
+const QueryPage: NextPage<Props> = (props) => {
   const defaultQuery = "SHOW TABLES";
   const params = {
     ...props.params,
@@ -23,22 +23,6 @@ const QueryPage: NextPage<Props> = props => {
       <DatabasePage.ForQuery params={params} />
     </Page>
   );
-};
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  return {
-    props: {
-      params: {
-        ...(params as RefParams),
-        q: query.q ? String(query.q) : "",
-        active: query.active ? String(query.active) : "",
-        schemaName: query.schemaName ? String(query.schemaName) : "",
-      },
-    },
-  };
 };
 
 export default QueryPage;

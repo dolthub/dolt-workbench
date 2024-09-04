@@ -2,7 +2,7 @@ import Page from "@components/util/Page";
 import { Maybe } from "@dolthub/web-utils";
 import { PullDiffParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { GetServerSideProps, NextPage } from "next";
+import { NextPage } from "next";
 
 type Props = {
   params: PullDiffParams;
@@ -21,17 +21,5 @@ const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
     />
   </Page>
 );
-
-export const getServerSideProps: GetServerSideProps<Props> = async ({
-  params,
-  query,
-}) => {
-  return {
-    props: {
-      params: params as PullDiffParams,
-      tableName: query.tableName ? String(query.tableName) : null,
-    },
-  };
-};
 
 export default PullDiffPage;
