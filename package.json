@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "cd graphql-server && nest build && cd .. && nextron",
     "build": "cd graphql-server && nest build && cd .. && nextron build",
-    "build:mac": "nextron build --mac",
+    "dist-all": "electron-builder -mwl",
     "postinstall": "electron-builder install-app-deps",
     "clean": "tsc -b --clean && yarn yalc:clean",
     "compile": "tsc -b",
