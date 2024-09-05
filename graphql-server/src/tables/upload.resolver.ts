@@ -75,7 +75,7 @@ export class FileUploadResolver {
 
     const isDolt = await getIsDolt(pgConnection.query);
     if (isDolt) {
-      await pgConnection.query(`SELECT dolt_checkout('${args.refName}')`);
+      await pgConnection.query(useDB(args.databaseName, args.refName, true));
     }
     const schema = await getSchema(qr, args);
     await pgConnection.query(setSearchPath(schema));

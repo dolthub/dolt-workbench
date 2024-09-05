@@ -20,3 +20,11 @@ export async function changeSchema(
 ): Promise<void> {
   await qr.query(setSearchPath(schemaName));
 }
+
+export function tableWithSchema(args: {
+  tableName: string;
+  schemaName?: string;
+}): string {
+  const schema = args.schemaName || "public";
+  return `${schema}.${args.tableName}`;
+}

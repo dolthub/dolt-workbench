@@ -12,7 +12,7 @@ import {
 } from "../mysql/utils";
 import * as t from "../types";
 import * as qh from "./queries";
-import { changeSchema, getSchema } from "./utils";
+import { changeSchema, getSchema, tableWithSchema } from "./utils";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -47,53 +47,64 @@ export class PostgresQueryFactory
     );
   }
 
-  async checkoutDatabase(
-    qr: QueryRunner,
-    dbName: string,
-    refName?: string,
-  ): Promise<void> {
+  async checkoutDatabase(qr: QueryRunner, dbName: string): Promise<void> {
     const currentDb = await qr.getCurrentDatabase();
     if (dbName !== currentDb) {
       throw new Error("Databases do not match");
     }
-    if (this.isDolt && refName) {
-      await qr.query(`SELECT dolt_checkout('${refName}')`);
-    }
   }
 
   async getTableNames(args: t.RefMaybeSchemaArgs): Promise<string[]> {
-    return this.queryQR(async qr => {
-      const schema = await getSchema(qr, args);
-      const res: t.RawRows = await qr.query(qh.listTablesQuery, [schema]);
-      return res.map(r => r.tablename);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => {
+        const schema = await getSchema(qr, args);
+        const res: t.RawRows = await qr.query(qh.listTablesQuery, [schema]);
+        return res.map(r => r.tablename);
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getTableInfo(
     args: t.TableMaybeSchemaArgs,
   ): Promise<TableDetails | undefined> {
-    return this.queryQR(async qr => {
-      const schema = await getSchema(qr, args);
-      return getTableInfo(qr, `${schema}.${args.tableName}`);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => {
+        const schema = await getSchema(qr, args);
+        return getTableInfo(qr, `${schema}.${args.tableName}`);
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getTables(
     args: t.RefMaybeSchemaArgs,
     tns: string[],
   ): Promise<TableDetails[]> {
-    return this.queryQR(async qr => {
-      const schema = await getSchema(qr, args);
-      const names = tns.map(tn => `${schema}.${tn}`);
-      return getTables(qr, names);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => {
+        const schema = await getSchema(qr, args);
+        const names = tns.map(tn =>
+          tableWithSchema({ tableName: tn, schemaName: schema }),
+        );
+        return getTables(qr, names);
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getTablePKColumns(args: t.TableMaybeSchemaArgs): Promise<string[]> {
-    return this.queryQR(async qr => {
-      const schema = await getSchema(qr, args);
-      return getTablePKColumns(qr, `${schema}.${args.tableName}`);
-    }, args.databaseName);
+    return this.queryQR(
+      async qr => {
+        const schemaName = await getSchema(qr, args);
+        return getTablePKColumns(qr, tableWithSchema({ ...args, schemaName }));
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getTableRows(
@@ -102,8 +113,12 @@ export class PostgresQueryFactory
   ): t.PR {
     return this.queryQR(
       async qr => {
-        const schema = await getSchema(qr, args);
-        return getTableRows(qr.manager, `${schema}.${args.tableName}`, page);
+        const schemaName = await getSchema(qr, args);
+        return getTableRows(
+          qr.manager,
+          tableWithSchema({ ...args, schemaName }),
+          page,
+        );
       },
       args.databaseName,
       args.refName,

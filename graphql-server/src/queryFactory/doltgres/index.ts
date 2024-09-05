@@ -1,3 +1,4 @@
+import { QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
@@ -7,6 +8,7 @@ import { ROW_LIMIT } from "../../utils";
 import * as dem from "../dolt/doltEntityManager";
 import { getAuthorString, handleRefNotFound, unionCols } from "../dolt/utils";
 import { PostgresQueryFactory } from "../postgres";
+import { tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import * as qh from "./queries";
 
@@ -16,12 +18,12 @@ export class DoltgresQueryFactory
 {
   isDolt = true;
 
-  async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
-    return this.queryQR(async qr => {
-      const table = await qr.getTable(`${args.databaseName}.${args.tableName}`);
-      if (!table) return [];
-      return table.columns.filter(c => c.isPrimary).map(c => c.name);
-    }, args.databaseName);
+  async checkoutDatabase(
+    qr: QueryRunner,
+    dbName: string,
+    refName?: string,
+  ): Promise<void> {
+    await qr.query(qh.useDB(dbName, refName, this.isDolt));
   }
 
   async getSchemas(
@@ -66,16 +68,16 @@ export class DoltgresQueryFactory
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
     return this.query(
-      `SELECT DOLT_BRANCH('${args.branchName}', '${args.fromRefName}')`,
-      [],
+      qh.callNewBranch,
+      [args.branchName, args.fromRefName],
       args.databaseName,
     );
   }
 
   async callDeleteBranch(args: t.BranchArgs): t.PR {
     return this.query(
-      `SELECT DOLT_BRANCH('-D', '${args.branchName}')`,
-      [],
+      qh.callDeleteBranch,
+      [args.branchName],
       args.databaseName,
     );
   }
@@ -102,7 +104,7 @@ export class DoltgresQueryFactory
 
   async getDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithSchema({ ...args, tableName: args.tableName })}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -111,7 +113,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithSchema({ ...args, tableName: args.tableName })}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -120,7 +122,7 @@ export class DoltgresQueryFactory
 
   async getDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithSchema({ ...args, tableName: args.tableName })}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -129,43 +131,43 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${args.tableName}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithSchema({ ...args, tableName: args.tableName })}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
     );
   }
 
-  async getSchemaPatch(args: t.RefsTableArgs): t.PR {
+  async getSchemaPatch(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${args.tableName}') WHERE diff_type='schema'`,
+      `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${tableWithSchema(args)}') WHERE diff_type='schema'`,
       [],
       args.databaseName,
       args.refName,
     );
   }
 
-  async getThreeDotSchemaPatch(args: t.RefsTableArgs): t.PR {
+  async getThreeDotSchemaPatch(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${args.tableName}') WHERE diff_type='schema'`,
+      `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${tableWithSchema(args)}') WHERE diff_type='schema'`,
       [],
       args.databaseName,
       args.refName,
     );
   }
 
-  async getSchemaDiff(args: t.RefsTableArgs): t.PR {
+  async getSchemaDiff(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${args.tableName}')`,
+      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${tableWithSchema(args)}')`,
       [],
       args.databaseName,
       args.refName,
     );
   }
 
-  async getThreeDotSchemaDiff(args: t.RefsTableArgs): t.PR {
+  async getThreeDotSchemaDiff(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${args.tableName}')`,
+      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${tableWithSchema(args)}')`,
       [],
       args.databaseName,
       args.refName,
@@ -217,21 +219,14 @@ export class DoltgresQueryFactory
       params.push(getAuthorString(args.author));
     }
     return this.query(
-      `SELECT DOLT_TAG('${args.tagName}', '${args.fromRefName}'${args.message ? `, '-m', '${args.message}'` : ""}${qh.getAuthorNameString(
-        !!args.author,
-        `'${args.author}'`,
-      )})`,
+      qh.getCallNewTag(!!args.message, !!args.author),
       params,
       args.databaseName,
     );
   }
 
   async callDeleteTag(args: t.TagArgs): t.PR {
-    return this.query(
-      `SELECT DOLT_TAG('-d', '${args.tagName}')`,
-      [],
-      args.databaseName,
-    );
+    return this.query(qh.callDeleteTag, [args.tagName], args.databaseName);
   }
 
   async callMerge(

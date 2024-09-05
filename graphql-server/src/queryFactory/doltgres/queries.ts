@@ -1,5 +1,14 @@
 import { RawRows } from "../types";
 
+// Cannot use params here for the database revision. It will incorrectly
+// escape refs with dots
+export function useDB(dbName: string, refName?: string, isDolt = true): string {
+  if (refName && isDolt) {
+    return `USE "${dbName}/${refName}"`;
+  }
+  return `USE "${dbName}"`;
+}
+
 // TABLE
 
 // TODO: Table queries
@@ -23,9 +32,9 @@ import { RawRows } from "../types";
 
 // BRANCHES
 
-export const callNewBranch = `SELECT DOLT_BRANCH($1, $2)`;
+export const callNewBranch = `SELECT DOLT_BRANCH($1::text, $2::text)`;
 
-export const callDeleteBranch = `SELECT DOLT_BRANCH('-D', $1)`;
+export const callDeleteBranch = `SELECT DOLT_BRANCH('-D', $1::text)`;
 
 // COMMITS
 
@@ -65,12 +74,12 @@ export const getCallMerge = (hasAuthor = false) =>
 
 // TAGS
 
-export const callDeleteTag = `SELECT DOLT_TAG('-d', $1)`;
+export const callDeleteTag = `SELECT DOLT_TAG('-d', $1::text)`;
 
 export const getCallNewTag = (hasMessage = false, hasAuthor = false) =>
-  `SELECT DOLT_TAG($1, $2${hasMessage ? `, '-m', $3` : ""}${getAuthorNameString(
+  `SELECT DOLT_TAG($1::text, $2::text${hasMessage ? `, '-m', $3::text` : ""}${getAuthorNameString(
     hasAuthor,
-    hasMessage ? "$4" : "$3",
+    hasMessage ? "$4::text" : "$3::text",
   )})`;
 
 export function getAuthorNameString(hasAuthor: boolean, n: string): string {

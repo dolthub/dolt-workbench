@@ -27,6 +27,7 @@ export type RefsArgs = DBArgs & {
 };
 export type RefsMaybeTableArgs = RefsArgs & { tableName?: string };
 export type RefsTableArgs = RefsArgs & { tableName: string };
+export type RefsTableWithSchemaArgs = RefsTableArgs & { schemaName: string };
 export type RowDiffArgs = DBArgs & {
   refName?: string;
   tableName: string;
