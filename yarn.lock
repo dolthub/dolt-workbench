@@ -2549,6 +2549,7 @@ __metadata:
     tailwindcss: "npm:^3.3.5"
     ts-jest: "npm:^29.1.1"
     typescript: "npm:^5.4.5"
+    webpack-preprocessor-loader: "npm:^1.3.0"
     yalc: "npm:^1.0.0-pre.53"
   languageName: unknown
   linkType: soft
@@ -19969,6 +19970,13 @@ __metadata:
   version: 3.0.0
   resolution: "webpack-node-externals@npm:3.0.0"
   checksum: 9f645a4dc8e122dac43cdc8c1367d4b44af20c79632438b633acc1b4fe64ea7ba1ad6ab61bd0fc46e1b873158c48d8c7a25a489cdab1f31299f00eb3b81cfc61
+  languageName: node
+  linkType: hard
+
+"webpack-preprocessor-loader@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "webpack-preprocessor-loader@npm:1.3.0"
+  checksum: 071f6544ea8a1ff969097560f7cc8b7afc2a7e3785ae47190da03a3638927dfe3b7761d9711319a2c2ddc6c76875ee1d14018c9d71007c97e92e599776fb5cef
   languageName: node
   linkType: hard
 

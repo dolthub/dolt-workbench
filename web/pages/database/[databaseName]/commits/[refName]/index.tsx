@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
 import { RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
   params: RefParams;
@@ -12,5 +12,15 @@ const DatabaseCommitsPage: NextPage<Props> = ({ params }) => (
     <DatabasePage.ForCommits params={params} />
   </Page>
 );
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+}) => {
+  return {
+    props: { params: params as RefParams },
+  };
+};
+// #!endif
 
 export default DatabaseCommitsPage;

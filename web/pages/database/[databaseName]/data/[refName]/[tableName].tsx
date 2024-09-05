@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
 import { TableParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
   params: TableParams & {
@@ -15,8 +15,25 @@ const TablePage: NextPage<Props> = props => (
     title={`${props.params.databaseName} ${props.params.tableName}`}
     noIndex
   >
-    <DatabasePage.ForTable {...props} edit={props.params.edit} />
+    <DatabasePage.ForTable {...props} />
   </Page>
 );
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  query,
+}) => {
+  return {
+    props: {
+      params: {
+        ...(params as TableParams),
+        active: query.active ? String(query.active) : "",
+        edit: !!query.edit,
+      },
+    },
+  };
+};
+// #!endif
 
 export default TablePage;

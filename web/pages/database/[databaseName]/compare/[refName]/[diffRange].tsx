@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
 import { RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Params = RefParams & {
   diffRange: string;
@@ -27,5 +27,21 @@ const DiffRangePage: NextPage<Props> = ({ params }) => (
     />
   </Page>
 );
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  query,
+}) => {
+  return {
+    props: {
+      params: {
+        ...params,
+        tableName: query.tableName ? String(query.tableName) : "",
+      } as Params,
+    },
+  };
+};
+// #!endif
 
 export default DiffRangePage;

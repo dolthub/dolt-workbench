@@ -8,7 +8,7 @@ const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
 const schemaPath = path.join(userDataPath, "schema.gql");
 process.env.SCHEMA_PATH = schemaPath;
-process.env.FOR_ELECTRON = "true";
+process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 
 startGraphQLServer();
 

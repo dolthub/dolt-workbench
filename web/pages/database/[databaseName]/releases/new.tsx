@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
-import { MaybeRefParams } from "@lib/params";
+import { DatabaseParams, MaybeRefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
   params: MaybeRefParams;
@@ -15,5 +15,21 @@ const DatabaseNewReleasePage: NextPage<Props> = ({ params }) => (
     />
   </Page>
 );
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  query,
+}) => {
+  return {
+    props: {
+      params: {
+        ...(params as DatabaseParams),
+        refName: query.refName ? String(query.refName) : null,
+      },
+    },
+  };
+};
+// #!endif
 
 export default DatabaseNewReleasePage;

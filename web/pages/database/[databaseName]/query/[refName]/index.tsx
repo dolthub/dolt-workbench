@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
-import { RefOptionalSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams, RefParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type QueryPageQueryParams = RefOptionalSchemaParams & {
   q?: string;
@@ -24,5 +24,23 @@ const QueryPage: NextPage<Props> = props => {
     </Page>
   );
 };
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  query,
+}) => {
+  return {
+    props: {
+      params: {
+        ...(params as RefParams),
+        q: query.q ? String(query.q) : "",
+        active: query.active ? String(query.active) : "",
+        schemaName: query.schemaName ? String(query.schemaName) : "",
+      },
+    },
+  };
+};
+// #!endif
 
 export default QueryPage;

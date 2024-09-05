@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
 import { DatabaseParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
   params: DatabaseParams;
@@ -12,5 +12,17 @@ const DiffPageForDefaultBranch: NextPage<Props> = props => (
     <DatabasePage.ForCommits {...props} params={props.params} />
   </Page>
 );
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+}) => {
+  return {
+    props: {
+      params: params as DatabaseParams,
+    },
+  };
+};
+// #!endif
 
 export default DiffPageForDefaultBranch;

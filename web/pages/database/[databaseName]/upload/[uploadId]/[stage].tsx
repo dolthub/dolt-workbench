@@ -1,7 +1,7 @@
 import Page from "@components/util/Page";
 import { UploadParams } from "@lib/params";
 import FileUploadPage from "@pageComponents/FileUploadPage";
-import { NextPage } from "next";
+import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
   params: UploadParams & {
@@ -28,5 +28,25 @@ const DatabaseUploadStagePage: NextPage<Props> = ({ params }) => (
     />
   </Page>
 );
+
+// #!if isWeb
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+  params,
+  query,
+}) => {
+  return {
+    props: {
+      params: {
+        ...(params as UploadParams),
+        branchName: query.branchName ? String(query.branchName) : null,
+        schemaName: query.schemaName ? String(query.schemaName) : null,
+        tableName: query.tableName ? String(query.tableName) : null,
+        id: query.id ? String(query.id) : null,
+        stage: params?.stage ? String(params.stage) : null,
+      },
+    },
+  };
+};
+// #!endif
 
 export default DatabaseUploadStagePage;

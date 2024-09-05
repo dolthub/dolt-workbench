@@ -30,6 +30,7 @@ export function startGraphQLServer() {
     stdio: ["pipe", out, err, "ipc"],
     env: {
       ...process.env,
+      NEXT_PUBLIC_FOR_ELECTRON: "true",
       NODE_PATH: nodeModulesPath, // Override NODE_PATH
     },
   };
