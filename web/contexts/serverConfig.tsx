@@ -1,6 +1,7 @@
 import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { createContextWithDisplayName } from "@dolthub/react-contexts";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { useEffectAsync } from "@dolthub/react-hooks";
+import { ReactNode, useContext, useState } from "react";
 
 const cfg = {
   graphqlApiUrl: process.env.GRAPHQLAPI_URL,
@@ -27,7 +28,7 @@ function useServerConfigIPC(): {
   const [data, setData] = useState<ServerConfigContextValue | null>(null);
   const [error, setError] = useState<any>(null);
 
-  useEffect(() => {
+  useEffectAsync(async () => {
     const fetchConfig = async () => {
       try {
         const config = await window.ipc.invoke("api-config");
@@ -37,7 +38,7 @@ function useServerConfigIPC(): {
       }
     };
 
-    fetchConfig();
+    await fetchConfig();
   }, []);
 
   return { data, error };
