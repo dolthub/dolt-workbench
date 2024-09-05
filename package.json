@@ -22,8 +22,7 @@
     "compile:web": "tsc -b web",
     "dev:graphql": "cd graphql-server && NODE_ENV=development nest start --watch",
     "compile:graphql": "tsc -b graphql-server",
-    "build:graphql": "cd graphql-server && nest build",
-    "prettier-fix": "prettier --write 'web/{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}'"
+    "build:graphql": "cd graphql-server && nest build"
   },
   "build": {
     "appId": "com.dolthub.dolt-workbench",

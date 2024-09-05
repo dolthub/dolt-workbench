@@ -7,7 +7,7 @@ type Props = {
   params: DatabaseParams;
 };
 
-const DiffPageForDefaultBranch: NextPage<Props> = (props) => (
+const DiffPageForDefaultBranch: NextPage<Props> = props => (
   <Page title={`Viewing diffs for ${props.params.databaseName}`} noIndex>
     <DatabasePage.ForCommits {...props} params={props.params} />
   </Page>

@@ -12,7 +12,7 @@ type Props = {
   params: QueryPageQueryParams;
 };
 
-const QueryPage: NextPage<Props> = (props) => {
+const QueryPage: NextPage<Props> = props => {
   const defaultQuery = "SHOW TABLES";
   const params = {
     ...props.params,

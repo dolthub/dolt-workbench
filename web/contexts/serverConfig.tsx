@@ -1,6 +1,6 @@
- import { ErrorMsg, Loader } from "@dolthub/react-components";
+import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { createContextWithDisplayName } from "@dolthub/react-contexts";
-import { ReactNode, useContext, useEffect, useState  } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 
 const cfg = {
   graphqlApiUrl: process.env.GRAPHQLAPI_URL,
@@ -18,7 +18,6 @@ export const ServerConfigContext =
 type Props = {
   children: ReactNode;
 };
- 
 
 // Custom hook to fetch the server config using IPC
 function useServerConfigIPC(): {

@@ -10,7 +10,7 @@ type Props = {
   };
 };
 
-const TablePage: NextPage<Props> = (props) => (
+const TablePage: NextPage<Props> = props => (
   <Page
     title={`${props.params.databaseName} ${props.params.tableName}`}
     noIndex
