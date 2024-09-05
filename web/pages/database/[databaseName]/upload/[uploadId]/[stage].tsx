@@ -6,6 +6,7 @@ import { NextPage } from "next";
 type Props = {
   params: UploadParams & {
     branchName?: string | null;
+    schemaName?: string | null;
     tableName?: string | null;
     stage?: string | null;
   };
@@ -20,6 +21,7 @@ const DatabaseUploadStagePage: NextPage<Props> = ({ params }) => (
       params={{
         ...params,
         branchName: params.branchName ?? undefined,
+        schemaName: params.schemaName ?? undefined,
         tableName: params.tableName ?? undefined,
       }}
       stage={params.stage ?? undefined}

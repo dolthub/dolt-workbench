@@ -1,9 +1,9 @@
 import Page from "@components/util/Page";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { NextPage } from "next";
 
-type QueryPageQueryParams = RefParams & {
+type QueryPageQueryParams = RefOptionalSchemaParams & {
   q?: string;
   active?: string;
 };

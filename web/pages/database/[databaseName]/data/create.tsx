@@ -5,6 +5,7 @@ import { NextPage } from "next";
 
 type Props = {
   params: MaybeRefParams & {
+    schemaName?: string;
     active?: string;
     edit?: boolean;
   };
