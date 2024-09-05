@@ -414,3 +414,39 @@ describe("test updateTableQuery and updateTableMakeNullQuery", () => {
     });
   });
 });
+
+describe("test getCallProcedure", () => {
+  const tests = [
+    {
+      desc: "no args",
+      name: "DOLT_MERGE",
+      args: [],
+      expected: "SELECT DOLT_MERGE();",
+    },
+    {
+      desc: "with one arg",
+      name: "DOLT_BRANCH",
+      args: ["branch"],
+      expected: "SELECT DOLT_BRANCH('branch');",
+    },
+    {
+      desc: "with two args",
+      name: "DOLT_CHECKOUT",
+      args: ["-b", "newbranch"],
+      expected: "SELECT DOLT_CHECKOUT('-b', 'newbranch');",
+    },
+    {
+      desc: "with escaped single quote",
+      name: "DOLT_COMMIT",
+      args: ["-m", "single quote's escape"],
+      expected: "SELECT DOLT_COMMIT('-m', 'single quote''s escape');",
+    },
+  ];
+
+  tests.forEach(test => {
+    it(test.desc, async () => {
+      const { getCallProcedure } = await renderUseSqlBuilderForPG();
+      expect(getCallProcedure(test.name, test.args)).toEqual(test.expected);
+    });
+  });
+});

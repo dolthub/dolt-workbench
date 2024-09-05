@@ -1,7 +1,7 @@
 import DocsLink from "@components/links/DocsLink";
 import { CodeBlock } from "@dolthub/react-components";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { PullDiffParams } from "@lib/params";
-import { getMergeCommands } from "../utils";
 import css from "./index.module.css";
 
 type Props = {
@@ -9,6 +9,18 @@ type Props = {
 };
 
 export default function MergeConflictsDirections({ params }: Props) {
+  const { getCallProcedure } = useSqlBuilder();
+  const checkout = getCallProcedure("DOLT_CHECKOUT", [params.refName]);
+  const merge = getCallProcedure("DOLT_MERGE", [params.fromBranchName]);
+  const conflictsResolve = getCallProcedure("DOLT_CONFLICTS_RESOLVE", [
+    "--[ours|theirs]",
+    "[tablename]",
+  ]);
+  const commit = getCallProcedure("DOLT_COMMIT", [
+    "-Am",
+    `Merge branch ${params.fromBranchName}`,
+  ]);
+
   return (
     <div>
       <h3>Merge and Resolve Conflicts</h3>
@@ -23,7 +35,7 @@ export default function MergeConflictsDirections({ params }: Props) {
           </DocsLink>{" "}
           pull request:
         </p>
-        <CodeBlock.WithCopyButton textToCopy={getMergeCommands(params)} />
+        <CodeBlock.WithCopyButton textToCopy={`${checkout}\n${merge}`} />
         <p>
           View{" "}
           <DocsLink path="/sql-reference/version-control/dolt-system-tables#dolt_conflicts">
@@ -46,16 +58,14 @@ export default function MergeConflictsDirections({ params }: Props) {
           </DocsLink>
           :
         </p>
-        <CodeBlock.WithCopyButton textToCopy="CALL DOLT_CONFLICTS_RESOLVE('--[ours|theirs]', '[tablename]');" />
+        <CodeBlock.WithCopyButton textToCopy={conflictsResolve} />
         <p>
           <DocsLink path="/sql-reference/version-control/dolt-sql-procedures#dolt_commit">
             Commit
           </DocsLink>{" "}
           the merge:
         </p>
-        <CodeBlock.WithCopyButton
-          textToCopy={`CALL DOLT_COMMIT('-Am', 'Merge branch ${params.fromBranchName}');`}
-        />
+        <CodeBlock.WithCopyButton textToCopy={commit} />
         <p>
           Learn more about merging and resolving conflicts with SQL{" "}
           <DocsLink path="/sql-reference/version-control/merges">here</DocsLink>

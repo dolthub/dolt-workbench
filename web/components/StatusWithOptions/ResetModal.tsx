@@ -1,6 +1,7 @@
 import Link from "@components/links/Link";
 import { Button, Modal } from "@dolthub/react-components";
 import { StatusFragment } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
@@ -13,6 +14,8 @@ type Props = ModalProps & {
 };
 
 export default function ResetModal(props: Props) {
+  const { getCallProcedure } = useSqlBuilder();
+
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -47,7 +50,7 @@ export default function ResetModal(props: Props) {
                     <Link
                       {...sqlQuery({
                         ...props.params,
-                        q: `CALL DOLT_RESET("${st.tableName}")`,
+                        q: getCallProcedure("DOLT_RESET", [st.tableName]),
                       })}
                     >
                       Unstage
@@ -56,7 +59,7 @@ export default function ResetModal(props: Props) {
                     <Link
                       {...sqlQuery({
                         ...props.params,
-                        q: `CALL DOLT_CHECKOUT("${st.tableName}")`,
+                        q: getCallProcedure("DOLT_CHECKOUT", [st.tableName]),
                       })}
                     >
                       Restore
