@@ -1,8 +1,11 @@
 // import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { createContextWithDisplayName } from "@dolthub/react-contexts";
-import { ServerConfig } from "pages/api/config";
 // import { useEffectAsync } from "@dolthub/react-hooks";
 import { ReactNode, useContext, useState } from "react";
+
+type ServerConfig = {
+  graphqlApiUrl: string | undefined;
+};
 
 export type ServerConfigContextValue = Partial<ServerConfig>;
 
