@@ -52,7 +52,7 @@ function useServerConfigIPC(): {
   return { data, error };
 }
 
-function ApiConfigProvider({ children }: Props): JSX.Element {
+function APIConfigProvider({ children }: Props): JSX.Element {
   const { data, error } = useSWR<ServerConfigContextValue>("/api/config");
   return (
     <Provider data={data} error={error}>
@@ -75,7 +75,7 @@ export function ServerConfigProvider({ children }: Props): JSX.Element {
   return process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ? (
     <IPCConfigProvider>{children}</IPCConfigProvider>
   ) : (
-    <ApiConfigProvider>{children}</ApiConfigProvider>
+    <APIConfigProvider>{children}</APIConfigProvider>
   );
 }
 
