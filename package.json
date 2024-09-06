@@ -28,8 +28,7 @@
     "appId": "com.dolthub.dolt-workbench",
     "files": [
       "app",
-      "package.json",
-      "!app/server/pages/api"
+      "package.json"
     ],
     "extraFiles": [
       "graphql-server/dist/*",
