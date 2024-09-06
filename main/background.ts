@@ -31,6 +31,8 @@ if (isProd) {
   if (isProd) {
     setTimeout(async () => {
       await mainWindow.loadURL("app://./");
+            mainWindow.webContents.openDevTools();
+
     }, 3000);
   } else {
     setTimeout(async () => {
