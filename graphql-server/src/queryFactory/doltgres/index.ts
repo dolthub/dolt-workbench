@@ -1,14 +1,17 @@
 import { QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
+import * as foreignKey from "../../indexes/foreignKey.model";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
-import { ROW_LIMIT } from "../../utils";
+import { systemTableValues } from "../../systemTables/systemTable.enums";
+import { TableDetails } from "../../tables/table.model";
+import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import * as dem from "../dolt/doltEntityManager";
 import { getAuthorString, handleRefNotFound, unionCols } from "../dolt/utils";
 import { PostgresQueryFactory } from "../postgres";
-import { tableWithSchema } from "../postgres/utils";
+import { getSchema, tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import * as qh from "./queries";
 
@@ -24,6 +27,78 @@ export class DoltgresQueryFactory
     refName?: string,
   ): Promise<void> {
     await qr.query(qh.useDB(dbName, refName, this.isDolt));
+  }
+
+  async getTableNames(
+    args: t.RefMaybeSchemaArgs,
+    filterSystemTables?: boolean,
+  ): Promise<string[]> {
+    const revDb = `${args.databaseName}/${args.refName}`;
+    return this.queryQR(
+      async qr => {
+        const schema = await getSchema(qr, args);
+        const res: t.RawRows = await qr.query(qh.listTablesQuery, [
+          schema,
+          revDb,
+        ]);
+        const tables = res.map(t => t.table_name);
+        if (filterSystemTables) return tables;
+
+        const systemTables: Array<string | undefined> = await Promise.all(
+          systemTableValues.map(async st => {
+            const cols = await handleTableNotFound(async () =>
+              qr.query(qh.columnsQuery, [st, schema, revDb]),
+            );
+            if (cols) {
+              return `${st}`;
+            }
+            return undefined;
+          }),
+        );
+        return [...tables, ...(systemTables.filter(st => !!st) as string[])];
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  // TODO:  qr.getTable() does not allow specifying a database for doltgres
+  async getTableInfo(
+    args: t.TableMaybeSchemaArgs,
+  ): Promise<TableDetails | undefined> {
+    return this.queryQR(
+      async qr => getTableInfoWithQR(qr, args),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTables(
+    args: t.RefMaybeSchemaArgs,
+    tns: string[],
+  ): Promise<TableDetails[]> {
+    return this.queryQR(
+      async qr => {
+        const tableInfos = await Promise.all(
+          tns.map(async name => {
+            const tableInfo = await getTableInfoWithQR(qr, {
+              ...args,
+              tableName: name,
+            });
+            return tableInfo;
+          }),
+        );
+        return tableInfos;
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTablePKColumns(args: t.TableMaybeSchemaArgs): Promise<string[]> {
+    const res = await this.getTableInfo(args);
+    if (!res) return [];
+    return res.columns.filter(c => c.isPrimaryKey).map(c => c.name);
   }
 
   async getSchemas(
@@ -292,14 +367,8 @@ export class DoltgresQueryFactory
         args.tableName,
         args.refName,
       ]);
-      const { q, cols } = qh.getRowsQueryAsOf(columns, args.tableName);
-      const rows = await query(q, [
-        // args.tableName,
-        args.refName,
-        ...cols,
-        ROW_LIMIT + 1,
-        args.offset,
-      ]);
+      const { q, cols } = qh.getRowsQueryAsOf(columns, args);
+      const rows = await query(q, [...cols, ROW_LIMIT + 1, args.offset]);
       return { rows, columns };
     }, args.databaseName);
   }
@@ -331,4 +400,53 @@ export class DoltgresQueryFactory
       args.refName,
     );
   }
+}
+
+async function getTableInfoWithQR(
+  qr: QueryRunner,
+  args: t.TableMaybeSchemaArgs,
+): Promise<TableDetails> {
+  const revDb = `${args.databaseName}/${args.refName}`;
+  const schema = await getSchema(qr, args);
+  const columns = await qr.query(qh.columnsQuery, [
+    args.tableName,
+    schema,
+    revDb,
+  ]);
+  const constraints = await qr.query(qh.constraintsQuery, [
+    schema,
+    args.tableName,
+  ]);
+  const fkRows = await qr.query(qh.foreignKeysQuery, [
+    args.tableName,
+    schema,
+    revDb,
+  ]);
+  // const idxRows = await qr.query(qh.indexQuery, [
+  //   args.tableName,
+  //   schema,
+  //   revDb,
+  // ]);
+
+  return {
+    tableName: args.tableName,
+    columns: columns.map(c => {
+      return {
+        name: c.column_name,
+        isPrimaryKey: !!constraints.find(
+          con =>
+            con.column_name === c.column_name &&
+            con.constraint_type === "PRIMARY",
+        ),
+        type: `${c.data_type}${c.character_maximum_length ? `(${c.character_maximum_length})` : ""}${
+          c.unsigned ? " unsigned" : ""
+        }`,
+        constraints: [{ notNull: c.is_nullable === "NO" }],
+        sourceTable: c.table_name,
+      };
+    }),
+    foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
+    // indexes: index.fromDoltRowsRes(idxRows), // TODO
+    indexes: [],
+  };
 }

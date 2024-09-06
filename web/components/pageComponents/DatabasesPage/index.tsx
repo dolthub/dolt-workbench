@@ -3,6 +3,7 @@ import MainLayout from "@components/layouts/MainLayout";
 import Link from "@components/links/Link";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { useDatabasesQuery } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { database } from "@lib/urls";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import cx from "classnames";
@@ -11,6 +12,7 @@ import { useEffect } from "react";
 import css from "./index.module.css";
 
 export default function DatabasesPage() {
+  const { isPostgres } = useDatabaseDetails();
   const res = useDatabasesQuery();
   const router = useRouter();
 
@@ -49,7 +51,7 @@ export default function DatabasesPage() {
             No databases found. Create a database to get started.
           </p>
         )}
-        <CreateDatabase buttonClassName={css.button} />
+        <CreateDatabase buttonClassName={css.button} isPostgres={isPostgres} />
         <ErrorMsg err={res.error} />
       </Loader>
     </MainLayout>

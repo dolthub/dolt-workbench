@@ -47,6 +47,7 @@ export class PostgresQueryFactory
     );
   }
 
+  // eslint-disable-next-line class-methods-use-this
   async checkoutDatabase(qr: QueryRunner, dbName: string): Promise<void> {
     const currentDb = await qr.getCurrentDatabase();
     if (dbName !== currentDb) {
@@ -72,7 +73,10 @@ export class PostgresQueryFactory
     return this.queryQR(
       async qr => {
         const schema = await getSchema(qr, args);
-        return getTableInfo(qr, `${schema}.${args.tableName}`);
+        return getTableInfo(
+          qr,
+          qr.connection.driver.buildTableName(args.tableName, schema),
+        );
       },
       args.databaseName,
       args.refName,

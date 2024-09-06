@@ -1,4 +1,4 @@
-import { RawRows } from "../types";
+import { RawRows, TableArgs } from "../types";
 
 // Cannot use params here for the database revision. It will incorrectly
 // escape refs with dots
@@ -11,22 +11,39 @@ export function useDB(dbName: string, refName?: string, isDolt = true): string {
 
 // TABLE
 
+export const listTablesQuery = `SELECT "table_schema", "table_name" FROM "information_schema"."tables" WHERE "table_schema" = $1 AND "table_catalog" = $2`;
+
 // TODO: Table queries
-// export const columnsQuery = `DESCRIBE ??`;
+export const columnsQuery = `SELECT columns.*
+FROM "information_schema"."columns" 
+WHERE "table_name" = $1 AND "table_schema" = $2 AND  "table_catalog" = $3;`;
 
-// export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
-// WHERE table_name=? AND table_schema=?
-// AND referenced_table_schema IS NOT NULL`;
+export const constraintsQuery = `SELECT 
+"ns"."nspname" AS "table_schema", 
+"t"."relname" AS "table_name", 
+"cnst"."conname" AS "constraint_name",
+pg_get_constraintdef("cnst"."oid") AS "expression",
+CASE "cnst"."contype" WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS "constraint_type", 
+"a"."attname" AS "column_name"
+FROM "pg_constraint" "cnst"
+INNER JOIN "pg_class" "t" ON "t"."oid" = "cnst"."conrelid"
+INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "cnst"."connamespace"
+LEFT JOIN "pg_attribute" "a" ON "a"."attrelid" = "cnst"."conrelid" AND "a"."attnum" = ANY ("cnst"."conkey")
+WHERE "t"."relkind" IN ('r', 'p') AND (("ns"."nspname" = $1 AND "t"."relname" = $2));`;
 
-// export const indexQuery = `SELECT
-//   table_name,
-//   index_name,
-//   GROUP_CONCAT(comment) as COMMENTS,
-//   GROUP_CONCAT(non_unique) AS NON_UNIQUES,
-//   GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS
-// FROM information_schema.statistics
-// WHERE table_name=? AND index_name!="PRIMARY"
-// GROUP BY index_name;`;
+export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
+WHERE table_name=$1 AND table_schema=$2 AND table_catalog=$3
+AND referenced_table_schema IS NOT NULL`;
+
+export const indexQuery = `SELECT
+  table_name,
+  index_name,
+  GROUP_CONCAT(comment) as COMMENTS,
+  GROUP_CONCAT(non_unique) AS NON_UNIQUES,
+  GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS
+FROM information_schema.statistics
+WHERE table_name=$1 AND table_schema=$2 AND table_catalog=$3 AND index_name!="PRIMARY"
+GROUP BY index_name;`;
 
 // export const tableColsQuery = `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`;
 
@@ -93,20 +110,19 @@ export function getAuthorNameString(hasAuthor: boolean, n: string): string {
 function getOrderByFromCols(numCols: number): string {
   if (!numCols) return "";
   const pkCols = Array.from({ length: numCols })
-    .map((_, i) => `$${i + 2} ASC`)
+    .map((_, i) => `$${i + 1} ASC`)
     .join(", ");
   return pkCols === "" ? "" : `ORDER BY ${pkCols} `;
 }
 
-// TODO: Table name
 export const getRowsQueryAsOf = (
   columns: RawRows,
-  tableName: string,
+  args: TableArgs,
 ): { q: string; cols: string[] } => {
   const cols = getPKColsForRowsQuery(columns);
-  const n = cols.length + 2;
+  const n = cols.length + 1;
   return {
-    q: `SELECT * FROM ${tableName} AS OF $1 ${getOrderByFromCols(
+    q: `SELECT * FROM "${args.databaseName}/${args.refName}"."${args.tableName}" ${getOrderByFromCols(
       cols.length,
     )}LIMIT $${n} OFFSET $${n + 1}`,
     cols,
@@ -129,7 +145,7 @@ export function getTableCommitDiffQuery(
 ): string {
   const n = hasFilter ? 4 : 3;
   const whereDiffType = hasFilter ? ` WHERE diff_type=$4 ` : "";
-  return `SELECT * FROM DOLT_DIFF($1, $2, $3)${whereDiffType}
+  return `SELECT * FROM DOLT_DIFF($1::text, $2::text, $3::text)${whereDiffType}
   ${getOrderByFromDiffCols(cols)}
   LIMIT $${n + 1}
   OFFSET $${n + 2}`;
