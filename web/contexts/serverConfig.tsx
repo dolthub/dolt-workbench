@@ -81,7 +81,6 @@ export function ServerConfigProvider({ children }: Props): JSX.Element {
 
 function Provider({ children, data, error }: InnerProps): JSX.Element {
   if (error) {
-    error.message = `Failed to fetch server config,data:${data},error:${error}, ${error.message}`;
     return (
       <>
         <ErrorMsg err={error} />

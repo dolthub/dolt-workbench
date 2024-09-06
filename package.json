@@ -15,14 +15,7 @@
     "dist-all": "electron-builder -mwl",
     "postinstall": "electron-builder install-app-deps",
     "clean": "tsc -b --clean && yarn yalc:clean",
-    "compile": "tsc -b",
-    "dev:web": "next dev -p 3002 web",
-    "build:web": "next build web",
-    "start:web": "next start web",
-    "compile:web": "tsc -b web",
-    "dev:graphql": "cd graphql-server && NODE_ENV=development nest start --watch",
-    "compile:graphql": "tsc -b graphql-server",
-    "build:graphql": "cd graphql-server && nest build"
+    "compile": "tsc -b"
   },
   "build": {
     "appId": "com.dolthub.dolt-workbench",
