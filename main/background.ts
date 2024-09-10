@@ -1,5 +1,11 @@
 import path from "path";
-import { app, BrowserWindow, ipcMain, utilityProcess, UtilityProcess } from "electron";
+import {
+  app,
+  BrowserWindow,
+  ipcMain,
+  utilityProcess,
+  UtilityProcess,
+} from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 
@@ -16,41 +22,37 @@ if (isProd) {
 }
 
 let serverProcess: UtilityProcess | null;
-let mainWindow: BrowserWindow ;
+let mainWindow: BrowserWindow;
 
-function createGraphqlSeverProcess(){
+function createGraphqlSeverProcess() {
   const serverPath =
-  process.env.NODE_ENV === "production"
-    ? path.join(
-        process.resourcesPath,
-        "..",
-        "graphql-server",
-        "dist",
-        "main.js"
-      )
-    : path.join("graphql-server", "dist", "main.js");
-    serverProcess = utilityProcess.fork(
-      serverPath ,[], { stdio: 'pipe' } );
-  
-    serverProcess?.stdout?.on('data', (chunk: Buffer) => {
-      console.log("server data",chunk.toString('utf8'));
-      // Send the Server console.log messages to the main browser window
-      mainWindow?.webContents.executeJavaScript(`
-        console.info('Server Log:', ${JSON.stringify(chunk.toString('utf8'))})`);
-    });
-  
-    serverProcess?.stderr?.on('data', (chunk: Buffer) => {
-      console.error("server error",chunk.toString('utf8'));
-      // Send the Server console.error messages out to the main browser window
-      mainWindow?.webContents.executeJavaScript(`
-        console.error('Server Log:', ${JSON.stringify(chunk.toString('utf8'))})`);
-    });
-  }
+    process.env.NODE_ENV === "production"
+      ? path.join(
+          process.resourcesPath,
+          "..",
+          "graphql-server",
+          "dist",
+          "main.js",
+        )
+      : path.join("graphql-server", "dist", "main.js");
+  serverProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
-  
-(async () => {
-  await app.whenReady();
+  serverProcess?.stdout?.on("data", (chunk: Buffer) => {
+    console.log("server data", chunk.toString("utf8"));
+    // Send the Server console.log messages to the main browser window
+    mainWindow?.webContents.executeJavaScript(`
+        console.info('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
+  });
 
+  serverProcess?.stderr?.on("data", (chunk: Buffer) => {
+    console.error("server error", chunk.toString("utf8"));
+    // Send the Server console.error messages out to the main browser window
+    mainWindow?.webContents.executeJavaScript(`
+        console.error('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
+  });
+}
+
+app.on("ready", () => {
   mainWindow = createWindow("main", {
     width: 1280,
     height: 680,
@@ -72,18 +74,18 @@ function createGraphqlSeverProcess(){
       mainWindow.webContents.openDevTools();
     }, 2500);
   }
-})();
+});
 
-app.on('before-quit', () => {
+app.on("before-quit", () => {
   if (serverProcess) {
     serverProcess.kill();
     serverProcess = null;
   }
 });
 
-app.on('window-all-closed', () => {
+app.on("window-all-closed", () => {
   // On macOS, closing all windows shouldn't exit the process
-  if (process.platform !== 'darwin') {
+  if (process.platform !== "darwin") {
     app.quit();
   }
 });
