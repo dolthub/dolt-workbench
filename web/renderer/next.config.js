@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  distDir: process.env.NODE_ENV === "production" ? "../../app" : "./.next",
+  distDir: process.env.NODE_ENV === "production" ? "../app" : "./.next",
   output:
     process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" &&
     process.env.NODE_ENV === "production"
@@ -10,7 +10,7 @@ const nextConfig = {
     unoptimized:
       process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ? true : undefined,
   },
-  webpack: config => {
+  webpack: (config) => {
     config.module.rules.push({
       test: /\.tsx$/,
       use: [
