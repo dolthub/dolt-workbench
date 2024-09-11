@@ -64,7 +64,7 @@ app.on("ready", () => {
 
   if (isProd) {
     setTimeout(async () => {
-      await mainWindow.loadURL("app://./");
+      await mainWindow.loadURL("../app://./");
       mainWindow.webContents.openDevTools();
     }, 3000);
   } else {
