@@ -184,7 +184,7 @@ Open your browser to [localhost:3002](http://localhost:3002).
 
 ## electron app
 ### Install and build
-Run `yarn` in root directory to install dependencies. Then run `yarn build` in both `web` and `graphql-server`.
+Run `yarn` in root directory to install dependencies. Then run `yarn build` in `graphql-server` to build graphql server dist.
 
 ### Dev
 
