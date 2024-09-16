@@ -18,7 +18,7 @@
     "clean:misc": "rimraf node_modules '*/node_modules' '*/.eslintcache' '*/*.tsbuildinfo' '*/dist' web/.next",
     "compile": "npm-run-all 'compile:*'",
     "compile:graphql-server": "yarn workspace @dolt-sql-workbench/graphql-server compile",
-    "compile:dolthub": "yarn workspace @dolt-sql-workbench/web compile"
+    "compile:web": "yarn workspace @dolt-sql-workbench/web compile"
   },
   "build": {
     "appId": "com.dolthub.dolt-workbench",
