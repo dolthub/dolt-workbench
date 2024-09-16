@@ -1,4 +1,4 @@
-const { mergeConfig } = require("@dolthub/react-components");
+import { mergeConfig } from "@dolthub/react-components";
 
 const config = mergeConfig({
   corePlugins: {
