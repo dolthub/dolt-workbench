@@ -12,7 +12,6 @@
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",
-    "dist-all": "electron-builder -mwl",
     "postinstall": "electron-builder install-app-deps",
     "clean": "npm-run-all 'clean:*'",
     "clean:web": "yarn workspace @dolt-sql-workbench/web clean",
