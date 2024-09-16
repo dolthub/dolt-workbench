@@ -14,7 +14,11 @@ const DiffForRefPage: NextPage<Props> = ({ params }) => (
     title={`Viewing diffs for ${params.databaseName} - ${params.refName}`}
     noIndex
   >
-    <DatabasePage.ForCommits params={params} compare tableName={params.tableName}/>
+    <DatabasePage.ForCommits
+      params={params}
+      compare
+      tableName={params.tableName}
+    />
   </Page>
 );
 

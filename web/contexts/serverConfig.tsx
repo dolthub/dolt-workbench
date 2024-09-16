@@ -25,9 +25,10 @@ type ServerConfigReturnType = {
   error: any;
 };
 
-type InnerProps = Props &ServerConfigReturnType& {
-  children: ReactNode;
-};
+type InnerProps = Props &
+  ServerConfigReturnType & {
+    children: ReactNode;
+  };
 
 // Custom hook to fetch the server config using IPC
 function useServerConfigIPC(): ServerConfigReturnType {

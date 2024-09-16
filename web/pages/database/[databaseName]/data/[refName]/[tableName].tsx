@@ -15,7 +15,7 @@ const TablePage: NextPage<Props> = props => (
     title={`${props.params.databaseName} ${props.params.tableName}`}
     noIndex
   >
-    <DatabasePage.ForTable {...props} edit={props.params.edit}/>
+    <DatabasePage.ForTable {...props} edit={props.params.edit} />
   </Page>
 );
 
