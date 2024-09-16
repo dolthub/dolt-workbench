@@ -5,14 +5,14 @@ import { GetServerSideProps, NextPage } from "next";
 
 type Params = RefParams & {
   diffRange: string;
+  tableName?: string;
 };
 
 type Props = {
   params: Params;
-  tableName?: string;
 };
 
-const DiffRangePage: NextPage<Props> = ({ params, tableName }) => (
+const DiffRangePage: NextPage<Props> = ({ params }) => (
   <Page
     title={`Viewing diffs for ${params.databaseName} - ${params.diffRange}`}
     noIndex
@@ -23,21 +23,25 @@ const DiffRangePage: NextPage<Props> = ({ params, tableName }) => (
         refName: params.refName,
         diffRange: params.diffRange,
       }}
-      tableName={tableName}
+      tableName={params.tableName}
     />
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
 }) => {
   return {
     props: {
-      params: params as Params,
-      tableName: query.tableName ? String(query.tableName) : "",
+      params: {
+        ...params,
+        tableName: query.tableName ? String(query.tableName) : "",
+      } as Params,
     },
   };
 };
+// #!endif
 
 export default DiffRangePage;

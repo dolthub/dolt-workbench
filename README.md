@@ -181,3 +181,16 @@ web % yarn dev
 ```
 
 Open your browser to [localhost:3002](http://localhost:3002).
+
+## electron app
+### Install and build
+Run `yarn` in root directory to install dependencies. Then run `yarn build` in `graphql-server` to build graphql server dist.
+
+### Dev
+
+Run `yarn dev` to start dev mode with dev tool.
+
+### Build the app
+Run `yarn build` in the root directory to build the app, and the built app will be found under `dist`.
+
+`electron-builder` defaults to building for the current platform. To build for `mac`, `windows` and `linux`, use `yarn dist-all`.

@@ -11,7 +11,10 @@ import resolvers from "./resolvers";
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      autoSchemaFile: "schema.gql",
+      autoSchemaFile:
+        process.env.NEXT_PUBLIC_FOR_ELECTRON === "true"
+          ? process.env.SCHEMA_PATH
+          : "schema.gql",
       context: ctx => ctx,
       driver: ApolloDriver,
     }),

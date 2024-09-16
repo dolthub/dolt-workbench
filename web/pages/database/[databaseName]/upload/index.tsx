@@ -25,6 +25,7 @@ const DatabaseUploadPage: NextPage<Props> = ({ params }) => (
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
@@ -40,5 +41,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   };
 };
+// #!endif
 
 export default DatabaseUploadPage;

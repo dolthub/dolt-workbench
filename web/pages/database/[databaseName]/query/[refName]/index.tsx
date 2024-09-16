@@ -25,6 +25,7 @@ const QueryPage: NextPage<Props> = props => {
   );
 };
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
@@ -40,5 +41,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   };
 };
+// #!endif
 
 export default QueryPage;

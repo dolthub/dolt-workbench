@@ -22,6 +22,7 @@ const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
@@ -33,5 +34,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   };
 };
+// #!endif
 
 export default PullDiffPage;

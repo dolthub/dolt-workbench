@@ -13,6 +13,7 @@ const DiffPageForDefaultBranch: NextPage<Props> = props => (
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
 }) => {
@@ -22,5 +23,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   };
 };
+// #!endif
 
 export default DiffPageForDefaultBranch;

@@ -6,8 +6,8 @@ import { GetServerSideProps, NextPage } from "next";
 type Props = {
   params: TableParams & {
     active?: string;
+    edit?: boolean;
   };
-  edit?: boolean;
 };
 
 const TablePage: NextPage<Props> = props => (
@@ -15,10 +15,11 @@ const TablePage: NextPage<Props> = props => (
     title={`${props.params.databaseName} ${props.params.tableName}`}
     noIndex
   >
-    <DatabasePage.ForTable {...props} />
+    <DatabasePage.ForTable {...props} edit={props.params.edit} />
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
@@ -28,10 +29,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
       params: {
         ...(params as TableParams),
         active: query.active ? String(query.active) : "",
+        edit: !!query.edit,
       },
-      edit: !!query.edit,
     },
   };
 };
+// #!endif
 
 export default TablePage;
