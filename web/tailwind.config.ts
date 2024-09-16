@@ -1,5 +1,6 @@
 const { mergeConfig } = require("@dolthub/react-components");
-module.exports = mergeConfig({
+
+const config = mergeConfig({
   corePlugins: {
     preflight: false,
   },
@@ -22,3 +23,5 @@ module.exports = mergeConfig({
   },
   plugins: [],
 });
+
+export default config;
