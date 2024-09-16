@@ -6,6 +6,7 @@ const nextConfig = {
     unoptimized: process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ? true : undefined,
   },
   webpack:(config)=>{
+    // Add the webpack-preprocessor-loader so we can use getServerSideProps conditionally
     config.module.rules.push({
       test: /\.tsx$/,
       use: [
@@ -13,7 +14,7 @@ const nextConfig = {
           loader: 'webpack-preprocessor-loader',
           options: {
             params: {
-              isWeb: process.env.NEXT_PUBLIC_FOR_ELECTRON!=="true",
+              isElectron: process.env.NEXT_PUBLIC_FOR_ELECTRON ==="true",
             },
           },
         },

@@ -18,7 +18,7 @@ const DatabaseBranchesPage: NextPage<Props> = ({ params }) => (
   </Page>
 );
 
-// #!if isWeb
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,

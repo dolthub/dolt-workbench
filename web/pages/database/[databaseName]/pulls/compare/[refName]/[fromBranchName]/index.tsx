@@ -22,7 +22,7 @@ const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
   </Page>
 );
 
-// #!if isWeb
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,

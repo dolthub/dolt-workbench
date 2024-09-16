@@ -20,17 +20,17 @@ type Props = {
   children: ReactNode;
 };
 
-type InnerProps = Props & {
-  children: ReactNode;
+type ServerConfigReturnType = {
   data: ServerConfigContextValue | undefined;
   error: any;
 };
 
+type InnerProps = Props &ServerConfigReturnType& {
+  children: ReactNode;
+};
+
 // Custom hook to fetch the server config using IPC
-function useServerConfigIPC(): {
-  data: ServerConfigContextValue | undefined;
-  error: any;
-} {
+function useServerConfigIPC(): ServerConfigReturnType {
   const [data, setData] = useState<ServerConfigContextValue | undefined>(
     undefined,
   );
@@ -72,6 +72,7 @@ function IPCConfigProvider({ children }: Props): JSX.Element {
 
 // ServerConfigProvider needs to wrap every page, and is only used in _app
 export function ServerConfigProvider({ children }: Props): JSX.Element {
+  // For Electron, use IPC to fetch config, otherwise use API, since api routes are not available in Electron
   return process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ? (
     <IPCConfigProvider>{children}</IPCConfigProvider>
   ) : (

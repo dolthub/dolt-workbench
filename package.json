@@ -14,8 +14,12 @@
     "build": "nextron build",
     "dist-all": "electron-builder -mwl",
     "postinstall": "electron-builder install-app-deps",
-    "clean": "tsc -b --clean && yarn yalc:clean",
-    "compile": "tsc -b"
+    "clean": "npm-run-all 'clean:*'",
+    "clean:web": "yarn workspace @dolt-sql-workbench/web clean",
+    "clean:misc": "rimraf node_modules '*/node_modules' '*/.eslintcache' '*/*.tsbuildinfo' '*/dist' web/.next",
+    "compile": "npm-run-all 'compile:*'",
+    "compile:graphql-server": "yarn workspace @dolt-sql-workbench/graphql-server compile",
+    "compile:dolthub": "yarn workspace @dolt-sql-workbench/web compile"
   },
   "build": {
     "appId": "com.dolthub.dolt-workbench",
@@ -58,9 +62,11 @@
     "electron-builder": "^24.13.3",
     "next": "^14.2.4",
     "nextron": "^9.1.0",
+    "npm-run-all": "4.1.5",
     "postcss": "^8.4.40",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "rimraf": "^6.0.1",
     "typescript": "^5.4.5"
   }
 }

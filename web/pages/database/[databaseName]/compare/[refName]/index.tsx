@@ -14,11 +14,11 @@ const DiffForRefPage: NextPage<Props> = ({ params }) => (
     title={`Viewing diffs for ${params.databaseName} - ${params.refName}`}
     noIndex
   >
-    <DatabasePage.ForCommits params={params} compare />
+    <DatabasePage.ForCommits params={params} compare tableName={params.tableName}/>
   </Page>
 );
 
-// #!if isWeb
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,

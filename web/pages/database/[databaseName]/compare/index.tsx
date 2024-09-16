@@ -13,7 +13,7 @@ const DiffPageForDefaultBranch: NextPage<Props> = props => (
   </Page>
 );
 
-// #!if isWeb
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
 }) => {

@@ -11,7 +11,7 @@ import { createWindow } from "./helpers";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
-const schemaPath = path.join(userDataPath, "schema.gql");
+const schemaPath = isProd?path.join(userDataPath, "schema.gql"):"graphql-server/schema.gql";
 process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 
@@ -65,6 +65,8 @@ app.on("ready", () => {
   if (isProd) {
     setTimeout(async () => {
       await mainWindow.loadURL("app://./");
+      mainWindow.webContents.openDevTools();
+
     }, 3000);
   } else {
     setTimeout(async () => {

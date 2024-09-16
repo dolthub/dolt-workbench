@@ -15,11 +15,11 @@ const TablePage: NextPage<Props> = props => (
     title={`${props.params.databaseName} ${props.params.tableName}`}
     noIndex
   >
-    <DatabasePage.ForTable {...props} />
+    <DatabasePage.ForTable {...props} edit={props.params.edit}/>
   </Page>
 );
 
-// #!if isWeb
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
