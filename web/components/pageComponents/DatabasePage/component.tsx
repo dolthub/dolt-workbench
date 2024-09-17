@@ -2,7 +2,7 @@ import DatabaseLayout from "@components/layouts/DatabaseLayout";
 import { SqlEditorProvider } from "@contexts/sqleditor";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { DatabasePageParams } from "@lib/params";
-import { commitGraph, RefUrl, schemaDiagram, upload } from "@lib/urls";
+import { commitGraph, createTable, newBranch, newRelease, RefUrl, schemaDiagram, upload } from "@lib/urls";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
 
@@ -45,6 +45,21 @@ export default function DatabasePage({ params, children, ...props }: Props) {
         }
         case "schema-diagram": {
           const { href, as } = schemaDiagram(paramsWithRef);
+          router.push(href, as).catch(console.error);
+          break;
+        }
+        case "new-table": {
+          const { href, as } = createTable(paramsWithRef);
+          router.push(href, as).catch(console.error);
+          break;
+        }
+        case "new-branch": {
+          const { href, as } =newBranch(paramsWithRef);
+          router.push(href, as).catch(console.error);
+          break;
+        }
+        case "new-release": {
+          const { href, as } = newRelease(paramsWithRef);
           router.push(href, as).catch(console.error);
           break;
         }

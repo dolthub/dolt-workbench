@@ -9,7 +9,7 @@ export function initMenu(
   win: BrowserWindow,
   isProd: boolean,
   hasChosenDatabase?: boolean,
-) {
+): Menu {
   var application_menu: MenuItemConstructorOptions[] = [
     {
       label: "Edit",
@@ -86,25 +86,57 @@ export function initMenu(
         },
         {
           label: "Import File",
+          accelerator: "CmdOrCtrl+I",
           click: () => win.webContents.send("menu-clicked", "upload-file"),
           enabled: hasChosenDatabase,
         },
         {
           type: "separator",
-          enabled: hasChosenDatabase,
         },
         {
           label: "Commit Graph",
+          accelerator: "CmdOrCtrl+G",
           click: () => win.webContents.send("menu-clicked", "commit-graph"),
           enabled: hasChosenDatabase,
         },
         {
           type: "separator",
-          enabled: hasChosenDatabase,
         },
         {
           label: "Schema Diagram",
+          accelerator: "CmdOrCtrl+D",
           click: () => win.webContents.send("menu-clicked", "schema-diagram"),
+          enabled: hasChosenDatabase,
+        },
+        {
+          type: "separator",
+        },
+        {
+          label: "New...",
+          submenu: [
+            {
+              label: "Table",
+              accelerator: "CmdOrCtrl+T",
+              click: () => win.webContents.send("menu-clicked", "new-table"),
+              enabled: hasChosenDatabase,
+            },
+            {
+              type: "separator",
+            },
+            {
+              label: "Branch",
+              accelerator: "CmdOrCtrl+B",
+              click: () => win.webContents.send("menu-clicked", "new-branch"),
+            },
+            {
+              type: "separator",
+            },
+            {
+              label: "Release",
+              accelerator: "CmdOrCtrl+R",
+              click: () => win.webContents.send("menu-clicked", "new-release"),
+            },
+          ],
           enabled: hasChosenDatabase,
         },
       ],
