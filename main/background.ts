@@ -4,16 +4,18 @@ import {
   BrowserWindow,
   ipcMain,
   Menu,
-   utilityProcess,
+  utilityProcess,
   UtilityProcess,
- } from "electron";
+} from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
-  
+
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
-const schemaPath = isProd?path.join(userDataPath, "schema.gql"):"graphql-server/schema.gql";
+const schemaPath = isProd
+  ? path.join(userDataPath, "schema.gql")
+  : "graphql-server/schema.gql";
 process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 
@@ -79,13 +81,12 @@ app.on("ready", () => {
 
 function updateMenu(databaseName?: string) {
   const hasChosenDatabase = !!databaseName;
-  const menu = initMenu(mainWindow, isProd,hasChosenDatabase);
- 
-    Menu.setApplicationMenu(menu);
- 
+  const menu = initMenu(mainWindow, isProd, hasChosenDatabase);
+
+  Menu.setApplicationMenu(menu);
 }
 
-ipcMain.on('update-menu', (_event, databaseName?: string) => {
+ipcMain.on("update-menu", (_event, databaseName?: string) => {
   updateMenu(databaseName);
 });
 
