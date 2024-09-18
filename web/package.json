@@ -43,7 +43,7 @@
     "localforage": "^1.10.0",
     "localforage-getitems": "^1.4.2",
     "lodash": "^4.17.21",
-    "next": "^14.2.4",
+    "next": "^14.2.10",
     "next-useragent": "^2.8.0",
     "node-sql-parser": "^4.17.0",
     "react": "^18.3.1",
