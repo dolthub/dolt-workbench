@@ -10,7 +10,7 @@ export function initMenu(
   isProd: boolean,
   hasChosenDatabase?: boolean,
 ): Menu {
-  var application_menu: MenuItemConstructorOptions[] = [
+  var applicationMenu: MenuItemConstructorOptions[] = [
     {
       label: "Edit",
       submenu: [
@@ -161,5 +161,5 @@ export function initMenu(
       ],
     },
   ];
-  return Menu.buildFromTemplate(application_menu);
+  return Menu.buildFromTemplate(applicationMenu);
 }

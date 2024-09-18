@@ -26,8 +26,10 @@ function Inner(props: { pageProps: any; Component: any }) {
   const { params } = props.pageProps;
 
   useEffect(() => {
-    // enable the tools when the database is selected
-    window.ipc.updateAppMenu(params?.databaseName);
+    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+      // enable the tools when the database is selected
+      window.ipc.updateAppMenu(params?.databaseName);
+    }
   }, [props.pageProps]);
 
   const WrappedPage = withApollo(graphqlApiUrl)(props.Component);
