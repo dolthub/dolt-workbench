@@ -3,6 +3,7 @@ import {
   BrowserWindow,
   Menu,
   MenuItemConstructorOptions,
+  app,
 } from "electron";
 
 export function initMenu(
@@ -139,6 +140,15 @@ export function initMenu(
           ],
           enabled: hasChosenDatabase,
         },
+        {
+          type: "separator",
+        },
+        {
+          label: "Run Query",
+          accelerator: "CmdOrCtrl+Q",
+          click: () => win.webContents.send("menu-clicked", "run-query"),
+          enabled: hasChosenDatabase,
+        },
       ],
     },
     {
@@ -161,5 +171,41 @@ export function initMenu(
       ],
     },
   ];
+
+  const name = app.getName();
+  applicationMenu.unshift({
+    label: name,
+    submenu: [
+      {
+        role: "about",
+      },
+      {
+        type: "separator",
+      },
+      {
+        role: "services",
+        submenu: [],
+      },
+      {
+        type: "separator",
+      },
+      {
+        role: "hide",
+      },
+      {
+        role: "hideOthers",
+      },
+      {
+        role: "unhide",
+      },
+      {
+        type: "separator",
+      },
+      {
+        role: "quit",
+      },
+    ],
+  });
+
   return Menu.buildFromTemplate(applicationMenu);
 }
