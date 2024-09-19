@@ -1,5 +1,6 @@
 import DatabaseLayout from "@components/layouts/DatabaseLayout";
 import { SqlEditorProvider } from "@contexts/sqleditor";
+import useElectronMenu from "@hooks/useElectronMenu";
 import { DatabasePageParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { ReactNode } from "react";
@@ -21,6 +22,8 @@ type Props = {
 };
 
 export default function DatabasePage({ params, children, ...props }: Props) {
+  useElectronMenu(params);
+
   return (
     <SqlEditorProvider params={params}>
       <DatabaseLayout

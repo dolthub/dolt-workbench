@@ -3,15 +3,19 @@ import {
   app,
   BrowserWindow,
   ipcMain,
+  Menu,
   utilityProcess,
   UtilityProcess,
 } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
+import { initMenu } from "./helpers/menu";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
-const schemaPath = isProd?path.join(userDataPath, "schema.gql"):"graphql-server/schema.gql";
+const schemaPath = isProd
+  ? path.join(userDataPath, "schema.gql")
+  : "graphql-server/schema.gql";
 process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 
@@ -60,21 +64,30 @@ app.on("ready", () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+  Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   createGraphqlSeverProcess();
 
   if (isProd) {
     setTimeout(async () => {
       await mainWindow.loadURL("app://./");
-      mainWindow.webContents.openDevTools();
-
     }, 3000);
   } else {
     setTimeout(async () => {
       const port = process.argv[2];
       await mainWindow.loadURL(`http://localhost:${port}`);
-      mainWindow.webContents.openDevTools();
     }, 2500);
   }
+});
+
+function updateMenu(databaseName?: string) {
+  const hasChosenDatabase = !!databaseName;
+  const menu = initMenu(mainWindow, isProd, hasChosenDatabase);
+
+  Menu.setApplicationMenu(menu);
+}
+
+ipcMain.on("update-menu", (_event, databaseName?: string) => {
+  updateMenu(databaseName);
 });
 
 app.on("before-quit", () => {
