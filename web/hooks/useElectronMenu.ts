@@ -4,6 +4,7 @@ import {
   createTable,
   newBranch,
   newRelease,
+  query,
   schemaDiagram,
   upload,
 } from "@lib/urls";
@@ -48,6 +49,11 @@ export default function useElectronMenu(params: DatabasePageParams) {
         }
         case "new-release": {
           const { href, as } = newRelease(paramsWithRef);
+          router.push(href, as).catch(console.error);
+          break;
+        }
+        case "run-query": {
+          const { href, as } = query(paramsWithRef);
           router.push(href, as).catch(console.error);
           break;
         }

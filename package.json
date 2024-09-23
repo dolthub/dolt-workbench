@@ -4,10 +4,16 @@
   "productName": "dolt-sql-workbench",
   "version": "1.0.0",
   "main": "app/background.js",
-  "workspaces": [
-    "graphql-server",
-    "web"
-  ],
+  "workspaces": {
+    "packages": [
+      "graphql-server",
+      "web"
+    ],
+    "nohoist": [
+      "graphql-server",
+      "graphql-server/**"
+    ]
+  },
   "packageManager": "yarn@4.0.2",
   "scripts": {
     "dev": "nextron",
@@ -28,7 +34,17 @@
     ],
     "extraFiles": [
       "graphql-server/dist/*",
-      "graphql-server/dist/**/*"
+      "graphql-server/dist/**/*",
+      "graphql-server/node_modules",
+      "!graphql-server/node_modules/@types",
+      "!graphql-server/node_modules/eslint",
+      "!graphql-server/node_modules/prettier",
+      "!graphql-server/node_modules/jest",
+      "!graphql-server/node_modules/yalc",
+      "!graphql-server/node_modules/webpack",
+      "!graphql-server/node_modules/eslint-*",
+      "!graphql-server/node_modules/ts-*",
+      "!graphql-server/node_modules/typescript"
     ],
     "mac": {
       "icon": "build/icon.icns",

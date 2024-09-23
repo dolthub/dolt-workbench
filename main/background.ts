@@ -4,6 +4,7 @@ import {
   BrowserWindow,
   ipcMain,
   Menu,
+  shell,
   utilityProcess,
   UtilityProcess,
 } from "electron";
@@ -27,6 +28,10 @@ if (isProd) {
 
 let serverProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
+
+function isExternalUrl(url: string) {
+  return !url.includes("localhost:") && !url.includes("app://");
+}
 
 function createGraphqlSeverProcess() {
   const serverPath =
@@ -77,6 +82,25 @@ app.on("ready", () => {
       await mainWindow.loadURL(`http://localhost:${port}`);
     }, 2500);
   }
+
+  // hit when middle-clicking buttons or <a href/> with a target set to _blank
+  // always deny, optionally redirect to browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (isExternalUrl(url)) {
+      shell.openExternal(url);
+    }
+
+    return { action: "deny" };
+  });
+
+  // hit when clicking <a href/> with no target
+  // optionally redirect to browser
+  mainWindow.webContents.on("will-navigate", (event, url) => {
+    if (isExternalUrl(url)) {
+      shell.openExternal(url);
+      event.preventDefault();
+    }
+  });
 });
 
 function updateMenu(databaseName?: string) {
