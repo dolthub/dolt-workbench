@@ -41,7 +41,7 @@ export class DoltgresQueryFactory
           schema,
           revDb,
         ]);
-        const tables = res.map(t => t.table_name);
+        const tables = res.map(tbl => tbl.table_name);
         if (filterSystemTables) return tables;
 
         const systemTables: Array<string | undefined> = await Promise.all(
@@ -422,11 +422,7 @@ async function getTableInfoWithQR(
     schema,
     revDb,
   ]);
-  // const idxRows = await qr.query(qh.indexQuery, [
-  //   args.tableName,
-  //   schema,
-  //   revDb,
-  // ]);
+  // const idxRows = await qr.query(qh.indexQuery, [schema, args.tableName]);
 
   return {
     tableName: args.tableName,

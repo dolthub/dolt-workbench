@@ -32,7 +32,11 @@ export class PostgresQueryFactory
   async schemas(args: t.RefArgs): Promise<string[]> {
     const res: t.RawRows = await this.query(
       qh.schemasQuery,
-      [args.databaseName],
+      [
+        args.refName && this.isDolt
+          ? `${args.databaseName}/${args.refName}`
+          : args.databaseName,
+      ],
       args.databaseName,
       args.refName,
     );
@@ -73,10 +77,7 @@ export class PostgresQueryFactory
     return this.queryQR(
       async qr => {
         const schema = await getSchema(qr, args);
-        return getTableInfo(
-          qr,
-          qr.connection.driver.buildTableName(args.tableName, schema),
-        );
+        return getTableInfo(qr, `${schema}.${args.tableName}`);
       },
       args.databaseName,
       args.refName,

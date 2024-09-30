@@ -8,5 +8,6 @@ export function getDocsQuery(docType: DocType, markdown: string): string {
     return `DELETE FROM dolt_docs WHERE doc_name="${docName}"`;
   }
   const escaped = escapeDoubleQuotes(markdown);
+  // TODO(doltgres): INSERT on conflict update
   return `REPLACE INTO dolt_docs VALUES ("${docName}", "${escaped}")`;
 }

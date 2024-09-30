@@ -55,6 +55,7 @@ export default function BranchAndTagSelector(props: Props) {
       }
     }
 
+    // TODO(doltgres): Don't include current schema
     const { href, as } = props.routeRefChangeTo({
       ...props.params,
       refName,
