@@ -19,6 +19,7 @@ const schemaPath = isProd
   : "graphql-server/schema.gql";
 process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
+process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
 
 if (isProd) {
   serve({ directory: "app" });

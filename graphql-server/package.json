@@ -5,6 +5,9 @@
   "author": "DoltHub",
   "private": true,
   "packageManager": "yarn@4.0.2",
+  "installConfig": {
+    "hoistingLimits": "dependencies"
+  },
   "scripts": {
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build && yarn check-server",
     "build": "nest build",
