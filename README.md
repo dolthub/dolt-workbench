@@ -6,6 +6,12 @@ features. [Doltgres](https://github.com/dolthub/doltgresql) support coming soon.
 
 Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
 
+## Installation
+
+- [Desktop Application](https://github.com/dolthub/dolt-workbench-desktop/releases/download/v0.2.13/dolt-workbench-mac-arm64.dmg) (windows coming soon)
+- [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench)
+- [From source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
+
 ## Features
 
 Whether you decide to connect this workbench to a MySQL, Dolt, or PostgreSQL database, the
