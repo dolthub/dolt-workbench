@@ -8,7 +8,7 @@ Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
 
 ## Installation
 
-- [Desktop Application](https://github.com/dolthub/dolt-workbench-desktop/releases/download/v0.2.13/dolt-workbench-mac-arm64.dmg) (windows coming soon)
+- [Desktop Application - Download for MAC - Apple Silicon](https://github.com/dolthub/dolt-workbench-desktop/releases/download/v0.2.13/dolt-workbench-mac-arm64.dmg) (windows coming soon)
 - [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench)
 - [From source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
 
