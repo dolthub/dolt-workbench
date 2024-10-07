@@ -25,6 +25,12 @@ export function tableWithSchema(args: {
   tableName: string;
   schemaName?: string;
 }): string {
+  if (args.tableName.includes(".")) return args.tableName;
   const schema = args.schemaName || "public";
   return `${schema}.${args.tableName}`;
+}
+
+export function tableWithoutSchema(args: { tableName: string }): string {
+  const split = args.tableName.split(".");
+  return split[split.length - 1];
 }

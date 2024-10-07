@@ -14,7 +14,15 @@ type Props = ModalProps & {
 };
 
 export default function ResetModal(props: Props) {
-  const { getCallProcedure } = useSqlBuilder();
+  const { getCallProcedure, isPostgres } = useSqlBuilder();
+
+  const getTableName = (tn: string): string => {
+    if (isPostgres) {
+      const split = tn.split(".");
+      return split[split.length - 1];
+    }
+    return tn;
+  };
 
   const onClose = () => {
     props.setIsOpen(false);
@@ -50,7 +58,9 @@ export default function ResetModal(props: Props) {
                     <Link
                       {...sqlQuery({
                         ...props.params,
-                        q: getCallProcedure("DOLT_RESET", [st.tableName]),
+                        q: getCallProcedure("DOLT_RESET", [
+                          getTableName(st.tableName),
+                        ]),
                       })}
                     >
                       Unstage
@@ -59,7 +69,9 @@ export default function ResetModal(props: Props) {
                     <Link
                       {...sqlQuery({
                         ...props.params,
-                        q: getCallProcedure("DOLT_CHECKOUT", [st.tableName]),
+                        q: getCallProcedure("DOLT_CHECKOUT", [
+                          getTableName(st.tableName),
+                        ]),
                       })}
                     >
                       Restore

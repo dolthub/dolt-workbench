@@ -11,25 +11,24 @@ export function useDB(dbName: string, refName?: string, isDolt = true): string {
 
 // TABLE
 
-export const listTablesQuery = `SELECT "table_schema", "table_name" FROM "information_schema"."tables" WHERE "table_schema" = $1 AND "table_catalog" = $2`;
+export const listTablesQuery = `SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema = $1 AND table_catalog = $2`;
 
-// TODO: Table queries
 export const columnsQuery = `SELECT columns.*
-FROM "information_schema"."columns" 
-WHERE "table_name" = $1 AND "table_schema" = $2 AND  "table_catalog" = $3;`;
+FROM information_schema.columns 
+WHERE table_name = $1 AND table_schema = $2 AND table_catalog = $3;`;
 
 export const constraintsQuery = `SELECT 
-"ns"."nspname" AS "table_schema", 
-"t"."relname" AS "table_name", 
-"cnst"."conname" AS "constraint_name",
-pg_get_constraintdef("cnst"."oid") AS "expression",
-CASE "cnst"."contype" WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS "constraint_type", 
-"a"."attname" AS "column_name"
-FROM "pg_constraint" "cnst"
-INNER JOIN "pg_class" "t" ON "t"."oid" = "cnst"."conrelid"
-INNER JOIN "pg_namespace" "ns" ON "ns"."oid" = "cnst"."connamespace"
-LEFT JOIN "pg_attribute" "a" ON "a"."attrelid" = "cnst"."conrelid" AND "a"."attnum" = ANY ("cnst"."conkey")
-WHERE "t"."relkind" IN ('r', 'p') AND (("ns"."nspname" = $1 AND "t"."relname" = $2));`;
+ns.nspname AS table_schema, 
+t.relname AS table_name, 
+cnst.conname AS constraint_name,
+pg_get_constraintdef(cnst.oid) AS expression,
+CASE cnst.contype WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS constraint_type, 
+a.attname AS column_name
+FROM pg_constraint cnst
+INNER JOIN pg_class t ON t.oid = cnst.conrelid
+INNER JOIN pg_namespace ns ON ns.oid = cnst.connamespace
+LEFT JOIN pg_attribute a ON a.attrelid = cnst.conrelid AND a.attnum = ANY (cnst.conkey)
+WHERE t.relkind IN ('r', 'p') AND ((ns.nspname = $1 AND t.relname = $2));`;
 
 export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE table_name=$1 AND table_schema=$2 AND table_catalog=$3
@@ -136,8 +135,9 @@ function getPKColsForRowsQuery(cs: RawRows): string[] {
   return cols;
 }
 
-// TODO: Postgres query
-export const tableColsQueryAsOf = `DESCRIBE ?? AS OF ?`;
+// export const tableColsQueryAsOf = `SELECT columns.*
+// FROM "information_schema"."columns"
+// WHERE "table_name" = $1 AND "table_schema" = $2 AND "table_catalog" = $3;`;
 
 export function getTableCommitDiffQuery(
   cols: RawRows,

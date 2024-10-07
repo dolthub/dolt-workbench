@@ -79,14 +79,10 @@ export class FileUploadResolver {
     }
     const schema = await getSchema(qr, args);
     await pgConnection.query(setSearchPath(schema));
+    const q = getCopyFromQuery(args.tableName, args.fileType);
 
     try {
-      await pipeline(
-        createReadStream,
-        pgConnection.query(
-          copyFrom(getCopyFromQuery(args.tableName, args.fileType)),
-        ),
-      );
+      await pipeline(createReadStream, pgConnection.query(copyFrom(q)));
     } finally {
       await qr.release();
     }
