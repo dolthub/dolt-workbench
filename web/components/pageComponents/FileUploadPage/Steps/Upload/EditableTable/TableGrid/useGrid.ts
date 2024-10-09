@@ -45,7 +45,6 @@ export default function useGrid(
       const enc = new TextEncoder();
       // encode text utf-8
       const contents = enc.encode(csv);
-      console.log("CONTENTS", contents, csv);
 
       const file = new File([contents], "editor.csv", { type: "text/csv" });
       const fileType = FileType.Csv;

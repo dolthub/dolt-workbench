@@ -1,4 +1,7 @@
-import { RawRows, TableArgs } from "../types";
+import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
+import { ROW_LIMIT } from "../../utils";
+import { tableWithSchema, tableWithoutSchema } from "../postgres/utils";
+import { RawRows, RowDiffArgs, TableArgs } from "../types";
 
 // Cannot use params here for the database revision. It will incorrectly
 // escape refs with dots
@@ -13,22 +16,8 @@ export function useDB(dbName: string, refName?: string, isDolt = true): string {
 
 export const listTablesQuery = `SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema = $1 AND table_catalog = $2`;
 
-export const columnsQuery = `SELECT columns.*
-FROM information_schema.columns 
-WHERE table_name = $1 AND table_schema = $2 AND table_catalog = $3;`;
-
-export const constraintsQuery = `SELECT 
-ns.nspname AS table_schema, 
-t.relname AS table_name, 
-cnst.conname AS constraint_name,
-pg_get_constraintdef(cnst.oid) AS expression,
-CASE cnst.contype WHEN 'p' THEN 'PRIMARY' WHEN 'u' THEN 'UNIQUE' WHEN 'c' THEN 'CHECK' WHEN 'x' THEN 'EXCLUDE' END AS constraint_type, 
-a.attname AS column_name
-FROM pg_constraint cnst
-INNER JOIN pg_class t ON t.oid = cnst.conrelid
-INNER JOIN pg_namespace ns ON ns.oid = cnst.connamespace
-LEFT JOIN pg_attribute a ON a.attrelid = cnst.conrelid AND a.attnum = ANY (cnst.conkey)
-WHERE t.relkind IN ('r', 'p') AND ((ns.nspname = $1 AND t.relname = $2));`;
+export const columnsQuery = (schemaName: string, tableName: string) =>
+  `DESCRIBE ${tableWithSchema({ schemaName, tableName })};`;
 
 export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE table_name=$1 AND table_schema=$2 AND table_catalog=$3
@@ -106,26 +95,20 @@ export function getAuthorNameString(hasAuthor: boolean, n: string): string {
 // TODO: Columns
 // Creates ORDER BY statement with column parameters
 // i.e. ORDER BY ::col1, ::col2
-function getOrderByFromCols(numCols: number): string {
-  if (!numCols) return "";
-  const pkCols = Array.from({ length: numCols })
-    .map((_, i) => `$${i + 1} ASC`)
-    .join(", ");
+function getOrderByFromCols(cols: string[]): string {
+  if (!cols.length) return "";
+  const pkCols = cols.map(col => `${col} ASC`).join(", ");
   return pkCols === "" ? "" : `ORDER BY ${pkCols} `;
 }
 
 export const getRowsQueryAsOf = (
   columns: RawRows,
-  args: TableArgs,
-): { q: string; cols: string[] } => {
+  args: TableArgs & { offset: number },
+): string => {
   const cols = getPKColsForRowsQuery(columns);
-  const n = cols.length + 1;
-  return {
-    q: `SELECT * FROM "${args.databaseName}/${args.refName}"."${args.tableName}" ${getOrderByFromCols(
-      cols.length,
-    )}LIMIT $${n} OFFSET $${n + 1}`,
+  return `SELECT * FROM ${args.tableName} AS OF '${args.refName}' ${getOrderByFromCols(
     cols,
-  };
+  )}LIMIT ${ROW_LIMIT + 1} OFFSET ${args.offset}`;
 };
 
 // TODO: col.Key and col.Field for postgres
@@ -135,20 +118,21 @@ function getPKColsForRowsQuery(cs: RawRows): string[] {
   return cols;
 }
 
-// export const tableColsQueryAsOf = `SELECT columns.*
-// FROM "information_schema"."columns"
-// WHERE "table_name" = $1 AND "table_schema" = $2 AND "table_catalog" = $3;`;
+export const tableColsQueryAsOf = (tableName: string, refName: string) =>
+  `DESCRIBE ${tableName} AS OF '${refName}'`;
 
 export function getTableCommitDiffQuery(
+  args: RowDiffArgs,
   cols: RawRows,
-  hasFilter = false,
 ): string {
-  const n = hasFilter ? 4 : 3;
-  const whereDiffType = hasFilter ? ` WHERE diff_type=$4 ` : "";
-  return `SELECT * FROM DOLT_DIFF($1::text, $2::text, $3::text)${whereDiffType}
+  const diffType = convertToStringForQuery(args.filterByRowType);
+  const whereDiffType = args.filterByRowType
+    ? ` WHERE diff_type=${diffType} `
+    : "";
+  return `SELECT * FROM DOLT_DIFF('${args.fromCommitId}', '${args.toCommitId}', '${tableWithoutSchema(args.toTableName)}')${whereDiffType}
   ${getOrderByFromDiffCols(cols)}
-  LIMIT $${n + 1}
-  OFFSET $${n + 2}`;
+  LIMIT ${ROW_LIMIT + 1}
+  OFFSET ${args.offset}`;
 }
 
 // TODO: col.Key for postgres

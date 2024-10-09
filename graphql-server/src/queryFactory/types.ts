@@ -30,6 +30,7 @@ export type RefsTableArgs = RefsArgs & { tableName: string };
 export type RefsTableWithSchemaArgs = RefsTableArgs & { schemaName: string };
 export type RowDiffArgs = DBArgs & {
   refName?: string;
+  schemaName?: string;
   tableName: string;
   fromTableName: string;
   toTableName: string;

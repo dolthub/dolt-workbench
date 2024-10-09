@@ -1,8 +1,8 @@
 import { QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
+import * as column from "../../columns/column.model";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import * as foreignKey from "../../indexes/foreignKey.model";
-import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { systemTableValues } from "../../systemTables/systemTable.enums";
@@ -47,7 +47,7 @@ export class DoltgresQueryFactory
         const systemTables: Array<string | undefined> = await Promise.all(
           systemTableValues.map(async st => {
             const cols = await handleTableNotFound(async () =>
-              qr.query(qh.columnsQuery, [st, schema, revDb]),
+              qr.query(qh.columnsQuery(schema, st)),
             );
             if (cols) {
               return `${st}`;
@@ -179,7 +179,7 @@ export class DoltgresQueryFactory
 
   async getDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema({ ...args, tableName: args.tableName })}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -188,7 +188,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema({ ...args, tableName: args.tableName })}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -197,7 +197,7 @@ export class DoltgresQueryFactory
 
   async getDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema({ ...args, tableName: args.tableName })}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -206,7 +206,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema({ ...args, tableName: args.tableName })}'` : ""})`,
+      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
       [],
       args.databaseName,
       args.refName,
@@ -215,7 +215,7 @@ export class DoltgresQueryFactory
 
   async getSchemaPatch(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args)}') WHERE diff_type='schema'`,
+      `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args.tableName)}') WHERE diff_type='schema'`,
       [],
       args.databaseName,
       args.refName,
@@ -224,7 +224,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotSchemaPatch(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args)}') WHERE diff_type='schema'`,
+      `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args.tableName)}') WHERE diff_type='schema'`,
       [],
       args.databaseName,
       args.refName,
@@ -233,7 +233,7 @@ export class DoltgresQueryFactory
 
   async getSchemaDiff(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args)}')`,
+      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args.tableName)}')`,
       [],
       args.databaseName,
       args.refName,
@@ -242,7 +242,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotSchemaDiff(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args)}')`,
+      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args.tableName)}')`,
       [],
       args.databaseName,
       args.refName,
@@ -363,13 +363,10 @@ export class DoltgresQueryFactory
     args: t.TableMaybeSchemaArgs & { offset: number },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
     return this.queryMultiple(async query => {
-      const columns = await query(qh.columnsQuery, [
-        args.tableName,
-        args.schemaName ?? "public",
-        `${args.databaseName}/${args.refName}`,
-      ]);
-      const { q, cols } = qh.getRowsQueryAsOf(columns, args);
-      const rows = await query(q, [...cols, ROW_LIMIT + 1, args.offset]);
+      const columns = await query(
+        qh.tableColsQueryAsOf(args.tableName, args.refName),
+      );
+      const rows = await query(qh.getRowsQueryAsOf(columns, args));
       return { rows, columns };
     }, args.databaseName);
   }
@@ -377,25 +374,15 @@ export class DoltgresQueryFactory
   async getRowDiffs(args: t.RowDiffArgs): t.DiffRes {
     return this.queryMultiple(
       async query => {
-        // TODO: Need way to get columns at a commit
-        const oldCols = await query(qh.columnsQuery, [
-          args.fromTableName,
-          args.fromCommitId,
-        ]);
-        const newCols = await query(qh.columnsQuery, [
-          args.toTableName,
-          args.toCommitId,
-        ]);
-        const colsUnion = unionCols(oldCols, newCols);
-        const diffType = convertToStringForQuery(args.filterByRowType);
-        const refArgs = [args.fromCommitId, args.toCommitId, args.toTableName];
-        const pageArgs = [ROW_LIMIT + 1, args.offset];
-        const diff = await query(
-          qh.getTableCommitDiffQuery(colsUnion, !!diffType),
-          diffType
-            ? [...refArgs, diffType, ...pageArgs]
-            : [...refArgs, ...pageArgs],
+        const oldCols = await query(
+          qh.tableColsQueryAsOf(args.fromTableName, args.fromCommitId),
         );
+        const newCols = await query(
+          qh.tableColsQueryAsOf(args.toTableName, args.toCommitId),
+        );
+        const colsUnion = unionCols(oldCols, newCols);
+
+        const diff = await query(qh.getTableCommitDiffQuery(args, colsUnion));
         return { colsUnion, diff };
       },
       args.databaseName,
@@ -410,15 +397,7 @@ async function getTableInfoWithQR(
 ): Promise<TableDetails> {
   const revDb = `${args.databaseName}/${args.refName}`;
   const schema = await getSchema(qr, args);
-  const columns = await qr.query(qh.columnsQuery, [
-    args.tableName,
-    schema,
-    revDb,
-  ]);
-  const constraints = await qr.query(qh.constraintsQuery, [
-    schema,
-    args.tableName,
-  ]);
+  const columns = await qr.query(qh.columnsQuery(schema, args.tableName));
   const fkRows = await qr.query(qh.foreignKeysQuery, [
     args.tableName,
     schema,
@@ -428,21 +407,7 @@ async function getTableInfoWithQR(
 
   return {
     tableName: args.tableName,
-    columns: columns.map(c => {
-      return {
-        name: c.column_name,
-        isPrimaryKey: !!constraints.find(
-          con =>
-            con.column_name === c.column_name &&
-            con.constraint_type === "PRIMARY",
-        ),
-        type: `${c.data_type}${c.character_maximum_length ? `(${c.character_maximum_length})` : ""}${
-          c.unsigned ? " unsigned" : ""
-        }`,
-        constraints: [{ notNull: c.is_nullable === "NO" }],
-        sourceTable: c.table_name,
-      };
-    }),
+    columns: columns.map(c => column.fromDoltRowRes(c, args.tableName)),
     foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
     // indexes: index.fromDoltRowsRes(idxRows), // TODO
     indexes: [],

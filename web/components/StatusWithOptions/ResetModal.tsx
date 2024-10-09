@@ -4,6 +4,7 @@ import { StatusFragment } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
+import { getPostgresTableName } from "@lib/postgres";
 import { sqlQuery } from "@lib/urls";
 import css from "./index.module.css";
 
@@ -18,8 +19,7 @@ export default function ResetModal(props: Props) {
 
   const getTableName = (tn: string): string => {
     if (isPostgres) {
-      const split = tn.split(".");
-      return split[split.length - 1];
+      return getPostgresTableName(tn);
     }
     return tn;
   };

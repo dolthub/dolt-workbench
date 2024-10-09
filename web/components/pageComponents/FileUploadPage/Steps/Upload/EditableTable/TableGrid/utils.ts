@@ -23,10 +23,10 @@ export async function getGridAsCsv<R, SR>(
   const { head, body, err } = await getGridContent(gridElement);
   const rows = [...head, ...body];
   const filtered = filterOutEmptyRowsAndCols(rows);
-  const csv =
-    filtered.map(cells => cells.map(serializeCellValue).join(",")).join("\n") +
-    "\n";
-  return { csv, rows: filtered, err };
+  const csv = filtered
+    .map(cells => cells.map(serializeCellValue).join(","))
+    .join("\n");
+  return { csv: `${csv}\n`, rows: filtered, err };
 }
 
 type GridContent = {

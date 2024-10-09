@@ -30,7 +30,7 @@ export function tableWithSchema(args: {
   return `${schema}.${args.tableName}`;
 }
 
-export function tableWithoutSchema(args: { tableName: string }): string {
-  const split = args.tableName.split(".");
+export function tableWithoutSchema(tableName: string): string {
+  const split = tableName.split(".");
   return split[split.length - 1];
 }
