@@ -7,11 +7,11 @@ import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { systemTableValues } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
-import { ROW_LIMIT, handleTableNotFound } from "../../utils";
+import { handleTableNotFound } from "../../utils";
 import * as dem from "../dolt/doltEntityManager";
 import { getAuthorString, handleRefNotFound, unionCols } from "../dolt/utils";
 import { PostgresQueryFactory } from "../postgres";
-import { getSchema, tableWithoutSchema } from "../postgres/utils";
+import { getSchema } from "../postgres/utils";
 import * as t from "../types";
 import * as qh from "./queries";
 
@@ -162,27 +162,19 @@ export class DoltgresQueryFactory
 
   async getLogs(args: t.RefArgs, offset: number): t.PR {
     return handleRefNotFound(async () =>
-      this.query(
-        `SELECT * FROM DOLT_LOG('${args.refName}', '--parents') LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`,
-        [],
-        args.databaseName,
-      ),
+      this.query(qh.doltLogsQuery(args, offset), [], args.databaseName),
     );
   }
 
   async getTwoDotLogs(args: t.RefsArgs): t.PR {
     return handleRefNotFound(async () =>
-      this.query(
-        `SELECT * FROM DOLT_LOG('${args.toRefName}..${args.fromRefName}', '--parents')`,
-        [],
-        args.databaseName,
-      ),
+      this.query(qh.twoDotDoltLogsQuery(args), [], args.databaseName),
     );
   }
 
   async getDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
+      qh.getDiffStatQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -191,7 +183,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffStat(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
+      qh.getThreeDotDiffStatQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -200,7 +192,7 @@ export class DoltgresQueryFactory
 
   async getDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
+      qh.getDiffSummaryQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -209,7 +201,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotDiffSummary(args: t.RefsMaybeTableArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`,
+      qh.getThreeDotDiffSummaryQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -218,7 +210,7 @@ export class DoltgresQueryFactory
 
   async getSchemaPatch(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args.tableName)}') WHERE diff_type='schema'`,
+      qh.schemaPatchQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -227,7 +219,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotSchemaPatch(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args.tableName)}') WHERE diff_type='schema'`,
+      qh.threeDotSchemaPatchQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -236,7 +228,7 @@ export class DoltgresQueryFactory
 
   async getSchemaDiff(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args.tableName)}')`,
+      qh.schemaDiffQuery(args),
       [],
       args.databaseName,
       args.refName,
@@ -245,7 +237,7 @@ export class DoltgresQueryFactory
 
   async getThreeDotSchemaDiff(args: t.RefsTableWithSchemaArgs): t.PR {
     return this.query(
-      `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args.tableName)}')`,
+      qh.threeDotSchemaDiffQuery(args),
       [],
       args.databaseName,
       args.refName,

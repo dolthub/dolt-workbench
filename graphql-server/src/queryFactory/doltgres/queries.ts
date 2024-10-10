@@ -1,7 +1,7 @@
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { ROW_LIMIT } from "../../utils";
 import { tableWithSchema, tableWithoutSchema } from "../postgres/utils";
-import { RawRows, RowDiffArgs, TableArgs } from "../types";
+import * as t from "../types";
 
 // Cannot use params here for the database revision. It will incorrectly
 // escape refs with dots
@@ -43,34 +43,47 @@ export const callDeleteBranch = `SELECT DOLT_BRANCH('-D', $1::text)`;
 
 // COMMITS
 
-export const doltLogsQuery = `SELECT * FROM DOLT_LOG($1, '--parents') LIMIT $2 OFFSET $3`;
+// TODO: Use prepared statements for these when they work with table functions
+export const doltLogsQuery = (args: t.RefArgs, offset: number): string =>
+  `SELECT * FROM DOLT_LOG('${args.refName}', '--parents') LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`;
 
-export const twoDotDoltLogsQuery = `SELECT * FROM DOLT_LOG($1, '--parents')`;
+export const twoDotDoltLogsQuery = (args: t.RefsArgs): string =>
+  `SELECT * FROM DOLT_LOG('${args.toRefName}..${args.fromRefName}', '--parents')`;
 
 // DIFFS
 
 export const hashOf = `SELECT HASHOF($1::text)`;
 export const mergeBase = `SELECT DOLT_MERGE_BASE($1::text, $2::text)`;
 
-export const getThreeDotDiffStatQuery = (hasTableName?: boolean): string =>
-  `SELECT * FROM DOLT_DIFF_STAT($1${hasTableName ? `, $2` : ""})`;
+export const getThreeDotDiffStatQuery = (args: t.RefsMaybeTableArgs): string =>
+  `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`;
 
-export const getDiffStatQuery = (hasTableName?: boolean): string =>
-  `SELECT * FROM DOLT_DIFF_STAT($1, $2${hasTableName ? `, $3` : ""})`;
+export const getDiffStatQuery = (args: t.RefsMaybeTableArgs): string =>
+  `SELECT * FROM DOLT_DIFF_STAT('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`;
 
-export const getDiffSummaryQuery = (hasTableName?: boolean): string =>
-  `SELECT * FROM DOLT_DIFF_SUMMARY($1, $2${hasTableName ? `, $3` : ""})`;
+export const getDiffSummaryQuery = (args: t.RefsMaybeTableArgs): string =>
+  `SELECT * FROM DOLT_DIFF_SUMMARY('${args.fromRefName}', '${args.toRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`;
 
-export const getThreeDotDiffSummaryQuery = (hasTableName?: boolean): string =>
-  `SELECT * FROM DOLT_DIFF_SUMMARY($1${hasTableName ? `, $2` : ""})`;
+export const getThreeDotDiffSummaryQuery = (
+  args: t.RefsMaybeTableArgs,
+): string =>
+  `SELECT * FROM DOLT_DIFF_SUMMARY('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`;
 
-export const schemaPatchQuery = `SELECT * FROM DOLT_PATCH($1, $2, $3) WHERE diff_type='schema'`;
+export const schemaPatchQuery = (args: t.RefsTableWithSchemaArgs): string =>
+  `SELECT * FROM DOLT_PATCH('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args.tableName)}') WHERE diff_type='schema'`;
 
-export const threeDotSchemaPatchQuery = `SELECT * FROM DOLT_PATCH($1, $2) WHERE diff_type='schema'`;
+export const threeDotSchemaPatchQuery = (
+  args: t.RefsTableWithSchemaArgs,
+): string =>
+  `SELECT * FROM DOLT_PATCH('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args.tableName)}') WHERE diff_type='schema'`;
 
-export const schemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF($1, $2, $3)`;
+export const schemaDiffQuery = (args: t.RefsTableWithSchemaArgs): string =>
+  `SELECT * FROM DOLT_SCHEMA_DIFF('${args.fromRefName}', '${args.toRefName}', '${tableWithoutSchema(args.tableName)}')`;
 
-export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF($1, $2)`;
+export const threeDotSchemaDiffQuery = (
+  args: t.RefsTableWithSchemaArgs,
+): string =>
+  `SELECT * FROM DOLT_SCHEMA_DIFF('${args.toRefName}...${args.fromRefName}', '${tableWithoutSchema(args.tableName)}')`;
 
 // PULLS
 
@@ -92,7 +105,6 @@ export function getAuthorNameString(hasAuthor: boolean, n: string): string {
   return `, '--author', ${n}`;
 }
 
-// TODO: Columns
 // Creates ORDER BY statement with column parameters
 // i.e. ORDER BY ::col1, ::col2
 function getOrderByFromCols(cols: string[]): string {
@@ -102,8 +114,8 @@ function getOrderByFromCols(cols: string[]): string {
 }
 
 export const getRowsQueryAsOf = (
-  columns: RawRows,
-  args: TableArgs & { offset: number },
+  columns: t.RawRows,
+  args: t.TableArgs & { offset: number },
 ): string => {
   const cols = getPKColsForRowsQuery(columns);
   return `SELECT * FROM ${args.tableName} AS OF '${args.refName}' ${getOrderByFromCols(
@@ -111,8 +123,7 @@ export const getRowsQueryAsOf = (
   )}LIMIT ${ROW_LIMIT + 1} OFFSET ${args.offset}`;
 };
 
-// TODO: col.Key and col.Field for postgres
-function getPKColsForRowsQuery(cs: RawRows): string[] {
+function getPKColsForRowsQuery(cs: t.RawRows): string[] {
   const pkCols = cs.filter(col => col.Key === "PRI");
   const cols = pkCols.map(c => c.Field);
   return cols;
@@ -122,8 +133,8 @@ export const tableColsQueryAsOf = (tableName: string, refName: string) =>
   `DESCRIBE ${tableName} AS OF '${refName}'`;
 
 export function getTableCommitDiffQuery(
-  args: RowDiffArgs,
-  cols: RawRows,
+  args: t.RowDiffArgs,
+  cols: t.RawRows,
 ): string {
   const diffType = convertToStringForQuery(args.filterByRowType);
   const whereDiffType = args.filterByRowType
@@ -135,7 +146,7 @@ export function getTableCommitDiffQuery(
   OFFSET ${args.offset}`;
 }
 
-export function getOrderByFromDiffCols(cols: RawRows): string {
+export function getOrderByFromDiffCols(cols: t.RawRows): string {
   const pkCols = cols.filter(col => col.Key === "PRI");
   const diffCols: string[] = [];
   pkCols.forEach(col => {
