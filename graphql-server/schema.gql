@@ -101,7 +101,6 @@ type DatabaseConnection {
   hideDoltFeatures: Boolean
   useSSL: Boolean
   type: DatabaseType
-  schema: String
   isDolt: Boolean
 }
 
@@ -118,7 +117,6 @@ type DoltDatabaseDetails {
 
 type CurrentDatabaseState {
   currentDatabase: String
-  currentSchema: String
 }
 
 type DiffStat {
@@ -341,7 +339,7 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, schema: String): CurrentDatabaseState!
+  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
   createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!

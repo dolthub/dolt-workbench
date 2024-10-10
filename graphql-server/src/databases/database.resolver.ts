@@ -30,9 +30,6 @@ class AddDatabaseConnectionArgs {
 
   @Field(_type => DatabaseType, { nullable: true })
   type?: DatabaseType;
-
-  @Field({ nullable: true })
-  schema?: string;
 }
 
 @ObjectType()
@@ -51,10 +48,6 @@ class DoltDatabaseDetails {
 class CurrentDatabaseState {
   @Field({ nullable: true })
   currentDatabase?: string;
-
-  // Postgres only
-  @Field({ nullable: true })
-  currentSchema?: string;
 }
 
 @ArgsType()
@@ -133,7 +126,6 @@ export class DatabaseResolver {
       hideDoltFeatures: !!args.hideDoltFeatures,
       useSSL: !!args.useSSL,
       type,
-      schema: args.schema,
     };
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
@@ -146,7 +138,7 @@ export class DatabaseResolver {
     }
 
     const db = await this.currentDatabase();
-    return { currentDatabase: db, currentSchema: args.schema };
+    return { currentDatabase: db };
   }
 
   @Mutation(_returns => Boolean)

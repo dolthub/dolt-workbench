@@ -131,16 +131,6 @@ export default function NewConnection(props: Props) {
               horizontal
               light
             />
-            {state.type === DatabaseType.Postgres && (
-              <FormInput
-                label="Schema"
-                value={state.schema}
-                onChangeString={s => setState({ schema: s })}
-                placeholder="myschema"
-                horizontal
-                light
-              />
-            )}
           </div>
           <div className={css.section}>
             <Button.Link

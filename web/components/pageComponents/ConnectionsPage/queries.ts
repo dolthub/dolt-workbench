@@ -7,7 +7,6 @@ export const ADD_DATABASE_CONNECTION = gql`
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
     $type: DatabaseType
-    $schema: String
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
@@ -15,10 +14,8 @@ export const ADD_DATABASE_CONNECTION = gql`
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
-      schema: $schema
     ) {
       currentDatabase
-      currentSchema
     }
   }
 `;
@@ -30,7 +27,6 @@ export const STORED_CONNECTIONS = gql`
     useSSL
     hideDoltFeatures
     type
-    schema
     isDolt
   }
   query StoredConnections {

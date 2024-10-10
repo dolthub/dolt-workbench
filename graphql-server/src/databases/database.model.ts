@@ -19,8 +19,5 @@ export class DatabaseConnection {
   type?: DatabaseType;
 
   @Field({ nullable: true })
-  schema?: string;
-
-  @Field({ nullable: true })
   isDolt?: boolean;
 }
