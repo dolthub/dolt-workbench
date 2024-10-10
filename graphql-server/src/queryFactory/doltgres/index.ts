@@ -105,8 +105,11 @@ export class DoltgresQueryFactory
     args: t.RefMaybeSchemaArgs,
     type?: SchemaType,
   ): Promise<SchemaItem[]> {
-    return this.queryForBuilder(
-      async em => dem.getDoltSchemas(em, type),
+    return this.queryQR(
+      async qr => {
+        const schema = await getSchema(qr, args);
+        return dem.getDoltSchemas(qr.manager, type, schema);
+      },
       args.databaseName,
       args.refName,
     );
@@ -318,14 +321,12 @@ export class DoltgresQueryFactory
         if (args.author) {
           params.push(getAuthorString(args.author));
         }
-        const res = await query(
-          `SELECT DOLT_MERGE('${args.fromBranchName}', '--no-ff', '-m', 'Merge branch ${args.fromBranchName}'${qh.getAuthorNameString(!!args.author, `'${args.author}'`)})`,
-          params,
-        );
+        const res = await query(qh.getCallMerge(!!args.author), params);
 
-        if (res.length && res[0].conflicts !== "0") {
+        if (res.length && res[0].dolt_merge[2] !== "0") {
           await query("ROLLBACK");
-          throw new Error("Merge conflict detected");
+          const msg = res[0].dolt_merge[3] ?? "Merge conflict detected";
+          throw new Error(msg);
         }
 
         await query("COMMIT");

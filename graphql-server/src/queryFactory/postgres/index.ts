@@ -25,7 +25,11 @@ export class PostgresQueryFactory
     return res
       .map(r => r.datname)
       .filter(
-        d => d !== "template0" && d !== "template1" && d !== "dolt_cluster",
+        d =>
+          d !== "template0" &&
+          d !== "template1" &&
+          d !== "dolt_cluster" &&
+          !d.includes("/"),
       );
   }
 

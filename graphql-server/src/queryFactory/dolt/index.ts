@@ -307,7 +307,8 @@ export class DoltQueryFactory
 
         if (res.length && res[0].conflicts !== "0") {
           await query("ROLLBACK");
-          throw new Error("Merge conflict detected");
+          const msg = res[0].message ?? "Merge conflict detected";
+          throw new Error(msg);
         }
 
         await query("COMMIT");

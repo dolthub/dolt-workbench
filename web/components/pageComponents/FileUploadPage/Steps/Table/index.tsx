@@ -1,5 +1,7 @@
+import { Selector as SchemasSelector } from "@components/SchemasSelector";
 import TableSelector from "@components/TableSelector";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import StepLayout from "../../StepLayout";
 import UploadQueryInfo from "../../UploadQueryInfo";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
@@ -26,6 +28,7 @@ function Inner() {
     getUploadUrl,
   } = useFileUploadContext();
   const { onNext, disabled, state, setState } = useTable();
+  const { isPostgres } = useDatabaseDetails();
 
   return (
     <StepLayout
@@ -42,13 +45,33 @@ function Inner() {
         <div className={css.container}>
           <TableOption title="Update an existing table">
             <div>
+              {isPostgres && (
+                <div>
+                  <SchemasSelector
+                    className={css.schemaSelector}
+                    val={state.schemaName}
+                    onChangeValue={v => {
+                      setState({
+                        existingTable: undefined,
+                        schemaName: v ?? undefined,
+                      });
+                    }}
+                    params={{ ...dbParams, refName: branchName, schemaName }}
+                  />
+                </div>
+              )}
               <TableSelector
-                params={{ ...dbParams, refName: branchName, schemaName }}
+                params={{
+                  ...dbParams,
+                  refName: branchName,
+                  schemaName: state.schemaName,
+                }}
                 selectedTable={state.existingTable}
                 onChangeTable={t => setState({ existingTable: t ?? undefined })}
+                label={isPostgres ? "Table" : undefined}
                 light
               />
-              <UploadQueryInfo />
+              <UploadQueryInfo tableName={state.existingTable} />
             </div>
           </TableOption>
         </div>

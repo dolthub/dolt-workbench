@@ -5,6 +5,7 @@ import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 
 const defaultState = {
   existingTable: "",
+  schemaName: undefined as string | undefined,
   err: "",
   valErr: "",
 };
@@ -20,13 +21,13 @@ type ReturnType = {
 };
 
 export default function useTable(): ReturnType {
-  const [state, setState] = useSetState(defaultState);
   const {
-    state: { tableName, importOp },
+    state: { tableName, importOp, schemaName },
     setItem,
     updateLoad,
     getUploadUrl,
   } = useFileUploadContext();
+  const [state, setState] = useSetState({ ...defaultState, schemaName });
   const router = useRouter();
   const [stateSet, setStateSet] = useState(false);
 
@@ -36,6 +37,7 @@ export default function useTable(): ReturnType {
     if (!tableName || stateSet) return;
     setState({
       existingTable: tableName,
+      schemaName,
     });
     setStateSet(true);
   }, [tableName, importOp, setState, stateSet, updateLoad]);
@@ -45,6 +47,7 @@ export default function useTable(): ReturnType {
 
   const onNext = () => {
     setItem("tableName", state.existingTable);
+    setItem("schemaName", state.schemaName);
     setItem("importOp", importOp);
     router.push(uploadLink.href, uploadLink.as).catch(console.error);
   };

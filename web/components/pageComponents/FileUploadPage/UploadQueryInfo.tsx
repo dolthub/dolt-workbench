@@ -6,6 +6,7 @@ import css from "./index.module.css";
 
 type Props = {
   forSpreadsheet?: boolean;
+  tableName: string;
 };
 
 export default function UploadQueryInfo(props: Props) {
@@ -28,7 +29,7 @@ export default function UploadQueryInfo(props: Props) {
           {props.forSpreadsheet
             ? "insert spreadsheet rows"
             : "read rows from a file"}{" "}
-          into the selected table.
+          into the <span className={css.bold}>{props.tableName}</span> table.
         </p>{" "}
         <HelpPopup popupProps={{ contentStyle: { width: "22rem" } }}>
           <div className={css.loadHelp}>

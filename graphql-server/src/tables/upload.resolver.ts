@@ -6,8 +6,8 @@ import { from as copyFrom } from "pg-copy-streams";
 import { pipeline } from "stream/promises";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DatabaseType } from "../databases/database.enum";
-import { useDB } from "../queryFactory/mysql/queries";
-import { setSearchPath } from "../queryFactory/postgres/queries";
+import { useDB as doltgresUseDB } from "../queryFactory/doltgres/queries";
+import { useDB as mysqlUseDB } from "../queryFactory/mysql/queries";
 import { getSchema } from "../queryFactory/postgres/utils";
 import { TableMaybeSchemaArgs } from "../utils/commonTypes";
 import { FileType, ImportOperation, LoadDataModifier } from "./table.enum";
@@ -49,9 +49,9 @@ export class FileUploadResolver {
     if (config.type === DatabaseType.Mysql) {
       const conn = await this.connResolver.mysqlConnection();
 
-      const isDolt = await getIsDolt(conn.query);
+      const isDolt = await getIsDolt(conn);
 
-      await conn.query(useDB(args.databaseName, args.refName, isDolt));
+      await conn.query(mysqlUseDB(args.databaseName, args.refName, isDolt));
       await conn.query("SET GLOBAL local_infile=ON;");
 
       await conn.query({
@@ -73,13 +73,14 @@ export class FileUploadResolver {
     const qr = conn.getQR();
     const pgConnection = await qr.connect();
 
-    const isDolt = await getIsDolt(pgConnection.query);
+    const isDolt = await getIsDolt(pgConnection);
     if (isDolt) {
-      await pgConnection.query(useDB(args.databaseName, args.refName, true));
+      await pgConnection.query(
+        doltgresUseDB(args.databaseName, args.refName, true),
+      );
     }
     const schema = await getSchema(qr, args);
-    await pgConnection.query(setSearchPath(schema));
-    const q = getCopyFromQuery(args.tableName, args.fileType);
+    const q = getCopyFromQuery(schema, args.tableName, args.fileType);
 
     try {
       await pipeline(createReadStream, pgConnection.query(copyFrom(q)));
@@ -91,18 +92,22 @@ export class FileUploadResolver {
   }
 }
 
-async function getIsDolt(query: (s: string) => Promise<any>): Promise<boolean> {
+async function getIsDolt(conn: any): Promise<boolean> {
   try {
-    const res = await query("SELECT dolt_version()");
+    const res = await conn.query("SELECT dolt_version()");
     return !!res;
-  } catch (_) {
+  } catch (err) {
     // ignore
   }
   return false;
 }
 
-function getCopyFromQuery(tableName: string, fileType: FileType): string {
-  return `COPY "${tableName}" 
+function getCopyFromQuery(
+  schemaName: string,
+  tableName: string,
+  fileType: FileType,
+): string {
+  return `COPY "${schemaName}"."${tableName}" 
 FROM STDIN
 WITH (
   FORMAT csv, 

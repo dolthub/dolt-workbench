@@ -8,6 +8,7 @@ type Props = {
   onChangeTable: (t: Maybe<string>) => void;
   selectedTable: string;
   light?: boolean;
+  label?: string;
 };
 
 type InnerProps = Props & {

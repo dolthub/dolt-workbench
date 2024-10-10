@@ -125,7 +125,7 @@ describe("test DocMarkdown", () => {
     await user.click(screen.getByText("delete"));
     const { href, as } = sqlQuery({
       ...params,
-      q: `DELETE FROM dolt_docs WHERE doc_name="${docName}"`,
+      q: `DELETE FROM dolt_docs WHERE doc_name='${docName}'`,
     });
     await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });

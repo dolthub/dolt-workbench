@@ -11,7 +11,7 @@ import { ReactNode, useEffect, useMemo, useState } from "react";
 
 type Props = {
   children: ReactNode;
-  params: RequiredRefsParams & { refName?: string };
+  params: RequiredRefsParams & { refName?: string; schemaName?: string };
   initialTableName?: string;
   stayWithinPage?: boolean;
   forPull?: boolean;

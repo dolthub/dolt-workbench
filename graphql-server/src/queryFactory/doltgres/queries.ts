@@ -49,8 +49,8 @@ export const twoDotDoltLogsQuery = `SELECT * FROM DOLT_LOG($1, '--parents')`;
 
 // DIFFS
 
-export const hashOf = `SELECT HASHOF($1)`;
-export const mergeBase = `SELECT DOLT_MERGE_BASE($1, $2)`;
+export const hashOf = `SELECT HASHOF($1::text)`;
+export const mergeBase = `SELECT DOLT_MERGE_BASE($1::text, $2::text)`;
 
 export const getThreeDotDiffStatQuery = (hasTableName?: boolean): string =>
   `SELECT * FROM DOLT_DIFF_STAT($1${hasTableName ? `, $2` : ""})`;
@@ -75,7 +75,7 @@ export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF($1, $2)`;
 // PULLS
 
 export const getCallMerge = (hasAuthor = false) =>
-  `SELECT DOLT_MERGE($1, '--no-ff', '-m', $2${getAuthorNameString(hasAuthor, "$3")})`;
+  `SELECT DOLT_MERGE($1::text, '--no-ff', '-m', $2::text${getAuthorNameString(hasAuthor, "$3::text")})`;
 
 // TAGS
 
@@ -135,7 +135,6 @@ export function getTableCommitDiffQuery(
   OFFSET ${args.offset}`;
 }
 
-// TODO: col.Key for postgres
 export function getOrderByFromDiffCols(cols: RawRows): string {
   const pkCols = cols.filter(col => col.Key === "PRI");
   const diffCols: string[] = [];
