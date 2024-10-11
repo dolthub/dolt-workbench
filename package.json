@@ -8,13 +8,9 @@
     "packages": [
       "graphql-server",
       "web"
-    ],
-    "nohoist": [
-      "graphql-server",
-      "graphql-server/**"
     ]
   },
-  "packageManager": "yarn@4.0.2",
+  "packageManager": "yarn@4.5.0",
   "scripts": {
     "dev": "nextron",
     "build": "nextron build",

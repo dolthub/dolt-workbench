@@ -13,3 +13,5 @@ next-env.d.ts
 dist
 
 .yarn/*
+
+.env
