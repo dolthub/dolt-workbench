@@ -61,7 +61,37 @@ function createGraphqlSeverProcess() {
   });
 }
 
-app.on("ready", () => {
+async function isGraphQLServerReady(url: string): Promise<boolean> {
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: "{ __typename }" }),
+    });
+    console.log(url, response);
+    return response.ok;
+  } catch (error) {
+    console.error("Error pinging GraphQL server:", error);
+    return false;
+  }
+}
+
+async function waitForGraphQLServer(
+  url: string,
+  timeout: number = 30000,
+): Promise<void> {
+  const startTime = Date.now();
+  while (Date.now() - startTime < timeout) {
+    const isReady = await isGraphQLServerReady(url);
+    if (isReady) {
+      return;
+    }
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+  }
+  throw new Error("Timed out starting GraphQL server");
+}
+
+app.on("ready", async () => {
   mainWindow = createWindow("main", {
     width: 1280,
     height: 680,
@@ -71,16 +101,13 @@ app.on("ready", () => {
   });
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   createGraphqlSeverProcess();
+  await waitForGraphQLServer("http://localhost:9002/graphql");
 
   if (isProd) {
-    setTimeout(async () => {
-      await mainWindow.loadURL("app://./");
-    }, 3000);
+    await mainWindow.loadURL("app://./");
   } else {
-    setTimeout(async () => {
-      const port = process.argv[2];
-      await mainWindow.loadURL(`http://localhost:${port}`);
-    }, 2500);
+    const port = process.argv[2];
+    await mainWindow.loadURL(`http://localhost:${port}`);
   }
 
   // hit when middle-clicking buttons or <a href/> with a target set to _blank
