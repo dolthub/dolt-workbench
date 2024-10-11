@@ -4,7 +4,13 @@ A modern, browser-based, open source SQL workbench for your MySQL and PostgreSQL
 compatible databases. Use [Dolt](https://doltdb.com) to unlock powerful version control
 features. [Doltgres](https://github.com/dolthub/doltgresql) support coming soon.
 
-Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
+## Installation
+
+There are a few ways to install the Dolt Workbench:
+
+- [Download the desktop application from the Mac App Store](https://apps.apple.com/us/app/dolt-workbench/id6720702995?mt=12) (Windows coming soon)
+- [Pull the Docker Hub image](https://hub.docker.com/r/dolthub/dolt-workbench)
+- [Build from source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
 
 ## Features
 
