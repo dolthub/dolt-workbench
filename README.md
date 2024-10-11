@@ -8,9 +8,9 @@ Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
 
 ## Installation
 
-- [Desktop Application - Download for MAC ](https://apps.apple.com/us/app/dolt-workbench/id6720702995?mt=12) (windows coming soon)
-- [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench)
-- [From source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
+- [Desktop Application - Download for MAC ](https://apps.apple.com/us/app/dolt-workbench/id6720702995?mt=12) (Windows version coming soon)
+- [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench) - Run Dolt Workbench in a Docker container
+- [From source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source) - Run Dolt Workbench in a Docker container
 
 ## Features
 
