@@ -1,8 +1,9 @@
 # dolt-workbench
 
 A modern, browser-based, open source SQL workbench for your MySQL and PostgreSQL
-compatible databases. Use [Dolt](https://doltdb.com) to unlock powerful version control
-features. [Doltgres](https://github.com/dolthub/doltgresql) support coming soon.
+compatible databases. Use [Dolt](https://doltdb.com) or
+[Doltgres](https://github.com/dolthub/doltgresql) to unlock powerful version control
+features.
 
 Get started on [Docker Hub](https://hub.docker.com/r/dolthub/dolt-workbench).
 

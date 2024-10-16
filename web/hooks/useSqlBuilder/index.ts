@@ -263,10 +263,11 @@ where schemaname='${schemaName ?? "public"}';`;
   function showCreateQuery(
     name: string,
     kind: SchemaType,
+    dbName?: string,
     schemaName?: string,
   ): string {
     return isPostgres
-      ? u.getPostgresSchemaDefQuery(name, kind, schemaName)
+      ? u.getPostgresSchemaDefQuery(name, kind, dbName, schemaName)
       : `SHOW CREATE ${kind.toUpperCase()} \`${name}\``;
   }
 

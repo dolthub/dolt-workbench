@@ -58,7 +58,7 @@ function Inner(props: InnerProps) {
         setIsOpen={setIsOpen}
         position="bottom left"
         offsetX={0}
-        contentStyle={{ width: "8rem", padding: 0 }}
+        contentStyle={{ width: "auto", padding: 0 }}
         arrow={false}
       >
         <ul>

@@ -1,8 +1,9 @@
 import { SmallLoader } from "@dolthub/react-components";
 import { pluralize } from "@dolthub/web-utils";
 import { SchemaType } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { RefOptionalSchemaParams } from "@lib/params";
+import { RefOptionalSchemaParams, RefParams } from "@lib/params";
 import { useEffect } from "react";
 import Item from "./Item";
 import NotFound from "./NotFound";
@@ -18,6 +19,7 @@ type InnerProps = {
 
 export default function List(props: InnerProps) {
   const { showCreateQuery, isPostgres } = useSqlBuilder();
+  const { isDolt } = useDatabaseDetails();
   const activeItem = getActiveItem(props.kind, props.params.q, isPostgres);
   const pluralKind = pluralize(2, props.kind.toLowerCase());
 
@@ -47,7 +49,12 @@ export default function List(props: InnerProps) {
               name={t}
               params={props.params}
               isActive={t === activeItem}
-              query={showCreateQuery(t, props.kind, props.params.schemaName)}
+              query={showCreateQuery(
+                t,
+                props.kind,
+                getDatabaseName(props.params, isDolt, isPostgres),
+                props.params.schemaName,
+              )}
             />
           ))}
         </ol>
@@ -56,4 +63,14 @@ export default function List(props: InnerProps) {
       )}
     </div>
   );
+}
+
+function getDatabaseName(
+  params: RefParams,
+  isDolt: boolean,
+  isPostgres: boolean,
+): string | undefined {
+  if (!isPostgres) return undefined;
+  if (isDolt) return `${params.databaseName}/${params.refName}`;
+  return params.databaseName;
 }

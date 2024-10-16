@@ -64,6 +64,7 @@ export default function NewConnection(props: Props) {
                 setState({
                   type: t,
                   port: t === DatabaseType.Mysql ? "3306" : "5432",
+                  username: t === DatabaseType.Mysql ? "root" : "doltgres",
                 });
               }}
               options={[

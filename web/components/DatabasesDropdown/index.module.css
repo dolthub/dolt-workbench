@@ -7,7 +7,7 @@
 }
 
 .createDBButton {
-  @apply text-white bg-button-1 px-1 w-full py-1 rounded-b-lg;
+  @apply text-white bg-button-1 pl-1 pr-3 w-full py-1 rounded-b-lg;
 
   &:hover {
     @apply text-white bg-button-2;
