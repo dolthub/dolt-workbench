@@ -9,6 +9,8 @@ type Grid = {
   rows: string[][];
 };
 
+type GridWithError = Grid & { err?: Error };
+
 const defaultNumCols = 7;
 const defaultNumRows = 51;
 const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -17,19 +19,20 @@ const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 export async function getGridAsCsv<R, SR>(
   gridElement: ReactElement<DataGridProps<R, SR>>,
-): Promise<Grid> {
-  const { head, body } = await getGridContent(gridElement);
+): Promise<GridWithError> {
+  const { head, body, err } = await getGridContent(gridElement);
   const rows = [...head, ...body];
   const filtered = filterOutEmptyRowsAndCols(rows);
   const csv = filtered
     .map(cells => cells.map(serializeCellValue).join(","))
     .join("\n");
-  return { csv, rows: filtered };
+  return { csv: `${csv}\n`, rows: filtered, err };
 }
 
 type GridContent = {
   head: string[][];
   body: string[][];
+  err?: Error;
 };
 
 async function getGridContent<R, SR>(
@@ -50,7 +53,7 @@ async function getGridContent<R, SR>(
     };
   } catch (err) {
     console.error(err);
-    return { head: [], body: [] };
+    return { head: [], body: [], err: err as Error };
   }
 
   function getRows(grid: HTMLDivElement, selector: string): string[][] {

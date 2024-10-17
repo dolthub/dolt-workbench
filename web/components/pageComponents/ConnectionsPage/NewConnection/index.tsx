@@ -64,14 +64,13 @@ export default function NewConnection(props: Props) {
                 setState({
                   type: t,
                   port: t === DatabaseType.Mysql ? "3306" : "5432",
+                  username: t === DatabaseType.Mysql ? "root" : "doltgres",
                 });
               }}
               options={[
                 { label: "MySQL/Dolt", value: DatabaseType.Mysql },
                 {
-                  label: "Postgres",
-                  // TODO(doltgres): Uncomment when ready
-                  // label: "Postgres/Doltgres",
+                  label: "Postgres/Doltgres",
                   value: DatabaseType.Postgres,
                 },
               ]}
@@ -133,16 +132,6 @@ export default function NewConnection(props: Props) {
               horizontal
               light
             />
-            {state.type === DatabaseType.Postgres && (
-              <FormInput
-                label="Schema"
-                value={state.schema}
-                onChangeString={s => setState({ schema: s })}
-                placeholder="myschema"
-                horizontal
-                light
-              />
-            )}
           </div>
           <div className={css.section}>
             <Button.Link

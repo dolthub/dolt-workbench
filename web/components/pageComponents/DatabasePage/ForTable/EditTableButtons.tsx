@@ -6,7 +6,10 @@ import { Button, ErrorMsg } from "@dolthub/react-components";
 import { useTagListQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { TableParams, UploadParamsWithOptions } from "@lib/params";
+import {
+  TableOptionalSchemaParams,
+  UploadParamsWithOptions,
+} from "@lib/params";
 import { table } from "@lib/urls";
 import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
 import { AiOutlineDelete } from "@react-icons/all-files/ai/AiOutlineDelete";
@@ -17,7 +20,7 @@ import css from "./index.module.css";
 import { mapColTypeToFakeValue } from "./utils";
 
 type Props = {
-  params: TableParams;
+  params: TableOptionalSchemaParams;
 };
 
 type InnerProps = Props & {

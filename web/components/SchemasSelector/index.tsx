@@ -15,11 +15,40 @@ type Props = {
   routeRefChangeTo: RefUrl;
 };
 
-type InnerProps = Props & {
-  schemas: string[];
+type SelectorProps = {
+  params: RefOptionalSchemaParams & { tableName?: string };
+  val?: Maybe<string>;
+  onChangeValue: (val: Maybe<string>) => void;
+  horizontal?: boolean;
+  className?: string;
 };
 
-function Inner(props: InnerProps) {
+export function Selector(props: SelectorProps) {
+  const res = useDatabaseSchemasQuery({
+    variables: props.params,
+  });
+  if (res.loading || res.error || !res.data) return null;
+
+  return (
+    <FormSelect
+      val={props.val ?? res.data.schemas[0]}
+      className={props.className}
+      onChangeValue={props.onChangeValue}
+      options={res.data.schemas.map(v => {
+        return {
+          value: v,
+          label: v,
+        };
+      })}
+      hideSelectedOptions
+      label="Schema"
+      horizontal={props.horizontal}
+      light
+    />
+  );
+}
+
+export default function SchemasSelector(props: Props) {
   const router = useRouter();
   const [getTableNames] = useTableNamesForBranchLazyQuery();
 
@@ -54,30 +83,14 @@ function Inner(props: InnerProps) {
 
   return (
     <span className={css.wrapper}>
-      <FormSelect
-        val={props.params.schemaName ?? props.schemas[0]}
-        className={css.selector}
+      <Selector
+        params={props.params}
+        val={props.params.schemaName}
         onChangeValue={handleChangeRef}
-        options={props.schemas.map(v => {
-          return {
-            value: v,
-            label: v,
-          };
-        })}
-        hideSelectedOptions
-        label="Schema"
+        className={css.selector}
         horizontal
-        light
       />
       <CreateSchema {...props} />
     </span>
   );
-}
-
-export default function SchemasSelector(props: Props) {
-  const res = useDatabaseSchemasQuery({
-    variables: { databaseName: props.params.databaseName },
-  });
-  if (res.loading || res.error || !res.data) return null;
-  return <Inner {...props} schemas={res.data.schemas} />;
 }

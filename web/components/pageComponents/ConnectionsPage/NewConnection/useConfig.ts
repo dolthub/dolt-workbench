@@ -16,7 +16,6 @@ const defaultState = {
   username: "root",
   password: "",
   database: "",
-  schema: undefined as string | undefined,
   connectionUrl: "",
   hideDoltFeatures: false,
   useSSL: true,
@@ -83,7 +82,6 @@ export default function useConfig(): ReturnType {
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,
           type: state.type,
-          schema: state.schema,
         },
       });
       await res.client.clearStore();

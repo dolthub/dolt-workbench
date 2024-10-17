@@ -2,6 +2,7 @@ import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { FormModal, Textarea } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import { StatusFragment } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { useUserHeaders } from "@hooks/useUserHeaders";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
@@ -21,14 +22,15 @@ export default function CommitModal(props: Props) {
   const [msg, setMsg] = useState(defaultMsg);
   const userHeaders = useUserHeaders();
   const [addCommitAuthor, setAddCommitAuthor] = useState(!!userHeaders);
+  const { getCallProcedure } = useSqlBuilder();
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();
-    const q = `CALL DOLT_COMMIT("-Am", "${msg}"${
-      addCommitAuthor
-        ? getAuthorInfo(userHeaders?.user, userHeaders?.email)
-        : ""
-    })`;
+    const q = getCallProcedure("DOLT_COMMIT", [
+      "-Am",
+      msg,
+      ...getAuthorArgs(userHeaders?.user, userHeaders?.email),
+    ]);
     const { href, as } = sqlQuery({ ...props.params, q });
     router.push(href, as).catch(console.error);
   };
@@ -82,7 +84,7 @@ function getDefaultCommitMsg(
     .join(", ")} from ${refName}`;
 }
 
-function getAuthorInfo(name: Maybe<string>, email: Maybe<string>): string {
-  if (!name && !email) return "";
-  return `, "--author", "${name} <${email}>"`;
+function getAuthorArgs(name: Maybe<string>, email: Maybe<string>): string[] {
+  if (!name && !email) return [];
+  return ["--author", `${name} <${email}>`];
 }

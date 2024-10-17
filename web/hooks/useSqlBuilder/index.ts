@@ -9,6 +9,7 @@ import {
   Update,
 } from "node-sql-parser";
 import * as u from "./util";
+import { escapeSingleQuotes } from "./util";
 
 export default function useSqlBuilder() {
   const { sqlify, isPostgres, parseSelectQuery, getTableNames } =
@@ -262,11 +263,19 @@ where schemaname='${schemaName ?? "public"}';`;
   function showCreateQuery(
     name: string,
     kind: SchemaType,
+    dbName?: string,
     schemaName?: string,
   ): string {
     return isPostgres
-      ? u.getPostgresSchemaDefQuery(name, kind, schemaName)
+      ? u.getPostgresSchemaDefQuery(name, kind, dbName, schemaName)
       : `SHOW CREATE ${kind.toUpperCase()} \`${name}\``;
+  }
+
+  function getCallProcedure(name: string, args: string[]): string {
+    const quotedArgs = args
+      .map(a => `'${escapeSingleQuotes(a, isPostgres)}'`)
+      .join(", ");
+    return `${isPostgres ? "SELECT" : "CALL"} ${name}(${quotedArgs});`;
   }
 
   return {
@@ -279,6 +288,7 @@ where schemaname='${schemaName ?? "public"}';`;
     createView,
     deleteFromTable,
     dropTable,
+    getCallProcedure,
     getDefaultQueryString,
     hideRowQuery,
     insertIntoTable,

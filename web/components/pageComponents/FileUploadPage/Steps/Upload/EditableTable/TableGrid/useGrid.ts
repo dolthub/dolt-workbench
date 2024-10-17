@@ -31,7 +31,12 @@ export default function useGrid(
     gridElement: ReactElement<DataGridProps<R, SR>>,
   ) => {
     try {
-      const { csv, rows } = await getGridAsCsv(gridElement);
+      const { csv, rows, err } = await getGridAsCsv(gridElement);
+      if (err) {
+        setState({ error: err });
+        return;
+      }
+
       if (rows.length === 0) {
         setState({ error: new Error("cannot upload empty spreadsheet") });
         return;

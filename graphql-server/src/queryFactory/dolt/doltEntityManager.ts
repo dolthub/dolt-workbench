@@ -3,17 +3,27 @@ import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { DoltSystemTable } from "../../systemTables/systemTable.enums";
 import { ROW_LIMIT, handleTableNotFound } from "../../utils";
+import { tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import { getOrderByColForBranches } from "./queries";
 
 export async function getDoltSchemas(
   em: EntityManager,
   type?: SchemaType,
+  pgSchema?: string,
 ): Promise<SchemaItem[]> {
   let sel = em
     .createQueryBuilder()
     .select("*")
-    .from(DoltSystemTable.SCHEMAS, "");
+    .from(
+      pgSchema
+        ? tableWithSchema({
+            tableName: DoltSystemTable.SCHEMAS,
+            schemaName: pgSchema,
+          })
+        : DoltSystemTable.SCHEMAS,
+      DoltSystemTable.SCHEMAS,
+    );
   if (type) {
     sel = sel.where(`${DoltSystemTable.SCHEMAS}.type = :type`, {
       type,

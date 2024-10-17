@@ -30,6 +30,10 @@
   @apply font-semibold inline-block mr-3 ml-2.5;
 }
 
+.branchLabel {
+  @apply mt-1.5;
+}
+
 .doltDisabled {
   @apply bg-stone-50 border border-storm-200 px-2.5 py-2 rounded text-sm;
 }

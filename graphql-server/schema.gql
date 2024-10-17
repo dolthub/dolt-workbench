@@ -101,7 +101,6 @@ type DatabaseConnection {
   hideDoltFeatures: Boolean
   useSSL: Boolean
   type: DatabaseType
-  schema: String
   isDolt: Boolean
 }
 
@@ -118,7 +117,6 @@ type DoltDatabaseDetails {
 
 type CurrentDatabaseState {
   currentDatabase: String
-  currentSchema: String
 }
 
 type DiffStat {
@@ -291,7 +289,7 @@ type Query {
   currentDatabase: String
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
-  schemas(databaseName: String!): [String!]!
+  schemas(databaseName: String!, refName: String!): [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
   diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
@@ -341,10 +339,10 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, schema: String): CurrentDatabaseState!
+  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
-  createSchema(databaseName: String!, schemaName: String!): Boolean!
+  createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!
   resetDatabase(newDatabase: String): Boolean!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!

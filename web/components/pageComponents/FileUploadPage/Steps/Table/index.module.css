@@ -14,9 +14,9 @@
   @apply hidden;
 }
 
-/* .radio {
-  @apply mr-10 font-normal;
-}*/
+.schemaSelector {
+  @apply mb-4;
+}
 
 .bold {
   @apply font-semibold;

@@ -1,7 +1,9 @@
 import StatusWithOptions from "@components/StatusWithOptions";
 import { useDiffContext } from "@contexts/diff";
 import { DiffSummaryFragment, TableDiffType } from "@gen/graphql-types";
-import { DatabaseParams, RequiredRefsParams } from "@lib/params";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import { DatabaseOptionalSchemaParams, RequiredRefsParams } from "@lib/params";
+import { createPostgresTableName } from "@lib/postgres";
 import { useEffect, useState } from "react";
 import DataSection from "./DataSection";
 import DiffTableStats from "./DiffTableStats";
@@ -10,7 +12,7 @@ import TabButtons from "./TabButtons";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams;
+  params: DatabaseOptionalSchemaParams;
   hideCellButtons?: boolean;
 };
 
@@ -69,12 +71,15 @@ export function Inner({ diffSummary, hideCellButtons }: InnerProps) {
 
 export default function DiffTable(props: Props) {
   const { activeTableName, diffSummaries } = useDiffContext();
+  const { isPostgres } = useDatabaseDetails();
 
   if (!activeTableName) return null;
-  const currentDiffSummary = diffSummaries.find(
-    ds =>
-      ds.fromTableName === activeTableName ||
-      ds.toTableName === activeTableName,
+
+  const currentDiffSummary = getCurrentDiffSummary(
+    diffSummaries,
+    activeTableName,
+    isPostgres,
+    props.params.schemaName,
   );
   if (!currentDiffSummary) return null;
   return <Inner {...props} diffSummary={currentDiffSummary} />;
@@ -87,4 +92,27 @@ function isShowingUncommittedChanges(params: RequiredRefsParams): boolean {
     params.fromRefName === "STAGED" ||
     params.toRefName === "STAGED"
   );
+}
+
+function getCurrentDiffSummary(
+  diffSummaries: DiffSummaryFragment[],
+  activeTableName: string,
+  isPostgres: boolean,
+  schemaName?: string,
+): DiffSummaryFragment | undefined {
+  return diffSummaries.find(ds => {
+    if (isPostgres) {
+      const activeTableWithSchema = createPostgresTableName(
+        activeTableName,
+        schemaName ?? "public",
+      );
+      return (
+        ds.fromTableName === activeTableWithSchema ||
+        ds.toTableName === activeTableWithSchema
+      );
+    }
+    return (
+      ds.fromTableName === activeTableName || ds.toTableName === activeTableName
+    );
+  });
 }

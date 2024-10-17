@@ -55,6 +55,7 @@ export default function BranchAndTagSelector(props: Props) {
       }
     }
 
+    // TODO(doltgres): Don't include current schema
     const { href, as } = props.routeRefChangeTo({
       ...props.params,
       refName,
@@ -87,6 +88,7 @@ export default function BranchAndTagSelector(props: Props) {
         { [css.outerForPostgres]: !!props.isPostgres },
         props.className,
       )}
+      labelClassName={css.branchLabel}
       className={cx(css.branchAndTagSelect, {
         [css.selectForPostgres]: !!props.isPostgres,
       })}
