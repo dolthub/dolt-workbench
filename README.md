@@ -8,8 +8,7 @@ features. [Doltgres](https://github.com/dolthub/doltgresql) support coming soon.
 
 There are a few ways to install the Dolt Workbench:
 
-- [Download the desktop application from the Mac App Store](https://apps.apple.com/us/app/dolt-workbench/id6720702995?mt=12)
-- [Download the desktop application for Windows-x64](https://github.com/dolthub/dolt-workbench/releases/download/v0.2.13/dolt-workbench-win-x64.exe)
+- Download the desktop application for [Mac](https://apps.apple.com/us/app/dolt-workbench/id6720702995?mt=12) or [Windows-x64](https://github.com/dolthub/dolt-workbench/releases/download/v0.2.13/dolt-workbench-win-x64.exe)
 - [Pull the Docker Hub image](https://hub.docker.com/r/dolthub/dolt-workbench)
 - [Build from source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
 
