@@ -1,6 +1,8 @@
 # dolt-workbench
 
-A modern, browser-based, open source SQL workbench for your MySQL and PostgreSQL compatible databases. Unlock powerful version control features when you use [Dolt](https://doltdb.com).
+A modern, browser-based, open source SQL workbench for your MySQL and PostgreSQL
+compatible databases. Unlock powerful version control features when you use
+[Dolt](https://doltdb.com) or [Doltgres](https://github.com/dolthub/doltgresql).
 
 <img src="https://www.dolthub.com/blog/static/3f1358cd506d7b8ed383ea0751b67446/4f2ef/table-browser.png" width="850px" alt="Dolt Workbench" />
 
@@ -12,7 +14,8 @@ Features include:
 - ER diagrams
 - File upload
 
-For [Dolt](https://doltdb.com) databases, access additional version control features, such as:
+For [Dolt](https://doltdb.com) and [Doltgres](https://github.com/dolthub/doltgresql)
+databases, access additional version control features, such as:
 
 - Commit log visualizations
 - Branch navigation
