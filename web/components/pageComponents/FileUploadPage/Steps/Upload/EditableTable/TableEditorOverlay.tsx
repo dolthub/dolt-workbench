@@ -28,7 +28,9 @@ function Inner(props: InnerProps) {
             <IoMdClose />
           </Button.Link>
           <h1 data-cy="spreadsheet-editor-title">Spreadsheet Editor</h1>
-          {props.state.tableName && <UpdateQueryInfo forSpreadsheet />}
+          {props.state.tableName && (
+            <UpdateQueryInfo tableName={props.state.tableName} forSpreadsheet />
+          )}
           <div>
             <div>
               <ErrorMsg err={props.error} />

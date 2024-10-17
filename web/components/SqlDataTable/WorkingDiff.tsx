@@ -4,11 +4,11 @@ import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DiffProvider, useDiffContext } from "@contexts/diff";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
 import useSqlParser from "@hooks/useSqlParser";
-import { RefParams } from "@lib/params";
+import { RefOptionalSchemaParams } from "@lib/params";
 import css from "./index.module.css";
 
 type Props = {
-  params: RefParams & { q: string };
+  params: RefOptionalSchemaParams & { q: string };
 };
 
 function Inner() {
@@ -29,7 +29,8 @@ export default function WorkingDiff(props: Props) {
   const toRefName = "WORKING";
   const params = { ...props.params, toRefName, fromRefName };
 
-  const { getTableNames } = useSqlParser();
+  const { getTableNames, loading } = useSqlParser();
+  if (loading) return <Loader loaded={false} />;
   const tns = getTableNames(params.q);
 
   return (

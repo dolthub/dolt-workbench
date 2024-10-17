@@ -98,7 +98,6 @@ export type CommitList = {
 export type CurrentDatabaseState = {
   __typename?: 'CurrentDatabaseState';
   currentDatabase?: Maybe<Scalars['String']['output']>;
-  currentSchema?: Maybe<Scalars['String']['output']>;
 };
 
 export type DatabaseConnection = {
@@ -107,7 +106,6 @@ export type DatabaseConnection = {
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
   isDolt?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
-  schema?: Maybe<Scalars['String']['output']>;
   type?: Maybe<DatabaseType>;
   useSSL?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -242,7 +240,6 @@ export type MutationAddDatabaseConnectionArgs = {
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
-  schema?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -262,6 +259,7 @@ export type MutationCreateDatabaseArgs = {
 
 export type MutationCreateSchemaArgs = {
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
 };
 
@@ -518,6 +516,7 @@ export type QuerySchemaDiffArgs = {
 
 export type QuerySchemasArgs = {
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 };
 
 
@@ -886,6 +885,7 @@ export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ _
 
 export type DatabaseSchemasQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -894,6 +894,7 @@ export type DatabaseSchemasQuery = { __typename?: 'Query', schemas: Array<string
 export type CreateSchemaMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -952,18 +953,17 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<DatabaseType>;
-  schema?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: { __typename?: 'CurrentDatabaseState', currentDatabase?: string | null, currentSchema?: string | null } };
+export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: { __typename?: 'CurrentDatabaseState', currentDatabase?: string | null } };
 
-export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, schema?: string | null, isDolt?: boolean | null };
+export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null };
 
 export type StoredConnectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, schema?: string | null, isDolt?: boolean | null }> };
+export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null }> };
 
 export type RemoveConnectionMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -1445,7 +1445,6 @@ export const DatabaseConnectionFragmentDoc = gql`
   useSSL
   hideDoltFeatures
   type
-  schema
   isDolt
 }
     `;
@@ -2326,8 +2325,8 @@ export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableL
 export type TableListForSchemasSuspenseQueryHookResult = ReturnType<typeof useTableListForSchemasSuspenseQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const DatabaseSchemasDocument = gql`
-    query DatabaseSchemas($databaseName: String!) {
-  schemas(databaseName: $databaseName)
+    query DatabaseSchemas($databaseName: String!, $refName: String!) {
+  schemas(databaseName: $databaseName, refName: $refName)
 }
     `;
 
@@ -2344,6 +2343,7 @@ export const DatabaseSchemasDocument = gql`
  * const { data, loading, error } = useDatabaseSchemasQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */
@@ -2364,8 +2364,12 @@ export type DatabaseSchemasLazyQueryHookResult = ReturnType<typeof useDatabaseSc
 export type DatabaseSchemasSuspenseQueryHookResult = ReturnType<typeof useDatabaseSchemasSuspenseQuery>;
 export type DatabaseSchemasQueryResult = Apollo.QueryResult<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>;
 export const CreateSchemaDocument = gql`
-    mutation CreateSchema($databaseName: String!, $schemaName: String!) {
-  createSchema(databaseName: $databaseName, schemaName: $schemaName)
+    mutation CreateSchema($databaseName: String!, $schemaName: String!, $refName: String!) {
+  createSchema(
+    databaseName: $databaseName
+    schemaName: $schemaName
+    refName: $refName
+  )
 }
     `;
 export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutation, CreateSchemaMutationVariables>;
@@ -2385,6 +2389,7 @@ export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutatio
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      schemaName: // value for 'schemaName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */
@@ -2583,17 +2588,15 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType, $schema: String) {
+    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
   addDatabaseConnection(
     connectionUrl: $connectionUrl
     name: $name
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
     type: $type
-    schema: $schema
   ) {
     currentDatabase
-    currentSchema
   }
 }
     `;
@@ -2617,7 +2620,6 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
  *      type: // value for 'type'
- *      schema: // value for 'schema'
  *   },
  * });
  */

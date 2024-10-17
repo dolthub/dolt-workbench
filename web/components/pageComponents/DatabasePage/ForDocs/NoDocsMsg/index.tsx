@@ -2,6 +2,7 @@ import DocsLink from "@components/links/DocsLink";
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button, CodeBlock } from "@dolthub/react-components";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
 import css from "./index.module.css";
@@ -57,6 +58,7 @@ function AddFromWorkbench(props: Props) {
 }
 
 function AddFromSQL() {
+  const { getCallProcedure } = useSqlBuilder();
   return (
     <>
       <h3>Adding a doc using SQL</h3>
@@ -89,7 +91,7 @@ function AddFromSQL() {
       </p>
       <p>
         <CodeBlock.WithCopyButton
-          textToCopy={`CALL DOLT_COMMIT('-am', 'Add docs');`}
+          textToCopy={getCallProcedure("DOLT_COMMIT", ["-am", "Add docs"])}
         />
       </p>
     </>

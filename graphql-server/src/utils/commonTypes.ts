@@ -31,6 +31,12 @@ export class RefArgs extends DBArgs {
 }
 
 @ArgsType()
+export class RefSchemaArgs extends RefArgs {
+  @Field()
+  schemaName: string;
+}
+
+@ArgsType()
 export class RefMaybeSchemaArgs extends RefArgs {
   @Field({ nullable: true })
   schemaName?: string;

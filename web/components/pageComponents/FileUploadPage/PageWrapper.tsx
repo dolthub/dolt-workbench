@@ -22,6 +22,7 @@ export default function PageWrapper(props: Props) {
   });
   const dbParams = {
     databaseName: props.params.databaseName,
+    schemaName: props.params.schemaName,
   };
 
   if (loading || doltRes.loading) return <Loader loaded={false} />;

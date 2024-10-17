@@ -35,3 +35,7 @@
 .radioHelp {
   @apply ml-3;
 }
+
+.bold {
+  @apply font-semibold;
+}

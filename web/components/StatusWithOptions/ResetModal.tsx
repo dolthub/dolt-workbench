@@ -1,8 +1,10 @@
 import Link from "@components/links/Link";
 import { Button, Modal } from "@dolthub/react-components";
 import { StatusFragment } from "@gen/graphql-types";
+import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
+import { getPostgresTableName } from "@lib/postgres";
 import { sqlQuery } from "@lib/urls";
 import css from "./index.module.css";
 
@@ -13,6 +15,15 @@ type Props = ModalProps & {
 };
 
 export default function ResetModal(props: Props) {
+  const { getCallProcedure, isPostgres } = useSqlBuilder();
+
+  const getTableName = (tn: string): string => {
+    if (isPostgres) {
+      return getPostgresTableName(tn);
+    }
+    return tn;
+  };
+
   const onClose = () => {
     props.setIsOpen(false);
   };
@@ -47,7 +58,9 @@ export default function ResetModal(props: Props) {
                     <Link
                       {...sqlQuery({
                         ...props.params,
-                        q: `CALL DOLT_RESET("${st.tableName}")`,
+                        q: getCallProcedure("DOLT_RESET", [
+                          getTableName(st.tableName),
+                        ]),
                       })}
                     >
                       Unstage
@@ -56,7 +69,9 @@ export default function ResetModal(props: Props) {
                     <Link
                       {...sqlQuery({
                         ...props.params,
-                        q: `CALL DOLT_CHECKOUT("${st.tableName}")`,
+                        q: getCallProcedure("DOLT_CHECKOUT", [
+                          getTableName(st.tableName),
+                        ]),
                       })}
                     >
                       Restore

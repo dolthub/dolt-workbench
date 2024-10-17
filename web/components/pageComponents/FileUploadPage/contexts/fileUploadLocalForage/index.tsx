@@ -71,10 +71,15 @@ export function FileUploadLocalForageProvider(props: Props) {
 
   // Set branchName and tableName if params provided
   useEffectOnMount(() => {
-    if (props.params.tableName || props.params.branchName) {
+    if (
+      props.params.tableName ||
+      props.params.branchName ||
+      props.params.schemaName
+    ) {
       setState({
         tableName: props.params.tableName ?? "",
         branchName: props.params.branchName ?? "",
+        schemaName: props.params.schemaName,
         importOp: ImportOperation.Update,
       });
     }

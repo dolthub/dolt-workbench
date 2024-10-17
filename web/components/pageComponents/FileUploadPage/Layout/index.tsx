@@ -2,13 +2,13 @@ import { DatabaseLayoutWrapperOuter } from "@components/layouts/DatabaseLayout/W
 import DatabaseLink from "@components/links/DatabaseLink";
 import KeyNav from "@components/util/KeyNav";
 import { Button } from "@dolthub/react-components";
-import { DatabaseParams } from "@lib/params";
+import { DatabaseOptionalSchemaParams } from "@lib/params";
 import { GoChevronLeft } from "@react-icons/all-files/go/GoChevronLeft";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams;
+  params: DatabaseOptionalSchemaParams;
   children: ReactNode;
 };
 

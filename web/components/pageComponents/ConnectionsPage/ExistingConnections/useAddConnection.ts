@@ -27,7 +27,6 @@ export default function useAddConnection(
       }
       const { href, as } = maybeDatabase(
         db.data.addDatabaseConnection.currentDatabase,
-        db.data.addDatabaseConnection.currentSchema ?? undefined,
       );
       router.push(href, as).catch(console.error);
     } catch (_) {

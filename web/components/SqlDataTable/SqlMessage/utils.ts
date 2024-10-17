@@ -7,7 +7,10 @@ type RevisionInfo = {
 
 export function parseQuery(q: string): RevisionInfo {
   const lower = q.toLowerCase();
-  if (lower.includes("call dolt_checkout")) {
+  if (
+    lower.includes("call dolt_checkout") ||
+    lower.includes("select dolt_checkout")
+  ) {
     return parseDoltCheckoutQuery(q);
   }
   if (lower.startsWith("use ")) {

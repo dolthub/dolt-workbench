@@ -10,7 +10,7 @@ function getQueryError(q: string, err: unknown): string {
 }
 
 export default function useSqlParser() {
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres, loading } = useDatabaseDetails();
 
   const opt = {
     database: isPostgres ? "POSTGRESQL" : "MYSQL",
@@ -31,7 +31,14 @@ export default function useSqlParser() {
   // Gets table names as array `{type}::{dbName}::{tableName}` and converts to array of tableNames
   function getTableNames(q: string): string[] | undefined {
     try {
-      return parser.tableList(q, opt).map(tn => tn.split("::")[2]);
+      const tl = parser.tableList(q, opt);
+      return tl.map(tn => {
+        const [, schemaName, tableName] = tn.split("::");
+        if (isPostgres && schemaName !== "null") {
+          return `${schemaName}.${tableName}`;
+        }
+        return tableName;
+      });
     } catch (err) {
       console.error(getQueryError(q, err));
       return undefined;
@@ -39,7 +46,8 @@ export default function useSqlParser() {
   }
 
   function requireTableNamesForSelect(q: string): string[] {
-    return getTableNames(q) ?? fallbackGetTableNamesForSelect(q, isPostgres);
+    const tns = getTableNames(q);
+    return tns ?? fallbackGetTableNamesForSelect(q, isPostgres);
   }
 
   // Extracts tableName from query
@@ -148,5 +156,6 @@ export default function useSqlParser() {
     queryHasOrderBy,
     requireTableNamesForSelect,
     sqlify,
+    loading,
   };
 }

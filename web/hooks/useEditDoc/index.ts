@@ -1,6 +1,7 @@
 import { useSetState } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import { DocType } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -30,6 +31,7 @@ export default function useEditDoc(
     loading: false,
   });
   const router = useRouter();
+  const { isPostgres } = useDatabaseDetails();
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -38,7 +40,7 @@ export default function useEditDoc(
 
     const { href, as } = sqlQuery({
       ...params,
-      q: getDocsQuery(state.docType, state.markdown),
+      q: getDocsQuery(state.docType, state.markdown, isPostgres),
     });
     router.push(href, as).catch(console.error);
     setState({ loading: false });
