@@ -38,7 +38,11 @@ export class SqlSelectResolver {
 function toCsvString(rows: RawRows): string {
   const header = Object.keys(rows[0]).join(",");
   const body = rows
-    .map(row => Object.values(row).map(getCellValue).join(","))
+    .map(row =>
+      Object.entries(row)
+        .map(([key, cell]) => getCellValue(cell, key))
+        .join(","),
+    )
     .join("\r\n");
   return `${header}\r\n${body}`;
 }
