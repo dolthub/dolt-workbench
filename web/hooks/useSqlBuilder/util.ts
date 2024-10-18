@@ -302,7 +302,7 @@ export function getPostgresSchemaDefQuery(
 ): string {
   switch (kind) {
     case SchemaType.Table:
-      return `SELECT ordinal_position, column_name, udt_name as data_type, is_nullable, column_default FROM information_schema.columns WHERE${schemaName ? ` table_schema = '${schemaName}' AND` : ""}${dbName ? ` table_catalog= '${dbName}' AND` : ""} table_name = '${name}'`;
+      return `SELECT ordinal_position, column_name, udt_name as data_type, is_nullable, column_default FROM information_schema.columns WHERE${schemaName ? ` table_schema = '${schemaName}' AND` : ""}${dbName ? ` table_catalog = '${dbName}' AND` : ""} table_name = '${name}'`;
     case SchemaType.View:
       return `SELECT pg_get_viewdef('${schemaName ?? "public"}.${name}'::regclass, true)`;
     case SchemaType.Trigger:
