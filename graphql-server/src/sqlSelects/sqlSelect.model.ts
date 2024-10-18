@@ -63,6 +63,7 @@ export function fromSqlSelectRow(
   if (!doltRows.length) {
     return res;
   }
+
   const rows: row.Row[] = doltRows.map(row.fromDoltRowRes);
   const columns: column.Column[] = Object.keys(doltRows[0]).map(c => {
     return { name: c, isPrimaryKey: false, type: "unknown" };

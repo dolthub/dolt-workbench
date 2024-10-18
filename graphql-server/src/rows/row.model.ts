@@ -33,12 +33,18 @@ export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
   };
 }
 
-export function getCellValue(value: any): string {
+export function getCellValue(value: any, key: string): string {
   if (value === null || value === undefined) {
     return NULL_VALUE;
   }
   if (value === '""') {
     return "";
+  }
+  if (Array.isArray(value) && key === "dolt_commit") {
+    if (value.length === 0) {
+      return NULL_VALUE;
+    }
+    return value[0];
   }
   if (typeof value === "object") {
     if (Object.prototype.toString.call(value) === "[object Date]") {
@@ -55,8 +61,8 @@ export function getCellValue(value: any): string {
 
 export function fromDoltRowRes(row: RawRow): Row {
   return {
-    columnValues: Object.values(row).map(cell => {
-      return { displayValue: getCellValue(cell) };
+    columnValues: Object.entries(row).map(([key, cell]) => {
+      return { displayValue: getCellValue(cell, key) };
     }),
   };
 }
