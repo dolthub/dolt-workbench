@@ -1,0 +1,374 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type ColConstraint {
+  notNull: Boolean!
+}
+
+type Column {
+  name: String!
+  isPrimaryKey: Boolean!
+  type: String!
+  sourceTable: String
+  constraints: [ColConstraint!]
+}
+
+type ForeignKeyColumn {
+  referencedColumnName: String!
+  referrerColumnIndex: Float!
+}
+
+type ForeignKey {
+  tableName: String!
+  columnName: String!
+  referencedTableName: String!
+  foreignKeyColumn: [ForeignKeyColumn!]!
+}
+
+type IndexColumn {
+  name: String!
+  sqlType: String
+}
+
+type Index {
+  name: String!
+  type: String!
+  comment: String!
+  columns: [IndexColumn!]!
+}
+
+type Table {
+  tableName: String!
+  columns: [Column!]!
+  foreignKeys: [ForeignKey!]!
+  indexes: [Index!]!
+  _id: ID!
+  databaseName: String!
+  refName: String!
+}
+
+type TableNames {
+  list: [String!]!
+}
+
+type Branch {
+  _id: ID!
+  databaseName: String!
+  branchName: String!
+  lastCommitter: String!
+  lastUpdated: Timestamp!
+  table(tableName: String!): Table
+  tableNames(filterSystemTables: Boolean, schemaName: String): [String!]!
+  head: String
+}
+
+"""
+`Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
+
+type BranchList {
+  nextOffset: Int
+  list: [Branch!]!
+}
+
+type DoltWriter {
+  _id: ID!
+  displayName: String!
+  emailAddress: String!
+  username: String
+}
+
+type Commit {
+  _id: ID!
+  commitId: String!
+  databaseName: String!
+  message: String!
+  committedAt: Timestamp!
+  committer: DoltWriter!
+  parents: [String!]!
+}
+
+type CommitList {
+  nextOffset: Int
+  list: [Commit!]!
+}
+
+type DatabaseConnection {
+  connectionUrl: String!
+  name: String!
+  hideDoltFeatures: Boolean
+  useSSL: Boolean
+  type: DatabaseType
+  isDolt: Boolean
+}
+
+enum DatabaseType {
+  Mysql
+  Postgres
+}
+
+type DoltDatabaseDetails {
+  isDolt: Boolean!
+  hideDoltFeatures: Boolean!
+  type: DatabaseType!
+}
+
+type CurrentDatabaseState {
+  currentDatabase: String
+}
+
+type DiffStat {
+  rowsUnmodified: Float!
+  rowsAdded: Float!
+  rowsDeleted: Float!
+  rowsModified: Float!
+  cellsModified: Float!
+  rowCount: Float!
+  cellCount: Float!
+}
+
+type DiffSummary {
+  _id: ID!
+  fromTableName: String!
+  toTableName: String!
+  tableName: String!
+  tableType: TableDiffType!
+  hasDataChanges: Boolean!
+  hasSchemaChanges: Boolean!
+}
+
+enum TableDiffType {
+  Added
+  Dropped
+  Modified
+  Renamed
+}
+
+type ColumnValue {
+  displayValue: String!
+}
+
+type Row {
+  columnValues: [ColumnValue!]!
+}
+
+type RowList {
+  nextOffset: Int
+  list: [Row!]!
+}
+
+type Doc {
+  docType: String!
+  docRow: Row
+  branchName: String!
+}
+
+type DocList {
+  list: [Doc!]!
+}
+
+type PullSummary {
+  _id: ID!
+  commits: CommitList!
+}
+
+type PullWithDetails {
+  _id: ID!
+  state: PullState!
+  summary: PullSummary
+  details: [PullDetails!]
+}
+
+enum PullState {
+  Open
+  Merged
+  Unspecified
+}
+
+union PullDetails = PullDetailSummary | PullDetailCommit
+
+type PullDetailSummary {
+  _id: ID!
+  username: String!
+  createdAt: Timestamp!
+  numCommits: Float!
+}
+
+type PullDetailCommit {
+  _id: ID!
+  username: String!
+  message: String!
+  createdAt: Timestamp!
+  commitId: String!
+  parentCommitId: String
+}
+
+type RowDiff {
+  added: Row
+  deleted: Row
+}
+
+type RowDiffList {
+  nextOffset: Int
+  list: [RowDiff!]!
+  columns: [Column!]!
+}
+
+type TextDiff {
+  leftLines: String!
+  rightLines: String!
+}
+
+type SchemaDiff {
+  schemaDiff: TextDiff
+  schemaPatch: [String!]
+  numChangedSchemas: Int
+}
+
+type SchemaItem {
+  name: String!
+  type: SchemaType!
+}
+
+enum SchemaType {
+  View
+  Procedure
+  Event
+  Trigger
+  Table
+}
+
+type SqlSelect {
+  _id: ID!
+  databaseName: String!
+  refName: String!
+  queryString: String!
+  columns: [Column!]!
+  rows: [Row!]!
+  queryExecutionStatus: QueryExecutionStatus!
+  queryExecutionMessage: String!
+}
+
+enum QueryExecutionStatus {
+  Success
+  Error
+  Timeout
+}
+
+type Status {
+  _id: ID!
+  refName: String!
+  tableName: String!
+  staged: Boolean!
+  status: String!
+}
+
+type Tag {
+  _id: ID!
+  tagName: String!
+  databaseName: String!
+  message: String!
+  taggedAt: Timestamp!
+  tagger: DoltWriter!
+  commitId: String!
+}
+
+type TagList {
+  list: [Tag!]!
+}
+
+type Query {
+  branch(databaseName: String!, branchName: String!): Branch
+  branchOrDefault(databaseName: String!, branchName: String): Branch
+  branches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
+  allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
+  defaultBranch(databaseName: String!): Branch
+  commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
+  currentDatabase: String
+  storedConnections: [DatabaseConnection!]!
+  databases: [String!]!
+  schemas(databaseName: String!, refName: String!): [String!]!
+  doltDatabaseDetails: DoltDatabaseDetails!
+  diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
+  diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
+  docs(databaseName: String!, refName: String!): DocList!
+  docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
+  pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
+  rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
+  rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
+  doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
+  views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
+  doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
+  sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!): SqlSelect!
+  sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!): String!
+  status(databaseName: String!, refName: String!): [Status!]!
+  table(tableName: String!, refName: String!, databaseName: String!, schemaName: String): Table!
+  tableNames(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
+  tables(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
+  tags(databaseName: String!): TagList!
+  tag(databaseName: String!, tagName: String!): Tag
+}
+
+enum SortBranchesBy {
+  Unspecified
+  LastUpdated
+}
+
+enum CommitDiffType {
+  TwoDot
+  ThreeDot
+  Unspecified
+}
+
+enum DocType {
+  Unspecified
+  Readme
+  License
+}
+
+enum DiffRowType {
+  Added
+  Removed
+  Modified
+  All
+}
+
+type Mutation {
+  createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
+  deleteBranch(databaseName: String!, branchName: String!): Boolean!
+  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
+  removeDatabaseConnection(name: String!): Boolean!
+  createDatabase(databaseName: String!): Boolean!
+  createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!
+  resetDatabase(newDatabase: String): Boolean!
+  loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
+  mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
+  createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
+  deleteTag(databaseName: String!, tagName: String!): Boolean!
+}
+
+enum ImportOperation {
+  Update
+}
+
+enum FileType {
+  Csv
+  Psv
+  Tsv
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+enum LoadDataModifier {
+  Ignore
+  Replace
+}
+
+input AuthorInfo {
+  name: String!
+  email: String!
+}
