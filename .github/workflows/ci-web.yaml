@@ -24,4 +24,4 @@ jobs:
         working-directory: ./web
         run: |
           yarn
-          yarn run ci
+          yarn run ci:renderer

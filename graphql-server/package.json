@@ -1,5 +1,5 @@
 {
-  "name": "@dolt-sql-workbench/graphql-server",
+  "name": "graphql-server",
   "version": "0.1.0",
   "description": "",
   "author": "DoltHub",
