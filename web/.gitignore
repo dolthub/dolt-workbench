@@ -1,19 +1,48 @@
-# dependencies
-node_modules
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# logs
-*.log
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
 
 # next.js
-.next
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env*.local
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
 next-env.d.ts
 
-# build
-/app
-dist
+.eslintcache
 
 .yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+node_modules
 
-.env
-
-/build/mac/*.provisionprofile
+.yalc
+yalc.lock
