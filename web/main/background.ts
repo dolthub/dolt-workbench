@@ -46,9 +46,7 @@ function createGraphqlSeverProcess() {
         )
       : path.join("../graphql-server", "dist", "main.js");
   serverProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
-  console.log("server path", serverPath);
-  console.log("server process stdout", serverProcess.stdout);
-  console.log("server process stderr", serverProcess.stderr);
+
   serverProcess?.stdout?.on("data", (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
     // Send the Server console.log messages to the main browser window
@@ -101,9 +99,12 @@ app.on("ready", async () => {
       preload: path.join(__dirname, "preload.js"),
     },
   });
+
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
+
   createGraphqlSeverProcess();
-  // await waitForGraphQLServer("http://localhost:9002/graphql");
+
+  await waitForGraphQLServer("http://localhost:9002/graphql");
 
   if (isProd) {
     await mainWindow.loadURL("app://./");
