@@ -46,7 +46,7 @@ export function initMenu(
           : {
               label: "Reload",
               click(_item, focusedWindow) {
-                if (focusedWindow) focusedWindow.reload();
+                if (focusedWindow) (focusedWindow as BrowserWindow).reload();
               },
             },
         isProd
@@ -83,7 +83,8 @@ export function initMenu(
                   ? "Alt+Command+I"
                   : "Ctrl+Shift+I",
               click(_item, focusedWindow) {
-                if (focusedWindow) focusedWindow.webContents.toggleDevTools();
+                if (focusedWindow)
+                  (focusedWindow as BrowserWindow).webContents.toggleDevTools();
               },
             },
         isProd
