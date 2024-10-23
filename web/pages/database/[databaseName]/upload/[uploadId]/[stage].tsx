@@ -8,13 +8,13 @@ type Props = {
     branchName?: string | null;
     schemaName?: string | null;
     tableName?: string | null;
+    stage?: string | null;
   };
-  stage?: string | null;
 };
 
-const DatabaseUploadStagePage: NextPage<Props> = ({ params, stage }) => (
+const DatabaseUploadStagePage: NextPage<Props> = ({ params }) => (
   <Page
-    title={`Upload file to ${params.databaseName} - ${stage ?? "Branch"}`}
+    title={`Upload file to ${params.databaseName} - ${params.stage ?? "Branch"}`}
     noIndex
   >
     <FileUploadPage
@@ -24,11 +24,12 @@ const DatabaseUploadStagePage: NextPage<Props> = ({ params, stage }) => (
         schemaName: params.schemaName ?? undefined,
         tableName: params.tableName ?? undefined,
       }}
-      stage={stage ?? undefined}
+      stage={params.stage ?? undefined}
     />
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
   query,
@@ -41,10 +42,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
         schemaName: query.schemaName ? String(query.schemaName) : null,
         tableName: query.tableName ? String(query.tableName) : null,
         id: query.id ? String(query.id) : null,
+        stage: params?.stage ? String(params.stage) : null,
       },
-      stage: params?.stage ? String(params.stage) : null,
     },
   };
 };
+// #!endif
 
 export default DatabaseUploadStagePage;

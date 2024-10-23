@@ -5,26 +5,23 @@ const config = mergeConfig({
     preflight: false,
   },
   content: [
-    "./app/**/*.css",
-    "./app/**/*.tsx",
-    "./components/**/*.css",
-    "./components/**/*.tsx",
-    "./contexts/**/*.css",
-    "./contexts/**/*.tsx",
-    "./hooks/**/*.css",
-    "./hooks/**/*.tsx",
-    "./lib/**/*.css",
-    "./lib/**/*.tsx",
-    "./pages/**/*.tsx",
-    "./styles/**/*.css",
+    "./web/app/**/*.css",
+    "./web/app/**/*.tsx",
+    "./web/components/**/*.css",
+    "./web/components/**/*.tsx",
+    "./web/contexts/**/*.css",
+    "./web/contexts/**/*.tsx",
+    "./web/hooks/**/*.css",
+    "./web/hooks/**/*.tsx",
+    "./web/lib/**/*.css",
+    "./web/lib/**/*.tsx",
+    "./web/pages/**/*.tsx",
+    "./web/styles/**/*.css",
   ],
   theme: {
-    extend: {
-      borderColor: {
-        DEFAULT: "#D7D8DF",
-      },
-    },
+    extend: {},
   },
+  plugins: [],
 });
 
 export default config;

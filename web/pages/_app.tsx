@@ -10,6 +10,7 @@ import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
 import { SWRConfig } from "swr";
 import "../styles/global.css";
+import { useEffect } from "react";
 
 // configure fetch for use with SWR
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
@@ -22,6 +23,15 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
 
 function Inner(props: { pageProps: any; Component: any }) {
   const { graphqlApiUrl } = useServerConfig();
+  const { params } = props.pageProps;
+
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+      // enable the tools when the database is selected
+      window.ipc.updateAppMenu(params?.databaseName);
+    }
+  }, [props.pageProps]);
+
   const WrappedPage = withApollo(graphqlApiUrl)(props.Component);
   return <WrappedPage {...props.pageProps} />;
 }

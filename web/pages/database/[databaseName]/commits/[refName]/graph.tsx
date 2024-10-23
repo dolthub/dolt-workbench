@@ -13,6 +13,7 @@ const DatabaseCommitGraphPage: NextPage<Props> = ({ params }) => (
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   params,
 }) => {
@@ -20,5 +21,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     props: { params: params as RefParams },
   };
 };
+// #!endif
 
 export default DatabaseCommitGraphPage;

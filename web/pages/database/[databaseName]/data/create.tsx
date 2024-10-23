@@ -17,6 +17,7 @@ const CreateTablePage: NextPage<Props> = ({ params }) => (
   </Page>
 );
 
+// #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
   query,
   params,
@@ -33,5 +34,6 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
     },
   };
 };
+// #!endif
 
 export default CreateTablePage;
