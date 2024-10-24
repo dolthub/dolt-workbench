@@ -86,7 +86,7 @@ async function waitForGraphQLServer(
     if (isReady) {
       return;
     }
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
   throw new Error("Timed out starting GraphQL server");
 }

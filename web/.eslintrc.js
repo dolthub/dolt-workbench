@@ -38,7 +38,7 @@ module.exports = {
     "testing-library",
     "react",
     "react-hooks",
-    "css-modules"
+    "css-modules",
   ],
   rules: {
     "@typescript-eslint/array-type": ["error", { default: "array-simple" }],

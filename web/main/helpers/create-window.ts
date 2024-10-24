@@ -52,7 +52,7 @@ export const createWindow = (
   };
 
   const ensureVisibleOnSomeDisplay = (windowState: Rectangle) => {
-    const visible = screen.getAllDisplays().some((display) => {
+    const visible = screen.getAllDisplays().some(display => {
       return windowWithinBounds(windowState, display.bounds);
     });
     if (!visible) {

@@ -1,8 +1,8 @@
 overwrite: true
 schema: "http://localhost:9002/graphql"
-documents: "{components,contexts,hooks,lib,pages}/**/*.{ts,tsx}"
+documents: "renderer/{components,contexts,hooks,lib,pages}/**/*.{ts,tsx}"
 generates:
-  gen/graphql-types.tsx:
+  renderer/gen/graphql-types.tsx:
     config:
       dedupeOperationSuffix: true
       withHooks: true
@@ -12,7 +12,7 @@ generates:
       - "typescript"
       - "typescript-operations"
       - "typescript-react-apollo"
-  gen/fragmentTypes.json:
+  renderer/gen/fragmentTypes.json:
     plugins:
       - "fragment-matcher"
     config:

@@ -18,6 +18,30 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@components/*": [
+        "renderer/components/*"
+      ],
+      "@pageComponents/*": [
+        "renderer/components/pageComponents/*"
+      ],
+      "@layouts/*": [
+        "renderer/components/layouts/*"
+      ],
+      "@contexts/*": [
+        "renderer/contexts/*"
+      ],
+      "@gen/*": [
+        "renderer/gen/*"
+      ],
+      "@hooks/*": [
+        "renderer/hooks/*"
+      ],
+      "@lib/*": [
+        "renderer/lib/*"
+      ]
+    }, 
     "plugins": [
       {
         "name": "next"
@@ -36,6 +60,10 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts"
+    "renderer/**/*.ts",
+    "renderer/**/*.tsx",
+    "renderer/components/**/*.tsx",
+    "renderer/.next/types/**/*.ts",
+    "jest.setup.ts"
   ]
 }

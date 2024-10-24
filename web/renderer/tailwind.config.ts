@@ -5,8 +5,8 @@ const config = mergeConfig({
     preflight: false,
   },
   content: [
-    "./renderer/app/**/*.css",
-    "./renderer/app/**/*.tsx",
+    "./app/**/*.css",
+    "./app/**/*.tsx",
     "./renderer/components/**/*.css",
     "./renderer/components/**/*.tsx",
     "./renderer/contexts/**/*.css",

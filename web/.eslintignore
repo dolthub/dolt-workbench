@@ -1,7 +1,7 @@
-.next
+renderer/.next
 coverage
 node_modules
-gen
+renderer/gen
 static
 *.config.js
 *.setup.ts

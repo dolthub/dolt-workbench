@@ -5,7 +5,7 @@
     "**/*.tsx",
     "components/**/*.tsx",
     ".next/types/**/*.ts"
-  ],
+, "../jest.setup.ts"  ],
   "compilerOptions": {
     "downlevelIteration": true,
     "incremental": true,
