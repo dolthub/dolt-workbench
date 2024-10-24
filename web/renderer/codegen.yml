@@ -1,0 +1,20 @@
+overwrite: true
+schema: "http://localhost:9002/graphql"
+documents: "renderer/{components,contexts,hooks,lib,pages}/**/*.{ts,tsx}"
+generates:
+  renderer/gen/graphql-types.tsx:
+    config:
+      dedupeOperationSuffix: true
+      withHooks: true
+      withComponent: false
+      withHOC: false
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  renderer/gen/fragmentTypes.json:
+    plugins:
+      - "fragment-matcher"
+    config:
+      apolloClientVersion: 3
+      

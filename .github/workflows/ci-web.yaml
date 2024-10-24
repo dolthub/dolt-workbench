@@ -2,7 +2,7 @@ name: Run web CI
 on:
   pull_request:
     paths:
-      - "web/**"
+      - "web/renderer/**"
   workflow_dispatch:
 
 concurrency:
