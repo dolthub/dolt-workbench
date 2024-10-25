@@ -1,4 +1,10 @@
-Release and update for Mac:
+## Run the desktop app in dev mode:
+
+```bash
+yarn dev:app
+```
+
+## Release and update for Mac:
 
 ### Prerequisite
 
@@ -17,18 +23,18 @@ yarn
 yarn build
 ```
 
-3. Install dependencies in root:
+3. Install dependencies in web:
 
 ```bash
-# in the root directory of the repo
+# in web
 yarn
 ```
 
 4. Build the package
 
 ```bash
-# in the root directory of the repo
-yarn build
+# in web
+yarn build:app
 ```
 
 The builds will show up in `dist` folder, including a `Dolt Workbench-mac-arm64.dmg` file, a `mac-arm64` folder and a `mas-universal` folder. Inside the `mac-arm64` folder is the app that you can run locally.
