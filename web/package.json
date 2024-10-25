@@ -25,7 +25,7 @@
     "find:unused": "npx unimported",
     "yalc": "yalc link",
     "yalc:clean": "yalc remove --all",
-    "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build:renderer",
+    "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
     "clean": "tsc -b --clean && yarn yalc:clean"
   },
   "build": {
