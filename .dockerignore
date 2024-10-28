@@ -1,7 +1,10 @@
 **/node_modules
 **/npm-debug.log
 **/yarn-error.log
-**/.next
+**/renderer/.next
+**/build
+**/main
+**/app
 **/.cache
 **/.gitignore
 **/.eslintcache
