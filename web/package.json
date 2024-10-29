@@ -7,7 +7,7 @@
   "author": "DoltHub",
   "packageManager": "yarn@4.5.0",
   "scripts": {
-    "dev:app": "nextron",
+    "dev:app": "nextron --renderer-port 7777",
     "build:app": "nextron build",
     "postinstall": "electron-builder install-app-deps",
     "prettier": "prettier --check 'renderer/{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}' 'main/*.{js,ts,jsx,tsx}' 'main/**/*.{js,ts,jsx,tsx}'",
@@ -20,7 +20,7 @@
     "generate-types": "graphql-codegen --config ./renderer/codegen.yml",
     "test": "jest --env=jest-environment-jsdom ./renderer",
     "dev": "next dev ./renderer -p 3002",
-    "build": "next build --debug ./renderer",
+    "build": "next build ./renderer",
     "compile": "tsc -b",
     "find:unused": "npx unimported",
     "yalc": "yalc link",
