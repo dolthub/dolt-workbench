@@ -3,8 +3,7 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "components/**/*.tsx",
-    ".next/types/**/*.ts"
+    "jest.setup.ts"
   ],
   "compilerOptions": {
     "downlevelIteration": true,
@@ -12,7 +11,11 @@
     "types": ["node"],
     "baseUrl": ".",
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -26,33 +29,38 @@
     "jsx": "preserve",
     "paths": {
       "@components/*": [
-        "components/*"
+        "renderer/components/*"
       ],
       "@pageComponents/*": [
-        "components/pageComponents/*"
+        "renderer/components/pageComponents/*"
       ],
       "@layouts/*": [
-        "components/layouts/*"
+        "renderer/components/layouts/*"
       ],
       "@contexts/*": [
-        "contexts/*"
+        "renderer/contexts/*"
       ],
       "@gen/*": [
-        "gen/*"
+        "renderer/gen/*"
       ],
       "@hooks/*": [
-        "hooks/*"
+        "renderer/hooks/*"
       ],
       "@lib/*": [
-        "lib/*"
+        "renderer/lib/*"
       ]
-    },
+    }, 
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "strictNullChecks": true
+    "strictNullChecks": true,
   },
-  "exclude": []
+  "exclude": [
+    "node_modules",
+    "web/next.config.js",
+    "app",
+    "dist"
+  ]
 }

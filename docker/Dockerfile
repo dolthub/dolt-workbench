@@ -85,7 +85,7 @@ COPY --chown=node:node --from=graphql-build /app/graphql-server/dist ./graphql-s
 
 EXPOSE 9002
 
-COPY --from=web-build /app/web/public ./web/public
+COPY --from=web-build /app/web/renderer/public ./web/public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

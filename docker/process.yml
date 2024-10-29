@@ -1,7 +1,7 @@
 apps:
   - script   : /app/graphql-server/dist/main.js
     name     : 'graphql'
-  - script : /app/web/server.js
+  - script : /app/web/renderer/server.js
     name   : 'web'
     env    :
       NODE_ENV: production

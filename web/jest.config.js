@@ -7,7 +7,8 @@ const createJestConfig = nextJest();
 
 // Any custom config you want to pass to Jest
 const customJestConfig = {
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  rootDir: "./renderer",
+  setupFilesAfterEnv: ["../jest.setup.ts"],
   testRegex: TEST_REGEX,
   transform: {
     "^.+\\.tsx?$": "babel-jest",
@@ -25,7 +26,7 @@ const customJestConfig = {
   },
   testPathIgnorePatterns: [
     "<rootDir>/.next/",
-    "<rootDir>/node_modules/",
+    "node_modules/",
     "<rootDir>/lib/testUtils.test.ts",
   ],
   moduleFileExtensions: ["ts", "tsx", "js", "jsx"],

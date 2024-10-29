@@ -5,15 +5,12 @@
 /.pnp
 .pnp.js
 
-# testing
-/coverage
+# logs
+*.log
 
 # next.js
-/.next/
+.next
 /out/
-
-# production
-/build
 
 # misc
 .DS_Store
@@ -31,8 +28,8 @@ yarn-error.log*
 .vercel
 
 # typescript
-*.tsbuildinfo
-next-env.d.ts
+**/*.tsbuildinfo
+**/next-env.d.ts
 
 .eslintcache
 
@@ -46,3 +43,11 @@ node_modules
 
 .yalc
 yalc.lock
+
+.env
+
+/build/mac/*.provisionprofile
+
+# electron app build
+/app
+dist

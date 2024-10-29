@@ -1,4 +1,8 @@
 {
+  "entry": [
+    "renderer/pages/**/*.{js,ts,tsx}",
+    "main/*.{js,ts,jsx,tsx}"
+  ],
   "ignorePatterns": [
     "**/node_modules/**",
     "**/__tests__/**",
@@ -10,13 +14,13 @@
     "**/*.test.tsx"
   ],
   "ignoreUnimported": [
-    "**/queries.ts", 
-    "**/mocks.ts", 
-    "**/mocks.tsx", 
-    "**/testData.ts", 
+    "**/queries.ts",
+    "**/mocks.ts",
+    "**/mocks.tsx",
+    "**/testData.ts",
     "**/testSetup.tsx",
     "**/MockedProvider.tsx",
-    "hooks/useMockRouter.ts"
+    "**/hooks/useMockRouter.ts"
   ],
   "ignoreUnused": [
     "next",

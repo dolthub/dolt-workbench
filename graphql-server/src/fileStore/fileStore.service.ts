@@ -1,9 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import * as fs from "fs";
-import { resolve } from "path";
+import path, { resolve } from "path";
 import { DatabaseConnection } from "../databases/database.model";
 
-const storePath = resolve(__dirname, "../../store/store.json");
+const storePath =
+  process.env.NEXT_PUBLIC_FOR_ELECTRON === "true"
+    ? path.join(process.env.NEXT_PUBLIC_USER_DATA_PATH || "", "store.json")
+    : resolve(__dirname, "../../store/store.json");
 
 @Injectable()
 export class FileStoreService {
@@ -37,8 +40,11 @@ export class FileStoreService {
     }
 
     store.push(item);
-
-    if (!fs.existsSync(resolve(__dirname, "../../store"))) {
+    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+      if (!fs.existsSync(process.env.NEXT_PUBLIC_USER_DATA_PATH || "")) {
+        fs.mkdirSync(process.env.NEXT_PUBLIC_USER_DATA_PATH || "");
+      }
+    } else if (!fs.existsSync(resolve(__dirname, "../../store"))) {
       fs.mkdirSync(resolve(__dirname, "../../store"));
     }
 
