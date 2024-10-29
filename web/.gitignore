@@ -28,10 +28,8 @@ yarn-error.log*
 .vercel
 
 # typescript
-*.tsbuildinfo
-renderer/*.tsbuildinfo
-next-env.d.ts
-renderer/next-env.d.ts
+**/*.tsbuildinfo
+**/next-env.d.ts
 
 .eslintcache
 

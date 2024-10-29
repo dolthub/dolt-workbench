@@ -3,10 +3,6 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "renderer/**/*.ts",
-    "renderer/**/*.tsx",
-    "renderer/components/**/*.tsx",
-    "renderer/.next/types/**/*.ts",
     "jest.setup.ts"
   ],
   "compilerOptions": {
