@@ -298,7 +298,7 @@ export class MySQLQueryFactory
     throw notDoltError("get row sided diffs");
   }
 
-  async restoreAllTables(args: t.RefArgs): t.PR {
+  async restoreAllTables(_args: t.RefArgs): t.PR {
     throw notDoltError("restore all tables");
   }
 }
