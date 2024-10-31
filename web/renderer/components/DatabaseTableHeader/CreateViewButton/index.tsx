@@ -1,12 +1,12 @@
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button } from "@dolthub/react-components";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import { useState } from "react";
 import CreateViewModal from "./CreateViewModal";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams & { refName?: string };
+  params: OptionalRefParams;
   query: string;
 };
 

@@ -6,6 +6,7 @@ import css from "./index.module.css";
 
 type Props = {
   forSpreadsheet?: boolean;
+  hideModifierOptions?: boolean;
   tableName: string;
 };
 
@@ -42,7 +43,7 @@ export default function UploadQueryInfo(props: Props) {
           </div>
         </HelpPopup>
       </div>
-      {!isPostgres && <ModifierOptions />}
+      {!isPostgres && !props.hideModifierOptions && <ModifierOptions />}
     </div>
   );
 }

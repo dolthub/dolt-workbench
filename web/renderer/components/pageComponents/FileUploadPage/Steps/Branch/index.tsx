@@ -1,6 +1,7 @@
 import useGetBranchOptionsForSelect from "@components/FormSelectForRefs/useGetBranchOptionsForSelect";
 import DatabaseLink from "@components/links/DatabaseLink";
 import { ErrorMsg, FormSelect, Loader } from "@dolthub/react-components";
+import { useEffect } from "react";
 import StepLayout from "../../StepLayout";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import { UploadStage } from "../../enums";
@@ -16,7 +17,14 @@ export default function Branch() {
 function Inner() {
   const { state, error, updateLoad, setItem, dbParams, getUploadUrl } =
     useFileUploadContext();
-  const { branchOptions } = useGetBranchOptionsForSelect(dbParams);
+  const { branchOptions, defaultBranch } =
+    useGetBranchOptionsForSelect(dbParams);
+
+  useEffect(() => {
+    if (defaultBranch && !state.branchName) {
+      setItem("branchName", defaultBranch);
+    }
+  }, [defaultBranch, state.branchName, setItem]);
 
   return (
     <StepLayout
