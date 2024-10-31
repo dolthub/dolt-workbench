@@ -142,4 +142,6 @@ export declare class QueryFactory {
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }>;
 
   getRowDiffs(args: t.RowDiffArgs): t.DiffRes;
+
+  restoreAllTables(args: t.RefArgs): t.PR;
 }

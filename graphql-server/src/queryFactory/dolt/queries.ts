@@ -139,3 +139,7 @@ export function getOrderByFromDiffCols(cols: RawRows): string {
   const orderBy = diffCols.map(c => `\`${c}\` ASC`).join(", ");
   return orderBy === "" ? "" : `ORDER BY ${orderBy} `;
 }
+
+export const callResetHard = `CALL DOLT_RESET("--hard")`;
+
+export const callCheckoutTable = `CALL DOLT_CHECKOUT(?)`;

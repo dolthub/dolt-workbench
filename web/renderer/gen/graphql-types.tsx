@@ -233,6 +233,7 @@ export type Mutation = {
   mergePull: Scalars['Boolean']['output'];
   removeDatabaseConnection: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
+  restoreAllTables: Scalars['Boolean']['output'];
 };
 
 
@@ -312,6 +313,12 @@ export type MutationRemoveDatabaseConnectionArgs = {
 
 export type MutationResetDatabaseArgs = {
   newDatabase?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type MutationRestoreAllTablesArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 };
 
 export type PullDetailCommit = {
@@ -923,6 +930,14 @@ export type GetStatusQueryVariables = Exact<{
 
 
 export type GetStatusQuery = { __typename?: 'Query', status: Array<{ __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string }> };
+
+export type RestoreAllMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type RestoreAllMutation = { __typename?: 'Mutation', restoreAllTables: boolean };
 
 export type ColumnForTableListFragment = { __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -2497,6 +2512,38 @@ export type GetStatusQueryHookResult = ReturnType<typeof useGetStatusQuery>;
 export type GetStatusLazyQueryHookResult = ReturnType<typeof useGetStatusLazyQuery>;
 export type GetStatusSuspenseQueryHookResult = ReturnType<typeof useGetStatusSuspenseQuery>;
 export type GetStatusQueryResult = Apollo.QueryResult<GetStatusQuery, GetStatusQueryVariables>;
+export const RestoreAllDocument = gql`
+    mutation RestoreAll($databaseName: String!, $refName: String!) {
+  restoreAllTables(databaseName: $databaseName, refName: $refName)
+}
+    `;
+export type RestoreAllMutationFn = Apollo.MutationFunction<RestoreAllMutation, RestoreAllMutationVariables>;
+
+/**
+ * __useRestoreAllMutation__
+ *
+ * To run a mutation, you first call `useRestoreAllMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRestoreAllMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [restoreAllMutation, { data, loading, error }] = useRestoreAllMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useRestoreAllMutation(baseOptions?: Apollo.MutationHookOptions<RestoreAllMutation, RestoreAllMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RestoreAllMutation, RestoreAllMutationVariables>(RestoreAllDocument, options);
+      }
+export type RestoreAllMutationHookResult = ReturnType<typeof useRestoreAllMutation>;
+export type RestoreAllMutationResult = Apollo.MutationResult<RestoreAllMutation>;
+export type RestoreAllMutationOptions = Apollo.BaseMutationOptions<RestoreAllMutation, RestoreAllMutationVariables>;
 export const TableForBranchDocument = gql`
     query TableForBranch($databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String) {
   table(

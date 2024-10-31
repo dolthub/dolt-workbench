@@ -297,4 +297,8 @@ export class MySQLQueryFactory
   async getRowDiffs(_args: t.RowDiffArgs): t.DiffRes {
     throw notDoltError("get row sided diffs");
   }
+
+  async restoreAllTables(args: t.RefArgs): t.PR {
+    throw notDoltError("restore all tables");
+  }
 }
