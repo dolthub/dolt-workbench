@@ -3,7 +3,7 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import { FormInput, FormModal, Loader } from "@dolthub/react-components";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import dynamic from "next/dynamic";
 import { SyntheticEvent, useState } from "react";
 import css from "./index.module.css";
@@ -13,7 +13,7 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 });
 
 type Props = {
-  params: DatabaseParams & { refName?: string };
+  params: OptionalRefParams;
   query: string;
 } & ModalProps;
 

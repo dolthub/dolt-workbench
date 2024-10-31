@@ -14,3 +14,9 @@ export const GET_STATUS = gql`
     }
   }
 `;
+
+export const RESTORE_ALL = gql`
+  mutation RestoreAll($databaseName: String!, $refName: String!) {
+    restoreAllTables(databaseName: $databaseName, refName: $refName)
+  }
+`;

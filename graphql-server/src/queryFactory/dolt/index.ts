@@ -389,6 +389,51 @@ export class DoltQueryFactory
       args.refName,
     );
   }
+
+  async restoreAllTables(args: t.RefArgs): t.PR {
+    return this.queryQR(
+      async qr => {
+        console.log("[restore_all]: starting transaction");
+        await qr.query("BEGIN");
+
+        console.log("[restore_all]: calling");
+        const res = await qr.query(qh.callResetHard);
+
+        if (res.length && res[0].status !== "0") {
+          console.log("[restore_all]: reset not successful, rolling back");
+          await qr.query("ROLLBACK");
+          throw new Error("Reset --hard not successful");
+        }
+
+        // Handles any new tables that weren't restored by dolt_reset(--hard)
+        const status = await dem.getDoltStatus(qr.manager);
+
+        if (status.length) {
+          status.forEach(async r => {
+            console.log("[restore_all]: checking out new table", r.table_name);
+            const checkRes = await qr.query(qh.callCheckoutTable, [
+              r.table_name,
+            ]);
+            if (checkRes.length && checkRes[0].status !== "0") {
+              console.log(
+                "[restore_all]: checkout not successful, rolling back",
+              );
+              await qr.query("ROLLBACK");
+              throw new Error(
+                `Checking out table not successful: ${checkRes[0].message}`,
+              );
+            }
+          });
+        }
+
+        console.log("[restore_all]: committing");
+        await qr.query("COMMIT");
+        return res;
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
 }
 
 async function getTableInfoWithQR(

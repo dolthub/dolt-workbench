@@ -1,4 +1,5 @@
 import { Button } from "@dolthub/react-components";
+import { excerpt } from "@dolthub/web-utils";
 import { FiFile } from "@react-icons/all-files/fi/FiFile";
 import cx from "classnames";
 import { ReactNode } from "react";
@@ -28,7 +29,9 @@ export default function FileInfo(props: Props) {
       >
         <span className={css.fileInfo}>
           <FiFile className={css.fileIcon} />
-          <span data-cy="file-name">{state.selectedFile.name}</span>
+          <span data-cy="file-name">
+            {excerpt(state.selectedFile.name, 30)}
+          </span>
           <span className={css.fileSize}>
             {fileSize(state.selectedFile.size)}
           </span>

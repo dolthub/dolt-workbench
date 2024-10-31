@@ -51,7 +51,10 @@ function Inner() {
           <OpenSpreadsheetZone />
         </div>
         <EditableTable />
-        <UploadQueryInfo tableName={state.tableName} />
+        <UploadQueryInfo
+          tableName={state.tableName}
+          hideModifierOptions={uState.spreadsheetOverlayOpen}
+        />
         <ErrorMsg err={uState.error ?? error} />
       </div>
     </StepLayout>

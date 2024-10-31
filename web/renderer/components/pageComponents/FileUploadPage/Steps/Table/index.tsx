@@ -71,7 +71,10 @@ function Inner() {
                 label={isPostgres ? "Table" : undefined}
                 light
               />
-              <UploadQueryInfo tableName={state.existingTable} />
+              <UploadQueryInfo
+                tableName={state.existingTable}
+                hideModifierOptions
+              />
             </div>
           </TableOption>
         </div>

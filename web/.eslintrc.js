@@ -13,6 +13,9 @@ module.exports = {
         extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
+    next: {
+      rootDir: "renderer",
+    },
   },
   env: {
     browser: true,

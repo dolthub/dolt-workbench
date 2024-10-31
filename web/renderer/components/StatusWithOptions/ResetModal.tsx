@@ -1,10 +1,12 @@
 import Link from "@components/links/Link";
-import { Button, Modal } from "@dolthub/react-components";
-import { StatusFragment } from "@gen/graphql-types";
+import { Button, Loader, Modal } from "@dolthub/react-components";
+import { StatusFragment, useRestoreAllMutation } from "@gen/graphql-types";
+import useMutation from "@hooks/useMutation";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
 import { getPostgresTableName } from "@lib/postgres";
+import { refetchSqlUpdateQueriesCacheEvict } from "@lib/refetchQueries";
 import { sqlQuery } from "@lib/urls";
 import css from "./index.module.css";
 
@@ -16,6 +18,21 @@ type Props = ModalProps & {
 
 export default function ResetModal(props: Props) {
   const { getCallProcedure, isPostgres } = useSqlBuilder();
+  const { mutateFn, loading, err, client } = useMutation({
+    hook: useRestoreAllMutation,
+  });
+
+  const onRestoreAll = async () => {
+    try {
+      await mutateFn({ variables: props.params });
+      props.setIsOpen(false);
+      client
+        .refetchQueries(refetchSqlUpdateQueriesCacheEvict)
+        .catch(console.error);
+    } catch (_) {
+      // Handled by useMutation
+    }
+  };
 
   const getTableName = (tn: string): string => {
     if (isPostgres) {
@@ -33,9 +50,15 @@ export default function ResetModal(props: Props) {
       title="Reset uncommitted changes"
       isOpen={props.isOpen}
       onRequestClose={onClose}
-      button={<Button onClick={onClose}>Done</Button>}
+      button={
+        <Button onClick={onRestoreAll} pill>
+          Restore all tables
+        </Button>
+      }
+      err={err}
     >
       <div>
+        <Loader loaded={!loading} />
         <p>
           Choose to unstage staged tables or restore tables to their current
           contents in the current <code>HEAD</code>.
