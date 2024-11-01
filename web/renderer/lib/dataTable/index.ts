@@ -10,7 +10,11 @@ export function escapeSingleQuotes(s: string): string {
   return s.replace(/'/g, `\\'`);
 }
 
-export function isLongContentType(currentColType?: string): boolean {
+export function isLongContentType(
+  currentColType?: string,
+  currentColName?: string,
+): boolean {
+  if (currentColName?.toLowerCase() === "plan") return true;
   if (!currentColType) return false;
   const colType = currentColType.toLowerCase();
   return (
