@@ -28,7 +28,7 @@
     "node": ">=10.3.0"
   },
   "dependencies": {
-    "@apollo/server": "^4.11.0",
+    "@apollo/server": "^4.11.2",
     "@dolthub/web-utils": "^0.1.2",
     "@nestjs/apollo": "^12.2.0",
     "@nestjs/cli": "^10.4.5",
