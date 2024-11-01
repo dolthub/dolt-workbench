@@ -47,11 +47,18 @@ export default function Cell(props: Props): JSX.Element {
     props.columnStatus,
     props.cidx,
     value,
-    currentCol.type,
+    currentCol,
   );
 
   if (showAceCell) {
-    return <CreateTableCell value={value} data-cy={dataCy} />;
+    return (
+      <CreateTableCell
+        value={value}
+        data-cy={dataCy}
+        showDropdown={showDropdown}
+        setShowDropdown={setShowDropdown}
+      />
+    );
   }
 
   return (
@@ -65,6 +72,9 @@ export default function Cell(props: Props): JSX.Element {
         [css.longContent]:
           props.columnStatus[props.cidx] === CellStatusActionType.Expand ||
           cellStatus === CellStatusActionType.Expand,
+        [css.wideCell]:
+          props.columns.length === 1 &&
+          currentCol.name.toLowerCase() === "plan",
       })}
     >
       {editing ? (

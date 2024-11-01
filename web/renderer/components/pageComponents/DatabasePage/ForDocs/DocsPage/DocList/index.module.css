@@ -3,7 +3,7 @@
 }
 
 .docs {
-  @apply flex text-primary mb-0 mr-8;
+  @apply flex flex-wrap text-primary mb-0 mr-8;
 
   > li {
     @apply mr-8 my-2;

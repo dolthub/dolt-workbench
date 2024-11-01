@@ -12,6 +12,7 @@ describe("test split enum", () => {
 describe("test isLongContentType", () => {
   const tests: Array<{
     colType: string;
+    colName?: string;
     expectedTypeCheck: boolean;
   }> = [
     {
@@ -86,11 +87,18 @@ describe("test isLongContentType", () => {
       colType: "YEAR",
       expectedTypeCheck: false,
     },
+    {
+      colType: "",
+      colName: "plan",
+      expectedTypeCheck: true,
+    },
   ];
 
   tests.forEach(test => {
     it(`tests isLongContentType for ${test.colType}`, () => {
-      expect(isLongContentType(test.colType)).toEqual(test.expectedTypeCheck);
+      expect(isLongContentType(test.colType, test.colName)).toEqual(
+        test.expectedTypeCheck,
+      );
     });
   });
 });

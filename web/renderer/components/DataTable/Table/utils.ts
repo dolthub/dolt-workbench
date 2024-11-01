@@ -80,7 +80,8 @@ export function getInitialColumnStatus(
         (o, key) =>
           Object.assign(o, {
             [key]:
-              columns[key].type === "json"
+              columns[key].type === "json" ||
+              columns[key].name.toLowerCase() === "plan"
                 ? CellStatusActionType.Expand
                 : CellStatusActionType.Collapse,
           }),

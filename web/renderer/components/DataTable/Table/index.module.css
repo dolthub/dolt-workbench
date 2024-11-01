@@ -108,6 +108,10 @@
   }
 }
 
+.wideCell {
+  @apply max-w-[1000px];
+}
+
 .cellIsNull {
   @apply text-stone-300;
 }
