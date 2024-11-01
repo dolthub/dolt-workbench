@@ -225,6 +225,7 @@
     "yalc": "^1.0.0-pre.53"
   },
   "resolutions": {
-    "@types/react": "18.3.5"
+    "@types/react": "18.3.5",
+    "webpack": "5.94.0"
   }
 }
