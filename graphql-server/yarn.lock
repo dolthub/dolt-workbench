@@ -734,7 +734,7 @@ __metadata:
     "@nestjs/config": "npm:^3.2.3"
     "@nestjs/core": "npm:^10.4.5"
     "@nestjs/graphql": "npm:^12.2.0"
-    "@nestjs/platform-express": "npm:^10.4.5"
+    "@nestjs/platform-express": "npm:^10.4.6"
     "@nestjs/schematics": "npm:^10.2.1"
     "@nestjs/terminus": "npm:^10.2.3"
     "@nestjs/typeorm": "npm:^10.0.2"
@@ -1478,9 +1478,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/platform-express@npm:^10.4.5":
-  version: 10.4.5
-  resolution: "@nestjs/platform-express@npm:10.4.5"
+"@nestjs/platform-express@npm:^10.4.6":
+  version: 10.4.6
+  resolution: "@nestjs/platform-express@npm:10.4.6"
   dependencies:
     body-parser: "npm:1.20.3"
     cors: "npm:2.8.5"
@@ -1490,7 +1490,7 @@ __metadata:
   peerDependencies:
     "@nestjs/common": ^10.0.0
     "@nestjs/core": ^10.0.0
-  checksum: 10c0/3e63314861eaebcbd146bd2f18b27ad19f3ce84a1e60ee29d76dc36d88c878faab6f1252687b3ddc69e94d85ce7f042dda638d08982929a9b76d7e51125d2795
+  checksum: 10c0/1d2f9d913a0b4a066aaa783810d0d029a9f201243f8ac52d396c8361a19b73d44e05d8d656388af61696784bdfff1cb8dd711bb0b1765496c6bf40b410284081
   languageName: node
   linkType: hard
 
