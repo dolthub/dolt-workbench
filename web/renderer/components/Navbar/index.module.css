@@ -1,0 +1,11 @@
+.leftLinks {
+  @apply ml-20;
+}
+
+.titlebar {
+  -webkit-app-region: drag;
+  a {
+    @apply cursor-pointer;
+    -webkit-app-region: no-drag;
+  }
+}

@@ -9,6 +9,9 @@ const handler = {
   updateAppMenu: (databaseName?: string) => {
     ipcRenderer.send("update-menu", databaseName);
   },
+  macTitlebarClicked() {
+    ipcRenderer.send("mac-title-bar-clicked");
+  },
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

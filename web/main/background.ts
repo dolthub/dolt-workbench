@@ -7,6 +7,8 @@ import {
   shell,
   utilityProcess,
   UtilityProcess,
+  IpcMainEvent,
+  systemPreferences,
 } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
@@ -91,17 +93,52 @@ async function waitForGraphQLServer(
   throw new Error("Timed out starting GraphQL server");
 }
 
+function setupTitleBarClickMac() {
+  if (process.platform !== "darwin") {
+    return;
+  }
+
+  ipcMain.on("mac-title-bar-clicked", (event: IpcMainEvent) => {
+    console.log("mac-title-bar-clicked");
+    const doubleClickAction = systemPreferences.getUserDefault(
+      "AppleActionOnDoubleClick",
+      "string",
+    );
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win) {
+      if (doubleClickAction === "Minimize") {
+        win.minimize();
+      } else if (doubleClickAction === "Maximize") {
+        if (!win.isMaximized()) {
+          win.maximize();
+        } else {
+          win.unmaximize();
+        }
+      }
+    }
+  });
+}
+
 app.on("ready", async () => {
+  const HEADER_HEIGHT = 48;
+  const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
   mainWindow = createWindow("main", {
     width: 1280,
     height: 680,
+    titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
+    titleBarOverlay: process.platform === "darwin",
+    trafficLightPosition: {
+      x: 20,
+      y: HEADER_HEIGHT / 2 - MACOS_TRAFFIC_LIGHTS_HEIGHT / 2,
+    },
+    acceptFirstMouse: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
   });
 
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
-
+  setupTitleBarClickMac();
   createGraphqlSeverProcess();
 
   await waitForGraphQLServer("http://localhost:9002/graphql");
