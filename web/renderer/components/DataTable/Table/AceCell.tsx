@@ -1,3 +1,5 @@
+import CopyButton from "@components/CellButtons/CopyButton";
+import { CellDropdown } from "@dolthub/react-components";
 import cx from "classnames";
 import dynamic from "next/dynamic";
 import css from "./index.module.css";
@@ -9,6 +11,8 @@ const AceEditor = dynamic(async () => import("@components/AceEditor"), {
 type Props = {
   value: string;
   ["data-cy"]?: string;
+  showDropdown: boolean;
+  setShowDropdown: (show: boolean) => void;
 };
 
 export default function AceCell(props: Props) {
@@ -24,6 +28,9 @@ export default function AceCell(props: Props) {
         height: `${height * 20}px`,
       }}
     >
+      <CellDropdown {...props} buttonClassName={css.menu}>
+        <CopyButton value={props.value} />
+      </CellDropdown>
       <AceEditor
         className="create-table-ace"
         value={props.value}

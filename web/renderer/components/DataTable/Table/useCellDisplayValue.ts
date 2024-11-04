@@ -1,4 +1,5 @@
 import { excerpt, prettyJSONText } from "@dolthub/web-utils";
+import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { getBitDisplayValue, isLongContentType } from "@lib/dataTable";
 import {
   CellStatusActionType,
@@ -20,11 +21,11 @@ export default function useCellDisplayValue(
   columnStatus: ColumnStatus,
   cidx: number,
   value: string,
-  colType: string,
+  currCol: ColumnForDataTableFragment,
 ): ReturnType {
   const [cellStatus, setCellStatus] = useState(columnStatus[cidx]);
   const [displayCellVal, setDisplayCellVal] = useState(
-    getCellValue(value, colType, columnStatus[cidx]),
+    getCellValue(value, currCol, columnStatus[cidx]),
   );
 
   useEffect(() => {
@@ -32,7 +33,7 @@ export default function useCellDisplayValue(
   }, [columnStatus]);
 
   useEffect(() => {
-    const val = getCellValue(value, colType, cellStatus);
+    const val = getCellValue(value, currCol, cellStatus);
     setDisplayCellVal(val);
   }, [cellStatus]);
 
@@ -41,14 +42,14 @@ export default function useCellDisplayValue(
 
 function getCellValue(
   value: string,
-  colType: string,
+  currCol: ColumnForDataTableFragment,
   cellStatusAction?: CellStatusActionType,
 ): string {
   if (value === "NULL") return value;
-  const isLongContent = isLongContentType(colType);
+  const isLongContent = isLongContentType(currCol.type, currCol.name);
   if (isLongContent) {
     if (
-      colType === "json" &&
+      currCol.type === "json" &&
       cellStatusAction === CellStatusActionType.Expand &&
       value !== "NULL"
     ) {
@@ -59,7 +60,7 @@ function getCellValue(
     }
   }
 
-  if (colType === "bit(1)") {
+  if (currCol.type === "bit(1)") {
     return getBitDisplayValue(value);
   }
   return excerpt(value, excerptLength);

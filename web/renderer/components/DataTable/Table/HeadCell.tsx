@@ -33,7 +33,7 @@ export default function HeadCell({
   idx,
 }: Props) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const showCollapseCellButton = isLongContentType(col.type);
+  const showCollapseCellButton = isLongContentType(col.type, col.name);
   return (
     <th
       className={cx(css.cell, {

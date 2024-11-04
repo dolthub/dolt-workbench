@@ -34,7 +34,10 @@ type Props = {
 
 export default function CellDropdown(props: Props) {
   const isNull = isNullValue(props.rawVal);
-  const showCollapseCellButton = isLongContentType(props.currentCol.type);
+  const showCollapseCellButton = isLongContentType(
+    props.currentCol.type,
+    props.currentCol.name,
+  );
   return (
     <Dropdown
       showDropdown={props.showDropdown}
