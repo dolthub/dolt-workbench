@@ -13,6 +13,7 @@ type Props = {
   initialTabIndex: number;
   setShowSmall: (s: boolean) => void;
   showSmall: boolean;
+  showHeaderDetails?: boolean;
 };
 
 export default function Full(props: Props) {
@@ -21,24 +22,26 @@ export default function Full(props: Props) {
       data-cy="db-page-header"
       className={cx(css.header, { [css.hideFullHeader]: props.showSmall })}
     >
-      <div className={css.headerDetails}>
-        <div className={css.topLeft}>
-          <DatabaseBreadcrumbs
-            className={css.databaseBreadcrumbs}
-            params={props.params}
-          />
-          <DatabaseTypeLabel className={css.permission} />
-        </div>
-        <div>
-          <RightHeaderButtons
-            {...props}
-            onMenuClick={() => props.setShowSmall(true)}
-          />
-          <div className={css.mobileSelector}>
-            <MobileDatabaseNav {...props} />
+      {props.showHeaderDetails && (
+        <div className={css.headerDetails}>
+          <div className={css.topLeft}>
+            <DatabaseBreadcrumbs
+              className={css.databaseBreadcrumbs}
+              params={props.params}
+            />
+            <DatabaseTypeLabel className={css.permission} />
+          </div>
+          <div>
+            <RightHeaderButtons
+              {...props}
+              onMenuClick={() => props.setShowSmall(true)}
+            />
+            <div className={css.mobileSelector}>
+              <MobileDatabaseNav {...props} />
+            </div>
           </div>
         </div>
-      </div>
+      )}
       <DatabaseNav {...props} />
     </div>
   );

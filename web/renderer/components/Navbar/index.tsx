@@ -4,24 +4,18 @@ import { ExternalLink, Navbar } from "@dolthub/react-components";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import css from "./index.module.css";
+import DesktopAppNavbar from "./DesktopAppNavbar";
+import { DatabasePageParams } from "@lib/params";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
-const handleDoubleClick = () => {
-  window.ipc.macTitlebarClicked();
+type Props = {
+  params?: DatabasePageParams;
 };
 
-export default function Nav() {
+export default function Nav(props: Props) {
   return forElectron ? (
-    <div className={css.titlebar} onDoubleClick={handleDoubleClick}>
-      <Navbar
-        logo={<Logo />}
-        leftLinks={<LeftLinks />}
-        rightLinks={<RightLinks />}
-        bgColor="bg-storm-600"
-      />
-    </div>
+    <DesktopAppNavbar {...props} />
   ) : (
     <Navbar
       logo={<Logo />}
@@ -33,11 +27,7 @@ export default function Nav() {
 }
 
 function LeftLinks() {
-  return forElectron ? (
-    <div className={css.leftLinks}>
-      <Link href="/connections">Connections</Link>
-    </div>
-  ) : (
+  return (
     <>
       <DocsLink>Documentation</DocsLink>
       <Link href="/connections">Connections</Link>
@@ -46,14 +36,7 @@ function LeftLinks() {
 }
 
 function RightLinks() {
-  return forElectron ? (
-    <>
-      <ExternalLink href={workbenchGithubRepo}>
-        <FaGithub /> GitHub
-      </ExternalLink>
-      <DocsLink>Documentation</DocsLink>
-    </>
-  ) : (
+  return (
     <>
       <ExternalLink href={workbenchGithubRepo}>
         <FaGithub /> GitHub
@@ -66,9 +49,7 @@ function RightLinks() {
 }
 
 function Logo() {
-  return forElectron ? (
-    <img src="/images/dolt-workbench.png" alt="Dolt Workbench" />
-  ) : (
+  return (
     <Link href="/">
       <img src="/images/dolt-workbench.png" alt="Dolt Workbench" />
     </Link>

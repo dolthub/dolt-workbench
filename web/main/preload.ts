@@ -12,6 +12,8 @@ const handler = {
   macTitlebarClicked() {
     ipcRenderer.send("mac-title-bar-clicked");
   },
+  toggleLeftSidebar: (callback: () => {}) =>
+    ipcRenderer.on("toggle-left-sidebar", _event => callback()),
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

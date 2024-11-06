@@ -99,7 +99,6 @@ function setupTitleBarClickMac() {
   }
 
   ipcMain.on("mac-title-bar-clicked", (event: IpcMainEvent) => {
-    console.log("mac-title-bar-clicked");
     const doubleClickAction = systemPreferences.getUserDefault(
       "AppleActionOnDoubleClick",
       "string",
@@ -123,8 +122,10 @@ app.on("ready", async () => {
   const HEADER_HEIGHT = 48;
   const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
   mainWindow = createWindow("main", {
-    width: 1280,
-    height: 680,
+    width: 1400,
+    height: 900,
+    minHeight: 600,
+    minWidth: 600,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
     titleBarOverlay: process.platform === "darwin",
     trafficLightPosition: {
@@ -206,4 +207,8 @@ ipcMain.handle("api-config", async () => {
     graphqlApiUrl: process.env.GRAPHQLAPI_URL,
   };
   return cfg;
+});
+
+ipcMain.handle("toggle-left-sidebar", () => {
+  mainWindow.webContents.send("toggle-left-sidebar");
 });

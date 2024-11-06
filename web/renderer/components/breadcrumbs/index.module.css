@@ -11,3 +11,7 @@
     @apply text-lg mr-3 inline-block;
   }
 }
+
+.blue svg {
+  @apply text-sky-300 mr-2;
+}

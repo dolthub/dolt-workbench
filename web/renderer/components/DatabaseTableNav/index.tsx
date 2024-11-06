@@ -37,7 +37,9 @@ function Nav({
   const toggleMenu = () => {
     setOpen(!open);
   };
-
+  if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+    window.ipc.toggleLeftSidebar(() => setOpen(!open));
+  }
   return (
     <div
       className={cx(css.container, {

@@ -21,6 +21,7 @@ export default function useAddConnection(
   const onAdd = async () => {
     try {
       const db = await addDb({ variables: conn });
+      console.log(db);
       await res.client.clearStore();
       if (!db.data) {
         return;

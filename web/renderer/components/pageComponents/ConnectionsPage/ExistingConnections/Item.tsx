@@ -8,21 +8,24 @@ import useAddConnection from "./useAddConnection";
 
 type Props = {
   conn: DatabaseConnectionFragment;
-  onDeleteClicked: (n: string) => void;
+  onDeleteClicked?: (n: string) => void;
+  className?: string;
 };
 
-export default function Item({ conn, onDeleteClicked }: Props) {
+export default function Item({ conn, onDeleteClicked, className }: Props) {
   const { onAdd, err, loading } = useAddConnection(conn);
 
   return (
     <>
-      <li key={conn.name} className={css.connection}>
+      <li key={conn.name} className={cx(css.connection, className)}>
         <Button.Link onClick={onAdd}>{conn.name}</Button.Link>
         <span className={css.right}>
           <DatabaseTypeLabel conn={conn} />
-          <Button.Link onClick={() => onDeleteClicked(conn.name)}>
-            <IoMdClose />
-          </Button.Link>
+          {onDeleteClicked && (
+            <Button.Link onClick={() => onDeleteClicked(conn.name)}>
+              <IoMdClose />
+            </Button.Link>
+          )}
         </span>
       </li>
       <Loader loaded={!loading} />

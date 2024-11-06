@@ -14,6 +14,7 @@ import { branches, commitLog, database, defaultDoc, releases } from "@lib/urls";
 import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
 import css from "./index.module.css";
 import { BreadcrumbDetails, BreadcrumbName, BreadcrumbType } from "./types";
+import cx from "classnames";
 
 const newBreadcrumb: BreadcrumbDetails = {
   child: <span>new</span>,
@@ -23,11 +24,13 @@ const newBreadcrumb: BreadcrumbDetails = {
 
 export function databaseBreadcrumbs(
   params: DatabaseParams,
+  blueIcon?: boolean,
 ): BreadcrumbDetails[] {
+  console.log(blueIcon);
   return [
     {
       child: (
-        <span className={css.withIcon}>
+        <span className={cx(css.withIcon, { [css.blue]: blueIcon })}>
           <FiDatabase />
           <Link {...database(params)}>{params.databaseName}</Link>
         </span>
