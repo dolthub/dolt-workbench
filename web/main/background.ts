@@ -23,6 +23,9 @@ process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
 
+const HEADER_HEIGHT = 48;
+const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
+
 if (isProd) {
   serve({ directory: "app" });
 } else {
@@ -119,8 +122,6 @@ function setupTitleBarClickMac() {
 }
 
 app.on("ready", async () => {
-  const HEADER_HEIGHT = 48;
-  const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
   mainWindow = createWindow("main", {
     width: 1400,
     height: 900,

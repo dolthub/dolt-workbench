@@ -1,14 +1,14 @@
 import Link from "@components/links/Link";
-import { Navbar } from "@dolthub/react-components";
-import css from "./index.module.css";
+import { Button, Navbar } from "@dolthub/react-components";
 import ResetConnectionButton from "@components/DatabaseHeaderAndNav/ResetConnectionButton";
 import AddItemDropdown from "@components/DatabaseHeaderAndNav/AddItemDropdown";
 import { DatabasePageParams } from "@lib/params";
 import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
 import DatabaseTypeLabel from "@components/DatabaseTypeLabel";
-import Connections from "./Connections";
 import { useState } from "react";
 import cx from "classnames";
+import Connections from "./Connections";
+import css from "./index.module.css";
 
 const handleDoubleClick = () => {
   window.ipc.macTitlebarClicked();
@@ -32,31 +32,28 @@ export default function DesktopAppNavbar(props: Props) {
 }
 
 function LeftLinks(props: Props) {
-  if (!props.params) return <></>;
+  if (!props.params) return null;
   return (
     <div className={css.leftLinks}>
       <Connections />
-      {props.params && (
-        <>
-          <DatabaseBreadcrumbs
-            className={css.databaseBreadcrumbs}
-            params={props.params}
-            blueIcon
-          />
-          <DatabaseTypeLabel className={css.permission} />{" "}
-        </>
-      )}
+
+      <DatabaseBreadcrumbs
+        className={css.databaseBreadcrumbs}
+        params={props.params}
+        blueIcon
+      />
+      <DatabaseTypeLabel className={css.permission} />
     </div>
   );
 }
 
 function RightLinks({ params }: Props) {
-  if (!params) return <></>;
   const [toggle, setToggle] = useState(false);
   const toggleLeftSidebar = () => {
     setToggle(!toggle);
     window.ipc.invoke("toggle-left-sidebar");
   };
+  if (!params) return null;
 
   return (
     <div className={css.rightButtons}>
@@ -64,7 +61,7 @@ function RightLinks({ params }: Props) {
       <AddItemDropdown params={params} />
       <div className={css.toggleActions}>
         <div className={cx(css.toggleLeft, { [css.collapsed]: toggle })}>
-          <a onClick={toggleLeftSidebar} />
+          <Button.Link onClick={toggleLeftSidebar} />
         </div>
       </div>
     </div>

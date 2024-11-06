@@ -1,10 +1,10 @@
 import { QueryHandler, ButtonWithPopup } from "@dolthub/react-components";
 import Link from "@components/links/Link";
-import css from "./index.module.css";
 import { useStoredConnectionsQuery } from "@gen/graphql-types";
 import Item from "@components/pageComponents/ConnectionsPage/ExistingConnections/Item";
 import { useState } from "react";
 import { BiPencil } from "@react-icons/all-files/bi/BiPencil";
+import css from "./index.module.css";
 
 export default function Connections() {
   const res = useStoredConnectionsQuery();
@@ -28,15 +28,13 @@ export default function Connections() {
             result={res}
             render={data => (
               <ul>
-                {data.storedConnections.map(connection => {
-                  return (
-                    <Item
-                      conn={connection}
-                      key={connection.name}
-                      className={css.item}
-                    />
-                  );
-                })}
+                {data.storedConnections.map(connection => (
+                  <Item
+                    conn={connection}
+                    key={connection.name}
+                    className={css.item}
+                  />
+                ))}
               </ul>
             )}
           />

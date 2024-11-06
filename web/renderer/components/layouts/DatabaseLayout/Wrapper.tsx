@@ -7,8 +7,8 @@ import { gqlDatabaseNotFoundErr } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
-import css from "./index.module.css";
 import { DatabasePageParams } from "@lib/params";
+import css from "./index.module.css";
 
 type Props = {
   params: DatabasePageParams;

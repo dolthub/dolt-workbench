@@ -4,8 +4,8 @@ import { ExternalLink, Navbar } from "@dolthub/react-components";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import DesktopAppNavbar from "./DesktopAppNavbar";
 import { DatabasePageParams } from "@lib/params";
+import DesktopAppNavbar from "./DesktopAppNavbar";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
