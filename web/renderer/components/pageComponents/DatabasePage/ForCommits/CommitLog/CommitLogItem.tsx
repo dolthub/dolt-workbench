@@ -57,10 +57,12 @@ export default function CommitLogItem(props: Props) {
       >
         {commit.commitId}
       </span>
-      <div className={css.message}>
-        <CommitLink params={{ ...params, ...commit }}>
-          {commit.message}
-        </CommitLink>
+      <div className={css.messageAndButton}>
+        <div className={css.message}>
+          <CommitLink params={{ ...params, ...commit }}>
+            {commit.message}
+          </CommitLink>
+        </div>
         {showOverviewButton && !!commit.parents.length && (
           <Button.Link
             type="button"

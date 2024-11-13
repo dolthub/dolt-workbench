@@ -5,10 +5,10 @@ import { useCommitListForCommitGraph } from "@hooks/useCommitListForCommitGraph"
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { RefParams } from "@lib/params";
+import useDiffForTableListLazy from "@hooks/useCommitListForCommitGraph/useDiffForTableListLazy";
 import CommitLogButton from "./CommitLogButton";
 import Inner from "./Inner";
 import css from "./index.module.css";
-import useDiffForTableListLazy from "@hooks/useCommitListForCommitGraph/useDiffForTableListLazy";
 
 type Props = {
   params: RefParams;

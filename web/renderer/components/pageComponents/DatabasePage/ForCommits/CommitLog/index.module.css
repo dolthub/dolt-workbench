@@ -78,8 +78,12 @@
   }
 }
 
+.messageAndButton {
+  @apply flex justify-between items-baseline;
+}
+
 .message {
-  @apply pb-3 flex items-end justify-between;
+  @apply pb-3 flex max-w-3xl items-end justify-between;
 
   .showForMobile {
     @apply text-sky-900 break-words font-semibold mb-0;
