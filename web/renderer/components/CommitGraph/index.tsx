@@ -8,6 +8,7 @@ import { RefParams } from "@lib/params";
 import CommitLogButton from "./CommitLogButton";
 import Inner from "./Inner";
 import css from "./index.module.css";
+import useDiffForTableListLazy from "@hooks/useCommitListForCommitGraph/useDiffForTableListLazy";
 
 type Props = {
   params: RefParams;
@@ -16,6 +17,7 @@ type Props = {
 export default function CommitGraph(props: Props) {
   const { loading, commits, loadMore, hasMore, error, branchHeads } =
     useCommitListForCommitGraph(props.params);
+  const { getDiff } = useDiffForTableListLazy(props.params);
 
   if (loading) return <Loader loaded={false} />;
 
@@ -39,6 +41,7 @@ export default function CommitGraph(props: Props) {
         loadMore={loadMore}
         hasMore={hasMore}
         branchHeads={branchHeads}
+        getDiff={getDiff}
       />
     </div>
   );

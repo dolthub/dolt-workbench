@@ -1,9 +1,14 @@
 import CommitLink from "@components/links/CommitLink";
-import { Tooltip } from "@dolthub/react-components";
+import { Button, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import cx from "classnames";
+import { useRef, useState } from "react";
+import { useOnClickOutside } from "@dolthub/react-hooks";
+import useDiffForTableListLazy from "@hooks/useCommitListForCommitGraph/useDiffForTableListLazy";
+import { Diff, DiffSection } from "commit-graph";
+import { getCommit } from "@components/CommitGraph/utils";
 import css from "./index.module.css";
 
 type UserProps = {
@@ -18,14 +23,33 @@ type Props = UserProps & {
 
 export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
+  const [showOverview, setShowOverview] = useState(false);
+  const [showOverviewButton, setShowOverviewButton] = useState(false);
+  const diffRef = useRef<HTMLDivElement>(null);
+  useOnClickOutside(diffRef, () => {
+    setShowOverview(false);
+  });
+  const [diff, setDiff] = useState<Diff | undefined>(undefined);
+  const { getDiff, err, loading } = useDiffForTableListLazy(params);
 
   return (
     <li
       className={cx(css.item, {
         [css.activeItem]: activeHash === commit.commitId,
+        [css.focused]: showOverview,
+        [css.hovered]: showOverviewButton && !showOverview,
       })}
       data-cy="commit-log-item"
       id={commit.commitId}
+      onMouseOver={() => {
+        setShowOverviewButton(true);
+      }}
+      onFocus={() => {
+        setShowOverviewButton(true);
+      }}
+      onMouseLeave={() => {
+        setShowOverviewButton(false);
+      }}
     >
       <span
         data-cy="commit-log-id-mobile"
@@ -37,6 +61,19 @@ export default function CommitLogItem(props: Props) {
         <CommitLink params={{ ...params, ...commit }}>
           {commit.message}
         </CommitLink>
+        {showOverviewButton && !!commit.parents.length && (
+          <Button.Link
+            type="button"
+            className={css.showOverviewButton}
+            onClick={async () => {
+              setShowOverview(true);
+              const result = await getDiff(commit.parents[0], commit.commitId);
+              setDiff(result);
+            }}
+          >
+            See commit overview
+          </Button.Link>
+        )}
       </div>
       <div className={css.itemBottom}>
         <span>
@@ -53,7 +90,18 @@ export default function CommitLogItem(props: Props) {
             {commit.commitId}
           </CommitLink>
         </span>
+        <ErrorMsg err={err} />
       </div>
+      {showOverview && (
+        <div ref={diffRef}>
+          <DiffSection
+            commit={getCommit(commit, params)}
+            diff={diff}
+            loading={loading}
+            forDolt
+          />
+        </div>
+      )}
     </li>
   );
 }

@@ -79,8 +79,7 @@
 }
 
 .message {
-  @apply pb-3 flex max-w-4xl items-end justify-between;
-  width: calc(100% - 30px);
+  @apply pb-3 flex items-end justify-between;
 
   .showForMobile {
     @apply text-sky-900 break-words font-semibold mb-0;
@@ -115,4 +114,16 @@
   svg {
     @apply mr-2;
   }
+}
+
+.showOverviewButton {
+  @apply leading-5;
+}
+
+.focused {
+  @apply bg-sky-50;
+}
+
+.hovered {
+  @apply bg-stone-50;
 }
