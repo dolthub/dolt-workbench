@@ -16,8 +16,9 @@ import { DatabaseParams } from "@lib/params";
 import { database } from "@lib/urls";
 import cx from "classnames";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import css from "./index.module.css";
+import { useOnClickOutside } from "@dolthub/react-hooks";
 
 type Props = {
   params: DatabaseParams;
@@ -50,6 +51,11 @@ function Inner(props: InnerProps) {
     router.push(href, as).catch(console.error);
   };
 
+  const dropdownRef = useRef<HTMLUListElement>(null);
+  useOnClickOutside(dropdownRef, () => {
+    setIsOpen(false);
+  });
+
   return (
     <span className={css.wrapper}>
       <Loader loaded={!loading} />
@@ -61,7 +67,7 @@ function Inner(props: InnerProps) {
         contentStyle={{ width: "auto", padding: 0 }}
         arrow={false}
       >
-        <ul>
+        <ul ref={dropdownRef}>
           {filtered.map(db => (
             <li key={db} className={css.dbItem}>
               <Button.Link onClick={async () => onClick(db)}>{db}</Button.Link>

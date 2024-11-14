@@ -36,7 +36,6 @@ function LeftLinks(props: Props) {
   return (
     <div className={css.leftLinks}>
       <Connections />
-
       <DatabaseBreadcrumbs
         className={css.databaseBreadcrumbs}
         params={props.params}
