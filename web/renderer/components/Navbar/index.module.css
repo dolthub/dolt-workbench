@@ -42,17 +42,20 @@
 }
 
 .toggleLeft {
-  a {
+  button {
     @apply m-2 flex  items-center cursor-pointer w-4 h-4 rounded-sm border border-stone-300;
   }
-  a:before {
+  button:focus{
+    @apply outline-0 shadow-none;
+  }
+  button:before {
     content: "";
     @apply h-4 w-2 bg-stone-300 cursor-pointer;
   }
 }
 
 .collapsed {
-  a:before {
+  button:before {
     @apply h-3 w-2 bg-transparent border-r border-stone-300 cursor-pointer;
   }
 }

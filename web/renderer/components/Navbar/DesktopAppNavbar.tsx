@@ -71,7 +71,7 @@ function RightLinks({ params }: Props) {
 function Logo() {
   return (
     <Link href="/">
-      <img src="/images/dolt-workbench.png" alt="Dolt Workbench" />
+      <img src="/images/d.png" alt="Dolt Workbench" />
     </Link>
   );
 }
