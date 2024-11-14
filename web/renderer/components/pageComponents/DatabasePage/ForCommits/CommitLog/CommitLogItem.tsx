@@ -4,11 +4,9 @@ import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import cx from "classnames";
-import { useRef, useState } from "react";
-import { useOnClickOutside } from "@dolthub/react-hooks";
-import useDiffForTableListLazy from "@hooks/useCommitListForCommitGraph/useDiffForTableListLazy";
-import { Diff, DiffSection } from "commit-graph";
+import { DiffSection } from "commit-graph";
 import { getCommit } from "@components/CommitGraph/utils";
+import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import css from "./index.module.css";
 
 type UserProps = {
@@ -23,14 +21,18 @@ type Props = UserProps & {
 
 export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
-  const [showOverview, setShowOverview] = useState(false);
-  const [showOverviewButton, setShowOverviewButton] = useState(false);
-  const diffRef = useRef<HTMLDivElement>(null);
-  useOnClickOutside(diffRef, () => {
-    setShowOverview(false);
-  });
-  const [diff, setDiff] = useState<Diff | undefined>(undefined);
-  const { getDiff, err, loading } = useDiffForTableListLazy(params);
+  const {
+    showOverview,
+    showOverviewButton,
+    setShowOverview,
+    setShowOverviewButton,
+    err,
+    getDiff,
+    loading,
+    setDiff,
+    diffRef,
+    diffOverview,
+  } = useCommitOverview(params);
 
   return (
     <li
@@ -98,7 +100,7 @@ export default function CommitLogItem(props: Props) {
         <div ref={diffRef}>
           <DiffSection
             commit={getCommit(commit, params)}
-            diff={diff}
+            diff={diffOverview}
             loading={loading}
             forDolt
           />

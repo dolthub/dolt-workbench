@@ -8,11 +8,9 @@ import {
 import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import cx from "classnames";
-import { Diff, DiffSection } from "commit-graph";
-import { useRef, useState } from "react";
-import { useOnClickOutside } from "@dolthub/react-hooks";
-import useDiffForTableListLazy from "@hooks/useCommitListForCommitGraph/useDiffForTableListLazy";
+import { DiffSection } from "commit-graph";
 import { getCommit } from "@components/CommitGraph/utils";
+import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import css from "./index.module.css";
 
 type Props = {
@@ -28,14 +26,18 @@ type ItemProps = {
 };
 
 function Item(props: ItemProps) {
-  const [showOverview, setShowOverview] = useState(false);
-  const [showOverviewButton, setShowOverviewButton] = useState(false);
-  const diffRef = useRef<HTMLDivElement>(null);
-  useOnClickOutside(diffRef, () => {
-    setShowOverview(false);
-  });
-  const [diffOverview, setDiff] = useState<Diff | undefined>(undefined);
-  const { getDiff, err, loading } = useDiffForTableListLazy(props.params);
+  const {
+    showOverview,
+    showOverviewButton,
+    setShowOverview,
+    setShowOverviewButton,
+    err,
+    getDiff,
+    loading,
+    setDiff,
+    diffRef,
+    diffOverview,
+  } = useCommitOverview(props.params);
   const commit: CommitForHistoryFragment = {
     ...props.params,
     _id: props.params.toCommitId,
