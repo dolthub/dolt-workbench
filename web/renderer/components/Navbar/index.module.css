@@ -45,7 +45,7 @@
   button {
     @apply m-2 flex  items-center cursor-pointer w-4 h-4 rounded-sm border border-stone-300;
   }
-  button:focus{
+  button:focus {
     @apply outline-0 shadow-none;
   }
   button:before {
