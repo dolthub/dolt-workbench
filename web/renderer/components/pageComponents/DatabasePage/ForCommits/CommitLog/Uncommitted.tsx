@@ -1,9 +1,16 @@
 import Link from "@components/links/Link";
-import { Loader } from "@dolthub/react-components";
-import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
+import {
+  CommitForHistoryFragment,
+  StatusFragment,
+  useGetStatusQuery,
+} from "@gen/graphql-types";
 import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import cx from "classnames";
+import { DiffSection } from "commit-graph";
+import { getCommit } from "@components/CommitGraph/utils";
+import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import css from "./index.module.css";
 
 type Props = {
@@ -19,13 +26,71 @@ type ItemProps = {
 };
 
 function Item(props: ItemProps) {
+  const { state, setState, err, getDiff, loading, diffRef } = useCommitOverview(
+    props.params,
+  );
+  const commit: CommitForHistoryFragment = {
+    ...props.params,
+    _id: props.params.toCommitId,
+    commitId: props.params.toCommitId,
+    message: "Uncommitted changes",
+    parents: [props.params.fromCommitId],
+    committedAt: "",
+    committer: {
+      _id: "",
+      displayName: "",
+      emailAddress: "",
+    },
+  };
+
   return (
     <li
-      className={css.item}
+      className={cx(css.item, {
+        [css.focused]: state.showOverview,
+        [css.hovered]: state.showOverviewButton && !state.showOverview,
+      })}
       id={props.params.toCommitId}
       data-cy="commit-log-item-uncommitted"
+      onMouseOver={() => {
+        setState({ showOverviewButton: true });
+      }}
+      onFocus={() => {
+        setState({ showOverviewButton: true });
+      }}
+      onMouseLeave={() => {
+        setState({ showOverviewButton: false });
+      }}
     >
-      <Link {...diff(props.params)}>{props.params.toCommitId}</Link>
+      <div className={css.messageAndButton}>
+        <Link {...diff(props.params)}>{props.params.toCommitId}</Link>
+        <ErrorMsg err={err} />
+        {state.showOverviewButton && (
+          <Button.Link
+            type="button"
+            className={css.showOverviewButton}
+            onClick={async () => {
+              setState({ showOverview: true });
+              const result = await getDiff(
+                props.params.fromCommitId,
+                props.params.toCommitId,
+              );
+              setState({ diffOverview: result });
+            }}
+          >
+            See commit overview
+          </Button.Link>
+        )}
+      </div>
+      {state.showOverview && (
+        <div ref={diffRef}>
+          <DiffSection
+            commit={getCommit(commit, props.params)}
+            diff={state.diffOverview}
+            loading={loading}
+            forDolt
+          />
+        </div>
+      )}
     </li>
   );
 }

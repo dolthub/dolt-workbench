@@ -3,27 +3,29 @@ import { RefParams } from "@lib/params";
 import { colors as customColors } from "@lib/tailwind";
 import { commit } from "@lib/urls";
 
+export function getCommit(c: CommitForHistoryFragment, params: RefParams) {
+  return {
+    sha: c.commitId,
+    commit: {
+      author: {
+        name: c.committer.username || "",
+        date: c.committedAt,
+        email: c.committer.emailAddress,
+      },
+      message: c.message,
+    },
+    parents: c.parents.map(p => {
+      return { sha: p };
+    }),
+    html_url: commit({ ...params, commitId: c.commitId }).asPathname(),
+  };
+}
+
 export function getCommits(
   commits: CommitForHistoryFragment[],
   params: RefParams,
 ) {
-  return commits.map(c => {
-    return {
-      sha: c.commitId,
-      commit: {
-        author: {
-          name: c.committer.username,
-          date: c.committedAt,
-          email: c.committer.emailAddress,
-        },
-        message: c.message,
-      },
-      parents: c.parents.map(p => {
-        return { sha: p };
-      }),
-      html_url: commit({ ...params, commitId: c.commitId }).asPathname(),
-    };
-  });
+  return commits.map(c => getCommit(c, params));
 }
 
 // colors to choose from for branch paths

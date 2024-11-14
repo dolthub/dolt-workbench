@@ -1,9 +1,12 @@
 import CommitLink from "@components/links/CommitLink";
-import { Tooltip } from "@dolthub/react-components";
+import { Button, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import cx from "classnames";
+import { DiffSection } from "commit-graph";
+import { getCommit } from "@components/CommitGraph/utils";
+import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import css from "./index.module.css";
 
 type UserProps = {
@@ -18,14 +21,27 @@ type Props = UserProps & {
 
 export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
+  const { state, setState, err, getDiff, loading, diffRef } =
+    useCommitOverview(params);
 
   return (
     <li
       className={cx(css.item, {
         [css.activeItem]: activeHash === commit.commitId,
+        [css.focused]: state.showOverview,
+        [css.hovered]: state.showOverviewButton && !state.showOverview,
       })}
       data-cy="commit-log-item"
       id={commit.commitId}
+      onMouseOver={() => {
+        setState({ showOverviewButton: true });
+      }}
+      onFocus={() => {
+        setState({ showOverviewButton: true });
+      }}
+      onMouseLeave={() => {
+        setState({ showOverviewButton: false });
+      }}
     >
       <span
         data-cy="commit-log-id-mobile"
@@ -33,10 +49,25 @@ export default function CommitLogItem(props: Props) {
       >
         {commit.commitId}
       </span>
-      <div className={css.message}>
-        <CommitLink params={{ ...params, ...commit }}>
-          {commit.message}
-        </CommitLink>
+      <div className={css.messageAndButton}>
+        <div className={css.message}>
+          <CommitLink params={{ ...params, ...commit }}>
+            {commit.message}
+          </CommitLink>
+        </div>
+        {state.showOverviewButton && !!commit.parents.length && (
+          <Button.Link
+            type="button"
+            className={css.showOverviewButton}
+            onClick={async () => {
+              setState({ showOverview: true });
+              const result = await getDiff(commit.parents[0], commit.commitId);
+              setState({ diffOverview: result });
+            }}
+          >
+            See commit overview
+          </Button.Link>
+        )}
       </div>
       <div className={css.itemBottom}>
         <span>
@@ -53,7 +84,18 @@ export default function CommitLogItem(props: Props) {
             {commit.commitId}
           </CommitLink>
         </span>
+        <ErrorMsg err={err} />
       </div>
+      {state.showOverview && (
+        <div ref={diffRef}>
+          <DiffSection
+            commit={getCommit(commit, params)}
+            diff={state.diffOverview}
+            loading={loading}
+            forDolt
+          />
+        </div>
+      )}
     </li>
   );
 }
