@@ -26,18 +26,9 @@ type ItemProps = {
 };
 
 function Item(props: ItemProps) {
-  const {
-    showOverview,
-    showOverviewButton,
-    setShowOverview,
-    setShowOverviewButton,
-    err,
-    getDiff,
-    loading,
-    setDiff,
-    diffRef,
-    diffOverview,
-  } = useCommitOverview(props.params);
+  const { state, setState, err, getDiff, loading, diffRef } = useCommitOverview(
+    props.params,
+  );
   const commit: CommitForHistoryFragment = {
     ...props.params,
     _id: props.params.toCommitId,
@@ -55,46 +46,46 @@ function Item(props: ItemProps) {
   return (
     <li
       className={cx(css.item, {
-        [css.focused]: showOverview,
-        [css.hovered]: showOverviewButton && !showOverview,
+        [css.focused]: state.showOverview,
+        [css.hovered]: state.showOverviewButton && !state.showOverview,
       })}
       id={props.params.toCommitId}
       data-cy="commit-log-item-uncommitted"
       onMouseOver={() => {
-        setShowOverviewButton(true);
+        setState({ showOverviewButton: true });
       }}
       onFocus={() => {
-        setShowOverviewButton(true);
+        setState({ showOverviewButton: true });
       }}
       onMouseLeave={() => {
-        setShowOverviewButton(false);
+        setState({ showOverviewButton: false });
       }}
     >
       <div className={css.messageAndButton}>
         <Link {...diff(props.params)}>{props.params.toCommitId}</Link>
         <ErrorMsg err={err} />
-        {showOverviewButton && (
+        {state.showOverviewButton && (
           <Button.Link
             type="button"
             className={css.showOverviewButton}
             onClick={async () => {
-              setShowOverview(true);
+              setState({ showOverview: true });
               const result = await getDiff(
                 props.params.fromCommitId,
                 props.params.toCommitId,
               );
-              setDiff(result);
+              setState({ diffOverview: result });
             }}
           >
             See commit overview
           </Button.Link>
         )}
       </div>
-      {showOverview && (
+      {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
             commit={getCommit(commit, props.params)}
-            diff={diffOverview}
+            diff={state.diffOverview}
             loading={loading}
             forDolt
           />

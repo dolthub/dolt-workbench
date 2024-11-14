@@ -21,36 +21,26 @@ type Props = UserProps & {
 
 export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
-  const {
-    showOverview,
-    showOverviewButton,
-    setShowOverview,
-    setShowOverviewButton,
-    err,
-    getDiff,
-    loading,
-    setDiff,
-    diffRef,
-    diffOverview,
-  } = useCommitOverview(params);
+  const { state, setState, err, getDiff, loading, diffRef } =
+    useCommitOverview(params);
 
   return (
     <li
       className={cx(css.item, {
         [css.activeItem]: activeHash === commit.commitId,
-        [css.focused]: showOverview,
-        [css.hovered]: showOverviewButton && !showOverview,
+        [css.focused]: state.showOverview,
+        [css.hovered]: state.showOverviewButton && !state.showOverview,
       })}
       data-cy="commit-log-item"
       id={commit.commitId}
       onMouseOver={() => {
-        setShowOverviewButton(true);
+        setState({ showOverviewButton: true });
       }}
       onFocus={() => {
-        setShowOverviewButton(true);
+        setState({ showOverviewButton: true });
       }}
       onMouseLeave={() => {
-        setShowOverviewButton(false);
+        setState({ showOverviewButton: false });
       }}
     >
       <span
@@ -65,14 +55,14 @@ export default function CommitLogItem(props: Props) {
             {commit.message}
           </CommitLink>
         </div>
-        {showOverviewButton && !!commit.parents.length && (
+        {state.showOverviewButton && !!commit.parents.length && (
           <Button.Link
             type="button"
             className={css.showOverviewButton}
             onClick={async () => {
-              setShowOverview(true);
+              setState({ showOverview: true });
               const result = await getDiff(commit.parents[0], commit.commitId);
-              setDiff(result);
+              setState({ diffOverview: result });
             }}
           >
             See commit overview
@@ -96,11 +86,11 @@ export default function CommitLogItem(props: Props) {
         </span>
         <ErrorMsg err={err} />
       </div>
-      {showOverview && (
+      {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
             commit={getCommit(commit, params)}
-            diff={diffOverview}
+            diff={state.diffOverview}
             loading={loading}
             forDolt
           />
