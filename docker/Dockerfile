@@ -1,7 +1,7 @@
 ###################
 # BUILD GRAPHQL SERVER
 ###################
-FROM --platform=linux/amd64 node:18.19.0-alpine3.19 as graphql-base
+FROM node:18.19.0-alpine3.19 as graphql-base
 
 FROM graphql-base AS graphql-deps
 WORKDIR /app/graphql-server
@@ -40,7 +40,7 @@ USER node
 ###################
 # BUILD NEXT.JS SERVER
 ###################
-FROM --platform=linux/amd64 node:18.19.0-alpine3.19 as web-base
+FROM node:18.19.0-alpine3.19 as web-base
 
 # Install dependencies only when needed
 FROM web-base AS web-deps
@@ -69,7 +69,7 @@ RUN yarn run build
 ###################
 # COMBINE
 ###################
-FROM --platform=linux/amd64 node:18.19.0-alpine3.19 AS production
+FROM node:18.19.0-alpine3.19 AS production
 
 # Set the working directory
 WORKDIR /app
@@ -85,7 +85,7 @@ COPY --chown=node:node --from=graphql-build /app/graphql-server/dist ./graphql-s
 
 EXPOSE 9002
 
-COPY --from=web-build /app/web/renderer/public ./web/public
+COPY --from=web-build /app/web/renderer/public ./web/renderer/public
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
