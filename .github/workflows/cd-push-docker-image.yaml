@@ -26,11 +26,11 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
         with:
-          platforms: linux/amd64,linux/x86_64,linux/arm64/v8
+          platforms: linux/amd64,linux/arm64
       - name: Build and push image
         uses: docker/build-push-action@v3
         with:
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           context: .
           file: ./docker/Dockerfile
           push: true
