@@ -13,7 +13,6 @@ type Props = {
     active?: string;
   };
   initialTabIndex: number;
-  showHeaderDetails?: boolean;
 };
 
 export default function DatabaseNav(props: Props) {
@@ -27,12 +26,7 @@ export default function DatabaseNav(props: Props) {
 
 function Inner(props: Props) {
   return (
-    <div
-      data-cy="db-page-header-nav"
-      className={cx(css.headerNav, {
-        [css.forElectron]: !props.showHeaderDetails,
-      })}
-    >
+    <div data-cy="db-page-header-nav" className={css.headerNav}>
       <Tooltip id="disabled-database-nav-item" />
       <ul className={css.tabs}>
         {tabs.map((tab, i) => {

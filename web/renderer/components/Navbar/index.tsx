@@ -4,18 +4,13 @@ import { ExternalLink, Navbar } from "@dolthub/react-components";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import { DatabasePageParams } from "@lib/params";
 import DesktopAppNavbar from "./DesktopAppNavbar";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
-type Props = {
-  params?: DatabasePageParams;
-};
-
-export default function Nav(props: Props) {
+export default function Nav() {
   return forElectron ? (
-    <DesktopAppNavbar {...props} />
+    <DesktopAppNavbar />
   ) : (
     <Navbar
       logo={<Logo />}

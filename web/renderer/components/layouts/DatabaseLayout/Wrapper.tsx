@@ -11,7 +11,6 @@ import { DatabasePageParams } from "@lib/params";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabasePageParams;
   children: ReactNode;
 };
 
@@ -37,7 +36,7 @@ export default function DatabaseLayoutWrapper(props: Props) {
   const { toggleSqlEditor } = useSqlEditorContext();
   const { keyMap, handlers } = useHotKeysForToggle(toggleSqlEditor);
   return (
-    <DatabaseLayoutWrapperOuter {...props}>
+    <DatabaseLayoutWrapperOuter>
       <GlobalHotKeys keyMap={keyMap} handlers={handlers} />
       {props.children}
     </DatabaseLayoutWrapperOuter>
@@ -47,9 +46,9 @@ export default function DatabaseLayoutWrapper(props: Props) {
 export function DatabaseLayoutWrapperOuter(props: Props) {
   return (
     <div className={css.appLayout}>
-      <Navbar params={props.params} />
+      <Navbar />
       <div className={css.layoutWrapperContainer} data-cy="db-layout-container">
-        <Inner {...props}>{props.children}</Inner>
+        <Inner>{props.children}</Inner>
       </div>
     </div>
   );

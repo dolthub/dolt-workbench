@@ -5,7 +5,6 @@ import { databaseBreadcrumbs } from "./breadcrumbDetails";
 type Props = {
   className?: string;
   params: DatabaseParams;
-  blueIcon?: boolean;
 };
 
 export default function DatabaseBreadcrumbs(props: Props) {
@@ -14,7 +13,7 @@ export default function DatabaseBreadcrumbs(props: Props) {
       {...props}
       aria-label="db-breadcrumbs"
       data-cy="db-breadcrumbs"
-      breadcrumbs={databaseBreadcrumbs(props.params, props.blueIcon)}
+      breadcrumbs={databaseBreadcrumbs(props.params)}
     />
   );
 }

@@ -10,7 +10,6 @@ type Props = {
   breadcrumbs?: ReactNode;
   showSmall: boolean;
   setShowSmall: (s: boolean) => void;
-  showHeaderDetails?: boolean;
 };
 
 export default function DatabaseHeaderAndNav(props: Props) {

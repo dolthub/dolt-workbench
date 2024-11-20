@@ -26,8 +26,6 @@ type Props = {
   leftTableNav?: ReactNode;
 };
 
-const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
-
 export default function DatabaseLayout(props: Props) {
   const [showSmallHeader, setShowSmallHeader] = useState(
     !!props.initialSmallHeader,
@@ -39,21 +37,19 @@ export default function DatabaseLayout(props: Props) {
   const { isMobile } = useReactiveWidth(1024);
   const [showTableNav, setShowTableNav] = useState(false);
   return (
-    <Wrapper params={props.params}>
+    <Wrapper>
       <DatabaseHeaderAndNav
         initialTabIndex={props.initialTabIndex}
         params={refParams}
         breadcrumbs={props.smallHeaderBreadcrumbs}
         title={props.title}
-        showSmall={showSmallHeader && !forElectron}
+        showSmall={showSmallHeader}
         setShowSmall={setShowSmallHeader}
-        showHeaderDetails={!forElectron}
       />
       <div
         className={cx(css.content, {
           [css.contentWithHeader]: !!showHeader,
           [css.contentWithSmallHeader]: showSmallHeader,
-          [css.lessMarginTop]: forElectron,
         })}
       >
         {props.leftTableNav || (

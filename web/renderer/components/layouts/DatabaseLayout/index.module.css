@@ -56,7 +56,3 @@
 .noHeader {
   min-height: calc(100vh - 11.5rem);
 }
-
-.lessMarginTop {
-  @apply top-32;
-}

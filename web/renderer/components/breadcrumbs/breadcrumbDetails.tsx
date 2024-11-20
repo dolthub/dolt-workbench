@@ -24,13 +24,11 @@ const newBreadcrumb: BreadcrumbDetails = {
 
 export function databaseBreadcrumbs(
   params: DatabaseParams,
-  blueIcon?: boolean,
 ): BreadcrumbDetails[] {
-  console.log(blueIcon);
   return [
     {
       child: (
-        <span className={cx(css.withIcon, { [css.blue]: blueIcon })}>
+        <span className={css.withIcon}>
           <FiDatabase />
           <Link {...database(params)}>{params.databaseName}</Link>
         </span>
