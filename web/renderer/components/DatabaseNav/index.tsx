@@ -1,7 +1,6 @@
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Tooltip } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
-import cx from "classnames";
 import NavItem from "./Item";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";

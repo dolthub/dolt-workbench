@@ -14,7 +14,7 @@ type Props = {
 
 export default function Layout(props: Props) {
   return (
-    <DatabaseLayoutWrapperOuter params={props.params}>
+    <DatabaseLayoutWrapperOuter>
       {/* <MobileWarning {...props} pageCrumb="file-upload" title="File uploads" /> */}
       <header className={css.header}>
         <div className={css.left}>

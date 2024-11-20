@@ -12,7 +12,7 @@ export default function DesktopAppNavbar() {
       <Navbar
         logo={<Logo />}
         leftLinks={<LeftLinks />}
-        rightLinks={<></>}
+        rightLinks={<div />}
         bgColor="bg-storm-600"
       />
     </div>

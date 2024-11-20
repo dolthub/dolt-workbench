@@ -41,10 +41,3 @@
 .innerTab {
   @apply flex justify-center mt-1 min-w-full px-0 text-sm font-normal whitespace-nowrap pb-[0.7rem];
 }
-
-.forElectron {
-  @apply mt-0 bg-storm-500;
-  ul {
-    @apply mt-6;
-  }
-}
