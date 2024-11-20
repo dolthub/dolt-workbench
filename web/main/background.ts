@@ -7,6 +7,8 @@ import {
   shell,
   utilityProcess,
   UtilityProcess,
+  IpcMainEvent,
+  systemPreferences,
 } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
@@ -20,6 +22,9 @@ const schemaPath = isProd
 process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
+
+const HEADER_HEIGHT = 48;
+const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
 
 if (isProd) {
   serve({ directory: "app" });
@@ -91,17 +96,51 @@ async function waitForGraphQLServer(
   throw new Error("Timed out starting GraphQL server");
 }
 
+function setupTitleBarClickMac() {
+  if (process.platform !== "darwin") {
+    return;
+  }
+
+  ipcMain.on("mac-title-bar-clicked", (event: IpcMainEvent) => {
+    const doubleClickAction = systemPreferences.getUserDefault(
+      "AppleActionOnDoubleClick",
+      "string",
+    );
+    const win = BrowserWindow.fromWebContents(event.sender);
+    if (win) {
+      if (doubleClickAction === "Minimize") {
+        win.minimize();
+      } else if (doubleClickAction === "Maximize") {
+        if (!win.isMaximized()) {
+          win.maximize();
+        } else {
+          win.unmaximize();
+        }
+      }
+    }
+  });
+}
+
 app.on("ready", async () => {
   mainWindow = createWindow("main", {
-    width: 1280,
-    height: 680,
+    width: 1400,
+    height: 900,
+    minHeight: 600,
+    minWidth: 600,
+    titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
+    titleBarOverlay: process.platform === "darwin",
+    trafficLightPosition: {
+      x: 20,
+      y: HEADER_HEIGHT / 2 - MACOS_TRAFFIC_LIGHTS_HEIGHT / 2,
+    },
+    acceptFirstMouse: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
     },
   });
 
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
-
+  setupTitleBarClickMac();
   createGraphqlSeverProcess();
 
   await waitForGraphQLServer("http://localhost:9002/graphql");
@@ -169,4 +208,8 @@ ipcMain.handle("api-config", async () => {
     graphqlApiUrl: process.env.GRAPHQLAPI_URL,
   };
   return cfg;
+});
+
+ipcMain.handle("toggle-left-sidebar", () => {
+  mainWindow.webContents.send("toggle-left-sidebar");
 });

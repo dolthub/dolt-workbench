@@ -94,3 +94,7 @@
 .resetButton {
   @apply mr-5 text-xl text-white hover:text-stone-50 hidden lg:block;
 }
+
+.tooltip {
+  @apply z-10;
+}

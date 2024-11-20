@@ -1,0 +1,12 @@
+.leftLinks {
+  @apply ml-20 flex items-center;
+}
+
+.titlebar {
+  -webkit-app-region: drag;
+  a,
+  button {
+    @apply cursor-pointer;
+    -webkit-app-region: no-drag;
+  }
+}

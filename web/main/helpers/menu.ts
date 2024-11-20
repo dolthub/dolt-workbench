@@ -1,3 +1,4 @@
+import { workbenchGithubRepo } from "@lib/constants";
 import {
   shell,
   BrowserWindow,
@@ -170,9 +171,15 @@ export function initMenu(
       role: "help",
       submenu: [
         {
-          label: "Learn More",
+          label: "Documentation",
           click() {
             shell.openExternal("https://docs.dolthub.com/");
+          },
+        },
+        {
+          label: "View on GitHub",
+          click() {
+            shell.openExternal(workbenchGithubRepo);
           },
         },
       ],
