@@ -98,6 +98,10 @@ export class ConnectionProvider {
     return this.workbenchConfig;
   }
 
+  getIsDolt(): boolean | undefined {
+    return this.qf?.isDolt;
+  }
+
   async newQueryFactory(
     type: DatabaseType,
   ): Promise<{ qf: QueryFactory; isDolt: boolean }> {

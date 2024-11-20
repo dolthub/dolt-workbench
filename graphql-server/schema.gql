@@ -119,6 +119,10 @@ type CurrentDatabaseState {
   currentDatabase: String
 }
 
+type Databases {
+  databases: [String!]
+}
+
 type DiffStat {
   rowsUnmodified: Float!
   rowsAdded: Float!
@@ -287,6 +291,7 @@ type Query {
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
   currentDatabase: String
+  currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
   schemas(databaseName: String!, refName: String!): [String!]!
@@ -339,6 +344,7 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
+  databasesByConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): Databases!
   addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!

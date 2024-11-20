@@ -7,7 +7,10 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { ConnectionProvider } from "../connections/connection.provider";
+import {
+  ConnectionProvider,
+  WorkbenchConfig,
+} from "../connections/connection.provider";
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs, RefArgs, RefSchemaArgs } from "../utils/commonTypes";
@@ -50,6 +53,12 @@ class CurrentDatabaseState {
   currentDatabase?: string;
 }
 
+@ObjectType()
+class Databases {
+  @Field(_type => [String], { nullable: true })
+  databases: string[];
+}
+
 @ArgsType()
 class RemoveDatabaseConnectionArgs {
   @Field()
@@ -76,6 +85,26 @@ export class DatabaseResolver {
     return conn.currentDatabase();
   }
 
+  @Query(_returns => DatabaseConnection, { nullable: true })
+  async currentConnection(): Promise<DatabaseConnection | undefined> {
+    const config = this.conn.getWorkbenchConfig();
+    if (!config) return undefined;
+    const isDolt = this.conn.getIsDolt();
+    const storedConnections = await this.storedConnections();
+    const connectionName =
+      storedConnections.find(x => x.connectionUrl === config.connectionUrl)
+        ?.name || "connections";
+
+    return {
+      connectionUrl: config?.connectionUrl,
+      name: connectionName,
+      hideDoltFeatures: config.hideDoltFeatures,
+      useSSL: config.useSSL,
+      type: config.type,
+      isDolt,
+    };
+  }
+
   @Query(_returns => [DatabaseConnection])
   async storedConnections(): Promise<DatabaseConnection[]> {
     if (this.dataStoreService.hasDataStoreConfig()) {
@@ -89,6 +118,20 @@ export class DatabaseResolver {
     const conn = this.conn.connection();
     const dbs = await conn.databases();
     return dbs;
+  }
+
+  @Mutation(_returns => Databases)
+  async databasesByConnection(
+    @Args() args: AddDatabaseConnectionArgs,
+  ): Promise<Databases> {
+    // Switch to the selected connection to get the databases
+    await this.addDatabaseConnection(args);
+    const conn = this.conn.connection();
+    const dbs = await conn.databases();
+
+    return {
+      databases: dbs,
+    };
   }
 
   @Query(_returns => [String])
