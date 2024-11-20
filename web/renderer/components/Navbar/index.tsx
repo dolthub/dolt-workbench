@@ -5,12 +5,17 @@ import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import DesktopAppNavbar from "./DesktopAppNavbar";
+import { DatabaseParams } from "@lib/params";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
-export default function Nav() {
+type Props = {
+  params: DatabaseParams;
+};
+
+export default function Nav(props: Props) {
   return forElectron ? (
-    <DesktopAppNavbar />
+    <DesktopAppNavbar {...props}/>
   ) : (
     <Navbar
       logo={<Logo />}

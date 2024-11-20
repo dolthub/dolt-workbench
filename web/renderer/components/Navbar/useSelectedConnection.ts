@@ -1,4 +1,5 @@
 import {
+  DatabaseConnectionFragment,
   DatabaseType,
   useDatabasesByConnectionMutation,
   useStoredConnectionsQuery,
@@ -13,22 +14,22 @@ type ReturnType = {
   databases: string[];
   loading: boolean;
   err: ApolloErrorType | undefined;
+  storedConnections: DatabaseConnectionFragment[];
 };
 
 export default function useSelectedConnection(): ReturnType {
   const connectionsRes = useStoredConnectionsQuery();
+  const storedConnections = connectionsRes.data?.storedConnections || [];
   const [databases, setDatabases] = useState<string[]>([]);
   const [getDbs] = useDatabasesByConnectionMutation();
   const [loading, setLoading] = useState(connectionsRes.loading);
   const [err, setErr] = useApolloError(connectionsRes.error);
-
+  console.log("storedConnections", storedConnections);
   const onSelected = async (connectionName: string) => {
     setLoading(true);
     setErr(undefined);
     try {
-      const selected = connectionsRes.data?.storedConnections.find(
-        c => c.name === connectionName,
-      );
+      const selected = storedConnections.find(c => c.name === connectionName);
       const dbs = await getDbs({
         variables: {
           connectionUrl: selected?.connectionUrl || "",
@@ -45,5 +46,5 @@ export default function useSelectedConnection(): ReturnType {
     }
   };
 
-  return { onSelected, databases, loading, err };
+  return { onSelected, databases, loading, err, storedConnections };
 }
