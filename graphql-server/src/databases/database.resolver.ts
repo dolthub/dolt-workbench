@@ -7,10 +7,7 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import {
-  ConnectionProvider,
-  WorkbenchConfig,
-} from "../connections/connection.provider";
+import { ConnectionProvider } from "../connections/connection.provider";
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs, RefArgs, RefSchemaArgs } from "../utils/commonTypes";
@@ -96,7 +93,7 @@ export class DatabaseResolver {
         ?.name || "connections";
 
     return {
-      connectionUrl: config?.connectionUrl,
+      connectionUrl: config.connectionUrl,
       name: connectionName,
       hideDoltFeatures: config.hideDoltFeatures,
       useSSL: config.useSSL,
