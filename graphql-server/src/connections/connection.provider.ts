@@ -67,29 +67,11 @@ export class ConnectionProvider {
 
     this.workbenchConfig = config;
 
-    this.ds = new DataSource({
-      type: config.type,
-      connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
-      url: config.connectionUrl,
-      schema: config.schema,
-      ssl: config.useSSL
-        ? {
-            rejectUnauthorized: false,
-          }
-        : undefined,
-      synchronize: false,
-      logging: "all",
-
-      extra: {
-        connectionLimit: 6,
-        dateStrings: ["DATE"],
-        namedPlaceholders: true,
-      },
-    });
+    this.ds = getDataSource(config);
 
     await this.ds.initialize();
 
-    const res = await this.newQueryFactory(config.type);
+    const res = await newQueryFactory(config.type, this.ds);
     this.qf = res.qf;
     return { isDolt: res.isDolt };
   }
@@ -98,30 +80,8 @@ export class ConnectionProvider {
     return this.workbenchConfig;
   }
 
-  async newQueryFactory(
-    type: DatabaseType,
-  ): Promise<{ qf: QueryFactory; isDolt: boolean }> {
-    if (type === DatabaseType.Postgres) {
-      try {
-        const res = await this.ds?.query("SELECT dolt_version()");
-        if (res) {
-          return { qf: new DoltgresQueryFactory(this.ds), isDolt: true };
-        }
-      } catch (_) {
-        // do nothing
-      }
-      return { qf: new PostgresQueryFactory(this.ds), isDolt: false };
-    }
-
-    try {
-      const res = await this.ds?.query("SELECT dolt_version()");
-      if (res) {
-        return { qf: new DoltQueryFactory(this.ds), isDolt: true };
-      }
-    } catch (_) {
-      // do nothing
-    }
-    return { qf: new MySQLQueryFactory(this.ds), isDolt: false };
+  getIsDolt(): boolean | undefined {
+    return this.qf?.isDolt;
   }
 
   async resetDS(newDatabase?: string): Promise<void> {
@@ -140,4 +100,54 @@ export class ConnectionProvider {
         : this.workbenchConfig.connectionUrl,
     });
   }
+}
+
+export function getDataSource(config: WorkbenchConfig): DataSource {
+  const ds = new DataSource({
+    type: config.type,
+    connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
+    url: config.connectionUrl,
+    schema: config.schema,
+    ssl: config.useSSL
+      ? {
+          rejectUnauthorized: false,
+        }
+      : undefined,
+    synchronize: false,
+    logging: "all",
+
+    extra: {
+      connectionLimit: 6,
+      dateStrings: ["DATE"],
+      namedPlaceholders: true,
+    },
+  });
+  return ds;
+}
+
+export async function newQueryFactory(
+  type: DatabaseType,
+  ds?: DataSource,
+): Promise<{ qf: QueryFactory; isDolt: boolean }> {
+  if (type === DatabaseType.Postgres) {
+    try {
+      const res = await ds?.query("SELECT dolt_version()");
+      if (res) {
+        return { qf: new DoltgresQueryFactory(ds), isDolt: true };
+      }
+    } catch (_) {
+      // do nothing
+    }
+    return { qf: new PostgresQueryFactory(ds), isDolt: false };
+  }
+
+  try {
+    const res = await ds?.query("SELECT dolt_version()");
+    if (res) {
+      return { qf: new DoltQueryFactory(ds), isDolt: true };
+    }
+  } catch (_) {
+    // do nothing
+  }
+  return { qf: new MySQLQueryFactory(ds), isDolt: false };
 }

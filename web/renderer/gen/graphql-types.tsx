@@ -368,8 +368,10 @@ export type Query = {
   branchOrDefault?: Maybe<Branch>;
   branches: BranchList;
   commits: CommitList;
+  currentConnection?: Maybe<DatabaseConnection>;
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
+  databasesByConnection: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
   diffStat: DiffStat;
   diffSummaries: Array<DiffSummary>;
@@ -429,6 +431,15 @@ export type QueryCommitsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
   twoDot?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueryDatabasesByConnectionArgs = {
+  connectionUrl: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  type?: InputMaybe<DatabaseType>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -730,6 +741,22 @@ export type ResetDatabaseMutationVariables = Exact<{
 
 
 export type ResetDatabaseMutation = { __typename?: 'Mutation', resetDatabase: boolean };
+
+export type CurrentConnectionQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null } | null };
+
+export type DatabasesByConnectionQueryVariables = Exact<{
+  connectionUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+  type?: InputMaybe<DatabaseType>;
+}>;
+
+
+export type DatabasesByConnectionQuery = { __typename?: 'Query', databasesByConnection: Array<string> };
 
 export type GetTagQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1714,6 +1741,98 @@ export function useResetDatabaseMutation(baseOptions?: Apollo.MutationHookOption
 export type ResetDatabaseMutationHookResult = ReturnType<typeof useResetDatabaseMutation>;
 export type ResetDatabaseMutationResult = Apollo.MutationResult<ResetDatabaseMutation>;
 export type ResetDatabaseMutationOptions = Apollo.BaseMutationOptions<ResetDatabaseMutation, ResetDatabaseMutationVariables>;
+export const CurrentConnectionDocument = gql`
+    query CurrentConnection {
+  currentConnection {
+    connectionUrl
+    name
+    hideDoltFeatures
+    useSSL
+    type
+    isDolt
+  }
+}
+    `;
+
+/**
+ * __useCurrentConnectionQuery__
+ *
+ * To run a query within a React component, call `useCurrentConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentConnectionQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCurrentConnectionQuery(baseOptions?: Apollo.QueryHookOptions<CurrentConnectionQuery, CurrentConnectionQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CurrentConnectionQuery, CurrentConnectionQueryVariables>(CurrentConnectionDocument, options);
+      }
+export function useCurrentConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentConnectionQuery, CurrentConnectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CurrentConnectionQuery, CurrentConnectionQueryVariables>(CurrentConnectionDocument, options);
+        }
+export function useCurrentConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CurrentConnectionQuery, CurrentConnectionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CurrentConnectionQuery, CurrentConnectionQueryVariables>(CurrentConnectionDocument, options);
+        }
+export type CurrentConnectionQueryHookResult = ReturnType<typeof useCurrentConnectionQuery>;
+export type CurrentConnectionLazyQueryHookResult = ReturnType<typeof useCurrentConnectionLazyQuery>;
+export type CurrentConnectionSuspenseQueryHookResult = ReturnType<typeof useCurrentConnectionSuspenseQuery>;
+export type CurrentConnectionQueryResult = Apollo.QueryResult<CurrentConnectionQuery, CurrentConnectionQueryVariables>;
+export const DatabasesByConnectionDocument = gql`
+    query DatabasesByConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+  databasesByConnection(
+    connectionUrl: $connectionUrl
+    name: $name
+    hideDoltFeatures: $hideDoltFeatures
+    useSSL: $useSSL
+    type: $type
+  )
+}
+    `;
+
+/**
+ * __useDatabasesByConnectionQuery__
+ *
+ * To run a query within a React component, call `useDatabasesByConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatabasesByConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDatabasesByConnectionQuery({
+ *   variables: {
+ *      connectionUrl: // value for 'connectionUrl'
+ *      name: // value for 'name'
+ *      hideDoltFeatures: // value for 'hideDoltFeatures'
+ *      useSSL: // value for 'useSSL'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useDatabasesByConnectionQuery(baseOptions: Apollo.QueryHookOptions<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables> & ({ variables: DatabasesByConnectionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>(DatabasesByConnectionDocument, options);
+      }
+export function useDatabasesByConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>(DatabasesByConnectionDocument, options);
+        }
+export function useDatabasesByConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>(DatabasesByConnectionDocument, options);
+        }
+export type DatabasesByConnectionQueryHookResult = ReturnType<typeof useDatabasesByConnectionQuery>;
+export type DatabasesByConnectionLazyQueryHookResult = ReturnType<typeof useDatabasesByConnectionLazyQuery>;
+export type DatabasesByConnectionSuspenseQueryHookResult = ReturnType<typeof useDatabasesByConnectionSuspenseQuery>;
+export type DatabasesByConnectionQueryResult = Apollo.QueryResult<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>;
 export const GetTagDocument = gql`
     query GetTag($databaseName: String!, $tagName: String!) {
   tag(databaseName: $databaseName, tagName: $tagName) {
