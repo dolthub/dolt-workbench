@@ -30,7 +30,7 @@ function LeftLinks() {
 function Logo() {
   return (
     <Link href="/">
-      <img src="/images/d.png" alt="Dolt Workbench" />
+      <img src="/images/d-logo.png" alt="Dolt Workbench" />
     </Link>
   );
 }
