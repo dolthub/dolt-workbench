@@ -87,27 +87,7 @@ export class ConnectionProvider {
   async newQueryFactory(
     type: DatabaseType,
   ): Promise<{ qf: QueryFactory; isDolt: boolean }> {
-    if (type === DatabaseType.Postgres) {
-      try {
-        const res = await this.ds?.query("SELECT dolt_version()");
-        if (res) {
-          return { qf: new DoltgresQueryFactory(this.ds), isDolt: true };
-        }
-      } catch (_) {
-        // do nothing
-      }
-      return { qf: new PostgresQueryFactory(this.ds), isDolt: false };
-    }
-
-    try {
-      const res = await this.ds?.query("SELECT dolt_version()");
-      if (res) {
-        return { qf: new DoltQueryFactory(this.ds), isDolt: true };
-      }
-    } catch (_) {
-      // do nothing
-    }
-    return { qf: new MySQLQueryFactory(this.ds), isDolt: false };
+    return initializeQueryFactory(type, this.ds);
   }
 
   async resetDS(newDatabase?: string): Promise<void> {
@@ -149,4 +129,31 @@ export function getDataSource(config: WorkbenchConfig): DataSource {
     },
   });
   return ds;
+}
+
+export async function initializeQueryFactory(
+  type: DatabaseType,
+  ds?: DataSource,
+): Promise<{ qf: QueryFactory; isDolt: boolean }> {
+  if (type === DatabaseType.Postgres) {
+    try {
+      const res = await ds?.query("SELECT dolt_version()");
+      if (res) {
+        return { qf: new DoltgresQueryFactory(ds), isDolt: true };
+      }
+    } catch (_) {
+      // do nothing
+    }
+    return { qf: new PostgresQueryFactory(ds), isDolt: false };
+  }
+
+  try {
+    const res = await ds?.query("SELECT dolt_version()");
+    if (res) {
+      return { qf: new DoltQueryFactory(ds), isDolt: true };
+    }
+  } catch (_) {
+    // do nothing
+  }
+  return { qf: new MySQLQueryFactory(ds), isDolt: false };
 }
