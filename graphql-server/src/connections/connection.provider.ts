@@ -71,7 +71,7 @@ export class ConnectionProvider {
 
     await this.ds.initialize();
 
-    const res = await this.newQueryFactory(config.type);
+    const res = await newQueryFactory(config.type, this.ds);
     this.qf = res.qf;
     return { isDolt: res.isDolt };
   }
@@ -82,12 +82,6 @@ export class ConnectionProvider {
 
   getIsDolt(): boolean | undefined {
     return this.qf?.isDolt;
-  }
-
-  async newQueryFactory(
-    type: DatabaseType,
-  ): Promise<{ qf: QueryFactory; isDolt: boolean }> {
-    return initializeQueryFactory(type, this.ds);
   }
 
   async resetDS(newDatabase?: string): Promise<void> {
@@ -131,7 +125,7 @@ export function getDataSource(config: WorkbenchConfig): DataSource {
   return ds;
 }
 
-export async function initializeQueryFactory(
+export async function newQueryFactory(
   type: DatabaseType,
   ds?: DataSource,
 ): Promise<{ qf: QueryFactory; isDolt: boolean }> {

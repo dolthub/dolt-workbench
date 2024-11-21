@@ -7,11 +7,10 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { DataSource } from "typeorm";
 import {
   ConnectionProvider,
   getDataSource,
-  initializeQueryFactory,
+  newQueryFactory,
   WorkbenchConfig,
 } from "../connections/connection.provider";
 import { DataStoreService } from "../dataStore/dataStore.service";
@@ -126,9 +125,17 @@ export class DatabaseResolver {
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     const ds = getDataSource(workbenchConfig);
-    const { qf } = await initializeQueryFactory(workbenchConfig.type, ds);
-    const dbs = await qf.databases();
-    return dbs;
+
+    try {
+      const { qf } = await newQueryFactory(workbenchConfig.type, ds);
+      const dbs = await qf.databases();
+      return dbs;
+    } catch (e) {
+      console.log(e);
+      return [];
+    } finally {
+      ds.destroy();
+    }
   }
 
   @Query(_returns => [String])
