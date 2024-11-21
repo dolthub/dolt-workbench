@@ -115,11 +115,6 @@ export enum DatabaseType {
   Postgres = 'Postgres'
 }
 
-export type Databases = {
-  __typename?: 'Databases';
-  databases?: Maybe<Array<Scalars['String']['output']>>;
-};
-
 export enum DiffRowType {
   Added = 'Added',
   All = 'All',
@@ -232,7 +227,7 @@ export type Mutation = {
   createDatabase: Scalars['Boolean']['output'];
   createSchema: Scalars['Boolean']['output'];
   createTag: Scalars['String']['output'];
-  databasesByConnection: Databases;
+  databasesByConnection: Array<Scalars['String']['output']>;
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
@@ -761,7 +756,7 @@ export type DatabasesByConnectionMutationVariables = Exact<{
 }>;
 
 
-export type DatabasesByConnectionMutation = { __typename?: 'Mutation', databasesByConnection: { __typename?: 'Databases', databases?: Array<string> | null } };
+export type DatabasesByConnectionMutation = { __typename?: 'Mutation', databasesByConnection: Array<string> };
 
 export type GetTagQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1798,9 +1793,7 @@ export const DatabasesByConnectionDocument = gql`
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
     type: $type
-  ) {
-    databases
-  }
+  )
 }
     `;
 export type DatabasesByConnectionMutationFn = Apollo.MutationFunction<DatabasesByConnectionMutation, DatabasesByConnectionMutationVariables>;

@@ -67,25 +67,7 @@ export class ConnectionProvider {
 
     this.workbenchConfig = config;
 
-    this.ds = new DataSource({
-      type: config.type,
-      connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
-      url: config.connectionUrl,
-      schema: config.schema,
-      ssl: config.useSSL
-        ? {
-            rejectUnauthorized: false,
-          }
-        : undefined,
-      synchronize: false,
-      logging: "all",
-
-      extra: {
-        connectionLimit: 6,
-        dateStrings: ["DATE"],
-        namedPlaceholders: true,
-      },
-    });
+    this.ds = getDataSource(config);
 
     await this.ds.initialize();
 
@@ -144,4 +126,27 @@ export class ConnectionProvider {
         : this.workbenchConfig.connectionUrl,
     });
   }
+}
+
+export function getDataSource(config: WorkbenchConfig): DataSource {
+  const ds = new DataSource({
+    type: config.type,
+    connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
+    url: config.connectionUrl,
+    schema: config.schema,
+    ssl: config.useSSL
+      ? {
+          rejectUnauthorized: false,
+        }
+      : undefined,
+    synchronize: false,
+    logging: "all",
+
+    extra: {
+      connectionLimit: 6,
+      dateStrings: ["DATE"],
+      namedPlaceholders: true,
+    },
+  });
+  return ds;
 }

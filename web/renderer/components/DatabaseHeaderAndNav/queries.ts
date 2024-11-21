@@ -39,8 +39,6 @@ export const DATABASES_BY_CONNECTION = gql`
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
-    ) {
-      databases
-    }
+    )
   }
 `;

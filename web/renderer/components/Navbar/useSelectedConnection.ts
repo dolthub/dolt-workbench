@@ -29,15 +29,19 @@ export default function useSelectedConnection(): ReturnType {
       const selected = connectionsRes.data?.storedConnections.find(
         c => c.name === connectionName,
       );
+      if (!selected) {
+        setErr(new Error("Connection not found"));
+        return;
+      }
       const dbs = await getDbs({
         variables: {
-          connectionUrl: selected?.connectionUrl || "",
-          type: selected?.type || DatabaseType.Mysql,
-          name: selected?.name || "",
-          useSSL: selected?.useSSL || true,
+          connectionUrl: selected.connectionUrl || "",
+          type: selected.type || DatabaseType.Mysql,
+          name: selected.name || "",
+          useSSL: selected.useSSL || true,
         },
       });
-      setDatabases(dbs.data?.databasesByConnection.databases || []);
+      setDatabases(dbs.data?.databasesByConnection || []);
     } catch (e) {
       handleCaughtApolloError(e, setErr);
     } finally {
