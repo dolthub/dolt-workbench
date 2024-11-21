@@ -26,7 +26,7 @@ export const CURRENT_CONNECTION = gql`
 `;
 
 export const DATABASES_BY_CONNECTION = gql`
-  mutation DatabasesByConnection(
+  query DatabasesByConnection(
     $connectionUrl: String!
     $name: String!
     $hideDoltFeatures: Boolean

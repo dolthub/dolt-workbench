@@ -1,6 +1,6 @@
 import {
   DatabaseType,
-  useDatabasesByConnectionMutation,
+  useDatabasesByConnectionLazyQuery,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
@@ -18,7 +18,7 @@ type ReturnType = {
 export default function useSelectedConnection(): ReturnType {
   const connectionsRes = useStoredConnectionsQuery();
   const [databases, setDatabases] = useState<string[]>([]);
-  const [getDbs] = useDatabasesByConnectionMutation();
+  const [getDbs] = useDatabasesByConnectionLazyQuery();
   const [loading, setLoading] = useState(connectionsRes.loading);
   const [err, setErr] = useApolloError(connectionsRes.error);
 

@@ -227,7 +227,6 @@ export type Mutation = {
   createDatabase: Scalars['Boolean']['output'];
   createSchema: Scalars['Boolean']['output'];
   createTag: Scalars['String']['output'];
-  databasesByConnection: Array<Scalars['String']['output']>;
   deleteBranch: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
@@ -272,15 +271,6 @@ export type MutationCreateTagArgs = {
   fromRefName: Scalars['String']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
   tagName: Scalars['String']['input'];
-};
-
-
-export type MutationDatabasesByConnectionArgs = {
-  connectionUrl: Scalars['String']['input'];
-  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
-  type?: InputMaybe<DatabaseType>;
-  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -381,6 +371,7 @@ export type Query = {
   currentConnection?: Maybe<DatabaseConnection>;
   currentDatabase?: Maybe<Scalars['String']['output']>;
   databases: Array<Scalars['String']['output']>;
+  databasesByConnection: Array<Scalars['String']['output']>;
   defaultBranch?: Maybe<Branch>;
   diffStat: DiffStat;
   diffSummaries: Array<DiffSummary>;
@@ -440,6 +431,15 @@ export type QueryCommitsArgs = {
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
   twoDot?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type QueryDatabasesByConnectionArgs = {
+  connectionUrl: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  type?: InputMaybe<DatabaseType>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -747,7 +747,7 @@ export type CurrentConnectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null } | null };
 
-export type DatabasesByConnectionMutationVariables = Exact<{
+export type DatabasesByConnectionQueryVariables = Exact<{
   connectionUrl: Scalars['String']['input'];
   name: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
@@ -756,7 +756,7 @@ export type DatabasesByConnectionMutationVariables = Exact<{
 }>;
 
 
-export type DatabasesByConnectionMutation = { __typename?: 'Mutation', databasesByConnection: Array<string> };
+export type DatabasesByConnectionQuery = { __typename?: 'Query', databasesByConnection: Array<string> };
 
 export type GetTagQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1786,7 +1786,7 @@ export type CurrentConnectionLazyQueryHookResult = ReturnType<typeof useCurrentC
 export type CurrentConnectionSuspenseQueryHookResult = ReturnType<typeof useCurrentConnectionSuspenseQuery>;
 export type CurrentConnectionQueryResult = Apollo.QueryResult<CurrentConnectionQuery, CurrentConnectionQueryVariables>;
 export const DatabasesByConnectionDocument = gql`
-    mutation DatabasesByConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+    query DatabasesByConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
   databasesByConnection(
     connectionUrl: $connectionUrl
     name: $name
@@ -1796,20 +1796,18 @@ export const DatabasesByConnectionDocument = gql`
   )
 }
     `;
-export type DatabasesByConnectionMutationFn = Apollo.MutationFunction<DatabasesByConnectionMutation, DatabasesByConnectionMutationVariables>;
 
 /**
- * __useDatabasesByConnectionMutation__
+ * __useDatabasesByConnectionQuery__
  *
- * To run a mutation, you first call `useDatabasesByConnectionMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDatabasesByConnectionMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * To run a query within a React component, call `useDatabasesByConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDatabasesByConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const [databasesByConnectionMutation, { data, loading, error }] = useDatabasesByConnectionMutation({
+ * const { data, loading, error } = useDatabasesByConnectionQuery({
  *   variables: {
  *      connectionUrl: // value for 'connectionUrl'
  *      name: // value for 'name'
@@ -1819,13 +1817,22 @@ export type DatabasesByConnectionMutationFn = Apollo.MutationFunction<DatabasesB
  *   },
  * });
  */
-export function useDatabasesByConnectionMutation(baseOptions?: Apollo.MutationHookOptions<DatabasesByConnectionMutation, DatabasesByConnectionMutationVariables>) {
+export function useDatabasesByConnectionQuery(baseOptions: Apollo.QueryHookOptions<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables> & ({ variables: DatabasesByConnectionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DatabasesByConnectionMutation, DatabasesByConnectionMutationVariables>(DatabasesByConnectionDocument, options);
+        return Apollo.useQuery<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>(DatabasesByConnectionDocument, options);
       }
-export type DatabasesByConnectionMutationHookResult = ReturnType<typeof useDatabasesByConnectionMutation>;
-export type DatabasesByConnectionMutationResult = Apollo.MutationResult<DatabasesByConnectionMutation>;
-export type DatabasesByConnectionMutationOptions = Apollo.BaseMutationOptions<DatabasesByConnectionMutation, DatabasesByConnectionMutationVariables>;
+export function useDatabasesByConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>(DatabasesByConnectionDocument, options);
+        }
+export function useDatabasesByConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>(DatabasesByConnectionDocument, options);
+        }
+export type DatabasesByConnectionQueryHookResult = ReturnType<typeof useDatabasesByConnectionQuery>;
+export type DatabasesByConnectionLazyQueryHookResult = ReturnType<typeof useDatabasesByConnectionLazyQuery>;
+export type DatabasesByConnectionSuspenseQueryHookResult = ReturnType<typeof useDatabasesByConnectionSuspenseQuery>;
+export type DatabasesByConnectionQueryResult = Apollo.QueryResult<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>;
 export const GetTagDocument = gql`
     query GetTag($databaseName: String!, $tagName: String!) {
   tag(databaseName: $databaseName, tagName: $tagName) {

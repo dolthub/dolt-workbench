@@ -116,7 +116,7 @@ export class DatabaseResolver {
     return dbs;
   }
 
-  @Mutation(_returns => [String])
+  @Query(_returns => [String])
   async databasesByConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string[]> {
