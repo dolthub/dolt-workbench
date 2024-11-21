@@ -7,6 +7,7 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
+import { DataSource } from "typeorm";
 import {
   ConnectionProvider,
   getDataSource,
@@ -124,18 +125,17 @@ export class DatabaseResolver {
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     const ds = getDataSource(workbenchConfig);
-    await ds.initialize();
-    const dbs = await ds.query("SHOW DATABASES");
-    await ds.destroy();
-    return dbs
-      .map(r => r.Database)
-      .filter(
-        db =>
-          db !== "information_schema" &&
-          db !== "mysql" &&
-          db !== "dolt_cluster" &&
-          !db.includes("/"),
-      );
+
+    try {
+      await ds.initialize();
+      const dbs = await getDatabasesByType(workbenchConfig.type, ds);
+      return dbs;
+    } catch (e) {
+      console.error("Error query databases", e);
+      return [];
+    } finally {
+      await ds.destroy();
+    }
   }
 
   @Query(_returns => [String])
@@ -225,4 +225,30 @@ function getWorkbenchConfigFromArgs(
     useSSL: !!args.useSSL,
     type,
   };
+}
+
+async function getDatabasesByType(type: DatabaseType, ds: DataSource) {
+  const isPostgres = type === DatabaseType.Postgres;
+  if (isPostgres) {
+    const dbs = await ds.query("SELECT datname FROM pg_database");
+    return dbs
+      .map(r => r.datname)
+      .filter(
+        d =>
+          d !== "template0" &&
+          d !== "template1" &&
+          d !== "dolt_cluster" &&
+          !d.includes("/"),
+      );
+  }
+  const dbs = await ds.query("SHOW DATABASES");
+  return dbs
+    .map(r => r.Database)
+    .filter(
+      db =>
+        db !== "information_schema" &&
+        db !== "mysql" &&
+        db !== "dolt_cluster" &&
+        !db.includes("/"),
+    );
 }
