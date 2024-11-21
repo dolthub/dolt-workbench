@@ -6,6 +6,7 @@ import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import DesktopAppNavbar from "./DesktopAppNavbar";
 
+// TODO: Support desktop app nav bar on windows 
 const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
 
 export default function Nav() {
