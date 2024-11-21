@@ -131,9 +131,6 @@ export class DatabaseResolver {
       const { qf } = await newQueryFactory(workbenchConfig.type, ds);
       const dbs = await qf.databases();
       return dbs;
-    } catch (e) {
-      console.error("Error query databases:", e);
-      return [];
     } finally {
       await ds.destroy();
     }
