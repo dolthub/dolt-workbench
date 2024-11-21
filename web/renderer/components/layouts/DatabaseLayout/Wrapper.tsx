@@ -34,7 +34,6 @@ function Inner(props: Props) {
 }
 
 export default function DatabaseLayoutWrapper(props: Props) {
-  console.log(props);
   const { toggleSqlEditor } = useSqlEditorContext();
   const { keyMap, handlers } = useHotKeysForToggle(toggleSqlEditor);
   return (
@@ -48,7 +47,7 @@ export default function DatabaseLayoutWrapper(props: Props) {
 export function DatabaseLayoutWrapperOuter(props: Props) {
   return (
     <div className={css.appLayout}>
-      <Navbar {...props}/>
+      <Navbar {...props} />
       <div className={css.layoutWrapperContainer} data-cy="db-layout-container">
         <Inner {...props}>{props.children}</Inner>
       </div>

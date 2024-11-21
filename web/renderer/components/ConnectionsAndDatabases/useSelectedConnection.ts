@@ -1,7 +1,7 @@
 import {
   DatabaseConnectionFragment,
   DatabaseType,
-  useDatabasesByConnectionMutation,
+  useDatabasesByConnectionLazyQuery,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
@@ -10,7 +10,7 @@ import { ApolloErrorType } from "@lib/errors/types";
 import { useState } from "react";
 
 type ReturnType = {
-  onSelected: (connectionName: string) => Promise<void>;
+  onSelected: (connection: DatabaseConnectionFragment) => Promise<void>;
   databases: string[];
   loading: boolean;
   err: ApolloErrorType | undefined;
@@ -21,24 +21,19 @@ export default function useSelectedConnection(): ReturnType {
   const connectionsRes = useStoredConnectionsQuery();
   const storedConnections = connectionsRes.data?.storedConnections || [];
   const [databases, setDatabases] = useState<string[]>([]);
-  const [getDbs] = useDatabasesByConnectionMutation();
+  const [getDbs] = useDatabasesByConnectionLazyQuery();
   const [loading, setLoading] = useState(connectionsRes.loading);
   const [err, setErr] = useApolloError(connectionsRes.error);
-  console.log("storedConnections", storedConnections);
-  const onSelected = async (connectionName: string) => {
+  const onSelected = async (connection: DatabaseConnectionFragment) => {
     setLoading(true);
     setErr(undefined);
     try {
-      const selected = storedConnections.find(c => c.name === connectionName);
       const dbs = await getDbs({
         variables: {
-          connectionUrl: selected?.connectionUrl || "",
-          type: selected?.type || DatabaseType.Mysql,
-          name: selected?.name || "",
-          useSSL: selected?.useSSL || true,
+          ...connection,
         },
       });
-      setDatabases(dbs.data?.databasesByConnection.databases || []);
+      setDatabases(dbs.data?.databasesByConnection || []);
     } catch (e) {
       handleCaughtApolloError(e, setErr);
     } finally {

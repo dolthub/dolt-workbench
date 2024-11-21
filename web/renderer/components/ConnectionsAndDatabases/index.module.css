@@ -1,0 +1,34 @@
+.container {
+  @apply flex w-[28rem] flex-col;
+}
+
+.top,
+.bottom {
+  @apply flex;
+}
+
+.left {
+  @apply w-2/5 border-r border-stone-100 pt-2 pb-4;
+}
+
+.right {
+  @apply w-3/5 pt-2 pb-4;
+}
+
+.header {
+  @apply flex items-center text-stone-400 font-semibold text-sm border-b border-stone-100 py-2 px-4 justify-between;
+  svg {
+    @apply text-[#000];
+  }
+}
+
+.connection {
+  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center justify-between;
+  svg {
+    @apply font-normal;
+  }
+}
+
+.manageConnection {
+  @apply px-4 text-sm text-storm-500 underline;
+}

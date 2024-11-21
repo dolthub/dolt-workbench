@@ -16,6 +16,7 @@ import css from "./index.module.css";
 type Props = {
   buttonClassName?: string;
   isPostgres: boolean;
+  showText?: boolean;
 };
 
 export default function CreateDatabase(props: Props) {
@@ -55,7 +56,7 @@ export default function CreateDatabase(props: Props) {
         className={cx(css.createDB, props.buttonClassName)}
       >
         <AiOutlinePlus />
-        Create database
+        {props.showText && "Create database"}
       </Button.Link>
       <ModalOuter
         isOpen={isOpen}

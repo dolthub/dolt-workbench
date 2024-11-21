@@ -1,19 +1,18 @@
 import Link from "@components/links/Link";
 import { Navbar } from "@dolthub/react-components";
 import css from "./index.module.css";
-import ConnectionsAndDatabases from "./ConnectionsAndDatabases";
 import { DatabaseParams } from "@lib/params";
+import ConnectionsAndDatabases from "@components/ConnectionsAndDatabases";
 
 const handleDoubleClick = () => {
   window.ipc.macTitlebarClicked();
 };
 
 type Props = {
-  params?:DatabaseParams
-}
+  params?: DatabaseParams;
+};
 
-export default function DesktopAppNavbar({params}:Props) {
-  console.log(params);
+export default function DesktopAppNavbar({ params }: Props) {
   return (
     <div className={css.titlebar} onDoubleClick={handleDoubleClick}>
       <Navbar
@@ -26,13 +25,13 @@ export default function DesktopAppNavbar({params}:Props) {
   );
 }
 
-function LeftLinks({params}:Props) {
-  if(!params){
-    return <></>
+function LeftLinks({ params }: Props) {
+  if (!params) {
+    return <></>;
   }
   return (
     <div className={css.leftLinks}>
-      <ConnectionsAndDatabases params={params}/>
+      <ConnectionsAndDatabases params={params} />
     </div>
   );
 }
@@ -40,7 +39,7 @@ function LeftLinks({params}:Props) {
 function Logo() {
   return (
     <Link href="/">
-      <img src="/images/d.png" alt="Dolt Workbench" />
+      <img src="/images/d-logo.png" alt="Dolt Workbench" />
     </Link>
   );
 }

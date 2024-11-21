@@ -7,7 +7,12 @@ import {
   Query,
   Resolver,
 } from "@nestjs/graphql";
-import { ConnectionProvider } from "../connections/connection.provider";
+import {
+  ConnectionProvider,
+  getDataSource,
+  newQueryFactory,
+  WorkbenchConfig,
+} from "../connections/connection.provider";
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import { DBArgs, RefArgs, RefSchemaArgs } from "../utils/commonTypes";
@@ -50,12 +55,6 @@ class CurrentDatabaseState {
   currentDatabase?: string;
 }
 
-@ObjectType()
-class Databases {
-  @Field(_type => [String], { nullable: true })
-  databases: string[];
-}
-
 @ArgsType()
 class RemoveDatabaseConnectionArgs {
   @Field()
@@ -88,10 +87,10 @@ export class DatabaseResolver {
     if (!config) return undefined;
     const isDolt = this.conn.getIsDolt();
     const storedConnections = await this.storedConnections();
-    const connectionName =
-      storedConnections.find(x => x.connectionUrl === config.connectionUrl)
-        ?.name || "connections";
-
+    const connectionName = storedConnections.find(
+      x => x.connectionUrl === config.connectionUrl,
+    )?.name;
+    if (!connectionName) return undefined;
     return {
       connectionUrl: config.connectionUrl,
       name: connectionName,
@@ -117,18 +116,24 @@ export class DatabaseResolver {
     return dbs;
   }
 
-  @Mutation(_returns => Databases)
+  @Query(_returns => [String])
   async databasesByConnection(
     @Args() args: AddDatabaseConnectionArgs,
-  ): Promise<Databases> {
-    // Switch to the selected connection to get the databases
-    await this.addDatabaseConnection(args);
-    const conn = this.conn.connection();
-    const dbs = await conn.databases();
+  ): Promise<string[]> {
+    if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
+      return this.databases();
+    }
+    const workbenchConfig = getWorkbenchConfigFromArgs(args);
+    const ds = getDataSource(workbenchConfig);
+    await ds.initialize();
 
-    return {
-      databases: dbs,
-    };
+    try {
+      const { qf } = await newQueryFactory(workbenchConfig.type, ds);
+      const dbs = await qf.databases();
+      return dbs;
+    } finally {
+      await ds.destroy();
+    }
   }
 
   @Query(_returns => [String])
@@ -159,14 +164,7 @@ export class DatabaseResolver {
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<CurrentDatabaseState> {
-    const type = args.type ?? DatabaseType.Mysql;
-
-    const workbenchConfig = {
-      connectionUrl: args.connectionUrl,
-      hideDoltFeatures: !!args.hideDoltFeatures,
-      useSSL: !!args.useSSL,
-      type,
-    };
+    const workbenchConfig = getWorkbenchConfigFromArgs(args);
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
     const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
@@ -213,4 +211,16 @@ export class DatabaseResolver {
     await this.conn.resetDS(args.newDatabase);
     return true;
   }
+}
+
+function getWorkbenchConfigFromArgs(
+  args: AddDatabaseConnectionArgs,
+): WorkbenchConfig {
+  const type = args.type ?? DatabaseType.Mysql;
+  return {
+    connectionUrl: args.connectionUrl,
+    hideDoltFeatures: !!args.hideDoltFeatures,
+    useSSL: !!args.useSSL,
+    type,
+  };
 }
