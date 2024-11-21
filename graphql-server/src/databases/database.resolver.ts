@@ -127,7 +127,8 @@ export class DatabaseResolver {
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     const ds = getDataSource(workbenchConfig);
     const { qf } = await initializeQueryFactory(workbenchConfig.type, ds);
-    return qf.databases();
+    const dbs = await qf.databases();
+    return dbs;
   }
 
   @Query(_returns => [String])
