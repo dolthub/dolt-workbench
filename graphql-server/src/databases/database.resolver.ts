@@ -132,10 +132,10 @@ export class DatabaseResolver {
       const dbs = await qf.databases();
       return dbs;
     } catch (e) {
-      console.log(e);
+      console.error("Error query databases:", e);
       return [];
     } finally {
-      ds.destroy();
+      await ds.destroy();
     }
   }
 
