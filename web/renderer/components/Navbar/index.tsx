@@ -6,12 +6,10 @@ import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import DesktopAppNavbar from "./DesktopAppNavbar";
 
-const macNavBar =
-  process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" &&
-  process.platform === "darwin";
+const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
 
 export default function Nav() {
-  return macNavBar ? (
+  return forMacNav ? (
     <DesktopAppNavbar />
   ) : (
     <Navbar

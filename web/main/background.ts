@@ -142,7 +142,9 @@ app.on("ready", async () => {
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   setupTitleBarClickMac();
   createGraphqlSeverProcess();
-
+  mainWindow?.webContents.executeJavaScript(
+    ` console.error('for mac nav:', ${process.env.NEXT_PUBLIC_FOR_MAC_NAV})`,
+  );
   await waitForGraphQLServer("http://localhost:9002/graphql");
 
   if (isProd) {
