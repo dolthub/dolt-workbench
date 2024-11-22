@@ -1,3 +1,4 @@
+import { useSetState } from "@dolthub/react-hooks";
 import {
   DatabaseConnectionFragment,
   DatabaseType,
@@ -7,20 +8,31 @@ import {
 import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+type StateType = {
+  databases: string[];
+  connection: DatabaseConnectionFragment;
+};
 
 type ReturnType = {
   onSelected: (connection: DatabaseConnectionFragment) => Promise<void>;
-  databases: string[];
   loading: boolean;
   err: ApolloErrorType | undefined;
   storedConnections: DatabaseConnectionFragment[];
+  state: StateType;
+  setState: (s: StateType) => void;
 };
 
-export default function useSelectedConnection(): ReturnType {
+export default function useSelectedConnection(
+  conn: DatabaseConnectionFragment,
+): ReturnType {
   const connectionsRes = useStoredConnectionsQuery();
   const storedConnections = connectionsRes.data?.storedConnections || [];
-  const [databases, setDatabases] = useState<string[]>([]);
+  const [state, setState] = useSetState({
+    databases: [] as string[],
+    connection: conn,
+  });
   const [getDbs] = useDatabasesByConnectionLazyQuery();
   const [loading, setLoading] = useState(connectionsRes.loading);
   const [err, setErr] = useApolloError(connectionsRes.error);
@@ -33,7 +45,10 @@ export default function useSelectedConnection(): ReturnType {
           ...connection,
         },
       });
-      setDatabases(dbs.data?.databasesByConnection || []);
+      setState({
+        connection,
+        databases: dbs.data?.databasesByConnection || [],
+      });
     } catch (e) {
       handleCaughtApolloError(e, setErr);
     } finally {
@@ -41,5 +56,9 @@ export default function useSelectedConnection(): ReturnType {
     }
   };
 
-  return { onSelected, databases, loading, err, storedConnections };
+  useEffect(() => {
+    onSelected(conn);
+  }, [conn]);
+
+  return { onSelected, state, setState, loading, err, storedConnections };
 }

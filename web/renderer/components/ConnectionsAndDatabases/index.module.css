@@ -1,18 +1,31 @@
+.dbIcon{
+  @apply mr-3;
+}
+
+.selector{
+  @apply rounded px-4 bg-[#3C4D5A];
+}
+
+.label{
+  @apply mr-4;
+}
+
 .container {
   @apply flex w-[28rem] flex-col;
 }
 
 .top,
+.middle,
 .bottom {
   @apply flex;
 }
 
 .left {
-  @apply w-2/5 border-r border-stone-100 pt-2 pb-4;
+  @apply w-2/5 border-r border-stone-100 pt-2;
 }
 
 .right {
-  @apply w-3/5 pt-2 pb-4;
+  @apply w-3/5 pt-2;
 }
 
 .header {
@@ -22,13 +35,17 @@
   }
 }
 
-.connection {
+.item {
   @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center justify-between;
   svg {
-    @apply font-normal;
+    @apply font-normal h-3;
   }
 }
 
+.selected {
+  @apply bg-sky-50;
+}
+
 .manageConnection {
-  @apply px-4 text-sm text-storm-500 underline;
+  @apply px-4 text-sm text-storm-500 underline mb-2 block;
 }
