@@ -43,7 +43,7 @@ function Inner({ connection, params }: InnerProps) {
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           position="bottom left"
-          offsetY={10}
+          offsetY={12}
           contentStyle={{ width: "auto", padding: 0 }}
           arrow={false}
           onOpen={async () => onSelected(connection)}

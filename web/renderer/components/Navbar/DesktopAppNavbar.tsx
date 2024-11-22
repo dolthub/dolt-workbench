@@ -33,12 +33,13 @@ export default function DesktopAppNavbar({ params }: Props) {
 }
 
 function LeftLinks({ params }: Props) {
-  if (!params) {
-    return null;
-  }
   return (
     <div className={css.leftLinks}>
-      <ConnectionsAndDatabases params={params} />
+      {params ? (
+        <ConnectionsAndDatabases params={params} />
+      ) : (
+        <Link href="/connections">Connections</Link>
+      )}
     </div>
   );
 }
