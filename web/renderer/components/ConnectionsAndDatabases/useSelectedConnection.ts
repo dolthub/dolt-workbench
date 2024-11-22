@@ -4,20 +4,18 @@ import {
   useDatabasesByConnectionLazyQuery,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
-import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
-import { useEffect, useState } from "react";
 
-type StateType = {
-  databases: string[];
+export type StateType = {
   connection: DatabaseConnectionFragment;
+  databases: string[];
+  err: ApolloErrorType | undefined;
+  loading: boolean;
 };
 
 type ReturnType = {
   onSelected: (connection: DatabaseConnectionFragment) => Promise<void>;
-  loading: boolean;
-  err: ApolloErrorType | undefined;
   storedConnections: DatabaseConnectionFragment[];
   state: StateType;
   setState: (s: StateType) => void;
@@ -31,13 +29,16 @@ export default function useSelectedConnection(
   const [state, setState] = useSetState({
     databases: [] as string[],
     connection: conn,
+    err: undefined as ApolloErrorType | undefined,
+    loading: false,
   });
   const [getDbs] = useDatabasesByConnectionLazyQuery();
-  const [loading, setLoading] = useState(connectionsRes.loading);
-  const [err, setErr] = useApolloError(connectionsRes.error);
+
   const onSelected = async (connection: DatabaseConnectionFragment) => {
-    setLoading(true);
-    setErr(undefined);
+    setState({
+      loading: true,
+      err: undefined,
+    });
     try {
       const dbs = await getDbs({
         variables: {
@@ -49,22 +50,11 @@ export default function useSelectedConnection(
         databases: dbs.data?.databasesByConnection || [],
       });
     } catch (e) {
-      handleCaughtApolloError(e, setErr);
+      handleCaughtApolloError(e, er => setState({ err: er }));
     } finally {
-      setLoading(false);
+      setState({ loading: false });
     }
   };
 
-  useEffect(() => {
-    const fetchDatabases = async () => {
-      try {
-        await onSelected(conn);
-      } catch (e) {
-        handleCaughtApolloError(e, setErr);
-      }
-    };
-    fetchDatabases();
-  }, [conn]);
-
-  return { onSelected, state, setState, loading, err, storedConnections };
+  return { onSelected, state, setState, storedConnections };
 }

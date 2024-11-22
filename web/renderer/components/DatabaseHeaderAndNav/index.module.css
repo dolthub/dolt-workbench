@@ -12,7 +12,7 @@
 
 .headerDetails {
   @apply inline-block h-fit py-6 px-8 justify-between bg-storm-500 relative;
-
+  background-image: linear-gradient(to bottom, #354c5c, #192e3d);
   @screen lg {
     @apply flex pt-6 h-28;
   }
@@ -99,6 +99,14 @@
   @apply z-10;
 }
 
-.lessHeight {
-  @apply h-14 pt-3;
+.forAppNav {
+  @screen lg {
+    @apply h-16 pt-4 justify-end;
+  }
+}
+
+.hideForApp {
+  @screen lg {
+    @apply hidden;
+  }
 }

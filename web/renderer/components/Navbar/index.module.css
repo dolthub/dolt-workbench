@@ -3,10 +3,35 @@
 }
 
 .titlebar {
+  @screen lg {
+    @apply h-16;
+  }
   -webkit-app-region: drag;
   a,
   button {
     @apply cursor-pointer;
     -webkit-app-region: no-drag;
+  }
+  button {
+    @apply ml-16;
+    @screen lg {
+      @apply ml-0;
+    }
+  }
+  a {
+    @apply inline-block -ml-4;
+    @screen lg {
+      @apply -ml-0;
+    }
+  }
+}
+
+.dLogo img {
+  @apply max-w-none max-h-none;
+}
+
+.forMobile {
+  @screen md {
+    @apply hidden;
   }
 }

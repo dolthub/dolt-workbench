@@ -23,18 +23,14 @@ export default function Full(props: Props) {
       data-cy="db-page-header"
       className={cx(css.header, { [css.hideFullHeader]: props.showSmall })}
     >
-      <div className={cx(css.headerDetails, { [css.lessHeight]: forMacNav })}>
-        {!forMacNav ? (
-          <div className={css.topLeft}>
-            <DatabaseBreadcrumbs
-              className={css.databaseBreadcrumbs}
-              params={props.params}
-            />
-            <DatabaseTypeLabel className={css.permission} />
-          </div>
-        ) : (
-          <div />
-        )}
+      <div className={cx(css.headerDetails, { [css.forAppNav]: forMacNav })}>
+        <div className={cx(css.topLeft, { [css.hideForApp]: forMacNav })}>
+          <DatabaseBreadcrumbs
+            className={css.databaseBreadcrumbs}
+            params={props.params}
+          />
+          <DatabaseTypeLabel className={css.permission} />
+        </div>
         <div>
           <RightHeaderButtons
             {...props}

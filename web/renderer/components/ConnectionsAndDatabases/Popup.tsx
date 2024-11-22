@@ -3,22 +3,27 @@ import { DatabaseParams } from "@lib/params";
 import cx from "classnames";
 import Link from "@components/links/Link";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
-import { Button } from "@dolthub/react-components";
+import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
-import useSelectedConnection from "./useSelectedConnection";
+import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
 import css from "./index.module.css";
 
 type Props = {
   params: DatabaseParams;
   currentConnection: DatabaseConnection;
+  onSelected: (conn: DatabaseConnection) => void;
+  storedConnections: DatabaseConnection[];
+  state: StateType;
 };
 
-export default function Inner(props: Props) {
-  const { onSelected, state, storedConnections } = useSelectedConnection(
-    props.currentConnection,
-  );
-
+export default function Popup({
+  params,
+  currentConnection,
+  onSelected,
+  storedConnections,
+  state,
+}: Props) {
   return (
     <div className={css.container}>
       <div className={css.top}>
@@ -28,7 +33,7 @@ export default function Inner(props: Props) {
         <div className={cx(css.header, css.right)}>
           <span>DATABASES</span>
           <CreateDatabase
-            isPostgres={props.currentConnection.type === DatabaseType.Postgres}
+            isPostgres={currentConnection.type === DatabaseType.Postgres}
           />
         </div>
       </div>
@@ -48,11 +53,16 @@ export default function Inner(props: Props) {
           ))}
         </div>
         <div className={css.right}>
-          {state.databases
-            .filter(db => db !== props.params.databaseName)
-            .map(db => (
-              <DatabaseItem key={db} db={db} conn={state.connection} />
-            ))}
+          {state.loading && <SmallLoader loaded={!state.loading} />}
+          {state.databases.map(db => (
+            <DatabaseItem
+              key={db}
+              db={db}
+              conn={state.connection}
+              currentDatabase={params.databaseName}
+            />
+          ))}
+          <ErrorMsg err={state.err} />
         </div>
       </div>
       <div className={css.bottom}>

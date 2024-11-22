@@ -1,9 +1,16 @@
+.iconAndSelector {
+  @apply hidden;
+  @screen lg {
+    @apply flex items-center;
+  }
+}
+
 .dbIcon {
-  @apply mr-3;
+  @apply mr-3 w-5 h-5;
 }
 
 .selector {
-  @apply rounded px-4 bg-[#3C4D5A];
+  @apply rounded px-4 py-1 bg-[#3C4D5A] min-w-40 flex items-center justify-between;
 }
 
 .label {
@@ -48,4 +55,12 @@
 
 .manageConnection {
   @apply px-4 text-sm text-storm-500 underline mb-2 block;
+}
+
+.err {
+  @apply ml-4;
+}
+
+.link {
+  @apply text-sky-500;
 }

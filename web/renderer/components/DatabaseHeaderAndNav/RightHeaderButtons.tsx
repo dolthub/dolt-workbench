@@ -5,6 +5,8 @@ import AddItemDropdown from "./AddItemDropdown";
 import ResetConnectionButton from "./ResetConnectionButton";
 import css from "./index.module.css";
 
+const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
+
 type Props = {
   params: OptionalRefParams & { schemaName?: string };
   onMenuClick: () => void;
@@ -13,13 +15,15 @@ type Props = {
 export default function RightHeaderButtons(props: Props) {
   return (
     <div className={css.topRight}>
-      <ResetConnectionButton />
       <AddItemDropdown params={props.params} />
-      <div className={css.menu}>
-        <Btn onClick={props.onMenuClick}>
-          <GiHamburgerMenu />
-        </Btn>
-      </div>
+      <ResetConnectionButton />
+      {!forMacNav && (
+        <div className={css.menu}>
+          <Btn onClick={props.onMenuClick}>
+            <GiHamburgerMenu />
+          </Btn>
+        </div>
+      )}
     </div>
   );
 }

@@ -4,8 +4,10 @@ import { DatabaseParams } from "@lib/params";
 import ConnectionsAndDatabases from "@components/ConnectionsAndDatabases";
 import css from "./index.module.css";
 
-const handleDoubleClick = () => {
-  window.ipc.macTitlebarClicked();
+const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  if (e.currentTarget === e.target) {
+    window.ipc.macTitlebarClicked();
+  }
 };
 
 type Props = {
@@ -18,8 +20,13 @@ export default function DesktopAppNavbar({ params }: Props) {
       <Navbar
         logo={<Logo />}
         leftLinks={<LeftLinks params={params} />}
-        rightLinks={<div />}
+        rightLinks={
+          <div className={css.forMobile}>
+            <Link href="/connections">Connections</Link>
+          </div>
+        }
         bgColor="bg-storm-600"
+        large
       />
     </div>
   );
@@ -38,8 +45,13 @@ function LeftLinks({ params }: Props) {
 
 function Logo() {
   return (
-    <Link href="/">
-      <img src="/images/d-logo.png" alt="Dolt Workbench" />
+    <Link href="/" className={css.dLogo}>
+      <img
+        src="/images/d-logo.png"
+        alt="Dolt Workbench"
+        width={32}
+        height={32}
+      />
     </Link>
   );
 }
