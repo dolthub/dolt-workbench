@@ -1,8 +1,8 @@
 import Link from "@components/links/Link";
 import { Navbar } from "@dolthub/react-components";
-import css from "./index.module.css";
 import { DatabaseParams } from "@lib/params";
 import ConnectionsAndDatabases from "@components/ConnectionsAndDatabases";
+import css from "./index.module.css";
 
 const handleDoubleClick = () => {
   window.ipc.macTitlebarClicked();
@@ -27,7 +27,7 @@ export default function DesktopAppNavbar({ params }: Props) {
 
 function LeftLinks({ params }: Props) {
   if (!params) {
-    return <></>;
+    return null;
   }
   return (
     <div className={css.leftLinks}>

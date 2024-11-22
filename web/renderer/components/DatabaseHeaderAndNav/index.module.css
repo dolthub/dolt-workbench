@@ -98,3 +98,7 @@
 .tooltip {
   @apply z-10;
 }
+
+.lessHeight {
+  @apply h-14 pt-3;
+}

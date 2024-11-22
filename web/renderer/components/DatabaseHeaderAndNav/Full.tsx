@@ -7,6 +7,8 @@ import cx from "classnames";
 import RightHeaderButtons from "./RightHeaderButtons";
 import css from "./index.module.css";
 
+const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
+
 type Props = {
   params: OptionalRefParams & { schemaName?: string };
   title?: string;
@@ -21,14 +23,18 @@ export default function Full(props: Props) {
       data-cy="db-page-header"
       className={cx(css.header, { [css.hideFullHeader]: props.showSmall })}
     >
-      <div className={css.headerDetails}>
-        <div className={css.topLeft}>
-          <DatabaseBreadcrumbs
-            className={css.databaseBreadcrumbs}
-            params={props.params}
-          />
-          <DatabaseTypeLabel className={css.permission} />
-        </div>
+      <div className={cx(css.headerDetails, { [css.lessHeight]: forMacNav })}>
+        {!forMacNav ? (
+          <div className={css.topLeft}>
+            <DatabaseBreadcrumbs
+              className={css.databaseBreadcrumbs}
+              params={props.params}
+            />
+            <DatabaseTypeLabel className={css.permission} />
+          </div>
+        ) : (
+          <div />
+        )}
         <div>
           <RightHeaderButtons
             {...props}

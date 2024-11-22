@@ -1,7 +1,6 @@
 import { useSetState } from "@dolthub/react-hooks";
 import {
   DatabaseConnectionFragment,
-  DatabaseType,
   useDatabasesByConnectionLazyQuery,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
@@ -57,7 +56,14 @@ export default function useSelectedConnection(
   };
 
   useEffect(() => {
-    onSelected(conn);
+    const fetchDatabases = async () => {
+      try {
+        await onSelected(conn);
+      } catch (e) {
+        handleCaughtApolloError(e, setErr);
+      }
+    };
+    fetchDatabases();
   }, [conn]);
 
   return { onSelected, state, setState, loading, err, storedConnections };

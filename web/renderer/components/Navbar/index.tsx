@@ -4,8 +4,8 @@ import { ExternalLink, Navbar } from "@dolthub/react-components";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
-import DesktopAppNavbar from "./DesktopAppNavbar";
 import { DatabaseParams } from "@lib/params";
+import DesktopAppNavbar from "./DesktopAppNavbar";
 
 // TODO: Support desktop app nav bar on windows
 const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";

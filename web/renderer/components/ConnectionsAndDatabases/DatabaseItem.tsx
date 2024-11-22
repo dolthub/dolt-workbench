@@ -1,5 +1,4 @@
-import { Button, Loader } from "@dolthub/react-components";
-import css from "./index.module.css";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import {
   DatabaseConnectionFragment,
@@ -10,6 +9,7 @@ import useAddConnection from "@components/pageComponents/ConnectionsPage/Existin
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
 import { database } from "@lib/urls";
+import css from "./index.module.css";
 
 type Props = {
   db: string;
@@ -40,8 +40,12 @@ export default function DatabaseItem({ db, conn }: Props) {
     return <Loader loaded={!loading} />;
   }
 
+  if (err) {
+    return <ErrorMsg err={err} />;
+  }
+
   return (
-    <Button.Link className={css.item} onClick={() => onClick(db)}>
+    <Button.Link className={css.item} onClick={async () => onClick(db)}>
       <span>{db}</span>
       <FaChevronRight />
     </Button.Link>

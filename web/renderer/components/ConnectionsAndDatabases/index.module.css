@@ -1,12 +1,12 @@
-.dbIcon{
+.dbIcon {
   @apply mr-3;
 }
 
-.selector{
+.selector {
   @apply rounded px-4 bg-[#3C4D5A];
 }
 
-.label{
+.label {
   @apply mr-4;
 }
 

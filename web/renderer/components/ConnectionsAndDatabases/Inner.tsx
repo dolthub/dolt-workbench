@@ -1,14 +1,13 @@
 import { DatabaseConnection, DatabaseType } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import cx from "classnames";
-import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import Link from "@components/links/Link";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button } from "@dolthub/react-components";
-import css from "./index.module.css";
-import useSelectedConnection from "./useSelectedConnection";
 import CreateDatabase from "@components/CreateDatabase";
+import useSelectedConnection from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
+import css from "./index.module.css";
 
 type Props = {
   params: DatabaseParams;
@@ -29,19 +28,19 @@ export default function Inner(props: Props) {
         <div className={cx(css.header, css.right)}>
           <span>DATABASES</span>
           <CreateDatabase
-            isPostgres={props.currentConnection?.type === DatabaseType.Postgres}
+            isPostgres={props.currentConnection.type === DatabaseType.Postgres}
           />
         </div>
       </div>
       <div className={css.middle}>
         <div className={css.left}>
-          {storedConnections.map((conn, i) => (
+          {storedConnections.map(conn => (
             <Button.Link
-              key={i}
+              key={conn.name}
               className={cx(css.item, {
-                [css.selected]: state.connection?.name === conn.name,
+                [css.selected]: state.connection.name === conn.name,
               })}
-              onClick={() => onSelected(conn)}
+              onClick={async () => onSelected(conn)}
             >
               <span>{conn.name}</span>
               <FaChevronRight />
@@ -50,9 +49,9 @@ export default function Inner(props: Props) {
         </div>
         <div className={css.right}>
           {state.databases
-            .filter(db => db != props.params.databaseName)
-            .map((db, i) => (
-              <DatabaseItem key={i} db={db} conn={state.connection} />
+            .filter(db => db !== props.params.databaseName)
+            .map(db => (
+              <DatabaseItem key={db} db={db} conn={state.connection} />
             ))}
         </div>
       </div>
