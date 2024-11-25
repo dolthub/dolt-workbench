@@ -31,7 +31,7 @@ export default function Full(props: Props) {
           />
           <DatabaseTypeLabel className={css.permission} />
         </div>
-        <div>
+        <div className={css.zIndex}>
           <RightHeaderButtons
             {...props}
             onMenuClick={() => props.setShowSmall(true)}

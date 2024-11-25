@@ -33,6 +33,10 @@
   }
 }
 
+.zIndex{
+  @apply z-10;
+}
+
 .topRight {
   @apply flex mt-4 justify-start items-center;
   > * {
