@@ -10,7 +10,7 @@
 }
 
 .selector {
-  @apply rounded px-4 py-1 bg-[#3C4D5A] min-w-48 flex items-center justify-between;
+  @apply rounded px-4 py-1 bg-[#3C4D5A] min-w-48 flex items-center justify-between font-normal;
 }
 
 .label {
@@ -18,13 +18,17 @@
 }
 
 .container {
-  @apply flex w-[28rem] flex-col min-h-48;
+  @apply flex w-[32rem] flex-col;
 }
 
 .top,
 .middle,
 .bottom {
   @apply flex;
+}
+
+.middle {
+  @apply min-h-32;
 }
 
 .left {
@@ -54,7 +58,7 @@
 }
 
 .manageConnection {
-  @apply px-4 text-sm text-storm-500 underline mb-2 block;
+  @apply px-4 text-xs text-storm-500 underline my-2 block;
 }
 
 .err {
@@ -63,4 +67,8 @@
 
 .link {
   @apply text-sky-500;
+}
+
+.alignLeft {
+  @apply text-left;
 }

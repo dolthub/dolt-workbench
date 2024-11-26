@@ -9,16 +9,23 @@ import useAddConnection from "@components/pageComponents/ConnectionsPage/Existin
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
 import { database } from "@lib/urls";
+import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
 import css from "./index.module.css";
 
 type Props = {
   db: string;
   conn: DatabaseConnectionFragment;
+  currentConnection: DatabaseConnectionFragment;
   currentDatabase: string;
 };
 
-export default function DatabaseItem({ db, conn, currentDatabase }: Props) {
+export default function DatabaseItem({
+  db,
+  conn,
+  currentConnection,
+  currentDatabase,
+}: Props) {
   const { onAdd } = useAddConnection(conn);
   const {
     mutateFn: resetDB,
@@ -46,15 +53,15 @@ export default function DatabaseItem({ db, conn, currentDatabase }: Props) {
     return <ErrorMsg err={err} />;
   }
 
-  if (db === currentDatabase) {
-    return <span className={css.item}>{db} </span>;
+  if (db === currentDatabase && conn.name === currentConnection.name) {
+    return <span className={css.item}>{excerpt(db, 24)} </span>;
   }
   return (
     <Button.Link
       className={cx(css.item, css.link)}
       onClick={async () => onClick(db)}
     >
-      <span>{db}</span>
+      <span className={css.alignLeft}>{excerpt(db, 24)}</span>
       <FaChevronRight />
     </Button.Link>
   );

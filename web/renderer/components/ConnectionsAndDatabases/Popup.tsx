@@ -5,6 +5,7 @@ import Link from "@components/links/Link";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
+import { excerpt } from "@dolthub/web-utils";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
 import css from "./index.module.css";
@@ -47,7 +48,7 @@ export default function Popup({
               })}
               onClick={async () => onSelected(conn)}
             >
-              <span>{conn.name}</span>
+              <span className={css.alignLeft}>{excerpt(conn.name, 16)}</span>
               <FaChevronRight />
             </Button.Link>
           ))}
@@ -59,6 +60,7 @@ export default function Popup({
               key={db}
               db={db}
               conn={state.connection}
+              currentConnection={currentConnection}
               currentDatabase={params.databaseName}
             />
           ))}

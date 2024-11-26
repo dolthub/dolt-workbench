@@ -5,7 +5,7 @@ import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { DatabaseParams } from "@lib/params";
-import DesktopAppNavbar from "./DesktopAppNavbar";
+import DesktopAppNavbar, { Logo } from "./DesktopAppNavbar";
 
 // TODO: Support desktop app nav bar on windows
 const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
@@ -46,13 +46,5 @@ function RightLinks() {
         <FaDocker /> Docker Hub
       </ExternalLink>
     </>
-  );
-}
-
-function Logo() {
-  return (
-    <Link href="/">
-      <img src="/images/dolt-workbench.png" alt="Dolt Workbench" />
-    </Link>
   );
 }

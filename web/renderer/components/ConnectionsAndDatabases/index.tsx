@@ -11,9 +11,10 @@ import {
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
 import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
-import css from "./index.module.css";
+import { excerpt } from "@dolthub/web-utils";
 import useSelectedConnection from "./useSelectedConnection";
 import Popup from "./Popup";
+import css from "./index.module.css";
 
 type Props = {
   params: DatabaseParams;
@@ -31,34 +32,33 @@ function Inner({ connection, params }: InnerProps) {
   useOnClickOutside(connectionsRef, () => {
     setIsOpen(false);
   });
+  const triggerText = `${excerpt(connection.name, 24)} / ${excerpt(params.databaseName, 24)}`;
 
   return (
     <div className={css.iconAndSelector}>
       <FiDatabase className={css.dbIcon} />
-      <div className={css.selector}>
-        <span className={css.label}>
-          {connection.name} / {params.databaseName}
-        </span>
-        <ButtonWithPopup
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          position="bottom left"
-          offsetY={12}
-          contentStyle={{ width: "auto", padding: 0 }}
-          arrow={false}
-          onOpen={async () => onSelected(connection)}
-        >
-          <div className={css.popup} ref={connectionsRef}>
-            <Popup
-              params={params}
-              currentConnection={connection}
-              onSelected={onSelected}
-              state={state}
-              storedConnections={storedConnections}
-            />
-          </div>
-        </ButtonWithPopup>
-      </div>
+      <ButtonWithPopup
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        position="bottom center"
+        offsetY={12}
+        offsetX={-16}
+        contentStyle={{ width: "auto", padding: 0 }}
+        arrow={false}
+        onOpen={async () => onSelected(connection)}
+        triggerText={triggerText}
+        buttonClassName={css.selector}
+      >
+        <div className={css.popup} ref={connectionsRef}>
+          <Popup
+            params={params}
+            currentConnection={connection}
+            onSelected={onSelected}
+            state={state}
+            storedConnections={storedConnections}
+          />
+        </div>
+      </ButtonWithPopup>
     </div>
   );
 }

@@ -1,8 +1,5 @@
-.leftLinks {
-  @apply ml-12 flex items-center;
-}
-
 .titlebar {
+  @apply bg-storm-600 text-white flex justify-center items-center;
   @screen lg {
     @apply h-16;
   }
