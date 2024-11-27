@@ -5,12 +5,15 @@ import { Button } from "@dolthub/react-components";
 import { DatabaseOptionalSchemaParams } from "@lib/params";
 import { GoChevronLeft } from "@react-icons/all-files/go/GoChevronLeft";
 import { ReactNode } from "react";
+import cx from "classnames";
 import css from "./index.module.css";
 
 type Props = {
   params: DatabaseOptionalSchemaParams;
   children: ReactNode;
 };
+
+const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
 
 export default function Layout(props: Props) {
   return (
@@ -32,7 +35,7 @@ export default function Layout(props: Props) {
           </DatabaseLink>
         </div>
       </header>
-      <div className={css.outer}>
+      <div className={cx(css.outer, { [css.moreTopDistance]: forMacNav })}>
         <KeyNav className={css.main}>{props.children}</KeyNav>
       </div>
     </DatabaseLayoutWrapperOuter>

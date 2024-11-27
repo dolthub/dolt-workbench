@@ -6,6 +6,7 @@ import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
 import { excerpt } from "@dolthub/web-utils";
+import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
 import css from "./index.module.css";
@@ -30,6 +31,9 @@ export default function Popup({
       <div className={css.top}>
         <div className={cx(css.header, css.left)}>
           <span>CONNECTIONS</span>
+          <Link href="/connections">
+            <AiOutlinePlus />
+          </Link>
         </div>
         <div className={cx(css.header, css.right)}>
           <span>DATABASES</span>

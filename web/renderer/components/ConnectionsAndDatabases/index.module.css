@@ -41,7 +41,10 @@
 }
 
 .header {
-  @apply flex items-center text-stone-400 font-semibold text-sm border-b border-stone-100 py-2 px-4 justify-between;
+  @apply flex items-center  border-b border-stone-100 py-2 px-4 justify-between;
+  span {
+    @apply font-semibold text-sm text-storm-500;
+  }
   svg {
     @apply text-[#000];
   }

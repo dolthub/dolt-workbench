@@ -49,3 +49,7 @@
 .main {
   @apply outline-none max-w-7xl mx-auto w-full bg-white h-full overflow-auto;
 }
+
+.moreTopDistance {
+  @apply top-32;
+}
