@@ -3,7 +3,6 @@
   @screen lg {
     @apply h-16;
   }
-  -webkit-app-region: drag;
   a,
   button {
     @apply cursor-pointer;
@@ -23,8 +22,21 @@
   }
 }
 
-.dLogo img {
-  @apply max-w-none max-h-none;
+.drag {
+  -webkit-app-region: drag;
+  a,
+  button {
+    @apply cursor-pointer;
+    -webkit-app-region: no-drag;
+  }
+}
+
+.noDrag {
+  -webkit-app-region: no-drag;
+}
+
+.logo {
+  @apply max-h-6;
 }
 
 .forMobile {

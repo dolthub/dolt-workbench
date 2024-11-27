@@ -18,17 +18,19 @@ import css from "./index.module.css";
 
 type Props = {
   params: DatabaseParams;
+  setNoDrag: (isOpen: boolean) => void;
 };
 
 type InnerProps = Props & {
   connection: DatabaseConnectionFragment;
 };
 
-function Inner({ connection, params }: InnerProps) {
+function Inner({ connection, params, setNoDrag }: InnerProps) {
   const { onSelected, state, storedConnections } =
     useSelectedConnection(connection);
   const [isOpen, setIsOpen] = useState(false);
   const connectionsRef = useRef<HTMLDivElement>(null);
+
   useOnClickOutside(connectionsRef, () => {
     setIsOpen(false);
   });
@@ -45,7 +47,13 @@ function Inner({ connection, params }: InnerProps) {
         offsetX={-16}
         contentStyle={{ width: "auto", padding: 0 }}
         arrow={false}
-        onOpen={async () => onSelected(connection)}
+        onOpen={async () => {
+          setNoDrag(true);
+          await onSelected(connection);
+        }}
+        onClose={() => {
+          setNoDrag(false);
+        }}
         triggerText={triggerText}
         buttonClassName={css.selector}
       >
@@ -63,7 +71,7 @@ function Inner({ connection, params }: InnerProps) {
   );
 }
 
-export default function ConnectionsAndDatabases({ params }: Props) {
+export default function ConnectionsAndDatabases(props: Props) {
   const res = useCurrentConnectionQuery();
 
   return (
@@ -71,7 +79,7 @@ export default function ConnectionsAndDatabases({ params }: Props) {
       result={{ ...res, data: res.data }}
       render={data =>
         data.currentConnection ? (
-          <Inner params={params} connection={data.currentConnection} />
+          <Inner {...props} connection={data.currentConnection} />
         ) : (
           <ErrorMsg errString="No connection found" />
         )

@@ -1,4 +1,5 @@
 .iconAndSelector {
+  -webkit-app-region: no-drag;
   @apply hidden;
   @screen lg {
     @apply flex items-center;
@@ -10,7 +11,7 @@
 }
 
 .selector {
-  @apply rounded px-4 py-1 bg-[#3C4D5A] min-w-48 flex items-center justify-between font-normal;
+  @apply rounded px-4 py-1 bg-[#3C4D5A] min-w-56 flex items-center justify-between font-normal;
 }
 
 .label {
