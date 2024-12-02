@@ -210,7 +210,7 @@
     "next": "^14.2.4",
     "nextron": "^9.4.0",
     "npm-run-all2": "^7.0.1",
-    "postcss": "^8.4.40",
+    "postcss": "^8.4.49",
     "postcss-preset-env": "^9.4.0",
     "prettier": "^3.3.3",
     "react": "^18.3.1",
