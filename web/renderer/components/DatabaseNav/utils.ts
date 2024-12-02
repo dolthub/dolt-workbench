@@ -9,6 +9,7 @@ import {
   ref,
   RefUrl,
   releases,
+  remotes,
 } from "@lib/urls";
 
 function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
@@ -23,6 +24,8 @@ function getUrlFromName(name: string): [DatabaseUrl, RefUrl?] {
       return [releases];
     case "Pull Requests":
       return [pulls];
+    case "Remotes":
+      return [remotes];
     default:
       return [database, ref];
   }

@@ -113,6 +113,18 @@ export function commitLogBreadcrumbDetails(
   ];
 }
 
+export function remoteBreadcrumbDetails(params: DatabaseParams): BreadcrumbDetails[] {
+  return [
+    ...databaseBreadcrumbs(params),
+    {
+      child: <span>remotes</span>,
+      name: BreadcrumbName.DBRemote,
+      type: BreadcrumbType.Text,
+    },
+  ];
+}
+
+
 export function tableBreadcrumbsDetails(
   params: TableParams,
 ): BreadcrumbDetails[] {

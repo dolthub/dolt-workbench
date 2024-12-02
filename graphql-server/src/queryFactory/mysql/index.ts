@@ -301,4 +301,8 @@ export class MySQLQueryFactory
   async restoreAllTables(_args: t.RefArgs): t.PR {
     throw notDoltError("restore all tables");
   }
+
+  async getRemotes(args: t.DBArgs): t.PR {
+    throw notDoltError("get one-sided diff");
+  }
 }

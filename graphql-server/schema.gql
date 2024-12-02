@@ -279,6 +279,18 @@ type TagList {
   list: [Tag!]!
 }
 
+type Remote {
+  _id: ID!
+  name: String!
+  url: String!
+  fetch_specs: [String!]!
+}
+
+type RemoteList {
+  nextOffset: Int
+  list: [Remote!]!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -298,6 +310,7 @@ type Query {
   docs(databaseName: String!, refName: String!): DocList!
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
+  remotes(databaseName: String!, offset: Int): RemoteList!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff

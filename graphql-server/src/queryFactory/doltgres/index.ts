@@ -425,6 +425,13 @@ export class DoltgresQueryFactory
       args.refName,
     );
   }
+
+  async getRemotes(args: t.DBArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltRemotes(em),
+      args.databaseName,
+    );
+  }
 }
 
 async function getTableInfoWithQR(

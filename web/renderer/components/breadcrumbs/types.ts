@@ -23,6 +23,7 @@ export enum BreadcrumbName {
   DBSchema = "db-schema",
   DBCommitGraph = "db-commit-graph",
   DBNew = "db-new",
+  DBRemote = "db-remote",
 }
 
 export enum BreadcrumbType {

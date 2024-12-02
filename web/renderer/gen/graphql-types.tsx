@@ -381,6 +381,7 @@ export type Query = {
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
   pullWithDetails: PullWithDetails;
+  remotes: RemoteList;
   rowDiffs: RowDiffList;
   rows: RowList;
   schemaDiff?: Maybe<SchemaDiff>;
@@ -501,6 +502,12 @@ export type QueryPullWithDetailsArgs = {
 };
 
 
+export type QueryRemotesArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryRowDiffsArgs = {
   databaseName: Scalars['String']['input'];
   filterByRowType?: InputMaybe<DiffRowType>;
@@ -606,6 +613,20 @@ export enum QueryExecutionStatus {
   Success = 'Success',
   Timeout = 'Timeout'
 }
+
+export type Remote = {
+  __typename?: 'Remote';
+  _id: Scalars['ID']['output'];
+  fetch_specs: Array<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type RemoteList = {
+  __typename?: 'RemoteList';
+  list: Array<Remote>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
+};
 
 export type Row = {
   __typename?: 'Row';
@@ -1161,6 +1182,16 @@ export type DeleteTagMutationVariables = Exact<{
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
+export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetch_specs: Array<string> };
+
+export type RemoteListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RemoteListQuery = { __typename?: 'Query', remotes: { __typename?: 'RemoteList', nextOffset?: number | null, list: Array<{ __typename?: 'Remote', _id: string, name: string, url: string, fetch_specs: Array<string> }> } };
+
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1579,6 +1610,14 @@ export const PullDetailsFragmentDoc = gql`
   }
 }
     ${PullDetailsForPullDetailsFragmentDoc}`;
+export const RemoteFragmentDoc = gql`
+    fragment Remote on Remote {
+  _id
+  name
+  url
+  fetch_specs
+}
+    `;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -3447,6 +3486,50 @@ export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<De
 export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
 export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
+export const RemoteListDocument = gql`
+    query RemoteList($databaseName: String!, $offset: Int) {
+  remotes(databaseName: $databaseName, offset: $offset) {
+    list {
+      ...Remote
+    }
+    nextOffset
+  }
+}
+    ${RemoteFragmentDoc}`;
+
+/**
+ * __useRemoteListQuery__
+ *
+ * To run a query within a React component, call `useRemoteListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useRemoteListQuery(baseOptions: Apollo.QueryHookOptions<RemoteListQuery, RemoteListQueryVariables> & ({ variables: RemoteListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+      }
+export function useRemoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteListQuery, RemoteListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+        }
+export function useRemoteListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteListQuery, RemoteListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+        }
+export type RemoteListQueryHookResult = ReturnType<typeof useRemoteListQuery>;
+export type RemoteListLazyQueryHookResult = ReturnType<typeof useRemoteListLazyQuery>;
+export type RemoteListSuspenseQueryHookResult = ReturnType<typeof useRemoteListSuspenseQuery>;
+export type RemoteListQueryResult = Apollo.QueryResult<RemoteListQuery, RemoteListQueryVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(

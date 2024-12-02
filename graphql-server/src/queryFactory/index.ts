@@ -144,4 +144,6 @@ export declare class QueryFactory {
   getRowDiffs(args: t.RowDiffArgs): t.DiffRes;
 
   restoreAllTables(args: t.RefArgs): t.PR;
+
+  getRemotes(args: t.DBArgs): t.PR;
 }
