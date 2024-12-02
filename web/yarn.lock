@@ -8854,7 +8854,7 @@ __metadata:
     nextron: "npm:^9.4.0"
     node-sql-parser: "npm:^4.17.0"
     npm-run-all2: "npm:^7.0.1"
-    postcss: "npm:^8.4.40"
+    postcss: "npm:^8.4.49"
     postcss-preset-env: "npm:^9.4.0"
     prettier: "npm:^3.3.3"
     react: "npm:^18.3.1"
@@ -15632,7 +15632,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"postcss@npm:^8.4.23, postcss@npm:^8.4.40":
+"postcss@npm:^8.4.23":
   version: 8.4.47
   resolution: "postcss@npm:8.4.47"
   dependencies:
