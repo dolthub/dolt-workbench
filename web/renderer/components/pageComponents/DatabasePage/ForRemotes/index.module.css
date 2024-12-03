@@ -11,33 +11,34 @@
 }
 
 .table {
-  @apply my-8 min-w-[55rem] w-full;
+  @apply border border-stone-100 border-separate rounded-lg text-primary mx-auto my-10 overflow-x-auto block;
+  border-spacing: 0;
 
-  tr {
-    @apply border-b-[6px] border-stone-50 relative;
+  @screen lg {
+    @apply min-w-[40rem] overflow-x-visible;
+    display: table;
+  }
+
+  td,
+  th {
+    @apply px-6 text-left;
   }
 
   th {
-    @apply font-semibold;
-  }
-
-  th,
-  td {
-    @apply pl-2 pr-4 py-2.5 text-left lg:pr-10;
+    @apply pt-6 pb-2 bg-stone-50;
   }
 
   td {
-    @apply bg-white text-stone-500;
+    @apply border-t border-stone-100 py-3;
   }
 
-  th:first-child,
-  td:first-child {
-    @apply xl:pl-20;
-  }
-
-  th:last-child,
-  td:last-child {
-    @apply xl:pr-32;
+  tr:first-child {
+    th:first-child {
+      @apply rounded-tl-lg;
+    }
+    th:last-child {
+      @apply rounded-tr-lg;
+    }
   }
 }
 
