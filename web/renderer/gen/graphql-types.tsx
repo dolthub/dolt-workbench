@@ -229,6 +229,7 @@ export type Mutation = {
   createSchema: Scalars['Boolean']['output'];
   createTag: Scalars['String']['output'];
   deleteBranch: Scalars['Boolean']['output'];
+  deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
@@ -285,6 +286,12 @@ export type MutationCreateTagArgs = {
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteRemoteArgs = {
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
 };
 
 
@@ -1198,6 +1205,14 @@ export type AddRemoteMutationVariables = Exact<{
 
 
 export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
+
+export type DeleteRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: boolean };
 
 export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
 
@@ -3540,6 +3555,38 @@ export function useAddRemoteMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation>;
 export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
 export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
+export const DeleteRemoteDocument = gql`
+    mutation DeleteRemote($remoteName: String!, $databaseName: String!) {
+  deleteRemote(remoteName: $remoteName, databaseName: $databaseName)
+}
+    `;
+export type DeleteRemoteMutationFn = Apollo.MutationFunction<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
+
+/**
+ * __useDeleteRemoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRemoteMutation, { data, loading, error }] = useDeleteRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDeleteRemoteMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRemoteMutation, DeleteRemoteMutationVariables>(DeleteRemoteDocument, options);
+      }
+export type DeleteRemoteMutationHookResult = ReturnType<typeof useDeleteRemoteMutation>;
+export type DeleteRemoteMutationResult = Apollo.MutationResult<DeleteRemoteMutation>;
+export type DeleteRemoteMutationOptions = Apollo.BaseMutationOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
 export const RemoteListDocument = gql`
     query RemoteList($databaseName: String!, $offset: Int) {
   remotes(databaseName: $databaseName, offset: $offset) {

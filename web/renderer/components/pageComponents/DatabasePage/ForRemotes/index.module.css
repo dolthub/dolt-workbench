@@ -49,3 +49,11 @@
 .loader {
   @apply text-primary my-4 text-center;
 }
+
+.trashColumn {
+  @apply flex justify-end;
+}
+
+.icon {
+  @apply text-lg m-4;
+}

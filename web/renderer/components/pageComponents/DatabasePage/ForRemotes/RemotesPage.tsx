@@ -1,5 +1,5 @@
 import { Button, Loader, QueryHandler } from "@dolthub/react-components";
-import { RemoteFragment } from "@gen/graphql-types";
+import { RemoteFragment, useDeleteRemoteMutation } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
@@ -8,6 +8,9 @@ import InfiniteScroll from "react-infinite-scroller";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import Link from "@components/links/Link";
 import { newRemote } from "@lib/urls";
+import { useState } from "react";
+import DeleteModal from "@components/DeleteModal";
+import { refetchRemoteQueries } from "@lib/refetchQueries";
 import { useRemoteList } from "./useRemoteList";
 import RemoteRow from "./RemoteRow";
 import css from "./index.module.css";
@@ -24,6 +27,12 @@ type InnerProps = {
 
 function Inner({ remotes, loadMore, hasMore, params }: InnerProps) {
   const createUrl = newRemote(params);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [remoteNameToDelete, setRemoteNameToDelete] = useState("");
+  const onDeleteClicked = (r: RemoteFragment) => {
+    setRemoteNameToDelete(r.name);
+    setDeleteModalOpen(true);
+  };
   return (
     <div className={css.container}>
       <div className={css.top}>
@@ -52,11 +61,16 @@ function Inner({ remotes, loadMore, hasMore, params }: InnerProps) {
                   <th>Name</th>
                   <th>Url</th>
                   <th>Fetch Specs</th>
+                  <th aria-hidden="true" />
                 </tr>
               </thead>
               <tbody>
                 {remotes.map(r => (
-                  <RemoteRow key={r._id} remote={r} />
+                  <RemoteRow
+                    key={r._id}
+                    remote={r}
+                    onDeleteClicked={() => onDeleteClicked(r)}
+                  />
                 ))}
               </tbody>
             </table>
@@ -67,6 +81,18 @@ function Inner({ remotes, loadMore, hasMore, params }: InnerProps) {
           No remotes found
         </p>
       )}
+      <DeleteModal
+        isOpen={isDeleteModalOpen}
+        setIsOpen={setDeleteModalOpen}
+        asset="remote"
+        assetId={remoteNameToDelete}
+        mutationProps={{
+          hook: useDeleteRemoteMutation,
+          variables: { ...params, remoteName: remoteNameToDelete },
+          refetchQueries: refetchRemoteQueries(params),
+        }}
+        cannotBeUndone
+      />
     </div>
   );
 }

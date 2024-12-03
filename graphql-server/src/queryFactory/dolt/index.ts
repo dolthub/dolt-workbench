@@ -449,6 +449,14 @@ export class DoltQueryFactory
       args.databaseName,
     );
   }
+
+  async callDeleteRemote(args: t.RemoteArgs): t.PR {
+    return this.query(
+      qh.callDeleteRemote,
+      [args.remoteName],
+      args.databaseName,
+    );
+  }
 }
 
 async function getTableInfoWithQR(

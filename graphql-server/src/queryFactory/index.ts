@@ -148,4 +148,6 @@ export declare class QueryFactory {
   getRemotes(args: t.DBArgs): t.PR;
 
   addRemote(args: t.AddRemoteArgs): t.PR;
+
+  callDeleteRemote(args: t.RemoteArgs): t.PR;
 }

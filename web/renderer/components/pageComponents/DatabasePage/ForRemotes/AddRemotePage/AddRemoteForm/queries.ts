@@ -13,3 +13,9 @@ export const CREATE_BRANCH = gql`
     )
   }
 `;
+
+export const DELETE_REMOTE = gql`
+  mutation DeleteRemote($remoteName: String!, $databaseName: String!) {
+    deleteRemote(remoteName: $remoteName, databaseName: $databaseName)
+  }
+`;

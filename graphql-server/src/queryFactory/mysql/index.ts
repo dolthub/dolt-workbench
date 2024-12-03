@@ -309,4 +309,8 @@ export class MySQLQueryFactory
   async addRemote(_: t.AddRemoteArgs): t.PR {
     throw notDoltError("add remote");
   }
+
+  async callDeleteRemote(_: t.RemoteArgs): t.PR {
+    throw notDoltError("delete remote");
+  }
 }

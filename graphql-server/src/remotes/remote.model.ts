@@ -1,7 +1,7 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { __Type } from "graphql";
-import { RawRow } from "src/queryFactory/types";
-import { ListOffsetRes } from "src/utils/commonTypes";
+import { RawRow } from "../queryFactory/types";
+import { ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()
 export class Remote {

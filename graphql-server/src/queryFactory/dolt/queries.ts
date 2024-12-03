@@ -78,6 +78,8 @@ export const getCallMerge = (hasAuthor = false) =>
 
 export const callAddRemote = `CALL DOLT_REMOTE("add", ?, ?)`;
 
+export const callDeleteRemote = `CALL DOLT_REMOTE("remove", ?)`;
+
 // TAGS
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;
