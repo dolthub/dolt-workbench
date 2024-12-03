@@ -41,7 +41,6 @@ function Inner({ remotes, loadMore, hasMore }: InnerProps) {
                   <th>Name</th>
                   <th>Url</th>
                   <th>Fetch Specs</th>
-                  <th>Params</th>
                 </tr>
               </thead>
               <tbody>

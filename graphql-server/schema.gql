@@ -284,7 +284,6 @@ type Remote {
   name: String!
   url: String!
   fetchSpecs: [String!]
-  params: String
 }
 
 type RemoteList {
