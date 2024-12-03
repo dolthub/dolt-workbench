@@ -113,7 +113,9 @@ export function commitLogBreadcrumbDetails(
   ];
 }
 
-export function remoteBreadcrumbDetails(params: DatabaseParams): BreadcrumbDetails[] {
+export function remoteBreadcrumbDetails(
+  params: DatabaseParams,
+): BreadcrumbDetails[] {
   return [
     ...databaseBreadcrumbs(params),
     {
@@ -123,7 +125,6 @@ export function remoteBreadcrumbDetails(params: DatabaseParams): BreadcrumbDetai
     },
   ];
 }
-
 
 export function tableBreadcrumbsDetails(
   params: TableParams,

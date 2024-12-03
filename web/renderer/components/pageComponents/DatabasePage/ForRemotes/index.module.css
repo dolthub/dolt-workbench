@@ -1,0 +1,46 @@
+.container {
+  @apply mx-6;
+}
+
+.top {
+  @apply flex justify-between pt-6;
+}
+
+.tableParent {
+  @apply overflow-x-auto;
+}
+
+.table {
+  @apply my-8 min-w-[55rem] w-full;
+
+  tr {
+    @apply border-b-[6px] border-stone-50 relative;
+  }
+
+  th {
+    @apply font-semibold;
+  }
+
+  th,
+  td {
+    @apply pl-2 pr-4 py-2.5 text-left lg:pr-10;
+  }
+
+  td {
+    @apply bg-white text-stone-500;
+  }
+
+  th:first-child,
+  td:first-child {
+    @apply xl:pl-20;
+  }
+
+  th:last-child,
+  td:last-child {
+    @apply xl:pr-32;
+  }
+}
+
+.noRemotes {
+  @apply text-center text-lg m-6;
+}

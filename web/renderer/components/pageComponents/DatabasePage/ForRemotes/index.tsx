@@ -17,13 +17,11 @@ export default function ForBranches({ params, newBranch }: Props): JSX.Element {
       initialTabIndex={5}
       params={params}
       hideDefaultTable
-      smallHeaderBreadcrumbs={
-        <RemotesBreadcrumbs params={params} />
-      }
+      smallHeaderBreadcrumbs={<RemotesBreadcrumbs params={params} />}
       routeRefChangeTo={urlParams => branches(urlParams)}
     >
       <NotDoltWrapper showNotDoltMsg feature={feature} bigMsg>
-        <RemotesPage params={params}/>
+        <RemotesPage params={params} />
       </NotDoltWrapper>
     </ForDefaultBranch>
   );

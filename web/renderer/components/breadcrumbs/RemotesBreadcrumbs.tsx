@@ -1,4 +1,4 @@
-import { DatabaseParams  } from "@lib/params";
+import { DatabaseParams } from "@lib/params";
 import Breadcrumbs from ".";
 import { remoteBreadcrumbDetails } from "./breadcrumbDetails";
 
@@ -8,12 +8,12 @@ type Props = {
 };
 
 export default function RemotesBreadcrumbs(props: Props) {
-    return (
-        <Breadcrumbs
-          {...props}
-          aria-label="db-remotes-breadcrumbs"
-          data-cy="db-remotes-breadcrumbs"
-          breadcrumbs={remoteBreadcrumbDetails(props.params)}
-        />
-      );
+  return (
+    <Breadcrumbs
+      {...props}
+      aria-label="db-remotes-breadcrumbs"
+      data-cy="db-remotes-breadcrumbs"
+      breadcrumbs={remoteBreadcrumbDetails(props.params)}
+    />
+  );
 }
