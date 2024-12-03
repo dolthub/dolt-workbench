@@ -44,3 +44,7 @@
 .noRemotes {
   @apply text-center text-lg m-6;
 }
+
+.loader {
+  @apply text-primary my-4 text-center;
+}

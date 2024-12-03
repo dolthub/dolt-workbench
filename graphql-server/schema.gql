@@ -283,7 +283,7 @@ type Remote {
   _id: ID!
   name: String!
   url: String!
-  fetchSpecs: [String!]!
+  fetchSpecs: [String!]
   params: String
 }
 

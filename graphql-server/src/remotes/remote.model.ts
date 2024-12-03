@@ -14,8 +14,8 @@ export class Remote {
   @Field()
   url: string;
 
-  @Field(_type => [String])
-  fetchSpecs: string[];
+  @Field(_type => [String], { nullable: true })
+  fetchSpecs?: string[];
 
   @Field({ nullable: true })
   params?: string;

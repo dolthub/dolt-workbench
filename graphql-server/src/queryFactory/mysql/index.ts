@@ -303,6 +303,6 @@ export class MySQLQueryFactory
   }
 
   async getRemotes(_args: t.DBArgs): t.PR {
-    throw notDoltError("get one-sided diff");
+    throw notDoltError("get remotes");
   }
 }

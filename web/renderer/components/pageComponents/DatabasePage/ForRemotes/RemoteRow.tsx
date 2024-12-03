@@ -4,7 +4,7 @@ type Props = {
   remote: RemoteFragment;
 };
 
-export default function Row({ remote }: Props) {
+export default function RemoteRow({ remote }: Props) {
   return (
     <tr>
       <td>{remote.name}</td>

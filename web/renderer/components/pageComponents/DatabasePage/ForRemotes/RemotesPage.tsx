@@ -1,8 +1,13 @@
-import { QueryHandler } from "@dolthub/react-components";
-import { RemoteFragment, useRemoteListQuery } from "@gen/graphql-types";
+import { Loader, QueryHandler } from "@dolthub/react-components";
+import { RemoteFragment } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
+import { gqlDepNotFound } from "@lib/errors/graphql";
+import { errorMatches } from "@lib/errors/helpers";
+import Database404 from "@components/Database404";
+import InfiniteScroll from "react-infinite-scroller";
+import { useRemoteList } from "./useRemoteList";
+import RemoteRow from "./RemoteRow";
 import css from "./index.module.css";
-import Row from "./Row";
 
 type Props = {
   params: DatabaseParams;
@@ -10,32 +15,42 @@ type Props = {
 
 type InnerProps = {
   remotes: RemoteFragment[];
+  loadMore: () => Promise<void>;
+  hasMore: boolean;
 };
 
-function Inner({ remotes }: InnerProps) {
+function Inner({ remotes, loadMore, hasMore }: InnerProps) {
   return (
     <div className={css.container}>
       <div className={css.top}>
         <h1>Remotes</h1>
       </div>
-
       {remotes.length ? (
         <div className={css.tableParent}>
-          <table className={css.table}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Url</th>
-                <th>Fetch Specs</th>
-                <th>Params</th>
-              </tr>
-            </thead>
-            <tbody>
-              {remotes.map(r => (
-                <Row key={r._id} remote={r} />
-              ))}
-            </tbody>
-          </table>
+          <InfiniteScroll
+            loadMore={loadMore}
+            hasMore={hasMore}
+            loader={<div className={css.loader}>Loading remotes ...</div>}
+            useWindow={false}
+            initialLoad={false}
+            getScrollParent={() => document.getElementById("main-content")}
+          >
+            <table className={css.table} data-cy="remote-list">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Url</th>
+                  <th>Fetch Specs</th>
+                  <th>Params</th>
+                </tr>
+              </thead>
+              <tbody>
+                {remotes.map(r => (
+                  <RemoteRow key={r._id} remote={r} />
+                ))}
+              </tbody>
+            </table>
+          </InfiniteScroll>
         </div>
       ) : (
         <p className={css.noRemotes} data-cy="remote-list-no-remotes">
@@ -47,11 +62,18 @@ function Inner({ remotes }: InnerProps) {
 }
 
 export default function RemotesPage({ params }: Props) {
-  const res = useRemoteListQuery({ variables: params });
+  const res = useRemoteList(params);
+  if (res.loading) return <Loader loaded={false} />;
+  if (errorMatches(gqlDepNotFound, res.error)) {
+    return <Database404 params={params} />;
+  }
+
   return (
     <QueryHandler
-      result={{ ...res, data: res.data?.remotes.list }}
-      render={data => <Inner remotes={data} />}
+      result={{ ...res, data: res.remotes }}
+      render={data => (
+        <Inner remotes={data} loadMore={res.loadMore} hasMore={res.hasMore} />
+      )}
     />
   );
 }
