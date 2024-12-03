@@ -10,10 +10,10 @@ export default function RemoteRow({ remote }: Props) {
       <td>{remote.name}</td>
       <td>{remote.url}</td>
       <td>
-        {remote.fetchSpecs.map((fs, i) => (
+        {remote.fetchSpecs?.map((fs, i) => (
           <span key={fs}>
             {fs}
-            {i < remote.fetchSpecs.length - 1 ? ", " : ""}
+            {i < (remote.fetchSpecs?.length ?? 0) - 1 ? ", " : ""}
           </span>
         ))}
       </td>
