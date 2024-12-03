@@ -617,7 +617,7 @@ export enum QueryExecutionStatus {
 export type Remote = {
   __typename?: 'Remote';
   _id: Scalars['ID']['output'];
-  fetchSpecs: Array<Scalars['String']['output']>;
+  fetchSpecs?: Maybe<Array<Scalars['String']['output']>>;
   name: Scalars['String']['output'];
   params?: Maybe<Scalars['String']['output']>;
   url: Scalars['String']['output'];
@@ -1183,7 +1183,7 @@ export type DeleteTagMutationVariables = Exact<{
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
-export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs: Array<string>, params?: string | null };
+export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null, params?: string | null };
 
 export type RemoteListQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1191,7 +1191,7 @@ export type RemoteListQueryVariables = Exact<{
 }>;
 
 
-export type RemoteListQuery = { __typename?: 'Query', remotes: { __typename?: 'RemoteList', nextOffset?: number | null, list: Array<{ __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs: Array<string>, params?: string | null }> } };
+export type RemoteListQuery = { __typename?: 'Query', remotes: { __typename?: 'RemoteList', nextOffset?: number | null, list: Array<{ __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null, params?: string | null }> } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
