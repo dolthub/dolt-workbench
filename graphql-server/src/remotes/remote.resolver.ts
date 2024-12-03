@@ -1,9 +1,25 @@
-import { Args, Query, Resolver } from "@nestjs/graphql";
-import { ConnectionProvider } from "src/connections/connection.provider";
-import { DBArgsWithOffset } from "src/utils/commonTypes";
-import { RawRow } from "src/queryFactory/types";
-import { getNextOffset, ROW_LIMIT } from "src/utils";
+import {
+  Args,
+  ArgsType,
+  Field,
+  Mutation,
+  Query,
+  Resolver,
+} from "@nestjs/graphql";
+import { ConnectionProvider } from "../connections/connection.provider";
+import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
+import { RawRow } from "../queryFactory/types";
+import { getNextOffset, ROW_LIMIT } from "../utils";
 import { fromDoltRemotesRow, Remote, RemoteList } from "./remote.model";
+
+@ArgsType()
+export class AddRemoteArgs extends DBArgs {
+  @Field()
+  remoteName: string;
+
+  @Field()
+  remoteUrl: string;
+}
 
 @Resolver(_of => Remote)
 export class RemoteResolver {
@@ -15,6 +31,20 @@ export class RemoteResolver {
 
     const res = await conn.getRemotes(args);
     return getRemoteListRes(res, args);
+  }
+
+  @Mutation(_returns => String)
+  async addRemote(@Args() args: AddRemoteArgs): Promise<string> {
+    const conn = this.conn.connection();
+    await conn.addRemote(args);
+    return args.remoteName;
+  }
+
+  @Mutation(_returns => Boolean)
+  async deleteRemote(@Args() args: RemoteArgs): Promise<boolean> {
+    const conn = this.conn.connection();
+    await conn.callDeleteRemote(args);
+    return true;
   }
 }
 

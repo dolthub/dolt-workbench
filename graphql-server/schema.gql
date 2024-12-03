@@ -361,6 +361,8 @@ type Mutation {
   resetDatabase(newDatabase: String): Boolean!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
+  addRemote(databaseName: String!, remoteName: String!, remoteUrl: String!): String!
+  deleteRemote(databaseName: String!, remoteName: String!): Boolean!
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

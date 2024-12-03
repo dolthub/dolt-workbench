@@ -66,6 +66,12 @@ export class TagArgs extends DBArgs {
   tagName: string;
 }
 
+@ArgsType()
+export class RemoteArgs extends DBArgs {
+  @Field()
+  remoteName: string;
+}
+
 @InputType()
 export class AuthorInfo {
   @Field()
