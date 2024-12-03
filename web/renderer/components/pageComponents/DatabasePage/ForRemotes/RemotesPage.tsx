@@ -17,7 +17,7 @@ function Inner({ remotes }: InnerProps) {
         <li key={remote.name}>
           <span>{remote.name}</span>
           <span>{remote.url}</span>
-          <span>{remote.fetch_specs}</span>
+          <span>{remote.fetchSpecs}</span>
         </li>
       ))}
     </ul>

@@ -5,7 +5,7 @@ export const REMOTES_FOR_REMOTES_PAGE_QUERY = gql`
     _id
     name
     url
-    fetch_specs
+    fetchSpecs
   }
   query RemoteList($databaseName: String!, $offset: Int) {
     remotes(databaseName: $databaseName, offset: $offset) {

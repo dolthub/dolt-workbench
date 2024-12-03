@@ -14,7 +14,7 @@ export class Remote {
   url: string;
 
   @Field(_type => [String])
-  fetch_specs: string[];
+  fetchSpecs: string[];
 }
 
 @ObjectType()
@@ -28,6 +28,6 @@ export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
     _id: `databases/${databaseName}/remotes/${r.name}`,
     name: r.name,
     url: r.url,
-    fetch_specs: r.fetch_specs,
+    fetchSpecs: r.fetch_specs,
   };
 }

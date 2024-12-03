@@ -1,9 +1,9 @@
 import { Args, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "src/connections/connection.provider";
-import { fromDoltRemotesRow, Remote, RemoteList } from "./remote.model";
 import { DBArgsWithOffset } from "src/utils/commonTypes";
 import { RawRow } from "src/queryFactory/types";
 import { getNextOffset, ROW_LIMIT } from "src/utils";
+import { fromDoltRemotesRow, Remote, RemoteList } from "./remote.model";
 
 @Resolver(_of => Remote)
 export class RemoteResolver {
