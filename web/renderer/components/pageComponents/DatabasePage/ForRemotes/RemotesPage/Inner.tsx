@@ -1,9 +1,6 @@
-import { Button, Loader, QueryHandler } from "@dolthub/react-components";
+import { Button } from "@dolthub/react-components";
 import { RemoteFragment, useDeleteRemoteMutation } from "@gen/graphql-types";
-import { DatabaseParams } from "@lib/params";
-import { gqlDepNotFound } from "@lib/errors/graphql";
-import { errorMatches } from "@lib/errors/helpers";
-import Database404 from "@components/Database404";
+
 import InfiniteScroll from "react-infinite-scroller";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import Link from "@components/links/Link";
@@ -11,21 +8,23 @@ import { newRemote } from "@lib/urls";
 import { useState } from "react";
 import DeleteModal from "@components/DeleteModal";
 import { refetchRemoteQueries } from "@lib/refetchQueries";
-import { useRemoteList } from "./useRemoteList";
+import { DatabaseParams } from "@lib/params";
 import RemoteRow from "./RemoteRow";
 import css from "./index.module.css";
 
-type Props = {
-  params: DatabaseParams;
-};
-
 type InnerProps = {
+  params: DatabaseParams;
   remotes: RemoteFragment[];
   loadMore: () => Promise<void>;
   hasMore: boolean;
-} & Props;
+};
 
-function Inner({ remotes, loadMore, hasMore, params }: InnerProps) {
+export default function Inner({
+  remotes,
+  loadMore,
+  hasMore,
+  params,
+}: InnerProps) {
   const createUrl = newRemote(params);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [remoteNameToDelete, setRemoteNameToDelete] = useState("");
@@ -70,6 +69,7 @@ function Inner({ remotes, loadMore, hasMore, params }: InnerProps) {
                     key={r._id}
                     remote={r}
                     onDeleteClicked={() => onDeleteClicked(r)}
+                    params={params}
                   />
                 ))}
               </tbody>
@@ -94,27 +94,5 @@ function Inner({ remotes, loadMore, hasMore, params }: InnerProps) {
         cannotBeUndone
       />
     </div>
-  );
-}
-
-export default function RemotesPage({ params }: Props) {
-  const res = useRemoteList(params);
-  if (res.loading) return <Loader loaded={false} />;
-  if (errorMatches(gqlDepNotFound, res.error)) {
-    return <Database404 params={params} />;
-  }
-
-  return (
-    <QueryHandler
-      result={{ ...res, data: res.remotes }}
-      render={data => (
-        <Inner
-          remotes={data}
-          loadMore={res.loadMore}
-          hasMore={res.hasMore}
-          params={params}
-        />
-      )}
-    />
   );
 }

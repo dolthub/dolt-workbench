@@ -3,8 +3,8 @@ import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DatabaseParams } from "@lib/params";
 import { remotes } from "@lib/urls";
 import ForDefaultBranch from "../ForDefaultBranch";
-import RemotesPage from "./RemotesPage";
 import AddRemotePage from "./AddRemotePage";
+import RemotesPage from "./RemotesPage";
 
 type Props = {
   params: DatabaseParams;

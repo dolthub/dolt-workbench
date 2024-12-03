@@ -52,7 +52,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   return (
     <div>
       <form onSubmit={onSubmit}>
-        <div className={css.container}>
+        <div className={css.remoteForm}>
           <FormInput
             value={remoteName}
             onChangeString={setRemoteName}

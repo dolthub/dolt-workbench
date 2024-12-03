@@ -6,10 +6,6 @@
   @apply flex justify-between pt-6;
 }
 
-.tableParent {
-  @apply overflow-x-auto;
-}
-
 .table {
   @apply border border-stone-100 border-separate rounded-lg text-primary mx-auto my-10 overflow-x-auto block;
   border-spacing: 0;

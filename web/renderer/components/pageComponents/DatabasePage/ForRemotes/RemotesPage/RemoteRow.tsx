@@ -2,14 +2,16 @@ import { RemoteFragment } from "@gen/graphql-types";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button } from "@dolthub/react-components";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
+import { DatabaseParams } from "@lib/params";
 import css from "./index.module.css";
 
 type Props = {
   remote: RemoteFragment;
-  onDeleteClicked: (r: RemoteFragment) => void;
+  onDeleteClicked: () => void;
+  params: DatabaseParams;
 };
 
-export default function RemoteRow({ remote, onDeleteClicked }: Props) {
+export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
   return (
     <tr>
       <td>{remote.name}</td>
@@ -23,7 +25,7 @@ export default function RemoteRow({ remote, onDeleteClicked }: Props) {
         ))}
       </td>
       <td className={css.trashColumn}>
-        <HideForNoWritesWrapper params={remote}>
+        <HideForNoWritesWrapper params={params}>
           <Button.Link
             onClick={onDeleteClicked}
             red
