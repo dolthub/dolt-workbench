@@ -17,6 +17,7 @@ export default function Row({ remote }: Props) {
           </span>
         ))}
       </td>
+      <td>{remote.params}</td>
     </tr>
   );
 }

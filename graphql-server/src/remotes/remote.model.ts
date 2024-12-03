@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { __Type } from "graphql";
 import { RawRow } from "src/queryFactory/types";
 import { ListOffsetRes } from "src/utils/commonTypes";
 
@@ -15,6 +16,9 @@ export class Remote {
 
   @Field(_type => [String])
   fetchSpecs: string[];
+
+  @Field({ nullable: true })
+  params?: string;
 }
 
 @ObjectType()
@@ -29,5 +33,6 @@ export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
     name: r.name,
     url: r.url,
     fetchSpecs: r.fetch_specs,
+    params: r.params,
   };
 }
