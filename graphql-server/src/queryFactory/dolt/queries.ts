@@ -74,6 +74,10 @@ export const threeDotSchemaDiffQuery = `SELECT * FROM DOLT_SCHEMA_DIFF(?, ?)`;
 export const getCallMerge = (hasAuthor = false) =>
   `CALL DOLT_MERGE(?, "--no-ff", "-m", ?${getAuthorNameString(hasAuthor)})`;
 
+// REMOTES
+
+export const callAddRemote = `CALL DOLT_REMOTE("add", ?, ?)`;
+
 // TAGS
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;

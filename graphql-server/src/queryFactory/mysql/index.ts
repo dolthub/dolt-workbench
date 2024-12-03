@@ -305,4 +305,8 @@ export class MySQLQueryFactory
   async getRemotes(_args: t.DBArgs): t.PR {
     throw notDoltError("get remotes");
   }
+
+  async addRemote(_: t.AddRemoteArgs): t.PR {
+    throw notDoltError("add remote");
+  }
 }

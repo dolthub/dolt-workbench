@@ -7,6 +7,7 @@ export type RefArgs = DBArgs & { refName: string };
 export type RefSchemaArgs = RefArgs & { schemaName: string };
 export type RefMaybeSchemaArgs = RefArgs & { schemaName?: string };
 export type BranchArgs = DBArgs & { branchName: string };
+export type AddRemoteArgs = DBArgs & { remoteName: string; remoteUrl: string };
 export type TagArgs = DBArgs & { tagName: string };
 export type TableArgs = RefArgs & { tableName: string };
 export type TableMaybeSchemaArgs = TableArgs & { schemaName?: string };
