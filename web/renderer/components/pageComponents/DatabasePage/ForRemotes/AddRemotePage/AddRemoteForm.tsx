@@ -30,6 +30,9 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
     useDoltDatabaseDetailsQuery();
+  const { dbLink, urlPlaceHolder } = getDbNameAndLink(
+    databaseDetails?.doltDatabaseDetails,
+  );
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");
   const {
@@ -74,7 +77,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             value={remoteUrl}
             onChangeString={setRemoteUrl}
             label="Add remote url"
-            placeholder="i.e. https://url-of-remote.com"
+            placeholder={urlPlaceHolder}
             className={css.input}
           />
           <ButtonsWithError
@@ -88,10 +91,9 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             </Button>
           </ButtonsWithError>
           <p className={css.text}>
-            A remote is a {getDbLink(databaseDetails?.doltDatabaseDetails)}{" "}
-            database in another location, usually on a different, network
-            accessible host. To learn more about configuring a remote for your
-            database, see our{" "}
+            A remote is a {dbLink} database in another location, usually on a
+            different, network accessible host. To learn more about configuring
+            a remote for your database, see our{" "}
             <Link href="https://docs.dolthub.com/concepts/dolt/git/remotes">
               documentation
             </Link>
@@ -103,16 +105,25 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   );
 }
 
-function getDbLink(dbDetails?: DoltDatabaseDetails): JSX.Element {
+type ReturnType = {
+  dbLink: JSX.Element;
+  urlPlaceHolder: string;
+};
+
+function getDbNameAndLink(dbDetails?: DoltDatabaseDetails): ReturnType {
   const type = getDatabaseType(
     dbDetails?.type ?? undefined,
     !!dbDetails?.isDolt,
   );
+  const universalUrl = "i.e. https://url-of-remote.com";
   if (type === "Dolt") {
-    return <DoltLink />;
+    return {
+      dbLink: <DoltLink />,
+      urlPlaceHolder: "i.e. https://doltremoteapi.dolthub.com/owner/repo",
+    };
   }
   if (type === "DoltgreSQL") {
-    return <DoltgresLink />;
+    return { dbLink: <DoltgresLink />, urlPlaceHolder: universalUrl };
   }
-  return <span>{type}</span>;
+  return { dbLink: <span>{type}</span>, urlPlaceHolder: universalUrl };
 }
