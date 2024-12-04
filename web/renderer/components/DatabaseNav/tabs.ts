@@ -4,4 +4,5 @@ export const tabs = [
   "Commit Log",
   "Releases",
   "Pull Requests",
+  "Remotes",
 ];

@@ -14,6 +14,7 @@ import { StatusResolver } from "./status/status.resolver";
 import { TableResolver } from "./tables/table.resolver";
 import { FileUploadResolver } from "./tables/upload.resolver";
 import { TagResolver } from "./tags/tag.resolver";
+import { RemoteResolver } from "./remotes/remote.resolver";
 
 const resolvers = [
   BranchResolver,
@@ -24,6 +25,7 @@ const resolvers = [
   DocsResolver,
   FileUploadResolver,
   PullResolver,
+  RemoteResolver,
   RowDiffResolver,
   RowResolver,
   SchemaDiffResolver,

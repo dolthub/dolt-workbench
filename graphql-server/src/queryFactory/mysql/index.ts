@@ -301,4 +301,16 @@ export class MySQLQueryFactory
   async restoreAllTables(_args: t.RefArgs): t.PR {
     throw notDoltError("restore all tables");
   }
+
+  async getRemotes(_args: t.ListRemotesArgs): t.PR {
+    throw notDoltError("get remotes");
+  }
+
+  async addRemote(_: t.AddRemoteArgs): t.PR {
+    throw notDoltError("add remote");
+  }
+
+  async callDeleteRemote(_: t.RemoteArgs): t.PR {
+    throw notDoltError("delete remote");
+  }
 }

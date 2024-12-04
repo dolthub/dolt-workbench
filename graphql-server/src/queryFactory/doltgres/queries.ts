@@ -160,3 +160,9 @@ export function getOrderByFromDiffCols(cols: t.RawRows): string {
 export const callResetHard = `SELECT DOLT_RESET('--hard')`;
 
 export const callCheckoutTable = `SELECT DOLT_CHECKOUT($1::text)`;
+
+// REMOTES
+
+export const callAddRemote = `SELECT DOLT_REMOTE('add', $1::text, $2::text)`;
+
+export const callDeleteRemote = `SELECT DOLT_REMOTE('remove', $1::text)`;

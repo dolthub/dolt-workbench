@@ -223,11 +223,13 @@ export enum LoadDataModifier {
 export type Mutation = {
   __typename?: 'Mutation';
   addDatabaseConnection: CurrentDatabaseState;
+  addRemote: Scalars['String']['output'];
   createBranch: Scalars['String']['output'];
   createDatabase: Scalars['Boolean']['output'];
   createSchema: Scalars['Boolean']['output'];
   createTag: Scalars['String']['output'];
   deleteBranch: Scalars['Boolean']['output'];
+  deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
@@ -243,6 +245,13 @@ export type MutationAddDatabaseConnectionArgs = {
   name: Scalars['String']['input'];
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
+export type MutationAddRemoteArgs = {
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  remoteUrl: Scalars['String']['input'];
 };
 
 
@@ -277,6 +286,12 @@ export type MutationCreateTagArgs = {
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteRemoteArgs = {
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
 };
 
 
@@ -381,6 +396,7 @@ export type Query = {
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
   pullWithDetails: PullWithDetails;
+  remotes: RemoteList;
   rowDiffs: RowDiffList;
   rows: RowList;
   schemaDiff?: Maybe<SchemaDiff>;
@@ -501,6 +517,12 @@ export type QueryPullWithDetailsArgs = {
 };
 
 
+export type QueryRemotesArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+};
+
+
 export type QueryRowDiffsArgs = {
   databaseName: Scalars['String']['input'];
   filterByRowType?: InputMaybe<DiffRowType>;
@@ -606,6 +628,20 @@ export enum QueryExecutionStatus {
   Success = 'Success',
   Timeout = 'Timeout'
 }
+
+export type Remote = {
+  __typename?: 'Remote';
+  _id: Scalars['ID']['output'];
+  fetchSpecs?: Maybe<Array<Scalars['String']['output']>>;
+  name: Scalars['String']['output'];
+  url: Scalars['String']['output'];
+};
+
+export type RemoteList = {
+  __typename?: 'RemoteList';
+  list: Array<Remote>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
+};
 
 export type Row = {
   __typename?: 'Row';
@@ -1161,6 +1197,33 @@ export type DeleteTagMutationVariables = Exact<{
 
 export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
 
+export type AddRemoteMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  remoteUrl: Scalars['String']['input'];
+}>;
+
+
+export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
+
+export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
+
+export type RemoteListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RemoteListQuery = { __typename?: 'Query', remotes: { __typename?: 'RemoteList', nextOffset?: number | null, list: Array<{ __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null }> } };
+
+export type DeleteRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: boolean };
+
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1579,6 +1642,14 @@ export const PullDetailsFragmentDoc = gql`
   }
 }
     ${PullDetailsForPullDetailsFragmentDoc}`;
+export const RemoteFragmentDoc = gql`
+    fragment Remote on Remote {
+  _id
+  name
+  url
+  fetchSpecs
+}
+    `;
 export const ColumnForDataTableFragmentDoc = gql`
     fragment ColumnForDataTable on Column {
   name
@@ -3447,6 +3518,119 @@ export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<De
 export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
 export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
 export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
+export const AddRemoteDocument = gql`
+    mutation AddRemote($databaseName: String!, $remoteName: String!, $remoteUrl: String!) {
+  addRemote(
+    databaseName: $databaseName
+    remoteName: $remoteName
+    remoteUrl: $remoteUrl
+  )
+}
+    `;
+export type AddRemoteMutationFn = Apollo.MutationFunction<AddRemoteMutation, AddRemoteMutationVariables>;
+
+/**
+ * __useAddRemoteMutation__
+ *
+ * To run a mutation, you first call `useAddRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addRemoteMutation, { data, loading, error }] = useAddRemoteMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      remoteName: // value for 'remoteName'
+ *      remoteUrl: // value for 'remoteUrl'
+ *   },
+ * });
+ */
+export function useAddRemoteMutation(baseOptions?: Apollo.MutationHookOptions<AddRemoteMutation, AddRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddRemoteMutation, AddRemoteMutationVariables>(AddRemoteDocument, options);
+      }
+export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation>;
+export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
+export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
+export const RemoteListDocument = gql`
+    query RemoteList($databaseName: String!, $offset: Int) {
+  remotes(databaseName: $databaseName, offset: $offset) {
+    list {
+      ...Remote
+    }
+    nextOffset
+  }
+}
+    ${RemoteFragmentDoc}`;
+
+/**
+ * __useRemoteListQuery__
+ *
+ * To run a query within a React component, call `useRemoteListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useRemoteListQuery(baseOptions: Apollo.QueryHookOptions<RemoteListQuery, RemoteListQueryVariables> & ({ variables: RemoteListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+      }
+export function useRemoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteListQuery, RemoteListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+        }
+export function useRemoteListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteListQuery, RemoteListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+        }
+export type RemoteListQueryHookResult = ReturnType<typeof useRemoteListQuery>;
+export type RemoteListLazyQueryHookResult = ReturnType<typeof useRemoteListLazyQuery>;
+export type RemoteListSuspenseQueryHookResult = ReturnType<typeof useRemoteListSuspenseQuery>;
+export type RemoteListQueryResult = Apollo.QueryResult<RemoteListQuery, RemoteListQueryVariables>;
+export const DeleteRemoteDocument = gql`
+    mutation DeleteRemote($remoteName: String!, $databaseName: String!) {
+  deleteRemote(remoteName: $remoteName, databaseName: $databaseName)
+}
+    `;
+export type DeleteRemoteMutationFn = Apollo.MutationFunction<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
+
+/**
+ * __useDeleteRemoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRemoteMutation, { data, loading, error }] = useDeleteRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDeleteRemoteMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRemoteMutation, DeleteRemoteMutationVariables>(DeleteRemoteDocument, options);
+      }
+export type DeleteRemoteMutationHookResult = ReturnType<typeof useDeleteRemoteMutation>;
+export type DeleteRemoteMutationResult = Apollo.MutationResult<DeleteRemoteMutation>;
+export type DeleteRemoteMutationOptions = Apollo.BaseMutationOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(
