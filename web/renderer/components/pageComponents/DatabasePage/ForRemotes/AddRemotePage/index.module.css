@@ -16,3 +16,7 @@
     }
   }
 }
+
+.text {
+  @apply text-sm text-stone-500 mb-5 max-w-xl mt-4;
+}

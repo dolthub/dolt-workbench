@@ -9,7 +9,7 @@ type Props = {
 export default function AddRemotePage(props: Props): JSX.Element {
   return (
     <div className={css.container}>
-      <h1>Add Remote</h1>
+      <h1>New Remote</h1>
       <AddRemoteForm {...props} />
     </div>
   );

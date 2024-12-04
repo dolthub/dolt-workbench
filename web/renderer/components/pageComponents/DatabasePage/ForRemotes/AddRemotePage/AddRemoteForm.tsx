@@ -12,6 +12,7 @@ import { refetchRemoteQueries } from "@lib/refetchQueries";
 import { remotes } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
+import Link from "@components/links/Link";
 import css from "./index.module.css";
 
 type Props = {
@@ -64,6 +65,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             value={remoteUrl}
             onChangeString={setRemoteUrl}
             label="Add remote url"
+            placeholder="i.e. https://url-of-remote.com"
             className={css.input}
           />
           <ButtonsWithError
@@ -76,6 +78,14 @@ export default function AddRemoteForm(props: Props): JSX.Element {
               Add remote
             </Button>
           </ButtonsWithError>
+          <p className={css.text}>
+            A remote is a [Dolt|Doltgres] database in another location, usually
+            on a different, network accessible host. To learn more about
+            configuring a remote for your database, see our{" "}
+            <Link href="https://docs.dolthub.com/concepts/dolt/git/remotes">
+              documentation
+            </Link>
+          </p>
         </div>
         <Loader loaded={!loading} />
       </form>
