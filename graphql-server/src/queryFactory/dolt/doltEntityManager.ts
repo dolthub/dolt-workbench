@@ -139,10 +139,12 @@ export async function getDoltTags(em: EntityManager): t.PR {
     .getRawMany();
 }
 
-export async function getDoltRemotes(em: EntityManager): t.PR {
-  return em
-    .createQueryBuilder()
-    .select("*")
-    .from("dolt_remotes", "")
-    .getRawMany();
+export async function getDoltRemotesPaginated(
+  em: EntityManager,
+  args: t.ListRemotesArgs,
+): t.PR {
+  let sel = em.createQueryBuilder().select("*").from("dolt_remotes", "");
+  sel = sel.offset(args.offset);
+
+  return sel.limit(ROW_LIMIT + 1).getRawMany();
 }

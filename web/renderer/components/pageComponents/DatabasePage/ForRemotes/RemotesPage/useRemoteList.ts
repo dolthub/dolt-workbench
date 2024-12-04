@@ -18,7 +18,6 @@ type ReturnType = {
   error?: ApolloErrorType;
   loading: boolean;
   hasMore: boolean;
-  refetch: () => Promise<void>;
 };
 
 export function useRemoteList(params: DatabaseParams): ReturnType {
@@ -30,15 +29,6 @@ export function useRemoteList(params: DatabaseParams): ReturnType {
   const [remotes, setRemotes] = useState(data?.remotes.list);
   const [offset, setOffset] = useState(data?.remotes.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
-
-  const refetch = async () => {
-    try {
-      const newRes = await res.refetch(params);
-      setRemotes(newRes.data.remotes.list);
-    } catch (e) {
-      handleCaughtApolloError(e, setErr);
-    }
-  };
 
   useEffect(() => {
     setRemotes(data?.remotes.list);
@@ -70,5 +60,5 @@ export function useRemoteList(params: DatabaseParams): ReturnType {
   const hasMore =
     offset !== undefined && offset !== null && offset !== lastOffset;
 
-  return { ...res, error: err, remotes, loadMore, hasMore, refetch };
+  return { ...res, error: err, remotes, loadMore, hasMore };
 }

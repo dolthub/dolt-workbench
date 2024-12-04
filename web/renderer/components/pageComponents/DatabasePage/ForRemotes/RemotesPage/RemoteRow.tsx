@@ -16,14 +16,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
     <tr>
       <td>{remote.name}</td>
       <td>{remote.url}</td>
-      <td>
-        {remote.fetchSpecs?.map((fs, i) => (
-          <span key={fs}>
-            {fs}
-            {i < (remote.fetchSpecs?.length ?? 0) - 1 ? ", " : ""}
-          </span>
-        ))}
-      </td>
+      <td>{remote.fetchSpecs?.join(",")}</td>
       <td className={css.trashColumn}>
         <HideForNoWritesWrapper params={params}>
           <Button.Link

@@ -7,8 +7,8 @@ type Props = {
   params: DatabaseParams;
 };
 
-const DatabaseRemotesPage: NextPage<Props> = ({ params }) => (
-  <Page title={`Add remote for ${params.databaseName}`} noIndex>
+const DatabaseNewRemotePage: NextPage<Props> = ({ params }) => (
+  <Page title={`New remote for ${params.databaseName}`} noIndex>
     <DatabasePage.ForRemotes params={params} newRemote />
   </Page>
 );
@@ -25,4 +25,4 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 };
 // #!endif
 
-export default DatabaseRemotesPage;
+export default DatabaseNewRemotePage;

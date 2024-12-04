@@ -145,7 +145,7 @@ export declare class QueryFactory {
 
   restoreAllTables(args: t.RefArgs): t.PR;
 
-  getRemotes(args: t.DBArgs): t.PR;
+  getRemotes(args: t.ListRemotesArgs): t.PR;
 
   addRemote(args: t.AddRemoteArgs): t.PR;
 

@@ -435,9 +435,9 @@ export class DoltQueryFactory
     );
   }
 
-  async getRemotes(args: t.DBArgs): t.PR {
+  async getRemotes(args: t.ListRemotesArgs): t.PR {
     return this.queryForBuilder(
-      async em => dem.getDoltRemotes(em),
+      async em => dem.getDoltRemotesPaginated(em, args),
       args.databaseName,
     );
   }

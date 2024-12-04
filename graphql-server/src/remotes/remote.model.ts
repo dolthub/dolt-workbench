@@ -1,7 +1,8 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { __Type } from "graphql";
+import { getNextOffset, ROW_LIMIT } from "../utils";
 import { RawRow } from "../queryFactory/types";
-import { ListOffsetRes } from "../utils/commonTypes";
+import { DBArgsWithOffset, ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()
 export class Remote {
@@ -30,5 +31,17 @@ export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
     name: r.name,
     url: r.url,
     fetchSpecs: r.fetch_specs,
+  };
+}
+
+export function getRemoteListRes(
+  remotes: RawRow[],
+  args: DBArgsWithOffset,
+): RemoteList {
+  return {
+    list: remotes
+      .slice(0, ROW_LIMIT)
+      .map(l => fromDoltRemotesRow(args.databaseName, l)),
+    nextOffset: getNextOffset(remotes.length, args.offset ?? 0),
   };
 }

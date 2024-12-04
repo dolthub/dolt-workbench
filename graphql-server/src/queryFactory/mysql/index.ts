@@ -302,7 +302,7 @@ export class MySQLQueryFactory
     throw notDoltError("restore all tables");
   }
 
-  async getRemotes(_args: t.DBArgs): t.PR {
+  async getRemotes(_args: t.ListRemotesArgs): t.PR {
     throw notDoltError("get remotes");
   }
 

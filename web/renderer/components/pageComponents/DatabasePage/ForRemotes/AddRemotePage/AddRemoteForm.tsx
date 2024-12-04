@@ -8,7 +8,7 @@ import { useReactiveWidth } from "@dolthub/react-hooks";
 import { useAddRemoteMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { DatabaseParams } from "@lib/params";
-import { refetchBranchQueries } from "@lib/refetchQueries";
+import { refetchRemoteQueries } from "@lib/refetchQueries";
 import { remotes } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
@@ -28,7 +28,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
     loading,
   } = useMutation({
     hook: useAddRemoteMutation,
-    refetchQueries: refetchBranchQueries(props.params),
+    refetchQueries: refetchRemoteQueries(props.params),
   });
   const { isMobile } = useReactiveWidth();
 

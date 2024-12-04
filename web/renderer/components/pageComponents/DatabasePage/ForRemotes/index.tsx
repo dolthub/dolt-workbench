@@ -12,8 +12,7 @@ type Props = {
 };
 
 export default function ForRemotes({ params, newRemote }: Props): JSX.Element {
-  const feature = newRemote ? "Creating remotes" : "Viewing Remotes";
-  console.log("ForRemotes", params, newRemote);
+  const feature = newRemote ? "Creating remotes" : "Viewing remotes";
   return (
     <ForDefaultBranch
       initialTabIndex={5}
