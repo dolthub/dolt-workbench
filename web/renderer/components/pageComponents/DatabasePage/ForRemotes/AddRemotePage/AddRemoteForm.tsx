@@ -6,6 +6,7 @@ import {
 } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import {
+  DoltDatabaseDetails,
   useAddRemoteMutation,
   useDoltDatabaseDetailsQuery,
 } from "@gen/graphql-types";
@@ -17,6 +18,8 @@ import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import Link from "@components/links/Link";
 import { getDatabaseType } from "@components/DatabaseTypeLabel";
+import DoltLink from "@components/links/DoltLink";
+import DoltgresLink from "@components/links/DoltgresLink";
 import css from "./index.module.css";
 
 type Props = {
@@ -27,10 +30,6 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
     useDoltDatabaseDetailsQuery();
-  const type = getDatabaseType(
-    databaseDetails?.doltDatabaseDetails.type ?? undefined,
-    !!databaseDetails?.doltDatabaseDetails.isDolt,
-  );
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");
   const {
@@ -89,9 +88,10 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             </Button>
           </ButtonsWithError>
           <p className={css.text}>
-            A remote is a {type} database in another location, usually on a
-            different, network accessible host. To learn more about configuring
-            a remote for your database, see our{" "}
+            A remote is a {getDbLink(databaseDetails?.doltDatabaseDetails)}{" "}
+            database in another location, usually on a different, network
+            accessible host. To learn more about configuring a remote for your
+            database, see our{" "}
             <Link href="https://docs.dolthub.com/concepts/dolt/git/remotes">
               documentation
             </Link>
@@ -101,4 +101,18 @@ export default function AddRemoteForm(props: Props): JSX.Element {
       </form>
     </div>
   );
+}
+
+function getDbLink(dbDetails?: DoltDatabaseDetails): JSX.Element {
+  const type = getDatabaseType(
+    dbDetails?.type ?? undefined,
+    !!dbDetails?.isDolt,
+  );
+  if (type === "Dolt") {
+    return <DoltLink />;
+  }
+  if (type === "DoltgreSQL") {
+    return <DoltgresLink />;
+  }
+  return <span>{type}</span>;
 }
