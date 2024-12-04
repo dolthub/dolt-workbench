@@ -143,8 +143,11 @@ export async function getDoltRemotesPaginated(
   em: EntityManager,
   args: t.ListRemotesArgs,
 ): t.PR {
-  let sel = em.createQueryBuilder().select("*").from("dolt_remotes", "");
-  sel = sel.offset(args.offset);
-
-  return sel.limit(ROW_LIMIT + 1).getRawMany();
+  return em
+    .createQueryBuilder()
+    .select("*")
+    .from("dolt_remotes", "")
+    .offset(args.offset)
+    .limit(ROW_LIMIT + 1)
+    .getRawMany();
 }
