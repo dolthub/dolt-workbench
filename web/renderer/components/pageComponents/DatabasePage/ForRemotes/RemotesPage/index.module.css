@@ -46,10 +46,10 @@
   @apply text-primary my-4 text-center;
 }
 
-.trashColumn {
-  @apply flex justify-end;
+.pullIcon {
+  transform: rotateX(180deg);
 }
 
-.icon {
-  @apply text-lg m-4;
+.trashIcon {
+  @apply text-red-300;
 }

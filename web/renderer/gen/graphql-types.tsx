@@ -233,6 +233,8 @@ export type Mutation = {
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
+  pullFromRemote: Scalars['Boolean']['output'];
+  pushToRemote: Scalars['Boolean']['output'];
   removeDatabaseConnection: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
   restoreAllTables: Scalars['Boolean']['output'];
@@ -318,6 +320,20 @@ export type MutationMergePullArgs = {
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
+};
+
+
+export type MutationPullFromRemoteArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+};
+
+
+export type MutationPushToRemoteArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
 };
 
 
@@ -1223,6 +1239,24 @@ export type DeleteRemoteMutationVariables = Exact<{
 
 
 export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: boolean };
+
+export type PullFromRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: boolean };
+
+export type PushToRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: boolean };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -3631,6 +3665,80 @@ export function useDeleteRemoteMutation(baseOptions?: Apollo.MutationHookOptions
 export type DeleteRemoteMutationHookResult = ReturnType<typeof useDeleteRemoteMutation>;
 export type DeleteRemoteMutationResult = Apollo.MutationResult<DeleteRemoteMutation>;
 export type DeleteRemoteMutationOptions = Apollo.BaseMutationOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
+export const PullFromRemoteDocument = gql`
+    mutation PullFromRemote($remoteName: String!, $branchName: String, $databaseName: String!) {
+  pullFromRemote(
+    remoteName: $remoteName
+    branchName: $branchName
+    databaseName: $databaseName
+  )
+}
+    `;
+export type PullFromRemoteMutationFn = Apollo.MutationFunction<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
+
+/**
+ * __usePullFromRemoteMutation__
+ *
+ * To run a mutation, you first call `usePullFromRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePullFromRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pullFromRemoteMutation, { data, loading, error }] = usePullFromRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function usePullFromRemoteMutation(baseOptions?: Apollo.MutationHookOptions<PullFromRemoteMutation, PullFromRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PullFromRemoteMutation, PullFromRemoteMutationVariables>(PullFromRemoteDocument, options);
+      }
+export type PullFromRemoteMutationHookResult = ReturnType<typeof usePullFromRemoteMutation>;
+export type PullFromRemoteMutationResult = Apollo.MutationResult<PullFromRemoteMutation>;
+export type PullFromRemoteMutationOptions = Apollo.BaseMutationOptions<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
+export const PushToRemoteDocument = gql`
+    mutation PushToRemote($remoteName: String!, $branchName: String, $databaseName: String!) {
+  pushToRemote(
+    remoteName: $remoteName
+    branchName: $branchName
+    databaseName: $databaseName
+  )
+}
+    `;
+export type PushToRemoteMutationFn = Apollo.MutationFunction<PushToRemoteMutation, PushToRemoteMutationVariables>;
+
+/**
+ * __usePushToRemoteMutation__
+ *
+ * To run a mutation, you first call `usePushToRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePushToRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pushToRemoteMutation, { data, loading, error }] = usePushToRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function usePushToRemoteMutation(baseOptions?: Apollo.MutationHookOptions<PushToRemoteMutation, PushToRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PushToRemoteMutation, PushToRemoteMutationVariables>(PushToRemoteDocument, options);
+      }
+export type PushToRemoteMutationHookResult = ReturnType<typeof usePushToRemoteMutation>;
+export type PushToRemoteMutationResult = Apollo.MutationResult<PushToRemoteMutation>;
+export type PushToRemoteMutationOptions = Apollo.BaseMutationOptions<PushToRemoteMutation, PushToRemoteMutationVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(
