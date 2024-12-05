@@ -53,3 +53,7 @@
 .trashIcon {
   @apply text-red-300;
 }
+
+.bold {
+  @apply font-semibold;
+}

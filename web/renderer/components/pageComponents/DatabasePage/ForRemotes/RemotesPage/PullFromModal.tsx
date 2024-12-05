@@ -1,9 +1,18 @@
 import { RemoteFragment, usePullFromRemoteMutation } from "@gen/graphql-types";
-import { ModalOuter } from "@dolthub/react-components";
+import {
+  Button,
+  FormInput,
+  ModalButtons,
+  ModalInner,
+  ModalOuter,
+} from "@dolthub/react-components";
 import { SyntheticEvent, useState } from "react";
 import useMutation from "@hooks/useMutation";
 import { DatabaseParams } from "@lib/params";
-import PullOrPushRemoteModal from "./Modal";
+import Link from "@components/links/Link";
+import { database } from "@lib/urls";
+import router from "next/router";
+import css from "./index.module.css";
 
 type Props = {
   isOpen: boolean;
@@ -19,13 +28,13 @@ export default function PullFromModal({
   params,
 }: Props) {
   const [branchName, setBranchName] = useState("");
-  const { mutateFn: pull, ...pullRes } = useMutation({
+  const { mutateFn: pull, ...res } = useMutation({
     hook: usePullFromRemoteMutation,
   });
 
   const onClose = () => {
     setIsOpen(false);
-    pullRes.setErr(undefined);
+    res.setErr(undefined);
     setBranchName("");
   };
 
@@ -38,23 +47,41 @@ export default function PullFromModal({
         branchName,
       },
     });
-    // if (!success) return;
+    if (!success) return;
+    const { href, as } = database(params);
+    router.push(href, as).catch(console.error);
   };
 
   return (
     <ModalOuter
       isOpen={isOpen}
       onRequestClose={onClose}
-      title="Create new database"
+      title="Pull from remote"
     >
-      <PullOrPushRemoteModal
-        onClose={onClose}
-        onSubmit={onSubmit}
-        branchName={branchName}
-        setBranchName={setBranchName}
-        err={pullRes.err}
-        label="pull from remote"
-      />
+      <form onSubmit={onSubmit}>
+        <ModalInner>
+          <p>
+            Fetch from remote <span className={css.bold}>{remote.name}</span> (
+            {remote.url}) and merge into current branch main. To learn more
+            about pull from a remote, see our{" "}
+            <Link href="https://docs.dolthub.com/cli-reference/cli#dolt-pull">
+              documentation
+            </Link>
+          </p>
+          <FormInput
+            value={branchName}
+            label="Remote branch name"
+            onChangeString={setBranchName}
+            placeholder="Enter remote branch name"
+            light
+          />
+        </ModalInner>
+        <ModalButtons err={res.err} onRequestClose={onClose}>
+          <Button type="submit" disabled={!branchName.length}>
+            Start pulling
+          </Button>
+        </ModalButtons>
+      </form>
     </ModalOuter>
   );
 }
