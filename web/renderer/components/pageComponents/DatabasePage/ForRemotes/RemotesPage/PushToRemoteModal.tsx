@@ -2,6 +2,7 @@ import { RemoteFragment, usePushToRemoteMutation } from "@gen/graphql-types";
 import {
   Button,
   FormInput,
+  Loader,
   ModalButtons,
   ModalInner,
   ModalOuter,
@@ -83,6 +84,7 @@ export default function PushToRemoteModal({
           </Button>
         </ModalButtons>
       </form>
+      <Loader loaded={!res.loading} />
     </ModalOuter>
   );
 }

@@ -2,6 +2,7 @@ import { RemoteFragment, usePullFromRemoteMutation } from "@gen/graphql-types";
 import {
   Button,
   FormInput,
+  Loader,
   ModalButtons,
   ModalInner,
   ModalOuter,
@@ -10,6 +11,7 @@ import { SyntheticEvent, useState } from "react";
 import useMutation from "@hooks/useMutation";
 import { DatabaseParams } from "@lib/params";
 import Link from "@components/links/Link";
+import { refetchUpdateQueriesCacheEvict } from "@lib/refetchQueries";
 import { database } from "@lib/urls";
 import router from "next/router";
 import css from "./index.module.css";
@@ -48,6 +50,9 @@ export default function PullFromModal({
       },
     });
     if (!success) return;
+    await res.client
+      .refetchQueries(refetchUpdateQueriesCacheEvict)
+      .catch(console.error);
     const { href, as } = database(params);
     router.push(href, as).catch(console.error);
   };
@@ -82,6 +87,7 @@ export default function PullFromModal({
           </Button>
         </ModalButtons>
       </form>
+      <Loader loaded={!res.loading} />
     </ModalOuter>
   );
 }

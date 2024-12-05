@@ -6,7 +6,7 @@ import useSqlBuilder from "@hooks/useSqlBuilder";
 import { ModalProps } from "@lib/modalProps";
 import { RefParams } from "@lib/params";
 import { getPostgresTableName } from "@lib/postgres";
-import { refetchSqlUpdateQueriesCacheEvict } from "@lib/refetchQueries";
+import { refetchUpdateQueriesCacheEvict } from "@lib/refetchQueries";
 import { sqlQuery } from "@lib/urls";
 import css from "./index.module.css";
 
@@ -27,7 +27,7 @@ export default function ResetModal(props: Props) {
       await mutateFn({ variables: props.params });
       props.setIsOpen(false);
       client
-        .refetchQueries(refetchSqlUpdateQueriesCacheEvict)
+        .refetchQueries(refetchUpdateQueriesCacheEvict)
         .catch(console.error);
     } catch (_) {
       // Handled by useMutation
