@@ -52,7 +52,6 @@ export default function PullFromModal({
         branchName,
       },
     });
-    console.log(pullRes);
     if (!pullRes.data) return;
     if (pullRes.data.pullFromRemote.conflicts !== "0") {
       res.setErr(new Error(pullRes.data.pullFromRemote.message));
