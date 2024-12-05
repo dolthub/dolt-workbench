@@ -8,7 +8,15 @@ import {
 } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
-import { getRemoteListRes, Remote, RemoteList } from "./remote.model";
+import {
+  fromPullRes,
+  fromPushRes,
+  getRemoteListRes,
+  PullRes,
+  PushRes,
+  Remote,
+  RemoteList,
+} from "./remote.model";
 
 @ArgsType()
 export class AddRemoteArgs extends RemoteArgs {
@@ -48,18 +56,17 @@ export class RemoteResolver {
     return true;
   }
 
-  @Mutation(_returns => Boolean)
-  async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<boolean> {
+  @Mutation(_returns => PullRes)
+  async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<PullRes> {
     const conn = this.conn.connection();
     const res = await conn.callPullRemote(args);
-    console.log(res);
-    return true;
+    return fromPullRes(res[0]);
   }
 
-  @Mutation(_returns => Boolean)
-  async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<boolean> {
+  @Mutation(_returns => PushRes)
+  async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<PushRes> {
     const conn = this.conn.connection();
-    await conn.callPushRemote(args);
-    return true;
+    const res = await conn.callPushRemote(args);
+    return fromPushRes(res[0]);
   }
 }

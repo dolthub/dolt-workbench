@@ -8,12 +8,12 @@ import { newRemote } from "@lib/urls";
 import { useState } from "react";
 import DeleteModal from "@components/DeleteModal";
 import { refetchRemoteQueries } from "@lib/refetchQueries";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import RemoteRow from "./RemoteRow";
 import css from "./index.module.css";
 
 type InnerProps = {
-  params: DatabaseParams;
+  params: OptionalRefParams;
   remotes: RemoteFragment[];
   loadMore: () => Promise<void>;
   hasMore: boolean;

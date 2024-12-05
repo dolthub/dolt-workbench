@@ -3,7 +3,7 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { ButtonWithPopup } from "@dolthub/react-components";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import { useState } from "react";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { fakeEscapePress } from "@dolthub/web-utils";
@@ -14,7 +14,7 @@ import css from "./index.module.css";
 type Props = {
   remote: RemoteFragment;
   onDeleteClicked: () => void;
-  params: DatabaseParams;
+  params: OptionalRefParams;
 };
 
 export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {

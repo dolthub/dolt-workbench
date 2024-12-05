@@ -9,18 +9,19 @@ import {
 } from "@dolthub/react-components";
 import { SyntheticEvent, useState } from "react";
 import useMutation from "@hooks/useMutation";
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { database } from "@lib/urls";
 import router from "next/router";
+import useDefaultBranch from "@hooks/useDefaultBranch";
 import css from "./index.module.css";
 
 type Props = {
   isOpen: boolean;
   setIsOpen: (d: boolean) => void;
   remote: RemoteFragment;
-  params: DatabaseParams;
+  params: OptionalRefParams;
 };
 
 export default function PullFromModal({
@@ -29,6 +30,8 @@ export default function PullFromModal({
   remote,
   params,
 }: Props) {
+  const { defaultBranchName } = useDefaultBranch(params);
+  const pullIntoBranch = params.refName || defaultBranchName;
   const [branchName, setBranchName] = useState("");
   const { mutateFn: pull, ...res } = useMutation({
     hook: usePullFromRemoteMutation,
@@ -42,14 +45,19 @@ export default function PullFromModal({
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { success } = await pull({
+    const pullRes = await pull({
       variables: {
         databaseName: params.databaseName,
         remoteName: remote.name,
         branchName,
       },
     });
-    if (!success) return;
+    console.log(pullRes);
+    if (!pullRes.data) return;
+    if (pullRes.data.pullFromRemote.conflicts !== "0") {
+      res.setErr(new Error(pullRes.data.pullFromRemote.message));
+      return;
+    }
     await res.client
       .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
       .catch(console.error);
@@ -67,7 +75,8 @@ export default function PullFromModal({
         <ModalInner>
           <p>
             Fetch from remote <span className={css.bold}>{remote.name}</span> (
-            {remote.url}) and merge into current branch main. To learn more
+            {remote.url}) and merge into current branch{" "}
+            <span className={css.bold}>{pullIntoBranch}</span>. To learn more
             about pull from a remote, see our{" "}
             <Link href="https://docs.dolthub.com/cli-reference/cli#dolt-pull">
               documentation

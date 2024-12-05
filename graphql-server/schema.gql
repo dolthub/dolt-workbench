@@ -291,6 +291,17 @@ type RemoteList {
   list: [Remote!]!
 }
 
+type PullRes {
+  fastForward: String!
+  conflicts: String!
+  message: String!
+}
+
+type PushRes {
+  status: String!
+  message: String!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -363,8 +374,8 @@ type Mutation {
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
   addRemote(remoteName: String!, databaseName: String!, remoteUrl: String!): String!
   deleteRemote(databaseName: String!, remoteName: String!): Boolean!
-  pullFromRemote(remoteName: String!, databaseName: String!, branchName: String!): Boolean!
-  pushToRemote(remoteName: String!, databaseName: String!, branchName: String!): Boolean!
+  pullFromRemote(remoteName: String!, databaseName: String!, branchName: String!): PullRes!
+  pushToRemote(remoteName: String!, databaseName: String!, branchName: String!): PushRes!
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

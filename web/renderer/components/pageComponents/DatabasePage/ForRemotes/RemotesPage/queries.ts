@@ -24,6 +24,11 @@ export const DELETE_REMOTE = gql`
 `;
 
 export const PULL_FROM_REMOTE = gql`
+  fragment PullRes on PullRes {
+    fastForward
+    conflicts
+    message
+  }
   mutation PullFromRemote(
     $remoteName: String!
     $branchName: String!
@@ -33,11 +38,17 @@ export const PULL_FROM_REMOTE = gql`
       remoteName: $remoteName
       branchName: $branchName
       databaseName: $databaseName
-    )
+    ) {
+      ...PullRes
+    }
   }
 `;
 
 export const PUSH_TO_REMOTE = gql`
+  fragment PushRes on PushRes {
+    status
+    message
+  }
   mutation PushToRemote(
     $remoteName: String!
     $branchName: String!
@@ -47,6 +58,8 @@ export const PUSH_TO_REMOTE = gql`
       remoteName: $remoteName
       branchName: $branchName
       databaseName: $databaseName
-    )
+    ) {
+      ...PushRes
+    }
   }
 `;

@@ -233,8 +233,8 @@ export type Mutation = {
   deleteTag: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
-  pullFromRemote: Scalars['Boolean']['output'];
-  pushToRemote: Scalars['Boolean']['output'];
+  pullFromRemote: PullRes;
+  pushToRemote: PushRes;
   removeDatabaseConnection: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
   restoreAllTables: Scalars['Boolean']['output'];
@@ -372,6 +372,13 @@ export type PullDetailSummary = {
 
 export type PullDetails = PullDetailCommit | PullDetailSummary;
 
+export type PullRes = {
+  __typename?: 'PullRes';
+  conflicts: Scalars['String']['output'];
+  fastForward: Scalars['String']['output'];
+  message: Scalars['String']['output'];
+};
+
 export enum PullState {
   Merged = 'Merged',
   Open = 'Open',
@@ -390,6 +397,12 @@ export type PullWithDetails = {
   details?: Maybe<Array<PullDetails>>;
   state: PullState;
   summary?: Maybe<PullSummary>;
+};
+
+export type PushRes = {
+  __typename?: 'PushRes';
+  message: Scalars['String']['output'];
+  status: Scalars['String']['output'];
 };
 
 export type Query = {
@@ -1240,6 +1253,8 @@ export type DeleteRemoteMutationVariables = Exact<{
 
 export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: boolean };
 
+export type PullResFragment = { __typename?: 'PullRes', fastForward: string, conflicts: string, message: string };
+
 export type PullFromRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
   branchName: Scalars['String']['input'];
@@ -1247,7 +1262,9 @@ export type PullFromRemoteMutationVariables = Exact<{
 }>;
 
 
-export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: boolean };
+export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: { __typename?: 'PullRes', fastForward: string, conflicts: string, message: string } };
+
+export type PushResFragment = { __typename?: 'PushRes', status: string, message: string };
 
 export type PushToRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
@@ -1256,7 +1273,7 @@ export type PushToRemoteMutationVariables = Exact<{
 }>;
 
 
-export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: boolean };
+export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', status: string, message: string } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1682,6 +1699,19 @@ export const RemoteFragmentDoc = gql`
   name
   url
   fetchSpecs
+}
+    `;
+export const PullResFragmentDoc = gql`
+    fragment PullRes on PullRes {
+  fastForward
+  conflicts
+  message
+}
+    `;
+export const PushResFragmentDoc = gql`
+    fragment PushRes on PushRes {
+  status
+  message
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -3671,9 +3701,11 @@ export const PullFromRemoteDocument = gql`
     remoteName: $remoteName
     branchName: $branchName
     databaseName: $databaseName
-  )
+  ) {
+    ...PullRes
+  }
 }
-    `;
+    ${PullResFragmentDoc}`;
 export type PullFromRemoteMutationFn = Apollo.MutationFunction<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
 
 /**
@@ -3708,9 +3740,11 @@ export const PushToRemoteDocument = gql`
     remoteName: $remoteName
     branchName: $branchName
     databaseName: $databaseName
-  )
+  ) {
+    ...PushRes
+  }
 }
-    `;
+    ${PushResFragmentDoc}`;
 export type PushToRemoteMutationFn = Apollo.MutationFunction<PushToRemoteMutation, PushToRemoteMutationVariables>;
 
 /**

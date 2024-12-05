@@ -1,9 +1,9 @@
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import AddRemoteForm from "./AddRemoteForm";
 import css from "./index.module.css";
 
 type Props = {
-  params: DatabaseParams;
+  params: OptionalRefParams;
 };
 
 export default function AddRemotePage(props: Props): JSX.Element {
