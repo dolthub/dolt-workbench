@@ -36,11 +36,13 @@ export default function PullFromModal({
   const { mutateFn: pull, ...res } = useMutation({
     hook: usePullFromRemoteMutation,
   });
+  const [message, setMessage] = useState("");
 
   const onClose = () => {
     setIsOpen(false);
     res.setErr(undefined);
     setBranchName("");
+    setMessage("");
   };
 
   const onSubmit = async (e: SyntheticEvent) => {
@@ -53,8 +55,17 @@ export default function PullFromModal({
       },
     });
     if (!pullRes.data) return;
-    if (pullRes.data.pullFromRemote.conflicts !== "0") {
-      res.setErr(new Error(pullRes.data.pullFromRemote.message));
+    const msg = pullRes.data.pullFromRemote.message;
+    if (
+      pullRes.data.pullFromRemote.conflicts !== "0" ||
+      msg.includes("cannot fast forward")
+    ) {
+      res.setErr(new Error(msg));
+      return;
+    }
+
+    if (msg === "Everything up-to-date") {
+      setMessage(msg);
       return;
     }
     await res.client
@@ -84,7 +95,11 @@ export default function PullFromModal({
           <FormInput
             value={branchName}
             label="Remote branch name"
-            onChangeString={setBranchName}
+            onChangeString={(s: string) => {
+              setBranchName(s);
+              setMessage("");
+              res.setErr(undefined);
+            }}
             placeholder="Enter remote branch name"
             light
           />
@@ -94,6 +109,7 @@ export default function PullFromModal({
             Start pulling
           </Button>
         </ModalButtons>
+        <p className={css.message}>{message}</p>
       </form>
       <Loader loaded={!res.loading} />
     </ModalOuter>

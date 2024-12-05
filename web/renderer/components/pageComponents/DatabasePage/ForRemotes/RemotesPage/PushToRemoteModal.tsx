@@ -11,8 +11,6 @@ import { SyntheticEvent, useState } from "react";
 import useMutation from "@hooks/useMutation";
 import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
-import { database } from "@lib/urls";
-import { useRouter } from "next/router";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import css from "./index.module.css";
 
@@ -33,10 +31,10 @@ export default function PushToRemoteModal({
   const [branchName, setBranchName] = useState(
     params.refName || defaultBranchName,
   );
+  const [message, setMessage] = useState("");
   const { mutateFn: push, ...res } = useMutation({
     hook: usePushToRemoteMutation,
   });
-  const router = useRouter();
 
   const onClose = () => {
     setIsOpen(false);
@@ -56,12 +54,17 @@ export default function PushToRemoteModal({
     if (!pushRes.data) {
       return;
     }
+
+    const msg = pushRes.data.pushToRemote.message;
     if (pushRes.data.pushToRemote.status !== "0") {
-      res.setErr(new Error(pushRes.data.pushToRemote.message));
+      res.setErr(new Error(msg));
       return;
     }
-    const { href, as } = database(params);
-    router.push(href, as).catch(console.error);
+    if (msg.includes("Everything up-to-date")) {
+      setMessage(msg);
+      return;
+    }
+    setMessage(`Pushing succeeded!\n ${msg}`);
   };
 
   return (
@@ -79,7 +82,11 @@ export default function PushToRemoteModal({
           <FormInput
             value={branchName}
             label="Push from branch name"
-            onChangeString={setBranchName}
+            onChangeString={(s: string) => {
+              setBranchName(s);
+              setMessage("");
+              res.setErr(undefined);
+            }}
             placeholder="Enter push from branch name"
             light
           />
@@ -89,6 +96,7 @@ export default function PushToRemoteModal({
             Start pushing
           </Button>
         </ModalButtons>
+        <p className={css.message}>{message}</p>
       </form>
       <Loader loaded={!res.loading} />
     </ModalOuter>

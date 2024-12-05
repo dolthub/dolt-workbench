@@ -57,3 +57,7 @@
 .bold {
   @apply font-semibold;
 }
+
+.message {
+  @apply text-center text-primary mb-4 whitespace-pre-wrap;
+}
