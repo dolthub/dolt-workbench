@@ -113,7 +113,7 @@ export const refetchRemoteQueries = (
   variables: DatabaseParams,
 ): RefetchQueries => [{ query: gen.RemoteListDocument, variables }];
 
-export const refetchUpdateQueriesCacheEvict: RefetchOptions = {
+export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
   updateCache(cache: TCacheShape) {
     [
       "rows",

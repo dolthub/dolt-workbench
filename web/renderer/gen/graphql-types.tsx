@@ -324,14 +324,14 @@ export type MutationMergePullArgs = {
 
 
 export type MutationPullFromRemoteArgs = {
-  branchName?: InputMaybe<Scalars['String']['input']>;
+  branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
 
 
 export type MutationPushToRemoteArgs = {
-  branchName?: InputMaybe<Scalars['String']['input']>;
+  branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
@@ -1242,7 +1242,7 @@ export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: bool
 
 export type PullFromRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
-  branchName?: InputMaybe<Scalars['String']['input']>;
+  branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
@@ -1251,7 +1251,7 @@ export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: 
 
 export type PushToRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
-  branchName?: InputMaybe<Scalars['String']['input']>;
+  branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
@@ -3666,7 +3666,7 @@ export type DeleteRemoteMutationHookResult = ReturnType<typeof useDeleteRemoteMu
 export type DeleteRemoteMutationResult = Apollo.MutationResult<DeleteRemoteMutation>;
 export type DeleteRemoteMutationOptions = Apollo.BaseMutationOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
 export const PullFromRemoteDocument = gql`
-    mutation PullFromRemote($remoteName: String!, $branchName: String, $databaseName: String!) {
+    mutation PullFromRemote($remoteName: String!, $branchName: String!, $databaseName: String!) {
   pullFromRemote(
     remoteName: $remoteName
     branchName: $branchName
@@ -3703,7 +3703,7 @@ export type PullFromRemoteMutationHookResult = ReturnType<typeof usePullFromRemo
 export type PullFromRemoteMutationResult = Apollo.MutationResult<PullFromRemoteMutation>;
 export type PullFromRemoteMutationOptions = Apollo.BaseMutationOptions<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
 export const PushToRemoteDocument = gql`
-    mutation PushToRemote($remoteName: String!, $branchName: String, $databaseName: String!) {
+    mutation PushToRemote($remoteName: String!, $branchName: String!, $databaseName: String!) {
   pushToRemote(
     remoteName: $remoteName
     branchName: $branchName

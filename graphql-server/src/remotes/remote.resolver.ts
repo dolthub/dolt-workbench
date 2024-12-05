@@ -18,8 +18,8 @@ export class AddRemoteArgs extends RemoteArgs {
 
 @ArgsType()
 export class PullOrPushRemoteArgs extends RemoteArgs {
-  @Field({ nullable: true })
-  branchName?: string;
+  @Field()
+  branchName: string;
 }
 
 @Resolver(_of => Remote)

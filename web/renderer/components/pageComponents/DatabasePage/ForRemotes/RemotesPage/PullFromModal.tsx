@@ -11,7 +11,7 @@ import { SyntheticEvent, useState } from "react";
 import useMutation from "@hooks/useMutation";
 import { DatabaseParams } from "@lib/params";
 import Link from "@components/links/Link";
-import { refetchUpdateQueriesCacheEvict } from "@lib/refetchQueries";
+import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { database } from "@lib/urls";
 import router from "next/router";
 import css from "./index.module.css";
@@ -51,7 +51,7 @@ export default function PullFromModal({
     });
     if (!success) return;
     await res.client
-      .refetchQueries(refetchUpdateQueriesCacheEvict)
+      .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
       .catch(console.error);
     const { href, as } = database(params);
     router.push(href, as).catch(console.error);

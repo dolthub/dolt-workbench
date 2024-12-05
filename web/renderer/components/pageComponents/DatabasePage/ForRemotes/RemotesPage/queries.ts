@@ -26,7 +26,7 @@ export const DELETE_REMOTE = gql`
 export const PULL_FROM_REMOTE = gql`
   mutation PullFromRemote(
     $remoteName: String!
-    $branchName: String
+    $branchName: String!
     $databaseName: String!
   ) {
     pullFromRemote(
@@ -40,7 +40,7 @@ export const PULL_FROM_REMOTE = gql`
 export const PUSH_TO_REMOTE = gql`
   mutation PushToRemote(
     $remoteName: String!
-    $branchName: String
+    $branchName: String!
     $databaseName: String!
   ) {
     pushToRemote(
