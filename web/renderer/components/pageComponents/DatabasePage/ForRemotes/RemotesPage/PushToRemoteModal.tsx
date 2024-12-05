@@ -6,6 +6,7 @@ import {
   ModalButtons,
   ModalInner,
   ModalOuter,
+  SuccessMsg,
 } from "@dolthub/react-components";
 import { SyntheticEvent, useState } from "react";
 import useMutation from "@hooks/useMutation";
@@ -40,6 +41,7 @@ export default function PushToRemoteModal({
     setIsOpen(false);
     res.setErr(undefined);
     setBranchName("");
+    setMessage("");
   };
 
   const onSubmit = async (e: SyntheticEvent) => {
@@ -54,17 +56,12 @@ export default function PushToRemoteModal({
     if (!pushRes.data) {
       return;
     }
-
     const msg = pushRes.data.pushToRemote.message;
     if (pushRes.data.pushToRemote.status !== "0") {
       res.setErr(new Error(msg));
       return;
     }
-    if (msg.includes("Everything up-to-date")) {
-      setMessage(msg);
-      return;
-    }
-    setMessage(`Pushing succeeded!\n ${msg}`);
+    setMessage(msg);
   };
 
   return (
@@ -92,13 +89,36 @@ export default function PushToRemoteModal({
           />
         </ModalInner>
         <ModalButtons err={res.err} onRequestClose={onClose}>
-          <Button type="submit" disabled={!branchName.length}>
-            Start pushing
-          </Button>
+          {message ? (
+            <Button onClick={onClose}>Close</Button>
+          ) : (
+            <Button type="submit" disabled={!branchName.length}>
+              Push
+            </Button>
+          )}
         </ModalButtons>
-        <p className={css.message}>{message}</p>
+        <PushMessage message={message} />
       </form>
       <Loader loaded={!res.loading} />
     </ModalOuter>
   );
+}
+
+type PushMessageProps = {
+  message: string;
+};
+
+function PushMessage({ message }: PushMessageProps) {
+  if (message.includes("Everything up-to-date")) {
+    return <p className={css.message}>{message}</p>;
+  }
+  if (message) {
+    return (
+      <div className={css.message}>
+        <SuccessMsg>Push Success</SuccessMsg>
+        <p>{message}</p>
+      </div>
+    );
+  }
+  return <div />;
 }

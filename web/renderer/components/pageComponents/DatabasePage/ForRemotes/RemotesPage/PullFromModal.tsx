@@ -106,7 +106,7 @@ export default function PullFromModal({
         </ModalInner>
         <ModalButtons err={res.err} onRequestClose={onClose}>
           <Button type="submit" disabled={!branchName.length}>
-            Start pulling
+            Pull
           </Button>
         </ModalButtons>
         <p className={css.message}>{message}</p>
