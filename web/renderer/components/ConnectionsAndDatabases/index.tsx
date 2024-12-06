@@ -14,18 +14,20 @@ import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
 import { excerpt } from "@dolthub/web-utils";
 import useSelectedConnection from "./useSelectedConnection";
 import Popup from "./Popup";
+import cx from "classnames";
 import css from "./index.module.css";
 
 type Props = {
   params: DatabaseParams;
-  setNoDrag: (isOpen: boolean) => void;
+  setNoDrag?: (isOpen: boolean) => void;
+  className?: string;
 };
 
 type InnerProps = Props & {
   connection: DatabaseConnectionFragment;
 };
 
-function Inner({ connection, params, setNoDrag }: InnerProps) {
+function Inner({ connection, params, setNoDrag ,className}: InnerProps) {
   const { onSelected, state, storedConnections } =
     useSelectedConnection(connection);
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +39,7 @@ function Inner({ connection, params, setNoDrag }: InnerProps) {
   const triggerText = `${excerpt(connection.name, 24)} / ${excerpt(params.databaseName, 24)}`;
 
   return (
-    <div className={css.iconAndSelector}>
+    <div className={cx(css.iconAndSelector,className)}>
       <FiDatabase className={css.dbIcon} />
       <ButtonWithPopup
         isOpen={isOpen}
@@ -48,11 +50,15 @@ function Inner({ connection, params, setNoDrag }: InnerProps) {
         contentStyle={{ width: "auto", padding: 0 }}
         arrow={false}
         onOpen={async () => {
-          setNoDrag(true);
-          await onSelected(connection);
+          if (setNoDrag) {
+            setNoDrag(true);
+          }
+           await onSelected(connection);
         }}
         onClose={() => {
+          if (setNoDrag) {
           setNoDrag(false);
+          }
         }}
         triggerText={triggerText}
         buttonClassName={css.selector}

@@ -2,7 +2,7 @@
   -webkit-app-region: no-drag;
   @apply hidden;
   @screen lg {
-    @apply flex items-center;
+    @apply flex items-center w-64;
   }
 }
 
@@ -28,6 +28,9 @@
   @apply flex;
 }
 
+.left {
+  @apply w-1/3;
+}
 .middle {
   @apply min-h-32;
 }

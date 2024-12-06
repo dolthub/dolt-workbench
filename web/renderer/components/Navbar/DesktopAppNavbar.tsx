@@ -4,6 +4,14 @@ import Link from "@components/links/Link";
 import { useState } from "react";
 import cx from "classnames";
 import css from "./index.module.css";
+import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
+import { ExternalLink } from "@dolthub/react-components";
+import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
+import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
+import DocsLink from "@components/links/DocsLink";
+
+// TODO: Support desktop app nav bar on windows
+const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
 
 const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
   if (e.currentTarget === e.target) {
@@ -27,22 +35,55 @@ export default function DesktopAppNavbar({ params }: Props) {
       onDoubleClick={handleDoubleClick}
     >
       {params ? (
-        <ConnectionsAndDatabases params={params} setNoDrag={setNoDrag} />
+        <Inner params={params} setNoDrag={setNoDrag} />
       ) : (
-        <Logo />
+        <Logo imgSrc="/images/dolt-workbench.png" />
       )}
     </div>
   );
 }
 
-export function Logo() {
+type InnerProps = {
+  params: DatabaseParams;
+   setNoDrag: (noDrag: boolean) => void;
+};
+
+function Inner({ params, setNoDrag }: InnerProps){
+  if (forMacNav) {
+    return <div className={css.outer}>
+    <ConnectionsAndDatabases params={params} setNoDrag={setNoDrag} />
+    <Logo imgSrc="/images/dolt-workbench-grey.png" />
+  </div>
+  }
+  return <div className={css.desktopOuter}>
+    <Logo imgSrc="/images/dolt-workbench.png" className={css.left} />
+    <ConnectionsAndDatabases params={params}  className={css.middle}/>
+    <RightLinks/>
+  </div>
+}
+
+type LogoProps = {
+  imgSrc: string;
+  className?: string;
+};
+
+export function Logo({ imgSrc,className }: LogoProps) {
   return (
-    <Link href="/">
-      <img
-        src="/images/dolt-workbench.png"
-        alt="Dolt Workbench"
-        className={css.logo}
-      />
+    <Link href="/" className={cx(className)}>
+      <img src={imgSrc} alt="Dolt Workbench" className={css.logo} />
     </Link>
+  );
+}
+function RightLinks() {
+  return (
+    <div className={css.right}>
+    <DocsLink>Documentation</DocsLink>
+      <ExternalLink href={workbenchGithubRepo}>
+        <FaGithub /> GitHub
+      </ExternalLink>
+      <ExternalLink href={dockerHubRepo}>
+        <FaDocker /> Docker Hub
+      </ExternalLink>
+    </div>
   );
 }
