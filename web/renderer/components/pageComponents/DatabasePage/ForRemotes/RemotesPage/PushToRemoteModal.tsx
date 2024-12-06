@@ -57,7 +57,7 @@ export default function PushToRemoteModal({
       return;
     }
     const msg = pushRes.data.pushToRemote.message;
-    if (pushRes.data.pushToRemote.status !== "0") {
+    if (!pushRes.data.pushToRemote.status) {
       res.setErr(new Error(msg));
       return;
     }
@@ -70,21 +70,21 @@ export default function PushToRemoteModal({
         <ModalInner>
           <p>
             Update remote <span className={css.bold}>{remote.name}</span> (
-            {remote.url}) with current branch. To learn more about push to a
-            remote, see our{" "}
+            {remote.url}) with changes from the specified branch. To learn more
+            about pushing to remotes, see our{" "}
             <Link href="https://docs.dolthub.com/cli-reference/cli#dolt-push">
               documentation
             </Link>
           </p>
           <FormInput
             value={branchName}
-            label="Push from branch name"
+            label="Branch name"
             onChangeString={(s: string) => {
               setBranchName(s);
               setMessage("");
               res.setErr(undefined);
             }}
-            placeholder="Enter push from branch name"
+            placeholder="Enter branch name to push to remote"
             light
           />
         </ModalInner>
@@ -115,7 +115,7 @@ function PushMessage({ message }: PushMessageProps) {
   if (message) {
     return (
       <div className={css.message}>
-        <SuccessMsg>Push Success</SuccessMsg>
+        <SuccessMsg>Push successful</SuccessMsg>
         <p>{message}</p>
       </div>
     );

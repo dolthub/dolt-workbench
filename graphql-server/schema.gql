@@ -292,13 +292,13 @@ type RemoteList {
 }
 
 type PullRes {
-  fastForward: String!
-  conflicts: String!
+  fastForward: Boolean!
+  conflicts: Float!
   message: String!
 }
 
 type PushRes {
-  status: String!
+  status: Boolean!
   message: String!
 }
 

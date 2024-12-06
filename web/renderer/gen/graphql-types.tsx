@@ -374,8 +374,8 @@ export type PullDetails = PullDetailCommit | PullDetailSummary;
 
 export type PullRes = {
   __typename?: 'PullRes';
-  conflicts: Scalars['String']['output'];
-  fastForward: Scalars['String']['output'];
+  conflicts: Scalars['Float']['output'];
+  fastForward: Scalars['Boolean']['output'];
   message: Scalars['String']['output'];
 };
 
@@ -402,7 +402,7 @@ export type PullWithDetails = {
 export type PushRes = {
   __typename?: 'PushRes';
   message: Scalars['String']['output'];
-  status: Scalars['String']['output'];
+  status: Scalars['Boolean']['output'];
 };
 
 export type Query = {
@@ -1253,7 +1253,7 @@ export type DeleteRemoteMutationVariables = Exact<{
 
 export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: boolean };
 
-export type PullResFragment = { __typename?: 'PullRes', fastForward: string, conflicts: string, message: string };
+export type PullResFragment = { __typename?: 'PullRes', fastForward: boolean, conflicts: number, message: string };
 
 export type PullFromRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
@@ -1262,9 +1262,9 @@ export type PullFromRemoteMutationVariables = Exact<{
 }>;
 
 
-export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: { __typename?: 'PullRes', fastForward: string, conflicts: string, message: string } };
+export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: { __typename?: 'PullRes', fastForward: boolean, conflicts: number, message: string } };
 
-export type PushResFragment = { __typename?: 'PushRes', status: string, message: string };
+export type PushResFragment = { __typename?: 'PushRes', status: boolean, message: string };
 
 export type PushToRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
@@ -1273,7 +1273,7 @@ export type PushToRemoteMutationVariables = Exact<{
 }>;
 
 
-export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', status: string, message: string } };
+export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', status: boolean, message: string } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];

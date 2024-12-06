@@ -28,10 +28,10 @@ export class RemoteList extends ListOffsetRes {
 @ObjectType()
 export class PullRes {
   @Field()
-  fastForward: string;
+  fastForward: boolean;
 
   @Field()
-  conflicts: string;
+  conflicts: number;
 
   @Field()
   message: string;
@@ -40,7 +40,7 @@ export class PullRes {
 @ObjectType()
 export class PushRes {
   @Field()
-  status: string;
+  status: boolean;
 
   @Field()
   message: string;
@@ -69,15 +69,15 @@ export function getRemoteListRes(
 
 export function fromPullRes(r: RawRow): PullRes {
   return {
-    fastForward: r.fast_forward,
-    conflicts: r.conflicts,
+    fastForward: r.fast_forward !== "0",
+    conflicts: parseInt(r.conflicts, 10),
     message: r.message,
   };
 }
 
 export function fromPushRes(r: RawRow): PushRes {
   return {
-    status: r.status,
+    status: r.status === "0",
     message: r.message,
   };
 }

@@ -24,7 +24,7 @@ type Props = {
   params: OptionalRefParams;
 };
 
-export default function PullFromModal({
+export default function PullFromRemoteModal({
   isOpen,
   setIsOpen,
   remote,
@@ -57,7 +57,7 @@ export default function PullFromModal({
     if (!pullRes.data) return;
     const msg = pullRes.data.pullFromRemote.message;
     if (
-      pullRes.data.pullFromRemote.conflicts !== "0" ||
+      pullRes.data.pullFromRemote.conflicts ||
       msg.includes("cannot fast forward")
     ) {
       res.setErr(new Error(msg));
@@ -87,7 +87,7 @@ export default function PullFromModal({
             Fetch from remote <span className={css.bold}>{remote.name}</span> (
             {remote.url}) and merge into current branch{" "}
             <span className={css.bold}>{pullIntoBranch}</span>. To learn more
-            about pull from a remote, see our{" "}
+            about pulling from remotes, see our{" "}
             <Link href="https://docs.dolthub.com/cli-reference/cli#dolt-pull">
               documentation
             </Link>
@@ -100,7 +100,7 @@ export default function PullFromModal({
               setMessage("");
               res.setErr(undefined);
             }}
-            placeholder="Enter remote branch name"
+            placeholder="Enter branch name from the remote to pull from"
             light
           />
         </ModalInner>

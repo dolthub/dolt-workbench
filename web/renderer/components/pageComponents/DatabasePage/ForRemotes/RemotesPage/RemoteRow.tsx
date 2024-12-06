@@ -7,7 +7,7 @@ import { OptionalRefParams } from "@lib/params";
 import { useState } from "react";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { fakeEscapePress } from "@dolthub/web-utils";
-import PullFromModal from "./PullFromModal";
+import PullFromRemoteModal from "./PullFromRemoteModal";
 import PushToRemoteModal from "./PushToRemoteModal";
 import css from "./index.module.css";
 
@@ -44,7 +44,6 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
             <div>
               <ul>
                 <DropdownItem
-                  data-cy="pull-from-remote-button"
                   onClick={() => {
                     setPullModalOpen(true);
                     fakeEscapePress();
@@ -54,7 +53,6 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                   Pull from remote
                 </DropdownItem>
                 <DropdownItem
-                  data-cy="push-to-remote-button"
                   onClick={() => {
                     setPushModalOpen(true);
                     fakeEscapePress();
@@ -64,7 +62,6 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                   Push to remote
                 </DropdownItem>
                 <DropdownItem
-                  data-cy="remove-remote-button"
                   onClick={onDeleteClicked}
                   icon={<FaRegTrashAlt className={css.trashIcon} />}
                 >
@@ -75,7 +72,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
           </ButtonWithPopup>
         </HideForNoWritesWrapper>
       </td>
-      <PullFromModal
+      <PullFromRemoteModal
         isOpen={pullModalOpen}
         setIsOpen={setPullModalOpen}
         params={params}
