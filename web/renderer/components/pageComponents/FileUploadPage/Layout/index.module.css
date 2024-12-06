@@ -43,13 +43,9 @@
 }
 
 .outer {
-  @apply absolute bottom-0 left-0 right-0 top-28 hidden lg:flex;
+  @apply absolute bottom-0 left-0 right-0 top-32 hidden lg:flex;
 }
 
 .main {
   @apply outline-none max-w-7xl mx-auto w-full bg-white h-full overflow-auto;
-}
-
-.moreTopDistance {
-  @apply top-32;
 }

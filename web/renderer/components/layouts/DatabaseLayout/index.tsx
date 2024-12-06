@@ -11,8 +11,6 @@ import { ReactNode, useState } from "react";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";
 
-const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
-
 type Props = {
   title?: string;
   children: ReactNode;
@@ -52,7 +50,6 @@ export default function DatabaseLayout(props: Props) {
         className={cx(css.content, {
           [css.contentWithHeader]: !!showHeader,
           [css.contentWithSmallHeader]: showSmallHeader,
-          [css.lessTop]: forMacNav,
         })}
       >
         {props.leftTableNav || (

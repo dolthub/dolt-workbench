@@ -12,9 +12,9 @@ import {
 } from "@gen/graphql-types";
 import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
 import { excerpt } from "@dolthub/web-utils";
+import cx from "classnames";
 import useSelectedConnection from "./useSelectedConnection";
 import Popup from "./Popup";
-import cx from "classnames";
 import css from "./index.module.css";
 
 type Props = {
@@ -27,7 +27,7 @@ type InnerProps = Props & {
   connection: DatabaseConnectionFragment;
 };
 
-function Inner({ connection, params, setNoDrag ,className}: InnerProps) {
+function Inner({ connection, params, setNoDrag, className }: InnerProps) {
   const { onSelected, state, storedConnections } =
     useSelectedConnection(connection);
   const [isOpen, setIsOpen] = useState(false);
@@ -39,7 +39,7 @@ function Inner({ connection, params, setNoDrag ,className}: InnerProps) {
   const triggerText = `${excerpt(connection.name, 24)} / ${excerpt(params.databaseName, 24)}`;
 
   return (
-    <div className={cx(css.iconAndSelector,className)}>
+    <div className={cx(css.iconAndSelector, className)}>
       <FiDatabase className={css.dbIcon} />
       <ButtonWithPopup
         isOpen={isOpen}
@@ -53,11 +53,11 @@ function Inner({ connection, params, setNoDrag ,className}: InnerProps) {
           if (setNoDrag) {
             setNoDrag(true);
           }
-           await onSelected(connection);
+          await onSelected(connection);
         }}
         onClose={() => {
           if (setNoDrag) {
-          setNoDrag(false);
+            setNoDrag(false);
           }
         }}
         triggerText={triggerText}

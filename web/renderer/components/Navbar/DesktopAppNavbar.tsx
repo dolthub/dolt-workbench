@@ -3,12 +3,12 @@ import ConnectionsAndDatabases from "@components/ConnectionsAndDatabases";
 import Link from "@components/links/Link";
 import { useState } from "react";
 import cx from "classnames";
-import css from "./index.module.css";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { ExternalLink } from "@dolthub/react-components";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import DocsLink from "@components/links/DocsLink";
+import css from "./index.module.css";
 
 // TODO: Support desktop app nav bar on windows
 const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
@@ -45,21 +45,25 @@ export default function DesktopAppNavbar({ params }: Props) {
 
 type InnerProps = {
   params: DatabaseParams;
-   setNoDrag: (noDrag: boolean) => void;
+  setNoDrag: (noDrag: boolean) => void;
 };
 
-function Inner({ params, setNoDrag }: InnerProps){
+function Inner({ params, setNoDrag }: InnerProps) {
   if (forMacNav) {
-    return <div className={css.outer}>
-    <ConnectionsAndDatabases params={params} setNoDrag={setNoDrag} />
-    <Logo imgSrc="/images/dolt-workbench-grey.png" />
-  </div>
+    return (
+      <div className={css.outer}>
+        <ConnectionsAndDatabases params={params} setNoDrag={setNoDrag} />
+        <Logo imgSrc="/images/dolt-workbench-grey.png" />
+      </div>
+    );
   }
-  return <div className={css.desktopOuter}>
-    <Logo imgSrc="/images/dolt-workbench.png" className={css.left} />
-    <ConnectionsAndDatabases params={params}  className={css.middle}/>
-    <RightLinks/>
-  </div>
+  return (
+    <div className={css.desktopOuter}>
+      <Logo imgSrc="/images/dolt-workbench.png" className={css.left} />
+      <ConnectionsAndDatabases params={params} className={css.middle} />
+      <RightLinks />
+    </div>
+  );
 }
 
 type LogoProps = {
@@ -67,7 +71,7 @@ type LogoProps = {
   className?: string;
 };
 
-export function Logo({ imgSrc,className }: LogoProps) {
+export function Logo({ imgSrc, className }: LogoProps) {
   return (
     <Link href="/" className={cx(className)}>
       <img src={imgSrc} alt="Dolt Workbench" className={css.logo} />
@@ -77,7 +81,7 @@ export function Logo({ imgSrc,className }: LogoProps) {
 function RightLinks() {
   return (
     <div className={css.right}>
-    <DocsLink>Documentation</DocsLink>
+      <DocsLink>Documentation</DocsLink>
       <ExternalLink href={workbenchGithubRepo}>
         <FaGithub /> GitHub
       </ExternalLink>

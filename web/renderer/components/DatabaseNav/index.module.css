@@ -2,7 +2,7 @@
   @apply hidden;
 
   @screen lg {
-    @apply flex justify-between relative -mt-[2.55rem];
+    @apply flex justify-between relative -mt-[5.55rem];
   }
 }
 
