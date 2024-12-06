@@ -19,7 +19,7 @@
 }
 
 .container {
-  @apply flex w-[32rem] flex-col;
+  @apply flex w-[36rem] flex-col;
 }
 
 .top,
@@ -28,29 +28,31 @@
   @apply flex;
 }
 
-.left {
-  @apply w-1/3;
-}
+ 
 .middle {
   @apply min-h-32;
 }
 
 .left {
-  @apply w-2/5 border-r border-stone-100 pt-2;
+  @apply w-3/5 border-r border-stone-100;
+  svg{
+    @apply text-sky-400;
+  }
 }
 
 .right {
-  @apply w-3/5 pt-2;
+  @apply w-2/5;
+  svg{
+    @apply text-sky-400;
+  }
 }
 
 .header {
   @apply flex items-center  border-b border-stone-100 py-2 px-4 justify-between;
   span {
-    @apply font-semibold text-sm text-storm-500;
+    @apply font-semibold text-sm text-storm-200;
   }
-  svg {
-    @apply text-[#000];
-  }
+ 
 }
 
 .item {

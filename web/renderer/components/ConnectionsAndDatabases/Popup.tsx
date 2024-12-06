@@ -6,11 +6,12 @@ import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
 import { excerpt } from "@dolthub/web-utils";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
 import css from "./index.module.css";
-
+import { DatabaseTypeLabel } from "@components/pageComponents/ConnectionsPage/ExistingConnections/Item";
+ 
 type Props = {
   params: DatabaseParams;
   currentConnection: DatabaseConnection;
@@ -32,7 +33,7 @@ export default function Popup({
         <div className={cx(css.header, css.left)}>
           <span>CONNECTIONS</span>
           <Link href="/connections">
-            <AiOutlinePlus />
+            <AiOutlinePlusCircle />
           </Link>
         </div>
         <div className={cx(css.header, css.right)}>
@@ -53,6 +54,7 @@ export default function Popup({
               onClick={async () => onSelected(conn)}
             >
               <span className={css.alignLeft}>{excerpt(conn.name, 16)}</span>
+              <DatabaseTypeLabel conn={conn} />
               <FaChevronRight />
             </Button.Link>
           ))}

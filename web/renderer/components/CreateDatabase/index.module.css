@@ -2,6 +2,6 @@
   @apply text-sm flex items-center;
 
   svg {
-    @apply mr-1;
+    @apply h-4 w-4;
   }
 }

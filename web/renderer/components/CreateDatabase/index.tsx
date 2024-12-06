@@ -7,7 +7,7 @@ import {
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { database } from "@lib/urls";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
@@ -55,7 +55,7 @@ export default function CreateDatabase(props: Props) {
         onClick={() => setIsOpen(true)}
         className={cx(css.createDB, props.buttonClassName)}
       >
-        <AiOutlinePlus />
+        <AiOutlinePlusCircle />
         {props.showText && "Create database"}
       </Button.Link>
       <ModalOuter

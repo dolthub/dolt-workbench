@@ -37,7 +37,7 @@ type LabelProps = {
   conn: DatabaseConnectionFragment;
 };
 
-function DatabaseTypeLabel({ conn }: LabelProps) {
+export function DatabaseTypeLabel({ conn }: LabelProps) {
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
   return <span className={cx(css.label, css[type.toLowerCase()])}>{type}</span>;
 }
