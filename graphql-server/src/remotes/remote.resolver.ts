@@ -60,6 +60,9 @@ export class RemoteResolver {
   async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<PullRes> {
     const conn = this.conn.connection();
     const res = await conn.callPullRemote(args);
+    if (res.length === 0) {
+      throw new Error("No response from pull");
+    }
     return fromPullRes(res[0]);
   }
 
@@ -67,6 +70,9 @@ export class RemoteResolver {
   async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<PushRes> {
     const conn = this.conn.connection();
     const res = await conn.callPushRemote(args);
+    if (res.length === 0) {
+      throw new Error("No response from push");
+    }
     return fromPushRes(res[0]);
   }
 }
