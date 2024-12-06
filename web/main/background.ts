@@ -23,7 +23,7 @@ process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
 
-const HEADER_HEIGHT = 48;
+const HEADER_HEIGHT = 60;
 const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
 
 if (isProd) {
@@ -128,7 +128,8 @@ app.on("ready", async () => {
     minHeight: 600,
     minWidth: 600,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
-    titleBarOverlay: process.platform === "darwin",
+    titleBarOverlay:
+      process.platform === "darwin" ? { height: HEADER_HEIGHT } : undefined,
     trafficLightPosition: {
       x: 20,
       y: HEADER_HEIGHT / 2 - MACOS_TRAFFIC_LIGHTS_HEIGHT / 2,

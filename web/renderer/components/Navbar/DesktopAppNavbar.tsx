@@ -1,36 +1,93 @@
+import { DatabaseParams } from "@lib/params";
+import ConnectionsAndDatabases from "@components/ConnectionsAndDatabases";
 import Link from "@components/links/Link";
-import { Navbar } from "@dolthub/react-components";
+import { useState } from "react";
+import cx from "classnames";
+import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
+import { ExternalLink } from "@dolthub/react-components";
+import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
+import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
+import DocsLink from "@components/links/DocsLink";
 import css from "./index.module.css";
 
-const handleDoubleClick = () => {
-  window.ipc.macTitlebarClicked();
+// TODO: Support desktop app nav bar on windows
+const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";
+
+const handleDoubleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+  if (e.currentTarget === e.target) {
+    window.ipc.macTitlebarClicked();
+  }
 };
 
-export default function DesktopAppNavbar() {
+type Props = {
+  params?: DatabaseParams;
+};
+
+export default function DesktopAppNavbar({ params }: Props) {
+  const [noDrag, setNoDrag] = useState(false);
+
   return (
-    <div className={css.titlebar} onDoubleClick={handleDoubleClick}>
-      <Navbar
-        logo={<Logo />}
-        leftLinks={<LeftLinks />}
-        rightLinks={<div />}
-        bgColor="bg-storm-600"
-      />
+    <div
+      className={cx(css.titlebar, {
+        [css.drag]: !noDrag,
+        [css.noDrag]: noDrag,
+      })}
+      onDoubleClick={handleDoubleClick}
+    >
+      {params ? (
+        <Inner params={params} setNoDrag={setNoDrag} />
+      ) : (
+        <Logo imgSrc="/images/dolt-workbench.png" />
+      )}
     </div>
   );
 }
 
-function LeftLinks() {
+type InnerProps = {
+  params: DatabaseParams;
+  setNoDrag: (noDrag: boolean) => void;
+};
+
+function Inner({ params, setNoDrag }: InnerProps) {
+  if (forMacNav) {
+    return (
+      <div className={css.outer}>
+        <ConnectionsAndDatabases params={params} setNoDrag={setNoDrag} />
+        <Logo imgSrc="/images/dolt-workbench-grey.png" />
+      </div>
+    );
+  }
   return (
-    <div className={css.leftLinks}>
-      <Link href="/connections">Connections</Link>
+    <div className={css.desktopOuter}>
+      <Logo imgSrc="/images/dolt-workbench.png" className={css.left} />
+      <ConnectionsAndDatabases params={params} className={css.middle} />
+      <RightLinks />
     </div>
   );
 }
 
-function Logo() {
+type LogoProps = {
+  imgSrc: string;
+  className?: string;
+};
+
+export function Logo({ imgSrc, className }: LogoProps) {
   return (
-    <Link href="/">
-      <img src="/images/d-logo.png" alt="Dolt Workbench" />
+    <Link href="/" className={cx(className)}>
+      <img src={imgSrc} alt="Dolt Workbench" className={css.logo} />
     </Link>
+  );
+}
+function RightLinks() {
+  return (
+    <div className={css.right}>
+      <DocsLink>Documentation</DocsLink>
+      <ExternalLink href={workbenchGithubRepo}>
+        <FaGithub /> GitHub
+      </ExternalLink>
+      <ExternalLink href={dockerHubRepo}>
+        <FaDocker /> Docker Hub
+      </ExternalLink>
+    </div>
   );
 }

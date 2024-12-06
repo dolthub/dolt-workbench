@@ -18,7 +18,7 @@ export default function Database404Page(props: Props) {
 
 export function Database404(props: Props) {
   return (
-    <DatabaseLayoutWrapperOuter>
+    <DatabaseLayoutWrapperOuter {...props}>
       <Page404 title="Database not found">
         <Database404Inner {...props} />
       </Page404>

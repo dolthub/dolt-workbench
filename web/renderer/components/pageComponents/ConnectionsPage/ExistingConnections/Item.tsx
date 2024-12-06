@@ -8,7 +8,7 @@ import useAddConnection from "./useAddConnection";
 
 type Props = {
   conn: DatabaseConnectionFragment;
-  onDeleteClicked: (n: string) => void;
+  onDeleteClicked?: (n: string) => void;
 };
 
 export default function Item({ conn, onDeleteClicked }: Props) {
@@ -20,9 +20,11 @@ export default function Item({ conn, onDeleteClicked }: Props) {
         <Button.Link onClick={onAdd}>{conn.name}</Button.Link>
         <span className={css.right}>
           <DatabaseTypeLabel conn={conn} />
-          <Button.Link onClick={() => onDeleteClicked(conn.name)}>
-            <IoMdClose />
-          </Button.Link>
+          {onDeleteClicked && (
+            <Button.Link onClick={() => onDeleteClicked(conn.name)}>
+              <IoMdClose />
+            </Button.Link>
+          )}
         </span>
       </li>
       <Loader loaded={!loading} />

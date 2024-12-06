@@ -11,10 +11,10 @@
 }
 
 .headerDetails {
-  @apply inline-block h-fit py-6 px-8 justify-between bg-storm-500 relative;
-
+  @apply inline-block  pb-6 px-8  bg-storm-500 relative h-16 pt-4 justify-end;
+  background-image: linear-gradient(to bottom, #354c5c, #192e3d);
   @screen lg {
-    @apply flex pt-6 h-28;
+    @apply flex h-28;
   }
 }
 
@@ -31,6 +31,10 @@
   button {
     @apply text-lg;
   }
+}
+
+.zIndex {
+  @apply z-10;
 }
 
 .topRight {
@@ -97,4 +101,16 @@
 
 .tooltip {
   @apply z-10;
+}
+
+.forAppNav {
+  @screen lg {
+    @apply h-16 pt-4 justify-end;
+  }
+}
+
+.hideForApp {
+  @screen lg {
+    @apply hidden;
+  }
 }
