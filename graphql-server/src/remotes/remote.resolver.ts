@@ -7,16 +7,27 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
-import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
-import { getRemoteListRes, Remote, RemoteList } from "./remote.model";
+import { DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
+import {
+  fromPullRes,
+  fromPushRes,
+  getRemoteListRes,
+  PullRes,
+  PushRes,
+  Remote,
+  RemoteList,
+} from "./remote.model";
 
 @ArgsType()
-export class AddRemoteArgs extends DBArgs {
-  @Field()
-  remoteName: string;
-
+export class AddRemoteArgs extends RemoteArgs {
   @Field()
   remoteUrl: string;
+}
+
+@ArgsType()
+export class PullOrPushRemoteArgs extends RemoteArgs {
+  @Field()
+  branchName: string;
 }
 
 @Resolver(_of => Remote)
@@ -43,5 +54,25 @@ export class RemoteResolver {
     const conn = this.conn.connection();
     await conn.callDeleteRemote(args);
     return true;
+  }
+
+  @Mutation(_returns => PullRes)
+  async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<PullRes> {
+    const conn = this.conn.connection();
+    const res = await conn.callPullRemote(args);
+    if (res.length === 0) {
+      throw new Error("No response from pull");
+    }
+    return fromPullRes(res[0]);
+  }
+
+  @Mutation(_returns => PushRes)
+  async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<PushRes> {
+    const conn = this.conn.connection();
+    const res = await conn.callPushRemote(args);
+    if (res.length === 0) {
+      throw new Error("No response from push");
+    }
+    return fromPushRes(res[0]);
   }
 }

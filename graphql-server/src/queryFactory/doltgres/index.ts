@@ -448,6 +448,22 @@ export class DoltgresQueryFactory
       args.databaseName,
     );
   }
+
+  async callPullRemote(args: t.PushOrPullRemoteArgs): t.PR {
+    return this.query(
+      qh.callPullRemote,
+      [args.remoteName, args.branchName],
+      args.databaseName,
+    );
+  }
+
+  async callPushRemote(args: t.PushOrPullRemoteArgs): t.PR {
+    return this.query(
+      qh.callPushRemote,
+      [args.remoteName, args.branchName],
+      args.databaseName,
+    );
+  }
 }
 
 async function getTableInfoWithQR(

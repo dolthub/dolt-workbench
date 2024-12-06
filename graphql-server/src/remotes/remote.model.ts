@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { __Type } from "graphql";
 import { getNextOffset, ROW_LIMIT } from "../utils";
 import { RawRow } from "../queryFactory/types";
@@ -25,6 +25,27 @@ export class RemoteList extends ListOffsetRes {
   list: Remote[];
 }
 
+@ObjectType()
+export class PullRes {
+  @Field()
+  fastForward: boolean;
+
+  @Field(_type => Int)
+  conflicts: number;
+
+  @Field()
+  message: string;
+}
+
+@ObjectType()
+export class PushRes {
+  @Field()
+  success: boolean;
+
+  @Field()
+  message: string;
+}
+
 export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
   return {
     _id: `databases/${databaseName}/remotes/${r.name}`,
@@ -43,5 +64,20 @@ export function getRemoteListRes(
       .slice(0, ROW_LIMIT)
       .map(l => fromDoltRemotesRow(args.databaseName, l)),
     nextOffset: getNextOffset(remotes.length, args.offset ?? 0),
+  };
+}
+
+export function fromPullRes(r: RawRow): PullRes {
+  return {
+    fastForward: r.fast_forward === "1",
+    conflicts: parseInt(r.conflicts, 10),
+    message: r.message,
+  };
+}
+
+export function fromPushRes(r: RawRow): PushRes {
+  return {
+    success: r.status === "0",
+    message: r.message,
   };
 }

@@ -6,7 +6,7 @@ import {
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
-import { refetchSqlUpdateQueriesCacheEvict } from "@lib/refetchQueries";
+import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { databases } from "@lib/urls";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
@@ -33,7 +33,7 @@ export default function useSqlQuery(
     // time to finish
     setTimeout(() => {
       client
-        .refetchQueries(refetchSqlUpdateQueriesCacheEvict)
+        .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
     }, 300);
   }, [gqlError, isMut, client]);

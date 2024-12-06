@@ -80,6 +80,10 @@ export const callAddRemote = `CALL DOLT_REMOTE("add", ?, ?)`;
 
 export const callDeleteRemote = `CALL DOLT_REMOTE("remove", ?)`;
 
+export const callPullRemote = `CALL DOLT_PULL(?, ?)`;
+
+export const callPushRemote = `CALL DOLT_PUSH(?, ?)`;
+
 // TAGS
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;

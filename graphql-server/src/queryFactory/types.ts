@@ -9,6 +9,7 @@ export type RefMaybeSchemaArgs = RefArgs & { schemaName?: string };
 export type BranchArgs = DBArgs & { branchName: string };
 export type RemoteArgs = DBArgs & { remoteName: string };
 export type AddRemoteArgs = RemoteArgs & { remoteUrl: string };
+export type PushOrPullRemoteArgs = RemoteArgs & { branchName?: string };
 export type TagArgs = DBArgs & { tagName: string };
 export type TableArgs = RefArgs & { tableName: string };
 export type TableMaybeSchemaArgs = TableArgs & { schemaName?: string };

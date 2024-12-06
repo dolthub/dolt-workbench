@@ -22,3 +22,44 @@ export const DELETE_REMOTE = gql`
     deleteRemote(remoteName: $remoteName, databaseName: $databaseName)
   }
 `;
+
+export const PULL_FROM_REMOTE = gql`
+  fragment PullRes on PullRes {
+    fastForward
+    conflicts
+    message
+  }
+  mutation PullFromRemote(
+    $remoteName: String!
+    $branchName: String!
+    $databaseName: String!
+  ) {
+    pullFromRemote(
+      remoteName: $remoteName
+      branchName: $branchName
+      databaseName: $databaseName
+    ) {
+      ...PullRes
+    }
+  }
+`;
+
+export const PUSH_TO_REMOTE = gql`
+  fragment PushRes on PushRes {
+    success
+    message
+  }
+  mutation PushToRemote(
+    $remoteName: String!
+    $branchName: String!
+    $databaseName: String!
+  ) {
+    pushToRemote(
+      remoteName: $remoteName
+      branchName: $branchName
+      databaseName: $databaseName
+    ) {
+      ...PushRes
+    }
+  }
+`;

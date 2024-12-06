@@ -1,15 +1,13 @@
 import { Loader, QueryHandler } from "@dolthub/react-components";
-
-import { DatabaseParams } from "@lib/params";
+import { OptionalRefParams } from "@lib/params";
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import Database404 from "@components/Database404";
-
 import { useRemoteList } from "./useRemoteList";
 import Inner from "./Inner";
 
 type Props = {
-  params: DatabaseParams;
+  params: OptionalRefParams;
 };
 
 export default function RemotesPage({ params }: Props) {
