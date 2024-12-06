@@ -57,7 +57,7 @@ export default function PushToRemoteModal({
       return;
     }
     const msg = pushRes.data.pushToRemote.message;
-    if (!pushRes.data.pushToRemote.status) {
+    if (!pushRes.data.pushToRemote.success) {
       res.setErr(new Error(msg));
       return;
     }

@@ -46,7 +46,7 @@ export const PULL_FROM_REMOTE = gql`
 
 export const PUSH_TO_REMOTE = gql`
   fragment PushRes on PushRes {
-    status
+    success
     message
   }
   mutation PushToRemote(

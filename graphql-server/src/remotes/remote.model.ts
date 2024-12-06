@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "@nestjs/graphql";
+import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { __Type } from "graphql";
 import { getNextOffset, ROW_LIMIT } from "../utils";
 import { RawRow } from "../queryFactory/types";
@@ -30,7 +30,7 @@ export class PullRes {
   @Field()
   fastForward: boolean;
 
-  @Field()
+  @Field(_type => Int)
   conflicts: number;
 
   @Field()
@@ -40,7 +40,7 @@ export class PullRes {
 @ObjectType()
 export class PushRes {
   @Field()
-  status: boolean;
+  success: boolean;
 
   @Field()
   message: string;
@@ -69,7 +69,7 @@ export function getRemoteListRes(
 
 export function fromPullRes(r: RawRow): PullRes {
   return {
-    fastForward: r.fast_forward !== "0",
+    fastForward: r.fast_forward === "1",
     conflicts: parseInt(r.conflicts, 10),
     message: r.message,
   };
@@ -77,7 +77,7 @@ export function fromPullRes(r: RawRow): PullRes {
 
 export function fromPushRes(r: RawRow): PushRes {
   return {
-    status: r.status === "0",
+    success: r.status === "0",
     message: r.message,
   };
 }
