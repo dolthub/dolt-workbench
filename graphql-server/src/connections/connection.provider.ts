@@ -104,6 +104,7 @@ export class ConnectionProvider {
 
 export function getDataSource(config: WorkbenchConfig): DataSource {
   const ds = new DataSource({
+    applicationName: "Dolt Workbench",
     type: config.type,
     connectorPackage: config.type === "mysql" ? "mysql2" : undefined,
     url: config.connectionUrl,
