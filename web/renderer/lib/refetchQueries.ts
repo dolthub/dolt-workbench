@@ -109,7 +109,11 @@ export const refetchDeletedBranch = (
   ...refetchBranchQueries(params),
 ];
 
-export const refetchSqlUpdateQueriesCacheEvict: RefetchOptions = {
+export const refetchRemoteQueries = (
+  variables: DatabaseParams,
+): RefetchQueries => [{ query: gen.RemoteListDocument, variables }];
+
+export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
   updateCache(cache: TCacheShape) {
     [
       "rows",

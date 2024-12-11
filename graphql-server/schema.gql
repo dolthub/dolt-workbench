@@ -279,6 +279,29 @@ type TagList {
   list: [Tag!]!
 }
 
+type Remote {
+  _id: ID!
+  name: String!
+  url: String!
+  fetchSpecs: [String!]
+}
+
+type RemoteList {
+  nextOffset: Int
+  list: [Remote!]!
+}
+
+type PullRes {
+  fastForward: Boolean!
+  conflicts: Int!
+  message: String!
+}
+
+type PushRes {
+  success: Boolean!
+  message: String!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -298,6 +321,7 @@ type Query {
   docs(databaseName: String!, refName: String!): DocList!
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
+  remotes(databaseName: String!, offset: Int): RemoteList!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
@@ -348,6 +372,10 @@ type Mutation {
   resetDatabase(newDatabase: String): Boolean!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
+  addRemote(remoteName: String!, databaseName: String!, remoteUrl: String!): String!
+  deleteRemote(databaseName: String!, remoteName: String!): Boolean!
+  pullFromRemote(remoteName: String!, databaseName: String!, branchName: String!): PullRes!
+  pushToRemote(remoteName: String!, databaseName: String!, branchName: String!): PushRes!
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

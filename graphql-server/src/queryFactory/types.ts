@@ -7,6 +7,9 @@ export type RefArgs = DBArgs & { refName: string };
 export type RefSchemaArgs = RefArgs & { schemaName: string };
 export type RefMaybeSchemaArgs = RefArgs & { schemaName?: string };
 export type BranchArgs = DBArgs & { branchName: string };
+export type RemoteArgs = DBArgs & { remoteName: string };
+export type AddRemoteArgs = RemoteArgs & { remoteUrl: string };
+export type PushOrPullRemoteArgs = RemoteArgs & { branchName?: string };
 export type TagArgs = DBArgs & { tagName: string };
 export type TableArgs = RefArgs & { tableName: string };
 export type TableMaybeSchemaArgs = TableArgs & { schemaName?: string };
@@ -38,6 +41,10 @@ export type RowDiffArgs = DBArgs & {
   toCommitId: string;
   offset: number;
   filterByRowType?: DiffRowType;
+};
+
+export type ListRemotesArgs = DBArgs & {
+  offset: number;
 };
 
 export type RawRow = Record<string, any>;

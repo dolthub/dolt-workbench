@@ -9,6 +9,7 @@ import ForPulls from "./ForPulls";
 import ForQuery from "./ForQuery";
 import ForRef from "./ForRef";
 import ForReleases from "./ForReleases";
+import ForRemotes from "./ForRemotes";
 import ForSchema from "./ForSchema";
 import ForTable from "./ForTable";
 import DatabasePage from "./component";
@@ -25,6 +26,7 @@ export default Object.assign(DatabasePage, {
   ForPullDiff,
   ForRef,
   ForReleases,
+  ForRemotes,
   ForSchema,
   ForTable,
 });

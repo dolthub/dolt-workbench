@@ -44,7 +44,7 @@ export class PostgresQueryFactory
       args.databaseName,
       args.refName,
     );
-    return res.map(r => r.schema_name);
+    return res.filter(s => s.schema_name !== "dolt").map(r => r.schema_name);
   }
 
   async createSchema(args: t.RefSchemaArgs): Promise<void> {

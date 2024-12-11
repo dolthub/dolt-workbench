@@ -1,0 +1,63 @@
+.container {
+  @apply mx-6;
+}
+
+.top {
+  @apply flex justify-between pt-6;
+}
+
+.table {
+  @apply border border-stone-100 border-separate rounded-lg text-primary mx-auto my-10 overflow-x-auto block;
+  border-spacing: 0;
+
+  @screen lg {
+    @apply min-w-[40rem] overflow-x-visible;
+    display: table;
+  }
+
+  td,
+  th {
+    @apply px-6 text-left;
+  }
+
+  th {
+    @apply pt-6 pb-2 bg-stone-50;
+  }
+
+  td {
+    @apply border-t border-stone-100 py-3;
+  }
+
+  tr:first-child {
+    th:first-child {
+      @apply rounded-tl-lg;
+    }
+    th:last-child {
+      @apply rounded-tr-lg;
+    }
+  }
+}
+
+.noRemotes {
+  @apply text-center text-lg m-6;
+}
+
+.loader {
+  @apply text-primary my-4 text-center;
+}
+
+.pullIcon {
+  transform: rotateX(180deg);
+}
+
+.trashIcon {
+  @apply text-red-300;
+}
+
+.bold {
+  @apply font-semibold;
+}
+
+.message {
+  @apply mx-8 mb-8 whitespace-pre-wrap;
+}
