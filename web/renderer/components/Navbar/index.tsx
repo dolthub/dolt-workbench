@@ -4,7 +4,7 @@ import Link from "@components/links/Link";
 import { useState } from "react";
 import cx from "classnames";
 import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
-import { ExternalLink } from "@dolthub/react-components";
+import { ExternalLink, MobileNavbar } from "@dolthub/react-components";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
 import DocsLink from "@components/links/DocsLink";
@@ -31,6 +31,7 @@ export default function DesktopAppNavbar({ params }: Props) {
       className={cx(css.titlebar, {
         [css.drag]: !noDrag,
         [css.noDrag]: noDrag,
+        [css.center]: !params,
       })}
       onDoubleClick={handleDoubleClick}
     >
@@ -39,6 +40,9 @@ export default function DesktopAppNavbar({ params }: Props) {
       ) : (
         <Logo imgSrc="/images/dolt-workbench.png" />
       )}
+      <MobileNavbar logo={<Logo imgSrc="/images/dolt-workbench.png" />}>
+        {params && <Inner params={params} setNoDrag={setNoDrag} />}
+      </MobileNavbar>
     </div>
   );
 }

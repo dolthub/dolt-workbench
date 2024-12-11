@@ -1,31 +1,25 @@
 .titlebar {
-  @apply bg-storm-600 text-white flex justify-center items-center relative;
+  @apply bg-storm-600 text-white  w-full;
   @screen lg {
-    @apply h-12;
+    @apply h-12 fixed flex justify-end items-center;
   }
   a,
   button {
     @apply cursor-pointer;
     -webkit-app-region: no-drag;
   }
-  button {
-    @apply ml-16;
-    @screen lg {
-      @apply ml-0;
-    }
-  }
-  a {
-    @apply inline-block -ml-4;
-    @screen lg {
-      @apply -ml-0;
-    }
-  }
+}
+
+.center {
+  @apply justify-center;
 }
 
 .outer {
-  @apply absolute flex  justify-between items-center;
-  left: calc(50% - 8rem);
-  width: calc(50% + 6rem);
+  @apply hidden justify-between items-center pr-8;
+  @screen md {
+    @apply flex;
+    width: calc(50% + 8rem);
+  }
 }
 
 .desktopOuter {
