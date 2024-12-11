@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { database } from "@lib/urls";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
+import { GoPrimitiveDot } from "@react-icons/all-files/go/GoPrimitiveDot";
 import css from "./index.module.css";
 
 type Props = {
@@ -52,16 +53,20 @@ export default function DatabaseItem({
   if (err) {
     return <ErrorMsg err={err} />;
   }
-
+  const dbName = excerpt(db, 32);
   if (db === currentDatabase && conn.name === currentConnection.name) {
-    return <span className={css.item}>{excerpt(db, 24)} </span>;
+    return (
+      <span className={css.DbItem}>
+        {dbName} <GoPrimitiveDot className={css.dot} />
+      </span>
+    );
   }
   return (
     <Button.Link
-      className={cx(css.item, css.link)}
+      className={cx(css.DbItem, css.link)}
       onClick={async () => onClick(db)}
     >
-      <span className={css.alignLeft}>{excerpt(db, 24)}</span>
+      <span>{dbName}</span>
       <FaChevronRight />
     </Button.Link>
   );

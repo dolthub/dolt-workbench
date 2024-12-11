@@ -11,10 +11,10 @@
 }
 
 .headerDetails {
-  @apply inline-block  pb-6 px-8  bg-storm-500 relative h-16 pt-4 justify-end;
+  @apply inline-block  py-2 px-8  bg-storm-500 relative h-16   justify-end;
   background-image: linear-gradient(to bottom, #354c5c, #192e3d);
   @screen lg {
-    @apply flex h-28;
+    @apply flex h-12;
   }
 }
 

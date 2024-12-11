@@ -1,7 +1,7 @@
 .titlebar {
   @apply bg-storm-600 text-white flex justify-center items-center relative;
   @screen lg {
-    @apply h-16;
+    @apply h-12;
   }
   a,
   button {
@@ -23,7 +23,7 @@
 }
 
 .outer {
-  @apply absolute bottom-4 flex  justify-between items-center;
+  @apply absolute flex  justify-between items-center;
   left: calc(50% - 8rem);
   width: calc(50% + 6rem);
 }
@@ -76,7 +76,7 @@
 }
 
 .logo {
-  @apply max-h-6;
+  @apply max-h-5;
 }
 
 .forMobile {

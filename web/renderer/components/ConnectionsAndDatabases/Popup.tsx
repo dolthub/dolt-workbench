@@ -1,4 +1,8 @@
-import { DatabaseConnection, DatabaseType } from "@gen/graphql-types";
+import {
+  DatabaseConnection,
+  DatabaseConnectionFragment,
+  DatabaseType,
+} from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import cx from "classnames";
 import Link from "@components/links/Link";
@@ -7,11 +11,12 @@ import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
 import { excerpt } from "@dolthub/web-utils";
 import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { GoPrimitiveDot } from "@react-icons/all-files/go/GoPrimitiveDot";
+import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
 import css from "./index.module.css";
-import { DatabaseTypeLabel } from "@components/pageComponents/ConnectionsPage/ExistingConnections/Item";
- 
+
 type Props = {
   params: DatabaseParams;
   currentConnection: DatabaseConnection;
@@ -48,14 +53,26 @@ export default function Popup({
           {storedConnections.map(conn => (
             <Button.Link
               key={conn.name}
-              className={cx(css.item, {
+              className={cx(css.connection, {
                 [css.selected]: state.connection.name === conn.name,
               })}
               onClick={async () => onSelected(conn)}
             >
-              <span className={css.alignLeft}>{excerpt(conn.name, 16)}</span>
-              <DatabaseTypeLabel conn={conn} />
-              <FaChevronRight />
+              <div className={css.connectionTop}>
+                <div className={css.nameAndLabel}>
+                  <span className={css.connectionName}>
+                    {excerpt(conn.name, 16)}
+                  </span>
+                  <DatabaseTypeLabel conn={conn} />
+                  {conn.name === currentConnection.name && (
+                    <GoPrimitiveDot className={css.dot} />
+                  )}
+                </div>
+                <FaChevronRight className={css.arrow} />
+              </div>
+              <div className={css.connectionUrl}>
+                {excerpt(conn.connectionUrl, 42)}
+              </div>
             </Button.Link>
           ))}
         </div>
@@ -73,13 +90,15 @@ export default function Popup({
           <ErrorMsg err={state.err} />
         </div>
       </div>
-      <div className={css.bottom}>
-        <div className={css.left}>
-          <Link href="/connections" className={css.manageConnection}>
-            manage
-          </Link>
-        </div>
-      </div>
     </div>
   );
+}
+
+type LabelProps = {
+  conn: DatabaseConnectionFragment;
+};
+
+export function DatabaseTypeLabel({ conn }: LabelProps) {
+  const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
+  return <span className={cx(css.label, css[type.toLowerCase()])}>{type}</span>;
 }

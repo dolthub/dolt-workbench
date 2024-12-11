@@ -3,8 +3,8 @@ import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import cx from "classnames";
-import css from "./index.module.css";
 import useAddConnection from "./useAddConnection";
+import css from "./index.module.css";
 
 type Props = {
   conn: DatabaseConnectionFragment;

@@ -7,77 +7,115 @@
 }
 
 .dbIcon {
-  @apply mr-3 w-5 h-5;
+  @apply mr-3 w-4 h-4;
 }
 
 .selector {
   @apply rounded px-4 py-1 bg-[#3C4D5A] min-w-56 flex items-center justify-between font-normal;
 }
 
-.label {
-  @apply mr-4;
-}
-
 .container {
-  @apply flex w-[36rem] flex-col;
+  @apply flex max-w-[40rem] flex-col;
 }
 
 .top,
-.middle,
-.bottom {
+.middle {
   @apply flex;
 }
 
- 
+.top svg {
+  @apply text-sky-400 w-5 h-5;
+}
+
 .middle {
   @apply min-h-32;
 }
 
 .left {
-  @apply w-3/5 border-r border-stone-100;
-  svg{
-    @apply text-sky-400;
-  }
+  @apply w-1/2 border-r border-stone-100 pb-3;
 }
 
 .right {
-  @apply w-2/5;
-  svg{
-    @apply text-sky-400;
-  }
+  @apply w-1/2 pb-3;
 }
 
 .header {
-  @apply flex items-center  border-b border-stone-100 py-2 px-4 justify-between;
+  @apply flex items-center  border-b border-stone-100 p-4 justify-between;
   span {
     @apply font-semibold text-sm text-storm-200;
   }
- 
 }
 
-.item {
-  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center justify-between;
-  svg {
-    @apply font-normal h-3;
-  }
+.connection {
+  @apply h-16 flex-col items-start w-full px-4;
 }
 
-.selected {
-  @apply bg-sky-50;
+.connectionTop {
+  @apply flex items-center justify-between;
 }
 
-.manageConnection {
-  @apply px-4 text-xs text-storm-500 underline my-2 block;
+.nameAndLabel {
+  @apply flex items-center;
+}
+
+.connectionName {
+  @apply text-left;
+}
+
+.label {
+  @apply text-sm px-2 bg-[#EFF2F3] rounded-full flex items-center justify-center ml-4;
+}
+
+.mysql {
+  @apply text-[#00758f];
+}
+
+.dolt {
+  @apply text-mint-200;
+}
+
+.doltgresql {
+  @apply text-orange-300;
+}
+
+.postgresql {
+  @apply text-[#0064a5];
+}
+
+.connectionUrl {
+  @apply text-storm-200 text-xs font-normal text-left py-1;
+}
+
+.selected,
+.connection:hover,
+.DbItem:hover {
+  @apply bg-storm-50 bg-opacity-50;
+}
+
+.selected .connectionName,
+.connection:hover .connectionName {
+  @apply text-primary;
+}
+
+.dot {
+  @apply text-mint-200 w-3 h-3 ml-2;
+}
+
+.arrow {
+  @apply text-sky-400 w-3 h-3;
 }
 
 .err {
   @apply ml-4;
 }
 
-.link {
-  @apply text-sky-500;
+.DbItem {
+  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center;
+  svg {
+    @apply font-normal h-3;
+  }
 }
 
-.alignLeft {
-  @apply text-left;
+.link {
+  @apply text-sky-500 justify-between;
 }

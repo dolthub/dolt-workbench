@@ -23,7 +23,7 @@ process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
 
-const HEADER_HEIGHT = 60;
+const HEADER_HEIGHT = 48;
 const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
 
 if (isProd) {
