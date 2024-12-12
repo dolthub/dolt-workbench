@@ -23,7 +23,12 @@ export default function NavLinks({ className, params }: Props) {
       <Tabs initialActiveIndex={initialActiveIndex}>
         <TabList className={css.tabList}>
           {tabs.map((tab, i) => (
-            <Tab key={tab} name={tab.toLowerCase()} index={i} dark>
+            <Tab
+              key={tab}
+              name={tab.toLowerCase()}
+              index={i}
+              className={css.tab}
+            >
               {tab}
             </Tab>
           ))}

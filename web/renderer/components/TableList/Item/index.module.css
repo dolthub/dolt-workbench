@@ -3,7 +3,7 @@
 }
 
 .buttonIcon {
-  @apply text-primary opacity-25 text-2xl mr-4 h-6 mt-1 rounded-full;
+  @apply text-white text-2xl mr-4 h-6 mt-1 rounded-full font-normal;
 
   &:focus {
     @apply widget-shadow-lightblue outline-none;
@@ -12,7 +12,7 @@
 
 .active,
 .item:hover {
-  @apply bg-white;
+  @apply bg-storm-50 text-storm-600;
 
   .buttonIcon {
     @apply font-semibold;
@@ -20,33 +20,41 @@
 }
 
 .item:hover .buttonIcon {
-  @apply opacity-100;
+  @apply text-sky-900;
+}
 
-  &:hover {
+.isExpanded {
+  @apply bg-[#fafbfc];
+  .buttonIcon {
     @apply text-sky-900;
   }
 }
 
-.isExpanded {
-  background-color: #fafbfc;
+.isExpanded .tableName {
+  @apply text-storm-600 font-semibold;
 }
 
+.isExpanded .table {
+  @apply text-storm-600 font-semibold bg-storm-50;
+}
 .table {
   @apply flex justify-between text-sm;
+  &:hover {
+    @apply bg-storm-50;
+    .tableName {
+      @apply text-storm-600;
+    }
+  }
 }
 
 .tableName {
   @apply hidden;
 
   @screen lg {
-    @apply flex p-3 text-link-1 font-semibold w-full text-sm;
+    @apply flex p-3 text-white w-full text-sm;
 
     svg {
       @apply inline-block text-sm mt-1 mr-2;
-    }
-
-    &:hover {
-      @apply text-link-2;
     }
 
     &:focus {

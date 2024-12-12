@@ -3,7 +3,13 @@
 }
 
 .text {
-  @apply my-4 mx-5;
+  @apply my-4 mx-5 text-storm-50;
+  a {
+    @apply text-white;
+    &:hover {
+      @apply text-sky-300;
+    }
+  }
 }
 
 .icon {

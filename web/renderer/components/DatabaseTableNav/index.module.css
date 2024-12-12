@@ -1,7 +1,7 @@
 .container {
   @apply hidden;
   @screen lg {
-    @apply bg-stone-50 pt-5 flex flex-col;
+    @apply bg-storm-500 pt-5 flex flex-col;
   }
 }
 
@@ -36,7 +36,7 @@
 .menuIcon {
   @apply hidden;
   @screen lg {
-    @apply block text-primary cursor-pointer mx-1;
+    @apply block cursor-pointer mx-1 text-white;
   }
 }
 
@@ -68,7 +68,7 @@
   @apply hidden;
 
   @screen lg {
-    @apply block font-bold text-xl cursor-pointer -ml-4;
+    @apply block font-bold text-xl cursor-pointer -ml-4 text-white;
     path {
       @apply stroke-[3.5rem];
     }
@@ -87,8 +87,12 @@
   @apply text-sm;
 
   li {
-    @apply mx-4 px-2 text-link-1;
+    @apply mx-4 px-2;
   }
+}
+
+.tab {
+  @apply text-storm-50;
 }
 
 .tabPanel {
