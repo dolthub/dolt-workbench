@@ -128,7 +128,8 @@ app.on("ready", async () => {
     minHeight: 600,
     minWidth: 600,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
-    titleBarOverlay: process.platform === "darwin",
+    titleBarOverlay:
+      process.platform === "darwin" ? { height: HEADER_HEIGHT } : undefined,
     trafficLightPosition: {
       x: 20,
       y: HEADER_HEIGHT / 2 - MACOS_TRAFFIC_LIGHTS_HEIGHT / 2,

@@ -37,7 +37,7 @@ export default function DatabaseLayout(props: Props) {
   const { isMobile } = useReactiveWidth(1024);
   const [showTableNav, setShowTableNav] = useState(false);
   return (
-    <Wrapper>
+    <Wrapper params={props.params}>
       <DatabaseHeaderAndNav
         initialTabIndex={props.initialTabIndex}
         params={refParams}

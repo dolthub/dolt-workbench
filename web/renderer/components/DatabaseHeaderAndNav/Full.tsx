@@ -1,7 +1,5 @@
 import DatabaseNav from "@components/DatabaseNav";
 import MobileDatabaseNav from "@components/DatabaseNav/ForMobile";
-import DatabaseTypeLabel from "@components/DatabaseTypeLabel";
-import DatabaseBreadcrumbs from "@components/breadcrumbs/DatabaseBreadcrumbs";
 import { OptionalRefParams } from "@lib/params";
 import cx from "classnames";
 import RightHeaderButtons from "./RightHeaderButtons";
@@ -22,14 +20,7 @@ export default function Full(props: Props) {
       className={cx(css.header, { [css.hideFullHeader]: props.showSmall })}
     >
       <div className={css.headerDetails}>
-        <div className={css.topLeft}>
-          <DatabaseBreadcrumbs
-            className={css.databaseBreadcrumbs}
-            params={props.params}
-          />
-          <DatabaseTypeLabel className={css.permission} />
-        </div>
-        <div>
+        <div className={css.zIndex}>
           <RightHeaderButtons
             {...props}
             onMenuClick={() => props.setShowSmall(true)}
