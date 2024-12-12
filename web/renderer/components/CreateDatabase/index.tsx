@@ -8,6 +8,7 @@ import {
 import useMutation from "@hooks/useMutation";
 import { database } from "@lib/urls";
 import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
@@ -55,8 +56,8 @@ export default function CreateDatabase(props: Props) {
         onClick={() => setIsOpen(true)}
         className={cx(css.createDB, props.buttonClassName)}
       >
-        <AiOutlinePlusCircle />
-        {props.showText && "Create database"}
+        {props.showText ? <AiOutlinePlus /> : <AiOutlinePlusCircle />}
+        {props.showText && <span className={css.text}>Create database</span>}
       </Button.Link>
       <ModalOuter
         isOpen={isOpen}
