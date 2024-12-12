@@ -11,7 +11,7 @@
 }
 
 .icon {
-  @apply text-xl mr-2 text-white rounded-full opacity-25;
+  @apply text-xl mr-2 text-white rounded-full;
 }
 
 .item {
@@ -25,7 +25,7 @@
 .item:hover {
   .icon,
   .name {
-    @apply text-sky-900  opacity-100;
+    @apply text-sky-900;
   }
 }
 

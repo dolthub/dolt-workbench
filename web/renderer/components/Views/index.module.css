@@ -13,7 +13,7 @@
 }
 
 .icon {
-  @apply text-2xl mr-2 text-primary rounded-full opacity-25;
+  @apply text-2xl mr-2 text-white rounded-full;
 }
 
 .item {
@@ -21,14 +21,6 @@
 
   @screen lg {
     @apply pr-2;
-  }
-}
-
-.item:hover .icon {
-  @apply opacity-100;
-
-  &:hover {
-    @apply text-sky-900;
   }
 }
 
@@ -42,11 +34,15 @@
 
 .selected,
 .item:hover {
-  @apply bg-white text-link-2;
+  @apply bg-storm-50;
+  .name,
+  .icon {
+    @apply text-storm-600;
+  }
 }
 
 .name {
-  @apply text-link-1 text-sm font-semibold;
+  @apply text-white text-sm font-semibold;
 }
 
 .viewing {
