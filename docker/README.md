@@ -42,7 +42,7 @@ You can also access the GraphQL Playground at http://localhost:9002/graphql.
 If you want to save connection metadata between Docker runs, you can mount a local
 directory to the `store` directory in `/app/graphql-server` in the container.
 
-```bash
+```zsh
 % docker run -p 9002:9002 -p 3000:3000 -v ~/path/to/store:/app/graphql-server/store dolthub/dolt-workbench:latest
 ```
 
@@ -53,7 +53,7 @@ database connection information through environment variables.
 
 Using a `.env` file:
 
-```bash
+```zsh
 # Specify individual fields:
 DW_DB_DBNAME=dolt_workbench
 DW_DB_PORT=3306
@@ -68,13 +68,13 @@ DW_DB_CONNECTION_URI=mysql://<username>:<password>@host.docker.internal:3306/dol
 DW_DB_USE_SSL=true
 ```
 
-```bash
+```zsh
 % docker run -p 9002:9002 -p 3000:3000 --env-file <env_file_name> dolthub/dolt-workbench:latest
 ```
 
 Or use the `-e` flag:
 
-```bash
+```zsh
 % docker run -p 9002:9002 -p 3000:3000 -e DW_DB_CONNECTION_URI="mysql://<username>:<password>@host.docker.internal:3306/dolt_workbench" dolthub/dolt-workbench:latest
 ```
 
@@ -92,7 +92,7 @@ server running at `http://localhost:9002/graphql`. In some cases you may want to
 different url to route GraphQL API requests, and you can do so using the following
 environment variable:
 
-```bash
+```zsh
 % docker run -p 9002:9002 -p 3000:3000 -e GRAPHQLAPI_URL="[your-host]:9002/graphql" dolthub/dolt-workbench:latest
 ```
 
@@ -102,13 +102,17 @@ If your database is already internet accessible (i.e. your database is hosted on
 
 ## Connecting to a locally installed database
 
-If you'd like to connect to a database server running on your local machine, there are some additional steps to accept connections from other hosts. Docker containers cannot use `localhost` or `127.0.0.1` to access services running on the host machine because they have their own local network. Instead, you can use `host.docker.internal` as the host IP which Docker resolves to the internal IP address used by the host machine.
+If you'd like to connect to a database server running on your local machine, there are some additional steps to accept connections from other hosts. Docker containers cannot use `localhost` or `127.0.0.1` to access services running on the host machine because they have their own local network. Instead, you can use `host.docker.internal`\* as the host IP which Docker resolves to the internal IP address used by the host machine.
+
+> \* If you are on Linux you will need to use the `--add-host` flag to map `host.docker.internal` to the host's gateway:
+>
+> For example, `docker run -it --add-host=host.docker.internal:host-gateway dolthub/dolt-workbench:latest`
 
 ### MySQL
 
 Set the `bind-address` directive in the MySQL configuration file (`my.cnf` or `my.ini`) to `0.0.0.0`. Restart the server.
 
-```
+```ini
 bind-address    = 0.0.0.0
 ```
 
@@ -120,7 +124,7 @@ On a Mac with MySQL installed via Homebrew, the location of this file is `/opt/h
 
 Run the Dolt SQL server with host `0.0.0.0`.
 
-```
+```zsh
 my-dolt-db % dolt sql-server -H 0.0.0.0
 ```
 
@@ -130,7 +134,7 @@ Use `host.docker.internal` as the host when entering your connection information
 
 Locate your PostgreSQL configuration file (`postgresql.conf`) and change the `listen_addresses` directive from `localhost` to `*`. Restart the server.
 
-```
+```ini
 listen_addresses = '*'
 ```
 
@@ -142,13 +146,13 @@ You can use Docker container networking to allow containers to connect to and co
 
 First, create the network:
 
-```
+```zsh
 % docker network create dolt-workbench
 ```
 
 And then run the workbench in that network:
 
-```
+```zsh
 % docker run --network dolt-workbench -p 9002:9002 -p 3000:3000 dolthub/dolt-workbench:latest
 ```
 
@@ -156,13 +160,13 @@ And then run the workbench in that network:
 
 For MySQL databases, you can use the [`mysql/mysql-server`](https://hub.docker.com/r/mysql/mysql-server/) image to start a SQL server for a new database:
 
-```
+```zsh
 % docker run --network dolt-workbench --name mysql-db mysql/mysql-server:latest
 ```
 
 Or an existing database on your local machine (see [MySQL documentation for more information](https://dev.mysql.com/doc/refman/8.0/en/docker-mysql-more-topics.html#docker-persisting-data-configuration)):
 
-```
+```zsh
 % docker run --name=mysql-db --network dolt-workbench \
 --mount type=bind,src=/path-on-host-machine/my.cnf,dst=/etc/my.cnf \
 --mount type=bind,src=/path-on-host-machine/datadir,dst=/var/lib/mysql \
@@ -181,13 +185,13 @@ When you enter your connection information from the UI, you can use `mysql-db` a
 
 For Dolt databases, you can use the [`dolthub/dolt-sql-server`](https://hub.docker.com/repository/docker/dolthub/dolt-sql-server/general) image to start a SQL server for a new database:
 
-```
+```zsh
 % docker run --network dolt-workbench --name my-doltdb -p 3307:3306 dolthub/dolt-sql-server:latest
 ```
 
 Or you can run a Dolt SQL server for an existing database on your local machine:
 
-```
+```zsh
 % docker run --network dolt-workbench -p 3307:3306 -v ~/path/to/parent/dir:/var/lib/dolt dolthub/dolt-sql-server:latest
 ```
 
