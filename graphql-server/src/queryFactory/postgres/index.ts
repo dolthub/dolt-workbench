@@ -136,7 +136,7 @@ export class PostgresQueryFactory
 
   async getSqlSelect(
     args: t.RefMaybeSchemaArgs & { queryString: string },
-  ): t.PR {
+  ): Promise<{ rows: t.RawRows; warnings: string[] }> {
     return this.queryQR(
       async qr => {
         if (args.schemaName) {

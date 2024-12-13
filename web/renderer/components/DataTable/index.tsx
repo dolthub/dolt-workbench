@@ -14,6 +14,7 @@ import AddRowsButton from "./AddRowsButton";
 import ShowAllColumns from "./ShowAllColumns";
 import Table from "./Table";
 import css from "./index.module.css";
+import Warnings from "./Warnings";
 
 type Props = {
   hasMore?: boolean;
@@ -23,6 +24,7 @@ type Props = {
   message?: ReactNode | null;
   params: RefParams & { tableName?: Maybe<string>; q: string };
   error?: ApolloError;
+  warnings?: Maybe<string[]>;
 };
 
 export function Inner({ columns, rows, message = null, ...props }: Props) {
@@ -31,6 +33,7 @@ export function Inner({ columns, rows, message = null, ...props }: Props) {
       <div>
         <div className={css.top}>
           <div data-cy="data-table-message">{message}</div>
+          {props.warnings && <Warnings warnings={props.warnings} />}
           <ShowAllColumns />
         </div>
         {rows && columns ? (

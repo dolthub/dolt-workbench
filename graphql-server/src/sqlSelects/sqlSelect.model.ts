@@ -29,6 +29,9 @@ export class SqlSelect {
 
   @Field()
   queryExecutionMessage: string;
+
+  @Field(_type => [String], { nullable: true })
+  warnings?: string[];
 }
 
 export function fromSqlSelectRow(
@@ -36,6 +39,7 @@ export function fromSqlSelectRow(
   refName: string,
   doltRows: RawRow | RawRow[],
   queryString: string,
+  warnings?: string[],
 ): SqlSelect {
   const res = {
     _id: `/databases/${databaseName}/refs/${refName}/queries/${queryString}`,
@@ -46,6 +50,7 @@ export function fromSqlSelectRow(
     columns: [],
     queryExecutionStatus: QueryExecutionStatus.Success,
     queryExecutionMessage: "",
+    warnings,
   };
 
   // Some mutation queries do not return an array

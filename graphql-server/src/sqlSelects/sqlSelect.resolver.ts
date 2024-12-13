@@ -22,8 +22,9 @@ export class SqlSelectResolver {
     return fromSqlSelectRow(
       args.databaseName,
       args.refName,
-      res,
+      res.rows,
       args.queryString,
+      res.warnings,
     );
   }
 
@@ -31,7 +32,7 @@ export class SqlSelectResolver {
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
     const conn = this.conn.connection();
     const res = await conn.getSqlSelect(args);
-    return toCsvString(res);
+    return toCsvString(res.rows);
   }
 }
 

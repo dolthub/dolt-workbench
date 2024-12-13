@@ -70,7 +70,9 @@ export declare class QueryFactory {
 
   getTableRows(args: t.TableMaybeSchemaArgs, page: t.TableRowPagination): t.PR;
 
-  getSqlSelect(args: t.RefMaybeSchemaArgs & { queryString: string }): t.PR;
+  getSqlSelect(
+    args: t.RefMaybeSchemaArgs & { queryString: string },
+  ): Promise<{ rows: t.RawRows; warnings: string[] }>;
 
   getSchemas(
     args: t.RefMaybeSchemaArgs,

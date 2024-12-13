@@ -142,8 +142,22 @@ export class MySQLQueryFactory
     );
   }
 
-  async getSqlSelect(args: t.RefArgs & { queryString: string }): t.PR {
-    return this.query(args.queryString, [], args.databaseName, args.refName);
+  async getSqlSelect(
+    args: t.RefArgs & { queryString: string },
+  ): Promise<{ rows: t.RawRows; warnings: string[] }> {
+    return this.queryMultiple(
+      async query => {
+        const rows = await query(args.queryString, [
+          args.databaseName,
+          args.refName,
+        ]);
+        const warningsRes = await query("show warnings");
+        const warnings = warningsRes.map(w => w.Message);
+        return { rows, warnings };
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getSchemas(args: t.DBArgs, type?: SchemaType): Promise<SchemaItem[]> {

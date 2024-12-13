@@ -7,7 +7,7 @@
 }
 
 .top {
-  @apply flex justify-start items-center;
+  @apply flex justify-start flex-col;
 }
 
 .bottom {
@@ -27,4 +27,17 @@
 
 .colsButton {
   @apply ml-4 h-8;
+}
+
+.warning {
+  @apply flex items-center mb-3 mx-6 text-base;
+  @screen md {
+    @apply mx-5;
+  }
+  svg {
+    @apply mr-2 text-coral-400 h-5 w-5 flex-shrink-0;
+  }
+  p {
+    @apply text-coral-400;
+  }
 }
