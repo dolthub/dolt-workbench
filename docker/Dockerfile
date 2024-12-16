@@ -1,7 +1,7 @@
 ###################
 # BUILD GRAPHQL SERVER
 ###################
-FROM node:18.19.0-alpine3.19 as graphql-base
+FROM --platform=linux/amd64 node:18.19.0-alpine3.19 as graphql-base
 
 FROM graphql-base AS graphql-deps
 WORKDIR /app/graphql-server
@@ -40,7 +40,7 @@ USER node
 ###################
 # BUILD NEXT.JS SERVER
 ###################
-FROM node:18.19.0-alpine3.19 as web-base
+FROM --platform=linux/amd64 node:18.19.0-alpine3.19 as web-base
 
 # Install dependencies only when needed
 FROM web-base AS web-deps
@@ -69,7 +69,7 @@ RUN yarn run build
 ###################
 # COMBINE
 ###################
-FROM node:18.19.0-alpine3.19 AS production
+FROM --platform=linux/amd64 node:18.19.0-alpine3.19 AS production
 
 # Set the working directory
 WORKDIR /app
