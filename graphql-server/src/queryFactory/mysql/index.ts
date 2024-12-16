@@ -144,7 +144,7 @@ export class MySQLQueryFactory
 
   async getSqlSelect(
     args: t.RefArgs & { queryString: string },
-  ): Promise<{ rows: t.RawRows; warnings: string[] }> {
+  ): Promise<{ rows: t.RawRows; warnings?: string[] }> {
     return this.queryMultiple(
       async query => {
         const rows = await query(args.queryString, [

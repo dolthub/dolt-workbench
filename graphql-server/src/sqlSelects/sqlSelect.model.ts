@@ -55,12 +55,13 @@ export function fromSqlSelectRow(
 
   // Some mutation queries do not return an array
   if (!Array.isArray(doltRows)) {
+    console.log("doltRows", doltRows);
     return {
       ...res,
       queryExecutionMessage: `Query OK, ${
-        doltRows.affectedRows
+        doltRows?.affectedRows
       } rows affected.${
-        doltRows.info.length > 0 ? doltRows.info.replace("#", " ") : ""
+        doltRows?.info.length > 0 ? doltRows.info.replace("#", " ") : ""
       }`,
     };
   }
