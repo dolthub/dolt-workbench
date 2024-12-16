@@ -37,7 +37,7 @@ export class SqlSelect {
 export function fromSqlSelectRow(
   databaseName: string,
   refName: string,
-  doltRows: RawRow | RawRow[],
+  doltRows: RawRow | RawRow[] | undefined,
   queryString: string,
   warnings?: string[],
 ): SqlSelect {
@@ -55,13 +55,17 @@ export function fromSqlSelectRow(
 
   // Some mutation queries do not return an array
   if (!Array.isArray(doltRows)) {
-    console.log("doltRows", doltRows);
+    if (!doltRows) {
+      return {
+        ...res,
+      };
+    }
     return {
       ...res,
       queryExecutionMessage: `Query OK, ${
-        doltRows?.affectedRows
+        doltRows.affectedRows
       } rows affected.${
-        doltRows?.info.length > 0 ? doltRows.info.replace("#", " ") : ""
+        doltRows.info.length > 0 ? doltRows.info.replace("#", " ") : ""
       }`,
     };
   }
