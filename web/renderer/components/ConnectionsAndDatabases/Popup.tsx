@@ -1,8 +1,4 @@
-import {
-  DatabaseConnection,
-  DatabaseConnectionFragment,
-  DatabaseType,
-} from "@gen/graphql-types";
+import { DatabaseConnection, DatabaseType } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import cx from "classnames";
 import Link from "@components/links/Link";
@@ -10,11 +6,10 @@ import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
 import { excerpt } from "@dolthub/web-utils";
-import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
-import { GoPrimitiveDot } from "@react-icons/all-files/go/GoPrimitiveDot";
-import { getDatabaseType } from "@components/DatabaseTypeLabel";
+import { FiTool } from "@react-icons/all-files/fi/FiTool";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
+import { DatabaseTypeLabel } from "./DatabaseTypeLabel";
 import css from "./index.module.css";
 
 type Props = {
@@ -38,7 +33,7 @@ export default function Popup({
         <div className={cx(css.header, css.left)}>
           <span>CONNECTIONS</span>
           <Link href="/connections">
-            <AiOutlinePlusCircle />
+            <FiTool className={css.wrench} />
           </Link>
         </div>
         <div className={cx(css.header, css.right)}>
@@ -65,7 +60,7 @@ export default function Popup({
                   </span>
                   <DatabaseTypeLabel conn={conn} />
                   {conn.name === currentConnection.name && (
-                    <GoPrimitiveDot className={css.dot} />
+                    <span className={css.viewing}>viewing</span>
                   )}
                 </div>
                 <FaChevronRight className={css.arrow} />
@@ -92,13 +87,4 @@ export default function Popup({
       </div>
     </div>
   );
-}
-
-type LabelProps = {
-  conn: DatabaseConnectionFragment;
-};
-
-export function DatabaseTypeLabel({ conn }: LabelProps) {
-  const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
-  return <span className={cx(css.label, css[type.toLowerCase()])}>{type}</span>;
 }

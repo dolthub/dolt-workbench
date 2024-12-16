@@ -50,6 +50,10 @@
   @apply h-16 flex-col items-start w-full px-4;
 }
 
+.wrench {
+  @apply w-4 h-4 border border-sky-400 rounded-full p-[0.1rem] -rotate-90;
+}
+
 .connectionTop {
   @apply flex items-center justify-between;
 }
@@ -63,23 +67,10 @@
 }
 
 .label {
-  @apply text-sm px-2 bg-[#EFF2F3] rounded-full flex items-center justify-center ml-4;
-}
-
-.mysql {
-  @apply text-[#00758f];
-}
-
-.dolt {
-  @apply text-mint-200;
-}
-
-.doltgresql {
-  @apply text-orange-300;
-}
-
-.postgresql {
-  @apply text-[#0064a5];
+  @apply text-sm px-3 h-5 bg-[#EFF2F3] rounded-full flex items-center justify-center ml-4;
+  img {
+    @apply h-[0.65rem];
+  }
 }
 
 .connectionUrl {
@@ -97,8 +88,8 @@
   @apply text-primary;
 }
 
-.dot {
-  @apply text-mint-200 w-3 h-3 ml-2;
+.viewing {
+  @apply text-[#FF8964] text-sm bg-coral-50 ml-2 rounded-full px-3;
 }
 
 .arrow {
