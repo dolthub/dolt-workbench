@@ -32,7 +32,6 @@
   }
 }
 
-.selected,
 .item:hover {
   @apply bg-storm-50;
   .name,

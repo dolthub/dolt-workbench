@@ -1,3 +1,7 @@
+.tableList {
+  @apply pb-4;
+}
+
 .addTable {
   @apply hidden;
   @screen lg {
@@ -15,4 +19,8 @@
 
 .empty {
   @apply my-4 mx-5;
+}
+
+.bottom {
+  @apply flex items-center justify-between px-6 border-t border-white border-opacity-10;
 }

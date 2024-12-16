@@ -3,7 +3,7 @@
 }
 
 .buttonIcon {
-  @apply text-white text-2xl mr-4 h-6 mt-1 rounded-full font-normal;
+  @apply text-storm-50 opacity-20 text-2xl mr-4 h-6 mt-1 rounded-full font-normal;
 
   &:focus {
     @apply widget-shadow-lightblue outline-none;
@@ -13,20 +13,16 @@
 .active,
 .item:hover {
   @apply bg-storm-50 text-storm-600;
-
-  .buttonIcon {
-    @apply font-semibold;
-  }
 }
 
 .item:hover .buttonIcon {
-  @apply text-sky-900;
+  @apply text-sky-900 opacity-100;
 }
 
 .isExpanded {
   @apply bg-[#fafbfc];
   .buttonIcon {
-    @apply text-sky-900;
+    @apply text-sky-900 opacity-100;
   }
 }
 

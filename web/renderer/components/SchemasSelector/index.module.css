@@ -13,3 +13,7 @@
     @apply stroke-[3.5rem];
   }
 }
+
+.createSchIcon {
+  @apply border-2 rounded-full border-white;
+}

@@ -68,7 +68,7 @@
   @apply hidden;
 
   @screen lg {
-    @apply block font-bold text-xl cursor-pointer -ml-4 text-white;
+    @apply block font-bold text-xl cursor-pointer -ml-4 text-white border-2 rounded-full border-white;
     path {
       @apply stroke-[3.5rem];
     }
