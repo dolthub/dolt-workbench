@@ -11,7 +11,6 @@ import { useRouter } from "next/router";
 import { database } from "@lib/urls";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
-import { GoPrimitiveDot } from "@react-icons/all-files/go/GoPrimitiveDot";
 import css from "./index.module.css";
 
 type Props = {
@@ -57,7 +56,7 @@ export default function DatabaseItem({
   if (db === currentDatabase && conn.name === currentConnection.name) {
     return (
       <span className={css.DbItem}>
-        {dbName} <GoPrimitiveDot className={css.dot} />
+        {dbName} <span className={css.viewing}>viewing</span>
       </span>
     );
   }
