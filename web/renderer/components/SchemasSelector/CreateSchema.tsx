@@ -53,7 +53,7 @@ export default function CreateSchema(props: Props) {
         data-tooltip-content="Create new schema"
         data-tooltip-place="top"
       >
-        <IoAddOutline />
+        <IoAddOutline className={css.createSchIcon} />
       </Button.Link>
       <Tooltip id="create-schema" />
       <ModalOuter

@@ -1,5 +1,8 @@
 .diagram {
-  @apply flex text-white ml-3 mt-2 text-base;
+  @apply flex text-white text-base bg-[#FF8964] rounded-full px-6 items-center;
+  &:hover {
+    @apply bg-coral-400;
+  }
 
   svg {
     @apply mt-1 mr-2 text-sm;
