@@ -21,6 +21,8 @@ import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import DoltLink from "@components/links/DoltLink";
 import DoltgresLink from "@components/links/DoltgresLink";
 import css from "./index.module.css";
+import Radios, { RemoteType } from "./Radios";
+import RemoteUrl from "./RemoteUrl";
 
 type Props = {
   params: DatabaseParams;
@@ -30,9 +32,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
     useDoltDatabaseDetailsQuery();
-  const { dbLink, urlPlaceHolder } = getDbNameAndLink(
-    databaseDetails?.doltDatabaseDetails,
-  );
+  const dbLink = getDbNameAndLink(databaseDetails?.doltDatabaseDetails);
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");
   const {
@@ -62,6 +62,8 @@ export default function AddRemoteForm(props: Props): JSX.Element {
     router.push(href, as).catch(console.error);
   };
 
+  const [type, setType] = useState(RemoteType.DoltHub);
+
   return (
     <div>
       <form onSubmit={onSubmit}>
@@ -73,12 +75,13 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             placeholder="i.e. origin"
             className={css.input}
           />
-          <FormInput
-            value={remoteUrl}
-            onChangeString={setRemoteUrl}
-            label="Add remote url"
-            placeholder={urlPlaceHolder}
-            className={css.input}
+          <span className={css.label}>Remote type</span>
+          <Radios type={type} setType={setType} />
+          <RemoteUrl
+            type={type}
+            remoteUrl={remoteUrl}
+            setRemoteUrl={setRemoteUrl}
+            currentDbName={props.params.databaseName}
           />
           <ButtonsWithError
             onCancel={goToRemotesPage}
@@ -105,25 +108,16 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   );
 }
 
-type ReturnType = {
-  dbLink: JSX.Element;
-  urlPlaceHolder: string;
-};
-
-function getDbNameAndLink(dbDetails?: DoltDatabaseDetails): ReturnType {
+function getDbNameAndLink(dbDetails?: DoltDatabaseDetails): JSX.Element {
   const type = getDatabaseType(
     dbDetails?.type ?? undefined,
     !!dbDetails?.isDolt,
   );
-  const universalUrl = "i.e. https://url-of-remote.com";
   if (type === "Dolt") {
-    return {
-      dbLink: <DoltLink />,
-      urlPlaceHolder: "i.e. https://doltremoteapi.dolthub.com/owner/repo",
-    };
+    return <DoltLink />;
   }
   if (type === "DoltgreSQL") {
-    return { dbLink: <DoltgresLink />, urlPlaceHolder: universalUrl };
+    return <DoltgresLink />;
   }
-  return { dbLink: <span>{type}</span>, urlPlaceHolder: universalUrl };
+  return <span>{type}</span>;
 }
