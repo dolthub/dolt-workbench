@@ -97,6 +97,11 @@
 
 .tabPanel {
   @apply px-0 absolute left-0 right-0 bottom-0 top-9 overflow-auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
 }
 
 .tableNavTrigger {

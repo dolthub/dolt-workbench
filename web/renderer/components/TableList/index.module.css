@@ -22,5 +22,5 @@
 }
 
 .bottom {
-  @apply flex items-center justify-between px-6 border-t border-white border-opacity-10;
+  @apply bg-storm-500 flex items-center justify-between px-6 border-t border-white border-opacity-10 fixed bottom-0 min-w-96 w-96;
 }
