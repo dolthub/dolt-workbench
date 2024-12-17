@@ -1,7 +1,7 @@
 import { FormInput } from "@dolthub/react-components";
+import { useState } from "react";
 import { RemoteType } from "./Radios";
 import css from "./index.module.css";
-import { useState } from "react";
 
 type Props = {
   type: RemoteType;
