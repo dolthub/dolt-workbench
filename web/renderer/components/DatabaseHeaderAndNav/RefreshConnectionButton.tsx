@@ -26,6 +26,7 @@ export default function ResetConnectionButton() {
     setErrorModalOpen(false);
     setErr(undefined);
   };
+  
   return (
     <>
       <Button.Link

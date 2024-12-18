@@ -213,5 +213,5 @@ ipcMain.handle("api-config", async () => {
 });
 
 ipcMain.handle("toggle-left-sidebar", () => {
-  mainWindow?.webContents.send("toggle-left-sidebar");
+  mainWindow.webContents.send("toggle-left-sidebar");
 });
