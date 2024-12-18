@@ -303,6 +303,10 @@ type PushRes {
   message: String!
 }
 
+type FetchRes {
+  success: Boolean!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -377,6 +381,7 @@ type Mutation {
   deleteRemote(databaseName: String!, remoteName: String!): Boolean!
   pullFromRemote(remoteName: String!, databaseName: String!, branchName: String!): PullRes!
   pushToRemote(remoteName: String!, databaseName: String!, branchName: String!): PushRes!
+  fetchRemote(remoteName: String!, databaseName: String!, branchName: String): FetchRes!
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

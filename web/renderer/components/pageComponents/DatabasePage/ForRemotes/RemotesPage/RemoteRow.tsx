@@ -3,6 +3,7 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { ButtonWithPopup } from "@dolthub/react-components";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
+import { GoArrowDown } from "@react-icons/all-files/go/GoArrowDown";
 import { OptionalRefParams } from "@lib/params";
 import { useState } from "react";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
@@ -10,6 +11,7 @@ import { fakeEscapePress } from "@dolthub/web-utils";
 import PullFromRemoteModal from "./PullFromRemoteModal";
 import PushToRemoteModal from "./PushToRemoteModal";
 import css from "./index.module.css";
+import FetchRemoteModal from "./FetchRemoteModal";
 
 type Props = {
   remote: RemoteFragment;
@@ -21,6 +23,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
   const [open, setOpen] = useState(false);
   const [pullModalOpen, setPullModalOpen] = useState(false);
   const [pushModalOpen, setPushModalOpen] = useState(false);
+  const [fetchModalOpen, setFetchModalOpen] = useState(false);
 
   return (
     <tr>
@@ -67,6 +70,15 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                 >
                   Remove remote
                 </DropdownItem>
+                <DropdownItem
+                  onClick={() => {
+                    setFetchModalOpen(true);
+                    fakeEscapePress();
+                  }}
+                  icon={<GoArrowDown />}
+                >
+                  Fetch from remote
+                </DropdownItem>
               </ul>
             </div>
           </ButtonWithPopup>
@@ -81,6 +93,12 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
       <PushToRemoteModal
         isOpen={pushModalOpen}
         setIsOpen={setPushModalOpen}
+        params={params}
+        remote={remote}
+      />
+      <FetchRemoteModal
+        isOpen={fetchModalOpen}
+        setIsOpen={setFetchModalOpen}
         params={params}
         remote={remote}
       />
