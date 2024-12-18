@@ -46,6 +46,7 @@ export function initMenu(
           ? { label: "hidden", visible: false }
           : {
               label: "Reload",
+              accelerator: "CmdOrCtrl+R",
               click(_item, focusedWindow) {
                 if (focusedWindow) (focusedWindow as BrowserWindow).reload();
               },
@@ -142,7 +143,7 @@ export function initMenu(
             },
             {
               label: "Release",
-              accelerator: "CmdOrCtrl+R",
+              // accelerator: "CmdOrCtrl+R",
               click: () => win.webContents.send("menu-clicked", "new-release"),
             },
           ],
