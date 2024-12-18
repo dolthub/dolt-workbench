@@ -15,6 +15,7 @@ import {
 } from "@gen/graphql-types";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
+import { Maybe } from "@dolthub/web-utils";
 import SqlMessage from "./SqlMessage";
 import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
@@ -32,6 +33,7 @@ type InnerProps = Props & {
   rows?: RowForDataTableFragment[];
   columns?: ColumnForSqlDataTableFragment[];
   client: ApolloClient<NormalizedCacheObject>;
+  warnings?: Maybe<string[]>;
 };
 
 function Inner(props: InnerProps) {
@@ -46,6 +48,7 @@ function Inner(props: InnerProps) {
           columns={props.columns}
           loadMore={async () => {}}
           message={msg}
+          warnings={props.warnings}
         />
       </DataTableLayout>
       {isMut && !isReadOnlyDatabaseRevisionError(props.gqlError) && (
@@ -77,6 +80,7 @@ function Query(props: Props) {
       columns={data?.sqlSelect.columns}
       params={props.params}
       client={client}
+      warnings={data?.sqlSelect.warnings}
     />
   );
 }

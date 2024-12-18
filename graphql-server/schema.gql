@@ -249,6 +249,7 @@ type SqlSelect {
   rows: [Row!]!
   queryExecutionStatus: QueryExecutionStatus!
   queryExecutionMessage: String!
+  warnings: [String!]
 }
 
 enum QueryExecutionStatus {

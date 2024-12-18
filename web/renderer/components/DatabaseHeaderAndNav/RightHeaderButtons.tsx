@@ -2,7 +2,7 @@ import { Btn } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import AddItemDropdown from "./AddItemDropdown";
-import ResetConnectionButton from "./ResetConnectionButton";
+import RefreshConnectionButton from "./RefreshConnectionButton";
 import css from "./index.module.css";
 
 type Props = {
@@ -13,7 +13,7 @@ type Props = {
 export default function RightHeaderButtons(props: Props) {
   return (
     <div className={css.topRight}>
-      <ResetConnectionButton />
+      <RefreshConnectionButton />
       <AddItemDropdown params={props.params} />
       <div className={css.menu}>
         <Btn onClick={props.onMenuClick}>
