@@ -151,7 +151,9 @@ export declare class QueryFactory {
 
   callDeleteRemote(args: t.RemoteArgs): t.PR;
 
-  callPullRemote(args: t.PushOrPullRemoteArgs): t.PR;
+  callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR;
 
-  callPushRemote(args: t.PushOrPullRemoteArgs): t.PR;
+  callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR;
+
+  callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR;
 }

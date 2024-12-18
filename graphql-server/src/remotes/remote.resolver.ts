@@ -9,6 +9,8 @@ import {
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
 import {
+  FetchRes,
+  fromFetchRes,
   fromPullRes,
   fromPushRes,
   getRemoteListRes,
@@ -28,6 +30,12 @@ export class AddRemoteArgs extends RemoteArgs {
 export class PullOrPushRemoteArgs extends RemoteArgs {
   @Field()
   branchName: string;
+}
+
+@ArgsType()
+export class RemoteMaybeBranchArgs extends RemoteArgs {
+  @Field({ nullable: true })
+  branchName?: string;
 }
 
 @Resolver(_of => Remote)
@@ -74,5 +82,16 @@ export class RemoteResolver {
       throw new Error("No response from push");
     }
     return fromPushRes(res[0]);
+  }
+
+  @Mutation(_returns => FetchRes)
+  async fetchRemote(@Args() args: RemoteMaybeBranchArgs): Promise<FetchRes> {
+    const conn = this.conn.connection();
+    const res = await conn.callFetchRemote(args);
+    if (res.length === 0) {
+      throw new Error("No response from fetch");
+    }
+    console.log(res);
+    return fromFetchRes(res[0]);
   }
 }

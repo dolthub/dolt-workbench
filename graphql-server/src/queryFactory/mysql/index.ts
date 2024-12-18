@@ -314,11 +314,15 @@ export class MySQLQueryFactory
     throw notDoltError("delete remote");
   }
 
-  async callPullRemote(_: t.PushOrPullRemoteArgs): t.PR {
+  async callPullRemote(_: t.RemoteMaybeBranchArgs): t.PR {
     throw notDoltError("pull remote");
   }
 
-  async callPushRemote(_: t.PushOrPullRemoteArgs): t.PR {
+  async callPushRemote(_: t.RemoteMaybeBranchArgs): t.PR {
     throw notDoltError("push remote");
+  }
+
+  async callFetchRemote(_: t.RemoteMaybeBranchArgs): t.PR {
+    throw notDoltError("fetch remote");
   }
 }

@@ -449,7 +449,7 @@ export class DoltgresQueryFactory
     );
   }
 
-  async callPullRemote(args: t.PushOrPullRemoteArgs): t.PR {
+  async callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR {
     return this.query(
       qh.callPullRemote,
       [args.remoteName, args.branchName],
@@ -457,10 +457,18 @@ export class DoltgresQueryFactory
     );
   }
 
-  async callPushRemote(args: t.PushOrPullRemoteArgs): t.PR {
+  async callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR {
     return this.query(
       qh.callPushRemote,
       [args.remoteName, args.branchName],
+      args.databaseName,
+    );
+  }
+
+  async callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR {
+    return this.query(
+      qh.callFetchRemote(args.branchName),
+      [args.remoteName],
       args.databaseName,
     );
   }

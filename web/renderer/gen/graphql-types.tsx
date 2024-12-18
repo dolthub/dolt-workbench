@@ -177,6 +177,11 @@ export type DoltWriter = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
+export type FetchRes = {
+  __typename?: 'FetchRes';
+  success: Scalars['Boolean']['output'];
+};
+
 export enum FileType {
   Csv = 'Csv',
   Psv = 'Psv',
@@ -231,6 +236,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
+  fetchRemote: FetchRes;
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
   pullFromRemote: PullRes;
@@ -300,6 +306,13 @@ export type MutationDeleteRemoteArgs = {
 export type MutationDeleteTagArgs = {
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
+};
+
+
+export type MutationFetchRemoteArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
 };
 
 
@@ -1275,6 +1288,17 @@ export type PushToRemoteMutationVariables = Exact<{
 
 export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', success: boolean, message: string } };
 
+export type FetchResFragment = { __typename?: 'FetchRes', success: boolean };
+
+export type FetchRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  branchName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FetchRemoteMutation = { __typename?: 'Mutation', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
+
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1712,6 +1736,11 @@ export const PushResFragmentDoc = gql`
     fragment PushRes on PushRes {
   success
   message
+}
+    `;
+export const FetchResFragmentDoc = gql`
+    fragment FetchRes on FetchRes {
+  success
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -3773,6 +3802,45 @@ export function usePushToRemoteMutation(baseOptions?: Apollo.MutationHookOptions
 export type PushToRemoteMutationHookResult = ReturnType<typeof usePushToRemoteMutation>;
 export type PushToRemoteMutationResult = Apollo.MutationResult<PushToRemoteMutation>;
 export type PushToRemoteMutationOptions = Apollo.BaseMutationOptions<PushToRemoteMutation, PushToRemoteMutationVariables>;
+export const FetchRemoteDocument = gql`
+    mutation FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
+  fetchRemote(
+    remoteName: $remoteName
+    databaseName: $databaseName
+    branchName: $branchName
+  ) {
+    ...FetchRes
+  }
+}
+    ${FetchResFragmentDoc}`;
+export type FetchRemoteMutationFn = Apollo.MutationFunction<FetchRemoteMutation, FetchRemoteMutationVariables>;
+
+/**
+ * __useFetchRemoteMutation__
+ *
+ * To run a mutation, you first call `useFetchRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFetchRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [fetchRemoteMutation, { data, loading, error }] = useFetchRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *      branchName: // value for 'branchName'
+ *   },
+ * });
+ */
+export function useFetchRemoteMutation(baseOptions?: Apollo.MutationHookOptions<FetchRemoteMutation, FetchRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FetchRemoteMutation, FetchRemoteMutationVariables>(FetchRemoteDocument, options);
+      }
+export type FetchRemoteMutationHookResult = ReturnType<typeof useFetchRemoteMutation>;
+export type FetchRemoteMutationResult = Apollo.MutationResult<FetchRemoteMutation>;
+export type FetchRemoteMutationOptions = Apollo.BaseMutationOptions<FetchRemoteMutation, FetchRemoteMutationVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(
