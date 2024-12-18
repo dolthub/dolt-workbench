@@ -134,6 +134,7 @@ export class PostgresQueryFactory
     );
   }
 
+  // TODO: get warnings for postgres
   async getSqlSelect(
     args: t.RefMaybeSchemaArgs & { queryString: string },
   ): Promise<{ rows: t.RawRows; warnings?: string[] }> {

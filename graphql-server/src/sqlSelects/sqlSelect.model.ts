@@ -56,9 +56,7 @@ export function fromSqlSelectRow(
   // Some mutation queries do not return an array
   if (!Array.isArray(doltRows)) {
     if (!doltRows) {
-      return {
-        ...res,
-      };
+      return res;
     }
     return {
       ...res,

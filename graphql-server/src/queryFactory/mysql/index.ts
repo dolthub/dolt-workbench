@@ -151,7 +151,7 @@ export class MySQLQueryFactory
           args.databaseName,
           args.refName,
         ]);
-        const warningsRes = await query("show warnings");
+        const warningsRes = await query(qh.showWarningsQuery);
         const warnings = warningsRes.map(w => w.Message);
         return { rows, warnings };
       },
