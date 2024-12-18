@@ -10,6 +10,8 @@ type Props = {
   currentDbName: string;
 };
 
+const dolthubHost = "https://doltremoteapi.dolthub.com";
+
 export default function RemoteUrl({
   type,
   remoteUrl,
@@ -18,6 +20,7 @@ export default function RemoteUrl({
 }: Props) {
   const [ownerName, setOwnerName] = useState("");
   const [dbName, setDbName] = useState(currentDbName);
+  const [host, setHost] = useState("");
   if (type === RemoteType.Other) {
     return (
       <FormInput
@@ -29,26 +32,43 @@ export default function RemoteUrl({
       />
     );
   }
+
   return (
     <div>
+      {type === RemoteType.DoltLab && (
+        <FormInput
+          value={host}
+          onChangeString={(s: string) => {
+            setHost(s);
+            setRemoteUrl(`${s}/${ownerName}/${dbName}`);
+          }}
+          label="Host"
+          placeholder="Url of your host, i.e. https://doltlab.dolthub.com:50051"
+          className={css.input}
+        />
+      )}
       <FormInput
         value={ownerName}
         onChangeString={(s: string) => {
           setOwnerName(s);
-          setRemoteUrl(`https://doltremoteapi.dolthub.com/${s}/${dbName}`);
+          setRemoteUrl(
+            `${type === RemoteType.DoltHub ? dolthubHost : host}/${s}/${dbName}`,
+          );
         }}
         label="Owner Name"
-        placeholder="i.e. dolthub"
+        placeholder="Owner of your database on DoltHub, i.e. dolthub"
         className={css.input}
       />
       <FormInput
         value={dbName}
         onChangeString={(s: string) => {
           setDbName(s);
-          setRemoteUrl(`https://doltremoteapi.dolthub.com/${ownerName}/${s}`);
+          setRemoteUrl(
+            `${type === RemoteType.DoltHub ? dolthubHost : host}/${ownerName}/${s}`,
+          );
         }}
         label="Database Name"
-        placeholder="i.e. example-db"
+        placeholder="Name of your database on DoltHub, i.e. example-db"
         className={css.input}
       />
     </div>

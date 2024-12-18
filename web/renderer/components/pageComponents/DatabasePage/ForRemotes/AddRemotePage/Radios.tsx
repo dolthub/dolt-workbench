@@ -3,6 +3,7 @@ import css from "./index.module.css";
 
 export enum RemoteType {
   DoltHub,
+  DoltLab,
   Other,
 }
 
@@ -19,6 +20,12 @@ export default function Radios(props: Props) {
         checked={props.type === RemoteType.DoltHub}
         onChange={() => props.setType(RemoteType.DoltHub)}
         label="DoltHub"
+      />
+      <Radio
+        name="DoltLab"
+        checked={props.type === RemoteType.DoltLab}
+        onChange={() => props.setType(RemoteType.DoltLab)}
+        label="DoltLab"
       />
       <Radio
         name="Other"

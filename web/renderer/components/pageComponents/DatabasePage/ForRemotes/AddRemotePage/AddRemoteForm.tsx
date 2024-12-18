@@ -32,9 +32,10 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
     useDoltDatabaseDetailsQuery();
-  const dbLink = getDbNameAndLink(databaseDetails?.doltDatabaseDetails);
+  const dbLink = getDbLink(databaseDetails?.doltDatabaseDetails);
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");
+  const [type, setType] = useState(RemoteType.DoltHub);
   const {
     mutateFn: addRemote,
     err,
@@ -61,8 +62,6 @@ export default function AddRemoteForm(props: Props): JSX.Element {
     const { href, as } = remotes(props.params);
     router.push(href, as).catch(console.error);
   };
-
-  const [type, setType] = useState(RemoteType.DoltHub);
 
   return (
     <div>
@@ -108,7 +107,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   );
 }
 
-function getDbNameAndLink(dbDetails?: DoltDatabaseDetails): JSX.Element {
+function getDbLink(dbDetails?: DoltDatabaseDetails): JSX.Element {
   const type = getDatabaseType(
     dbDetails?.type ?? undefined,
     !!dbDetails?.isDolt,
