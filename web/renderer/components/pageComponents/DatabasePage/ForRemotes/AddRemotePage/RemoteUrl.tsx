@@ -56,7 +56,7 @@ export default function RemoteUrl({
           );
         }}
         label="Owner Name"
-        placeholder="Owner of your database on DoltHub, i.e. dolthub"
+        placeholder="Owner of your database, i.e. dolthub"
         className={css.input}
       />
       <FormInput
@@ -68,7 +68,7 @@ export default function RemoteUrl({
           );
         }}
         label="Database Name"
-        placeholder="Name of your database on DoltHub, i.e. example-db"
+        placeholder="Name of your database, i.e. example-db"
         className={css.input}
       />
     </div>
