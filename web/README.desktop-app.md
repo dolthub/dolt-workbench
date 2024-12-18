@@ -1,6 +1,16 @@
 ## Run the desktop app in dev mode:
 
+1. Rebuild `graphql-server` (if changes were made):
+
 ```bash
+# in graphql-server
+yarn build
+```
+
+2.Start the desktop app:
+
+```bash
+# in web
 yarn dev:app
 ```
 
