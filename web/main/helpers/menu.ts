@@ -143,7 +143,7 @@ export function initMenu(
             },
             {
               label: "Release",
-              // accelerator: "CmdOrCtrl+R",
+              accelerator: "Shift+CmdOrCtrl+R",
               click: () => win.webContents.send("menu-clicked", "new-release"),
             },
           ],

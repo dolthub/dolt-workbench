@@ -14,9 +14,6 @@ const handler = {
   },
   toggleLeftSidebar: (callback: () => {}) =>
     ipcRenderer.on("toggle-left-sidebar", _event => callback()),
-  refreshWindow() {
-    ipcRenderer.send("refresh-window");
-  },
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

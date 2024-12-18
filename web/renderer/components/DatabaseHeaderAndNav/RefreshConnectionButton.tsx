@@ -18,21 +18,14 @@ export default function ResetConnectionButton() {
   const [errorModalOpen, setErrorModalOpen] = useState(false);
 
   const onClick = async () => {
-    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
-      await mutateFn();
-      await client.resetStore();
-      window.ipc.refreshWindow();
-    } else {
-      await mutateFn();
-      await client.resetStore();
-    }
+    await mutateFn();
+    await client.resetStore();
   };
 
   const onClose = () => {
     setErrorModalOpen(false);
     setErr(undefined);
   };
- 
   return (
     <>
       <Button.Link

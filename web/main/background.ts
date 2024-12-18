@@ -215,7 +215,3 @@ ipcMain.handle("api-config", async () => {
 ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow?.webContents.send("toggle-left-sidebar");
 });
-
-ipcMain.on("refresh-window", () => {
-  BrowserWindow.getFocusedWindow()?.reload();
-});
