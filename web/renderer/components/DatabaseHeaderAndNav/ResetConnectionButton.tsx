@@ -21,12 +21,19 @@ export default function ResetConnectionButton() {
     setErrorModalOpen(false);
     setErr(undefined);
   };
-
+  const onClick = async () => {
+    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+      await mutateFn();
+      window.ipc.refreshWindow();
+    } else {
+      await mutateFn();
+    }
+  };
   return (
     <>
       <Button.Link
         className={css.resetButton}
-        onClick={async () => mutateFn()}
+        onClick={onClick}
         data-tooltip-content="Reset connection"
         data-tooltip-id="reset-connection"
       >
