@@ -438,6 +438,7 @@ export type Query = {
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
   pullWithDetails: PullWithDetails;
+  remoteBranches: BranchList;
   remotes: RemoteList;
   rowDiffs: RowDiffList;
   rows: RowList;
@@ -556,6 +557,13 @@ export type QueryPullWithDetailsArgs = {
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
+};
+
+
+export type QueryRemoteBranchesArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<SortBranchesBy>;
 };
 
 
@@ -1103,6 +1111,15 @@ export type BranchListQueryVariables = Exact<{
 
 
 export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+
+export type RemoteBranchesQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  sortBy?: InputMaybe<SortBranchesBy>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RemoteBranchesQuery = { __typename?: 'Query', remoteBranches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
 
 export type DeleteBranchMutationVariables = Exact<{
   branchName: Scalars['String']['input'];
@@ -3077,6 +3094,51 @@ export type BranchListQueryHookResult = ReturnType<typeof useBranchListQuery>;
 export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQuery>;
 export type BranchListSuspenseQueryHookResult = ReturnType<typeof useBranchListSuspenseQuery>;
 export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
+export const RemoteBranchesDocument = gql`
+    query RemoteBranches($databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+  remoteBranches(databaseName: $databaseName, sortBy: $sortBy, offset: $offset) {
+    list {
+      ...Branch
+    }
+    nextOffset
+  }
+}
+    ${BranchFragmentDoc}`;
+
+/**
+ * __useRemoteBranchesQuery__
+ *
+ * To run a query within a React component, call `useRemoteBranchesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteBranchesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteBranchesQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      sortBy: // value for 'sortBy'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useRemoteBranchesQuery(baseOptions: Apollo.QueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables> & ({ variables: RemoteBranchesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+      }
+export function useRemoteBranchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+        }
+export function useRemoteBranchesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+        }
+export type RemoteBranchesQueryHookResult = ReturnType<typeof useRemoteBranchesQuery>;
+export type RemoteBranchesLazyQueryHookResult = ReturnType<typeof useRemoteBranchesLazyQuery>;
+export type RemoteBranchesSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchesSuspenseQuery>;
+export type RemoteBranchesQueryResult = Apollo.QueryResult<RemoteBranchesQuery, RemoteBranchesQueryVariables>;
 export const DeleteBranchDocument = gql`
     mutation DeleteBranch($branchName: String!, $databaseName: String!) {
   deleteBranch(branchName: $branchName, databaseName: $databaseName)

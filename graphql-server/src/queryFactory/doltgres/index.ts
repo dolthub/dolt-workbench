@@ -137,6 +137,13 @@ export class DoltgresQueryFactory
     );
   }
 
+  async getRemoteBranches(args: t.ListBranchesArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltRemoteBranchesPaginated(em, args),
+      args.databaseName,
+    );
+  }
+
   async getAllBranches(args: t.DBArgs): t.PR {
     return this.queryForBuilder(
       async em => dem.getAllDoltBranches(em),

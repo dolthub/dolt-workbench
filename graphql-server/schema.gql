@@ -311,6 +311,7 @@ type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
   branches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
+  remoteBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
   allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!

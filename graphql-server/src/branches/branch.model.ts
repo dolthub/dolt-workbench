@@ -42,6 +42,7 @@ export function fromDoltBranchesRow(
   b: RawRow,
   tns: string[] = [],
 ): Branch {
+  console.log(b);
   return {
     _id: `databases/${databaseName}/branches/${b.name}`,
     databaseName,

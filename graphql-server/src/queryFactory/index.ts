@@ -87,6 +87,8 @@ export declare class QueryFactory {
 
   getBranches(args: t.ListBranchesArgs): t.PR;
 
+  getRemoteBranches(args: t.ListBranchesArgs): t.PR;
+
   getAllBranches(args: t.DBArgs): t.PR;
 
   createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR;

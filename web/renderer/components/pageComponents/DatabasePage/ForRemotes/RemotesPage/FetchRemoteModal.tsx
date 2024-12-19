@@ -1,4 +1,4 @@
-import { RemoteFragment, useFetchRemoteMutation } from "@gen/graphql-types";
+import { RemoteFragment, useFetchRemoteMutation, useRemoteBranchesQuery } from "@gen/graphql-types";
 import {
   Button,
   FormInput,
@@ -37,6 +37,13 @@ export default function FetchRemoteModal({
   });
   const [message, setMessage] = useState("");
 
+  const remotebranchres=useRemoteBranchesQuery({
+    variables:{
+      databaseName: params.databaseName,
+ 
+    }
+  })
+  console.log(remotebranchres.data)
   const onClose = () => {
     setIsOpen(false);
     res.setErr(undefined);
@@ -61,7 +68,7 @@ export default function FetchRemoteModal({
   };
 
   return (
-    <ModalOuter isOpen={isOpen} onRequestClose={onClose} title="Push to remote">
+    <ModalOuter isOpen={isOpen} onRequestClose={onClose} title="Fetch from remote">
       <form onSubmit={onSubmit}>
         <ModalInner>
           <p>
