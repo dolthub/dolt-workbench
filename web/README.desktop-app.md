@@ -32,12 +32,26 @@ yarn
 
 4. Build the package
 
+To build for MAC store:
+
 ```bash
 # in web
-yarn build:app
+yarn build:mas
 ```
 
-The builds will show up in `dist` folder, including a `Dolt Workbench-mac-arm64.dmg` file, a `mac-arm64` folder and a `mas-universal` folder. Inside the `mac-arm64` folder is the app that you can run locally.
+To build the package outside MAC store:
+
+```bash
+# in web
+yarn build:dmg
+```
+
+On a Windows computer, build the windows app:
+
+```bash
+# in web
+yarn build:win
+```
 
 ### Submit to MAC store
 
@@ -113,3 +127,7 @@ The staple and validate action worked!
 ```
 
 The app is now fully signed and notarized, ready for distribution.
+
+### Release the Windows App
+
+Submit the `AppX` file to the store. Upload the `.exe` file to GitHub release for downloading outside the store.
