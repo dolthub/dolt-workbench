@@ -8824,7 +8824,7 @@ __metadata:
     cssnano: "npm:^7.0.6"
     diff: "npm:^5.1.0"
     electron: "npm:^31.0.1"
-    electron-builder: "npm:^25.1.7"
+    electron-builder: "npm:^25.1.8"
     electron-serve: "npm:^1.3.0"
     electron-store: "npm:^8.2.0"
     eslint: "npm:^8.57.0"
@@ -9011,7 +9011,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-builder@npm:^25.1.7":
+"electron-builder@npm:^25.1.8":
   version: 25.1.8
   resolution: "electron-builder@npm:25.1.8"
   dependencies:

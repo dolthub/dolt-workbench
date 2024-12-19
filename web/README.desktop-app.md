@@ -46,6 +46,13 @@ To build the package outside MAC store:
 yarn build:dmg
 ```
 
+On a Windows computer, build the windows app:
+
+```bash
+# in web
+yarn build:win
+```
+
 ### Submit to MAC store
 
 We will only use `mas-universal` folder for submitting to MAC store. There will be a `Dolt Workbench.app` application file and a `Dolt Workbench-mac-universal.pkg` installer file inside it. These files could not be used locally, they are for MAC store submission, when double clicking on them, it will show as "could not be opened", this is expected because they are packed in sandbox and need to be signed by Apple before distribution.
@@ -120,3 +127,7 @@ The staple and validate action worked!
 ```
 
 The app is now fully signed and notarized, ready for distribution.
+
+### Release the Windows App
+
+Submit the `AppX` file to the store. Upload the `.exe` file to GitHub release for downloading outside the store.
