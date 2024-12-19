@@ -32,12 +32,19 @@ yarn
 
 4. Build the package
 
+To build for MAC store:
+
 ```bash
 # in web
-yarn build:app
+yarn build:mas
 ```
 
-The builds will show up in `dist` folder, including a `Dolt Workbench-mac-arm64.dmg` file, a `mac-arm64` folder and a `mas-universal` folder. Inside the `mac-arm64` folder is the app that you can run locally.
+To build the package outside MAC store:
+
+```bash
+# in web
+yarn build:dmg
+```
 
 ### Submit to MAC store
 
