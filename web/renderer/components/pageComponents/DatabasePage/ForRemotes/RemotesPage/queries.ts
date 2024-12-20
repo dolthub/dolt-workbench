@@ -63,3 +63,41 @@ export const PUSH_TO_REMOTE = gql`
     }
   }
 `;
+
+export const FETCH_REMOTE = gql`
+  fragment FetchRes on FetchRes {
+    success
+  }
+  mutation FetchRemote(
+    $remoteName: String!
+    $databaseName: String!
+    $branchName: String
+  ) {
+    fetchRemote(
+      remoteName: $remoteName
+      databaseName: $databaseName
+      branchName: $branchName
+    ) {
+      ...FetchRes
+    }
+  }
+`;
+
+export const MERGE_BASE = gql`
+  fragment MergeBase on MergeBase {
+    mergeBase
+  }
+  query MergeBase(
+    $databaseName: String!
+    $branchName: String!
+    $anotherBranch: String!
+  ) {
+    mergeBase(
+      databaseName: $databaseName
+      branchName: $branchName
+      anotherBranch: $anotherBranch
+    ) {
+      ...MergeBase
+    }
+  }
+`;

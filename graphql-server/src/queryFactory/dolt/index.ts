@@ -119,6 +119,13 @@ export class DoltQueryFactory
     );
   }
 
+  async getRemoteBranches(args: t.ListBranchesArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltRemoteBranchesPaginated(em, args),
+      args.databaseName,
+    );
+  }
+
   async getAllBranches(args: t.DBArgs): t.PR {
     return this.queryForBuilder(
       async em => dem.getAllDoltBranches(em),
@@ -458,7 +465,7 @@ export class DoltQueryFactory
     );
   }
 
-  async callPullRemote(args: t.PushOrPullRemoteArgs): t.PR {
+  async callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR {
     return this.query(
       qh.callPullRemote,
       [args.remoteName, args.branchName],
@@ -466,10 +473,26 @@ export class DoltQueryFactory
     );
   }
 
-  async callPushRemote(args: t.PushOrPullRemoteArgs): t.PR {
+  async callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR {
     return this.query(
       qh.callPushRemote,
       [args.remoteName, args.branchName],
+      args.databaseName,
+    );
+  }
+
+  async callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR {
+    return this.query(
+      qh.callFetchRemote(args.branchName),
+      [args.remoteName],
+      args.databaseName,
+    );
+  }
+
+  async callMergeBase(args: t.MergeBaseArgs): t.PR {
+    return this.query(
+      qh.callMergeBase,
+      [args.branchName, args.anotherBranch],
       args.databaseName,
     );
   }

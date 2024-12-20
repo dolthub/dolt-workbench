@@ -170,3 +170,10 @@ export const callDeleteRemote = `SELECT DOLT_REMOTE('remove', $1::text)`;
 export const callPullRemote = `SELECT DOLT_PULL($1::text, $2::text)`;
 
 export const callPushRemote = `SELECT DOLT_PUSH($1::text, $2::text)`;
+
+export const callFetchRemote = (branchName?: string) =>
+  branchName
+    ? `SELECT DOLT_FETCH($1::text, '${branchName}')`
+    : `SELECT DOLT_FETCH($1::text)`;
+
+export const callMergeBase = `SELECT DOLT_MERGE_BASE($1::text,$2::text)`;

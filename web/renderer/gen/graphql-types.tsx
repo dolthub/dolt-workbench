@@ -177,6 +177,11 @@ export type DoltWriter = {
   username?: Maybe<Scalars['String']['output']>;
 };
 
+export type FetchRes = {
+  __typename?: 'FetchRes';
+  success: Scalars['Boolean']['output'];
+};
+
 export enum FileType {
   Csv = 'Csv',
   Psv = 'Psv',
@@ -220,6 +225,11 @@ export enum LoadDataModifier {
   Replace = 'Replace'
 }
 
+export type MergeBase = {
+  __typename?: 'MergeBase';
+  mergeBase?: Maybe<Scalars['String']['output']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   addDatabaseConnection: CurrentDatabaseState;
@@ -231,6 +241,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
+  fetchRemote: FetchRes;
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
   pullFromRemote: PullRes;
@@ -300,6 +311,13 @@ export type MutationDeleteRemoteArgs = {
 export type MutationDeleteTagArgs = {
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
+};
+
+
+export type MutationFetchRemoteArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
 };
 
 
@@ -424,7 +442,9 @@ export type Query = {
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
+  mergeBase: MergeBase;
   pullWithDetails: PullWithDetails;
+  remoteBranches: BranchList;
   remotes: RemoteList;
   rowDiffs: RowDiffList;
   rows: RowList;
@@ -539,10 +559,24 @@ export type QueryDoltSchemasArgs = {
 };
 
 
+export type QueryMergeBaseArgs = {
+  anotherBranch: Scalars['String']['input'];
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+};
+
+
 export type QueryPullWithDetailsArgs = {
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
+};
+
+
+export type QueryRemoteBranchesArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<SortBranchesBy>;
 };
 
 
@@ -1091,6 +1125,15 @@ export type BranchListQueryVariables = Exact<{
 
 export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
 
+export type RemoteBranchesQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  sortBy?: InputMaybe<SortBranchesBy>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RemoteBranchesQuery = { __typename?: 'Query', remoteBranches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+
 export type DeleteBranchMutationVariables = Exact<{
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -1275,6 +1318,28 @@ export type PushToRemoteMutationVariables = Exact<{
 
 
 export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', success: boolean, message: string } };
+
+export type FetchResFragment = { __typename?: 'FetchRes', success: boolean };
+
+export type FetchRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  branchName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FetchRemoteMutation = { __typename?: 'Mutation', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
+
+export type MergeBaseFragment = { __typename?: 'MergeBase', mergeBase?: string | null };
+
+export type MergeBaseQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  branchName: Scalars['String']['input'];
+  anotherBranch: Scalars['String']['input'];
+}>;
+
+
+export type MergeBaseQuery = { __typename?: 'Query', mergeBase: { __typename?: 'MergeBase', mergeBase?: string | null } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1713,6 +1778,16 @@ export const PushResFragmentDoc = gql`
     fragment PushRes on PushRes {
   success
   message
+}
+    `;
+export const FetchResFragmentDoc = gql`
+    fragment FetchRes on FetchRes {
+  success
+}
+    `;
+export const MergeBaseFragmentDoc = gql`
+    fragment MergeBase on MergeBase {
+  mergeBase
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -3048,6 +3123,51 @@ export type BranchListQueryHookResult = ReturnType<typeof useBranchListQuery>;
 export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQuery>;
 export type BranchListSuspenseQueryHookResult = ReturnType<typeof useBranchListSuspenseQuery>;
 export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
+export const RemoteBranchesDocument = gql`
+    query RemoteBranches($databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+  remoteBranches(databaseName: $databaseName, sortBy: $sortBy, offset: $offset) {
+    list {
+      ...Branch
+    }
+    nextOffset
+  }
+}
+    ${BranchFragmentDoc}`;
+
+/**
+ * __useRemoteBranchesQuery__
+ *
+ * To run a query within a React component, call `useRemoteBranchesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteBranchesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteBranchesQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      sortBy: // value for 'sortBy'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useRemoteBranchesQuery(baseOptions: Apollo.QueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables> & ({ variables: RemoteBranchesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+      }
+export function useRemoteBranchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+        }
+export function useRemoteBranchesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+        }
+export type RemoteBranchesQueryHookResult = ReturnType<typeof useRemoteBranchesQuery>;
+export type RemoteBranchesLazyQueryHookResult = ReturnType<typeof useRemoteBranchesLazyQuery>;
+export type RemoteBranchesSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchesSuspenseQuery>;
+export type RemoteBranchesQueryResult = Apollo.QueryResult<RemoteBranchesQuery, RemoteBranchesQueryVariables>;
 export const DeleteBranchDocument = gql`
     mutation DeleteBranch($branchName: String!, $databaseName: String!) {
   deleteBranch(branchName: $branchName, databaseName: $databaseName)
@@ -3775,6 +3895,91 @@ export function usePushToRemoteMutation(baseOptions?: Apollo.MutationHookOptions
 export type PushToRemoteMutationHookResult = ReturnType<typeof usePushToRemoteMutation>;
 export type PushToRemoteMutationResult = Apollo.MutationResult<PushToRemoteMutation>;
 export type PushToRemoteMutationOptions = Apollo.BaseMutationOptions<PushToRemoteMutation, PushToRemoteMutationVariables>;
+export const FetchRemoteDocument = gql`
+    mutation FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
+  fetchRemote(
+    remoteName: $remoteName
+    databaseName: $databaseName
+    branchName: $branchName
+  ) {
+    ...FetchRes
+  }
+}
+    ${FetchResFragmentDoc}`;
+export type FetchRemoteMutationFn = Apollo.MutationFunction<FetchRemoteMutation, FetchRemoteMutationVariables>;
+
+/**
+ * __useFetchRemoteMutation__
+ *
+ * To run a mutation, you first call `useFetchRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFetchRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [fetchRemoteMutation, { data, loading, error }] = useFetchRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *      branchName: // value for 'branchName'
+ *   },
+ * });
+ */
+export function useFetchRemoteMutation(baseOptions?: Apollo.MutationHookOptions<FetchRemoteMutation, FetchRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FetchRemoteMutation, FetchRemoteMutationVariables>(FetchRemoteDocument, options);
+      }
+export type FetchRemoteMutationHookResult = ReturnType<typeof useFetchRemoteMutation>;
+export type FetchRemoteMutationResult = Apollo.MutationResult<FetchRemoteMutation>;
+export type FetchRemoteMutationOptions = Apollo.BaseMutationOptions<FetchRemoteMutation, FetchRemoteMutationVariables>;
+export const MergeBaseDocument = gql`
+    query MergeBase($databaseName: String!, $branchName: String!, $anotherBranch: String!) {
+  mergeBase(
+    databaseName: $databaseName
+    branchName: $branchName
+    anotherBranch: $anotherBranch
+  ) {
+    ...MergeBase
+  }
+}
+    ${MergeBaseFragmentDoc}`;
+
+/**
+ * __useMergeBaseQuery__
+ *
+ * To run a query within a React component, call `useMergeBaseQuery` and pass it any options that fit your needs.
+ * When your component renders, `useMergeBaseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useMergeBaseQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      branchName: // value for 'branchName'
+ *      anotherBranch: // value for 'anotherBranch'
+ *   },
+ * });
+ */
+export function useMergeBaseQuery(baseOptions: Apollo.QueryHookOptions<MergeBaseQuery, MergeBaseQueryVariables> & ({ variables: MergeBaseQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<MergeBaseQuery, MergeBaseQueryVariables>(MergeBaseDocument, options);
+      }
+export function useMergeBaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MergeBaseQuery, MergeBaseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<MergeBaseQuery, MergeBaseQueryVariables>(MergeBaseDocument, options);
+        }
+export function useMergeBaseSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MergeBaseQuery, MergeBaseQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<MergeBaseQuery, MergeBaseQueryVariables>(MergeBaseDocument, options);
+        }
+export type MergeBaseQueryHookResult = ReturnType<typeof useMergeBaseQuery>;
+export type MergeBaseLazyQueryHookResult = ReturnType<typeof useMergeBaseLazyQuery>;
+export type MergeBaseSuspenseQueryHookResult = ReturnType<typeof useMergeBaseSuspenseQuery>;
+export type MergeBaseQueryResult = Apollo.QueryResult<MergeBaseQuery, MergeBaseQueryVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(
