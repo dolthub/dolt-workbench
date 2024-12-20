@@ -87,6 +87,8 @@ export const callPushRemote = `CALL DOLT_PUSH(?, ?)`;
 export const callFetchRemote = (branchName?: string) =>
   branchName ? `CALL DOLT_FETCH(?, '${branchName}')` : `CALL DOLT_FETCH(?)`;
 
+export const callMergeBase = `SELECT DOLT_MERGE_BASE(?, ?)`;
+
 // TAGS
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;

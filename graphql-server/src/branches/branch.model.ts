@@ -37,12 +37,17 @@ export class BranchList extends ListOffsetRes {
   list: Branch[];
 }
 
+@ObjectType()
+export class MergeBase {
+  @Field({ nullable: true })
+  mergeBase?: string;
+}
+
 export function fromDoltBranchesRow(
   databaseName: string,
   b: RawRow,
   tns: string[] = [],
 ): Branch {
-  console.log(b);
   return {
     _id: `databases/${databaseName}/branches/${b.name}`,
     databaseName,

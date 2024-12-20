@@ -211,6 +211,10 @@ export class MySQLQueryFactory
     return this.getAllBranches(args);
   }
 
+  async getRemoteBranches(args: t.ListBranchesArgs): t.PR {
+    throw notDoltError("remote branches");
+  }
+
   async getAllBranches(args: t.DBArgs): t.PR {
     const branch = await this.getBranch({ ...args, branchName: "main" });
     return branch ? [branch] : [];
@@ -338,5 +342,9 @@ export class MySQLQueryFactory
 
   async callFetchRemote(_: t.RemoteMaybeBranchArgs): t.PR {
     throw notDoltError("fetch remote");
+  }
+
+  async callMergeBase(_: t.MergeBaseArgs): t.PR {
+    throw notDoltError("merge base");
   }
 }

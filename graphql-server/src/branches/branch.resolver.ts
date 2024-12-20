@@ -15,7 +15,12 @@ import { TableResolver } from "../tables/table.resolver";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { BranchArgs, DBArgs, DBArgsWithOffset } from "../utils/commonTypes";
 import { SortBranchesBy } from "./branch.enum";
-import { Branch, BranchList, fromDoltBranchesRow } from "./branch.model";
+import {
+  Branch,
+  BranchList,
+  fromDoltBranchesRow,
+  MergeBase,
+} from "./branch.model";
 
 @ArgsType()
 export class GetBranchOrDefaultArgs extends DBArgs {
@@ -53,6 +58,14 @@ class ListBranchesArgs extends DBArgsWithOffset {
   sortBy?: SortBranchesBy;
 }
 
+@ArgsType()
+class MegeBaseArgs extends DBArgs {
+  @Field()
+  branchName: string;
+
+  @Field()
+  anotherBranch: string;
+}
 @Resolver(_of => Branch)
 export class BranchResolver {
   constructor(
@@ -95,6 +108,14 @@ export class BranchResolver {
       offset: args.offset ?? 0,
     });
     return fromBranchListRes(res, args);
+  }
+
+  @Query(_returns => MergeBase)
+  async mergeBase(@Args() args: MegeBaseArgs): Promise<MergeBase> {
+    const conn = this.conn.connection();
+    const res = await conn.callMergeBase(args);
+    console.log(res);
+    return { mergeBase: "" };
   }
 
   @Query(_returns => [Branch])

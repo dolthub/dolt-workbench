@@ -82,3 +82,22 @@ export const FETCH_REMOTE = gql`
     }
   }
 `;
+
+export const MERGE_BASE = gql`
+  fragment MergeBase on MergeBase {
+    mergeBase
+  }
+  query MergeBase(
+    $databaseName: String!
+    $branchName: String!
+    $anotherBranch: String!
+  ) {
+    mergeBase(
+      databaseName: $databaseName
+      branchName: $branchName
+      anotherBranch: $anotherBranch
+    ) {
+      ...MergeBase
+    }
+  }
+`;

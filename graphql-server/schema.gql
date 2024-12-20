@@ -73,6 +73,10 @@ type BranchList {
   list: [Branch!]!
 }
 
+type MergeBase {
+  mergeBase: String
+}
+
 type DoltWriter {
   _id: ID!
   displayName: String!
@@ -312,6 +316,7 @@ type Query {
   branchOrDefault(databaseName: String!, branchName: String): Branch
   branches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
   remoteBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
+  mergeBase(databaseName: String!, branchName: String!, anotherBranch: String!): MergeBase!
   allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!

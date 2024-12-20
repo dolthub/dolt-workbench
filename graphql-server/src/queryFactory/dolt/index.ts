@@ -488,6 +488,14 @@ export class DoltQueryFactory
       args.databaseName,
     );
   }
+
+  async callMergeBase(args: t.MergeBaseArgs): t.PR {
+    return this.query(
+      qh.callMergeBase,
+      [args.branchName, args.anotherBranch],
+      args.databaseName,
+    );
+  }
 }
 
 async function getTableInfoWithQR(
