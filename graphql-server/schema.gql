@@ -61,6 +61,8 @@ type Branch {
   table(tableName: String!): Table
   tableNames(filterSystemTables: Boolean, schemaName: String): [String!]!
   head: String
+  remote: String
+  remoteBranch: String
 }
 
 """

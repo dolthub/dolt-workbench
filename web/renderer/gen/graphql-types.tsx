@@ -32,6 +32,8 @@ export type Branch = {
   head?: Maybe<Scalars['String']['output']>;
   lastCommitter: Scalars['String']['output'];
   lastUpdated: Scalars['Timestamp']['output'];
+  remote?: Maybe<Scalars['String']['output']>;
+  remoteBranch?: Maybe<Scalars['String']['output']>;
   table?: Maybe<Table>;
   tableNames: Array<Scalars['String']['output']>;
 };
@@ -973,14 +975,14 @@ export type SchemaDiffQueryVariables = Exact<{
 
 export type SchemaDiffQuery = { __typename?: 'Query', schemaDiff?: { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null } | null };
 
-export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
+export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null };
 
 export type BranchesForSelectorQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
 }>;
 
 
-export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> };
+export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null }> };
 
 export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
 
@@ -1539,6 +1541,8 @@ export const BranchForBranchSelectorFragmentDoc = gql`
     fragment BranchForBranchSelector on Branch {
   branchName
   databaseName
+  remote
+  remoteBranch
 }
     `;
 export const DoltWriterForHistoryFragmentDoc = gql`

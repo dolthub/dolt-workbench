@@ -10,8 +10,8 @@ import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { fakeEscapePress } from "@dolthub/web-utils";
 import PullFromRemoteModal from "./PullFromRemoteModal";
 import PushToRemoteModal from "./PushToRemoteModal";
-import css from "./index.module.css";
 import FetchRemoteModal from "./FetchRemoteModal";
+import css from "./index.module.css";
 
 type Props = {
   remote: RemoteFragment;

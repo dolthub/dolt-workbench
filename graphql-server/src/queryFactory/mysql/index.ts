@@ -211,7 +211,7 @@ export class MySQLQueryFactory
     return this.getAllBranches(args);
   }
 
-  async getRemoteBranches(args: t.ListBranchesArgs): t.PR {
+  async getRemoteBranches(_args: t.ListBranchesArgs): t.PR {
     throw notDoltError("remote branches");
   }
 

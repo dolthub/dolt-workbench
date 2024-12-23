@@ -1,4 +1,8 @@
-import { RemoteFragment, useFetchRemoteMutation, useRemoteBranchesQuery } from "@gen/graphql-types";
+import {
+  RemoteFragment,
+  useFetchRemoteMutation,
+  useRemoteBranchesQuery,
+} from "@gen/graphql-types";
 import {
   Button,
   FormInput,
@@ -14,6 +18,7 @@ import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import css from "./index.module.css";
+import RemoteBranches from "./RemoteBranches";
 
 type Props = {
   isOpen: boolean;
@@ -22,7 +27,7 @@ type Props = {
   params: OptionalRefParams;
 };
 
-export default function FetchRemoteModal({
+export default function FetchFromRemoteModal({
   isOpen,
   setIsOpen,
   remote,
@@ -37,13 +42,12 @@ export default function FetchRemoteModal({
   });
   const [message, setMessage] = useState("");
 
-  const remotebranchres=useRemoteBranchesQuery({
-    variables:{
+  const remotebranchres = useRemoteBranchesQuery({
+    variables: {
       databaseName: params.databaseName,
- 
-    }
-  })
-  console.log(remotebranchres.data)
+    },
+  });
+  console.log(remotebranchres.data);
   const onClose = () => {
     setIsOpen(false);
     res.setErr(undefined);
@@ -68,7 +72,12 @@ export default function FetchRemoteModal({
   };
 
   return (
-    <ModalOuter isOpen={isOpen} onRequestClose={onClose} title="Fetch from remote">
+    <ModalOuter
+      isOpen={isOpen}
+      onRequestClose={onClose}
+      title="Fetch from remote"
+      className={css.fetchModal}
+    >
       <form onSubmit={onSubmit}>
         <ModalInner>
           <p>
@@ -79,16 +88,7 @@ export default function FetchRemoteModal({
               documentation
             </Link>
           </p>
-          <FormInput
-            value={branchName}
-            label="Branch name"
-            onChangeString={(s: string) => {
-              setBranchName(s);
-              res.setErr(undefined);
-            }}
-            placeholder="Enter optional branch name to fetch from"
-            light
-          />
+          <RemoteBranches params={params} remote={remote} />
         </ModalInner>
         <ModalButtons err={res.err} onRequestClose={onClose}>
           <Button type="submit">Fetch</Button>
