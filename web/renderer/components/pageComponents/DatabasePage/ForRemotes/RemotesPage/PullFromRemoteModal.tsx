@@ -41,7 +41,14 @@ export default function PullFromRemoteModal({
     loading,
     err,
     setErr,
-  } = usePullFromRemote(params, remote, branchName, setBranchName, setIsOpen);
+  } = usePullFromRemote(
+    params,
+    remote,
+    branchName,
+    undefined,
+    setBranchName,
+    setIsOpen,
+  );
 
   return (
     <ModalOuter

@@ -91,7 +91,6 @@ export class RemoteResolver {
     if (res.length === 0) {
       throw new Error("No response from fetch");
     }
-    console.log(res);
     return fromFetchRes(res[0]);
   }
 }

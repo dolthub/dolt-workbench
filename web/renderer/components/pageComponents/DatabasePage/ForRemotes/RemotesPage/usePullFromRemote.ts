@@ -1,6 +1,6 @@
-import { ApolloErrorType } from "@apollo/client";
 import { RemoteFragment, usePullFromRemoteMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
+import { ApolloErrorType } from "@lib/errors/types";
 import { OptionalRefParams } from "@lib/params";
 import {
   refetchMergeBaseQueries,

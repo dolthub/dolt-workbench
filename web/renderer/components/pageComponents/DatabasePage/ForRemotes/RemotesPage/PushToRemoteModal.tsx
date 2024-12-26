@@ -41,7 +41,14 @@ export default function PushToRemoteModal({
     loading,
     err,
     setErr,
-  } = usePushToRemote(params, remote, branchName, setBranchName, setIsOpen);
+  } = usePushToRemote(
+    params,
+    remote,
+    branchName,
+    undefined,
+    setBranchName,
+    setIsOpen,
+  );
   return (
     <ModalOuter isOpen={isOpen} onRequestClose={onClose} title="Push to remote">
       <form onSubmit={onSubmit}>

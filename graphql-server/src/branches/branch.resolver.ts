@@ -115,19 +115,16 @@ export class BranchResolver {
     const conn = this.conn.connection();
     const res = await conn.callMergeBase(args);
     const mergeBase = Object.values(res[0])[0];
-    console.log("mergebase", mergeBase);
     const aheadLogs = await conn.getTwoDotLogs({
       toRefName: mergeBase,
       fromRefName: args.branchName,
       databaseName: args.databaseName,
     });
-    console.log("aheadLogs", aheadLogs);
     const behindLogs = await conn.getTwoDotLogs({
       toRefName: mergeBase,
       fromRefName: args.anotherBranch,
       databaseName: args.databaseName,
     });
-    console.log("behindLogs", behindLogs);
     return { ahead: aheadLogs.length, behind: behindLogs.length };
   }
 
