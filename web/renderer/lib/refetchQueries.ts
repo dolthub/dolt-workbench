@@ -8,6 +8,7 @@ import {
 import * as gen from "@gen/graphql-types";
 import {
   DatabaseParams,
+  MergeBaseParams,
   PullDiffParams,
   RefOptionalSchemaParams,
   RequiredRefsParams,
@@ -140,3 +141,12 @@ export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
     cache.gc();
   },
 };
+
+export const refetchMergeBaseQueries = (
+  variables: MergeBaseParams,
+): RefetchQueries => [
+  {
+    query: gen.MergeBaseDocument,
+    variables,
+  },
+];

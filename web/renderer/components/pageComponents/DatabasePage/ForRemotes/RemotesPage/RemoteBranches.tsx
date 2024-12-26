@@ -6,9 +6,9 @@ import {
   useRemoteBranchesQuery,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
-import css from "./index.module.css";
-import RemoteBranchRow from "./RemoteBranchRow";
 import useDefaultBranch from "@hooks/useDefaultBranch";
+import RemoteBranchRow from "./RemoteBranchRow";
+import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
@@ -20,19 +20,19 @@ type InnerProps = Props & {
   currentBranch: string;
 };
 
-function Inner({ remoteBranches, params, remote }: InnerProps) {
+function Inner(props: InnerProps) {
   return (
     <table className={css.table}>
       <thead>
         <tr>
-          <th>Branch</th>
-          <th>Behind|Ahead</th>
+          <th>Remote Branch</th>
+          <th>Behind | Ahead</th>
           <th>Sync</th>
         </tr>
       </thead>
       <tbody>
-        {remoteBranches.map(rb => (
-          <RemoteBranchRow key={rb._id} branch={rb} remote={remote} />
+        {props.remoteBranches.map(rb => (
+          <RemoteBranchRow {...props} key={rb._id} branch={rb} />
         ))}
       </tbody>
     </table>

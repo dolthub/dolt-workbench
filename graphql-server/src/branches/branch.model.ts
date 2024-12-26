@@ -44,9 +44,12 @@ export class BranchList extends ListOffsetRes {
 }
 
 @ObjectType()
-export class MergeBase {
+export class AheadOrBehind {
   @Field({ nullable: true })
-  mergeBase?: string;
+  ahead?: number;
+
+  @Field({ nullable: true })
+  behind?: number;
 }
 
 export function fromDoltBranchesRow(

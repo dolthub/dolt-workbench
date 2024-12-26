@@ -1,29 +1,127 @@
-import { BranchFragment, RemoteFragment } from "@gen/graphql-types";
+import { Button, ErrorMsg, QueryHandler } from "@dolthub/react-components";
+import {
+  AheadOrBehindFragment,
+  BranchFragment,
+  RemoteFragment,
+  useMergeBaseQuery,
+} from "@gen/graphql-types";
+import { OptionalRefParams } from "@lib/params";
+import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
+import css from "./index.module.css";
+import usePullFromRemote from "./usePullFromRemote";
+import usePushToRemote from "./usePushToRemote";
 
 type Props = {
   branch: BranchFragment;
   remote: RemoteFragment;
+  currentBranch: string;
+  params: OptionalRefParams;
 };
 
-export default function RemoteBranchRow({ branch, remote }: Props) {
+export default function RemoteBranchRow({
+  branch,
+  remote,
+  params,
+  currentBranch,
+}: Props) {
+  const { remoteAndBranchName, remoteBranchName } = getBranchName(
+    branch.branchName,
+  );
+  const res = useMergeBaseQuery({
+    variables: {
+      databaseName: params.databaseName,
+      branchName: currentBranch,
+      anotherBranch: remoteAndBranchName,
+    },
+  });
+
   return (
-    <tr>
-      <td>{getBranchName(branch.branchName, remote.name)}</td>
-      <td></td>
-      <td></td>
-    </tr>
+    <QueryHandler
+      result={{ ...res, data: res.data?.mergeBase }}
+      render={data => (
+        <tr>
+          <td>{remoteAndBranchName}</td>
+          <td>
+            {data.behind}|{data.ahead}
+          </td>
+          <td>
+            <SyncButton
+              numbers={data}
+              params={params}
+              remote={remote}
+              remoteBranchName={remoteBranchName}
+              currentBranch={currentBranch}
+            />
+          </td>
+        </tr>
+      )}
+    />
   );
 }
 
-function getBranchName(branchName: string, remoteName: string): string {
-  // Escape special characters in the remote name to safely use it in the regex
-  const escapedRemoteName = remoteName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  // Create a regex pattern dynamically incorporating the escaped remote name
-  const pattern = new RegExp(`^remotes/${escapedRemoteName}/(.+)$`);
+type SyncButtonProps = {
+  numbers: AheadOrBehindFragment;
+  remote: RemoteFragment;
+  params: OptionalRefParams;
+  remoteBranchName: string;
+  currentBranch: string;
+};
 
-  // Search the input string with the regex pattern
-  const match = branchName.match(pattern);
+function SyncButton({
+  numbers,
+  params,
+  remote,
+  remoteBranchName,
+  currentBranch,
+}: SyncButtonProps) {
+  const { onSubmit: onPull, err: pullErr } = usePullFromRemote(
+    params,
+    remote,
+    remoteBranchName,
+    currentBranch,
+  );
+  const { onSubmit: onPush, err: pushErr } = usePushToRemote(
+    params,
+    remote,
+    currentBranch,
+    `${remote.name}/${remoteBranchName}`,
+  );
+  if (numbers.behind) {
+    return (
+      <div>
+        <Button onClick={onPull}>
+          <IoPushOutline className={css.pullIcon} /> Pull
+        </Button>{" "}
+        {pullErr && <ErrorMsg err={pullErr} />}
+      </div>
+    );
+  }
+  if (numbers.ahead) {
+    return (
+      <div>
+        <Button onClick={onPush}>
+          <IoPushOutline /> Push
+        </Button>
+        {pushErr && <ErrorMsg err={pushErr} />}
+      </div>
+    );
+  }
+  return <span>Up to date</span>;
+}
 
-  // If a match is found, return the captured group which is the branch name
-  return match ? match[1] : "";
+type ReturnType = {
+  remoteAndBranchName: string;
+  remoteBranchName: string;
+};
+function getBranchName(branchName: string): ReturnType {
+  if (branchName.startsWith("remotes/")) {
+    const remoteAndBranchName = branchName.slice(8);
+    const remoteBranchName = remoteAndBranchName.split("/").slice(1).join("/");
+    return {
+      remoteAndBranchName,
+      remoteBranchName,
+    };
+  }
+  const remoteBranchName = branchName.split("/").slice(1).join("");
+  return { remoteAndBranchName: branchName, remoteBranchName };
 }

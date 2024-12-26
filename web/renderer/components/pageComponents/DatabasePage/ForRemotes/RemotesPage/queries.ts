@@ -84,8 +84,9 @@ export const FETCH_REMOTE = gql`
 `;
 
 export const MERGE_BASE = gql`
-  fragment MergeBase on MergeBase {
-    mergeBase
+  fragment aheadOrBehind on AheadOrBehind {
+    ahead
+    behind
   }
   query MergeBase(
     $databaseName: String!
@@ -97,7 +98,7 @@ export const MERGE_BASE = gql`
       branchName: $branchName
       anotherBranch: $anotherBranch
     ) {
-      ...MergeBase
+      ...aheadOrBehind
     }
   }
 `;

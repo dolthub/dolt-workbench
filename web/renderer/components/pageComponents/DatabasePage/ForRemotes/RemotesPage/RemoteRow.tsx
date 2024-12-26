@@ -3,7 +3,6 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { ButtonWithPopup } from "@dolthub/react-components";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
-import { GoArrowDown } from "@react-icons/all-files/go/GoArrowDown";
 import { OptionalRefParams } from "@lib/params";
 import { useState } from "react";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
@@ -12,6 +11,7 @@ import PullFromRemoteModal from "./PullFromRemoteModal";
 import PushToRemoteModal from "./PushToRemoteModal";
 import FetchRemoteModal from "./FetchRemoteModal";
 import css from "./index.module.css";
+import FetchButton from "./FetchAction";
 
 type Props = {
   remote: RemoteFragment;
@@ -70,15 +70,11 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                 >
                   Remove remote
                 </DropdownItem>
-                <DropdownItem
-                  onClick={() => {
-                    setFetchModalOpen(true);
-                    fakeEscapePress();
-                  }}
-                  icon={<GoArrowDown />}
-                >
-                  Fetch from remote
-                </DropdownItem>
+                <FetchButton
+                  setFetchModalOpen={setFetchModalOpen}
+                  params={params}
+                  remote={remote}
+                />
               </ul>
             </div>
           </ButtonWithPopup>

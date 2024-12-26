@@ -19,6 +19,12 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
+export type AheadOrBehind = {
+  __typename?: 'AheadOrBehind';
+  ahead?: Maybe<Scalars['Float']['output']>;
+  behind?: Maybe<Scalars['Float']['output']>;
+};
+
 export type AuthorInfo = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -226,11 +232,6 @@ export enum LoadDataModifier {
   Ignore = 'Ignore',
   Replace = 'Replace'
 }
-
-export type MergeBase = {
-  __typename?: 'MergeBase';
-  mergeBase?: Maybe<Scalars['String']['output']>;
-};
 
 export type Mutation = {
   __typename?: 'Mutation';
@@ -444,7 +445,7 @@ export type Query = {
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
-  mergeBase: MergeBase;
+  mergeBase: AheadOrBehind;
   pullWithDetails: PullWithDetails;
   remoteBranches: BranchList;
   remotes: RemoteList;
@@ -1332,7 +1333,7 @@ export type FetchRemoteMutationVariables = Exact<{
 
 export type FetchRemoteMutation = { __typename?: 'Mutation', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
 
-export type MergeBaseFragment = { __typename?: 'MergeBase', mergeBase?: string | null };
+export type AheadOrBehindFragment = { __typename?: 'AheadOrBehind', ahead?: number | null, behind?: number | null };
 
 export type MergeBaseQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1341,7 +1342,7 @@ export type MergeBaseQueryVariables = Exact<{
 }>;
 
 
-export type MergeBaseQuery = { __typename?: 'Query', mergeBase: { __typename?: 'MergeBase', mergeBase?: string | null } };
+export type MergeBaseQuery = { __typename?: 'Query', mergeBase: { __typename?: 'AheadOrBehind', ahead?: number | null, behind?: number | null } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1789,9 +1790,10 @@ export const FetchResFragmentDoc = gql`
   success
 }
     `;
-export const MergeBaseFragmentDoc = gql`
-    fragment MergeBase on MergeBase {
-  mergeBase
+export const AheadOrBehindFragmentDoc = gql`
+    fragment aheadOrBehind on AheadOrBehind {
+  ahead
+  behind
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -3945,10 +3947,10 @@ export const MergeBaseDocument = gql`
     branchName: $branchName
     anotherBranch: $anotherBranch
   ) {
-    ...MergeBase
+    ...aheadOrBehind
   }
 }
-    ${MergeBaseFragmentDoc}`;
+    ${AheadOrBehindFragmentDoc}`;
 
 /**
  * __useMergeBaseQuery__
