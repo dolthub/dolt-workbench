@@ -142,9 +142,13 @@ export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
   },
 };
 
-export const refetchMergeBaseQueries = (
+export const refetchRemoteBranchesQueries = (
   variables: MergeBaseParams,
 ): RefetchQueries => [
+  {
+    query: gen.RemoteBranchesDocument,
+    variables,
+  },
   {
     query: gen.MergeBaseDocument,
     variables,

@@ -2,7 +2,7 @@ import { RemoteFragment, usePushToRemoteMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { ApolloErrorType } from "@lib/errors/types";
 import { OptionalRefParams } from "@lib/params";
-import { refetchMergeBaseQueries } from "@lib/refetchQueries";
+import { refetchRemoteBranchesQueries } from "@lib/refetchQueries";
 import { SyntheticEvent, useState } from "react";
 
 type ReturnType = {
@@ -27,7 +27,7 @@ export default function usePushToRemote(
   const { mutateFn: push, ...res } = useMutation({
     hook: usePushToRemoteMutation,
     refetchQueries: remoteBranch
-      ? refetchMergeBaseQueries({
+      ? refetchRemoteBranchesQueries({
           databaseName: params.databaseName,
           branchName,
           anotherBranch: remoteBranch,
@@ -52,7 +52,7 @@ export default function usePushToRemote(
       variables: {
         databaseName: params.databaseName,
         remoteName: remote.name,
-        branchName,
+        branchName: remoteBranch ? `${branchName}:${remoteBranch}` : branchName,
       },
     });
     if (!pushRes.data) {

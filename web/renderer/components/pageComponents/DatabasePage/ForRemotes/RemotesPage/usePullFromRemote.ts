@@ -3,7 +3,7 @@ import useMutation from "@hooks/useMutation";
 import { ApolloErrorType } from "@lib/errors/types";
 import { OptionalRefParams } from "@lib/params";
 import {
-  refetchMergeBaseQueries,
+  refetchRemoteBranchesQueries,
   refetchUpdateDatabaseQueriesCacheEvict,
 } from "@lib/refetchQueries";
 import { database } from "@lib/urls";
@@ -31,7 +31,7 @@ export default function usePullFromRemote(
   const { mutateFn: pull, ...res } = useMutation({
     hook: usePullFromRemoteMutation,
     refetchQueries: currentBranch
-      ? refetchMergeBaseQueries({
+      ? refetchRemoteBranchesQueries({
           databaseName: params.databaseName,
           branchName: currentBranch,
           anotherBranch: `${remote.name}/${branchName}`,

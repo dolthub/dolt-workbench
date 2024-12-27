@@ -84,7 +84,7 @@ function SyncButton({
     params,
     remote,
     currentBranch,
-    `${remote.name}/${remoteBranchName}`,
+     remoteBranchName ,
   );
   if (numbers.behind) {
     return (
