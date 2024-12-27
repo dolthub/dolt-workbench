@@ -15,12 +15,7 @@ import { TableResolver } from "../tables/table.resolver";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { BranchArgs, DBArgs, DBArgsWithOffset } from "../utils/commonTypes";
 import { SortBranchesBy } from "./branch.enum";
-import {
-  AheadOrBehind,
-  Branch,
-  BranchList,
-  fromDoltBranchesRow,
-} from "./branch.model";
+import { Branch, BranchList, fromDoltBranchesRow } from "./branch.model";
 
 @ArgsType()
 export class GetBranchOrDefaultArgs extends DBArgs {
@@ -58,14 +53,6 @@ class ListBranchesArgs extends DBArgsWithOffset {
   sortBy?: SortBranchesBy;
 }
 
-@ArgsType()
-class MegeBaseArgs extends DBArgs {
-  @Field()
-  branchName: string;
-
-  @Field()
-  anotherBranch: string;
-}
 @Resolver(_of => Branch)
 export class BranchResolver {
   constructor(
@@ -108,24 +95,6 @@ export class BranchResolver {
       offset: args.offset ?? 0,
     });
     return fromBranchListRes(res, args);
-  }
-
-  @Query(_returns => AheadOrBehind)
-  async mergeBase(@Args() args: MegeBaseArgs): Promise<AheadOrBehind> {
-    const conn = this.conn.connection();
-    const res = await conn.callMergeBase(args);
-    const mergeBase = Object.values(res[0])[0];
-    const aheadLogs = await conn.getTwoDotLogs({
-      toRefName: mergeBase,
-      fromRefName: args.branchName,
-      databaseName: args.databaseName,
-    });
-    const behindLogs = await conn.getTwoDotLogs({
-      toRefName: mergeBase,
-      fromRefName: args.anotherBranch,
-      databaseName: args.databaseName,
-    });
-    return { ahead: aheadLogs.length, behind: behindLogs.length };
   }
 
   @Query(_returns => [Branch])

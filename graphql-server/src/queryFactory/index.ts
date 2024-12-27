@@ -161,5 +161,5 @@ export declare class QueryFactory {
 
   callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR;
 
-  callMergeBase(args: t.MergeBaseArgs): t.PR;
+  callMergeBase(args: t.RefsArgs): t.PR;
 }

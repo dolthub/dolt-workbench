@@ -7,8 +7,9 @@ import {
   Resolver,
 } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
-import { DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
+import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
 import {
+  AheadBehindCount,
   FetchRes,
   fromFetchRes,
   fromPullRes,
@@ -36,6 +37,15 @@ export class PullOrPushRemoteArgs extends RemoteArgs {
 export class RemoteMaybeBranchArgs extends RemoteArgs {
   @Field({ nullable: true })
   branchName?: string;
+}
+
+@ArgsType()
+export class AheadBehindCountArgs extends DBArgs {
+  @Field()
+  fromRefName: string;
+
+  @Field()
+  toRefName: string;
 }
 
 @Resolver(_of => Remote)
@@ -92,5 +102,28 @@ export class RemoteResolver {
       throw new Error("No response from fetch");
     }
     return fromFetchRes(res[0]);
+  }
+
+  @Query(_returns => AheadBehindCount)
+  async aheadBehindCount(
+    @Args() args: AheadBehindCountArgs,
+  ): Promise<AheadBehindCount> {
+    const conn = this.conn.connection();
+    const res = await conn.callMergeBase(args);
+    const mergeBase = Object.values(res[0])[0];
+    const aheadLogs = await conn.getTwoDotLogs({
+      toRefName: mergeBase,
+      fromRefName: args.toRefName,
+      databaseName: args.databaseName,
+    });
+    const behindLogs = await conn.getTwoDotLogs({
+      toRefName: mergeBase,
+      fromRefName: args.fromRefName,
+      databaseName: args.databaseName,
+    });
+    return {
+      ahead: aheadLogs.length,
+      behind: behindLogs.length,
+    };
   }
 }

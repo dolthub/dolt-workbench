@@ -19,7 +19,7 @@ export default function BehindAheadCount({ numbers }: Props) {
         <div className={css.behind}>{behind}</div>
         <div className={css.ahead}>{ahead}</div>
       </td>
-      <Tooltip id="ahead-behind-commits" noArrow />
+      <Tooltip id="ahead-behind-commits" noArrow place="bottom" />
     </>
   );
 }

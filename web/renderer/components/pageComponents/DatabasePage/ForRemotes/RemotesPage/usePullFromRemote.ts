@@ -33,8 +33,8 @@ export default function usePullFromRemote(
     refetchQueries: currentBranch
       ? refetchRemoteBranchesQueries({
           databaseName: params.databaseName,
-          branchName: currentBranch,
-          anotherBranch: `${remote.name}/${branchName}`,
+          toRefName: currentBranch,
+          fromRefName: `${remote.name}/${branchName}`,
         })
       : [],
   });

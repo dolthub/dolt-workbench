@@ -8,7 +8,6 @@ import {
 import * as gen from "@gen/graphql-types";
 import {
   DatabaseParams,
-  MergeBaseParams,
   PullDiffParams,
   RefOptionalSchemaParams,
   RequiredRefsParams,
@@ -143,14 +142,14 @@ export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
 };
 
 export const refetchRemoteBranchesQueries = (
-  variables: MergeBaseParams,
+  variables: RequiredRefsParams,
 ): RefetchQueries => [
   {
     query: gen.RemoteBranchesDocument,
     variables,
   },
   {
-    query: gen.MergeBaseDocument,
+    query: gen.AheadBehindCountDocument,
     variables,
   },
 ];

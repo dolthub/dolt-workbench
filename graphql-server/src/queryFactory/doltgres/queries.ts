@@ -175,5 +175,3 @@ export const callFetchRemote = (branchName?: string) =>
   branchName
     ? `SELECT DOLT_FETCH($1::text, '${branchName}')`
     : `SELECT DOLT_FETCH($1::text)`;
-
-export const callMergeBase = `SELECT DOLT_MERGE_BASE($1::text,$2::text)`;

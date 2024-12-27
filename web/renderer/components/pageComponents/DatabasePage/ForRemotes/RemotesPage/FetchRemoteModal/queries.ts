@@ -19,22 +19,22 @@ export const FETCH_REMOTE = gql`
   }
 `;
 
-export const MERGE_BASE = gql`
-  fragment aheadOrBehind on AheadOrBehind {
+export const AHEAD_BEHIND_COUNT = gql`
+  fragment aheadBehindCount on AheadBehindCount {
     ahead
     behind
   }
-  query MergeBase(
+  query AheadBehindCount(
     $databaseName: String!
-    $branchName: String!
-    $anotherBranch: String!
+    $toRefName: String!
+    $fromRefName: String!
   ) {
-    mergeBase(
+    aheadBehindCount(
       databaseName: $databaseName
-      branchName: $branchName
-      anotherBranch: $anotherBranch
+      toRefName: $toRefName
+      fromRefName: $fromRefName
     ) {
-      ...aheadOrBehind
+      ...aheadBehindCount
     }
   }
 `;

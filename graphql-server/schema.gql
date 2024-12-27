@@ -75,11 +75,6 @@ type BranchList {
   list: [Branch!]!
 }
 
-type AheadOrBehind {
-  ahead: Float
-  behind: Float
-}
-
 type DoltWriter {
   _id: ID!
   displayName: String!
@@ -314,12 +309,16 @@ type FetchRes {
   success: Boolean!
 }
 
+type AheadBehindCount {
+  ahead: Float
+  behind: Float
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
   branches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
   remoteBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
-  mergeBase(databaseName: String!, branchName: String!, anotherBranch: String!): AheadOrBehind!
   allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
@@ -336,6 +335,7 @@ type Query {
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
   pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
   remotes(databaseName: String!, offset: Int): RemoteList!
+  aheadBehindCount(databaseName: String!, fromRefName: String!, toRefName: String!): AheadBehindCount!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff

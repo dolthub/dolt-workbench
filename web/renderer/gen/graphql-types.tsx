@@ -19,8 +19,8 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
-export type AheadOrBehind = {
-  __typename?: 'AheadOrBehind';
+export type AheadBehindCount = {
+  __typename?: 'AheadBehindCount';
   ahead?: Maybe<Scalars['Float']['output']>;
   behind?: Maybe<Scalars['Float']['output']>;
 };
@@ -428,6 +428,7 @@ export type PushRes = {
 
 export type Query = {
   __typename?: 'Query';
+  aheadBehindCount: AheadBehindCount;
   allBranches: Array<Branch>;
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
@@ -445,7 +446,6 @@ export type Query = {
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
-  mergeBase: AheadOrBehind;
   pullWithDetails: PullWithDetails;
   remoteBranches: BranchList;
   remotes: RemoteList;
@@ -463,6 +463,13 @@ export type Query = {
   tag?: Maybe<Tag>;
   tags: TagList;
   views: Array<SchemaItem>;
+};
+
+
+export type QueryAheadBehindCountArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
 };
 
 
@@ -559,13 +566,6 @@ export type QueryDoltSchemasArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
-};
-
-
-export type QueryMergeBaseArgs = {
-  anotherBranch: Scalars['String']['input'];
-  branchName: Scalars['String']['input'];
-  databaseName: Scalars['String']['input'];
 };
 
 
@@ -1282,6 +1282,28 @@ export type AddRemoteMutationVariables = Exact<{
 
 export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
 
+export type FetchResFragment = { __typename?: 'FetchRes', success: boolean };
+
+export type FetchRemoteMutationVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  branchName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FetchRemoteMutation = { __typename?: 'Mutation', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
+
+export type AheadBehindCountFragment = { __typename?: 'AheadBehindCount', ahead?: number | null, behind?: number | null };
+
+export type AheadBehindCountQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type AheadBehindCountQuery = { __typename?: 'Query', aheadBehindCount: { __typename?: 'AheadBehindCount', ahead?: number | null, behind?: number | null } };
+
 export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
 
 export type RemoteListQueryVariables = Exact<{
@@ -1321,28 +1343,6 @@ export type PushToRemoteMutationVariables = Exact<{
 
 
 export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', success: boolean, message: string } };
-
-export type FetchResFragment = { __typename?: 'FetchRes', success: boolean };
-
-export type FetchRemoteMutationVariables = Exact<{
-  remoteName: Scalars['String']['input'];
-  databaseName: Scalars['String']['input'];
-  branchName?: InputMaybe<Scalars['String']['input']>;
-}>;
-
-
-export type FetchRemoteMutation = { __typename?: 'Mutation', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
-
-export type AheadOrBehindFragment = { __typename?: 'AheadOrBehind', ahead?: number | null, behind?: number | null };
-
-export type MergeBaseQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-  branchName: Scalars['String']['input'];
-  anotherBranch: Scalars['String']['input'];
-}>;
-
-
-export type MergeBaseQuery = { __typename?: 'Query', mergeBase: { __typename?: 'AheadOrBehind', ahead?: number | null, behind?: number | null } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1764,6 +1764,17 @@ export const PullDetailsFragmentDoc = gql`
   }
 }
     ${PullDetailsForPullDetailsFragmentDoc}`;
+export const FetchResFragmentDoc = gql`
+    fragment FetchRes on FetchRes {
+  success
+}
+    `;
+export const AheadBehindCountFragmentDoc = gql`
+    fragment aheadBehindCount on AheadBehindCount {
+  ahead
+  behind
+}
+    `;
 export const RemoteFragmentDoc = gql`
     fragment Remote on Remote {
   _id
@@ -1783,17 +1794,6 @@ export const PushResFragmentDoc = gql`
     fragment PushRes on PushRes {
   success
   message
-}
-    `;
-export const FetchResFragmentDoc = gql`
-    fragment FetchRes on FetchRes {
-  success
-}
-    `;
-export const AheadOrBehindFragmentDoc = gql`
-    fragment aheadOrBehind on AheadOrBehind {
-  ahead
-  behind
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -3747,6 +3747,91 @@ export function useAddRemoteMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation>;
 export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
 export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
+export const FetchRemoteDocument = gql`
+    mutation FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
+  fetchRemote(
+    remoteName: $remoteName
+    databaseName: $databaseName
+    branchName: $branchName
+  ) {
+    ...FetchRes
+  }
+}
+    ${FetchResFragmentDoc}`;
+export type FetchRemoteMutationFn = Apollo.MutationFunction<FetchRemoteMutation, FetchRemoteMutationVariables>;
+
+/**
+ * __useFetchRemoteMutation__
+ *
+ * To run a mutation, you first call `useFetchRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useFetchRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [fetchRemoteMutation, { data, loading, error }] = useFetchRemoteMutation({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *      branchName: // value for 'branchName'
+ *   },
+ * });
+ */
+export function useFetchRemoteMutation(baseOptions?: Apollo.MutationHookOptions<FetchRemoteMutation, FetchRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<FetchRemoteMutation, FetchRemoteMutationVariables>(FetchRemoteDocument, options);
+      }
+export type FetchRemoteMutationHookResult = ReturnType<typeof useFetchRemoteMutation>;
+export type FetchRemoteMutationResult = Apollo.MutationResult<FetchRemoteMutation>;
+export type FetchRemoteMutationOptions = Apollo.BaseMutationOptions<FetchRemoteMutation, FetchRemoteMutationVariables>;
+export const AheadBehindCountDocument = gql`
+    query AheadBehindCount($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
+  aheadBehindCount(
+    databaseName: $databaseName
+    toRefName: $toRefName
+    fromRefName: $fromRefName
+  ) {
+    ...aheadBehindCount
+  }
+}
+    ${AheadBehindCountFragmentDoc}`;
+
+/**
+ * __useAheadBehindCountQuery__
+ *
+ * To run a query within a React component, call `useAheadBehindCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAheadBehindCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAheadBehindCountQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      toRefName: // value for 'toRefName'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useAheadBehindCountQuery(baseOptions: Apollo.QueryHookOptions<AheadBehindCountQuery, AheadBehindCountQueryVariables> & ({ variables: AheadBehindCountQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<AheadBehindCountQuery, AheadBehindCountQueryVariables>(AheadBehindCountDocument, options);
+      }
+export function useAheadBehindCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AheadBehindCountQuery, AheadBehindCountQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<AheadBehindCountQuery, AheadBehindCountQueryVariables>(AheadBehindCountDocument, options);
+        }
+export function useAheadBehindCountSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AheadBehindCountQuery, AheadBehindCountQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<AheadBehindCountQuery, AheadBehindCountQueryVariables>(AheadBehindCountDocument, options);
+        }
+export type AheadBehindCountQueryHookResult = ReturnType<typeof useAheadBehindCountQuery>;
+export type AheadBehindCountLazyQueryHookResult = ReturnType<typeof useAheadBehindCountLazyQuery>;
+export type AheadBehindCountSuspenseQueryHookResult = ReturnType<typeof useAheadBehindCountSuspenseQuery>;
+export type AheadBehindCountQueryResult = Apollo.QueryResult<AheadBehindCountQuery, AheadBehindCountQueryVariables>;
 export const RemoteListDocument = gql`
     query RemoteList($databaseName: String!, $offset: Int) {
   remotes(databaseName: $databaseName, offset: $offset) {
@@ -3901,91 +3986,6 @@ export function usePushToRemoteMutation(baseOptions?: Apollo.MutationHookOptions
 export type PushToRemoteMutationHookResult = ReturnType<typeof usePushToRemoteMutation>;
 export type PushToRemoteMutationResult = Apollo.MutationResult<PushToRemoteMutation>;
 export type PushToRemoteMutationOptions = Apollo.BaseMutationOptions<PushToRemoteMutation, PushToRemoteMutationVariables>;
-export const FetchRemoteDocument = gql`
-    mutation FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
-  fetchRemote(
-    remoteName: $remoteName
-    databaseName: $databaseName
-    branchName: $branchName
-  ) {
-    ...FetchRes
-  }
-}
-    ${FetchResFragmentDoc}`;
-export type FetchRemoteMutationFn = Apollo.MutationFunction<FetchRemoteMutation, FetchRemoteMutationVariables>;
-
-/**
- * __useFetchRemoteMutation__
- *
- * To run a mutation, you first call `useFetchRemoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useFetchRemoteMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [fetchRemoteMutation, { data, loading, error }] = useFetchRemoteMutation({
- *   variables: {
- *      remoteName: // value for 'remoteName'
- *      databaseName: // value for 'databaseName'
- *      branchName: // value for 'branchName'
- *   },
- * });
- */
-export function useFetchRemoteMutation(baseOptions?: Apollo.MutationHookOptions<FetchRemoteMutation, FetchRemoteMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<FetchRemoteMutation, FetchRemoteMutationVariables>(FetchRemoteDocument, options);
-      }
-export type FetchRemoteMutationHookResult = ReturnType<typeof useFetchRemoteMutation>;
-export type FetchRemoteMutationResult = Apollo.MutationResult<FetchRemoteMutation>;
-export type FetchRemoteMutationOptions = Apollo.BaseMutationOptions<FetchRemoteMutation, FetchRemoteMutationVariables>;
-export const MergeBaseDocument = gql`
-    query MergeBase($databaseName: String!, $branchName: String!, $anotherBranch: String!) {
-  mergeBase(
-    databaseName: $databaseName
-    branchName: $branchName
-    anotherBranch: $anotherBranch
-  ) {
-    ...aheadOrBehind
-  }
-}
-    ${AheadOrBehindFragmentDoc}`;
-
-/**
- * __useMergeBaseQuery__
- *
- * To run a query within a React component, call `useMergeBaseQuery` and pass it any options that fit your needs.
- * When your component renders, `useMergeBaseQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMergeBaseQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *      branchName: // value for 'branchName'
- *      anotherBranch: // value for 'anotherBranch'
- *   },
- * });
- */
-export function useMergeBaseQuery(baseOptions: Apollo.QueryHookOptions<MergeBaseQuery, MergeBaseQueryVariables> & ({ variables: MergeBaseQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MergeBaseQuery, MergeBaseQueryVariables>(MergeBaseDocument, options);
-      }
-export function useMergeBaseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MergeBaseQuery, MergeBaseQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MergeBaseQuery, MergeBaseQueryVariables>(MergeBaseDocument, options);
-        }
-export function useMergeBaseSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<MergeBaseQuery, MergeBaseQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<MergeBaseQuery, MergeBaseQueryVariables>(MergeBaseDocument, options);
-        }
-export type MergeBaseQueryHookResult = ReturnType<typeof useMergeBaseQuery>;
-export type MergeBaseLazyQueryHookResult = ReturnType<typeof useMergeBaseLazyQuery>;
-export type MergeBaseSuspenseQueryHookResult = ReturnType<typeof useMergeBaseSuspenseQuery>;
-export type MergeBaseQueryResult = Apollo.QueryResult<MergeBaseQuery, MergeBaseQueryVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(

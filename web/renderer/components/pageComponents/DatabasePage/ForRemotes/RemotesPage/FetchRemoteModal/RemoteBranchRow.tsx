@@ -2,7 +2,7 @@ import { QueryHandler } from "@dolthub/react-components";
 import {
   BranchFragment,
   RemoteFragment,
-  useMergeBaseQuery,
+  useAheadBehindCountQuery,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import { getBranchName } from "./utils";
@@ -25,17 +25,17 @@ export default function RemoteBranchRow({
   const { remoteAndBranchName, remoteBranchName } = getBranchName(
     branch.branchName,
   );
-  const res = useMergeBaseQuery({
+  const res = useAheadBehindCountQuery({
     variables: {
       databaseName: params.databaseName,
-      branchName: currentBranch,
-      anotherBranch: remoteAndBranchName,
+      toRefName: currentBranch,
+      fromRefName: remoteAndBranchName,
     },
   });
 
   return (
     <QueryHandler
-      result={{ ...res, data: res.data?.mergeBase }}
+      result={{ ...res, data: res.data?.aheadBehindCount }}
       render={data => (
         <tr>
           <td>{remoteAndBranchName}</td>

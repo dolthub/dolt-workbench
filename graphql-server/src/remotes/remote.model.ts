@@ -52,6 +52,15 @@ export class FetchRes {
   success: boolean;
 }
 
+@ObjectType()
+export class AheadBehindCount {
+  @Field({ nullable: true })
+  ahead?: number;
+
+  @Field({ nullable: true })
+  behind?: number;
+}
+
 export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
   return {
     _id: `databases/${databaseName}/remotes/${r.name}`,

@@ -489,10 +489,10 @@ export class DoltQueryFactory
     );
   }
 
-  async callMergeBase(args: t.MergeBaseArgs): t.PR {
+  async callMergeBase(args: t.RefsArgs): t.PR {
     return this.query(
-      qh.callMergeBase,
-      [args.branchName, args.anotherBranch],
+      qh.mergeBase,
+      [args.toRefName, args.fromRefName],
       args.databaseName,
     );
   }

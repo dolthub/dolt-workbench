@@ -98,9 +98,3 @@ export type PullParams = OptionalRefParams & {
 };
 
 export type PullDiffParams = Required<PullParams>;
-
-export type MergeBaseParams = {
-  databaseName: string;
-  branchName: string;
-  anotherBranch: string;
-};

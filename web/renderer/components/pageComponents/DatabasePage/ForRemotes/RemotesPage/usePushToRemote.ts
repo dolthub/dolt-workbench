@@ -29,8 +29,8 @@ export default function usePushToRemote(
     refetchQueries: remoteBranch
       ? refetchRemoteBranchesQueries({
           databaseName: params.databaseName,
-          branchName,
-          anotherBranch: `${remote.name}/${remoteBranch}`,
+          toRefName: branchName,
+          fromRefName: `${remote.name}/${remoteBranch}`,
         })
       : [],
   });
