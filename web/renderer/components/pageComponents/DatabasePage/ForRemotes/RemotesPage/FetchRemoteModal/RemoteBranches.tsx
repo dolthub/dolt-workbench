@@ -5,19 +5,19 @@ import {
   useBranchesForSelectorQuery,
   useRemoteBranchesQuery,
 } from "@gen/graphql-types";
+import { pluralize } from "@dolthub/web-utils";
 import { OptionalRefParams } from "@lib/params";
-import useDefaultBranch from "@hooks/useDefaultBranch";
 import RemoteBranchRow from "./RemoteBranchRow";
 import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
   remote: RemoteFragment;
+  currentBranch: string;
 };
 
 type InnerProps = Props & {
   remoteBranches: BranchFragment[];
-  currentBranch: string;
 };
 
 function Inner(props: InnerProps) {
@@ -25,7 +25,7 @@ function Inner(props: InnerProps) {
     <table className={css.table}>
       <thead>
         <tr>
-          <th>Remote Branch</th>
+          <th>Remote {pluralize(props.remoteBranches.length, "branch")}</th>
           <th>Behind | Ahead</th>
           <th>Sync</th>
         </tr>
@@ -39,21 +39,25 @@ function Inner(props: InnerProps) {
   );
 }
 
-export default function RemoteBranches({ params, remote }: Props) {
+export default function RemoteBranches({
+  params,
+  remote,
+  currentBranch,
+}: Props) {
   const res = useRemoteBranchesQuery({
     variables: {
       databaseName: params.databaseName,
     },
   });
+
   const branchesRes = useBranchesForSelectorQuery({ variables: params });
-  const { defaultBranchName } = useDefaultBranch(params);
-  const currentBranchName = params.refName || defaultBranchName;
   if (branchesRes.error) {
     return <ErrorMsg err={branchesRes.error} />;
   }
   if (branchesRes.loading) {
     return <Loader loaded={!branchesRes.loading} />;
   }
+
   return (
     <QueryHandler
       result={{ ...res, data: res.data?.remoteBranches.list }}
@@ -61,7 +65,7 @@ export default function RemoteBranches({ params, remote }: Props) {
         <Inner
           remoteBranches={data}
           params={params}
-          currentBranch={currentBranchName}
+          currentBranch={currentBranch}
           remote={remote}
         />
       )}

@@ -1,9 +1,5 @@
-.container {
-  @apply mx-6;
-}
-
-.top {
-  @apply flex justify-between pt-6;
+.fetchModal {
+  @apply w-fit;
 }
 
 .table {
@@ -21,7 +17,7 @@
   }
 
   th {
-    @apply pt-6 pb-2 bg-stone-50;
+    @apply pt-6 pb-2 bg-white;
   }
 
   td {
@@ -38,26 +34,29 @@
   }
 }
 
-.noRemotes {
-  @apply text-center text-lg m-6;
-}
-
-.loader {
-  @apply text-primary my-4 text-center;
+.button {
+  @apply flex items-center;
+  svg {
+    @apply mr-2;
+  }
 }
 
 .pullIcon {
   transform: rotateX(180deg);
 }
 
-.trashIcon {
-  @apply text-red-300;
-}
-
 .bold {
   @apply font-semibold;
 }
 
-.message {
-  @apply mx-8 mb-8 whitespace-pre-wrap;
+.count {
+  @apply flex items-center;
+}
+
+.behind {
+  @apply border-r border-stone-100 pr-2 ml-10;
+}
+
+.ahead {
+  @apply ml-2;
 }

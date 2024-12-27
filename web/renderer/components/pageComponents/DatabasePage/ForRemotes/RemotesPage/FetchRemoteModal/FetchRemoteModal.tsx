@@ -6,9 +6,10 @@ import {
   ModalOuter,
 } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
+import useDefaultBranch from "@hooks/useDefaultBranch";
 import Link from "@components/links/Link";
-import css from "./index.module.css";
 import RemoteBranches from "./RemoteBranches";
+import css from "./index.module.css";
 
 type Props = {
   isOpen: boolean;
@@ -26,6 +27,8 @@ export default function FetchFromRemoteModal({
   const onClose = () => {
     setIsOpen(false);
   };
+  const { defaultBranchName } = useDefaultBranch(params);
+  const currentBranch = params.refName || defaultBranchName;
 
   return (
     <ModalOuter
@@ -36,14 +39,20 @@ export default function FetchFromRemoteModal({
     >
       <ModalInner>
         <p>
-          Update remote <span className={css.bold}>{remote.name}</span> (
-          {remote.url}) tracking branches. To learn more about fetch remotes,
-          see our{" "}
+          Sync remote <span className={css.bold}>{remote.name}</span> (
+          {remote.url}) branches with local branch{" "}
+          <span className={css.bold}>{params.refName}</span>. To learn more
+          about fetch remotes, see our{" "}
           <Link href="https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch">
             documentation
           </Link>
+          .
         </p>
-        <RemoteBranches params={params} remote={remote} />
+        <RemoteBranches
+          params={params}
+          remote={remote}
+          currentBranch={currentBranch}
+        />
       </ModalInner>
       <ModalButtons onRequestClose={onClose}>
         <Button onClick={onClose}>Close</Button>

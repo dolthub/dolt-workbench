@@ -6,7 +6,7 @@ import {
   refetchRemoteBranchesQueries,
   refetchUpdateDatabaseQueriesCacheEvict,
 } from "@lib/refetchQueries";
-import { database } from "@lib/urls";
+import { ref } from "@lib/urls";
 import router from "next/router";
 import { SyntheticEvent, useState } from "react";
 
@@ -77,7 +77,7 @@ export default function usePullFromRemote(
     await res.client
       .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
       .catch(console.error);
-    const { href, as } = database(params);
+    const { href, as } = ref(params);
     router.push(href, as).catch(console.error);
   };
 
