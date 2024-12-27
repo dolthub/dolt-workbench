@@ -1,4 +1,4 @@
-import { AheadOrBehindFragment } from "@gen/graphql-types";
+import { AheadBehindCountFragment } from "@gen/graphql-types";
 
 type ReturnType = {
   remoteAndBranchName: string;
@@ -18,7 +18,7 @@ export function getBranchName(branchName: string): ReturnType {
   return { remoteAndBranchName: branchName, remoteBranchName };
 }
 
-export function getTooltipContent(numbers: AheadOrBehindFragment): string {
+export function getTooltipContent(numbers: AheadBehindCountFragment): string {
   const ahead = numbers.ahead
     ? `The local branch is ${numbers.ahead} commits ahead`
     : "";

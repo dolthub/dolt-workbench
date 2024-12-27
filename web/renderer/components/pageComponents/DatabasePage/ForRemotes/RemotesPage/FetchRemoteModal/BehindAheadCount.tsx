@@ -1,10 +1,10 @@
-import { AheadOrBehindFragment } from "@gen/graphql-types";
+import { AheadBehindCountFragment } from "@gen/graphql-types";
 import { Tooltip } from "@dolthub/react-components";
 import { getTooltipContent } from "./utils";
 import css from "./index.module.css";
 
 type Props = {
-  numbers: AheadOrBehindFragment;
+  numbers: AheadBehindCountFragment;
 };
 
 export default function BehindAheadCount({ numbers }: Props) {

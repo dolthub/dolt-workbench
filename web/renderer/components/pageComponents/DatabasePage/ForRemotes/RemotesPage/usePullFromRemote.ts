@@ -1,7 +1,7 @@
 import { RemoteFragment, usePullFromRemoteMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { ApolloErrorType } from "@lib/errors/types";
-import { OptionalRefParams } from "@lib/params";
+import { RefParams } from "@lib/params";
 import {
   refetchRemoteBranchesQueries,
   refetchUpdateDatabaseQueriesCacheEvict,
@@ -21,7 +21,7 @@ type ReturnType = {
 };
 
 export default function usePullFromRemote(
-  params: OptionalRefParams,
+  params: RefParams,
   remote: RemoteFragment,
   branchName: string,
   currentBranch?: string,

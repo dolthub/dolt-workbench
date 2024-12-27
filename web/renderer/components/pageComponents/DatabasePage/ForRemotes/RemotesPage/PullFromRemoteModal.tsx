@@ -42,7 +42,7 @@ export default function PullFromRemoteModal({
     err,
     setErr,
   } = usePullFromRemote(
-    params,
+    { ...params, refName: pullIntoBranch },
     remote,
     branchName,
     undefined,
