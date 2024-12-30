@@ -39,7 +39,11 @@ export default function RemoteBranchRow({
       render={data => (
         <tr>
           <td>{remoteAndBranchName}</td>
-          <BehindAheadCount numbers={data} />
+          <BehindAheadCount
+            numbers={data}
+            currentBranch={currentBranch}
+            remoteAndBranchName={remoteAndBranchName}
+          />
           <td>
             <SyncButton
               numbers={data}

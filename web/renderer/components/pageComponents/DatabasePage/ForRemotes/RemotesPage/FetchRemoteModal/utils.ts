@@ -18,12 +18,15 @@ export function getBranchName(branchName: string): ReturnType {
   return { remoteAndBranchName: branchName, remoteBranchName };
 }
 
-export function getTooltipContent(numbers: AheadBehindCountFragment): string {
+export function getTooltipContent(
+  numbers: AheadBehindCountFragment,
+  currentBranch: string,
+): string {
   const ahead = numbers.ahead
-    ? `The local branch is ${numbers.ahead} commits ahead`
+    ? `The local branch ${currentBranch} is ${numbers.ahead} commits ahead`
     : "";
   const behind = numbers.behind
-    ? `The local branch is ${numbers.behind} commits behind`
+    ? `The local branch ${currentBranch} is ${numbers.behind} commits behind`
     : "";
   return `${ahead}<br/>${behind}`;
 }

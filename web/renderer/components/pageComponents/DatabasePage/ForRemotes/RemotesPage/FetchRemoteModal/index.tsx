@@ -10,6 +10,7 @@ import useDefaultBranch from "@hooks/useDefaultBranch";
 import Link from "@components/links/Link";
 import RemoteBranches from "./RemoteBranches";
 import css from "./index.module.css";
+import RefLink from "@components/links/RefLink";
 
 type Props = {
   isOpen: boolean;
@@ -18,7 +19,7 @@ type Props = {
   params: OptionalRefParams;
 };
 
-export default function FetchFromRemoteModal({
+export default function FetchRemoteModal({
   isOpen,
   setIsOpen,
   remote,
@@ -41,8 +42,10 @@ export default function FetchFromRemoteModal({
         <p>
           Sync remote <span className={css.bold}>{remote.name}</span> (
           {remote.url}) branches with local branch{" "}
-          <span className={css.bold}>{params.refName}</span>. To learn more
-          about fetch remotes, see our{" "}
+          <RefLink params={{ ...params, refName: currentBranch }}>
+            {params.refName}
+          </RefLink>.{" "}
+          To learn more about fetch remotes, see our{" "}
           <Link href="https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch">
             documentation
           </Link>
