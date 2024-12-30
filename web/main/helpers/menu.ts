@@ -46,6 +46,7 @@ export function initMenu(
           ? { label: "hidden", visible: false }
           : {
               label: "Reload",
+              accelerator: "CmdOrCtrl+R",
               click(_item, focusedWindow) {
                 if (focusedWindow) (focusedWindow as BrowserWindow).reload();
               },
@@ -125,7 +126,7 @@ export function initMenu(
           submenu: [
             {
               label: "Table",
-              accelerator: "CmdOrCtrl+T",
+              accelerator: "Shift+CmdOrCtrl+T",
               click: () => win.webContents.send("menu-clicked", "new-table"),
               enabled: hasChosenDatabase,
             },
@@ -134,7 +135,7 @@ export function initMenu(
             },
             {
               label: "Branch",
-              accelerator: "CmdOrCtrl+B",
+              accelerator: "Shift+CmdOrCtrl+B",
               click: () => win.webContents.send("menu-clicked", "new-branch"),
             },
             {
@@ -142,7 +143,7 @@ export function initMenu(
             },
             {
               label: "Release",
-              accelerator: "CmdOrCtrl+R",
+              accelerator: "Shift+CmdOrCtrl+R",
               click: () => win.webContents.send("menu-clicked", "new-release"),
             },
           ],

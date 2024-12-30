@@ -8,7 +8,9 @@
   "packageManager": "yarn@4.5.0",
   "scripts": {
     "dev:app": "nextron --renderer-port 7777",
-    "build:app": "nextron build",
+    "build:dmg": "nextron build --config ./build/builder-dmg-config.yaml",
+    "build:mas": "nextron build --config ./build/builder-mas-config.yaml",
+    "build:win": "nextron build --win --x64 --config ./build/builder-win-config.yaml",
     "postinstall": "electron-builder install-app-deps",
     "prettier": "prettier --check 'renderer/{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}' 'main/*.{js,ts,jsx,tsx}' 'main/**/*.{js,ts,jsx,tsx}'",
     "prettier-fix": "prettier --write 'renderer/{components,contexts,hooks,lib,pages}/**/*.{js,ts,jsx,tsx,css}' 'main/*.{js,ts,jsx,tsx}' 'main/**/*.{js,ts,jsx,tsx}'",
@@ -27,104 +29,6 @@
     "yalc:clean": "yalc remove --all",
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
     "clean": "tsc -b --clean && yarn yalc:clean"
-  },
-  "build": {
-    "appId": "com.dolthub.dolt-workbench",
-    "productName": "Dolt Workbench",
-    "buildVersion": "0.3.0",
-    "copyright": "Copyright © 2024 <DoltHub Inc>",
-    "files": [
-      "app",
-      "package.json",
-      "!node_modules/**/*",
-      "node_modules/ajv",
-      "node_modules/ajv-formats",
-      "node_modules/atomically",
-      "node_modules/conf",
-      "node_modules/debounce-fn",
-      "node_modules/dot-prop",
-      "node_modules/electron-store",
-      "node_modules/electron-serve",
-      "node_modules/env-paths",
-      "node_modules/fast-deep-equal",
-      "node_modules/fast-uri",
-      "node_modules/is-obj",
-      "node_modules/json-schema-traverse",
-      "node_modules/json-schema-typed",
-      "node_modules/locate-path",
-      "node_modules/mimic-fn",
-      "node_modules/onetime",
-      "node_modules/p-locate",
-      "node_modules/p-try",
-      "node_modules/pkg-up",
-      "node_modules/require-from-string",
-      "node_modules/semver",
-      "node_modules/type-fest"
-    ],
-    "extraFiles": [
-      {
-        "from": "../graphql-server/dist",
-        "to": "graphql-server/dist"
-      },
-      {
-        "from": "../graphql-server/node_modules",
-        "to": "graphql-server/node_modules"
-      },
-      {
-        "from": "build/mac/Assets.car",
-        "to": "Resources/Assets.car"
-      },
-      {
-        "from": "build/mac/AppIcon.icns",
-        "to": "Resources/AppIcon.icns"
-      }
-    ],
-    "mac": {
-      "category": "public.app-category.developer-tools",
-      "icon": "build/mac/AppIcon.icns",
-      "extendInfo": {
-        "CFBundleIconName": "AppIcon",
-        "CFBundleIconFile": "AppIcon"
-      },
-      "target": [
-        {
-          "target": "dmg"
-        },
-        {
-          "target": "mas",
-          "arch": "universal"
-        }
-      ],
-      "artifactName": "${productName}-mac-${arch}.${ext}",
-      "hardenedRuntime": true,
-      "gatekeeperAssess": false,
-      "asarUnpack": [
-        "**/*.node"
-      ],
-      "provisioningProfile": "build/mac/AppleDevelopment.provisionprofile",
-      "entitlements": "build/mac/entitlements.plist",
-      "entitlementsInherit": "build/mac/entitlements.inherit.plist"
-    },
-    "mas": {
-      "category": "public.app-category.developer-tools",
-      "icon": "build/mac/AppIcon.icns",
-      "extendInfo": {
-        "CFBundleIconName": "AppIcon",
-        "CFBundleIconFile": "AppIcon",
-        "CFBundleDisplayName": "Dolt Workbench"
-      },
-      "artifactName": "${productName}-mac-${arch}.${ext}",
-      "type": "distribution",
-      "notarize": {
-        "teamId": "FK9YU86WZ5"
-      },
-      "x64ArchFiles": "*",
-      "hardenedRuntime": false,
-      "gatekeeperAssess": false,
-      "provisioningProfile": "build/mac/MacAppStore.provisionprofile",
-      "entitlements": "build/mac/entitlements.mas.plist",
-      "entitlementsInherit": "build/mac/entitlements.mas.inherit.plist"
-    }
   },
   "dependencies": {
     "@apollo/client": "^3.9.9",
@@ -190,7 +94,7 @@
     "babel-jest": "^29.7.0",
     "cssnano": "^7.0.6",
     "electron": "^31.0.1",
-    "electron-builder": "^25.1.7",
+    "electron-builder": "^25.1.8",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",

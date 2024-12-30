@@ -2,7 +2,7 @@ import { Btn } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
 import AddItemDropdown from "./AddItemDropdown";
-import ResetConnectionButton from "./ResetConnectionButton";
+import ResetConnectionButton from "./RefreshConnectionButton";
 import css from "./index.module.css";
 
 const forMacNav = process.env.NEXT_PUBLIC_FOR_MAC_NAV === "true";

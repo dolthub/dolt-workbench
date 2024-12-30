@@ -12,10 +12,15 @@ import { useState } from "react";
 import css from "./index.module.css";
 
 export default function ResetConnectionButton() {
-  const { mutateFn, loading, err, setErr } = useMutation({
+  const { mutateFn, loading, err, setErr, client } = useMutation({
     hook: useResetDatabaseMutation,
   });
   const [errorModalOpen, setErrorModalOpen] = useState(false);
+
+  const onClick = async () => {
+    await mutateFn();
+    await client.resetStore();
+  };
 
   const onClose = () => {
     setErrorModalOpen(false);
@@ -26,9 +31,9 @@ export default function ResetConnectionButton() {
     <>
       <Button.Link
         className={css.resetButton}
-        onClick={async () => mutateFn()}
-        data-tooltip-content="Reset connection"
-        data-tooltip-id="reset-connection"
+        onClick={onClick}
+        data-tooltip-content="Refresh connection"
+        data-tooltip-id="refresh-connection"
       >
         <SmallLoader
           loaded={!loading}
@@ -37,11 +42,11 @@ export default function ResetConnectionButton() {
           <IoReloadSharp />
         </SmallLoader>
       </Button.Link>
-      <Tooltip id="reset-connection" className={css.tooltip} />
+      <Tooltip id="refresh-connection" className={css.tooltip} />
       <Modal
         isOpen={errorModalOpen}
         onRequestClose={onClose}
-        title="Error resetting connection"
+        title="Error refreshing connection"
       >
         <ErrorMsg err={err} />
       </Modal>

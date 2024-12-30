@@ -32,6 +32,7 @@ export const SQL_SELECT_QUERY = gql`
       rows {
         ...RowForSqlDataTable
       }
+      warnings
     }
   }
 `;

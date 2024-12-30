@@ -88,5 +88,8 @@
     },
     "coverageDirectory": "./coverage",
     "testEnvironment": "node"
+  },
+  "resolutions": {
+    "express": "^4.21.2"
   }
 }
