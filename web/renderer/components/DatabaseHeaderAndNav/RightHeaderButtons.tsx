@@ -5,7 +5,6 @@ import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams & { schemaName?: string };
-  onMenuClick: () => void;
 };
 
 export default function RightHeaderButtons(props: Props) {

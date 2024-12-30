@@ -9,7 +9,6 @@ type Props = {
   params: OptionalRefParams & { schemaName?: string };
   title?: string;
   initialTabIndex: number;
-  setShowSmall: (s: boolean) => void;
   showSmall: boolean;
 };
 
@@ -21,10 +20,7 @@ export default function Full(props: Props) {
     >
       <div className={css.headerDetails}>
         <div className={css.zIndex}>
-          <RightHeaderButtons
-            {...props}
-            onMenuClick={() => props.setShowSmall(true)}
-          />
+          <RightHeaderButtons {...props} />
           <div className={css.mobileSelector}>
             <MobileDatabaseNav {...props} />
           </div>
