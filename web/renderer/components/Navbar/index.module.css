@@ -23,7 +23,10 @@
 }
 
 .desktopOuter {
-  @apply flex  justify-between items-center w-full;
+  @apply hidden;
+  @screen md {
+    @apply flex  justify-between items-center w-full;
+  }
 }
 
 .left,

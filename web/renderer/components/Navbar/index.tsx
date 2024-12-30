@@ -41,7 +41,7 @@ export default function DesktopAppNavbar({ params }: Props) {
         <Logo imgSrc="/images/dolt-workbench.png" />
       )}
       <MobileNavbar logo={<Logo imgSrc="/images/dolt-workbench.png" />}>
-        {params && <Inner params={params} setNoDrag={setNoDrag} />}
+      <RightLinks />
       </MobileNavbar>
     </div>
   );
