@@ -3,7 +3,7 @@
 }
 
 .table {
-  @apply border border-stone-100 border-separate rounded-lg text-primary mx-auto my-10 overflow-x-auto block;
+  @apply border border-stone-100 border-separate rounded-lg mx-auto my-10 overflow-x-auto block;
   border-spacing: 0;
 
   @screen lg {
@@ -17,11 +17,11 @@
   }
 
   th {
-    @apply pt-6 pb-2 bg-white;
+    @apply pt-4 pb-2 bg-white;
   }
 
   td {
-    @apply border-t border-stone-100 py-3;
+    @apply border-t border-stone-100 py-3 text-sm;
   }
 
   tr:first-child {
@@ -59,4 +59,11 @@
 
 .ahead {
   @apply ml-2;
+}
+
+.upToDate {
+  @apply flex items-center text-green-400;
+  svg {
+    @apply mr-2;
+  }
 }

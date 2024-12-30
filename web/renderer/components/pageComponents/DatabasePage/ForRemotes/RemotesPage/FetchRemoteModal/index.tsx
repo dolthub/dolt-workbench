@@ -44,8 +44,8 @@ export default function FetchRemoteModal({
           {remote.url}) branches with local branch{" "}
           <RefLink params={{ ...params, refName: currentBranch }}>
             {params.refName}
-          </RefLink>.{" "}
-          To learn more about fetch remotes, see our{" "}
+          </RefLink>
+          . To learn more about fetch remotes, see our{" "}
           <Link href="https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch">
             documentation
           </Link>
