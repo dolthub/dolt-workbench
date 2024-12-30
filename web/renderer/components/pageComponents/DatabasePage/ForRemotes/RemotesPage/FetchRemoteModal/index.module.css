@@ -21,7 +21,7 @@
   }
 
   td {
-    @apply border-t border-stone-100 py-3 text-sm;
+    @apply border-t border-stone-100 py-3 text-sm bg-white;
   }
 
   tr:first-child {
@@ -30,6 +30,14 @@
     }
     th:last-child {
       @apply rounded-tr-lg;
+    }
+  }
+  tr:last-child {
+    td:first-child {
+      @apply rounded-bl-lg;
+    }
+    td:last-child {
+      @apply rounded-br-lg;
     }
   }
 }
@@ -66,4 +74,8 @@
   svg {
     @apply mr-2;
   }
+}
+
+.buttons {
+  @apply flex items-center justify-between;
 }

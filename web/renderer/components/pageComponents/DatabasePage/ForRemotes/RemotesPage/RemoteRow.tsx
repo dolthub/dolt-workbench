@@ -46,6 +46,11 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
           >
             <div>
               <ul>
+                <FetchButton
+                  setFetchModalOpen={setFetchModalOpen}
+                  params={params}
+                  remote={remote}
+                />
                 <DropdownItem
                   onClick={() => {
                     setPullModalOpen(true);
@@ -70,11 +75,6 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                 >
                   Remove remote
                 </DropdownItem>
-                <FetchButton
-                  setFetchModalOpen={setFetchModalOpen}
-                  params={params}
-                  remote={remote}
-                />
               </ul>
             </div>
           </ButtonWithPopup>

@@ -1,5 +1,5 @@
 import { fakeEscapePress } from "@dolthub/web-utils";
-import { GoArrowDown } from "@react-icons/all-files/go/GoArrowDown";
+import { HiRefresh } from "@react-icons/all-files/hi/HiRefresh";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { RemoteFragment, useFetchRemoteLazyQuery } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
@@ -32,6 +32,7 @@ export default function FetchButton({
         remoteName: remote.name,
         branchName,
       },
+      fetchPolicy: "network-only",
     });
     setLoading(false);
     if (!fetchRes.data?.fetchRemote.success) {
@@ -44,7 +45,7 @@ export default function FetchButton({
   };
 
   return (
-    <DropdownItem onClick={onClick} icon={<GoArrowDown />}>
+    <DropdownItem onClick={onClick} icon={<HiRefresh />}>
       <>
         <SmallLoader loaded={!loading} />
         <div>

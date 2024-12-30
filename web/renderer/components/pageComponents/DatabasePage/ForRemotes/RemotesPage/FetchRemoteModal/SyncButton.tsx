@@ -43,7 +43,7 @@ export default function SyncButton({
     );
   }
   return (
-    <>
+    <div className={css.buttons}>
       {!!numbers.behind && (
         <div>
           <Button.Link onClick={onPull} className={css.button}>
@@ -60,6 +60,6 @@ export default function SyncButton({
           {pushErr && <ErrorMsg err={pushErr} />}
         </div>
       )}
-    </>
+    </div>
   );
 }

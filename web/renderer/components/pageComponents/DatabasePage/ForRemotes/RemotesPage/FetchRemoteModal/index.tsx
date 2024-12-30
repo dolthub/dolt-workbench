@@ -4,6 +4,7 @@ import {
   ModalButtons,
   ModalInner,
   ModalOuter,
+  SuccessMsg,
 } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import useDefaultBranch from "@hooks/useDefaultBranch";
@@ -35,17 +36,18 @@ export default function FetchRemoteModal({
     <ModalOuter
       isOpen={isOpen}
       onRequestClose={onClose}
-      title="Fetch from remote"
+      title="Sync with remote"
       className={css.fetchModal}
     >
       <ModalInner>
+        <SuccessMsg>Fetch successful.</SuccessMsg>
         <p>
-          Sync remote <span className={css.bold}>{remote.name}</span> (
-          {remote.url}) branches with local branch{" "}
+          Sync local branch{" "}
           <RefLink params={{ ...params, refName: currentBranch }}>
             {params.refName}
-          </RefLink>
-          . To learn more about fetch remotes, see our{" "}
+          </RefLink>{" "}
+          with remote <span className={css.bold}>{remote.name}</span> (
+          {remote.url}) branches. To learn more about fetch remotes, see our{" "}
           <Link href="https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch">
             documentation
           </Link>
