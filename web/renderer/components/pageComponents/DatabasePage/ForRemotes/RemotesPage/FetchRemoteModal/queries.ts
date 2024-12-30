@@ -4,7 +4,7 @@ export const FETCH_REMOTE = gql`
   fragment FetchRes on FetchRes {
     success
   }
-  mutation FetchRemote(
+  query FetchRemote(
     $remoteName: String!
     $databaseName: String!
     $branchName: String

@@ -1,11 +1,12 @@
 import { fakeEscapePress } from "@dolthub/web-utils";
 import { GoArrowDown } from "@react-icons/all-files/go/GoArrowDown";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
-import useMutation from "@hooks/useMutation";
-import { RemoteFragment, useFetchRemoteMutation } from "@gen/graphql-types";
+import { RemoteFragment, useFetchRemoteLazyQuery } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import useDefaultBranch from "@hooks/useDefaultBranch";
-import { ErrorMsg } from "@dolthub/react-components";
+import { ErrorMsg, SmallLoader } from "@dolthub/react-components";
+import useApolloError from "@hooks/useApolloError";
+import { useState } from "react";
 
 type Props = {
   setFetchModalOpen: (f: boolean) => void;
@@ -19,11 +20,12 @@ export default function FetchButton({
 }: Props) {
   const { defaultBranchName } = useDefaultBranch(params);
   const branchName = params.refName || defaultBranchName;
-  const { mutateFn: fetch, ...res } = useMutation({
-    hook: useFetchRemoteMutation,
-  });
+  const [fetch] = useFetchRemoteLazyQuery();
+  const [err, setErr] = useApolloError(undefined);
+  const [loading, setLoading] = useState(false);
 
   const onClick = async () => {
+    setLoading(true);
     const fetchRes = await fetch({
       variables: {
         databaseName: params.databaseName,
@@ -31,7 +33,9 @@ export default function FetchButton({
         branchName,
       },
     });
+    setLoading(false);
     if (!fetchRes.data?.fetchRemote.success) {
+      setErr(fetchRes.error || new Error("Fetch failed"));
       return;
     }
 
@@ -41,10 +45,13 @@ export default function FetchButton({
 
   return (
     <DropdownItem onClick={onClick} icon={<GoArrowDown />}>
-      <div>
-        <span>Fetch from remote</span>
-        <ErrorMsg err={res.err} />
-      </div>
+      <>
+        <SmallLoader loaded={!loading} />
+        <div>
+          <span>Fetch from remote</span>
+          <ErrorMsg err={err} />
+        </div>
+      </>
     </DropdownItem>
   );
 }

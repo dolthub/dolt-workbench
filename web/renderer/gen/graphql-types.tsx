@@ -244,7 +244,6 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
-  fetchRemote: FetchRes;
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
   pullFromRemote: PullRes;
@@ -314,13 +313,6 @@ export type MutationDeleteRemoteArgs = {
 export type MutationDeleteTagArgs = {
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
-};
-
-
-export type MutationFetchRemoteArgs = {
-  branchName?: InputMaybe<Scalars['String']['input']>;
-  databaseName: Scalars['String']['input'];
-  remoteName: Scalars['String']['input'];
 };
 
 
@@ -446,6 +438,7 @@ export type Query = {
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
+  fetchRemote: FetchRes;
   pullWithDetails: PullWithDetails;
   remoteBranches: BranchList;
   remotes: RemoteList;
@@ -566,6 +559,13 @@ export type QueryDoltSchemasArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryFetchRemoteArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
 };
 
 
@@ -1284,14 +1284,14 @@ export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
 
 export type FetchResFragment = { __typename?: 'FetchRes', success: boolean };
 
-export type FetchRemoteMutationVariables = Exact<{
+export type FetchRemoteQueryVariables = Exact<{
   remoteName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   branchName?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
-export type FetchRemoteMutation = { __typename?: 'Mutation', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
+export type FetchRemoteQuery = { __typename?: 'Query', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
 
 export type AheadBehindCountFragment = { __typename?: 'AheadBehindCount', ahead?: number | null, behind?: number | null };
 
@@ -3748,7 +3748,7 @@ export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation
 export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
 export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
 export const FetchRemoteDocument = gql`
-    mutation FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
+    query FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
   fetchRemote(
     remoteName: $remoteName
     databaseName: $databaseName
@@ -3758,20 +3758,18 @@ export const FetchRemoteDocument = gql`
   }
 }
     ${FetchResFragmentDoc}`;
-export type FetchRemoteMutationFn = Apollo.MutationFunction<FetchRemoteMutation, FetchRemoteMutationVariables>;
 
 /**
- * __useFetchRemoteMutation__
+ * __useFetchRemoteQuery__
  *
- * To run a mutation, you first call `useFetchRemoteMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useFetchRemoteMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
+ * To run a query within a React component, call `useFetchRemoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchRemoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
  *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const [fetchRemoteMutation, { data, loading, error }] = useFetchRemoteMutation({
+ * const { data, loading, error } = useFetchRemoteQuery({
  *   variables: {
  *      remoteName: // value for 'remoteName'
  *      databaseName: // value for 'databaseName'
@@ -3779,13 +3777,22 @@ export type FetchRemoteMutationFn = Apollo.MutationFunction<FetchRemoteMutation,
  *   },
  * });
  */
-export function useFetchRemoteMutation(baseOptions?: Apollo.MutationHookOptions<FetchRemoteMutation, FetchRemoteMutationVariables>) {
+export function useFetchRemoteQuery(baseOptions: Apollo.QueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables> & ({ variables: FetchRemoteQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<FetchRemoteMutation, FetchRemoteMutationVariables>(FetchRemoteDocument, options);
+        return Apollo.useQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
       }
-export type FetchRemoteMutationHookResult = ReturnType<typeof useFetchRemoteMutation>;
-export type FetchRemoteMutationResult = Apollo.MutationResult<FetchRemoteMutation>;
-export type FetchRemoteMutationOptions = Apollo.BaseMutationOptions<FetchRemoteMutation, FetchRemoteMutationVariables>;
+export function useFetchRemoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+        }
+export function useFetchRemoteSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+        }
+export type FetchRemoteQueryHookResult = ReturnType<typeof useFetchRemoteQuery>;
+export type FetchRemoteLazyQueryHookResult = ReturnType<typeof useFetchRemoteLazyQuery>;
+export type FetchRemoteSuspenseQueryHookResult = ReturnType<typeof useFetchRemoteSuspenseQuery>;
+export type FetchRemoteQueryResult = Apollo.QueryResult<FetchRemoteQuery, FetchRemoteQueryVariables>;
 export const AheadBehindCountDocument = gql`
     query AheadBehindCount($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
   aheadBehindCount(

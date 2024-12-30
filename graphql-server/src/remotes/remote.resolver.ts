@@ -94,7 +94,7 @@ export class RemoteResolver {
     return fromPushRes(res[0]);
   }
 
-  @Mutation(_returns => FetchRes)
+  @Query(_returns => FetchRes)
   async fetchRemote(@Args() args: RemoteMaybeBranchArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
     const res = await conn.callFetchRemote(args);
