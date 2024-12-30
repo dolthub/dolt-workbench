@@ -7,10 +7,10 @@ import {
 } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import useDefaultBranch from "@hooks/useDefaultBranch";
+import RefLink from "@components/links/RefLink";
 import Link from "@components/links/Link";
 import RemoteBranches from "./RemoteBranches";
 import css from "./index.module.css";
-import RefLink from "@components/links/RefLink";
 
 type Props = {
   isOpen: boolean;
