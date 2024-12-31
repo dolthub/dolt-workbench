@@ -20,21 +20,21 @@ export const FETCH_REMOTE = gql`
 `;
 
 export const AHEAD_BEHIND_COUNT = gql`
-  fragment aheadBehindCount on AheadBehindCount {
+  fragment AheadAndBehindCount on AheadAndBehindCount {
     ahead
     behind
   }
-  query AheadBehindCount(
+  query AheadAndBehindCount(
     $databaseName: String!
     $toRefName: String!
     $fromRefName: String!
   ) {
-    aheadBehindCount(
+    aheadAndBehindCount(
       databaseName: $databaseName
       toRefName: $toRefName
       fromRefName: $fromRefName
     ) {
-      ...aheadBehindCount
+      ...AheadAndBehindCount
     }
   }
 `;

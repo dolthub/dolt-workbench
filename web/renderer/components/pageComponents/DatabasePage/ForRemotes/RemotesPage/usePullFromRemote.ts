@@ -23,7 +23,7 @@ type ReturnType = {
 export default function usePullFromRemote(
   params: RefParams,
   remote: RemoteFragment,
-  branchName: string,
+  remoteBranchName: string,
   currentBranch?: string,
   setBranchName?: (b: string) => void,
   setIsOpen?: (o: boolean) => void,
@@ -34,7 +34,7 @@ export default function usePullFromRemote(
       ? refetchRemoteBranchesQueries({
           databaseName: params.databaseName,
           toRefName: currentBranch,
-          fromRefName: `${remote.name}/${branchName}`,
+          fromRefName: `${remote.name}/${remoteBranchName}`,
         })
       : [],
   });
@@ -57,7 +57,7 @@ export default function usePullFromRemote(
       variables: {
         databaseName: params.databaseName,
         remoteName: remote.name,
-        branchName,
+        branchName: remoteBranchName,
       },
     });
     if (!pullRes.data) return;

@@ -9,7 +9,7 @@ import {
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
 import {
-  AheadBehindCount,
+  AheadAndBehindCount,
   FetchRes,
   fromFetchRes,
   fromPullRes,
@@ -40,7 +40,7 @@ export class RemoteMaybeBranchArgs extends RemoteArgs {
 }
 
 @ArgsType()
-export class AheadBehindCountArgs extends DBArgs {
+export class AheadAndBehindCountArgs extends DBArgs {
   @Field()
   fromRefName: string;
 
@@ -104,10 +104,14 @@ export class RemoteResolver {
     return fromFetchRes(res[0]);
   }
 
-  @Query(_returns => AheadBehindCount)
-  async aheadBehindCount(
-    @Args() args: AheadBehindCountArgs,
-  ): Promise<AheadBehindCount> {
+  // Determine the number of commits by which the local branch is ahead or behind the remote branch:
+  // 1. Identify the merge base of the two branches.
+  // 2. Calculate the 'ahead' count as the number of commits on the local branch that come after the merge base.
+  // 3. Calculate the 'behind' count as the number of commits on the remote branch that come after the merge base.
+  @Query(_returns => AheadAndBehindCount)
+  async aheadAndBehindCount(
+    @Args() args: AheadAndBehindCountArgs,
+  ): Promise<AheadAndBehindCount> {
     const conn = this.conn.connection();
     const res = await conn.callMergeBase(args);
     const mergeBase = Object.values(res[0])[0];

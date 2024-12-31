@@ -1,10 +1,10 @@
-import { AheadBehindCountFragment } from "@gen/graphql-types";
+import { AheadAndBehindCountFragment } from "@gen/graphql-types";
 import { Tooltip } from "@dolthub/react-components";
 import { getTooltipContent } from "./utils";
 import css from "./index.module.css";
 
 type Props = {
-  numbers: AheadBehindCountFragment;
+  numbers: AheadAndBehindCountFragment;
   currentBranch: string;
   remoteAndBranchName: string;
 };
@@ -21,7 +21,6 @@ export default function BehindAheadCount({
       <td
         data-tooltip-html={getTooltipContent(numbers, currentBranch)}
         data-tooltip-id={tooltipId}
-        data-tooltip-hidden={!ahead && !behind}
         className={css.count}
       >
         <div className={css.behind}>{behind}</div>

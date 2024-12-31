@@ -40,13 +40,13 @@ export default function FetchRemoteModal({
       className={css.fetchModal}
     >
       <ModalInner>
-        <SuccessMsg>Fetch successful.</SuccessMsg>
+        <SuccessMsg>Fetch completed successfully.</SuccessMsg>
         <p>
-          Sync local branch{" "}
+          Synchronize the local branch{" "}
           <RefLink params={{ ...params, refName: currentBranch }}>
             {params.refName}
           </RefLink>{" "}
-          with remote <span className={css.bold}>{remote.name}</span> (
+          with the remote <span className={css.bold}>{remote.name}</span> (
           {remote.url}) branches. To learn more about fetch remotes, see our{" "}
           <Link href="https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch">
             documentation

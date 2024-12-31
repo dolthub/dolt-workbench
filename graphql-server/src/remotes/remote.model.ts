@@ -53,7 +53,7 @@ export class FetchRes {
 }
 
 @ObjectType()
-export class AheadBehindCount {
+export class AheadAndBehindCount {
   @Field({ nullable: true })
   ahead?: number;
 

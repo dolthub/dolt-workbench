@@ -19,8 +19,8 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
-export type AheadBehindCount = {
-  __typename?: 'AheadBehindCount';
+export type AheadAndBehindCount = {
+  __typename?: 'AheadAndBehindCount';
   ahead?: Maybe<Scalars['Float']['output']>;
   behind?: Maybe<Scalars['Float']['output']>;
 };
@@ -420,7 +420,7 @@ export type PushRes = {
 
 export type Query = {
   __typename?: 'Query';
-  aheadBehindCount: AheadBehindCount;
+  aheadAndBehindCount: AheadAndBehindCount;
   allBranches: Array<Branch>;
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
@@ -459,7 +459,7 @@ export type Query = {
 };
 
 
-export type QueryAheadBehindCountArgs = {
+export type QueryAheadAndBehindCountArgs = {
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
@@ -1293,16 +1293,16 @@ export type FetchRemoteQueryVariables = Exact<{
 
 export type FetchRemoteQuery = { __typename?: 'Query', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
 
-export type AheadBehindCountFragment = { __typename?: 'AheadBehindCount', ahead?: number | null, behind?: number | null };
+export type AheadAndBehindCountFragment = { __typename?: 'AheadAndBehindCount', ahead?: number | null, behind?: number | null };
 
-export type AheadBehindCountQueryVariables = Exact<{
+export type AheadAndBehindCountQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
 }>;
 
 
-export type AheadBehindCountQuery = { __typename?: 'Query', aheadBehindCount: { __typename?: 'AheadBehindCount', ahead?: number | null, behind?: number | null } };
+export type AheadAndBehindCountQuery = { __typename?: 'Query', aheadAndBehindCount: { __typename?: 'AheadAndBehindCount', ahead?: number | null, behind?: number | null } };
 
 export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
 
@@ -1769,8 +1769,8 @@ export const FetchResFragmentDoc = gql`
   success
 }
     `;
-export const AheadBehindCountFragmentDoc = gql`
-    fragment aheadBehindCount on AheadBehindCount {
+export const AheadAndBehindCountFragmentDoc = gql`
+    fragment AheadAndBehindCount on AheadAndBehindCount {
   ahead
   behind
 }
@@ -3793,29 +3793,29 @@ export type FetchRemoteQueryHookResult = ReturnType<typeof useFetchRemoteQuery>;
 export type FetchRemoteLazyQueryHookResult = ReturnType<typeof useFetchRemoteLazyQuery>;
 export type FetchRemoteSuspenseQueryHookResult = ReturnType<typeof useFetchRemoteSuspenseQuery>;
 export type FetchRemoteQueryResult = Apollo.QueryResult<FetchRemoteQuery, FetchRemoteQueryVariables>;
-export const AheadBehindCountDocument = gql`
-    query AheadBehindCount($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
-  aheadBehindCount(
+export const AheadAndBehindCountDocument = gql`
+    query AheadAndBehindCount($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
+  aheadAndBehindCount(
     databaseName: $databaseName
     toRefName: $toRefName
     fromRefName: $fromRefName
   ) {
-    ...aheadBehindCount
+    ...AheadAndBehindCount
   }
 }
-    ${AheadBehindCountFragmentDoc}`;
+    ${AheadAndBehindCountFragmentDoc}`;
 
 /**
- * __useAheadBehindCountQuery__
+ * __useAheadAndBehindCountQuery__
  *
- * To run a query within a React component, call `useAheadBehindCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useAheadBehindCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useAheadAndBehindCountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAheadAndBehindCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAheadBehindCountQuery({
+ * const { data, loading, error } = useAheadAndBehindCountQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      toRefName: // value for 'toRefName'
@@ -3823,22 +3823,22 @@ export const AheadBehindCountDocument = gql`
  *   },
  * });
  */
-export function useAheadBehindCountQuery(baseOptions: Apollo.QueryHookOptions<AheadBehindCountQuery, AheadBehindCountQueryVariables> & ({ variables: AheadBehindCountQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useAheadAndBehindCountQuery(baseOptions: Apollo.QueryHookOptions<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables> & ({ variables: AheadAndBehindCountQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AheadBehindCountQuery, AheadBehindCountQueryVariables>(AheadBehindCountDocument, options);
+        return Apollo.useQuery<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>(AheadAndBehindCountDocument, options);
       }
-export function useAheadBehindCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AheadBehindCountQuery, AheadBehindCountQueryVariables>) {
+export function useAheadAndBehindCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AheadBehindCountQuery, AheadBehindCountQueryVariables>(AheadBehindCountDocument, options);
+          return Apollo.useLazyQuery<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>(AheadAndBehindCountDocument, options);
         }
-export function useAheadBehindCountSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AheadBehindCountQuery, AheadBehindCountQueryVariables>) {
+export function useAheadAndBehindCountSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<AheadBehindCountQuery, AheadBehindCountQueryVariables>(AheadBehindCountDocument, options);
+          return Apollo.useSuspenseQuery<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>(AheadAndBehindCountDocument, options);
         }
-export type AheadBehindCountQueryHookResult = ReturnType<typeof useAheadBehindCountQuery>;
-export type AheadBehindCountLazyQueryHookResult = ReturnType<typeof useAheadBehindCountLazyQuery>;
-export type AheadBehindCountSuspenseQueryHookResult = ReturnType<typeof useAheadBehindCountSuspenseQuery>;
-export type AheadBehindCountQueryResult = Apollo.QueryResult<AheadBehindCountQuery, AheadBehindCountQueryVariables>;
+export type AheadAndBehindCountQueryHookResult = ReturnType<typeof useAheadAndBehindCountQuery>;
+export type AheadAndBehindCountLazyQueryHookResult = ReturnType<typeof useAheadAndBehindCountLazyQuery>;
+export type AheadAndBehindCountSuspenseQueryHookResult = ReturnType<typeof useAheadAndBehindCountSuspenseQuery>;
+export type AheadAndBehindCountQueryResult = Apollo.QueryResult<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>;
 export const RemoteListDocument = gql`
     query RemoteList($databaseName: String!, $offset: Int) {
   remotes(databaseName: $databaseName, offset: $offset) {

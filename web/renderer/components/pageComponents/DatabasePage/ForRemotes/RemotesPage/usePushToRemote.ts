@@ -18,7 +18,7 @@ type ReturnType = {
 export default function usePushToRemote(
   params: OptionalRefParams,
   remote: RemoteFragment,
-  branchName: string,
+  localBranchName: string,
   remoteBranch?: string,
   setBranchName?: (b: string) => void,
   setIsOpen?: (o: boolean) => void,
@@ -29,7 +29,7 @@ export default function usePushToRemote(
     refetchQueries: remoteBranch
       ? refetchRemoteBranchesQueries({
           databaseName: params.databaseName,
-          toRefName: branchName,
+          toRefName: localBranchName,
           fromRefName: `${remote.name}/${remoteBranch}`,
         })
       : [],
@@ -52,7 +52,9 @@ export default function usePushToRemote(
       variables: {
         databaseName: params.databaseName,
         remoteName: remote.name,
-        branchName: remoteBranch ? `${branchName}:${remoteBranch}` : branchName,
+        branchName: remoteBranch
+          ? `${localBranchName}:${remoteBranch}`
+          : localBranchName,
       },
     });
     if (!pushRes.data) {

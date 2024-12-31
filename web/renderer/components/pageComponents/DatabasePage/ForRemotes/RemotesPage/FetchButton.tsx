@@ -13,6 +13,7 @@ type Props = {
   params: OptionalRefParams;
   remote: RemoteFragment;
 };
+
 export default function FetchButton({
   setFetchModalOpen,
   params,
@@ -46,13 +47,11 @@ export default function FetchButton({
 
   return (
     <DropdownItem onClick={onClick} icon={<HiRefresh />}>
-      <>
+      <div>
         <SmallLoader loaded={!loading} />
-        <div>
-          <span>Fetch from remote</span>
-          <ErrorMsg err={err} />
-        </div>
-      </>
+        <span>Fetch from remote</span>
+        <ErrorMsg err={err} />
+      </div>
     </DropdownItem>
   );
 }

@@ -1,25 +1,28 @@
-import { AheadBehindCountFragment } from "@gen/graphql-types";
+import { AheadAndBehindCountFragment } from "@gen/graphql-types";
 
 type ReturnType = {
-  remoteAndBranchName: string;
+  branchNameWithRemotePrefix: string;
   remoteBranchName: string;
 };
 
 export function getBranchName(branchName: string): ReturnType {
   if (branchName.startsWith("remotes/")) {
-    const remoteAndBranchName = branchName.slice(8);
-    const remoteBranchName = remoteAndBranchName.split("/").slice(1).join("/");
+    const branchNameWithRemotePrefix = branchName.slice(8);
+    const remoteBranchName = branchNameWithRemotePrefix
+      .split("/")
+      .slice(1)
+      .join("/");
     return {
-      remoteAndBranchName,
+      branchNameWithRemotePrefix,
       remoteBranchName,
     };
   }
   const remoteBranchName = branchName.split("/").slice(1).join("");
-  return { remoteAndBranchName: branchName, remoteBranchName };
+  return { branchNameWithRemotePrefix: branchName, remoteBranchName };
 }
 
 export function getTooltipContent(
-  numbers: AheadBehindCountFragment,
+  numbers: AheadAndBehindCountFragment,
   currentBranch: string,
 ): string {
   const ahead = numbers.ahead
@@ -28,5 +31,5 @@ export function getTooltipContent(
   const behind = numbers.behind
     ? `The local branch ${currentBranch} is ${numbers.behind} commits behind`
     : "";
-  return `${ahead}<br/>${behind}`;
+  return behind ? `${behind}<br/>${ahead}` : ahead;
 }

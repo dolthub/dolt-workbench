@@ -2,7 +2,7 @@ import { QueryHandler } from "@dolthub/react-components";
 import {
   BranchFragment,
   RemoteFragment,
-  useAheadBehindCountQuery,
+  useAheadAndBehindCountQuery,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import { getBranchName } from "./utils";
@@ -22,27 +22,27 @@ export default function RemoteBranchRow({
   params,
   currentBranch,
 }: Props) {
-  const { remoteAndBranchName, remoteBranchName } = getBranchName(
+  const { branchNameWithRemotePrefix, remoteBranchName } = getBranchName(
     branch.branchName,
   );
-  const res = useAheadBehindCountQuery({
+  const res = useAheadAndBehindCountQuery({
     variables: {
       databaseName: params.databaseName,
       toRefName: currentBranch,
-      fromRefName: remoteAndBranchName,
+      fromRefName: branchNameWithRemotePrefix,
     },
   });
 
   return (
     <QueryHandler
-      result={{ ...res, data: res.data?.aheadBehindCount }}
+      result={{ ...res, data: res.data?.aheadAndBehindCount }}
       render={data => (
         <tr>
-          <td>{remoteAndBranchName}</td>
+          <td>{branchNameWithRemotePrefix}</td>
           <BehindAheadCount
             numbers={data}
             currentBranch={currentBranch}
-            remoteAndBranchName={remoteAndBranchName}
+            remoteAndBranchName={branchNameWithRemotePrefix}
           />
           <td>
             <SyncButton

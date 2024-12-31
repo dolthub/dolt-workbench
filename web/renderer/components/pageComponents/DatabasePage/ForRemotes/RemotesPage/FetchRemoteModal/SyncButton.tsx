@@ -1,4 +1,7 @@
-import { AheadBehindCountFragment, RemoteFragment } from "@gen/graphql-types";
+import {
+  AheadAndBehindCountFragment,
+  RemoteFragment,
+} from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
@@ -8,7 +11,7 @@ import usePushToRemote from "../usePushToRemote";
 import css from "./index.module.css";
 
 type SyncButtonProps = {
-  numbers: AheadBehindCountFragment;
+  numbers: AheadAndBehindCountFragment;
   remote: RemoteFragment;
   params: OptionalRefParams;
   remoteBranchName: string;

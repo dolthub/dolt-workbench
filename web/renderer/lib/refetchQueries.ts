@@ -149,7 +149,7 @@ export const refetchRemoteBranchesQueries = (
     variables,
   },
   {
-    query: gen.AheadBehindCountDocument,
+    query: gen.AheadAndBehindCountDocument,
     variables,
   },
 ];

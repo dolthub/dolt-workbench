@@ -309,7 +309,7 @@ type FetchRes {
   success: Boolean!
 }
 
-type AheadBehindCount {
+type AheadAndBehindCount {
   ahead: Float
   behind: Float
 }
@@ -336,7 +336,7 @@ type Query {
   pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
   remotes(databaseName: String!, offset: Int): RemoteList!
   fetchRemote(remoteName: String!, databaseName: String!, branchName: String): FetchRes!
-  aheadBehindCount(databaseName: String!, fromRefName: String!, toRefName: String!): AheadBehindCount!
+  aheadAndBehindCount(databaseName: String!, fromRefName: String!, toRefName: String!): AheadAndBehindCount!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
