@@ -29,14 +29,14 @@
 .topLine {
   @apply flex justify-between items-center w-full pb-4 px-4;
   @screen lg {
-    @apply px-3;
+    @apply pl-4 pr-3;
   }
 }
 
 .menuIcon {
   @apply hidden;
   @screen lg {
-    @apply block cursor-pointer mx-1 text-white;
+    @apply flex justify-end items-center w-full pt-2 pb-4 px-4 cursor-pointer text-white;
   }
 }
 
@@ -45,7 +45,7 @@
 }
 
 .openBranchSelector {
-  @apply opacity-100 transition-opacity duration-75 min-w-[200px];
+  @apply opacity-100 transition-opacity duration-75 min-w-[200px] w-full;
 }
 
 .openNav {
@@ -93,6 +93,13 @@
 
 .tab {
   @apply text-storm-50;
+  button {
+    @apply font-normal;
+  }
+}
+
+.active {
+  @apply text-orange-400;
 }
 
 .tabPanel {
@@ -119,4 +126,12 @@
   span {
     @apply font-semibold;
   }
+}
+
+.schemaSelector {
+  @apply m-0 max-w-none;
+}
+
+.selector {
+  @apply w-[264px] max-w-none;
 }
