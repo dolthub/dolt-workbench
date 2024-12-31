@@ -11,7 +11,7 @@
 }
 
 .headerDetails {
-  @apply inline-block  py-2 px-8  bg-storm-500 relative h-16   justify-end;
+  @apply inline-block  py-2 px-8  bg-storm-500 relative h-28   justify-end;
   background-image: linear-gradient(to bottom, #354c5c, #192e3d);
   @screen lg {
     @apply flex h-12;
@@ -84,14 +84,6 @@
 .mobileSelector {
   @screen lg {
     @apply hidden;
-  }
-}
-
-.menu {
-  @apply hidden;
-
-  @screen lg {
-    @apply mt-1 ml-3 block;
   }
 }
 

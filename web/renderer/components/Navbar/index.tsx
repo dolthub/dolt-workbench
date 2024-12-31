@@ -40,9 +40,6 @@ export default function DesktopAppNavbar({ params }: Props) {
       ) : (
         <Logo imgSrc="/images/dolt-workbench.png" />
       )}
-      <MobileNavbar logo={<Logo imgSrc="/images/dolt-workbench.png" />}>
-        {params && <Inner params={params} setNoDrag={setNoDrag} />}
-      </MobileNavbar>
     </div>
   );
 }
@@ -62,11 +59,22 @@ function Inner({ params, setNoDrag }: InnerProps) {
     );
   }
   return (
-    <div className={css.desktopOuter}>
-      <Logo imgSrc="/images/dolt-workbench.png" className={css.left} />
-      <ConnectionsAndDatabases params={params} className={css.middle} />
-      <RightLinks />
-    </div>
+    <>
+      <div className={css.desktopOuter}>
+        <Logo imgSrc="/images/dolt-workbench.png" className={css.left} />
+        <ConnectionsAndDatabases params={params} className={css.middle} />
+        <div className={css.right}>
+          <RightLinks />
+        </div>
+      </div>
+      <MobileNavbar
+        logo={<Logo imgSrc="/images/dolt-workbench.png" />}
+        bgColor="bg-storm-600"
+      >
+        <Link href="/connections">Connections</Link>
+        <RightLinks />
+      </MobileNavbar>
+    </>
   );
 }
 
@@ -84,7 +92,7 @@ export function Logo({ imgSrc, className }: LogoProps) {
 }
 function RightLinks() {
   return (
-    <div className={css.right}>
+    <>
       <DocsLink>Documentation</DocsLink>
       <ExternalLink href={workbenchGithubRepo}>
         <FaGithub /> GitHub
@@ -92,6 +100,6 @@ function RightLinks() {
       <ExternalLink href={dockerHubRepo}>
         <FaDocker /> Docker Hub
       </ExternalLink>
-    </div>
+    </>
   );
 }

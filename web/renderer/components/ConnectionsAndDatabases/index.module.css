@@ -15,7 +15,7 @@
 }
 
 .container {
-  @apply flex max-w-[40rem] flex-col;
+  @apply flex max-w-[42rem] flex-col;
 }
 
 .top,

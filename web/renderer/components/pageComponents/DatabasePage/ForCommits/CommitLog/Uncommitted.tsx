@@ -1,3 +1,4 @@
+import { getCommit } from "@components/CommitGraph/utils";
 import Link from "@components/links/Link";
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import {
@@ -5,12 +6,11 @@ import {
   StatusFragment,
   useGetStatusQuery,
 } from "@gen/graphql-types";
+import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import cx from "classnames";
 import { DiffSection } from "commit-graph";
-import { getCommit } from "@components/CommitGraph/utils";
-import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import css from "./index.module.css";
 
 type Props = {
@@ -127,7 +127,10 @@ function Inner(props: InnerProps) {
 }
 
 export default function Uncommitted(props: Props) {
-  const res = useGetStatusQuery({ variables: props.params });
+  const res = useGetStatusQuery({
+    variables: props.params,
+    fetchPolicy: "cache-and-network",
+  });
   if (res.loading) return <Loader loaded={false} />;
   if (res.error || !res.data || res.data.status.length === 0) {
     return null;

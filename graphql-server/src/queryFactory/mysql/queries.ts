@@ -20,3 +20,5 @@ export const getTriggersQuery = `SHOW TRIGGERS`;
 export const getEventsQuery = `SHOW EVENTS`;
 
 export const proceduresQuery = `SHOW PROCEDURE STATUS WHERE type = "PROCEDURE" AND db = ?`;
+
+export const showWarningsQuery = `SHOW WARNINGS`;
