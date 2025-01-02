@@ -68,8 +68,8 @@ export default function SyncButton({
       </div>
       {pullErr && <ErrorMsg err={pullErr} />}
       {state.err && <ErrorMsg err={state.err} />}
-      {message && <span> {message}</span>}
-      {state.message && <span> {state.message}</span>}
+      {message && <span>{message}</span>}
+      {state.message && <span>{state.message}</span>}
     </div>
   );
 }
