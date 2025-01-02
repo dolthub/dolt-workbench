@@ -119,6 +119,13 @@ export class DoltQueryFactory
     );
   }
 
+  async getRemoteBranches(args: t.ListBranchesArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltRemoteBranchesPaginated(em, args),
+      args.databaseName,
+    );
+  }
+
   async getAllBranches(args: t.DBArgs): t.PR {
     return this.queryForBuilder(
       async em => dem.getAllDoltBranches(em),
@@ -458,7 +465,7 @@ export class DoltQueryFactory
     );
   }
 
-  async callPullRemote(args: t.PushOrPullRemoteArgs): t.PR {
+  async callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR {
     return this.query(
       qh.callPullRemote,
       [args.remoteName, args.branchName],
@@ -466,12 +473,29 @@ export class DoltQueryFactory
     );
   }
 
-  async callPushRemote(args: t.PushOrPullRemoteArgs): t.PR {
+  async callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR {
     return this.query(
       qh.callPushRemote,
       [args.remoteName, args.branchName],
       args.databaseName,
     );
+  }
+
+  async callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR {
+    return this.query(
+      qh.callFetchRemote(!!args.branchName),
+      [args.remoteName, args.branchName],
+      args.databaseName,
+    );
+  }
+
+  async getMergeBase(args: t.RefsArgs): Promise<string> {
+    const res: t.RawRow = await this.query(
+      qh.mergeBase,
+      [args.toRefName, args.fromRefName],
+      args.databaseName,
+    );
+    return Object.values(res[0])[0] as string;
   }
 }
 

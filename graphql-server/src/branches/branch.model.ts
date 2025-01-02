@@ -29,6 +29,12 @@ export class Branch {
 
   @Field({ nullable: true })
   head?: string;
+
+  @Field({ nullable: true })
+  remote?: string;
+
+  @Field({ nullable: true })
+  remoteBranch?: string;
 }
 
 @ObjectType()
@@ -50,6 +56,8 @@ export function fromDoltBranchesRow(
     lastUpdated: convertToUTCDate(b.latest_commit_date),
     lastCommitter: b.latest_committer,
     tableNames: tns,
+    remote: b.remote,
+    remoteBranch: b.branch,
   };
 }
 

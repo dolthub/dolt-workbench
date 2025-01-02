@@ -4,6 +4,8 @@ export const BRANCH_SELECTOR_QUERY = gql`
   fragment BranchForBranchSelector on Branch {
     branchName
     databaseName
+    remote
+    remoteBranch
   }
   query BranchesForSelector($databaseName: String!) {
     allBranches(databaseName: $databaseName) {

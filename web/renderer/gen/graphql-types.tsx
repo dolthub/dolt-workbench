@@ -32,6 +32,8 @@ export type Branch = {
   head?: Maybe<Scalars['String']['output']>;
   lastCommitter: Scalars['String']['output'];
   lastUpdated: Scalars['Timestamp']['output'];
+  remote?: Maybe<Scalars['String']['output']>;
+  remoteBranch?: Maybe<Scalars['String']['output']>;
   table?: Maybe<Table>;
   tableNames: Array<Scalars['String']['output']>;
 };
@@ -175,6 +177,11 @@ export type DoltWriter = {
   displayName: Scalars['String']['output'];
   emailAddress: Scalars['String']['output'];
   username?: Maybe<Scalars['String']['output']>;
+};
+
+export type FetchRes = {
+  __typename?: 'FetchRes';
+  success: Scalars['Boolean']['output'];
 };
 
 export enum FileType {
@@ -424,7 +431,10 @@ export type Query = {
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
+  fetchRemote: FetchRes;
   pullWithDetails: PullWithDetails;
+  remoteBranchDiffCounts: RemoteBranchDiffCounts;
+  remoteBranches: BranchList;
   remotes: RemoteList;
   rowDiffs: RowDiffList;
   rows: RowList;
@@ -539,10 +549,31 @@ export type QueryDoltSchemasArgs = {
 };
 
 
+export type QueryFetchRemoteArgs = {
+  branchName?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+};
+
+
 export type QueryPullWithDetailsArgs = {
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
+};
+
+
+export type QueryRemoteBranchDiffCountsArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+};
+
+
+export type QueryRemoteBranchesArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  sortBy?: InputMaybe<SortBranchesBy>;
 };
 
 
@@ -664,6 +695,12 @@ export type Remote = {
   fetchSpecs?: Maybe<Array<Scalars['String']['output']>>;
   name: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+export type RemoteBranchDiffCounts = {
+  __typename?: 'RemoteBranchDiffCounts';
+  ahead?: Maybe<Scalars['Int']['output']>;
+  behind?: Maybe<Scalars['Int']['output']>;
 };
 
 export type RemoteList = {
@@ -939,14 +976,14 @@ export type SchemaDiffQueryVariables = Exact<{
 
 export type SchemaDiffQuery = { __typename?: 'Query', schemaDiff?: { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null } | null };
 
-export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string };
+export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null };
 
 export type BranchesForSelectorQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
 }>;
 
 
-export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string }> };
+export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null }> };
 
 export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
 
@@ -1090,6 +1127,15 @@ export type BranchListQueryVariables = Exact<{
 
 
 export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+
+export type RemoteBranchesQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  sortBy?: InputMaybe<SortBranchesBy>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RemoteBranchesQuery = { __typename?: 'Query', remoteBranches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
 
 export type DeleteBranchMutationVariables = Exact<{
   branchName: Scalars['String']['input'];
@@ -1235,6 +1281,26 @@ export type AddRemoteMutationVariables = Exact<{
 
 
 export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
+
+export type FetchRemoteQueryVariables = Exact<{
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  branchName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type FetchRemoteQuery = { __typename?: 'Query', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
+
+export type RemoteBranchDiffCountsFragment = { __typename?: 'RemoteBranchDiffCounts', ahead?: number | null, behind?: number | null };
+
+export type RemoteBranchDiffCountsQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type RemoteBranchDiffCountsQuery = { __typename?: 'Query', remoteBranchDiffCounts: { __typename?: 'RemoteBranchDiffCounts', ahead?: number | null, behind?: number | null } };
 
 export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
 
@@ -1474,6 +1540,8 @@ export const BranchForBranchSelectorFragmentDoc = gql`
     fragment BranchForBranchSelector on Branch {
   branchName
   databaseName
+  remote
+  remoteBranch
 }
     `;
 export const DoltWriterForHistoryFragmentDoc = gql`
@@ -1694,6 +1762,12 @@ export const PullDetailsFragmentDoc = gql`
   }
 }
     ${PullDetailsForPullDetailsFragmentDoc}`;
+export const RemoteBranchDiffCountsFragmentDoc = gql`
+    fragment RemoteBranchDiffCounts on RemoteBranchDiffCounts {
+  ahead
+  behind
+}
+    `;
 export const RemoteFragmentDoc = gql`
     fragment Remote on Remote {
   _id
@@ -3048,6 +3122,51 @@ export type BranchListQueryHookResult = ReturnType<typeof useBranchListQuery>;
 export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQuery>;
 export type BranchListSuspenseQueryHookResult = ReturnType<typeof useBranchListSuspenseQuery>;
 export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
+export const RemoteBranchesDocument = gql`
+    query RemoteBranches($databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+  remoteBranches(databaseName: $databaseName, sortBy: $sortBy, offset: $offset) {
+    list {
+      ...Branch
+    }
+    nextOffset
+  }
+}
+    ${BranchFragmentDoc}`;
+
+/**
+ * __useRemoteBranchesQuery__
+ *
+ * To run a query within a React component, call `useRemoteBranchesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteBranchesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteBranchesQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      sortBy: // value for 'sortBy'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useRemoteBranchesQuery(baseOptions: Apollo.QueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables> & ({ variables: RemoteBranchesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+      }
+export function useRemoteBranchesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+        }
+export function useRemoteBranchesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteBranchesQuery, RemoteBranchesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteBranchesQuery, RemoteBranchesQueryVariables>(RemoteBranchesDocument, options);
+        }
+export type RemoteBranchesQueryHookResult = ReturnType<typeof useRemoteBranchesQuery>;
+export type RemoteBranchesLazyQueryHookResult = ReturnType<typeof useRemoteBranchesLazyQuery>;
+export type RemoteBranchesSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchesSuspenseQuery>;
+export type RemoteBranchesQueryResult = Apollo.QueryResult<RemoteBranchesQuery, RemoteBranchesQueryVariables>;
 export const DeleteBranchDocument = gql`
     mutation DeleteBranch($branchName: String!, $databaseName: String!) {
   deleteBranch(branchName: $branchName, databaseName: $databaseName)
@@ -3621,6 +3740,98 @@ export function useAddRemoteMutation(baseOptions?: Apollo.MutationHookOptions<Ad
 export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation>;
 export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
 export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
+export const FetchRemoteDocument = gql`
+    query FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
+  fetchRemote(
+    remoteName: $remoteName
+    databaseName: $databaseName
+    branchName: $branchName
+  ) {
+    success
+  }
+}
+    `;
+
+/**
+ * __useFetchRemoteQuery__
+ *
+ * To run a query within a React component, call `useFetchRemoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchRemoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchRemoteQuery({
+ *   variables: {
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *      branchName: // value for 'branchName'
+ *   },
+ * });
+ */
+export function useFetchRemoteQuery(baseOptions: Apollo.QueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables> & ({ variables: FetchRemoteQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+      }
+export function useFetchRemoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+        }
+export function useFetchRemoteSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+        }
+export type FetchRemoteQueryHookResult = ReturnType<typeof useFetchRemoteQuery>;
+export type FetchRemoteLazyQueryHookResult = ReturnType<typeof useFetchRemoteLazyQuery>;
+export type FetchRemoteSuspenseQueryHookResult = ReturnType<typeof useFetchRemoteSuspenseQuery>;
+export type FetchRemoteQueryResult = Apollo.QueryResult<FetchRemoteQuery, FetchRemoteQueryVariables>;
+export const RemoteBranchDiffCountsDocument = gql`
+    query RemoteBranchDiffCounts($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
+  remoteBranchDiffCounts(
+    databaseName: $databaseName
+    toRefName: $toRefName
+    fromRefName: $fromRefName
+  ) {
+    ...RemoteBranchDiffCounts
+  }
+}
+    ${RemoteBranchDiffCountsFragmentDoc}`;
+
+/**
+ * __useRemoteBranchDiffCountsQuery__
+ *
+ * To run a query within a React component, call `useRemoteBranchDiffCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteBranchDiffCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteBranchDiffCountsQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      toRefName: // value for 'toRefName'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useRemoteBranchDiffCountsQuery(baseOptions: Apollo.QueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables> & ({ variables: RemoteBranchDiffCountsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
+      }
+export function useRemoteBranchDiffCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
+        }
+export function useRemoteBranchDiffCountsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
+        }
+export type RemoteBranchDiffCountsQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsQuery>;
+export type RemoteBranchDiffCountsLazyQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsLazyQuery>;
+export type RemoteBranchDiffCountsSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsSuspenseQuery>;
+export type RemoteBranchDiffCountsQueryResult = Apollo.QueryResult<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>;
 export const RemoteListDocument = gql`
     query RemoteList($databaseName: String!, $offset: Int) {
   remotes(databaseName: $databaseName, offset: $offset) {

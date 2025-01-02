@@ -1,4 +1,6 @@
-import { RemoteFragment, usePullFromRemoteMutation } from "@gen/graphql-types";
+import { RemoteFragment } from "@gen/graphql-types";
+import { useState } from "react";
+import useDefaultBranch from "@hooks/useDefaultBranch";
 import {
   Button,
   FormInput,
@@ -7,14 +9,10 @@ import {
   ModalInner,
   ModalOuter,
 } from "@dolthub/react-components";
-import { SyntheticEvent, useState } from "react";
-import useMutation from "@hooks/useMutation";
 import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
-import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
-import { database } from "@lib/urls";
-import router from "next/router";
-import useDefaultBranch from "@hooks/useDefaultBranch";
+import usePullFromRemote from "./usePullFromRemote";
+
 import css from "./index.module.css";
 
 type Props = {
@@ -33,47 +31,24 @@ export default function PullFromRemoteModal({
   const { defaultBranchName } = useDefaultBranch(params);
   const pullIntoBranch = params.refName || defaultBranchName;
   const [branchName, setBranchName] = useState("");
-  const { mutateFn: pull, ...res } = useMutation({
-    hook: usePullFromRemoteMutation,
-  });
-  const [message, setMessage] = useState("");
 
-  const onClose = () => {
-    setIsOpen(false);
-    res.setErr(undefined);
-    setBranchName("");
-    setMessage("");
-  };
+  const {
+    onSubmit,
+    onClose,
 
-  const onSubmit = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    const pullRes = await pull({
-      variables: {
-        databaseName: params.databaseName,
-        remoteName: remote.name,
-        branchName,
-      },
-    });
-    if (!pullRes.data) return;
-    const msg = pullRes.data.pullFromRemote.message;
-    if (
-      pullRes.data.pullFromRemote.conflicts ||
-      msg.includes("cannot fast forward")
-    ) {
-      res.setErr(new Error(msg));
-      return;
-    }
-
-    if (msg === "Everything up-to-date") {
-      setMessage(msg);
-      return;
-    }
-    await res.client
-      .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
-      .catch(console.error);
-    const { href, as } = database(params);
-    router.push(href, as).catch(console.error);
-  };
+    message,
+    setMessage,
+    loading,
+    err,
+    setErr,
+  } = usePullFromRemote(
+    { ...params, refName: pullIntoBranch },
+    remote,
+    branchName,
+    undefined,
+    setBranchName,
+    setIsOpen,
+  );
 
   return (
     <ModalOuter
@@ -98,13 +73,13 @@ export default function PullFromRemoteModal({
             onChangeString={(s: string) => {
               setBranchName(s);
               setMessage("");
-              res.setErr(undefined);
+              setErr(undefined);
             }}
             placeholder="Enter branch name from the remote to pull from"
             light
           />
         </ModalInner>
-        <ModalButtons err={res.err} onRequestClose={onClose}>
+        <ModalButtons err={err} onRequestClose={onClose}>
           {message.includes("Everything up-to-date") ? (
             <Button onClick={onClose}>Close</Button>
           ) : (
@@ -115,7 +90,7 @@ export default function PullFromRemoteModal({
         </ModalButtons>
         {message && <p className={css.message}>{message}</p>}
       </form>
-      <Loader loaded={!res.loading} />
+      <Loader loaded={!loading} />
     </ModalOuter>
   );
 }

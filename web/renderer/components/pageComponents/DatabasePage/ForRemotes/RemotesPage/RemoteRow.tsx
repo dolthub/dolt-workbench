@@ -1,6 +1,7 @@
 import { RemoteFragment } from "@gen/graphql-types";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { ButtonWithPopup } from "@dolthub/react-components";
+import useApolloError from "@hooks/useApolloError";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
 import { OptionalRefParams } from "@lib/params";
@@ -9,6 +10,8 @@ import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { fakeEscapePress } from "@dolthub/web-utils";
 import PullFromRemoteModal from "./PullFromRemoteModal";
 import PushToRemoteModal from "./PushToRemoteModal";
+import FetchRemoteModal from "./FetchRemoteModal";
+import FetchButton from "./FetchButton";
 import css from "./index.module.css";
 
 type Props = {
@@ -21,6 +24,8 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
   const [open, setOpen] = useState(false);
   const [pullModalOpen, setPullModalOpen] = useState(false);
   const [pushModalOpen, setPushModalOpen] = useState(false);
+  const [fetchModalOpen, setFetchModalOpen] = useState(false);
+  const [fetchError, setFetchError] = useApolloError(undefined);
 
   return (
     <tr>
@@ -43,6 +48,12 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
           >
             <div>
               <ul>
+                <FetchButton
+                  setFetchModalOpen={setFetchModalOpen}
+                  setErr={setFetchError}
+                  params={params}
+                  remote={remote}
+                />
                 <DropdownItem
                   onClick={() => {
                     setPullModalOpen(true);
@@ -83,6 +94,13 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
         setIsOpen={setPushModalOpen}
         params={params}
         remote={remote}
+      />
+      <FetchRemoteModal
+        isOpen={fetchModalOpen}
+        setIsOpen={setFetchModalOpen}
+        params={params}
+        remote={remote}
+        err={fetchError}
       />
     </tr>
   );

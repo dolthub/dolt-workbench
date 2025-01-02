@@ -1,4 +1,4 @@
-import { RemoteFragment, usePushToRemoteMutation } from "@gen/graphql-types";
+import { RemoteFragment } from "@gen/graphql-types";
 import {
   Button,
   FormInput,
@@ -8,11 +8,9 @@ import {
   ModalOuter,
   SuccessMsg,
 } from "@dolthub/react-components";
-import { SyntheticEvent, useState } from "react";
-import useMutation from "@hooks/useMutation";
 import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
-import useDefaultBranch from "@hooks/useDefaultBranch";
+import usePushToRemote from "./usePushToRemote";
 import css from "./index.module.css";
 
 type Props = {
@@ -28,42 +26,12 @@ export default function PushToRemoteModal({
   remote,
   params,
 }: Props) {
-  const { defaultBranchName } = useDefaultBranch(params);
-  const [branchName, setBranchName] = useState(
-    params.refName || defaultBranchName,
+  const { onClose, onSubmit, state, setState } = usePushToRemote(
+    params,
+    remote,
+    undefined,
+    setIsOpen,
   );
-  const [message, setMessage] = useState("");
-  const { mutateFn: push, ...res } = useMutation({
-    hook: usePushToRemoteMutation,
-  });
-
-  const onClose = () => {
-    setIsOpen(false);
-    res.setErr(undefined);
-    setBranchName("");
-    setMessage("");
-  };
-
-  const onSubmit = async (e: SyntheticEvent) => {
-    e.preventDefault();
-    const pushRes = await push({
-      variables: {
-        databaseName: params.databaseName,
-        remoteName: remote.name,
-        branchName,
-      },
-    });
-    if (!pushRes.data) {
-      return;
-    }
-    const msg = pushRes.data.pushToRemote.message;
-    if (!pushRes.data.pushToRemote.success) {
-      res.setErr(new Error(msg));
-      return;
-    }
-    setMessage(msg);
-  };
-
   return (
     <ModalOuter isOpen={isOpen} onRequestClose={onClose} title="Push to remote">
       <form onSubmit={onSubmit}>
@@ -77,29 +45,27 @@ export default function PushToRemoteModal({
             </Link>
           </p>
           <FormInput
-            value={branchName}
+            value={state.branchName}
             label="Branch name"
             onChangeString={(s: string) => {
-              setBranchName(s);
-              setMessage("");
-              res.setErr(undefined);
+              setState({ branchName: s, message: "", err: undefined });
             }}
             placeholder="Enter branch name to push to remote"
             light
           />
         </ModalInner>
-        <ModalButtons err={res.err} onRequestClose={onClose}>
-          {message ? (
+        <ModalButtons err={state.err} onRequestClose={onClose}>
+          {state.message ? (
             <Button onClick={onClose}>Close</Button>
           ) : (
-            <Button type="submit" disabled={!branchName.length}>
+            <Button type="submit" disabled={!state.branchName.length}>
               Push
             </Button>
           )}
         </ModalButtons>
-        <PushMessage message={message} />
+        <PushMessage message={state.message} />
       </form>
-      <Loader loaded={!res.loading} />
+      <Loader loaded={!state.loading} />
     </ModalOuter>
   );
 }
