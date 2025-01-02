@@ -1,5 +1,6 @@
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
+import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
 import {
   DatabaseConnectionFragment,
   DatabaseType,
@@ -56,7 +57,8 @@ export default function DatabaseItem({
   if (db === currentDatabase && conn.name === currentConnection.name) {
     return (
       <span className={css.DbItem}>
-        {dbName} <span className={css.viewing}>viewing</span>
+        {dbName}
+        <MdRemoveRedEye className={css.viewing} />
       </span>
     );
   }
