@@ -3,7 +3,7 @@
 }
 
 .branchAndTagSelect {
-  @apply w-[264px];
+  @apply w-[230px];
 }
 
 .selectForPostgres {

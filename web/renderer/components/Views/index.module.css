@@ -45,5 +45,5 @@
 }
 
 .viewing {
-  @apply py-0.5 mr-4 text-coral-400 font-semibold text-sm;
+  @apply py-0.5 mr-3 text-coral-400 bg-white px-2 rounded-full font-semibold text-sm;
 }

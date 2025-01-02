@@ -1,14 +1,14 @@
 .tableList {
-  @apply pb-4;
+  @apply pb-20;
 }
 
 .addTable {
   @apply hidden;
   @screen lg {
-    @apply flex my-8 mx-3 text-sm text-white;
+    @apply flex my-8 mx-3 text-sm text-white font-normal;
 
     &:hover {
-      @apply text-sky-300;
+      @apply text-[#FF8964];
     }
 
     svg {

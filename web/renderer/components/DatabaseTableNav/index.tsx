@@ -47,12 +47,6 @@ function Nav({
       })}
     >
       <div className={css.top}>
-        <div className={css.menuIcon}>
-          <GiHamburgerMenu
-            onClick={toggleMenu}
-            data-cy="left-nav-toggle-icon"
-          />
-        </div>
         <div className={css.topLine}>
           <div
             className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
@@ -71,6 +65,11 @@ function Nav({
               <NewBranchLink params={params} open={open} />
             </NotDoltWrapper>
           </HideForNoWritesWrapper>
+          <GiHamburgerMenu
+            onClick={toggleMenu}
+            className={css.menuIcon}
+            data-cy="left-nav-toggle-icon"
+          />
         </div>
         <div className={css.topLine}>
           {isPostgres && params.refName && (

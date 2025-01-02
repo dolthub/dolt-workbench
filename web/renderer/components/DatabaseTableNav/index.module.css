@@ -1,7 +1,7 @@
 .container {
   @apply hidden;
   @screen lg {
-    @apply bg-storm-500 pt-5 flex flex-col;
+    @apply bg-storm-500 pt-8 flex flex-col;
   }
 }
 
@@ -23,7 +23,7 @@
 }
 
 .top {
-  @apply pb-4 -mt-2;
+  @apply pb-4;
 }
 
 .topLine {
@@ -36,7 +36,7 @@
 .menuIcon {
   @apply hidden;
   @screen lg {
-    @apply flex justify-end items-center w-full pt-2 pb-4 px-4 cursor-pointer text-white;
+    @apply block cursor-pointer mx-1 text-white;
   }
 }
 
@@ -45,7 +45,7 @@
 }
 
 .openBranchSelector {
-  @apply opacity-100 transition-opacity duration-75 min-w-[200px] w-full;
+  @apply opacity-100 transition-opacity duration-75 min-w-[200px];
 }
 
 .openNav {
@@ -53,7 +53,7 @@
 }
 
 .createBranch {
-  @apply relative text-base;
+  @apply relative text-base ml-[0.8rem];
 }
 
 .createBranchDisabled a {
@@ -133,5 +133,5 @@
 }
 
 .selector {
-  @apply w-[264px] max-w-none;
+  @apply w-[230px] max-w-none;
 }
