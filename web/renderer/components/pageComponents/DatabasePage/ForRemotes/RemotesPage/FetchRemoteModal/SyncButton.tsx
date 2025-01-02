@@ -3,7 +3,7 @@ import {
   RemoteFragment,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
-import { Button, ErrorMsg } from "@dolthub/react-components";
+import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
 import { GoCheck } from "@react-icons/all-files/go/GoCheck";
 import usePullFromRemote from "../usePullFromRemote";
@@ -11,7 +11,7 @@ import usePushToRemote from "../usePushToRemote";
 import css from "./index.module.css";
 
 type SyncButtonProps = {
-  numbers: RemoteBranchDiffCountsFragment;
+  counts: RemoteBranchDiffCountsFragment;
   remote: RemoteFragment;
   params: OptionalRefParams;
   remoteBranchName: string;
@@ -19,25 +19,30 @@ type SyncButtonProps = {
 };
 
 export default function SyncButton({
-  numbers,
+  counts,
   params,
   remote,
   remoteBranchName,
   currentBranch,
 }: SyncButtonProps) {
-  const { onSubmit: onPull, err: pullErr } = usePullFromRemote(
+  const {
+    onSubmit: onPull,
+    err: pullErr,
+    loading: pullLoading,
+    message,
+  } = usePullFromRemote(
     { ...params, refName: currentBranch },
     remote,
     remoteBranchName,
     currentBranch,
   );
-  const { onSubmit: onPush, err: pushErr } = usePushToRemote(
+  const { onSubmit: onPush, state } = usePushToRemote(
     params,
     remote,
-    currentBranch,
     remoteBranchName,
   );
-  if (!numbers.ahead && !numbers.behind) {
+  const { ahead, behind } = counts;
+  if (!ahead && !behind) {
     return (
       <span className={css.upToDate}>
         <GoCheck />
@@ -46,23 +51,25 @@ export default function SyncButton({
     );
   }
   return (
-    <div className={css.buttons}>
-      {!!numbers.behind && (
-        <div>
+    <div>
+      <div className={css.buttons}>
+        {!!behind && (
           <Button.Link onClick={onPull} className={css.button}>
+            <SmallLoader loaded={!pullLoading} />
             <IoPushOutline className={css.pullIcon} /> Pull
-          </Button.Link>{" "}
-          {pullErr && <ErrorMsg err={pullErr} />}
-        </div>
-      )}
-      {!!numbers.ahead && (
-        <div>
+          </Button.Link>
+        )}
+        {!!ahead && (
           <Button.Link onClick={onPush} className={css.button}>
+            <SmallLoader loaded={!state.loading} />
             <IoPushOutline /> Push
           </Button.Link>
-          {pushErr && <ErrorMsg err={pushErr} />}
-        </div>
-      )}
+        )}
+      </div>
+      {pullErr && <ErrorMsg err={pullErr} />}
+      {state.err && <ErrorMsg err={state.err} />}
+      {message && <span> {message}</span>}
+      {state.message && <span> {state.message}</span>}
     </div>
   );
 }

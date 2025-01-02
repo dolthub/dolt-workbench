@@ -1,24 +1,24 @@
 import { RemoteBranchDiffCountsFragment } from "@gen/graphql-types";
 
 type ReturnType = {
-  branchNameWithRemotePrefix: string;
+  branchNameWithRemoteName: string;
   remoteBranchName: string;
 };
 
 export function getBranchName(branchName: string): ReturnType {
   if (branchName.startsWith("remotes/")) {
-    const branchNameWithRemotePrefix = branchName.slice(8);
-    const remoteBranchName = branchNameWithRemotePrefix
+    const branchNameWithRemoteName = branchName.slice(8);
+    const remoteBranchName = branchNameWithRemoteName
       .split("/")
       .slice(1)
       .join("/");
     return {
-      branchNameWithRemotePrefix,
+      branchNameWithRemoteName,
       remoteBranchName,
     };
   }
-  const remoteBranchName = branchName.split("/").slice(1).join("");
-  return { branchNameWithRemotePrefix: branchName, remoteBranchName };
+  const remoteBranchName = branchName.split("/").slice(1).join("/");
+  return { branchNameWithRemoteName: branchName, remoteBranchName };
 }
 
 export function getTooltipContent(

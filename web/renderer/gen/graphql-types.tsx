@@ -1282,8 +1282,6 @@ export type AddRemoteMutationVariables = Exact<{
 
 export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
 
-export type FetchResFragment = { __typename?: 'FetchRes', success: boolean };
-
 export type FetchRemoteQueryVariables = Exact<{
   remoteName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -1764,11 +1762,6 @@ export const PullDetailsFragmentDoc = gql`
   }
 }
     ${PullDetailsForPullDetailsFragmentDoc}`;
-export const FetchResFragmentDoc = gql`
-    fragment FetchRes on FetchRes {
-  success
-}
-    `;
 export const RemoteBranchDiffCountsFragmentDoc = gql`
     fragment RemoteBranchDiffCounts on RemoteBranchDiffCounts {
   ahead
@@ -3754,10 +3747,10 @@ export const FetchRemoteDocument = gql`
     databaseName: $databaseName
     branchName: $branchName
   ) {
-    ...FetchRes
+    success
   }
 }
-    ${FetchResFragmentDoc}`;
+    `;
 
 /**
  * __useFetchRemoteQuery__

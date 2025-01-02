@@ -1,9 +1,6 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_REMOTE = gql`
-  fragment FetchRes on FetchRes {
-    success
-  }
   query FetchRemote(
     $remoteName: String!
     $databaseName: String!
@@ -14,7 +11,7 @@ export const FETCH_REMOTE = gql`
       databaseName: $databaseName
       branchName: $branchName
     ) {
-      ...FetchRes
+      success
     }
   }
 `;

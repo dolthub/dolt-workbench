@@ -51,19 +51,19 @@ export default function RemoteBranches({
   });
 
   const branchesRes = useBranchesForSelectorQuery({ variables: params });
-  if (branchesRes.error) {
-    return <ErrorMsg err={branchesRes.error} />;
-  }
   if (branchesRes.loading) {
     return <Loader loaded={!branchesRes.loading} />;
+  }
+  if (branchesRes.error) {
+    return <ErrorMsg err={branchesRes.error} />;
   }
 
   return (
     <QueryHandler
-      result={{ ...res, data: res.data?.remoteBranches.list }}
+      result={res}
       render={data => (
         <Inner
-          remoteBranches={data}
+          remoteBranches={data.remoteBranches.list}
           params={params}
           currentBranch={currentBranch}
           remote={remote}

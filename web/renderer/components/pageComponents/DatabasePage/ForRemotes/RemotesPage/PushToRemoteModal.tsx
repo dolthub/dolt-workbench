@@ -1,5 +1,4 @@
 import { RemoteFragment } from "@gen/graphql-types";
-import { useState } from "react";
 import {
   Button,
   FormInput,
@@ -9,7 +8,6 @@ import {
   ModalOuter,
   SuccessMsg,
 } from "@dolthub/react-components";
-import useDefaultBranch from "@hooks/useDefaultBranch";
 import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
 import usePushToRemote from "./usePushToRemote";
@@ -28,19 +26,12 @@ export default function PushToRemoteModal({
   remote,
   params,
 }: Props) {
-  const { defaultBranchName } = useDefaultBranch(params);
-  const [branchName, setBranchName] = useState(
-    params.refName || defaultBranchName,
+  const { onClose, onSubmit, state, setState } = usePushToRemote(
+    params,
+    remote,
+    undefined,
+    setIsOpen,
   );
-  const { onClose, onSubmit, message, setMessage, loading, err, setErr } =
-    usePushToRemote(
-      params,
-      remote,
-      branchName,
-      undefined,
-      setBranchName,
-      setIsOpen,
-    );
   return (
     <ModalOuter isOpen={isOpen} onRequestClose={onClose} title="Push to remote">
       <form onSubmit={onSubmit}>
@@ -54,29 +45,27 @@ export default function PushToRemoteModal({
             </Link>
           </p>
           <FormInput
-            value={branchName}
+            value={state.branchName}
             label="Branch name"
             onChangeString={(s: string) => {
-              setBranchName(s);
-              setMessage("");
-              setErr(undefined);
+              setState({ branchName: s, message: "", err: undefined });
             }}
             placeholder="Enter branch name to push to remote"
             light
           />
         </ModalInner>
-        <ModalButtons err={err} onRequestClose={onClose}>
-          {message ? (
+        <ModalButtons err={state.err} onRequestClose={onClose}>
+          {state.message ? (
             <Button onClick={onClose}>Close</Button>
           ) : (
-            <Button type="submit" disabled={!branchName.length}>
+            <Button type="submit" disabled={!state.branchName.length}>
               Push
             </Button>
           )}
         </ModalButtons>
-        <PushMessage message={message} />
+        <PushMessage message={state.message} />
       </form>
-      <Loader loaded={!loading} />
+      <Loader loaded={!state.loading} />
     </ModalOuter>
   );
 }

@@ -1,6 +1,7 @@
 import { RemoteFragment } from "@gen/graphql-types";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { ButtonWithPopup } from "@dolthub/react-components";
+import useApolloError from "@hooks/useApolloError";
 import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
 import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
 import { OptionalRefParams } from "@lib/params";
@@ -24,6 +25,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
   const [pullModalOpen, setPullModalOpen] = useState(false);
   const [pushModalOpen, setPushModalOpen] = useState(false);
   const [fetchModalOpen, setFetchModalOpen] = useState(false);
+  const [fetchError, setFetchError] = useApolloError(undefined);
 
   return (
     <tr>
@@ -48,6 +50,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
               <ul>
                 <FetchButton
                   setFetchModalOpen={setFetchModalOpen}
+                  setErr={setFetchError}
                   params={params}
                   remote={remote}
                 />
@@ -97,6 +100,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
         setIsOpen={setFetchModalOpen}
         params={params}
         remote={remote}
+        err={fetchError}
       />
     </tr>
   );

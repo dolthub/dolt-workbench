@@ -486,7 +486,7 @@ export class DoltQueryFactory
     hasBranchName?: boolean,
   ): t.PR {
     return this.query(
-      qh.callFetchRemote(hasBranchName),
+      qh.callFetchRemote(!!hasBranchName),
       [args.remoteName, args.branchName],
       args.databaseName,
     );

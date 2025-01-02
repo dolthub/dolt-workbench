@@ -22,31 +22,31 @@ export default function RemoteBranchRow({
   params,
   currentBranch,
 }: Props) {
-  const { branchNameWithRemotePrefix, remoteBranchName } = getBranchName(
+  const { branchNameWithRemoteName, remoteBranchName } = getBranchName(
     branch.branchName,
   );
   const res = useRemoteBranchDiffCountsQuery({
     variables: {
       databaseName: params.databaseName,
       toRefName: currentBranch,
-      fromRefName: branchNameWithRemotePrefix,
+      fromRefName: branchNameWithRemoteName,
     },
   });
 
   return (
     <QueryHandler
-      result={{ ...res, data: res.data?.remoteBranchDiffCounts }}
+      result={res}
       render={data => (
         <tr>
-          <td>{branchNameWithRemotePrefix}</td>
+          <td>{branchNameWithRemoteName}</td>
           <BehindAheadCount
-            numbers={data}
+            counts={data.remoteBranchDiffCounts}
             currentBranch={currentBranch}
-            remoteAndBranchName={branchNameWithRemotePrefix}
+            remoteAndBranchName={branchNameWithRemoteName}
           />
           <td>
             <SyncButton
-              numbers={data}
+              counts={data.remoteBranchDiffCounts}
               params={params}
               remote={remote}
               remoteBranchName={remoteBranchName}

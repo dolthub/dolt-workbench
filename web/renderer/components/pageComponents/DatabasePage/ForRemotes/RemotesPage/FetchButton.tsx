@@ -4,25 +4,26 @@ import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { RemoteFragment, useFetchRemoteLazyQuery } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import useDefaultBranch from "@hooks/useDefaultBranch";
-import { ErrorMsg, SmallLoader } from "@dolthub/react-components";
-import useApolloError from "@hooks/useApolloError";
+import { SmallLoader } from "@dolthub/react-components";
 import { useState } from "react";
+import { SetApolloErrorType } from "@lib/errors/types";
 
 type Props = {
   setFetchModalOpen: (f: boolean) => void;
+  setErr: SetApolloErrorType;
   params: OptionalRefParams;
   remote: RemoteFragment;
 };
 
 export default function FetchButton({
   setFetchModalOpen,
+  setErr,
   params,
   remote,
 }: Props) {
   const { defaultBranchName } = useDefaultBranch(params);
   const branchName = params.refName || defaultBranchName;
   const [fetch] = useFetchRemoteLazyQuery();
-  const [err, setErr] = useApolloError(undefined);
   const [loading, setLoading] = useState(false);
 
   const onClick = async () => {
@@ -50,7 +51,6 @@ export default function FetchButton({
       <div>
         <SmallLoader loaded={!loading} />
         <span>Fetch from remote</span>
-        <ErrorMsg err={err} />
       </div>
     </DropdownItem>
   );
