@@ -760,7 +760,7 @@ __metadata:
   dependencies:
     "@apollo/server": "npm:^4.11.2"
     "@dolthub/web-utils": "npm:^0.1.2"
-    "@nestjs/apollo": "npm:^12.2.0"
+    "@nestjs/apollo": "npm:^12.2.2"
     "@nestjs/cli": "npm:^10.4.9"
     "@nestjs/common": "npm:^10.4.6"
     "@nestjs/config": "npm:^3.2.3"
@@ -1337,14 +1337,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/apollo@npm:^12.2.0":
-  version: 12.2.0
-  resolution: "@nestjs/apollo@npm:12.2.0"
+"@nestjs/apollo@npm:^12.2.2":
+  version: 12.2.2
+  resolution: "@nestjs/apollo@npm:12.2.2"
   dependencies:
     "@apollo/server-plugin-landing-page-graphql-playground": "npm:4.0.0"
     iterall: "npm:1.3.0"
     lodash.omit: "npm:4.5.0"
-    tslib: "npm:2.6.3"
+    tslib: "npm:2.8.1"
   peerDependencies:
     "@apollo/gateway": ^2.0.0
     "@apollo/server": ^4.3.2
@@ -1361,7 +1361,7 @@ __metadata:
       optional: true
     "@as-integrations/fastify":
       optional: true
-  checksum: 10c0/7373ff168315fa00274e875579fc30ce2f5bcff8e72a175c27d0bd171a9e9f49247d7657c23b9bf788e3409c45b486a62f2253bcf7c866a2cf923324a1228583
+  checksum: 10c0/3f79a5f6064102e69078f01956cb8d88f1ee2b2530161052cc7ecdb47fc6d451718617f8a8f7b1b0d6d43ade71e7699034fc9fe7d97bc45621194e4f498c0bb0
   languageName: node
   linkType: hard
 
@@ -8973,13 +8973,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:2.6.3, tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.5.0":
-  version: 2.6.3
-  resolution: "tslib@npm:2.6.3"
-  checksum: 10c0/2598aef53d9dbe711af75522464b2104724d6467b26a60f2bdac8297d2b5f1f6b86a71f61717384aa8fd897240467aaa7bcc36a0700a0faf751293d1331db39a
-  languageName: node
-  linkType: hard
-
 "tslib@npm:2.7.0":
   version: 2.7.0
   resolution: "tslib@npm:2.7.0"
@@ -8998,6 +8991,13 @@ __metadata:
   version: 2.8.1
   resolution: "tslib@npm:2.8.1"
   checksum: 10c0/9c4759110a19c53f992d9aae23aac5ced636e99887b51b9e61def52611732872ff7668757d4e4c61f19691e36f4da981cd9485e869b4a7408d689f6bf1f14e62
+  languageName: node
+  linkType: hard
+
+"tslib@npm:^2.1.0, tslib@npm:^2.4.0, tslib@npm:^2.5.0":
+  version: 2.6.3
+  resolution: "tslib@npm:2.6.3"
+  checksum: 10c0/2598aef53d9dbe711af75522464b2104724d6467b26a60f2bdac8297d2b5f1f6b86a71f61717384aa8fd897240467aaa7bcc36a0700a0faf751293d1331db39a
   languageName: node
   linkType: hard
 
