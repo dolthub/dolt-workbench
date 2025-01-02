@@ -97,8 +97,7 @@ export class RemoteResolver {
   @Query(_returns => FetchRes)
   async fetchRemote(@Args() args: RemoteMaybeBranchArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
-    const hasBranchName = !!args.branchName;
-    const res = await conn.callFetchRemote(args, hasBranchName);
+    const res = await conn.callFetchRemote(args);
     if (res.length === 0) {
       throw new Error("No response from fetch");
     }
