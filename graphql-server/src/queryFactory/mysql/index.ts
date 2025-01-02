@@ -344,7 +344,7 @@ export class MySQLQueryFactory
     throw notDoltError("fetch remote");
   }
 
-  async callMergeBase(_: t.RefsArgs): t.PR {
+  async getMergeBase(_: t.RefsArgs): Promise<string> {
     throw notDoltError("merge base");
   }
 }

@@ -53,11 +53,11 @@ export class FetchRes {
 }
 
 @ObjectType()
-export class AheadAndBehindCount {
-  @Field({ nullable: true })
+export class RemoteBranchDiffCounts {
+  @Field(_type => Int, { nullable: true })
   ahead?: number;
 
-  @Field({ nullable: true })
+  @Field(_type => Int, { nullable: true })
   behind?: number;
 }
 

@@ -1,5 +1,5 @@
 import {
-  AheadAndBehindCountFragment,
+  RemoteBranchDiffCountsFragment,
   RemoteFragment,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
@@ -11,7 +11,7 @@ import usePushToRemote from "../usePushToRemote";
 import css from "./index.module.css";
 
 type SyncButtonProps = {
-  numbers: AheadAndBehindCountFragment;
+  numbers: RemoteBranchDiffCountsFragment;
   remote: RemoteFragment;
   params: OptionalRefParams;
   remoteBranchName: string;

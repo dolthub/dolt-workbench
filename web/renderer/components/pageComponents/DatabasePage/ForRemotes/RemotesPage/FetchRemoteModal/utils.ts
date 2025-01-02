@@ -1,4 +1,4 @@
-import { AheadAndBehindCountFragment } from "@gen/graphql-types";
+import { RemoteBranchDiffCountsFragment } from "@gen/graphql-types";
 
 type ReturnType = {
   branchNameWithRemotePrefix: string;
@@ -22,7 +22,7 @@ export function getBranchName(branchName: string): ReturnType {
 }
 
 export function getTooltipContent(
-  numbers: AheadAndBehindCountFragment,
+  numbers: RemoteBranchDiffCountsFragment,
   currentBranch: string,
 ): string {
   const ahead = numbers.ahead

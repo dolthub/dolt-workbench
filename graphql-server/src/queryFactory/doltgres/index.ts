@@ -472,10 +472,13 @@ export class DoltgresQueryFactory
     );
   }
 
-  async callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR {
+  async callFetchRemote(
+    args: t.RemoteMaybeBranchArgs,
+    hasBranchName?: boolean,
+  ): t.PR {
     return this.query(
-      qh.callFetchRemote(args.branchName),
-      [args.remoteName],
+      qh.callFetchRemote(hasBranchName),
+      [args.remoteName, args.branchName],
       args.databaseName,
     );
   }

@@ -19,12 +19,6 @@ export type Scalars = {
   Upload: { input: any; output: any; }
 };
 
-export type AheadAndBehindCount = {
-  __typename?: 'AheadAndBehindCount';
-  ahead?: Maybe<Scalars['Float']['output']>;
-  behind?: Maybe<Scalars['Float']['output']>;
-};
-
 export type AuthorInfo = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
@@ -420,7 +414,6 @@ export type PushRes = {
 
 export type Query = {
   __typename?: 'Query';
-  aheadAndBehindCount: AheadAndBehindCount;
   allBranches: Array<Branch>;
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
@@ -440,6 +433,7 @@ export type Query = {
   doltSchemas: Array<SchemaItem>;
   fetchRemote: FetchRes;
   pullWithDetails: PullWithDetails;
+  remoteBranchDiffCounts: RemoteBranchDiffCounts;
   remoteBranches: BranchList;
   remotes: RemoteList;
   rowDiffs: RowDiffList;
@@ -456,13 +450,6 @@ export type Query = {
   tag?: Maybe<Tag>;
   tags: TagList;
   views: Array<SchemaItem>;
-};
-
-
-export type QueryAheadAndBehindCountArgs = {
-  databaseName: Scalars['String']['input'];
-  fromRefName: Scalars['String']['input'];
-  toRefName: Scalars['String']['input'];
 };
 
 
@@ -573,6 +560,13 @@ export type QueryPullWithDetailsArgs = {
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
+};
+
+
+export type QueryRemoteBranchDiffCountsArgs = {
+  databaseName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
 };
 
 
@@ -701,6 +695,12 @@ export type Remote = {
   fetchSpecs?: Maybe<Array<Scalars['String']['output']>>;
   name: Scalars['String']['output'];
   url: Scalars['String']['output'];
+};
+
+export type RemoteBranchDiffCounts = {
+  __typename?: 'RemoteBranchDiffCounts';
+  ahead?: Maybe<Scalars['Int']['output']>;
+  behind?: Maybe<Scalars['Int']['output']>;
 };
 
 export type RemoteList = {
@@ -1293,16 +1293,16 @@ export type FetchRemoteQueryVariables = Exact<{
 
 export type FetchRemoteQuery = { __typename?: 'Query', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
 
-export type AheadAndBehindCountFragment = { __typename?: 'AheadAndBehindCount', ahead?: number | null, behind?: number | null };
+export type RemoteBranchDiffCountsFragment = { __typename?: 'RemoteBranchDiffCounts', ahead?: number | null, behind?: number | null };
 
-export type AheadAndBehindCountQueryVariables = Exact<{
+export type RemoteBranchDiffCountsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
 }>;
 
 
-export type AheadAndBehindCountQuery = { __typename?: 'Query', aheadAndBehindCount: { __typename?: 'AheadAndBehindCount', ahead?: number | null, behind?: number | null } };
+export type RemoteBranchDiffCountsQuery = { __typename?: 'Query', remoteBranchDiffCounts: { __typename?: 'RemoteBranchDiffCounts', ahead?: number | null, behind?: number | null } };
 
 export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
 
@@ -1769,8 +1769,8 @@ export const FetchResFragmentDoc = gql`
   success
 }
     `;
-export const AheadAndBehindCountFragmentDoc = gql`
-    fragment AheadAndBehindCount on AheadAndBehindCount {
+export const RemoteBranchDiffCountsFragmentDoc = gql`
+    fragment RemoteBranchDiffCounts on RemoteBranchDiffCounts {
   ahead
   behind
 }
@@ -3793,29 +3793,29 @@ export type FetchRemoteQueryHookResult = ReturnType<typeof useFetchRemoteQuery>;
 export type FetchRemoteLazyQueryHookResult = ReturnType<typeof useFetchRemoteLazyQuery>;
 export type FetchRemoteSuspenseQueryHookResult = ReturnType<typeof useFetchRemoteSuspenseQuery>;
 export type FetchRemoteQueryResult = Apollo.QueryResult<FetchRemoteQuery, FetchRemoteQueryVariables>;
-export const AheadAndBehindCountDocument = gql`
-    query AheadAndBehindCount($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
-  aheadAndBehindCount(
+export const RemoteBranchDiffCountsDocument = gql`
+    query RemoteBranchDiffCounts($databaseName: String!, $toRefName: String!, $fromRefName: String!) {
+  remoteBranchDiffCounts(
     databaseName: $databaseName
     toRefName: $toRefName
     fromRefName: $fromRefName
   ) {
-    ...AheadAndBehindCount
+    ...RemoteBranchDiffCounts
   }
 }
-    ${AheadAndBehindCountFragmentDoc}`;
+    ${RemoteBranchDiffCountsFragmentDoc}`;
 
 /**
- * __useAheadAndBehindCountQuery__
+ * __useRemoteBranchDiffCountsQuery__
  *
- * To run a query within a React component, call `useAheadAndBehindCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useAheadAndBehindCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useRemoteBranchDiffCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteBranchDiffCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAheadAndBehindCountQuery({
+ * const { data, loading, error } = useRemoteBranchDiffCountsQuery({
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      toRefName: // value for 'toRefName'
@@ -3823,22 +3823,22 @@ export const AheadAndBehindCountDocument = gql`
  *   },
  * });
  */
-export function useAheadAndBehindCountQuery(baseOptions: Apollo.QueryHookOptions<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables> & ({ variables: AheadAndBehindCountQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+export function useRemoteBranchDiffCountsQuery(baseOptions: Apollo.QueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables> & ({ variables: RemoteBranchDiffCountsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>(AheadAndBehindCountDocument, options);
+        return Apollo.useQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
       }
-export function useAheadAndBehindCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>) {
+export function useRemoteBranchDiffCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>(AheadAndBehindCountDocument, options);
+          return Apollo.useLazyQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
         }
-export function useAheadAndBehindCountSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>) {
+export function useRemoteBranchDiffCountsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>) {
           const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>(AheadAndBehindCountDocument, options);
+          return Apollo.useSuspenseQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
         }
-export type AheadAndBehindCountQueryHookResult = ReturnType<typeof useAheadAndBehindCountQuery>;
-export type AheadAndBehindCountLazyQueryHookResult = ReturnType<typeof useAheadAndBehindCountLazyQuery>;
-export type AheadAndBehindCountSuspenseQueryHookResult = ReturnType<typeof useAheadAndBehindCountSuspenseQuery>;
-export type AheadAndBehindCountQueryResult = Apollo.QueryResult<AheadAndBehindCountQuery, AheadAndBehindCountQueryVariables>;
+export type RemoteBranchDiffCountsQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsQuery>;
+export type RemoteBranchDiffCountsLazyQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsLazyQuery>;
+export type RemoteBranchDiffCountsSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsSuspenseQuery>;
+export type RemoteBranchDiffCountsQueryResult = Apollo.QueryResult<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>;
 export const RemoteListDocument = gql`
     query RemoteList($databaseName: String!, $offset: Int) {
   remotes(databaseName: $databaseName, offset: $offset) {

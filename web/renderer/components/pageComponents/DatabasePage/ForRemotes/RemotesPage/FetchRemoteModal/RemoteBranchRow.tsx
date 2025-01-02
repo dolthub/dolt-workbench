@@ -2,7 +2,7 @@ import { QueryHandler } from "@dolthub/react-components";
 import {
   BranchFragment,
   RemoteFragment,
-  useAheadAndBehindCountQuery,
+  useRemoteBranchDiffCountsQuery,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import { getBranchName } from "./utils";
@@ -25,7 +25,7 @@ export default function RemoteBranchRow({
   const { branchNameWithRemotePrefix, remoteBranchName } = getBranchName(
     branch.branchName,
   );
-  const res = useAheadAndBehindCountQuery({
+  const res = useRemoteBranchDiffCountsQuery({
     variables: {
       databaseName: params.databaseName,
       toRefName: currentBranch,
@@ -35,7 +35,7 @@ export default function RemoteBranchRow({
 
   return (
     <QueryHandler
-      result={{ ...res, data: res.data?.aheadAndBehindCount }}
+      result={{ ...res, data: res.data?.remoteBranchDiffCounts }}
       render={data => (
         <tr>
           <td>{branchNameWithRemotePrefix}</td>

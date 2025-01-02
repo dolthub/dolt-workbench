@@ -481,20 +481,24 @@ export class DoltQueryFactory
     );
   }
 
-  async callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR {
+  async callFetchRemote(
+    args: t.RemoteMaybeBranchArgs,
+    hasBranchName?: boolean,
+  ): t.PR {
     return this.query(
-      qh.callFetchRemote(args.branchName),
-      [args.remoteName],
+      qh.callFetchRemote(hasBranchName),
+      [args.remoteName, args.branchName],
       args.databaseName,
     );
   }
 
-  async callMergeBase(args: t.RefsArgs): t.PR {
-    return this.query(
+  async getMergeBase(args: t.RefsArgs): Promise<string> {
+    const res: t.RawRow = await this.query(
       qh.mergeBase,
       [args.toRefName, args.fromRefName],
       args.databaseName,
     );
+    return Object.values(res[0])[0] as string;
   }
 }
 

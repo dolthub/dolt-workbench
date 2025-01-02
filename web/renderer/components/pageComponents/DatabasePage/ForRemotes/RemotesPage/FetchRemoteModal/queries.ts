@@ -20,21 +20,21 @@ export const FETCH_REMOTE = gql`
 `;
 
 export const AHEAD_BEHIND_COUNT = gql`
-  fragment AheadAndBehindCount on AheadAndBehindCount {
+  fragment RemoteBranchDiffCounts on RemoteBranchDiffCounts {
     ahead
     behind
   }
-  query AheadAndBehindCount(
+  query RemoteBranchDiffCounts(
     $databaseName: String!
     $toRefName: String!
     $fromRefName: String!
   ) {
-    aheadAndBehindCount(
+    remoteBranchDiffCounts(
       databaseName: $databaseName
       toRefName: $toRefName
       fromRefName: $fromRefName
     ) {
-      ...AheadAndBehindCount
+      ...RemoteBranchDiffCounts
     }
   }
 `;

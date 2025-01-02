@@ -9,7 +9,7 @@ import {
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
 import {
-  AheadAndBehindCount,
+  RemoteBranchDiffCounts,
   FetchRes,
   fromFetchRes,
   fromPullRes,
@@ -40,7 +40,7 @@ export class RemoteMaybeBranchArgs extends RemoteArgs {
 }
 
 @ArgsType()
-export class AheadAndBehindCountArgs extends DBArgs {
+export class RemoteBranchDiffCountsArgs extends DBArgs {
   @Field()
   fromRefName: string;
 
@@ -97,7 +97,8 @@ export class RemoteResolver {
   @Query(_returns => FetchRes)
   async fetchRemote(@Args() args: RemoteMaybeBranchArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
-    const res = await conn.callFetchRemote(args);
+    const hasBranchName = !!args.branchName;
+    const res = await conn.callFetchRemote(args, hasBranchName);
     if (res.length === 0) {
       throw new Error("No response from fetch");
     }
@@ -108,13 +109,12 @@ export class RemoteResolver {
   // 1. Identify the merge base of the two branches.
   // 2. Calculate the 'ahead' count as the number of commits on the local branch that come after the merge base.
   // 3. Calculate the 'behind' count as the number of commits on the remote branch that come after the merge base.
-  @Query(_returns => AheadAndBehindCount)
-  async aheadAndBehindCount(
-    @Args() args: AheadAndBehindCountArgs,
-  ): Promise<AheadAndBehindCount> {
+  @Query(_returns => RemoteBranchDiffCounts)
+  async remoteBranchDiffCounts(
+    @Args() args: RemoteBranchDiffCountsArgs,
+  ): Promise<RemoteBranchDiffCounts> {
     const conn = this.conn.connection();
-    const res = await conn.callMergeBase(args);
-    const mergeBase = Object.values(res[0])[0];
+    const mergeBase = await conn.getMergeBase(args);
     const aheadLogs = await conn.getTwoDotLogs({
       toRefName: mergeBase,
       fromRefName: args.toRefName,

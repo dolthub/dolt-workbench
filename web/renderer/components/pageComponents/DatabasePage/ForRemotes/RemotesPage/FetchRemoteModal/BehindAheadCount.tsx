@@ -1,10 +1,10 @@
-import { AheadAndBehindCountFragment } from "@gen/graphql-types";
+import { RemoteBranchDiffCountsFragment } from "@gen/graphql-types";
 import { Tooltip } from "@dolthub/react-components";
 import { getTooltipContent } from "./utils";
 import css from "./index.module.css";
 
 type Props = {
-  numbers: AheadAndBehindCountFragment;
+  numbers: RemoteBranchDiffCountsFragment;
   currentBranch: string;
   remoteAndBranchName: string;
 };

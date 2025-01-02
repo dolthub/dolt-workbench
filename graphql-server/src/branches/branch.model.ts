@@ -43,15 +43,6 @@ export class BranchList extends ListOffsetRes {
   list: Branch[];
 }
 
-@ObjectType()
-export class AheadOrBehind {
-  @Field({ nullable: true })
-  ahead?: number;
-
-  @Field({ nullable: true })
-  behind?: number;
-}
-
 export function fromDoltBranchesRow(
   databaseName: string,
   b: RawRow,
