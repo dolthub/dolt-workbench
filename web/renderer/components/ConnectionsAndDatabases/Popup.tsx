@@ -3,6 +3,7 @@ import { DatabaseParams } from "@lib/params";
 import cx from "classnames";
 import Link from "@components/links/Link";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
+import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
 import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
 import { excerpt } from "@dolthub/web-utils";
@@ -60,7 +61,7 @@ export default function Popup({
                   </span>
                   <DatabaseTypeLabel conn={conn} />
                   {conn.name === currentConnection.name && (
-                    <span className={css.viewing}>viewing</span>
+                    <MdRemoveRedEye className={css.viewing} />
                   )}
                 </div>
                 <FaChevronRight className={css.arrow} />

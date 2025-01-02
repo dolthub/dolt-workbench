@@ -89,7 +89,7 @@
 }
 
 .viewing {
-  @apply text-[#FF8964] text-sm bg-coral-50 ml-2 rounded-full px-3;
+  @apply w-4 text-link-1 ml-2;
 }
 
 .arrow {
