@@ -1,7 +1,7 @@
 .container {
   @apply hidden;
   @screen lg {
-    @apply bg-storm-500 pt-8 flex flex-col;
+    @apply bg-storm-500 pt-6 flex flex-col;
   }
 }
 
@@ -23,11 +23,11 @@
 }
 
 .top {
-  @apply pb-4;
+  @apply pb-2;
 }
 
 .topLine {
-  @apply flex justify-between items-center w-full pb-4 px-4;
+  @apply flex justify-between items-center w-full pb-2 px-4;
   @screen lg {
     @apply pl-4 pr-3;
   }

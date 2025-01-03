@@ -25,7 +25,7 @@
 .item:hover {
   .icon,
   .name {
-    @apply text-sky-900 opacity-100;
+    @apply text-storm-600;
   }
 }
 
@@ -43,7 +43,7 @@
 }
 
 .name {
-  @apply text-white text-sm font-semibold;
+  @apply text-white text-sm font-normal;
 }
 
 .viewing {

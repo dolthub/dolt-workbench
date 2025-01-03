@@ -18,7 +18,7 @@
 }
 
 .empty {
-  @apply my-4 mx-5;
+  @apply my-4 mx-5 text-white;
 }
 
 .bottom {
