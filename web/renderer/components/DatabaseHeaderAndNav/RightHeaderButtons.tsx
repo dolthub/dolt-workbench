@@ -1,6 +1,6 @@
 import { OptionalRefParams } from "@lib/params";
 import AddItemDropdown from "./AddItemDropdown";
-import ResetConnectionButton from "./RefreshConnectionButton";
+import RefreshConnectionButton from "./RefreshConnectionButton";
 import css from "./index.module.css";
 
 type Props = {
@@ -10,8 +10,8 @@ type Props = {
 export default function RightHeaderButtons(props: Props) {
   return (
     <div className={css.topRight}>
+      <RefreshConnectionButton />
       <AddItemDropdown params={props.params} />
-      <ResetConnectionButton />
     </div>
   );
 }
