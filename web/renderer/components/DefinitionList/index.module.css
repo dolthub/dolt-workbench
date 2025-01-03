@@ -2,16 +2,16 @@
   @apply mb-10;
 
   h4 {
-    @apply mx-3 mb-1.5 mt-3 text-base;
+    @apply mx-3 mb-1.5 mt-3 text-base text-storm-50;
   }
 }
 
 .text {
-  @apply mb-5 mt-2 mx-5;
+  @apply mb-5 mt-2 mx-5 text-white;
 }
 
 .icon {
-  @apply text-xl mr-2 text-primary rounded-full opacity-25;
+  @apply text-xl mr-2 text-white rounded-full opacity-20;
 }
 
 .item {
@@ -22,11 +22,10 @@
   }
 }
 
-.item:hover .icon {
-  @apply opacity-100;
-
-  &:hover {
-    @apply text-sky-900;
+.item:hover {
+  .icon,
+  .name {
+    @apply text-sky-900 opacity-100;
   }
 }
 
@@ -40,15 +39,15 @@
 
 .selected,
 .item:hover {
-  @apply bg-white text-link-2;
+  @apply bg-storm-200 text-link-2;
 }
 
 .name {
-  @apply text-link-1 text-sm font-semibold;
+  @apply text-white text-sm font-semibold;
 }
 
 .viewing {
-  @apply py-0.5 mr-4 text-coral-400 font-semibold text-sm;
+  @apply py-0.5 mr-3 text-coral-400 bg-white rounded-full px-2 font-semibold text-sm;
 }
 
 .smallLoader {

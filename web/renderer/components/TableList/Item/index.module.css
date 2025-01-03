@@ -3,7 +3,7 @@
 }
 
 .buttonIcon {
-  @apply text-primary opacity-25 text-2xl mr-4 h-6 mt-1 rounded-full;
+  @apply hidden text-sky-900 text-2xl mr-4 h-6 mt-1 rounded-full font-normal;
 
   &:focus {
     @apply widget-shadow-lightblue outline-none;
@@ -12,41 +12,46 @@
 
 .active,
 .item:hover {
-  @apply bg-white;
-
-  .buttonIcon {
-    @apply font-semibold;
-  }
+  @apply bg-storm-50 text-storm-600;
 }
 
 .item:hover .buttonIcon {
-  @apply opacity-100;
-
-  &:hover {
-    @apply text-sky-900;
-  }
+  @apply block;
 }
 
 .isExpanded {
-  background-color: #fafbfc;
+  @apply bg-[#fafbfc];
+  .buttonIcon {
+    @apply block;
+  }
+}
+
+.isExpanded .tableName {
+  @apply text-storm-600 font-semibold;
+}
+
+.isExpanded .table {
+  @apply text-storm-600 font-semibold bg-storm-50;
 }
 
 .table {
   @apply flex justify-between text-sm;
+  &:hover {
+    @apply bg-storm-50;
+    .tableName {
+      @apply text-storm-600;
+    }
+  }
 }
 
 .tableName {
   @apply hidden;
 
   @screen lg {
-    @apply flex p-3 text-link-1 font-semibold w-full text-sm;
+    @apply flex p-3 text-white w-full text-sm;
 
     svg {
       @apply inline-block text-sm mt-1 mr-2;
-    }
-
-    &:hover {
-      @apply text-link-2;
     }
 
     &:focus {
@@ -72,5 +77,5 @@
 }
 
 .tableStatus {
-  @apply text-coral-400 pr-4 mr-1 font-semibold;
+  @apply text-coral-400 bg-white rounded-full py-0.5 px-2 mr-3 font-semibold;
 }

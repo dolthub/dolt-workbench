@@ -92,7 +92,7 @@ export default function BranchAndTagSelector(props: Props) {
       className={cx(css.branchAndTagSelect, {
         [css.selectForPostgres]: !!props.isPostgres,
       })}
-      label={props.isPostgres ? "Branch" : undefined}
+      label="Branch:"
       horizontal
       selectedOptionFirst
       light

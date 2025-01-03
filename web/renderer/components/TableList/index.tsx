@@ -7,7 +7,7 @@ import { Maybe } from "@dolthub/web-utils";
 import useTableNames from "@hooks/useTableNames";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { createTable } from "@lib/urls";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { useEffect } from "react";
 import Item from "./Item";
 import css from "./index.module.css";
@@ -33,25 +33,25 @@ function Inner(props: InnerProps) {
     <div>
       <Tooltip id="primary-key-tip" content="primary key" place="left" />
       {props.tables.length ? (
-        <>
-          <ol>
-            {props.tables.map(t => (
-              <Item key={t} tableName={t} params={props.params} />
-            ))}
-          </ol>
-          <SchemaDiagramButton {...props} />
-        </>
+        <ol className={css.tableList}>
+          {props.tables.map(t => (
+            <Item key={t} tableName={t} params={props.params} />
+          ))}
+        </ol>
       ) : (
         <p className={css.empty}>
           No tables found for <code>{props.params.refName}</code>
         </p>
       )}
-      <HideForNoWritesWrapper params={props.params}>
-        <Link {...createTable(props.params)} className={css.addTable}>
-          <AiOutlinePlus />
-          Add new table
-        </Link>
-      </HideForNoWritesWrapper>
+      <div className={css.bottom}>
+        {props.tables.length > 0 && <SchemaDiagramButton {...props} />}
+        <HideForNoWritesWrapper params={props.params}>
+          <Link {...createTable(props.params)} className={css.addTable}>
+            <AiOutlinePlusCircle />
+            Add new table
+          </Link>
+        </HideForNoWritesWrapper>
+      </div>
     </div>
   );
 }

@@ -3,7 +3,7 @@
 }
 
 .branchAndTagSelect {
-  @apply min-w-[270px] max-w-[270px] w-full;
+  @apply w-[230px];
 }
 
 .selectForPostgres {
@@ -31,7 +31,7 @@
 }
 
 .branchLabel {
-  @apply mt-1.5;
+  @apply mt-2 mr-2 text-storm-50 font-normal text-sm w-[3.3rem];
 }
 
 .doltDisabled {
