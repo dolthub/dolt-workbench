@@ -32,11 +32,11 @@
 }
 
 .left {
-  @apply w-1/2 border-r border-stone-100 pb-3;
+  @apply w-1/2 border-r border-stone-100;
 }
 
 .right {
-  @apply w-1/2 pb-3;
+  @apply w-1/2;
 }
 
 .header {
@@ -47,7 +47,11 @@
 }
 
 .connection {
-  @apply h-16 flex-col items-start w-full px-4;
+  @apply h-16 flex-col items-start w-full px-4 border-b border-storm-50 border-opacity-40;
+}
+
+.connection:last-child {
+  @apply border-none rounded-bl;
 }
 
 .wrench {
@@ -101,7 +105,7 @@
 }
 
 .DbItem {
-  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center;
+  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center justify-between;
   svg {
     @apply font-normal h-3;
   }
