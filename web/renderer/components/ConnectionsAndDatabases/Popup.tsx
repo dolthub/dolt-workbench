@@ -28,7 +28,6 @@ export default function Popup({
   storedConnections,
   state,
 }: Props) {
-  console.log(state);
   return (
     <div className={css.container}>
       <div className={css.top}>
@@ -68,7 +67,7 @@ export default function Popup({
                 <FaChevronRight className={css.arrow} />
               </div>
               <div className={css.connectionUrl}>
-                {excerpt(conn.connectionUrl, 42)}
+                {excerpt(getHostAndPort(conn.connectionUrl), 42)}
               </div>
             </Button.Link>
           ))}
@@ -89,4 +88,9 @@ export default function Popup({
       </div>
     </div>
   );
+}
+
+function getHostAndPort(connectionString: string) {
+  const url = new URL(connectionString);
+  return `${url.hostname}:${url.port}`;
 }
