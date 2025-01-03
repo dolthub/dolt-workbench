@@ -96,8 +96,8 @@ function getDiffRange(p: ps.DiffParams): string {
 export const releases = (p: ps.OptionalRefParams): Route =>
   database(p).addStatic("releases").withQuery({ refName: p.refName });
 
-export const remotes = (p: ps.DatabaseParams): Route =>
-  database(p).addStatic("remotes");
+export const remotes = (p: ps.OptionalRefParams): Route =>
+  database(p).addStatic("remotes").withQuery({ refName: p.refName });
 
 export const newRemote = (p: ps.DatabaseParams): Route =>
   remotes(p).addStatic("new");

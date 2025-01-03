@@ -46,6 +46,21 @@ export class PushRes {
   message: string;
 }
 
+@ObjectType()
+export class FetchRes {
+  @Field()
+  success: boolean;
+}
+
+@ObjectType()
+export class RemoteBranchDiffCounts {
+  @Field(_type => Int, { nullable: true })
+  ahead?: number;
+
+  @Field(_type => Int, { nullable: true })
+  behind?: number;
+}
+
 export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
   return {
     _id: `databases/${databaseName}/remotes/${r.name}`,
@@ -79,5 +94,11 @@ export function fromPushRes(r: RawRow): PushRes {
   return {
     success: r.status === "0",
     message: r.message,
+  };
+}
+
+export function fromFetchRes(r: RawRow): FetchRes {
+  return {
+    success: r.status === "0",
   };
 }

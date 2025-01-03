@@ -1,5 +1,4 @@
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
 import {
   DatabaseConnectionFragment,
@@ -67,8 +66,7 @@ export default function DatabaseItem({
       className={cx(css.DbItem, css.link)}
       onClick={async () => onClick(db)}
     >
-      <span>{dbName}</span>
-      <FaChevronRight />
+      {dbName}
     </Button.Link>
   );
 }

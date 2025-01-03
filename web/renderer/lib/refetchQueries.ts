@@ -140,3 +140,16 @@ export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
     cache.gc();
   },
 };
+
+export const refetchRemoteBranchesQueries = (
+  variables: RequiredRefsParams,
+): RefetchQueries => [
+  {
+    query: gen.RemoteBranchesDocument,
+    variables,
+  },
+  {
+    query: gen.RemoteBranchDiffCountsDocument,
+    variables,
+  },
+];

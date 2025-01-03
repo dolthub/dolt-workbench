@@ -87,6 +87,16 @@ export class BranchResolver {
     return fromBranchListRes(res, args);
   }
 
+  @Query(_returns => BranchList)
+  async remoteBranches(@Args() args: ListBranchesArgs): Promise<BranchList> {
+    const conn = this.conn.connection();
+    const res = await conn.getRemoteBranches({
+      ...args,
+      offset: args.offset ?? 0,
+    });
+    return fromBranchListRes(res, args);
+  }
+
   @Query(_returns => [Branch])
   async allBranches(@Args() args: ListBranchesArgs): Promise<Branch[]> {
     const conn = this.conn.connection();

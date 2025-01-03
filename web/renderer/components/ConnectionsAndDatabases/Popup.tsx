@@ -28,6 +28,7 @@ export default function Popup({
   storedConnections,
   state,
 }: Props) {
+  console.log(state);
   return (
     <div className={css.container}>
       <div className={css.top}>
