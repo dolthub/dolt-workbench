@@ -71,16 +71,22 @@ function Nav({
             data-cy="left-nav-toggle-icon"
           />
         </div>
-        {isPostgres && params.refName && (
-          <div
-            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
-          >
-            <SchemasSelector
-              params={{ ...params, refName: params.refName }}
-              routeRefChangeTo={routeRefChangeTo}
-            />
-          </div>
-        )}
+        <div className={css.topLine}>
+          {isPostgres && params.refName && (
+            <div
+              className={cx(css.openBranchSelector, {
+                [css.closedItem]: !open,
+              })}
+            >
+              <SchemasSelector
+                params={{ ...params, refName: "" }}
+                routeRefChangeTo={routeRefChangeTo}
+                className={css.schemaSelector}
+                selectorClassName={css.selector}
+              />
+            </div>
+          )}
+        </div>
       </div>
       <NavLinks
         className={cx(css.openNav, { [css.closedItem]: !open })}

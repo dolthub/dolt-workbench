@@ -1,7 +1,7 @@
 .container {
   @apply hidden;
   @screen lg {
-    @apply bg-stone-50 pt-5 flex flex-col;
+    @apply bg-storm-500 pt-6 flex flex-col;
   }
 }
 
@@ -23,20 +23,20 @@
 }
 
 .top {
-  @apply pb-4 -mt-2;
+  @apply pb-2;
 }
 
 .topLine {
-  @apply flex justify-between items-center w-full pb-4 px-4;
+  @apply flex justify-between items-center w-full pb-2 px-4;
   @screen lg {
-    @apply px-3;
+    @apply pl-4 pr-3;
   }
 }
 
 .menuIcon {
   @apply hidden;
   @screen lg {
-    @apply block text-primary cursor-pointer mx-1;
+    @apply block cursor-pointer mx-1 text-white;
   }
 }
 
@@ -53,7 +53,7 @@
 }
 
 .createBranch {
-  @apply relative text-base;
+  @apply relative text-base ml-[0.8rem];
 }
 
 .createBranchDisabled a {
@@ -68,7 +68,7 @@
   @apply hidden;
 
   @screen lg {
-    @apply block font-bold text-xl cursor-pointer -ml-4;
+    @apply block font-bold text-xl cursor-pointer -ml-4 text-white border-2 rounded-full border-white;
     path {
       @apply stroke-[3.5rem];
     }
@@ -87,12 +87,28 @@
   @apply text-sm;
 
   li {
-    @apply mx-4 px-2 text-link-1;
+    @apply mx-4 px-2;
   }
+}
+
+.tab {
+  @apply text-storm-50;
+  button {
+    @apply font-normal;
+  }
+}
+
+.active {
+  @apply text-orange-400;
 }
 
 .tabPanel {
   @apply px-0 absolute left-0 right-0 bottom-0 top-9 overflow-auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    @apply hidden;
+  }
 }
 
 .tableNavTrigger {
@@ -110,4 +126,12 @@
   span {
     @apply font-semibold;
   }
+}
+
+.schemaSelector {
+  @apply m-0 max-w-none;
+}
+
+.selector {
+  @apply w-[230px] max-w-none;
 }

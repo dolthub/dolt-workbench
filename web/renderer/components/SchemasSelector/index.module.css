@@ -7,9 +7,17 @@
 }
 
 .createSch {
-  @apply text-xl ml-2.5 mt-1 font-semibold;
+  @apply text-xl ml-2.5 mt-1 font-semibold text-white;
 
   path {
     @apply stroke-[3.5rem];
   }
+}
+
+.createSchIcon {
+  @apply border-2 rounded-full border-white;
+}
+
+.schemaLabel {
+  @apply mt-2 mr-2 text-storm-50 font-normal text-sm w-[3.3rem];
 }

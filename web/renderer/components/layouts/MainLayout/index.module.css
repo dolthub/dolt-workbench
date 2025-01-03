@@ -8,7 +8,7 @@
 }
 
 .container {
-  @apply max-w-2xl py-40 px-4 mx-auto min-h-[calc(100vh-5rem)];
+  @apply max-w-2xl py-40 px-4 mx-auto  min-h-[calc(100vh-6rem)];
 
   h1 {
     @apply mb-6 text-center;
