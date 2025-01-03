@@ -47,7 +47,7 @@
 }
 
 .viewing {
-  @apply py-0.5 mr-3 text-coral-400 bg-white rounded-full px-2 font-semibold text-sm;
+  @apply mr-3 text-coral-400 bg-white rounded-full px-2 font-normal text-sm;
 }
 
 .smallLoader {

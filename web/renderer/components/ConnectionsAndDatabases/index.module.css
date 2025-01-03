@@ -88,8 +88,9 @@
 }
 
 .selected .connectionName,
-.connection:hover .connectionName {
-  @apply text-primary;
+.connection:hover .connectionName,
+.DbItem:hover {
+  @apply text-storm-600;
 }
 
 .viewing {
