@@ -88,12 +88,49 @@ async function getDoltBranchesQB(
   return sel.limit(args.limit).getRawMany();
 }
 
+async function getDoltRemoteBranchesQB(
+  em: EntityManager,
+  args: {
+    limit: number;
+    offset?: number;
+    orderBy?: string;
+    dir?: "ASC" | "DESC";
+  },
+): t.PR {
+  let sel = em
+    .createQueryBuilder()
+    .select("*")
+    .from("dolt_remote_branches", "");
+
+  if (args.orderBy && args.dir) {
+    sel = sel.addOrderBy(args.orderBy, args.dir);
+  }
+  if (args.offset !== undefined) {
+    sel = sel.offset(args.offset);
+  }
+
+  return sel.limit(args.limit).getRawMany();
+}
+
 export async function getDoltBranchesPaginated(
   em: EntityManager,
   args: t.ListBranchesArgs,
 ): t.PR {
   const [orderBy, dir] = getOrderByColForBranches(args.sortBy);
   return getDoltBranchesQB(em, {
+    limit: ROW_LIMIT + 1,
+    offset: args.offset,
+    orderBy,
+    dir,
+  });
+}
+
+export async function getDoltRemoteBranchesPaginated(
+  em: EntityManager,
+  args: t.ListBranchesArgs,
+): t.PR {
+  const [orderBy, dir] = getOrderByColForBranches(args.sortBy);
+  return getDoltRemoteBranchesQB(em, {
     limit: ROW_LIMIT + 1,
     offset: args.offset,
     orderBy,

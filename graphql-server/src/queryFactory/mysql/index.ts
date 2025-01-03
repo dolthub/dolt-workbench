@@ -211,6 +211,10 @@ export class MySQLQueryFactory
     return this.getAllBranches(args);
   }
 
+  async getRemoteBranches(_args: t.ListBranchesArgs): t.PR {
+    throw notDoltError("remote branches");
+  }
+
   async getAllBranches(args: t.DBArgs): t.PR {
     const branch = await this.getBranch({ ...args, branchName: "main" });
     return branch ? [branch] : [];
@@ -328,11 +332,19 @@ export class MySQLQueryFactory
     throw notDoltError("delete remote");
   }
 
-  async callPullRemote(_: t.PushOrPullRemoteArgs): t.PR {
+  async callPullRemote(_: t.RemoteMaybeBranchArgs): t.PR {
     throw notDoltError("pull remote");
   }
 
-  async callPushRemote(_: t.PushOrPullRemoteArgs): t.PR {
+  async callPushRemote(_: t.RemoteMaybeBranchArgs): t.PR {
     throw notDoltError("push remote");
+  }
+
+  async callFetchRemote(_: t.RemoteMaybeBranchArgs): t.PR {
+    throw notDoltError("fetch remote");
+  }
+
+  async getMergeBase(_: t.RefsArgs): Promise<string> {
+    throw notDoltError("merge base");
   }
 }

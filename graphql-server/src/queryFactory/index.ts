@@ -87,6 +87,8 @@ export declare class QueryFactory {
 
   getBranches(args: t.ListBranchesArgs): t.PR;
 
+  getRemoteBranches(args: t.ListBranchesArgs): t.PR;
+
   getAllBranches(args: t.DBArgs): t.PR;
 
   createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR;
@@ -153,7 +155,11 @@ export declare class QueryFactory {
 
   callDeleteRemote(args: t.RemoteArgs): t.PR;
 
-  callPullRemote(args: t.PushOrPullRemoteArgs): t.PR;
+  callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR;
 
-  callPushRemote(args: t.PushOrPullRemoteArgs): t.PR;
+  callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR;
+
+  callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR;
+
+  getMergeBase(args: t.RefsArgs): Promise<string>;
 }

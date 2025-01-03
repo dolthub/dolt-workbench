@@ -84,6 +84,9 @@ export const callPullRemote = `CALL DOLT_PULL(?, ?)`;
 
 export const callPushRemote = `CALL DOLT_PUSH(?, ?)`;
 
+export const callFetchRemote = (hasBranchName?: boolean) =>
+  `CALL DOLT_FETCH(?${hasBranchName ? ", ?" : ""})`;
+
 // TAGS
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;
