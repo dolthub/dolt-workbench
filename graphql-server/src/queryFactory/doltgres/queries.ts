@@ -171,7 +171,4 @@ export const callPullRemote = `SELECT DOLT_PULL($1::text, $2::text)`;
 
 export const callPushRemote = `SELECT DOLT_PUSH($1::text, $2::text)`;
 
-export const callFetchRemote = (hasBranchName?: boolean) =>
-  hasBranchName
-    ? `SELECT DOLT_FETCH($1::text, $2::text)`
-    : `SELECT DOLT_FETCH($1::text)`;
+export const callFetchRemote = `SELECT DOLT_FETCH($1::text)`;

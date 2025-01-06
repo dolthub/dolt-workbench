@@ -340,7 +340,7 @@ export class MySQLQueryFactory
     throw notDoltError("push remote");
   }
 
-  async callFetchRemote(_: t.RemoteMaybeBranchArgs): t.PR {
+  async callFetchRemote(_: t.RemoteArgs): t.PR {
     throw notDoltError("fetch remote");
   }
 

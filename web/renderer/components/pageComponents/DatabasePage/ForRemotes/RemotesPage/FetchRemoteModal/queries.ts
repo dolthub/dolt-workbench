@@ -1,16 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const FETCH_REMOTE = gql`
-  query FetchRemote(
-    $remoteName: String!
-    $databaseName: String!
-    $branchName: String
-  ) {
-    fetchRemote(
-      remoteName: $remoteName
-      databaseName: $databaseName
-      branchName: $branchName
-    ) {
+  query FetchRemote($remoteName: String!, $databaseName: String!) {
+    fetchRemote(remoteName: $remoteName, databaseName: $databaseName) {
       success
     }
   }

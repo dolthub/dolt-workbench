@@ -550,7 +550,6 @@ export type QueryDoltSchemasArgs = {
 
 
 export type QueryFetchRemoteArgs = {
-  branchName?: InputMaybe<Scalars['String']['input']>;
   databaseName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
@@ -1285,7 +1284,6 @@ export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
 export type FetchRemoteQueryVariables = Exact<{
   remoteName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  branchName?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
@@ -3741,12 +3739,8 @@ export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation
 export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
 export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
 export const FetchRemoteDocument = gql`
-    query FetchRemote($remoteName: String!, $databaseName: String!, $branchName: String) {
-  fetchRemote(
-    remoteName: $remoteName
-    databaseName: $databaseName
-    branchName: $branchName
-  ) {
+    query FetchRemote($remoteName: String!, $databaseName: String!) {
+  fetchRemote(remoteName: $remoteName, databaseName: $databaseName) {
     success
   }
 }
@@ -3766,7 +3760,6 @@ export const FetchRemoteDocument = gql`
  *   variables: {
  *      remoteName: // value for 'remoteName'
  *      databaseName: // value for 'databaseName'
- *      branchName: // value for 'branchName'
  *   },
  * });
  */
