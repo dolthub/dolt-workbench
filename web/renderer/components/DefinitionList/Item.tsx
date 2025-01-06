@@ -30,7 +30,7 @@ export default function Item({ name, params, isActive, query }: Props) {
         <Btn className={css.button}>
           <span className={css.name}>{excerpt(name, 45)}</span>
           <span className={isActive ? css.viewing : css.icon}>
-            {isActive ? "Viewing" : <RiBookOpenLine />}
+            {isActive ? "viewing" : <RiBookOpenLine />}
           </span>
         </Btn>
       </Link>

@@ -1,10 +1,17 @@
 import DefinitionList from "@components/DefinitionList";
 import TableList from "@components/TableList";
 import Views from "@components/Views";
-import { Tab, TabList, TabPanel, Tabs } from "@dolthub/react-components";
+import {
+  Tab,
+  TabList,
+  TabPanel,
+  Tabs,
+  useTabsContext,
+} from "@dolthub/react-components";
 import { DatabasePageParams, OptionalRefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import cx from "classnames";
 import css from "./index.module.css";
 
 type Props = {
@@ -23,9 +30,7 @@ export default function NavLinks({ className, params }: Props) {
       <Tabs initialActiveIndex={initialActiveIndex}>
         <TabList className={css.tabList}>
           {tabs.map((tab, i) => (
-            <Tab key={tab} name={tab.toLowerCase()} index={i} dark>
-              {tab}
-            </Tab>
+            <TabItem key={tab} tab={tab} index={i} />
           ))}
         </TabList>
         <CustomTabPanel
@@ -96,4 +101,22 @@ function getActiveIndexFromRouterQuery(
     default:
       return 0;
   }
+}
+
+type TabItemProps = {
+  tab: string;
+  index: number;
+};
+
+function TabItem({ index, tab }: TabItemProps) {
+  const { activeTabIndex } = useTabsContext();
+  return (
+    <Tab
+      name={tab.toLowerCase()}
+      index={index}
+      className={cx(css.tab, { [css.active]: index === activeTabIndex })}
+    >
+      {tab}
+    </Tab>
+  );
 }

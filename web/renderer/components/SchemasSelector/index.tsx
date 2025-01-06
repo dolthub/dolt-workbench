@@ -7,12 +7,15 @@ import {
 import { RefOptionalSchemaParams } from "@lib/params";
 import { RefUrl, ref } from "@lib/urls";
 import { useRouter } from "next/router";
+import cx from "classnames";
 import CreateSchema from "./CreateSchema";
 import css from "./index.module.css";
 
 type Props = {
   params: RefOptionalSchemaParams & { tableName?: string };
   routeRefChangeTo: RefUrl;
+  className?: string;
+  selectorClassName?: string;
 };
 
 type SelectorProps = {
@@ -33,6 +36,7 @@ export function Selector(props: SelectorProps) {
     <FormSelect
       val={props.val ?? res.data.schemas[0]}
       className={props.className}
+      labelClassName={css.schemaLabel}
       onChangeValue={props.onChangeValue}
       options={res.data.schemas.map(v => {
         return {
@@ -41,7 +45,7 @@ export function Selector(props: SelectorProps) {
         };
       })}
       hideSelectedOptions
-      label="Schema"
+      label="Schema:"
       horizontal={props.horizontal}
       light
     />
@@ -82,12 +86,12 @@ export default function SchemasSelector(props: Props) {
   };
 
   return (
-    <span className={css.wrapper}>
+    <span className={cx(css.wrapper, props.className)}>
       <Selector
         params={props.params}
         val={props.params.schemaName}
         onChangeValue={handleChangeRef}
-        className={css.selector}
+        className={cx(css.selector, props.selectorClassName)}
         horizontal
       />
       <CreateSchema {...props} />

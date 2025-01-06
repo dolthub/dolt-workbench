@@ -74,6 +74,7 @@ function Inner(props: InnerProps) {
                 buttonClassName={cx(css.createDBButton, {
                   [css.roundTop]: !filtered.length,
                 })}
+                showText
               />
             </li>
           </HideForNoWritesWrapper>
