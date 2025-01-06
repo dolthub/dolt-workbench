@@ -3,7 +3,6 @@ import { HiRefresh } from "@react-icons/all-files/hi/HiRefresh";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import { RemoteFragment, useFetchRemoteLazyQuery } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
-import useDefaultBranch from "@hooks/useDefaultBranch";
 import { SmallLoader } from "@dolthub/react-components";
 import { useState } from "react";
 import { SetApolloErrorType } from "@lib/errors/types";
@@ -21,8 +20,6 @@ export default function FetchButton({
   params,
   remote,
 }: Props) {
-  const { defaultBranchName } = useDefaultBranch(params);
-  const branchName = params.refName || defaultBranchName;
   const [fetch] = useFetchRemoteLazyQuery();
   const [loading, setLoading] = useState(false);
 
@@ -32,13 +29,14 @@ export default function FetchButton({
       variables: {
         databaseName: params.databaseName,
         remoteName: remote.name,
-        branchName,
       },
       fetchPolicy: "network-only",
     });
     setLoading(false);
     if (!fetchRes.data?.fetchRemote.success) {
       setErr(fetchRes.error || new Error("Fetch failed"));
+      setFetchModalOpen(true);
+
       return;
     }
 

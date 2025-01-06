@@ -159,7 +159,7 @@ export declare class QueryFactory {
 
   callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR;
 
-  callFetchRemote(args: t.RemoteMaybeBranchArgs): t.PR;
+  callFetchRemote(args: t.RemoteArgs): t.PR;
 
   getMergeBase(args: t.RefsArgs): Promise<string>;
 }

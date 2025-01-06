@@ -95,7 +95,7 @@ export class RemoteResolver {
   }
 
   @Query(_returns => FetchRes)
-  async fetchRemote(@Args() args: RemoteMaybeBranchArgs): Promise<FetchRes> {
+  async fetchRemote(@Args() args: RemoteArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
     const res = await conn.callFetchRemote(args);
     if (res.length === 0) {
