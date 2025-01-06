@@ -470,6 +470,7 @@ export class DoltQueryFactory
       qh.callPullRemote,
       [args.remoteName, args.branchName],
       args.databaseName,
+      args.refName,
     );
   }
 
@@ -478,6 +479,7 @@ export class DoltQueryFactory
       qh.callPushRemote,
       [args.remoteName, args.branchName],
       args.databaseName,
+      args.refName,
     );
   }
 

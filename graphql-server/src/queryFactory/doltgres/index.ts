@@ -461,6 +461,7 @@ export class DoltgresQueryFactory
       qh.callPullRemote,
       [args.remoteName, args.branchName],
       args.databaseName,
+      args.refName,
     );
   }
 
@@ -469,6 +470,7 @@ export class DoltgresQueryFactory
       qh.callPushRemote,
       [args.remoteName, args.branchName],
       args.databaseName,
+      args.refName,
     );
   }
 

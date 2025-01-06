@@ -33,11 +33,13 @@ export const PULL_FROM_REMOTE = gql`
     $remoteName: String!
     $branchName: String!
     $databaseName: String!
+    $refName: String!
   ) {
     pullFromRemote(
       remoteName: $remoteName
       branchName: $branchName
       databaseName: $databaseName
+      refName: $refName
     ) {
       ...PullRes
     }
@@ -53,11 +55,13 @@ export const PUSH_TO_REMOTE = gql`
     $remoteName: String!
     $branchName: String!
     $databaseName: String!
+    $refName: String!
   ) {
     pushToRemote(
       remoteName: $remoteName
       branchName: $branchName
       databaseName: $databaseName
+      refName: $refName
     ) {
       ...PushRes
     }

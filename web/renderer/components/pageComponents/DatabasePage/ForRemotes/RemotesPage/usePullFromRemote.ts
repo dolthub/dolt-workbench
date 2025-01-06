@@ -58,6 +58,7 @@ export default function usePullFromRemote(
         databaseName: params.databaseName,
         remoteName: remote.name,
         branchName: remoteBranchName,
+        refName: params.refName,
       },
     });
     if (!pullRes.data) return;
