@@ -49,7 +49,7 @@ export default function RemoteBranches({
       databaseName: params.databaseName,
     },
   });
-  
+
   const branchesRes = useBranchesForSelectorQuery({ variables: params });
   if (branchesRes.loading) {
     return <Loader loaded={!branchesRes.loading} />;
