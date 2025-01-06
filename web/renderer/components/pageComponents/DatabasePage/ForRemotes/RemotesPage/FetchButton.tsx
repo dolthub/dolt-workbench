@@ -36,7 +36,6 @@ export default function FetchButton({
     if (!fetchRes.data?.fetchRemote.success) {
       setErr(fetchRes.error || new Error("Fetch failed"));
       setFetchModalOpen(true);
-
       return;
     }
 
