@@ -28,7 +28,6 @@ export default function usePullFromRemote(
   setBranchName?: (b: string) => void,
   setIsOpen?: (o: boolean) => void,
 ): ReturnType {
-  console.log(currentBranch, remoteBranchName);
   const { mutateFn: pull, ...res } = useMutation({
     hook: usePullFromRemoteMutation,
     refetchQueries: currentBranch
