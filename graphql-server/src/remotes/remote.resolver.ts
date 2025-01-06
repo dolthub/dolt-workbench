@@ -30,6 +30,9 @@ export class AddRemoteArgs extends RemoteArgs {
 @ArgsType()
 export class PullOrPushRemoteArgs extends RemoteArgs {
   @Field()
+  refName: string;
+
+  @Field()
   branchName: string;
 }
 

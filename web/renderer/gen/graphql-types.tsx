@@ -333,6 +333,7 @@ export type MutationMergePullArgs = {
 export type MutationPullFromRemoteArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
 
@@ -340,6 +341,7 @@ export type MutationPullFromRemoteArgs = {
 export type MutationPushToRemoteArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
 
@@ -1324,6 +1326,7 @@ export type PullFromRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -1335,6 +1338,7 @@ export type PushToRemoteMutationVariables = Exact<{
   remoteName: Scalars['String']['input'];
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
 }>;
 
 
@@ -3902,11 +3906,12 @@ export type DeleteRemoteMutationHookResult = ReturnType<typeof useDeleteRemoteMu
 export type DeleteRemoteMutationResult = Apollo.MutationResult<DeleteRemoteMutation>;
 export type DeleteRemoteMutationOptions = Apollo.BaseMutationOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
 export const PullFromRemoteDocument = gql`
-    mutation PullFromRemote($remoteName: String!, $branchName: String!, $databaseName: String!) {
+    mutation PullFromRemote($remoteName: String!, $branchName: String!, $databaseName: String!, $refName: String!) {
   pullFromRemote(
     remoteName: $remoteName
     branchName: $branchName
     databaseName: $databaseName
+    refName: $refName
   ) {
     ...PullRes
   }
@@ -3930,6 +3935,7 @@ export type PullFromRemoteMutationFn = Apollo.MutationFunction<PullFromRemoteMut
  *      remoteName: // value for 'remoteName'
  *      branchName: // value for 'branchName'
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */
@@ -3941,11 +3947,12 @@ export type PullFromRemoteMutationHookResult = ReturnType<typeof usePullFromRemo
 export type PullFromRemoteMutationResult = Apollo.MutationResult<PullFromRemoteMutation>;
 export type PullFromRemoteMutationOptions = Apollo.BaseMutationOptions<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
 export const PushToRemoteDocument = gql`
-    mutation PushToRemote($remoteName: String!, $branchName: String!, $databaseName: String!) {
+    mutation PushToRemote($remoteName: String!, $branchName: String!, $databaseName: String!, $refName: String!) {
   pushToRemote(
     remoteName: $remoteName
     branchName: $branchName
     databaseName: $databaseName
+    refName: $refName
   ) {
     ...PushRes
   }
@@ -3969,6 +3976,7 @@ export type PushToRemoteMutationFn = Apollo.MutationFunction<PushToRemoteMutatio
  *      remoteName: // value for 'remoteName'
  *      branchName: // value for 'branchName'
  *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
  *   },
  * });
  */

@@ -53,6 +53,7 @@ export default function usePushToRemote(
         branchName: remoteBranch
           ? `${state.branchName}:${remoteBranch}`
           : state.branchName,
+        refName: state.branchName,
       },
     });
     setState({ loading: false });
