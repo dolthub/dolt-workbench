@@ -473,11 +473,7 @@ export class DoltgresQueryFactory
   }
 
   async callFetchRemote(args: t.RemoteArgs): t.PR {
-    return this.query(
-      qh.callFetchRemote(),
-      [args.remoteName],
-      args.databaseName,
-    );
+    return this.query(qh.callFetchRemote, [args.remoteName], args.databaseName);
   }
 }
 
