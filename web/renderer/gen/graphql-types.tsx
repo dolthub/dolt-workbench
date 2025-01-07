@@ -417,6 +417,7 @@ export type PushRes = {
 export type Query = {
   __typename?: 'Query';
   allBranches: Array<Branch>;
+  allCommits: Array<Commit>;
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
   branches: BranchList;
@@ -459,6 +460,16 @@ export type QueryAllBranchesArgs = {
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<SortBranchesBy>;
+};
+
+
+export type QueryAllCommitsArgs = {
+  afterCommitId?: InputMaybe<Scalars['String']['input']>;
+  databaseName: Scalars['String']['input'];
+  excludingCommitsFromRefName?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  refName?: InputMaybe<Scalars['String']['input']>;
+  twoDot?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -1155,6 +1166,16 @@ export type CreateBranchMutationVariables = Exact<{
 
 export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: string };
 
+export type CommitForCommitSelectorFragment = { __typename?: 'Commit', _id: string, commitId: string };
+
+export type CommitsForSelectorQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type CommitsForSelectorQuery = { __typename?: 'Query', allCommits: Array<{ __typename?: 'Commit', _id: string, commitId: string }> };
+
 export type CommitForAfterCommitHistoryFragment = { __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
 export type HistoryForCommitQueryVariables = Exact<{
@@ -1682,6 +1703,12 @@ export const BranchFragmentDoc = gql`
   databaseName
   lastUpdated
   lastCommitter
+}
+    `;
+export const CommitForCommitSelectorFragmentDoc = gql`
+    fragment CommitForCommitSelector on Commit {
+  _id
+  commitId
 }
     `;
 export const CommitForAfterCommitHistoryFragmentDoc = gql`
@@ -3238,6 +3265,47 @@ export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
 export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
 export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
+export const CommitsForSelectorDocument = gql`
+    query CommitsForSelector($databaseName: String!, $refName: String!) {
+  allCommits(databaseName: $databaseName, refName: $refName) {
+    ...CommitForCommitSelector
+  }
+}
+    ${CommitForCommitSelectorFragmentDoc}`;
+
+/**
+ * __useCommitsForSelectorQuery__
+ *
+ * To run a query within a React component, call `useCommitsForSelectorQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCommitsForSelectorQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCommitsForSelectorQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useCommitsForSelectorQuery(baseOptions: Apollo.QueryHookOptions<CommitsForSelectorQuery, CommitsForSelectorQueryVariables> & ({ variables: CommitsForSelectorQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CommitsForSelectorQuery, CommitsForSelectorQueryVariables>(CommitsForSelectorDocument, options);
+      }
+export function useCommitsForSelectorLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CommitsForSelectorQuery, CommitsForSelectorQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CommitsForSelectorQuery, CommitsForSelectorQueryVariables>(CommitsForSelectorDocument, options);
+        }
+export function useCommitsForSelectorSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CommitsForSelectorQuery, CommitsForSelectorQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CommitsForSelectorQuery, CommitsForSelectorQueryVariables>(CommitsForSelectorDocument, options);
+        }
+export type CommitsForSelectorQueryHookResult = ReturnType<typeof useCommitsForSelectorQuery>;
+export type CommitsForSelectorLazyQueryHookResult = ReturnType<typeof useCommitsForSelectorLazyQuery>;
+export type CommitsForSelectorSuspenseQueryHookResult = ReturnType<typeof useCommitsForSelectorSuspenseQuery>;
+export type CommitsForSelectorQueryResult = Apollo.QueryResult<CommitsForSelectorQuery, CommitsForSelectorQueryVariables>;
 export const HistoryForCommitDocument = gql`
     query HistoryForCommit($databaseName: String!, $afterCommitId: String!) {
   commits(afterCommitId: $afterCommitId, databaseName: $databaseName) {

@@ -1,0 +1,25 @@
+.outer {
+  @apply flex justify-between ml-6 mr-10 my-8;
+}
+
+.selectors {
+  @apply flex items-center;
+}
+
+.selector {
+  @apply min-w-[225px];
+}
+
+.arrow {
+  @apply text-2xl mx-6;
+}
+
+.viewDiffButton {
+  button {
+    @apply w-32 px-3 mt-2 mb-4 lg:my-0;
+  }
+
+  svg {
+    @apply inline-block ml-2 mb-1;
+  }
+}

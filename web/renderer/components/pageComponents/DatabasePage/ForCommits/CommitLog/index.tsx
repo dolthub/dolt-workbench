@@ -11,6 +11,7 @@ import CommitGraphButton from "./CommitGraphButton";
 import CommitHeader from "./CommitHeader";
 import CommitLogItem from "./CommitLogItem";
 import Uncommitted from "./Uncommitted";
+import CommitSelectForm from "./CommitSelectForm";
 import css from "./index.module.css";
 
 type Props = {
@@ -52,6 +53,7 @@ function Inner({ commits, ...props }: InnerProps) {
             <h1 className={css.title}>Commit Log</h1>
             <CommitGraphButton params={props.params} />
           </div>
+          <CommitSelectForm params={props.params} />
           <InfiniteScroll
             loadMore={props.loadMore}
             hasMore={props.hasMore}

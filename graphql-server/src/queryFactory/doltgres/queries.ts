@@ -47,6 +47,9 @@ export const callDeleteBranch = `SELECT DOLT_BRANCH('-D', $1::text)`;
 export const doltLogsQuery = (args: t.RefArgs, offset: number): string =>
   `SELECT * FROM DOLT_LOG('${args.refName}', '--parents') LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`;
 
+export const doltAllLogsQuery = (args: t.RefArgs): string =>
+  `SELECT * FROM DOLT_LOG('${args.refName}', '--parents') LIMIT 1000`;
+
 export const twoDotDoltLogsQuery = (args: t.RefsArgs): string =>
   `SELECT * FROM DOLT_LOG('${args.toRefName}..${args.fromRefName}', '--parents')`;
 
