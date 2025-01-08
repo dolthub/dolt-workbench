@@ -85,8 +85,10 @@ function Inner({ tags, ...props }: InnerProps) {
                 {...diff({
                   ...props.params,
                   refName: props.params.refName || "",
-                  fromCommitId: fromTag,
-                  toCommitId: toTag,
+                  fromCommitId:
+                    tags.filter(t => t.tagName === fromTag)[0].commitId || "",
+                  toCommitId:
+                    tags.filter(t => t.tagName === toTag)[0].commitId || "",
                 })}
                 className={css.viewDiffButton}
               >
