@@ -1,5 +1,5 @@
 .outer {
-  @apply flex items-center ml-6 mr-10 my-8;
+  @apply flex items-center ml-32 my-8;
 }
 
 .selectors {
@@ -7,7 +7,7 @@
 }
 
 .selector {
-  @apply min-w-[225px];
+  @apply w-64;
 }
 
 .arrow {

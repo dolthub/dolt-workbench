@@ -110,7 +110,7 @@
 }
 
 .outer {
-  @apply flex items-center mx-4 my-8;
+  @apply flex items-center ml-16 my-8;
 }
 
 .selectors {
