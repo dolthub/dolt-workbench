@@ -48,7 +48,7 @@ function Inner(props: InnerProps) {
           </div>
         </form>
       )}
-      {fromCommit && toCommit && (
+      {fromCommit && toCommit && fromCommit !== toCommit && (
         <Link
           {...diff({
             ...props.params,

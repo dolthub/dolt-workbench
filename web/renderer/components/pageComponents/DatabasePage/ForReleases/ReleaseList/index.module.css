@@ -108,3 +108,29 @@
     @apply block ml-2;
   }
 }
+
+.outer {
+  @apply flex items-center mx-4 my-8;
+}
+
+.selectors {
+  @apply flex items-center my-6;
+}
+
+.selector {
+  @apply min-w-[225px];
+}
+
+.arrow {
+  @apply text-2xl mx-6;
+}
+
+.viewDiffButton {
+  button {
+    @apply w-32 px-3 ml-8 mt-2 mb-4 lg:my-0;
+  }
+
+  svg {
+    @apply inline-block ml-2 mb-1;
+  }
+}

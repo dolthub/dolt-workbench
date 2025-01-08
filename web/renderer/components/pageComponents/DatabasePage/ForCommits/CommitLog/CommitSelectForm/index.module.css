@@ -1,5 +1,5 @@
 .outer {
-  @apply flex justify-between ml-6 mr-10 my-8;
+  @apply flex items-center ml-6 mr-10 my-8;
 }
 
 .selectors {
@@ -16,7 +16,7 @@
 
 .viewDiffButton {
   button {
-    @apply w-32 px-3 mt-2 mb-4 lg:my-0;
+    @apply w-32 px-3 ml-8 mt-2 mb-4 lg:my-0;
   }
 
   svg {
