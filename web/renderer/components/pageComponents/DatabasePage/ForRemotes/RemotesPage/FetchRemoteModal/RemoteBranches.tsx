@@ -28,6 +28,7 @@ function Inner(props: InnerProps) {
           <th>Remote {pluralize(props.remoteBranches.length, "branch")}</th>
           <th>Behind | Ahead</th>
           <th>Sync</th>
+          <th>Diff</th>
         </tr>
       </thead>
       <tbody>
