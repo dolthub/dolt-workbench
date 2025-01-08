@@ -232,6 +232,10 @@ export class MySQLQueryFactory
     throw notDoltError("get logs");
   }
 
+  async getAllLogs(_args: t.RefArgs): t.PR {
+    throw notDoltError("get all logs");
+  }
+
   async getTwoDotLogs(_args: t.RefsArgs): t.PR {
     throw notDoltError("get two dot logs");
   }

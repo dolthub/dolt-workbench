@@ -79,3 +79,9 @@
 .buttons {
   @apply flex items-center justify-between;
 }
+
+.viewDiffButton {
+  button {
+    @apply text-left mt-2 mb-4 lg:my-0;
+  }
+}
