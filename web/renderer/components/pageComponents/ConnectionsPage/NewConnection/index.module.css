@@ -1,8 +1,28 @@
+.container {
+  @apply py-20 bg-stone-50;
+  a {
+    @apply text-[#FF8964];
+  }
+  a:hover {
+    @apply text-coral-400;
+  }
+}
+
 .databaseForm {
-  @apply w-full max-w-xl mx-auto;
+  @apply w-full max-w-2xl mx-auto;
 
   h3 {
     @apply mb-4;
+  }
+}
+
+.welcome {
+  @apply text-center;
+  h1 {
+    @apply font-semibold;
+  }
+  p {
+    @apply text-xl  my-6 leading-8;
   }
 }
 
@@ -15,6 +35,10 @@
   svg {
     @apply mb-[0.2rem] mr-1 inline-block;
   }
+}
+
+.top {
+  @apply mx-10;
 }
 
 .section {
@@ -30,7 +54,7 @@
 }
 
 .middle {
-  @apply border-y pt-8;
+  @apply pt-8;
 }
 
 .or {

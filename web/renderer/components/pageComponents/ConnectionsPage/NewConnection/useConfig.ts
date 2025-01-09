@@ -19,6 +19,8 @@ const defaultState = {
   connectionUrl: "",
   hideDoltFeatures: false,
   useSSL: true,
+  showAbout: true,
+  showConnectionDetails: false,
   showAdvancedSettings: false,
   loading: false,
   type: DatabaseType.Mysql,
