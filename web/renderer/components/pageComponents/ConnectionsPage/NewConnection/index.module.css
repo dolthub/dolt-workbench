@@ -1,5 +1,5 @@
 .databaseForm {
-  @apply w-full max-w-xl;
+  @apply w-full max-w-xl mx-auto;
 
   h3 {
     @apply mb-4;

@@ -7,6 +7,10 @@ export type RefUrl = (p: ps.RefOptionalSchemaParams) => Route;
 
 export const databases = new Route("/database");
 
+export const connections = new Route("/connections");
+
+export const newConnection = connections.addStatic("new");
+
 export const database = (p: ps.DatabaseOptionalSchemaParams): Route =>
   databases
     .addDynamic("databaseName", p.databaseName)

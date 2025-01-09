@@ -2,36 +2,10 @@ import MainLayout from "@components/layouts/MainLayout";
 import DoltLink from "@components/links/DoltLink";
 import DoltgresLink from "@components/links/DoltgresLink";
 import { QueryHandler } from "@dolthub/react-components";
-import {
-  DatabaseConnectionFragment,
-  useStoredConnectionsQuery,
-} from "@gen/graphql-types";
-import { useEffect, useState } from "react";
+import { useStoredConnectionsQuery } from "@gen/graphql-types";
 import ExistingConnections from "./ExistingConnections";
 import NewConnection from "./NewConnection";
 import css from "./index.module.css";
-
-type InnerProps = {
-  connections: DatabaseConnectionFragment[];
-};
-
-function Inner(props: InnerProps) {
-  const [showForm, setShowForm] = useState(!props.connections.length);
-
-  useEffect(() => {
-    setShowForm(!props.connections.length);
-  }, [props.connections]);
-
-  if (showForm) {
-    return (
-      <NewConnection
-        canGoBack={!!props.connections.length}
-        setShowForm={setShowForm}
-      />
-    );
-  }
-  return <ExistingConnections {...props} setShowForm={setShowForm} />;
-}
 
 export default function ConfigurationPage() {
   const res = useStoredConnectionsQuery();
@@ -48,7 +22,13 @@ export default function ConfigurationPage() {
         </div>
         <QueryHandler
           result={res}
-          render={data => <Inner connections={data.storedConnections} />}
+          render={data =>
+            data.storedConnections.length ? (
+              <ExistingConnections connections={data.storedConnections} />
+            ) : (
+              <NewConnection canGoBack={!!data.storedConnections.length} />
+            )
+          }
         />
       </div>
     </MainLayout>

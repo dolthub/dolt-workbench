@@ -12,21 +12,24 @@ import { dockerHubRepo } from "@lib/constants";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { IoIosArrowDropleftCircle } from "@react-icons/all-files/io/IoIosArrowDropleftCircle";
+import { connections } from "@lib/urls";
+import { useRouter } from "next/router";
 import cx from "classnames";
-import css from "./index.module.css";
 import useConfig, { getCanSubmit } from "./useConfig";
+import css from "./index.module.css";
 
 type Props = {
   canGoBack: boolean;
-  setShowForm: (s: boolean) => void;
 };
 
 export default function NewConnection(props: Props) {
   const { onSubmit, state, setState, error, clearState } = useConfig();
+  const router = useRouter();
 
   const onCancel = props.canGoBack
     ? () => {
-        props.setShowForm(false);
+        const { href, as } = connections;
+        router.push(href, as).catch(console.error);
       }
     : clearState;
 

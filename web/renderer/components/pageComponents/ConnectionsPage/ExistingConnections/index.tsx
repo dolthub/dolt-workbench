@@ -5,14 +5,15 @@ import {
   StoredConnectionsDocument,
   useRemoveConnectionMutation,
 } from "@gen/graphql-types";
+import { useRouter } from "next/router";
 import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import { useState } from "react";
+import { newConnection } from "@lib/urls";
 import Item from "./Item";
 import css from "./index.module.css";
 
 type Props = {
   connections: DatabaseConnectionFragment[];
-  setShowForm: (s: boolean) => void;
 };
 
 export default function ExistingConnections(props: Props) {
@@ -22,6 +23,12 @@ export default function ExistingConnections(props: Props) {
   const onDeleteClicked = (name: string) => {
     setConnectionNameToDelete(name);
     setDeleteModalOpen(true);
+  };
+
+  const router = useRouter();
+  const onClick = () => {
+    const { href, as } = newConnection;
+    router.push(href, as).catch(console.error);
   };
 
   return (
@@ -48,10 +55,7 @@ export default function ExistingConnections(props: Props) {
             refetchQueries: [{ query: StoredConnectionsDocument }],
           }}
         />
-        <Button
-          onClick={() => props.setShowForm(true)}
-          className={css.newConnection}
-        >
+        <Button className={css.newConnection} onClick={onClick}>
           <AiOutlinePlus /> New connection
         </Button>
       </div>
