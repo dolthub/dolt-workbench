@@ -118,3 +118,10 @@
     @apply bg-coral-400;
   }
 }
+
+.buttons button:last-child {
+  @apply text-[#FF8964];
+  &:hover {
+    @apply text-coral-400;
+  }
+}

@@ -1,19 +1,27 @@
 import {
   Button,
+  ButtonsWithError,
   FormInput,
   FormSelect,
   useTabsContext,
 } from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";
-import css from "./index.module.css";
+import { useRouter } from "next/router";
+import { connections } from "@lib/urls";
 import { useConfigContext } from "./context/config";
+import css from "./index.module.css";
 
 export default function About() {
   const { state, setState } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
+  const router = useRouter();
 
   const onNext = () => {
     setActiveTabIndex(activeTabIndex + 1);
+  };
+  const onCancel = () => {
+    const { href, as } = connections;
+    router.push(href, as).catch(console.error);
   };
 
   return (
@@ -50,9 +58,11 @@ export default function About() {
         hideSelectedOptions
         light
       />
-      <Button type="submit" disabled={!state.name} className={css.button}>
-        Next
-      </Button>
+      <ButtonsWithError onCancel={onCancel} className={css.buttons}>
+        <Button type="submit" disabled={!state.name} className={css.button}>
+          Next
+        </Button>
+      </ButtonsWithError>
     </form>
   );
 }

@@ -1,18 +1,29 @@
-import { Button, FormInput, useTabsContext } from "@dolthub/react-components";
+import {
+  Button,
+  ButtonsWithError,
+  FormInput,
+  useTabsContext,
+} from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";
 import { SyntheticEvent } from "react";
+import { useRouter } from "next/router";
+import { connections } from "@lib/urls";
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
 
 export default function Connection() {
   const { state, setState } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
+  const router = useRouter();
 
   const onNext = (e: SyntheticEvent) => {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
-
+  const onCancel = () => {
+    const { href, as } = connections;
+    router.push(href, as).catch(console.error);
+  };
   return (
     <form onSubmit={onNext} className={css.form}>
       <FormInput
@@ -73,13 +84,15 @@ export default function Connection() {
         light
         labelClassName={css.label}
       />
-      <Button
-        type="submit"
-        disabled={!state.connectionUrl || (!state.host && !state.port)}
-        className={css.button}
-      >
-        Next
-      </Button>
+      <ButtonsWithError onCancel={onCancel} className={css.buttons}>
+        <Button
+          type="submit"
+          disabled={!state.connectionUrl || (!state.host && !state.port)}
+          className={css.button}
+        >
+          Next
+        </Button>
+      </ButtonsWithError>
     </form>
   );
 }
