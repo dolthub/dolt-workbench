@@ -16,7 +16,7 @@ export default function ConfigurationPage() {
             data.storedConnections.length ? (
               <ExistingConnections connections={data.storedConnections} />
             ) : (
-              <NewConnection canGoBack={!!data.storedConnections.length} />
+              <NewConnection />
             )
           }
         />

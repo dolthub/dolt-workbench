@@ -4,7 +4,7 @@ import { NextPage } from "next";
 
 const AddConnection: NextPage = () => (
   <Page title="Add SQL Connection">
-    <NewConnection canGoBack />
+    <NewConnection />
   </Page>
 );
 

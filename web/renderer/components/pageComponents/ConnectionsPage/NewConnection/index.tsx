@@ -9,29 +9,14 @@ import {
 } from "@dolthub/react-components";
 import { DatabaseType } from "@gen/graphql-types";
 import { dockerHubRepo } from "@lib/constants";
-import { IoIosArrowDropleftCircle } from "@react-icons/all-files/io/IoIosArrowDropleftCircle";
-import { connections } from "@lib/urls";
-import { useRouter } from "next/router";
 import MainLayout from "@components/layouts/MainLayout";
 import cx from "classnames";
 import useConfig, { getCanSubmit } from "./useConfig";
-import css from "./index.module.css";
 import WelcomeMessage from "./WelcomeMessage";
+import css from "./index.module.css";
 
-type Props = {
-  canGoBack: boolean;
-};
-
-export default function NewConnection(props: Props) {
-  const { onSubmit, state, setState, error, clearState } = useConfig();
-  const router = useRouter();
-
-  const onCancel = props.canGoBack
-    ? () => {
-        const { href, as } = connections;
-        router.push(href, as).catch(console.error);
-      }
-    : clearState;
+export default function NewConnection() {
+  const { onSubmit, state, setState, error } = useConfig();
 
   return (
     <MainLayout className={css.container}>
@@ -190,11 +175,7 @@ export default function NewConnection(props: Props) {
                     className={css.checkbox}
                   />
                 </div>
-                <ButtonsWithError
-                  error={error}
-                  onCancel={onCancel}
-                  cancelText={props.canGoBack ? "cancel" : "clear"}
-                >
+                <ButtonsWithError error={error}>
                   <Button type="submit" disabled={!getCanSubmit(state)}>
                     Launch Workbench
                   </Button>
@@ -203,11 +184,6 @@ export default function NewConnection(props: Props) {
             )}
           </form>
         </div>
-        {props.canGoBack && (
-          <Button.Link onClick={onCancel} className={css.goback}>
-            <IoIosArrowDropleftCircle /> back to connections
-          </Button.Link>
-        )}
       </div>
     </MainLayout>
   );
