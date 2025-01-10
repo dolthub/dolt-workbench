@@ -6,11 +6,15 @@ import ConnectionTabs from "./ConnectionTabs";
 import css from "./index.module.css";
 import { ConfigProvider } from "./context/config";
 
-export default function NewConnection() {
+type Props = {
+  showWelcomeMsg?: boolean;
+};
+
+export default function NewConnection({ showWelcomeMsg }: Props) {
   return (
     <MainLayout className={css.container}>
       <div className={css.databaseForm}>
-        <WelcomeMessage />
+        {showWelcomeMsg && <WelcomeMessage />}
         <div className={css.whiteContainer}>
           <div className={css.top}>
             <h3>Set up new connection</h3>
