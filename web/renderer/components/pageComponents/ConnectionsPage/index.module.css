@@ -1,19 +1,7 @@
 .container {
-  @apply max-w-6xl py-24 bg-stone-50;
+  @apply max-w-6xl py-16 bg-stone-50;
 }
 
 .inner {
   @apply flex justify-between;
-}
-
-.top {
-  @apply mr-24 mt-10;
-
-  h1 {
-    @apply text-left;
-  }
-
-  p {
-    @apply text-xl max-w-lg mt-7 leading-8;
-  }
 }
