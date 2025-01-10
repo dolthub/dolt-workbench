@@ -7,9 +7,16 @@ export function getConnectionUrl(state: ConfigState): string {
   return `${prefix}://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`;
 }
 
-export function getCanSubmit(state: ConfigState): boolean {
-  if (!state.name) return false;
-  if (state.connectionUrl) return true;
-  if (!state.host || !state.username) return false;
-  return true;
+type GetCanSubmitReturnType = {
+  canSubmit: boolean;
+  message?: string;
+};
+
+export function getCanSubmit(state: ConfigState): GetCanSubmitReturnType {
+  if (!state.name)
+    return { canSubmit: false, message: "Database name is required" };
+  if (state.connectionUrl) return { canSubmit: true };
+  if (!state.host || !state.username)
+    return { canSubmit: false, message: "Host or user name is require" };
+  return { canSubmit: true };
 }

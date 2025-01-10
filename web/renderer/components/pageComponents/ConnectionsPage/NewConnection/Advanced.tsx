@@ -1,10 +1,11 @@
-import { Button, Checkbox, ErrorMsg } from "@dolthub/react-components";
+import { Button, Checkbox, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
 import { getCanSubmit } from "./context/utils";
 
 export default function Advanced() {
   const { state, setState, error, onSubmit } = useConfigContext();
+  const { canSubmit, message } = getCanSubmit(state);
 
   return (
     <form onSubmit={onSubmit} className={css.form}>
@@ -26,11 +27,15 @@ export default function Advanced() {
       />
       <Button
         type="submit"
-        disabled={!getCanSubmit(state)}
+        disabled={!canSubmit}
         className={css.button}
+        data-tooltip-id="submit-message"
+        data-tooltip-content={message}
+        data-tooltip-hidden={canSubmit}
       >
         Launch Workbench
       </Button>
+      <Tooltip id="submit-message" />
       <ErrorMsg err={error} />
     </form>
   );
