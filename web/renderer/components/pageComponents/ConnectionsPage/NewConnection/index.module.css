@@ -8,6 +8,34 @@
   }
 }
 
+.panel {
+  @apply pt-10 px-10;
+}
+
+.tabList {
+  @apply px-6;
+}
+
+.tab {
+  @apply w-32 text-[#9AA5AD] relative;
+}
+
+.activeTab {
+  @apply text-storm-600 border-storm-600;
+}
+
+.check {
+  @apply absolute -left-2.5 top-0 mt-1.5 text-xl;
+
+  @screen md {
+    @apply left-2;
+  }
+}
+
+.isCompleted {
+  @apply text-green-400;
+}
+
 .databaseForm {
   @apply w-full max-w-2xl mx-auto;
 
@@ -27,38 +55,45 @@
 }
 
 .whiteContainer {
-  @apply max-w-xl w-full border rounded-lg py-10 bg-white mx-auto;
-}
-
-.goback {
-  @apply mb-2 mx-2;
-  svg {
-    @apply mb-[0.2rem] mr-1 inline-block;
-  }
+  @apply max-w-2xl w-full border rounded-lg py-10 bg-white mx-auto;
 }
 
 .top {
   @apply mx-10;
 }
 
-.section {
-  @apply px-14 py-4;
+.form {
+  @apply flex items-center flex-col;
+}
+
+.label {
+  @apply text-left;
 }
 
 .typeSelect {
-  @apply ml-8 mb-4;
+  @apply mb-4 w-full;
 }
 
 .typeSelectInner {
   @apply w-full;
 }
 
-.middle {
-  @apply pt-8;
+.or {
+  @apply font-semibold text-center w-full my-5 text-lg text-stone-100;
 }
 
-.or {
-  @apply font-semibold text-center w-full my-5 text-lg;
+.or::before,
+.or::after {
+  content: "";
+  @apply w-[46%] border-t border-stone-100 inline-block align-middle relative;
+}
+
+.or::after {
+  @apply right-0 -ml-[52%];
+}
+
+.or::before {
+  @apply left-0 -mr-[52%];
 }
 
 .advancedSettings {
@@ -70,9 +105,16 @@
 }
 
 .checkbox {
-  @apply mt-7 mb-10 text-sm;
+  @apply mb-3 text-sm w-full;
 }
 
 .instructions {
   @apply mb-8;
+}
+
+.button {
+  @apply mt-8 min-w-36 py-2 bg-[#FF8964];
+  &:hover {
+    @apply bg-coral-400;
+  }
 }
