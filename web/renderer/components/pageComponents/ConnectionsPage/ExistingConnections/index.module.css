@@ -12,15 +12,46 @@
   }
 }
 .options {
-  @apply my-6;
+  @apply my-6 flex items-center;
+}
 
-  ul {
-    @apply mb-8;
-  }
+.outerEllipse {
+  background: radial-gradient(
+    circle,
+    rgba(239, 242, 243, 0.3) 0%,
+    rgba(25, 46, 61, 0.12) 100%
+  );
+  @apply w-32 h-32 rounded-full z-10 flex justify-center items-center mr-10;
+}
+
+.innerEllipse {
+  background: radial-gradient(
+    circle,
+    rgba(239, 242, 243, 0.6) 0%,
+    rgba(25, 46, 61, 0.24) 100%
+  );
+  @apply w-24 h-24 rounded-full z-20 flex justify-center items-center;
+}
+
+.dLogo {
+  @apply w-16 h-16 z-30;
+}
+
+.dLogo::after {
+  content: "";
+  @apply w-[46%] border-t border-stone-100 inline-block align-middle relative;
+}
+
+.connectionContainer{
+  @apply flex relative ml-10;
+}
+
+.line{
+  @apply border-l-2 border-t-2 border-white w-16 h-36 rounded-tl-3xl absolute top-14;
 }
 
 .connection {
-  @apply my-3 border rounded flex w-80 h-24;
+  @apply my-3 border rounded flex w-80 h-24 ml-16;
 
   button {
     @apply text-base;
@@ -48,7 +79,15 @@
 }
 
 .right {
-  @apply relative;
+  @apply relative w-56 bg-white rounded-r;
+}
+
+.delete {
+  @apply absolute top-2 right-2 text-coral-400;
+}
+
+.delete:hover {
+  @apply text-[#FF8964];
 }
 
 .err {
@@ -56,13 +95,19 @@
 }
 
 .newConnection {
-  @apply flex items-center px-4;
-
-  svg {
-    @apply mr-2;
+  @apply flex items-center px-8 h-10 bg-coral-400;
+  &:hover {
+    @apply bg-[#FF8964];
   }
 }
 
+.typeAndName {
+  @apply pl-6 h-full flex flex-col justify-center items-start;
+}
+
+.name {
+  @apply text-sky-400;
+}
 .label {
-  @apply text-sm w-24 rounded-full flex items-center justify-center mr-5;
+  @apply text-sm;
 }

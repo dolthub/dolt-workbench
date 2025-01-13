@@ -17,8 +17,10 @@ export default function Item({ conn, onDeleteClicked }: Props) {
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
   return (
     <>
-      <li key={conn.name} className={css.connection}>
-        <div className={cx(css.left,css[type.toLowerCase()])}>
+      <li key={conn.name} className={css.connectionContainer}>
+        <div className={css.line} />
+        <div className={css.connection}>
+        <div className={cx(css.left, css[type.toLowerCase()])}>
           <Image
             src="/images/database-icon.png"
             alt="DatabaseIcon"
@@ -27,11 +29,19 @@ export default function Item({ conn, onDeleteClicked }: Props) {
           />
         </div>
         <div className={css.right}>
-          <DatabaseTypeLabel conn={conn} />
-          <Button.Link onClick={() => onDeleteClicked(conn.name)}>
+          <Button.Link
+            onClick={() => onDeleteClicked(conn.name)}
+            className={css.delete}
+          >
             <IoMdClose />
           </Button.Link>
-          <Button.Link onClick={onAdd}>{conn.name}</Button.Link>
+          <div className={css.typeAndName}>
+            <DatabaseTypeLabel conn={conn} />
+            <Button.Link onClick={onAdd} className={css.name}>
+              {conn.name}
+            </Button.Link>
+          </div>
+        </div>
         </div>
       </li>
       <Loader loaded={!loading} />
@@ -46,5 +56,5 @@ type LabelProps = {
 
 function DatabaseTypeLabel({ conn }: LabelProps) {
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
-  return <span className={ css.label }>{type}</span>;
+  return <span className={css.label}>{type}</span>;
 }

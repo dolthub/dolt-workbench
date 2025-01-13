@@ -45,6 +45,18 @@ export default function ExistingConnections(props: Props) {
       </div>
 
       <div className={css.options}>
+        <div className={css.outerEllipse}>
+          <div className={css.innerEllipse}>
+            <img
+              src="/images/dolt-logo.png"
+              alt="Dolt Logo"
+              className={css.dLogo}
+            />
+          </div>
+        </div>
+        <Button className={css.newConnection} onClick={onClick}>
+          Add connection
+        </Button>
         <ul>
           {props.connections.map(conn => (
             <Item
@@ -65,9 +77,6 @@ export default function ExistingConnections(props: Props) {
             refetchQueries: [{ query: StoredConnectionsDocument }],
           }}
         />
-        <Button className={css.newConnection} onClick={onClick}>
-          <AiOutlinePlus /> New connection
-        </Button>
       </div>
     </div>
   );
