@@ -1,7 +1,16 @@
-.whiteContainer {
-  @apply max-w-xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+.outer {
+  @apply max-w-5xl;
 }
 
+.text {
+  @apply max-w-md text-base my-4;
+  a {
+    @apply text-[#FF8964];
+  }
+  a:hover {
+    @apply text-coral-400;
+  }
+}
 .options {
   @apply my-6;
 
@@ -11,15 +20,35 @@
 }
 
 .connection {
-  @apply my-3 border rounded py-1.5 px-3 flex justify-between;
+  @apply my-3 border rounded flex w-80 h-24;
 
   button {
     @apply text-base;
   }
 }
 
+.left {
+  @apply w-24 flex justify-center items-center rounded-l;
+}
+
+.dolt {
+  background: linear-gradient(#0dc1a0 0%, #29e3c1 100%);
+}
+
+.mysql {
+  background: linear-gradient(#084550 0%, #00758f 100%);
+}
+
+.doltgresql {
+  background: linear-gradient(#d34f26 0%, #ff8964 100%);
+}
+
+.postgresql {
+  background: linear-gradient(#286288 0%, #367faf 100%);
+}
+
 .right {
-  @apply flex;
+  @apply relative;
 }
 
 .err {
@@ -36,20 +65,4 @@
 
 .label {
   @apply text-sm w-24 rounded-full flex items-center justify-center mr-5;
-}
-
-.mysql {
-  @apply text-[#00758f] bg-[#00758f]/20;
-}
-
-.dolt {
-  @apply bg-mint-50 text-green-500;
-}
-
-.doltgresql {
-  @apply bg-orange-50 text-orange-500;
-}
-
-.postgresql {
-  @apply bg-[#0064a5]/20 text-[#0064a5];
 }

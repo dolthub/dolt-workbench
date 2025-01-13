@@ -6,6 +6,8 @@ import {
   useRemoveConnectionMutation,
 } from "@gen/graphql-types";
 import { useRouter } from "next/router";
+import DoltLink from "@components/links/DoltLink";
+import DoltgresLink from "@components/links/DoltgresLink";
 import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
 import { useState } from "react";
 import { newConnection } from "@lib/urls";
@@ -32,8 +34,16 @@ export default function ExistingConnections(props: Props) {
   };
 
   return (
-    <div className={css.whiteContainer}>
-      <h3>Connections</h3>
+    <div className={css.outer}>
+      <div>
+        <h3>Connections</h3>
+        <p className={css.text}>
+          Connect the workbench to any MySQL or PostgreSQL compatible database.
+          Use <DoltLink /> or <DoltgresLink /> to unlock version control
+          features.
+        </p>
+      </div>
+
       <div className={css.options}>
         <ul>
           {props.connections.map(conn => (
