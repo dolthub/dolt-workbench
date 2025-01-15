@@ -42,7 +42,7 @@ export default function ResetConnectionButton() {
           <IoReloadSharp />
         </SmallLoader>
       </Button.Link>
-      <Tooltip id="refresh-connection" className={css.tooltip} />
+      <Tooltip id="refresh-connection" className={css.tooltip} place="left" />
       <Modal
         isOpen={errorModalOpen}
         onRequestClose={onClose}

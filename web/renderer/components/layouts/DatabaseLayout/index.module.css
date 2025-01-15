@@ -12,10 +12,10 @@
 }
 
 .content {
-  @apply flex flex-col relative bottom-0 left-0 right-0 top-0 bg-stone-50;
+  @apply flex flex-col relative bottom-0 left-0 right-0 top-32 bg-stone-50;
 
   @screen lg {
-    @apply flex-row absolute top-40;
+    @apply flex-row absolute top-24;
   }
 }
 
