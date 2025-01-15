@@ -51,7 +51,11 @@ export default function DatabasesPage() {
             No databases found. Create a database to get started.
           </p>
         )}
-        <CreateDatabase buttonClassName={css.button} isPostgres={isPostgres} />
+        <CreateDatabase
+          buttonClassName={css.button}
+          isPostgres={isPostgres}
+          showText
+        />
         <ErrorMsg err={res.error} />
       </Loader>
     </MainLayout>

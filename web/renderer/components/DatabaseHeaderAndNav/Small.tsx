@@ -8,14 +8,12 @@ import css from "./index.module.css";
 type Props = {
   params: OptionalRefParams & { schemaName?: string };
   breadcrumbs?: ReactNode;
-  setShowSmall: (s: boolean) => void;
   showSmall: boolean;
 };
 
 export default function SmallDBHeader(props: Props) {
   return (
     <div
-      data-cy="small-db-page-header"
       className={cx(css.header, { [css.hideSmallHeader]: !props.showSmall })}
     >
       <div className={cx(css.headerDetails, css.smallHeader)}>
@@ -28,10 +26,7 @@ export default function SmallDBHeader(props: Props) {
             </span>
           </div>
         </div>
-        <RightHeaderButtons
-          params={props.params}
-          onMenuClick={() => props.setShowSmall(false)}
-        />
+        <RightHeaderButtons params={props.params} />
       </div>
     </div>
   );

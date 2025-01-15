@@ -43,7 +43,7 @@
 }
 
 .outer {
-  @apply absolute bottom-0 left-0 right-0 top-28 hidden lg:flex;
+  @apply absolute bottom-0 left-0 right-0 top-32 hidden lg:flex;
 }
 
 .main {
