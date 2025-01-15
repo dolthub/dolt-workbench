@@ -30,7 +30,6 @@ export default function DesktopAppNavbar({ params }: Props) {
     <div
       className={cx(css.titleBar, {
         [css.drag]: !noDrag,
-        [css.noDrag]: noDrag,
         [css.center]: !params,
       })}
       onDoubleClick={forMacNav ? handleDoubleClick : undefined}

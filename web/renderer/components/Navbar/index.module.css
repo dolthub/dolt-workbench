@@ -8,6 +8,7 @@
     @apply cursor-pointer;
     -webkit-app-region: no-drag;
   }
+  -webkit-app-region: no-drag;
 }
 
 .center {
@@ -66,10 +67,6 @@
     @apply cursor-pointer;
     -webkit-app-region: no-drag;
   }
-}
-
-.noDrag {
-  -webkit-app-region: no-drag;
 }
 
 .logo {

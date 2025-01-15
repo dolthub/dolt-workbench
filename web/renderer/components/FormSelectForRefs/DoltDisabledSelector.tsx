@@ -13,9 +13,7 @@ export default function DoltDisabledSelector(props: Props) {
     <div className={css.disabledWrapper}>
       {props.showLabel && <span className={css.label}>Branch</span>}
       <div
-        className={cx(css.doltDisabled, css.branchAndTagSelect, {
-          [css.selectForPostgres]: props.showLabel,
-        })}
+        className={cx(css.doltDisabled, css.branchAndTagSelect)}
         data-tooltip-content="Use Dolt to enable branches"
         data-tooltip-id="selector-no-dolt"
         data-tooltip-place="top"
