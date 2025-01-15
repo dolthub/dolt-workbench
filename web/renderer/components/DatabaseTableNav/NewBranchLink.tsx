@@ -25,7 +25,7 @@ export default function NewBranchLink(props: Props) {
         data-tooltip-content={
           props.doltDisabled ? "Use Dolt to create branch" : "Create new branch"
         }
-        data-tooltip-place="top"
+        data-tooltip-place="top-end"
       >
         <IoAddOutline
           className={cx(css.createBranchIcon, {

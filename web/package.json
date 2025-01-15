@@ -93,7 +93,7 @@
     "autoprefixer": "^10.4.19",
     "babel-jest": "^29.7.0",
     "cssnano": "^7.0.6",
-    "electron": "^31.0.1",
+    "electron": "33.2.1",
     "electron-builder": "^25.1.8",
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",

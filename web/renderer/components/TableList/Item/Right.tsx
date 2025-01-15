@@ -39,7 +39,7 @@ export default function Right(props: { params: TableParams; active: boolean }) {
 
       {props.active && (
         <span className={css.tableStatus} data-cy={`db-tables-table-${status}`}>
-          {editing ? "Editing" : "Viewing"}
+          {editing ? "editing" : "viewing"}
         </span>
       )}
     </span>
