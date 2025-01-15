@@ -8,7 +8,7 @@ import {
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
-import { maybeDatabase } from "@lib/urls";
+import { database } from "@lib/urls";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
 import css from "./index.module.css";
@@ -38,15 +38,15 @@ export default function DatabaseItem({
 
   const onClick = async (databaseName: string) => {
     const addedDb = await addDb({ variables: conn });
-    await res.client.clearStore();
     if (!addedDb.data) {
       return;
     }
+    await res.client.clearStore();
 
     if (conn.type === DatabaseType.Postgres) {
       await resetDB({ variables: { newDatabase: databaseName } });
     }
-    const { href, as } = maybeDatabase(databaseName);
+    const { href, as } = database({ databaseName });
     router.push(href, as).catch(console.error);
   };
 

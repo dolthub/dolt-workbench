@@ -7,19 +7,18 @@ import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
-import { StateType } from "./useSelectedConnection";
 import { DatabaseTypeLabel } from "./DatabaseTypeLabel";
 import css from "./index.module.css";
 
 type Props = {
   conn: DatabaseConnectionFragment;
-  state: StateType;
+  selectedConnection: DatabaseConnectionFragment;
   onSelected: (conn: DatabaseConnection) => void;
   currentConnection: DatabaseConnection;
 };
 export default function ConnectionItem({
   conn,
-  state,
+  selectedConnection,
   onSelected,
   currentConnection,
 }: Props) {
@@ -27,7 +26,7 @@ export default function ConnectionItem({
     <Button.Link
       key={conn.name}
       className={cx(css.connection, {
-        [css.selected]: state.connection.name === conn.name,
+        [css.selected]: selectedConnection.name === conn.name,
       })}
       onClick={async () => onSelected(conn)}
     >

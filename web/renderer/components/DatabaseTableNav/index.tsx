@@ -32,7 +32,7 @@ function Nav({
   initiallyOpen = false,
   isMobile = false,
 }: NavProps) {
-  const { isPostgres, isMysql, isDolt } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails();
   const [open, setOpen] = useState(initiallyOpen || isInitiallyOpen(params));
   const toggleMenu = () => {
     setOpen(!open);
@@ -51,10 +51,7 @@ function Nav({
           {open && (
             <>
               <div>
-                <NotDoltSelectWrapper
-                  val={params.refName}
-                  showLabel={isPostgres || (isMysql && !isDolt)}
-                >
+                <NotDoltSelectWrapper val={params.refName} showLabel>
                   <BranchAndTagSelector
                     routeRefChangeTo={routeRefChangeTo}
                     params={params}

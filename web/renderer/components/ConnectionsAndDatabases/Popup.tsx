@@ -49,7 +49,7 @@ export default function Popup({
               conn={conn}
               currentConnection={currentConnection}
               onSelected={onSelected}
-              state={state}
+              selectedConnection={state.connection}
             />
           ))}
         </div>
