@@ -28,12 +28,12 @@ export default function DesktopAppNavbar({ params }: Props) {
 
   return (
     <div
-      className={cx(css.titlebar, {
+      className={cx(css.titleBar, {
         [css.drag]: !noDrag,
         [css.noDrag]: noDrag,
         [css.center]: !params,
       })}
-      onDoubleClick={handleDoubleClick}
+      onDoubleClick={forMacNav ? handleDoubleClick : undefined}
     >
       {params ? (
         <Inner params={params} setNoDrag={setNoDrag} />
@@ -85,7 +85,7 @@ type LogoProps = {
 
 export function Logo({ imgSrc, className }: LogoProps) {
   return (
-    <Link href="/" className={cx(className)}>
+    <Link href="/" className={className}>
       <img src={imgSrc} alt="Dolt Workbench" className={css.logo} />
     </Link>
   );

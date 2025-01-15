@@ -41,9 +41,7 @@ export default function useSelectedConnection(
     });
     try {
       const dbs = await getDbs({
-        variables: {
-          ...connection,
-        },
+        variables: connection,
       });
       setState({
         connection,

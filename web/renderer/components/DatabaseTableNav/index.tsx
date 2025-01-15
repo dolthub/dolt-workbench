@@ -32,7 +32,7 @@ function Nav({
   initiallyOpen = false,
   isMobile = false,
 }: NavProps) {
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres, isMysql, isDolt } = useDatabaseDetails();
   const [open, setOpen] = useState(initiallyOpen || isInitiallyOpen(params));
   const toggleMenu = () => {
     setOpen(!open);
@@ -48,23 +48,27 @@ function Nav({
     >
       <div className={css.top}>
         <div className={css.topLine}>
-          <div
-            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
-          >
-            <NotDoltSelectWrapper val={params.refName} showLabel={isPostgres}>
-              <BranchAndTagSelector
-                routeRefChangeTo={routeRefChangeTo}
-                params={params}
-                selectedValue={params.refName}
-                isPostgres={isPostgres}
-              />
-            </NotDoltSelectWrapper>
-          </div>
-          <HideForNoWritesWrapper params={params}>
-            <NotDoltWrapper>
-              <NewBranchLink params={params} open={open} />
-            </NotDoltWrapper>
-          </HideForNoWritesWrapper>
+          {open && (
+            <>
+              <div>
+                <NotDoltSelectWrapper
+                  val={params.refName}
+                  showLabel={isPostgres || (isMysql && !isDolt)}
+                >
+                  <BranchAndTagSelector
+                    routeRefChangeTo={routeRefChangeTo}
+                    params={params}
+                    selectedValue={params.refName}
+                  />
+                </NotDoltSelectWrapper>
+              </div>
+              <HideForNoWritesWrapper params={params}>
+                <NotDoltWrapper>
+                  <NewBranchLink params={params} open={open} />
+                </NotDoltWrapper>
+              </HideForNoWritesWrapper>
+            </>
+          )}
           <GiHamburgerMenu
             onClick={toggleMenu}
             className={css.menuIcon}

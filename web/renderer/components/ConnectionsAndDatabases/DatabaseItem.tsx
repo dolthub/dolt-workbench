@@ -3,12 +3,12 @@ import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
 import {
   DatabaseConnectionFragment,
   DatabaseType,
+  useAddDatabaseConnectionMutation,
   useResetDatabaseMutation,
 } from "@gen/graphql-types";
-import useAddConnection from "@components/pageComponents/ConnectionsPage/ExistingConnections/useAddConnection";
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
-import { database } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
 import css from "./index.module.css";
@@ -26,7 +26,6 @@ export default function DatabaseItem({
   currentConnection,
   currentDatabase,
 }: Props) {
-  const { onAdd } = useAddConnection(conn);
   const {
     mutateFn: resetDB,
     loading,
@@ -35,13 +34,19 @@ export default function DatabaseItem({
     hook: useResetDatabaseMutation,
   });
   const router = useRouter();
+  const [addDb, res] = useAddDatabaseConnectionMutation();
 
   const onClick = async (databaseName: string) => {
-    await onAdd();
+    const addedDb = await addDb({ variables: conn });
+    await res.client.clearStore();
+    if (!addedDb.data) {
+      return;
+    }
+
     if (conn.type === DatabaseType.Postgres) {
       await resetDB({ variables: { newDatabase: databaseName } });
     }
-    const { href, as } = database({ databaseName });
+    const { href, as } = maybeDatabase(databaseName);
     router.push(href, as).catch(console.error);
   };
 
@@ -55,7 +60,7 @@ export default function DatabaseItem({
   const dbName = excerpt(db, 32);
   if (db === currentDatabase && conn.name === currentConnection.name) {
     return (
-      <span className={css.DbItem}>
+      <span className={css.dbItem}>
         {dbName}
         <MdRemoveRedEye className={css.viewing} />
       </span>
@@ -63,7 +68,7 @@ export default function DatabaseItem({
   }
   return (
     <Button.Link
-      className={cx(css.DbItem, css.link)}
+      className={cx(css.dbItem, css.link)}
       onClick={async () => onClick(db)}
     >
       {dbName}

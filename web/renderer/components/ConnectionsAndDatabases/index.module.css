@@ -81,15 +81,22 @@
   @apply text-storm-200 text-xs font-normal text-left py-1;
 }
 
+.dbItem {
+  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center justify-between;
+  svg {
+    @apply font-normal h-3;
+  }
+}
+
 .selected,
 .connection:hover,
-.DbItem:hover {
+.dbItem:hover {
   @apply bg-storm-50 bg-opacity-50;
 }
 
 .selected .connectionName,
 .connection:hover .connectionName,
-.DbItem:hover {
+.dbItem:hover {
   @apply text-storm-600;
 }
 
@@ -105,13 +112,13 @@
   @apply ml-4;
 }
 
-.DbItem {
-  @apply text-storm-500 font-semibold text-sm py-2 px-4 flex w-full items-center justify-between;
-  svg {
-    @apply font-normal h-3;
-  }
-}
-
 .link {
   @apply text-sky-500 justify-between;
+}
+
+.connectionError {
+  @apply flex items-center text-white font-normal;
+  &:hover {
+    @apply text-sky-400;
+  }
 }

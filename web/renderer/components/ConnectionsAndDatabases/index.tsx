@@ -1,8 +1,4 @@
-import {
-  QueryHandler,
-  ButtonWithPopup,
-  ErrorMsg,
-} from "@dolthub/react-components";
+import { QueryHandler, ButtonWithPopup } from "@dolthub/react-components";
 import { useRef, useState } from "react";
 import { useOnClickOutside } from "@dolthub/react-hooks";
 import { DatabaseParams } from "@lib/params";
@@ -10,6 +6,7 @@ import {
   DatabaseConnectionFragment,
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
+import Link from "@components/links/Link";
 import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
@@ -87,7 +84,9 @@ export default function ConnectionsAndDatabases(props: Props) {
         data.currentConnection ? (
           <Inner {...props} connection={data.currentConnection} />
         ) : (
-          <ErrorMsg errString="No connection found" />
+          <Link href="/connections" className={css.connectionError}>
+            Connections
+          </Link>
         )
       }
     />

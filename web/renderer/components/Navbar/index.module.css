@@ -1,4 +1,4 @@
-.titlebar {
+.titleBar {
   @apply bg-storm-600 text-white  w-full z-100;
   @screen lg {
     @apply h-12 fixed flex justify-end items-center;

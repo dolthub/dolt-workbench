@@ -2,16 +2,13 @@ import { DatabaseConnection, DatabaseType } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
 import cx from "classnames";
 import Link from "@components/links/Link";
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
-import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
-import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
+import { ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
-import { excerpt } from "@dolthub/web-utils";
 import { FiTool } from "@react-icons/all-files/fi/FiTool";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
-import { DatabaseTypeLabel } from "./DatabaseTypeLabel";
 import css from "./index.module.css";
+import ConnectionItem from "./ConnectionItem";
 
 type Props = {
   params: DatabaseParams;
@@ -47,29 +44,13 @@ export default function Popup({
       <div className={css.middle}>
         <div className={css.left}>
           {storedConnections.map(conn => (
-            <Button.Link
+            <ConnectionItem
               key={conn.name}
-              className={cx(css.connection, {
-                [css.selected]: state.connection.name === conn.name,
-              })}
-              onClick={async () => onSelected(conn)}
-            >
-              <div className={css.connectionTop}>
-                <div className={css.nameAndLabel}>
-                  <span className={css.connectionName}>
-                    {excerpt(conn.name, 16)}
-                  </span>
-                  <DatabaseTypeLabel conn={conn} />
-                  {conn.name === currentConnection.name && (
-                    <MdRemoveRedEye className={css.viewing} />
-                  )}
-                </div>
-                <FaChevronRight className={css.arrow} />
-              </div>
-              <div className={css.connectionUrl}>
-                {excerpt(getHostAndPort(conn.connectionUrl), 42)}
-              </div>
-            </Button.Link>
+              conn={conn}
+              currentConnection={currentConnection}
+              onSelected={onSelected}
+              state={state}
+            />
           ))}
         </div>
         <div className={css.right}>
@@ -88,9 +69,4 @@ export default function Popup({
       </div>
     </div>
   );
-}
-
-function getHostAndPort(connectionString: string) {
-  const url = new URL(connectionString);
-  return `${url.hostname}:${url.port}`;
 }
