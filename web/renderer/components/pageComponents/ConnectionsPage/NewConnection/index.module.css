@@ -17,7 +17,13 @@
 }
 
 .tab {
-  @apply w-32 text-[#9AA5AD] relative;
+  @apply w-32  text-[#9AA5AD];
+  button {
+    @apply flex items-center w-full;
+  }
+  span {
+    @apply flex-shrink-0;
+  }
 }
 
 .activeTab {
@@ -25,11 +31,7 @@
 }
 
 .check {
-  @apply absolute -left-2.5 top-0 mt-1.5 text-xl;
-
-  @screen md {
-    @apply left-2;
-  }
+  @apply mt-1.5 text-xl mr-2 flex-shrink-0;
 }
 
 .isCompleted {
