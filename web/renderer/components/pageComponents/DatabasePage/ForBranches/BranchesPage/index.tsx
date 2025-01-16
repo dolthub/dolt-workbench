@@ -14,17 +14,14 @@ import {
   SortBranchesBy,
   useDeleteBranchMutation,
 } from "@gen/graphql-types";
-import { BsArrowLeft } from "@react-icons/all-files/bs/BsArrowLeft";
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { OptionalRefParams } from "@lib/params";
 import { refetchBranchQueries } from "@lib/refetchQueries";
-import { diff, newBranch } from "@lib/urls";
+import { compare, newBranch } from "@lib/urls";
 import { useState } from "react";
 import BranchList from "./BranchList";
 import { useBranchList } from "./useBranchList";
-import BranchSelect from "../../ForPulls/BranchSelectForm/BranchSelect";
 import css from "./index.module.css";
 
 type Props = {
@@ -42,8 +39,6 @@ type InnerProps = {
 function Inner(props: InnerProps): JSX.Element {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [branchNameToDelete, setBranchNameToDelete] = useState("");
-  const [fromBranch, setFromBranch] = useState("");
-  const [toBranch, setToBranch] = useState("");
 
   const createUrl = newBranch({
     ...props.params,
@@ -77,6 +72,11 @@ function Inner(props: InnerProps): JSX.Element {
             isClearable
             horizontal
           />
+          {props.branches.length && (
+            <Link {...compare(props.params)}>
+              <Button className={css.button}>Diff branches</Button>
+            </Link>
+          )}
           <HideForNoWritesWrapper params={props.params}>
             <Link {...createUrl} className={css.white}>
               <Button>Create Branch</Button>
@@ -86,49 +86,7 @@ function Inner(props: InnerProps): JSX.Element {
       </div>
       <div>
         {props.branches.length ? (
-          <div className={css.outer}>
-            <form>
-              <div className={css.selectors}>
-                <BranchSelect
-                  branchList={props.branches}
-                  currentBranchName={toBranch}
-                  label="to branch"
-                  onChange={b => {
-                    setToBranch(b || "");
-                  }}
-                />
-                <div className={css.arrow}>
-                  <BsArrowLeft />
-                </div>
-
-                <BranchSelect
-                  branchList={props.branches}
-                  currentBranchName={fromBranch}
-                  label="from branch"
-                  onChange={b => {
-                    setFromBranch(b || "");
-                  }}
-                />
-                {fromBranch && toBranch && fromBranch !== toBranch && (
-                  <Link
-                    {...diff({
-                      ...props.params,
-                      refName: props.params.refName || "",
-                      fromCommitId: fromBranch,
-                      toCommitId: toBranch,
-                    })}
-                    className={css.viewDiffButton}
-                  >
-                    <Button>
-                      View Diff <FaChevronRight />
-                    </Button>
-                  </Link>
-                )}
-              </div>
-            </form>
-
-            <BranchList {...props} onDeleteClicked={onDeleteClicked} />
-          </div>
+          <BranchList {...props} onDeleteClicked={onDeleteClicked} />
         ) : (
           <p className={css.noBranches}>No branches found</p>
         )}

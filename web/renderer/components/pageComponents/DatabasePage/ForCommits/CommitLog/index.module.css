@@ -6,6 +6,14 @@
   @apply flex justify-between;
 }
 
+.buttons {
+  @apply flex;
+}
+
+.button {
+  @apply mr-4;
+}
+
 .title {
   @apply mx-6;
 }

@@ -16,7 +16,9 @@ export default function ForRef(props: Props) {
           Select commit to view diff
         </p>
       }
-      diffSelector={<DiffSelector.ForBranch params={props.params} />}
+      diffSelector={
+        <DiffSelector.ForBranchCommitAndTag params={props.params} />
+      }
       diffTables={null}
     />
   );
