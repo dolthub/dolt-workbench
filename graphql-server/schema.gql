@@ -322,7 +322,6 @@ type Query {
   allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
   defaultBranch(databaseName: String!): Branch
   commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
-  allCommits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): [Commit!]!
   currentDatabase: String
   currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!

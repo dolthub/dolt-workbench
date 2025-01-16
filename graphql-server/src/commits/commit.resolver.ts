@@ -47,16 +47,6 @@ export class CommitResolver {
     const logs = await conn.getLogs({ ...args, refName }, offset);
     return getCommitListRes(logs, args);
   }
-
-  @Query(_returns => [Commit])
-  async allCommits(@Args() args: ListCommitsArgs): Promise<Commit[]> {
-    const err = handleArgsErr(args);
-    if (err) throw err;
-    const refName = args.refName ?? args.afterCommitId ?? "";
-    const conn = this.conn.connection();
-    const logs = await conn.getAllLogs({ ...args, refName });
-    return logs.map(l => fromDoltLogRow(args.databaseName, l));
-  }
 }
 
 function getCommitListRes(logs: RawRow[], args: ListCommitsArgs): CommitList {

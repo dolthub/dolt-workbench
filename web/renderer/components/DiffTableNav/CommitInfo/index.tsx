@@ -33,7 +33,7 @@ export default function CommitInfo({ params }: Props) {
   const fromCommitForInfo = isDiffRange(router.asPath)
     ? params.fromCommitId
     : undefined;
-  console.log(fromCommitForInfo);
+
   if (fromCommitForInfo) {
     return (
       <div className={css.container} data-cy="commit-info">

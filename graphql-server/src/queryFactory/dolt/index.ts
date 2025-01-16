@@ -159,12 +159,6 @@ export class DoltQueryFactory
     );
   }
 
-  async getAllLogs(args: t.RefArgs): t.PR {
-    return handleRefNotFound(async () =>
-      this.query(qh.doltLogsQuery, [args.refName, 1000, 0], args.databaseName),
-    );
-  }
-
   async getTwoDotLogs(args: t.RefsArgs): t.PR {
     return handleRefNotFound(async () =>
       this.query(

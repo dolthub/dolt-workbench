@@ -97,8 +97,6 @@ export declare class QueryFactory {
 
   getLogs(args: t.RefArgs, offset: number): t.PR;
 
-  getAllLogs(args: t.RefArgs): t.PR;
-
   getTwoDotLogs(args: t.RefsArgs): t.PR;
 
   getDiffStat(args: t.RefsMaybeTableArgs): t.PR;
