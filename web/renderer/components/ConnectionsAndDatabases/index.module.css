@@ -54,8 +54,16 @@
   @apply border-none rounded-bl;
 }
 
+.icons {
+  @apply flex;
+}
+
 .wrench {
-  @apply w-4 h-4 border border-sky-400 rounded-full p-[0.1rem] -rotate-90;
+  @apply w-5 h-5 border border-sky-400 rounded-full p-[0.1rem] -rotate-90;
+}
+
+.top .plus {
+  @apply ml-2 w-[21px] h-[21px];
 }
 
 .connectionTop {
