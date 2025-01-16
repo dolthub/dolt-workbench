@@ -1,5 +1,5 @@
 .outer {
-  @apply max-w-5xl py-10;
+  @apply max-w-5xl mt-16 mb-10 flex items-center relative w-fit;
 }
 
 .text {
@@ -15,9 +15,6 @@
     @apply text-coral-400;
   }
 }
-.options {
-  @apply my-6 flex items-center relative;
-}
 
 .outerEllipse {
   background: radial-gradient(
@@ -25,7 +22,7 @@
     rgba(239, 242, 243, 0.3) 0%,
     rgba(25, 46, 61, 0.12) 100%
   );
-  @apply w-32 h-32 rounded-full z-10 flex justify-center items-center;
+  @apply w-32 h-32 rounded-full z-10 flex justify-center items-center flex-shrink-0;
 }
 
 .innerEllipse {
@@ -119,7 +116,7 @@
 }
 
 .newConnection {
-  @apply flex items-center px-8 h-10 bg-coral-400 ml-28;
+  @apply flex items-center px-8 h-10 bg-coral-400 ml-28 min-w-40;
   &:hover {
     @apply bg-[#FF8964];
   }

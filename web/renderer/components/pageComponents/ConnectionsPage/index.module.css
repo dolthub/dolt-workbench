@@ -1,7 +1,3 @@
 .container {
-  @apply max-w-6xl py-16 bg-stone-50 mb-16;
-}
-
-.inner {
-  @apply flex justify-between;
+  @apply py-16 bg-stone-50 mb-16 w-fit max-w-none;
 }

@@ -34,55 +34,53 @@ export default function ExistingConnections(props: Props) {
 
   return (
     <div className={css.outer}>
-      <div className={css.options}>
-        <div className={css.text}>
-          <h3>Connections</h3>
-          <p>
-            Connect the workbench to any MySQL or PostgreSQL compatible
-            database. Use <DoltLink /> or <DoltgresLink /> to unlock version
-            control features.
-          </p>
-        </div>
-        <div className={css.outerEllipse}>
-          <div className={css.innerEllipse}>
-            <img
-              src="/images/d-large-logo.png"
-              alt="Dolt Logo"
-              className={css.dLogo}
-            />
-            <div className={css.leftLine} />
-          </div>
-        </div>
-
-        <Button className={css.newConnection} onClick={onClick}>
-          Add connection
-        </Button>
-        <div className={css.rightLine} />
-        <ul>
-          {props.connections.map((conn, i) => (
-            <Item
-              conn={conn}
-              key={conn.name}
-              onDeleteClicked={onDeleteClicked}
-              borderClassName={getBorderLineClassName(
-                props.connections.length,
-                i,
-              )}
-            />
-          ))}
-        </ul>
-        <DeleteModal
-          isOpen={deleteModalOpen}
-          setIsOpen={setDeleteModalOpen}
-          asset="connection"
-          assetId={connectionNameToDelete}
-          mutationProps={{
-            hook: useRemoveConnectionMutation,
-            variables: { name: connectionNameToDelete },
-            refetchQueries: [{ query: StoredConnectionsDocument }],
-          }}
-        />
+      <div className={css.text}>
+        <h3>Connections</h3>
+        <p>
+          Connect the workbench to any MySQL or PostgreSQL compatible database.
+          Use <DoltLink /> or <DoltgresLink /> to unlock version control
+          features.
+        </p>
       </div>
+      <div className={css.outerEllipse}>
+        <div className={css.innerEllipse}>
+          <img
+            src="/images/d-large-logo.png"
+            alt="Dolt Logo"
+            className={css.dLogo}
+          />
+          <div className={css.leftLine} />
+        </div>
+      </div>
+
+      <Button className={css.newConnection} onClick={onClick}>
+        Add connection
+      </Button>
+      <div className={css.rightLine} />
+      <ul>
+        {props.connections.map((conn, i) => (
+          <Item
+            conn={conn}
+            key={conn.name}
+            onDeleteClicked={onDeleteClicked}
+            borderClassName={getBorderLineClassName(
+              props.connections.length,
+              i,
+            )}
+          />
+        ))}
+      </ul>
+      <DeleteModal
+        isOpen={deleteModalOpen}
+        setIsOpen={setDeleteModalOpen}
+        asset="connection"
+        assetId={connectionNameToDelete}
+        mutationProps={{
+          hook: useRemoveConnectionMutation,
+          variables: { name: connectionNameToDelete },
+          refetchQueries: [{ query: StoredConnectionsDocument }],
+        }}
+      />
     </div>
   );
 }

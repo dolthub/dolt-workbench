@@ -1,5 +1,5 @@
 .container {
-  @apply py-20 bg-stone-50;
+  @apply py-20 bg-stone-50 mb-16;
   a {
     @apply text-[#FF8964];
   }
