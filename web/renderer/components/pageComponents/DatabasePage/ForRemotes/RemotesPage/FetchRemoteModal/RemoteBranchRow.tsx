@@ -1,13 +1,16 @@
-import { QueryHandler } from "@dolthub/react-components";
+import { Button, QueryHandler } from "@dolthub/react-components";
 import {
   BranchFragment,
   RemoteFragment,
   useRemoteBranchDiffCountsQuery,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
+import { diff } from "@lib/urls";
+import Link from "@components/links/Link";
 import { getBranchName } from "./utils";
 import SyncButton from "./SyncButton";
 import BehindAheadCount from "./BehindAheadCount";
+import css from "./index.module.css";
 
 type Props = {
   branch: BranchFragment;
@@ -52,6 +55,22 @@ export default function RemoteBranchRow({
               remoteBranchName={remoteBranchName}
               currentBranch={currentBranch}
             />
+          </td>
+          <td>
+            {(!!data.remoteBranchDiffCounts.ahead ||
+              !!data.remoteBranchDiffCounts.behind) && (
+              <Link
+                {...diff({
+                  ...params,
+                  refName: currentBranch,
+                  fromCommitId: branchNameWithRemoteName,
+                  toCommitId: currentBranch,
+                })}
+                className={css.viewDiffButton}
+              >
+                <Button.Link>View Diff</Button.Link>
+              </Link>
+            )}
           </td>
         </tr>
       )}

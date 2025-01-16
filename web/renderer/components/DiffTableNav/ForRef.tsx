@@ -1,4 +1,3 @@
-import DiffSelector from "@components/DiffSelector";
 import { RefParams } from "@lib/params";
 import DiffTableNav from "./component";
 import css from "./index.module.css";
@@ -16,7 +15,6 @@ export default function ForRef(props: Props) {
           Select commit to view diff
         </p>
       }
-      diffSelector={<DiffSelector.ForBranch params={props.params} />}
       diffTables={null}
     />
   );

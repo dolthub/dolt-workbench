@@ -1,4 +1,5 @@
 import DiffTableNav from "@components/DiffTableNav";
+import DiffSelector from "@components/DiffSelector";
 import CommitDiffBreadcrumbs from "@components/breadcrumbs/CommitDiffBreadcrumbs";
 import { RefParams } from "@lib/params";
 import { commitLog } from "@lib/urls";
@@ -18,7 +19,7 @@ export default function ForBranch(props: Props) {
       routeRefChangeTo={commitLog}
       smallHeaderBreadcrumbs={<CommitDiffBreadcrumbs params={props.params} />}
     >
-      <div />
+      <DiffSelector.ForBranchCommitAndTag params={props.params} />
     </DatabasePage>
   );
 }

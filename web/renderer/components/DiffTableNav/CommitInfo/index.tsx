@@ -52,7 +52,7 @@ export default function CommitInfo({ params }: Props) {
 }
 
 export function getDiffRange(fromCommit: string, toCommit: string): string {
-  return `${shortCommit(fromCommit)}..${shortCommit(toCommit)}`;
+  return `${fromCommit.includes("/") ? fromCommit : shortCommit(fromCommit)}..${toCommit.includes("/") ? toCommit : shortCommit(toCommit)}`;
 }
 
 function isDiffRange(asPath: string) {

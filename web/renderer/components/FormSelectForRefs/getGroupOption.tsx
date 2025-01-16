@@ -6,7 +6,7 @@ import { ApolloErrorType } from "@lib/errors/types";
 export default function getGroupOption(
   options: Array<FormSelectTypes.Option<string>>,
   label: string,
-  footerRoute: Route,
+  footerRoute?: Route,
   error?: ApolloErrorType,
 ): FormSelectTypes.CustomGroupBase<FormSelectTypes.Option<string>> {
   const lowerLabel = label.toLowerCase();
@@ -16,6 +16,6 @@ export default function getGroupOption(
     noOptionsMsg: error
       ? `Error getting ${lowerLabel}: ${error.message}`
       : `No ${lowerLabel} found`,
-    footer: <Link {...footerRoute}>View all {lowerLabel}</Link>,
+    footer: footerRoute && <Link {...footerRoute}>View all {lowerLabel}</Link>,
   };
 }
