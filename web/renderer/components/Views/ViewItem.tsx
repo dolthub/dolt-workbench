@@ -36,7 +36,7 @@ export default function ViewItem(props: Props) {
           className={viewingQuery ? css.viewing : css.icon}
           data-cy={`db-views-view-button-${name}`}
         >
-          {viewingQuery ? "Viewing" : <MdPlayCircleOutline />}
+          {viewingQuery ? "viewing" : <MdPlayCircleOutline />}
         </span>
       </Btn>
     </li>

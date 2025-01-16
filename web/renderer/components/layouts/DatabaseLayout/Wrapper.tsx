@@ -7,14 +7,20 @@ import { gqlDatabaseNotFoundErr } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";
+import { DatabaseParams } from "@lib/params";
 import css from "./index.module.css";
 
 type Props = {
   children: ReactNode;
+  params: DatabaseParams;
+};
+
+type InnerProps = {
+  children: ReactNode;
 };
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
-function Inner(props: Props) {
+function Inner(props: InnerProps) {
   const router = useRouter();
   const res = useCurrentDatabaseQuery();
   if (res.loading) {
@@ -35,7 +41,7 @@ export default function DatabaseLayoutWrapper(props: Props) {
   const { toggleSqlEditor } = useSqlEditorContext();
   const { keyMap, handlers } = useHotKeysForToggle(toggleSqlEditor);
   return (
-    <DatabaseLayoutWrapperOuter>
+    <DatabaseLayoutWrapperOuter {...props}>
       <GlobalHotKeys keyMap={keyMap} handlers={handlers} />
       {props.children}
     </DatabaseLayoutWrapperOuter>
@@ -45,9 +51,9 @@ export default function DatabaseLayoutWrapper(props: Props) {
 export function DatabaseLayoutWrapperOuter(props: Props) {
   return (
     <div className={css.appLayout}>
-      <Navbar />
+      <Navbar {...props} />
       <div className={css.layoutWrapperContainer} data-cy="db-layout-container">
-        <Inner>{props.children}</Inner>
+        <Inner {...props}>{props.children}</Inner>
       </div>
     </div>
   );

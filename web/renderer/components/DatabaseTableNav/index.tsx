@@ -48,39 +48,46 @@ function Nav({
     >
       <div className={css.top}>
         <div className={css.topLine}>
-          <div
-            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
-          >
-            <NotDoltSelectWrapper val={params.refName} showLabel={isPostgres}>
-              <BranchAndTagSelector
-                routeRefChangeTo={routeRefChangeTo}
-                params={params}
-                selectedValue={params.refName}
-                isPostgres={isPostgres}
-              />
-            </NotDoltSelectWrapper>
-          </div>
-          <HideForNoWritesWrapper params={params}>
-            <NotDoltWrapper>
-              <NewBranchLink params={params} open={open} />
-            </NotDoltWrapper>
-          </HideForNoWritesWrapper>
+          {open && (
+            <>
+              <div>
+                <NotDoltSelectWrapper val={params.refName} showLabel>
+                  <BranchAndTagSelector
+                    routeRefChangeTo={routeRefChangeTo}
+                    params={params}
+                    selectedValue={params.refName}
+                  />
+                </NotDoltSelectWrapper>
+              </div>
+              <HideForNoWritesWrapper params={params}>
+                <NotDoltWrapper>
+                  <NewBranchLink params={params} open={open} />
+                </NotDoltWrapper>
+              </HideForNoWritesWrapper>
+            </>
+          )}
           <GiHamburgerMenu
             onClick={toggleMenu}
             className={css.menuIcon}
             data-cy="left-nav-toggle-icon"
           />
         </div>
-        {isPostgres && params.refName && (
-          <div
-            className={cx(css.openBranchSelector, { [css.closedItem]: !open })}
-          >
-            <SchemasSelector
-              params={{ ...params, refName: params.refName }}
-              routeRefChangeTo={routeRefChangeTo}
-            />
-          </div>
-        )}
+        <div className={css.topLine}>
+          {isPostgres && params.refName && (
+            <div
+              className={cx(css.openBranchSelector, {
+                [css.closedItem]: !open,
+              })}
+            >
+              <SchemasSelector
+                params={{ ...params, refName: "" }}
+                routeRefChangeTo={routeRefChangeTo}
+                className={css.schemaSelector}
+                selectorClassName={css.selector}
+              />
+            </div>
+          )}
+        </div>
       </div>
       <NavLinks
         className={cx(css.openNav, { [css.closedItem]: !open })}

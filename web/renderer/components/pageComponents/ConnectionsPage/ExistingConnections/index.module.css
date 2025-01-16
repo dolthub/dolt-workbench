@@ -1,9 +1,13 @@
 .outer {
-  @apply max-w-5xl;
+  @apply max-w-5xl py-10;
 }
 
 .text {
-  @apply max-w-md text-base my-4;
+  @apply absolute top-0 left-0;
+
+  p {
+    @apply max-w-md text-base my-4;
+  }
   a {
     @apply text-[#FF8964];
   }
@@ -12,7 +16,7 @@
   }
 }
 .options {
-  @apply my-6 flex items-center;
+  @apply my-6 flex items-center relative;
 }
 
 .outerEllipse {
@@ -21,7 +25,7 @@
     rgba(239, 242, 243, 0.3) 0%,
     rgba(25, 46, 61, 0.12) 100%
   );
-  @apply w-32 h-32 rounded-full z-10 flex justify-center items-center mr-10;
+  @apply w-32 h-32 rounded-full z-10 flex justify-center items-center;
 }
 
 .innerEllipse {
@@ -42,12 +46,24 @@
   @apply w-[46%] border-t border-stone-100 inline-block align-middle relative;
 }
 
-.connectionContainer{
-  @apply flex relative ml-10;
+.connectionContainer {
+  @apply flex relative;
 }
 
-.line{
-  @apply border-l-2 border-t-2 border-white w-16 h-36 rounded-tl-3xl absolute top-14;
+.line {
+  @apply w-16 h-36 absolute;
+}
+
+.roundedTop {
+  @apply border-l-2 border-t-2 border-white rounded-tl-[2rem] top-14;
+}
+
+.roundedBottom {
+  @apply border-l-2 border-b-2 border-white rounded-bl-[2rem] bottom-14;
+}
+
+.straightLine {
+  @apply border-b-2 border-white bottom-14;
 }
 
 .connection {
@@ -94,19 +110,27 @@
   @apply text-center;
 }
 
+.leftLine {
+  @apply w-36 border-t-2 border-white absolute left-24;
+}
+
+.rightLine {
+  @apply w-28 border-t-2 border-white;
+}
+
 .newConnection {
-  @apply flex items-center px-8 h-10 bg-coral-400;
+  @apply flex items-center px-8 h-10 bg-coral-400 ml-28;
   &:hover {
     @apply bg-[#FF8964];
   }
 }
 
 .typeAndName {
-  @apply pl-6 h-full flex flex-col justify-center items-start;
+  @apply pl-2 h-full flex flex-col justify-center items-start;
 }
 
 .name {
-  @apply text-sky-400;
+  @apply pl-4 pt-2 text-sky-400;
 }
 .label {
   @apply text-sm;

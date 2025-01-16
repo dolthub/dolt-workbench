@@ -125,10 +125,9 @@ app.on("ready", async () => {
   mainWindow = createWindow("main", {
     width: 1400,
     height: 900,
-    minHeight: 600,
-    minWidth: 600,
     titleBarStyle: process.platform === "darwin" ? "hiddenInset" : undefined,
-    titleBarOverlay: process.platform === "darwin",
+    titleBarOverlay:
+      process.platform === "darwin" ? { height: HEADER_HEIGHT } : undefined,
     trafficLightPosition: {
       x: 20,
       y: HEADER_HEIGHT / 2 - MACOS_TRAFFIC_LIGHTS_HEIGHT / 2,
@@ -142,9 +141,7 @@ app.on("ready", async () => {
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   setupTitleBarClickMac();
   createGraphqlSeverProcess();
-  mainWindow?.webContents.executeJavaScript(
-    ` console.error('for mac nav:', ${process.env.NEXT_PUBLIC_FOR_MAC_NAV})`,
-  );
+
   await waitForGraphQLServer("http://localhost:9002/graphql");
 
   if (isProd) {
@@ -163,6 +160,7 @@ app.on("ready", async () => {
 
     return { action: "deny" };
   });
+  mainWindow.setMinimumSize(1080, 780);
 
   // hit when clicking <a href/> with no target
   // optionally redirect to browser

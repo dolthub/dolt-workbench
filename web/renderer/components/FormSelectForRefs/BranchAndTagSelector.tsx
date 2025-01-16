@@ -3,7 +3,6 @@ import { Maybe } from "@dolthub/web-utils";
 import { useTableNamesForBranchLazyQuery } from "@gen/graphql-types";
 import { DatabasePageParams } from "@lib/params";
 import { RefUrl, branches, ref, releases } from "@lib/urls";
-import cx from "classnames";
 import { useRouter } from "next/router";
 import getGroupOption from "./getGroupOption";
 import css from "./index.module.css";
@@ -15,7 +14,6 @@ type Props = {
   selectedValue?: string;
   routeRefChangeTo: RefUrl;
   className?: string;
-  isPostgres?: boolean;
 };
 
 export default function BranchAndTagSelector(props: Props) {
@@ -84,15 +82,10 @@ export default function BranchAndTagSelector(props: Props) {
       onChange={async e => handleChangeRef(e?.value)}
       options={options}
       placeholder="select a branch or tag..."
-      outerClassName={cx(
-        { [css.outerForPostgres]: !!props.isPostgres },
-        props.className,
-      )}
+      outerClassName={props.className}
       labelClassName={css.branchLabel}
-      className={cx(css.branchAndTagSelect, {
-        [css.selectForPostgres]: !!props.isPostgres,
-      })}
-      label={props.isPostgres ? "Branch" : undefined}
+      className={css.branchAndTagSelect}
+      label="Branch:"
       horizontal
       selectedOptionFirst
       light
