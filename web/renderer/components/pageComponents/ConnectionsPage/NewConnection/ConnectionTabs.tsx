@@ -62,7 +62,7 @@ function CustomTab(props: { index: number; children: string }) {
       })}
     >
       {isCompleted && <FiCheck className={css.check} />}
-      {props.children}
+      <span>{props.children}</span>
     </Tab>
   );
 }
