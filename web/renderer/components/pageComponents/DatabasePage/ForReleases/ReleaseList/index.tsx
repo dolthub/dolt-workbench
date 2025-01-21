@@ -40,7 +40,7 @@ function Inner({ tags, ...props }: InnerProps) {
         <h1>Releases</h1>
         <div>
           <Link {...compare(props.params)} className={css.button}>
-            <Button>Diff releases</Button>
+            <Button>Diff Releases</Button>
           </Link>
           <HideForNoWritesWrapper params={props.params}>
             <Link

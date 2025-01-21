@@ -54,7 +54,7 @@ function Inner({ commits, ...props }: InnerProps) {
             <h1 className={css.title}>Commit Log</h1>
             <div className={css.buttons}>
               <Link {...compare(props.params)}>
-                <Button className={css.button}>Diff commits</Button>
+                <Button className={css.button}>Diff Commits</Button>
               </Link>
               <CommitGraphButton params={props.params} />
             </div>

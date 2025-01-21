@@ -22,7 +22,7 @@
   @apply hidden h-24 pt-4;
 
   @screen lg {
-    @apply h-16 flex items-center;
+    @apply h-16 flex items-center justify-between;
   }
 }
 

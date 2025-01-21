@@ -2,7 +2,7 @@ import { QueryHandler } from "@dolthub/react-components";
 import { useHistoryForCommitQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
-import Inner, { shortCommit } from "./Inner";
+import Inner from "./Inner";
 import css from "./index.module.css";
 
 type Props = {
@@ -39,10 +39,17 @@ export default function CommitInfo({ params }: Props) {
       <div className={css.container} data-cy="commit-info">
         <div className={css.top}>
           <div data-cy="viewing-message">
-            Viewing changes from{" "}
-            <span className={css.hash}>
-              {getDiffRange(fromCommitForInfo, params.toCommitId)}
-            </span>
+            Viewing changes
+            <div className={css.hashes}>
+              <div>
+                <span className={css.fixedWidth}>from</span>
+                <span className={css.bold}>{fromCommitForInfo}</span>
+              </div>
+              <div>
+                <span className={css.fixedWidth}>to</span>{" "}
+                <span className={css.bold}>{params.toCommitId}</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -52,7 +59,7 @@ export default function CommitInfo({ params }: Props) {
 }
 
 export function getDiffRange(fromCommit: string, toCommit: string): string {
-  return `${fromCommit.includes("/") ? fromCommit : shortCommit(fromCommit)}..${toCommit.includes("/") ? toCommit : shortCommit(toCommit)}`;
+  return `${fromCommit}..${toCommit}`;
 }
 
 function isDiffRange(asPath: string) {

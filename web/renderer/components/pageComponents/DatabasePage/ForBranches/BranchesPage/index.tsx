@@ -74,7 +74,7 @@ function Inner(props: InnerProps): JSX.Element {
           />
           {props.branches.length && (
             <Link {...compare(props.params)}>
-              <Button className={css.button}>Diff branches</Button>
+              <Button className={css.button}>Diff Branches</Button>
             </Link>
           )}
           <HideForNoWritesWrapper params={props.params}>

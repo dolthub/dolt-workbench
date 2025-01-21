@@ -19,7 +19,7 @@
 }
 
 .arrow {
-  @apply text-2xl mx-6 my-auto;
+  @apply text-2xl mx-6;
 }
 
 .button {
