@@ -69,3 +69,7 @@
 .iconGray {
   @apply fill-storm-200;
 }
+
+.button {
+  @apply mr-4;
+}

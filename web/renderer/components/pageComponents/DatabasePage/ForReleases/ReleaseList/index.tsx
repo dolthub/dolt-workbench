@@ -9,11 +9,11 @@ import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { OptionalRefParams } from "@lib/params";
 import { refetchTagQueries } from "@lib/refetchQueries";
-import { newRelease } from "@lib/urls";
+import { compare, newRelease } from "@lib/urls";
 import { useState } from "react";
 import List from "./List";
-import css from "./index.module.css";
 import { useTagList } from "./useTagList";
+import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
@@ -38,22 +38,29 @@ function Inner({ tags, ...props }: InnerProps) {
     <div className={css.container}>
       <div className={css.top}>
         <h1>Releases</h1>
-        <HideForNoWritesWrapper params={props.params}>
-          <Link
-            {...newRelease({
-              ...props.params,
-              refName:
-                tagNameToDelete === props.params.refName
-                  ? undefined
-                  : props.params.refName,
-            })}
-          >
-            <Button>Create Release</Button>
+        <div>
+          <Link {...compare(props.params)} className={css.button}>
+            <Button>Diff Releases</Button>
           </Link>
-        </HideForNoWritesWrapper>
+          <HideForNoWritesWrapper params={props.params}>
+            <Link
+              {...newRelease({
+                ...props.params,
+                refName:
+                  tagNameToDelete === props.params.refName
+                    ? undefined
+                    : props.params.refName,
+              })}
+            >
+              <Button>Create Release</Button>
+            </Link>
+          </HideForNoWritesWrapper>
+        </div>
       </div>
       {tags?.length ? (
-        <List {...props} tags={tags} openDeleteModal={openDeleteModal} />
+        <div>
+          <List {...props} tags={tags} openDeleteModal={openDeleteModal} />
+        </div>
       ) : (
         <p className={css.noReleases} data-cy="release-list-no-releases">
           No releases found

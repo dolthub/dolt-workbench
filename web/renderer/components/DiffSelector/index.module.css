@@ -6,6 +6,34 @@
   }
 }
 
+.container {
+  @apply w-[54rem];
+}
+
 .branch {
   @apply mb-6;
+}
+
+.branchCommitTag {
+  @apply w-96;
+}
+
+.selectors {
+  @apply flex mt-4 mb-6 mx-4 items-center;
+}
+
+.top {
+  @apply flex mx-4 mt-8 justify-between;
+}
+
+.title {
+  @apply font-semibold w-96;
+}
+
+.arrow {
+  @apply text-2xl mx-6;
+}
+
+.button {
+  @apply ml-4;
 }

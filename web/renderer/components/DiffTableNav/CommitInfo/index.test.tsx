@@ -2,7 +2,7 @@ import { MockedProvider } from "@apollo/client/testing";
 import useMockRouter from "@hooks/useMockRouter";
 import { render, screen } from "@testing-library/react";
 import { commit as commitLink, diff } from "@lib/urls";
-import CommitInfo, { getDiffRange } from ".";
+import CommitInfo from ".";
 import * as mocks from "./mocks";
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");
@@ -73,9 +73,8 @@ describe("test CommitInfo", () => {
       <CommitInfo params={{ ...mocks.params, toCommitId, fromCommitId }} />,
     );
 
-    expect(
-      screen.getByText(getDiffRange(fromCommitId, toCommitId)),
-    ).toBeVisible();
+    expect(screen.getByText(fromCommitId)).toBeVisible();
+    expect(screen.getByText(toCommitId)).toBeVisible();
     expect(screen.queryByText("1 parent")).not.toBeInTheDocument();
   });
 });

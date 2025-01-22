@@ -108,3 +108,7 @@
     @apply block ml-2;
   }
 }
+
+.button {
+  @apply mr-4;
+}

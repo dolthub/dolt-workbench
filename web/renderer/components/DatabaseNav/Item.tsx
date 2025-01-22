@@ -20,7 +20,7 @@ export default function NavItem(props: Props) {
       <li className={css.disabledTab}>
         <span
           className={css.innerTab}
-          data-tooltip-position="top"
+          data-tooltip-place="left"
           data-tooltip-id="disabled-database-nav-item"
           data-tooltip-content={`${props.name} tab is only available for Dolt databases`}
         >

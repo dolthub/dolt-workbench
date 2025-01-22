@@ -6,7 +6,11 @@
   @apply mx-3 mb-3;
 }
 
-.hash {
+.fixedWidth {
+  @apply inline-block w-12;
+}
+
+.bold {
   @apply font-mono font-semibold text-sm;
 }
 
