@@ -91,10 +91,13 @@ export const commit = (p: ps.CommitParams): Route =>
 export const diff = (p: ps.DiffParams): Route =>
   commit({ ...p, commitId: getDiffRange(p) });
 
+export const compare = (p: ps.DatabaseParams): Route =>
+  database(p).addStatic("compare");
+
 function getDiffRange(p: ps.DiffParams): string {
   if (!p.fromCommitId && !p.toCommitId) return "";
   if (!p.toCommitId) return p.fromCommitId ?? "";
-  return `${p.fromCommitId ?? ""}..${p.toCommitId}`;
+  return encodeURIComponent(`${p.fromCommitId ?? ""}..${p.toCommitId}`);
 }
 
 export const releases = (p: ps.OptionalRefParams): Route =>

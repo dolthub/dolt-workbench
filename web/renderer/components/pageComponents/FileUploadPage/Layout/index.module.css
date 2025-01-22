@@ -1,5 +1,5 @@
 .header {
-  @apply w-full bg-storm-500 text-center p-4 justify-between hidden lg:flex;
+  @apply w-full bg-storm-500 text-center p-4 justify-between hidden absolute top-12 lg:flex;
 
   h1 {
     @apply text-white text-2xl font-normal;

@@ -1,9 +1,11 @@
 import Page404 from "@components/Page404";
-import { Loader } from "@dolthub/react-components";
+import { Button, Loader } from "@dolthub/react-components";
 import { useAnchorTag, useReactiveWidth } from "@dolthub/react-hooks";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
+import Link from "@components/links/Link";
 import { useCommitListForBranch } from "@hooks/useCommitListForBranch";
 import { RefParams } from "@lib/params";
+import { compare } from "@lib/urls";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroller";
@@ -50,7 +52,12 @@ function Inner({ commits, ...props }: InnerProps) {
         <div className={css.container}>
           <div className={css.top}>
             <h1 className={css.title}>Commit Log</h1>
-            <CommitGraphButton params={props.params} />
+            <Button.Group className={css.buttons}>
+              <Link {...compare(props.params)}>
+                <Button className={css.button}>Diff Commits</Button>
+              </Link>
+              <CommitGraphButton params={props.params} />
+            </Button.Group>
           </div>
           <InfiniteScroll
             loadMore={props.loadMore}
