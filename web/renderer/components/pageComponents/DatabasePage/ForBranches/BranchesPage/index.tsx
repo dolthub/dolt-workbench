@@ -18,11 +18,11 @@ import { gqlDepNotFound } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { OptionalRefParams } from "@lib/params";
 import { refetchBranchQueries } from "@lib/refetchQueries";
-import { newBranch } from "@lib/urls";
+import { compare, newBranch } from "@lib/urls";
 import { useState } from "react";
 import BranchList from "./BranchList";
-import css from "./index.module.css";
 import { useBranchList } from "./useBranchList";
+import css from "./index.module.css";
 
 type Props = {
   params: OptionalRefParams;
@@ -39,6 +39,7 @@ type InnerProps = {
 function Inner(props: InnerProps): JSX.Element {
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [branchNameToDelete, setBranchNameToDelete] = useState("");
+
   const createUrl = newBranch({
     ...props.params,
     refName:
@@ -71,6 +72,11 @@ function Inner(props: InnerProps): JSX.Element {
             isClearable
             horizontal
           />
+          {props.branches.length && (
+            <Link {...compare(props.params)}>
+              <Button className={css.button}>Diff Branches</Button>
+            </Link>
+          )}
           <HideForNoWritesWrapper params={props.params}>
             <Link {...createUrl} className={css.white}>
               <Button>Create Branch</Button>
