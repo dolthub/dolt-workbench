@@ -44,7 +44,7 @@ export default function BranchCommitAndTagSelector(props: Props) {
   return (
     <FormSelect.Grouped
       isLoading={branchLoading || commitLoading || tagLoading}
-      value={[...branchOptions, ...commitOptions].find(
+      value={[...branchOptions, ...commitOptions, ...tagOptions].find(
         t => t.value === props.selectedValue,
       )}
       onChange={async e => handleChangeRef(e?.value)}

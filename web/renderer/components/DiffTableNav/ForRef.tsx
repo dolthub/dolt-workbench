@@ -12,7 +12,7 @@ export default function ForRef(props: Props) {
       {...props}
       diffStat={
         <p className={css.noDiff} data-cy="diff-layout-no-diff">
-          Select commit to view diff
+          Select revision to view diff
         </p>
       }
       diffTables={null}

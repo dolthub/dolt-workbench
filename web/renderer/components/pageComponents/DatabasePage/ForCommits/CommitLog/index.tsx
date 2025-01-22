@@ -52,12 +52,12 @@ function Inner({ commits, ...props }: InnerProps) {
         <div className={css.container}>
           <div className={css.top}>
             <h1 className={css.title}>Commit Log</h1>
-            <div className={css.buttons}>
+            <Button.Group className={css.buttons}>
               <Link {...compare(props.params)}>
                 <Button className={css.button}>Diff Commits</Button>
               </Link>
               <CommitGraphButton params={props.params} />
-            </div>
+            </Button.Group>
           </div>
           <InfiniteScroll
             loadMore={props.loadMore}
