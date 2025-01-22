@@ -28,9 +28,6 @@
 
 .topLine {
   @apply flex justify-between items-center w-full pb-2 px-4;
-  @screen lg {
-    @apply pl-4 pr-3;
-  }
 }
 
 .menuIcon {
