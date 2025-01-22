@@ -11,7 +11,6 @@ type Props = {
   params: OptionalRefParams;
   selectedValue: Maybe<string>;
   onChangeValue: (s: Maybe<string>) => void;
-  label: string;
 };
 
 export default function BranchCommitAndTagSelector(props: Props) {
@@ -48,7 +47,6 @@ export default function BranchCommitAndTagSelector(props: Props) {
       value={[...branchOptions, ...commitOptions].find(
         t => t.value === props.selectedValue,
       )}
-      label={props.label}
       onChange={async e => handleChangeRef(e?.value)}
       options={options}
       placeholder="select a branch, commit or tag..."

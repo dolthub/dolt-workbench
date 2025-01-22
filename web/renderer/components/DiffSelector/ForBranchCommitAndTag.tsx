@@ -18,25 +18,29 @@ export default function ForBranchCommitAndTag({ params }: Props) {
 
   return (
     <DiffSelector>
-      <div className={css.selectors}>
-        <div className={css.branchCommitTag}>
-          <BranchCommitAndTagSelector
-            params={params}
-            selectedValue={toRef}
-            onChangeValue={s => setToRef(s || "")}
-            label="Pick to revision"
-          />
+      <div className={css.container}>
+        <div className={css.top}>
+          <div className={css.title}>Pick to revision</div>
+          <div className={css.title}>Pick from revision</div>
         </div>
-        <div className={css.arrow}>
-          <BsArrowLeft />
-        </div>
-        <div className={css.branchCommitTag}>
-          <BranchCommitAndTagSelector
-            params={params}
-            selectedValue={fromRef}
-            onChangeValue={s => setFromRef(s || "")}
-            label="Pick from revision"
-          />
+        <div className={css.selectors}>
+          <div className={css.branchCommitTag}>
+            <BranchCommitAndTagSelector
+              params={params}
+              selectedValue={toRef}
+              onChangeValue={s => setToRef(s || "")}
+            />
+          </div>
+          <div className={css.arrow}>
+            <BsArrowLeft />
+          </div>
+          <div className={css.branchCommitTag}>
+            <BranchCommitAndTagSelector
+              params={params}
+              selectedValue={fromRef}
+              onChangeValue={s => setFromRef(s || "")}
+            />
+          </div>
         </div>
       </div>
       {fromRef && toRef && (
