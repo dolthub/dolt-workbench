@@ -57,7 +57,7 @@ export default function ExistingConnections(props: Props) {
           </div>
         </div>
         <Button className={css.newConnection} onClick={onClick}>
-          Add connection
+          Add Connection
         </Button>
         <div className={css.rightLine} />
         <ul>

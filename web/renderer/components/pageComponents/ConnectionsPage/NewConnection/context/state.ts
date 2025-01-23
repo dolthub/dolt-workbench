@@ -1,4 +1,5 @@
 import { DatabaseType } from "@gen/graphql-types";
+import { SetApolloErrorType } from "@lib/errors/types";
 import { Dispatch, SyntheticEvent } from "react";
 
 export const defaultState = {
@@ -36,5 +37,6 @@ export type ConfigContextType = {
   state: ConfigState;
   setState: ConfigDispatch;
   error?: Error | undefined;
+  setErr: SetApolloErrorType;
   clearState: () => void;
 };

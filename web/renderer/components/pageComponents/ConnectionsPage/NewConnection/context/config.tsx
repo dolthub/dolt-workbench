@@ -79,6 +79,7 @@ export function ConfigProvider({ children }: Props) {
       setState,
       onSubmit,
       error: res.err,
+      setErr: res.setErr,
       clearState,
     };
   }, [state, setState, onSubmit, res.err, clearState]);

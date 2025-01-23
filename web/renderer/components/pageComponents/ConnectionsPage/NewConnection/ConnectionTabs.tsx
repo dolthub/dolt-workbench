@@ -12,10 +12,14 @@ import About from "./About";
 import Connection from "./Connection";
 import Advanced from "./Advanced";
 import css from "./index.module.css";
+import { useConfigContext } from "./context/config";
 
 export default function ConnectionTabs() {
+  const { setErr } = useConfigContext();
+  const clearErr = () => setErr(undefined);
+
   return (
-    <Tabs initialActiveIndex={0}>
+    <Tabs initialActiveIndex={0} afterSetTabIndex={clearErr}>
       <TabList className={css.tabList}>
         {["About", "Connection", "Advanced"].map((tab, i) => (
           <CustomTab key={tab} index={i}>

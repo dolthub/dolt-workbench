@@ -33,7 +33,7 @@
 }
 
 .databaseForm {
-  @apply w-full max-w-2xl mx-auto mt-8;
+  @apply w-full max-w-2xl mx-auto mt-14;
   a {
     @apply text-[#FF8964];
   }
@@ -48,7 +48,7 @@
 .welcome {
   @apply text-center;
   h1 {
-    @apply font-semibold;
+    @apply text-4xl font-semibold;
   }
   p {
     @apply text-xl  my-6 leading-8;
