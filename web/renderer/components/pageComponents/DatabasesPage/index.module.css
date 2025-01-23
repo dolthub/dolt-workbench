@@ -3,7 +3,7 @@
 }
 
 .desc {
-  @apply text-lg text-center mb-10;
+  @apply text-lg text-center mb-8;
 }
 
 .dbList {
@@ -11,7 +11,7 @@
 }
 
 .database {
-  @apply bg-white w-full h-14 border my-2 px-8 py-2 rounded flex justify-start items-center text-sky-400 min-w-56;
+  @apply bg-white w-full h-14 border my-1 px-14 py-2 rounded flex justify-start items-center text-sky-400 min-w-80;
 
   &:hover {
     @apply border-stone-300 text-link-1;
