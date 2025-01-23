@@ -1,55 +1,145 @@
-.whiteContainer {
-  @apply max-w-xl w-full border rounded-lg py-10 px-16 bg-white mx-auto;
+.outer {
+  @apply max-w-5xl mt-16 mb-10 flex items-center relative w-fit;
 }
 
-.options {
-  @apply my-6;
-
-  ul {
-    @apply mb-8;
+.text {
+  @apply absolute top-0 left-0;
+  h1 {
+    @apply text-left;
+  }
+  p {
+    @apply max-w-md text-lg my-4;
+  }
+  a {
+    @apply text-[#FF8964];
+  }
+  a:hover {
+    @apply text-coral-400;
   }
 }
 
+.connections {
+  @apply flex items-center;
+}
+
+.outerEllipse {
+  background: radial-gradient(
+    circle,
+    rgba(239, 242, 243, 0.3) 0%,
+    rgba(25, 46, 61, 0.12) 100%
+  );
+  @apply w-32 h-32 rounded-full z-10 flex justify-center items-center flex-shrink-0;
+}
+
+.innerEllipse {
+  background: radial-gradient(
+    circle,
+    rgba(239, 242, 243, 0.6) 0%,
+    rgba(25, 46, 61, 0.24) 100%
+  );
+  @apply w-24 h-24 rounded-full z-20 flex justify-center items-center;
+}
+
+.dLogo {
+  @apply w-16 h-16 z-30;
+}
+
+.dLogo::after {
+  content: "";
+  @apply w-[46%] border-t border-stone-100 inline-block align-middle relative;
+}
+
+.connectionContainer {
+  @apply flex relative;
+}
+
+.line {
+  @apply w-16 h-32 absolute;
+}
+
+.shorterLine {
+  @apply h-20;
+}
+
+.roundedTop {
+  @apply border-l-2 border-t-2 border-white rounded-tl-[2rem] top-14;
+}
+
+.roundedBottom {
+  @apply border-l-2 border-b-2 border-white rounded-bl-[2rem] bottom-14;
+}
+
+.straightLine {
+  @apply border-b-2 border-white;
+  bottom: calc(3.75rem - 1px);
+}
+
 .connection {
-  @apply my-3 border rounded py-1.5 px-3 flex justify-between;
+  @apply my-3 border rounded flex w-80 h-24 ml-16;
 
   button {
     @apply text-base;
   }
 }
 
+.left {
+  @apply w-24 flex justify-center items-center rounded-l;
+}
+
+.dolt {
+  background: linear-gradient(#0dc1a0 0%, #29e3c1 100%);
+}
+
+.mysql {
+  background: linear-gradient(#084550 0%, #00758f 100%);
+}
+
+.doltgresql {
+  background: linear-gradient(#d34f26 0%, #ff8964 100%);
+}
+
+.postgresql {
+  background: linear-gradient(#286288 0%, #367faf 100%);
+}
+
 .right {
-  @apply flex;
+  @apply relative w-56 bg-white rounded-r;
+}
+
+.delete {
+  @apply absolute top-2 right-2 text-coral-400;
+}
+
+.delete:hover {
+  @apply text-[#FF8964];
 }
 
 .err {
   @apply text-center;
 }
 
-.newConnection {
-  @apply flex items-center px-4;
+.leftLine {
+  @apply w-36 border-t-2 border-white absolute left-24;
+}
 
-  svg {
-    @apply mr-2;
+.rightLine {
+  @apply w-28 border-t-2 border-white;
+}
+
+.newConnection {
+  @apply flex items-center px-8 h-10 bg-coral-400 ml-28 min-w-40;
+  &:hover {
+    @apply bg-[#FF8964];
   }
 }
 
+.typeAndName {
+  @apply pl-2 h-full flex flex-col justify-center items-start;
+}
+
+.name {
+  @apply pl-4 pt-2 text-sky-400;
+}
 .label {
-  @apply text-sm w-24 rounded-full flex items-center justify-center mr-5;
-}
-
-.mysql {
-  @apply text-[#00758f] bg-[#00758f]/20;
-}
-
-.dolt {
-  @apply bg-mint-50 text-green-500;
-}
-
-.doltgresql {
-  @apply bg-orange-50 text-orange-500;
-}
-
-.postgresql {
-  @apply bg-[#0064a5]/20 text-[#0064a5];
+  @apply text-sm;
 }

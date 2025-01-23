@@ -9,18 +9,16 @@ export default function ConfigurationPage() {
   const res = useStoredConnectionsQuery();
   return (
     <MainLayout className={css.container}>
-      <div className={css.inner}>
-        <QueryHandler
-          result={res}
-          render={data =>
-            data.storedConnections.length ? (
-              <ExistingConnections connections={data.storedConnections} />
-            ) : (
-              <NewConnection showWelcomeMsg />
-            )
-          }
-        />
-      </div>
+      <QueryHandler
+        result={res}
+        render={data =>
+          data.storedConnections.length ? (
+            <ExistingConnections connections={data.storedConnections} />
+          ) : (
+            <NewConnection showWelcomeMsg />
+          )
+        }
+      />
     </MainLayout>
   );
 }

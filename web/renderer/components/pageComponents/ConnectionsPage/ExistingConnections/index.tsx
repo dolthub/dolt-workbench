@@ -6,7 +6,8 @@ import {
   useRemoveConnectionMutation,
 } from "@gen/graphql-types";
 import { useRouter } from "next/router";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import DoltLink from "@components/links/DoltLink";
+import DoltgresLink from "@components/links/DoltgresLink";
 import { useState } from "react";
 import { newConnection } from "@lib/urls";
 import Item from "./Item";
@@ -31,34 +32,73 @@ export default function ExistingConnections(props: Props) {
     router.push(href, as).catch(console.error);
   };
 
+  const halfHeight = Math.floor(props.connections.length / 2) * 5;
+  const marginTop = halfHeight < 10 ? `${12 - halfHeight}rem` : "0";
+
   return (
-    <div className={css.whiteContainer}>
-      <h3>Connections</h3>
-      <div className={css.options}>
+    <div className={css.outer}>
+      <div className={css.text}>
+        <h1>Connections</h1>
+        <p>
+          Connect the workbench to any MySQL or PostgreSQL compatible database.
+          Use <DoltLink /> or <DoltgresLink /> to unlock version control
+          features.
+        </p>
+      </div>
+      <div className={css.connections} style={{ marginTop }}>
+        <div className={css.outerEllipse}>
+          <div className={css.innerEllipse}>
+            <img
+              src="/images/d-large-logo.png"
+              alt="Dolt Logo"
+              className={css.dLogo}
+            />
+            <div className={css.leftLine} />
+          </div>
+        </div>
+        <Button className={css.newConnection} onClick={onClick}>
+          Add connection
+        </Button>
+        <div className={css.rightLine} />
         <ul>
-          {props.connections.map(conn => (
+          {props.connections.map((conn, i) => (
             <Item
               conn={conn}
               key={conn.name}
               onDeleteClicked={onDeleteClicked}
+              borderClassName={getBorderLineClassName(
+                props.connections.length,
+                i,
+              )}
+              shorterLine={props.connections.length === 2}
             />
           ))}
         </ul>
-        <DeleteModal
-          isOpen={deleteModalOpen}
-          setIsOpen={setDeleteModalOpen}
-          asset="connection"
-          assetId={connectionNameToDelete}
-          mutationProps={{
-            hook: useRemoveConnectionMutation,
-            variables: { name: connectionNameToDelete },
-            refetchQueries: [{ query: StoredConnectionsDocument }],
-          }}
-        />
-        <Button className={css.newConnection} onClick={onClick}>
-          <AiOutlinePlus /> New connection
-        </Button>
       </div>
+      <DeleteModal
+        isOpen={deleteModalOpen}
+        setIsOpen={setDeleteModalOpen}
+        asset="connection"
+        assetId={connectionNameToDelete}
+        mutationProps={{
+          hook: useRemoveConnectionMutation,
+          variables: { name: connectionNameToDelete },
+          refetchQueries: [{ query: StoredConnectionsDocument }],
+        }}
+      />
     </div>
   );
+}
+
+function getBorderLineClassName(n: number, ind: number): string {
+  if (n % 2 === 0) {
+    return ind < n / 2 ? "roundedTop" : "roundedBottom";
+  }
+  if (ind < Math.floor(n / 2)) {
+    return "roundedTop";
+  }
+  if (ind > Math.floor(n / 2)) {
+    return "roundedBottom";
+  }
+  return "straightLine";
 }
