@@ -11,7 +11,7 @@
 }
 
 .database {
-  @apply bg-white w-full h-14 border my-2 px-8 py-2 rounded flex justify-start items-center text-sky-400;
+  @apply bg-white w-full h-14 border my-2 px-8 py-2 rounded flex justify-start items-center text-sky-400 min-w-56;
 
   &:hover {
     @apply border-stone-300 text-link-1;

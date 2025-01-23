@@ -1,11 +1,5 @@
 .container {
   @apply py-20 bg-stone-50 mb-16;
-  a {
-    @apply text-[#FF8964];
-  }
-  a:hover {
-    @apply text-coral-400;
-  }
 }
 
 .panel {
@@ -17,7 +11,7 @@
 }
 
 .tab {
-  @apply w-32  text-[#9AA5AD];
+  @apply w-32 h-10 text-[#9AA5AD];
   button {
     @apply flex items-center w-full;
   }
@@ -39,8 +33,13 @@
 }
 
 .databaseForm {
-  @apply w-full max-w-2xl mx-auto;
-
+  @apply w-full max-w-2xl mx-auto mt-8;
+  a {
+    @apply text-[#FF8964];
+  }
+  a:hover {
+    @apply text-coral-400;
+  }
   h3 {
     @apply mb-4;
   }
@@ -110,6 +109,15 @@
   @apply mb-3 text-sm w-full;
 }
 
+.form .checkbox {
+  svg {
+    @apply text-[#FF8964];
+    &:hover {
+      @apply bg-coral-400;
+    }
+  }
+}
+
 .instructions {
   @apply mb-8;
 }
@@ -118,12 +126,5 @@
   @apply mt-8 min-w-36 py-2 bg-[#FF8964];
   &:hover {
     @apply bg-coral-400;
-  }
-}
-
-.buttons button:last-child {
-  @apply text-[#FF8964];
-  &:hover {
-    @apply text-coral-400;
   }
 }

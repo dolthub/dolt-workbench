@@ -12,19 +12,25 @@ type Props = {
   conn: DatabaseConnectionFragment;
   onDeleteClicked: (n: string) => void;
   borderClassName: string;
+  shorterLine: boolean;
 };
 
 export default function Item({
   conn,
   onDeleteClicked,
   borderClassName,
+  shorterLine,
 }: Props) {
   const { onAdd, err, loading } = useAddConnection(conn);
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
   return (
     <>
       <li key={conn.name} className={css.connectionContainer}>
-        <div className={cx(css.line, css[borderClassName])} />
+        <div
+          className={cx(css.line, css[borderClassName], {
+            [css.shorterLine]: shorterLine,
+          })}
+        />
         <div className={css.connection}>
           <div className={cx(css.left, css[type.toLowerCase()])}>
             <Image

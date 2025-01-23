@@ -23,7 +23,6 @@ export function ConfigProvider({ children }: Props) {
   const router = useRouter();
 
   const [state, setState] = useSetState(defaultState);
-  console.log(state);
   const { mutateFn, ...res } = useMutation({
     hook: useAddDatabaseConnectionMutation,
   });

@@ -4,9 +4,11 @@
 
 .text {
   @apply absolute top-0 left-0;
-
+  h1 {
+    @apply text-left;
+  }
   p {
-    @apply max-w-md text-base my-4;
+    @apply max-w-md text-lg my-4;
   }
   a {
     @apply text-[#FF8964];
@@ -14,6 +16,10 @@
   a:hover {
     @apply text-coral-400;
   }
+}
+
+.connections {
+  @apply flex items-center;
 }
 
 .outerEllipse {
@@ -48,7 +54,11 @@
 }
 
 .line {
-  @apply w-16 h-36 absolute;
+  @apply w-16 h-32 absolute;
+}
+
+.shorterLine {
+  @apply h-20;
 }
 
 .roundedTop {
@@ -60,7 +70,8 @@
 }
 
 .straightLine {
-  @apply border-b-2 border-white bottom-14;
+  @apply border-b-2 border-white;
+  bottom: calc(3.75rem - 1px);
 }
 
 .connection {
