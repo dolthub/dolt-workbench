@@ -54,7 +54,7 @@
 }
 
 .line {
-  @apply w-16 h-32 absolute;
+  @apply w-16 h-36 absolute;
 }
 
 .shorterLine {

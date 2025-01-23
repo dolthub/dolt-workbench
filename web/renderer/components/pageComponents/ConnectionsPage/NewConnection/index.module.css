@@ -113,7 +113,7 @@
   svg {
     @apply text-[#FF8964];
     &:hover {
-      @apply bg-coral-400;
+      @apply text-coral-400;
     }
   }
 }
