@@ -7,10 +7,14 @@ import css from "./index.module.css";
 import { ConfigProvider } from "./context/config";
 
 type Props = {
+  noExistingConnection?: boolean;
+};
+
+type InnerProps = {
   showWelcomeMsg?: boolean;
 };
 
-function Inner({ showWelcomeMsg }: Props) {
+function Inner({ showWelcomeMsg }: InnerProps) {
   return (
     <div className={css.databaseForm}>
       {showWelcomeMsg && <WelcomeMessage />}
@@ -30,8 +34,8 @@ function Inner({ showWelcomeMsg }: Props) {
   );
 }
 
-export default function NewConnection({ showWelcomeMsg }: Props) {
-  return showWelcomeMsg ? (
+export default function NewConnection({ noExistingConnection }: Props) {
+  return noExistingConnection ? (
     <Inner showWelcomeMsg />
   ) : (
     <MainLayout className={css.container}>
