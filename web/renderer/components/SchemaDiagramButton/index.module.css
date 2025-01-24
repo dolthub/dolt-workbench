@@ -1,5 +1,5 @@
 .diagram {
-  @apply flex text-white text-base bg-[#FF8964] px-6 items-center;
+  @apply flex text-white text-base bg-coral-300 px-6 items-center;
   &:hover {
     @apply bg-coral-400;
   }

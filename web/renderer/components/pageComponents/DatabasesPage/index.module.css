@@ -26,7 +26,7 @@
 }
 
 .button {
-  @apply text-white my-6 px-4 py-1.5 text-base rounded button-shadow bg-[#FF8964];
+  @apply text-white my-6 px-4 py-1.5 text-base rounded button-shadow bg-coral-300;
 
   &:hover {
     @apply text-white bg-coral-400 button-shadow-hover;

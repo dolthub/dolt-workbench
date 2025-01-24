@@ -11,7 +11,7 @@
     @apply max-w-md text-lg my-4;
   }
   a {
-    @apply text-[#FF8964];
+    @apply text-coral-300;
   }
   a:hover {
     @apply text-coral-400;
@@ -111,7 +111,7 @@
 }
 
 .delete:hover {
-  @apply text-[#FF8964];
+  @apply text-coral-300;
 }
 
 .err {
@@ -129,7 +129,7 @@
 .newConnection {
   @apply flex items-center px-8 h-10 bg-coral-400 ml-28 min-w-40;
   &:hover {
-    @apply bg-[#FF8964];
+    @apply bg-coral-300;
   }
 }
 

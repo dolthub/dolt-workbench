@@ -8,7 +8,7 @@
     @apply flex my-8 mx-3 text-sm text-white font-normal;
 
     &:hover {
-      @apply text-[#FF8964];
+      @apply text-coral-300;
     }
 
     svg {

@@ -13,10 +13,12 @@ type GetCanSubmitReturnType = {
 };
 
 export function getCanSubmit(state: ConfigState): GetCanSubmitReturnType {
-  if (!state.name)
-    return { canSubmit: false, message: "Database name is required" };
+  if (!state.name) {
+    return { canSubmit: false, message: "Connection name is required" };
+  }
   if (state.connectionUrl) return { canSubmit: true };
-  if (!state.host || !state.username)
-    return { canSubmit: false, message: "Host or user name is require" };
+  if (!state.host || !state.username) {
+    return { canSubmit: false, message: "Host or user name is required" };
+  }
   return { canSubmit: true };
 }

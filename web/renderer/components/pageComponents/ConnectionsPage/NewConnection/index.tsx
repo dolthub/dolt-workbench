@@ -29,6 +29,7 @@ function Inner({ showWelcomeMsg }: Props) {
     </div>
   );
 }
+
 export default function NewConnection({ showWelcomeMsg }: Props) {
   return showWelcomeMsg ? (
     <Inner showWelcomeMsg />

@@ -5,6 +5,7 @@ import Link from "@components/links/Link";
 import { ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import CreateDatabase from "@components/CreateDatabase";
 import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { connections, newConnection } from "@lib/urls";
 import { FiTool } from "@react-icons/all-files/fi/FiTool";
 import { StateType } from "./useSelectedConnection";
 import DatabaseItem from "./DatabaseItem";
@@ -32,10 +33,10 @@ export default function Popup({
         <div className={cx(css.header, css.left)}>
           <span>CONNECTIONS</span>
           <div className={css.icons}>
-            <Link href="/connections">
+            <Link {...connections}>
               <FiTool className={css.wrench} />
             </Link>
-            <Link href="/connections/new">
+            <Link {...newConnection}>
               <AiOutlinePlusCircle className={css.plus} />
             </Link>
           </div>

@@ -13,6 +13,7 @@ import Connection from "./Connection";
 import Advanced from "./Advanced";
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
+import { ConfigState } from "./context/state";
 
 export default function ConnectionTabs() {
   const { setErr } = useConfigContext();
@@ -56,7 +57,10 @@ function CustomTabPanel(props: PanelProps) {
 function CustomTab(props: { index: number; children: string }) {
   const { activeTabIndex } = useTabsContext();
   const isActive = props.index === activeTabIndex;
-  const isCompleted = props.index < activeTabIndex;
+  const { state } = useConfigContext();
+  const isCompleted =
+    props.index < activeTabIndex && getCompleted(props.children, state);
+
   return (
     <Tab
       index={props.index}
@@ -69,4 +73,15 @@ function CustomTab(props: { index: number; children: string }) {
       <span>{props.children}</span>
     </Tab>
   );
+}
+
+function getCompleted(tabName: string, state: ConfigState): boolean {
+  switch (tabName) {
+    case "About":
+      return !!state.name;
+    case "Connection":
+      return !!state.connectionUrl || (!!state.host && !!state.username);
+    default:
+      return true;
+  }
 }

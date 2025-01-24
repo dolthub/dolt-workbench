@@ -55,8 +55,11 @@ export default function CreateDatabase(props: Props) {
         onClick={() => setIsOpen(true)}
         className={cx(css.createDB, props.buttonClassName)}
       >
-        {!props.showText && <AiOutlinePlusCircle />}
-        {props.showText && <span className={css.text}>Create Database</span>}
+        {props.showText ? (
+          <span className={css.text}>Create Database</span>
+        ) : (
+          <AiOutlinePlusCircle />
+        )}
       </Button.Link>
       <ModalOuter
         isOpen={isOpen}

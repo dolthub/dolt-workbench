@@ -11,7 +11,7 @@
 }
 
 .tab {
-  @apply w-32 h-10 text-[#9AA5AD];
+  @apply w-32 h-10 text-[#9AA5AD] relative;
   button {
     @apply flex items-center w-full;
   }
@@ -25,7 +25,7 @@
 }
 
 .check {
-  @apply mt-1.5 text-xl mr-2 flex-shrink-0;
+  @apply mt-1.5 text-xl mr-2 flex-shrink-0 absolute left-0;
 }
 
 .isCompleted {
@@ -35,7 +35,7 @@
 .databaseForm {
   @apply w-full max-w-2xl mx-auto mt-14;
   a {
-    @apply text-[#FF8964];
+    @apply text-coral-300;
   }
   a:hover {
     @apply text-coral-400;
@@ -111,7 +111,7 @@
 
 .form .checkbox {
   svg {
-    @apply text-[#FF8964];
+    @apply text-coral-300;
     &:hover {
       @apply text-coral-400;
     }
@@ -123,7 +123,7 @@
 }
 
 .button {
-  @apply mt-8 min-w-36 py-2 bg-[#FF8964];
+  @apply mt-8 min-w-36 py-2 bg-coral-300;
   &:hover {
     @apply bg-coral-400;
   }

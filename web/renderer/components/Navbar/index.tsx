@@ -7,6 +7,7 @@ import { dockerHubRepo, workbenchGithubRepo } from "@lib/constants";
 import { ExternalLink, MobileNavbar } from "@dolthub/react-components";
 import { FaGithub } from "@react-icons/all-files/fa/FaGithub";
 import { FaDocker } from "@react-icons/all-files/fa/FaDocker";
+import { connections } from "@lib/urls";
 import DocsLink from "@components/links/DocsLink";
 import css from "./index.module.css";
 
@@ -70,7 +71,7 @@ function Inner({ params, setNoDrag }: InnerProps) {
         logo={<Logo imgSrc="/images/dolt-workbench.png" />}
         bgColor="bg-storm-600"
       >
-        <Link href="/connections">Connections</Link>
+        <Link {...connections}>Connections</Link>
         <RightLinks />
       </MobileNavbar>
     </>
