@@ -2564,7 +2564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/react-components@npm:^0.2.6, @dolthub/react-components@npm:^0.2.7":
+"@dolthub/react-components@npm:^0.2.7":
   version: 0.2.7
   resolution: "@dolthub/react-components@npm:0.2.7"
   dependencies:
@@ -2588,6 +2588,33 @@ __metadata:
     react: ^18
     react-dom: ^18
   checksum: 10c0/eff3e1b7db9f7d370054cee0c479e4728ccd23db5c973374829c20e692a57607ffbd5d7d27eddb3ea3160df9c0457d044a5b1b257b4dc38d9c365fc57a8e04c7
+  languageName: node
+  linkType: hard
+
+"@dolthub/react-components@npm:^0.2.8":
+  version: 0.2.8
+  resolution: "@dolthub/react-components@npm:0.2.8"
+  dependencies:
+    "@dolthub/react-contexts": "npm:^0.1.0"
+    "@dolthub/react-hooks": "npm:^0.1.7"
+    "@dolthub/web-utils": "npm:^0.1.5"
+    "@react-icons/all-files": "npm:^4.1.0"
+    classnames: "npm:^2.5.1"
+    deepmerge: "npm:^4.3.1"
+    github-markdown-css: "npm:^5.8.1"
+    numeral: "npm:^2.0.6"
+    react-copy-to-clipboard: "npm:^5.1.0"
+    react-loader: "npm:^2.4.7"
+    react-markdown: "npm:^9.0.1"
+    react-select: "npm:^5.8.3"
+    react-tooltip: "npm:^5.28.0"
+    reactjs-popup: "npm:^2.0.6"
+    remark-gfm: "npm:^4.0.0"
+    tailwindcss: "npm:^3.4.1"
+  peerDependencies:
+    react: ^18
+    react-dom: ^18
+  checksum: 10c0/7708505e0e4b1fc610b52813ca703c9b8fa5d1204e7f1ea141361cde24b209d59b4c1c3def419066e3d2765489815721285015ae5a53905dd3ffeb5e3e17e1ac
   languageName: node
   linkType: hard
 
@@ -8897,7 +8924,7 @@ __metadata:
   resolution: "dolt-workbench@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.9.9"
-    "@dolthub/react-components": "npm:^0.2.6"
+    "@dolthub/react-components": "npm:^0.2.8"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
     "@dolthub/web-utils": "npm:^0.1.8"
@@ -10777,6 +10804,13 @@ __metadata:
   version: 5.7.0
   resolution: "github-markdown-css@npm:5.7.0"
   checksum: 10c0/93e6050081dc52a4905830cbd520635ea7795ea7b7da2946b43140e10137ffd57c6bf25cce5b7f7fb9a37d15fe8b8fc25781a9e5e59178aefbc6026e40799ec5
+  languageName: node
+  linkType: hard
+
+"github-markdown-css@npm:^5.8.1":
+  version: 5.8.1
+  resolution: "github-markdown-css@npm:5.8.1"
+  checksum: 10c0/67d3540731f9f1fc3b903362ef270e6db0ffe252fd4998a1a8777fc63b288b1904e5e57703e74a2ee04f1d613a4732b1949cb472b66a3c2e9e2b7a1750d1f0a6
   languageName: node
   linkType: hard
 
@@ -16501,6 +16535,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-select@npm:^5.8.3":
+  version: 5.10.0
+  resolution: "react-select@npm:5.10.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.0"
+    "@emotion/cache": "npm:^11.4.0"
+    "@emotion/react": "npm:^11.8.1"
+    "@floating-ui/dom": "npm:^1.0.1"
+    "@types/react-transition-group": "npm:^4.4.0"
+    memoize-one: "npm:^6.0.0"
+    prop-types: "npm:^15.6.0"
+    react-transition-group: "npm:^4.3.0"
+    use-isomorphic-layout-effect: "npm:^1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  checksum: 10c0/64cc73ef43556d0a199420d7d19f9f72e3c5e3a7f6828aef5421ec16cc0e4bc337061a8fa3c03afc5b929a087a4ca866f497e0ef865b03fe014c5cacde5e71dd
+  languageName: node
+  linkType: hard
+
 "react-timeago@npm:^7.2.0":
   version: 7.2.0
   resolution: "react-timeago@npm:7.2.0"
@@ -16510,7 +16564,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-tooltip@npm:^5.26.3, react-tooltip@npm:^5.27.1":
+"react-tooltip@npm:^5.26.3, react-tooltip@npm:^5.27.1, react-tooltip@npm:^5.28.0":
   version: 5.28.0
   resolution: "react-tooltip@npm:5.28.0"
   dependencies:
@@ -19108,6 +19162,18 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 10c0/d8deea8b85e55ac6daba237a889630bfdbf0ebf60e9e22b6a78a78c26fabe6025e04ada7abef1e444e6786227d921e648b2707db8b3564daf757264a148a6e23
+  languageName: node
+  linkType: hard
+
+"use-isomorphic-layout-effect@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "use-isomorphic-layout-effect@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@types/react":
+      optional: true
+  checksum: 10c0/2e4bdee68d65893b37e716ebdcc111550775189c80e662eda87d6f5b54dc431d3383a18914ea01a893ee5478902a878012713eaebcacbb6611ab88c463accb83
   languageName: node
   linkType: hard
 
