@@ -67,7 +67,7 @@ function CustomTab(props: { index: number; children: string }) {
         [css.activeTab]: isActive,
         [css.isCompleted]: isCompleted,
       })}
-      disabled={getDisabled(props.children,state)}
+      disabled={getDisabled(props.children, state)}
     >
       {isCompleted && <FiCheck className={css.check} />}
       <span>{props.children}</span>
@@ -86,12 +86,15 @@ function getCompleted(tabName: string, state: ConfigState): boolean {
   }
 }
 
-function getDisabled(tabName: string, state: ConfigState):boolean{
+function getDisabled(tabName: string, state: ConfigState): boolean {
   switch (tabName) {
     case "Connection":
       return !state.name;
     case "Advanced":
-      return !state.name||(!state.connectionUrl && (!state.host || !state.username));
+      return (
+        !state.name ||
+        (!state.connectionUrl && (!state.host || !state.username))
+      );
     default:
       return false;
   }
