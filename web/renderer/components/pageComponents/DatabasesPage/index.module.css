@@ -1,35 +1,34 @@
+.container {
+  @apply flex flex-col items-center;
+}
+
 .desc {
-  @apply text-lg text-center mb-10;
+  @apply text-lg text-center mb-8;
+}
+
+.dbList {
+  @apply w-fit;
 }
 
 .database {
-  @apply bg-white w-full border my-2 px-4 py-2 rounded flex justify-between;
+  @apply bg-white w-full h-14 border my-1 px-14 py-2 rounded flex justify-start items-center text-sky-400 min-w-80;
 
   &:hover {
-    @apply border-stone-300;
+    @apply border-stone-300 text-link-1;
+  }
+  svg {
+    @apply flex-shrink-0 mr-2;
   }
 }
 
 .noDbs {
-  @apply text-lg;
+  @apply text-lg italic;
 }
 
 .button {
-  @apply bg-button-1 text-white my-6 px-4 py-1.5 text-base rounded button-shadow;
+  @apply text-white my-6 px-4 py-1.5 text-base rounded button-shadow bg-coral-300;
 
   &:hover {
-    @apply text-white bg-button-2 button-shadow-hover;
-  }
-}
-
-.go {
-  @apply hidden;
-}
-
-.database:hover .go {
-  @apply flex items-center;
-
-  svg {
-    @apply ml-2;
+    @apply text-white bg-coral-400 button-shadow-hover;
   }
 }

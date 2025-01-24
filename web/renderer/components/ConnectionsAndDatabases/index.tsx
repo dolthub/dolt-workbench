@@ -9,6 +9,7 @@ import {
 import Link from "@components/links/Link";
 import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
 import { excerpt } from "@dolthub/web-utils";
+import { connections } from "@lib/urls";
 import cx from "classnames";
 import useSelectedConnection from "./useSelectedConnection";
 import Popup from "./Popup";
@@ -84,7 +85,7 @@ export default function ConnectionsAndDatabases(props: Props) {
         data.currentConnection ? (
           <Inner {...props} connection={data.currentConnection} />
         ) : (
-          <Link href="/connections" className={css.connectionError}>
+          <Link {...connections} className={css.connectionError}>
             Connections
           </Link>
         )

@@ -1,40 +1,100 @@
-.databaseForm {
-  @apply w-full max-w-xl;
+.container {
+  @apply py-20 bg-stone-50 mb-16;
+}
 
+.panel {
+  @apply pt-10 px-10;
+}
+
+.tabList {
+  @apply px-6;
+}
+
+.tab {
+  @apply w-32 h-10 text-[#9AA5AD] relative;
+  button {
+    @apply flex items-center w-full;
+  }
+  span {
+    @apply flex-shrink-0;
+  }
+}
+
+.activeTab {
+  @apply text-storm-600 border-storm-600;
+}
+
+.check {
+  @apply mt-1.5 text-xl mr-2 flex-shrink-0 absolute left-0;
+}
+
+.isCompleted {
+  @apply text-green-400;
+}
+
+.databaseForm {
+  @apply w-full max-w-2xl mx-auto mt-14;
+  a {
+    @apply text-coral-300;
+  }
+  a:hover {
+    @apply text-coral-400;
+  }
   h3 {
     @apply mb-4;
   }
 }
 
-.whiteContainer {
-  @apply max-w-xl w-full border rounded-lg py-10 bg-white mx-auto;
-}
-
-.goback {
-  @apply mb-2 mx-2;
-  svg {
-    @apply mb-[0.2rem] mr-1 inline-block;
+.welcome {
+  @apply text-center;
+  h1 {
+    @apply text-4xl font-semibold;
+  }
+  p {
+    @apply text-xl  my-6 leading-8;
   }
 }
 
-.section {
-  @apply px-14 py-4;
+.whiteContainer {
+  @apply max-w-2xl w-full border rounded-lg py-10 bg-white mx-auto;
+}
+
+.top {
+  @apply mx-10;
+}
+
+.form {
+  @apply flex items-center flex-col;
+}
+
+.label {
+  @apply text-left;
 }
 
 .typeSelect {
-  @apply ml-8 mb-4;
+  @apply mb-4 w-full;
 }
 
 .typeSelectInner {
   @apply w-full;
 }
 
-.middle {
-  @apply border-y pt-8;
+.or {
+  @apply font-semibold text-center w-full my-5 text-lg text-stone-100;
 }
 
-.or {
-  @apply font-semibold text-center w-full my-5 text-lg;
+.or::before,
+.or::after {
+  content: "";
+  @apply w-[46%] border-t border-stone-100 inline-block align-middle relative;
+}
+
+.or::after {
+  @apply right-0 -ml-[52%];
+}
+
+.or::before {
+  @apply left-0 -mr-[52%];
 }
 
 .advancedSettings {
@@ -46,9 +106,25 @@
 }
 
 .checkbox {
-  @apply mt-7 mb-10 text-sm;
+  @apply mb-3 text-sm w-full;
+}
+
+.form .checkbox {
+  svg {
+    @apply text-coral-300;
+    &:hover {
+      @apply text-coral-400;
+    }
+  }
 }
 
 .instructions {
   @apply mb-8;
+}
+
+.button {
+  @apply mt-8 min-w-36 py-2 bg-coral-300;
+  &:hover {
+    @apply bg-coral-400;
+  }
 }

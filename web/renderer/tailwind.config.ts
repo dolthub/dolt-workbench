@@ -19,6 +19,11 @@ const config = mergeConfig({
     "./renderer/styles/**/*.css",
   ],
   theme: {
+    colors: {
+      coral: {
+        300: "#FF8964",
+      },
+    },
     extend: {},
   },
   plugins: [],

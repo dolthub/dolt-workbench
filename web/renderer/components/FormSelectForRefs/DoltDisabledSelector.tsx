@@ -11,7 +11,7 @@ type Props = {
 export default function DoltDisabledSelector(props: Props) {
   return (
     <div className={css.disabledWrapper}>
-      {props.showLabel && <span className={css.label}>Branch</span>}
+      {props.showLabel && <span className={css.label}>Branch:</span>}
       <div
         className={cx(css.doltDisabled, css.branchAndTagSelect)}
         data-tooltip-content="Use Dolt to enable branches"
