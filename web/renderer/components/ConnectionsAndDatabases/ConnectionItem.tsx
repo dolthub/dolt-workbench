@@ -2,6 +2,7 @@ import {
   DatabaseConnection,
   DatabaseConnectionFragment,
 } from "@gen/graphql-types";
+import URLParse from "url-parse";
 import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { Button } from "@dolthub/react-components";
@@ -48,6 +49,11 @@ export default function ConnectionItem({
 }
 
 function getHostAndPort(connectionString: string) {
-  const url = new URL(connectionString);
-  return `${url.hostname}:${url.port}`;
+  try {
+    const url = new URLParse(connectionString);
+    return `${url.hostname}:${url.port}`;
+  } catch (error) {
+    console.error("Failed to parse URL in Electron:", error);
+    return "";
+  }
 }
