@@ -53,7 +53,7 @@ function getHostAndPort(connectionString: string) {
     const url = new URLParse(connectionString);
     return `${url.hostname}:${url.port}`;
   } catch (error) {
-    console.error("Failed to parse URL in Electron:", error);
+    console.error("Failed to parse URL:", error);
     return "";
   }
 }
