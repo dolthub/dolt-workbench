@@ -5,10 +5,10 @@ import {
   SmallLoader,
   Tooltip,
 } from "@dolthub/react-components";
+import { useEffect, useState } from "react";
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
 import { getCanSubmit } from "./context/utils";
-import { useEffect, useState } from "react";
 
 export default function Advanced() {
   const { state, setState, error, onSubmit } = useConfigContext();
@@ -17,10 +17,10 @@ export default function Advanced() {
     undefined,
   );
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     window.ipc.startDoltServer(state.name);
-    onSubmit(e);
+    await onSubmit(e);
   };
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
