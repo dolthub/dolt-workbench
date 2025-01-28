@@ -8,16 +8,30 @@ import {
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
 import { getCanSubmit } from "./context/utils";
+import { useEffect, useState } from "react";
 
 export default function Advanced() {
   const { state, setState, error, onSubmit } = useConfigContext();
   const { canSubmit, message } = getCanSubmit(state);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(
+    undefined,
+  );
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     window.ipc.startDoltServer(state.name);
-    onSubmit(e)
+    onSubmit(e);
   };
-  
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+      const handleError = (event: any, msg: string) => {
+        setErrorMessage(msg);
+      };
+
+      window.ipc.sendDoltServerError("server-error", handleError);
+    }
+  }, []);
+
   return (
     <form onSubmit={onSubmit} className={css.form}>
       <Checkbox
@@ -58,9 +72,9 @@ export default function Advanced() {
       >
         Start and Connect to Dolt Server
       </Button>
-      
+
       {state.loading && <SmallLoader loaded={!state.loading} />}
-      <ErrorMsg err={error} />
+      <ErrorMsg errString={error?.message || errorMessage} />
       <Tooltip id="submit-message" />
     </form>
   );
