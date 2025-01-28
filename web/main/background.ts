@@ -13,6 +13,7 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
+import { startDoltServer } from "./doltServer";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -212,4 +213,8 @@ ipcMain.handle("api-config", async () => {
 
 ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow.webContents.send("toggle-left-sidebar");
+});
+
+ipcMain.on("start-dolt-server", (event, connectionName: string) => {
+  startDoltServer(mainWindow, connectionName);
 });

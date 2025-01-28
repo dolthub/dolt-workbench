@@ -12,7 +12,12 @@ import { getCanSubmit } from "./context/utils";
 export default function Advanced() {
   const { state, setState, error, onSubmit } = useConfigContext();
   const { canSubmit, message } = getCanSubmit(state);
-
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    window.ipc.startDoltServer(state.name);
+    onSubmit(e)
+  };
+  
   return (
     <form onSubmit={onSubmit} className={css.form}>
       <Checkbox
@@ -42,6 +47,18 @@ export default function Advanced() {
       >
         Launch Workbench
       </Button>
+      <Button
+        type="button"
+        disabled={!canSubmit}
+        className={css.button}
+        data-tooltip-id="submit-message"
+        data-tooltip-content={message}
+        data-tooltip-hidden={canSubmit}
+        onClick={handleSubmit}
+      >
+        Start and Connect to Dolt Server
+      </Button>
+      
       {state.loading && <SmallLoader loaded={!state.loading} />}
       <ErrorMsg err={error} />
       <Tooltip id="submit-message" />
