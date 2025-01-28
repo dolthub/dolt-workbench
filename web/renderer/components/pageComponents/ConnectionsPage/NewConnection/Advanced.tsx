@@ -10,6 +10,8 @@ import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
 import { getCanSubmit } from "./context/utils";
 
+const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+
 export default function Advanced() {
   const { state, setState, error, onSubmit } = useConfigContext();
   const { canSubmit, message } = getCanSubmit(state);
@@ -23,7 +25,7 @@ export default function Advanced() {
     await onSubmit(e);
   };
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+    if (forElectron) {
       const handleError = (event: any, msg: string) => {
         setErrorMessage(msg);
       };
@@ -61,17 +63,19 @@ export default function Advanced() {
       >
         Launch Workbench
       </Button>
-      <Button
-        type="button"
-        disabled={!canSubmit}
-        className={css.button}
-        data-tooltip-id="submit-message"
-        data-tooltip-content={message}
-        data-tooltip-hidden={canSubmit}
-        onClick={handleSubmit}
-      >
-        Start and Connect to Dolt Server
-      </Button>
+      {forElectron && (
+        <Button
+          type="button"
+          disabled={!canSubmit}
+          className={css.button}
+          data-tooltip-id="submit-message"
+          data-tooltip-content={message}
+          data-tooltip-hidden={canSubmit}
+          onClick={handleSubmit}
+        >
+          Start and Connect to Dolt Server
+        </Button>
+      )}
 
       {state.loading && <SmallLoader loaded={!state.loading} />}
       <ErrorMsg errString={error?.message || errorMessage} />
