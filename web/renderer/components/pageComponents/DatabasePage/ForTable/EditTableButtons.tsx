@@ -117,7 +117,7 @@ function Inner(props: InnerProps) {
 
 function ForDolt(props: Props) {
   const tagRes = useTagListQuery({
-    variables: {...props.params,name:props.params.connectionName},
+    variables: { ...props.params, name: props.params.connectionName },
   });
   const refIsTag = !!tagRes.data?.tags.list.find(
     t => t.tagName === props.params.refName,

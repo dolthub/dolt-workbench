@@ -37,6 +37,7 @@ export class ConnectionProvider {
   > = {};
 
   connection(name: string): QueryFactory {
+    console.log("name", name);
     if (!(name in this.databases)) {
       throw new Error("Connection not found");
     }
@@ -71,7 +72,6 @@ export class ConnectionProvider {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
-    console.log("addconnection");
     const name = config.name;
     if (name in this.databases) {
       if (this.databases[name].ds.isInitialized) {
@@ -91,8 +91,6 @@ export class ConnectionProvider {
     const res = await newQueryFactory(config.type, ds);
     const qf = res.qf;
 
-    const cdb = await qf.currentDatabase();
-    console.log("cdb", cdb);
     this.databases[name] = { ds, config, qf };
     return { isDolt: res.isDolt };
   }

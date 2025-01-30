@@ -85,8 +85,6 @@ export class DatabaseResolver {
   async currentDatabase(name: string): Promise<string | undefined> {
     const conn = this.conn.connection(name);
     const currentDB = await conn.currentDatabase();
-    console.log("conn", conn);
-    console.log("currentdb", currentDB);
     return currentDB;
     return conn.currentDatabase();
   }
@@ -120,8 +118,12 @@ export class DatabaseResolver {
   }
 
   @Query(_returns => [String])
-  async databases(name: string): Promise<string[]> {
+  async databases(
+    @Args() { name }: GetDoltDatabaseDetailsArgs,
+  ): Promise<string[]> {
+    console.log("name database", name);
     const conn = this.conn.connection(name);
+    console.log(conn);
     const dbs = await conn.databases();
     return dbs;
   }
@@ -131,7 +133,7 @@ export class DatabaseResolver {
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string[]> {
     if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
-      return this.databases(args.name);
+      return this.databases(args);
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     const ds = getDataSource(workbenchConfig);

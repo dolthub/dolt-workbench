@@ -510,6 +510,11 @@ export type QueryCommitsArgs = {
 };
 
 
+export type QueryDatabasesArgs = {
+  name: Scalars['String']['input'];
+};
+
+
 export type QueryDatabasesByConnectionArgs = {
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
@@ -940,7 +945,9 @@ export type SqlSelectForCsvDownloadQueryVariables = Exact<{
 
 export type SqlSelectForCsvDownloadQuery = { __typename?: 'Query', sqlSelectForCsvDownload: string };
 
-export type DatabasesQueryVariables = Exact<{ [key: string]: never; }>;
+export type DatabasesQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
 
 
 export type DatabasesQuery = { __typename?: 'Query', databases: Array<string> };
@@ -1990,8 +1997,8 @@ export type SqlSelectForCsvDownloadLazyQueryHookResult = ReturnType<typeof useSq
 export type SqlSelectForCsvDownloadSuspenseQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadSuspenseQuery>;
 export type SqlSelectForCsvDownloadQueryResult = Apollo.QueryResult<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>;
 export const DatabasesDocument = gql`
-    query Databases {
-  databases
+    query Databases($name: String!) {
+  databases(name: $name)
 }
     `;
 
@@ -2007,10 +2014,11 @@ export const DatabasesDocument = gql`
  * @example
  * const { data, loading, error } = useDatabasesQuery({
  *   variables: {
+ *      name: // value for 'name'
  *   },
  * });
  */
-export function useDatabasesQuery(baseOptions?: Apollo.QueryHookOptions<DatabasesQuery, DatabasesQueryVariables>) {
+export function useDatabasesQuery(baseOptions: Apollo.QueryHookOptions<DatabasesQuery, DatabasesQueryVariables> & ({ variables: DatabasesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<DatabasesQuery, DatabasesQueryVariables>(DatabasesDocument, options);
       }

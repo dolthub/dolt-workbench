@@ -326,7 +326,7 @@ type Query {
   currentDatabase: String
   currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!
-  databases: [String!]!
+  databases(name: String!): [String!]!
   databasesByConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): [String!]!
   schemas(name: String!, databaseName: String!, refName: String!): [String!]!
   doltDatabaseDetails(name: String!): DoltDatabaseDetails!

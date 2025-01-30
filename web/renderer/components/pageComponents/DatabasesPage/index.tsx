@@ -11,16 +11,24 @@ import cx from "classnames";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import css from "./index.module.css";
+import { ConnectionParams } from "@lib/params";
 
-export default function DatabasesPage() {
-  const { isPostgres } = useDatabaseDetails();
-  const res = useDatabasesQuery();
+type Props = {
+  params: ConnectionParams;
+};
+
+export default function DatabasesPage({ params }: Props) {
+  const { isPostgres } = useDatabaseDetails(params.connectionName);
+  const res = useDatabasesQuery({ variables: { name: params.connectionName } });
   const router = useRouter();
 
   useEffect(() => {
     if (!res.data) return;
     if (res.data.databases.length === 1) {
-      const { href, as } = database({ databaseName: res.data.databases[0]  });
+      const { href, as } = database({
+        connectionName: params.connectionName,
+        databaseName: res.data.databases[0],
+      });
       router.push(href, as).catch(console.error);
     }
   }, [res.data?.databases]);
@@ -37,7 +45,12 @@ export default function DatabasesPage() {
             <ul className={css.dbList}>
               {res.data.databases.map(db => (
                 <li key={db}>
-                  <Link {...database({ databaseName: db })}>
+                  <Link
+                    {...database({
+                      connectionName: params.connectionName,
+                      databaseName: db,
+                    })}
+                  >
                     <div className={css.database}>
                       <FaDatabase />
                       <span>{excerpt(db, 32)}</span>
