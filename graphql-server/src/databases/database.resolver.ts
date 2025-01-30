@@ -20,6 +20,12 @@ import { DatabaseType } from "./database.enum";
 import { DatabaseConnection } from "./database.model";
 
 @ArgsType()
+class GetDoltDatabaseDetailsArgs {
+  @Field()
+  name: string;
+}
+
+@ArgsType()
 class AddDatabaseConnectionArgs {
   @Field()
   connectionUrl: string;
@@ -76,8 +82,12 @@ export class DatabaseResolver {
   ) {}
 
   @Query(_returns => String, { nullable: true })
-  async currentDatabase(): Promise<string | undefined> {
-    const conn = this.conn.connection();
+  async currentDatabase(name: string): Promise<string | undefined> {
+    const conn = this.conn.connection(name);
+    const currentDB = await conn.currentDatabase();
+    console.log("conn", conn);
+    console.log("currentdb", currentDB);
+    return currentDB;
     return conn.currentDatabase();
   }
 
@@ -110,8 +120,8 @@ export class DatabaseResolver {
   }
 
   @Query(_returns => [String])
-  async databases(): Promise<string[]> {
-    const conn = this.conn.connection();
+  async databases(name: string): Promise<string[]> {
+    const conn = this.conn.connection(name);
     const dbs = await conn.databases();
     return dbs;
   }
@@ -121,7 +131,7 @@ export class DatabaseResolver {
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string[]> {
     if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
-      return this.databases();
+      return this.databases(args.name);
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     const ds = getDataSource(workbenchConfig);
@@ -138,7 +148,7 @@ export class DatabaseResolver {
 
   @Query(_returns => [String])
   async schemas(@Args() args: RefArgs): Promise<string[]> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     if (!conn.schemas) return [];
     const schemas = await conn.schemas(args);
     return schemas.filter(
@@ -150,9 +160,11 @@ export class DatabaseResolver {
   }
 
   @Query(_returns => DoltDatabaseDetails)
-  async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
+  async doltDatabaseDetails(
+    @Args() { name }: GetDoltDatabaseDetailsArgs,
+  ): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(name);
     return {
       isDolt: conn.isDolt,
       hideDoltFeatures: workbenchConfig?.hideDoltFeatures ?? false,
@@ -167,7 +179,7 @@ export class DatabaseResolver {
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
-    const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
+    const storeArgs = { ...workbenchConfig, isDolt };
 
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);
@@ -175,7 +187,7 @@ export class DatabaseResolver {
       this.fileStoreService.addItemToStore(storeArgs);
     }
 
-    const db = await this.currentDatabase();
+    const db = await this.currentDatabase(args.name);
     return { currentDatabase: db };
   }
 
@@ -193,14 +205,14 @@ export class DatabaseResolver {
 
   @Mutation(_returns => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     await conn.createDatabase(args);
     return true;
   }
 
   @Mutation(_returns => Boolean)
   async createSchema(@Args() args: RefSchemaArgs): Promise<boolean> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     if (!conn.createSchema) return false;
     await conn.createSchema(args);
     return true;
@@ -218,6 +230,7 @@ function getWorkbenchConfigFromArgs(
 ): WorkbenchConfig {
   const type = args.type ?? DatabaseType.Mysql;
   return {
+    name: args.name,
     connectionUrl: args.connectionUrl,
     hideDoltFeatures: !!args.hideDoltFeatures,
     useSSL: !!args.useSSL,

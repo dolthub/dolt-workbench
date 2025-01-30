@@ -18,7 +18,7 @@ export class RowResolver {
 
   @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     const pkCols = await conn.getTablePKColumns(args);
     const offset = args.offset ?? 0;
     const rows = await conn.getTableRows(args, {

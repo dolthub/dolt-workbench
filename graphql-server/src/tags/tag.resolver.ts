@@ -28,7 +28,7 @@ export class TagResolver {
 
   @Query(_returns => TagList)
   async tags(@Args() args: DBArgs): Promise<TagList> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     const res = await conn.getTags(args);
     return {
       list: res.map(t => fromDoltRowRes(args.databaseName, t)),
@@ -37,7 +37,7 @@ export class TagResolver {
 
   @Query(_returns => Tag, { nullable: true })
   async tag(@Args() args: TagArgs): Promise<Tag | undefined> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     const res = await conn.getTag(args);
     if (!res) return undefined;
     return fromDoltRowRes(args.databaseName, res);
@@ -45,14 +45,14 @@ export class TagResolver {
 
   @Mutation(_returns => String)
   async createTag(@Args() args: CreateTagArgs): Promise<string> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     await conn.createNewTag(args);
     return args.tagName;
   }
 
   @Mutation(_returns => Boolean)
   async deleteTag(@Args() args: TagArgs): Promise<boolean> {
-    const conn = this.conn.connection();
+    const conn = this.conn.connection(args.name);
     await conn.callDeleteTag(args);
     return true;
   }

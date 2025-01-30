@@ -8,6 +8,10 @@ export class ListOffsetRes {
 
 @ArgsType()
 export class DBArgs {
+  // connection name
+  @Field()
+  name: string;
+
   @Field()
   databaseName: string;
 }

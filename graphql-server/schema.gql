@@ -54,6 +54,7 @@ type TableNames {
 
 type Branch {
   _id: ID!
+  name: String!
   databaseName: String!
   branchName: String!
   lastCommitter: String!
@@ -315,42 +316,42 @@ type RemoteBranchDiffCounts {
 }
 
 type Query {
-  branch(databaseName: String!, branchName: String!): Branch
-  branchOrDefault(databaseName: String!, branchName: String): Branch
-  branches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
-  remoteBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): BranchList!
-  allBranches(offset: Int, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
-  defaultBranch(databaseName: String!): Branch
-  commits(offset: Int, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
+  branch(name: String!, databaseName: String!, branchName: String!): Branch
+  branchOrDefault(name: String!, databaseName: String!, branchName: String): Branch
+  branches(offset: Int, name: String!, databaseName: String!, sortBy: SortBranchesBy): BranchList!
+  remoteBranches(offset: Int, name: String!, databaseName: String!, sortBy: SortBranchesBy): BranchList!
+  allBranches(offset: Int, name: String!, databaseName: String!, sortBy: SortBranchesBy): [Branch!]!
+  defaultBranch(name: String!, databaseName: String!): Branch
+  commits(offset: Int, name: String!, databaseName: String!, refName: String, afterCommitId: String, twoDot: Boolean, excludingCommitsFromRefName: String): CommitList!
   currentDatabase: String
   currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
   databasesByConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): [String!]!
-  schemas(databaseName: String!, refName: String!): [String!]!
-  doltDatabaseDetails: DoltDatabaseDetails!
-  diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
-  diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
-  docs(databaseName: String!, refName: String!): DocList!
-  docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
-  pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
-  remotes(databaseName: String!, offset: Int): RemoteList!
-  fetchRemote(databaseName: String!, remoteName: String!): FetchRes!
-  remoteBranchDiffCounts(databaseName: String!, fromRefName: String!, toRefName: String!): RemoteBranchDiffCounts!
-  rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
-  rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
-  schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
-  doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
-  views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
-  doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
-  sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!): SqlSelect!
-  sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!): String!
-  status(databaseName: String!, refName: String!): [Status!]!
-  table(tableName: String!, refName: String!, databaseName: String!, schemaName: String): Table!
-  tableNames(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
-  tables(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
-  tags(databaseName: String!): TagList!
-  tag(databaseName: String!, tagName: String!): Tag
+  schemas(name: String!, databaseName: String!, refName: String!): [String!]!
+  doltDatabaseDetails(name: String!): DoltDatabaseDetails!
+  diffStat(name: String!, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
+  diffSummaries(name: String!, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
+  docs(name: String!, databaseName: String!, refName: String!): DocList!
+  docOrDefaultDoc(refName: String!, name: String!, databaseName: String!, docType: DocType): Doc
+  pullWithDetails(name: String!, databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
+  remotes(name: String!, databaseName: String!, offset: Int): RemoteList!
+  fetchRemote(name: String!, databaseName: String!, remoteName: String!): FetchRes!
+  remoteBranchDiffCounts(name: String!, databaseName: String!, fromRefName: String!, toRefName: String!): RemoteBranchDiffCounts!
+  rowDiffs(offset: Int, name: String!, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
+  rows(schemaName: String, refName: String!, name: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  schemaDiff(name: String!, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
+  doltSchemas(refName: String!, name: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
+  views(refName: String!, name: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
+  doltProcedures(name: String!, databaseName: String!, refName: String!): [SchemaItem!]!
+  sqlSelect(schemaName: String, refName: String!, name: String!, databaseName: String!, queryString: String!): SqlSelect!
+  sqlSelectForCsvDownload(schemaName: String, refName: String!, name: String!, databaseName: String!, queryString: String!): String!
+  status(name: String!, databaseName: String!, refName: String!): [Status!]!
+  table(tableName: String!, refName: String!, name: String!, databaseName: String!, schemaName: String): Table!
+  tableNames(schemaName: String, refName: String!, name: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!
+  tables(schemaName: String, refName: String!, name: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
+  tags(name: String!, databaseName: String!): TagList!
+  tag(name: String!, databaseName: String!, tagName: String!): Tag
 }
 
 enum SortBranchesBy {
@@ -378,22 +379,22 @@ enum DiffRowType {
 }
 
 type Mutation {
-  createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
-  deleteBranch(databaseName: String!, branchName: String!): Boolean!
+  createBranch(name: String!, databaseName: String!, newBranchName: String!, fromRefName: String!): String!
+  deleteBranch(name: String!, databaseName: String!, branchName: String!): Boolean!
   addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
-  createDatabase(databaseName: String!): Boolean!
-  createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!
+  createDatabase(name: String!, databaseName: String!): Boolean!
+  createSchema(refName: String!, name: String!, databaseName: String!, schemaName: String!): Boolean!
   resetDatabase(newDatabase: String): Boolean!
-  loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
-  mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
-  addRemote(remoteName: String!, databaseName: String!, remoteUrl: String!): String!
-  deleteRemote(databaseName: String!, remoteName: String!): Boolean!
-  pullFromRemote(remoteName: String!, databaseName: String!, refName: String!, branchName: String!): PullRes!
-  pushToRemote(remoteName: String!, databaseName: String!, refName: String!, branchName: String!): PushRes!
-  restoreAllTables(databaseName: String!, refName: String!): Boolean!
-  createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
-  deleteTag(databaseName: String!, tagName: String!): Boolean!
+  loadDataFile(schemaName: String, tableName: String!, refName: String!, name: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
+  mergePull(fromBranchName: String!, toBranchName: String!, name: String!, databaseName: String!, author: AuthorInfo): Boolean!
+  addRemote(remoteName: String!, name: String!, databaseName: String!, remoteUrl: String!): String!
+  deleteRemote(name: String!, databaseName: String!, remoteName: String!): Boolean!
+  pullFromRemote(remoteName: String!, name: String!, databaseName: String!, refName: String!, branchName: String!): PullRes!
+  pushToRemote(remoteName: String!, name: String!, databaseName: String!, refName: String!, branchName: String!): PushRes!
+  restoreAllTables(name: String!, databaseName: String!, refName: String!): Boolean!
+  createTag(tagName: String!, name: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
+  deleteTag(name: String!, databaseName: String!, tagName: String!): Boolean!
 }
 
 enum ImportOperation {
