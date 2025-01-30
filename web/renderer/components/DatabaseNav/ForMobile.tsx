@@ -22,7 +22,7 @@ export default function MobileDatabaseNav(props: Props) {
 }
 
 function Inner(props: Props) {
-  const res = useDatabaseDetails();
+  const res = useDatabaseDetails(props.params.databaseName);
   const router = useRouter();
 
   const handleChangeTab = (pageName: Maybe<string>) => {

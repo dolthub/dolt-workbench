@@ -7,8 +7,8 @@ export const BRANCH_SELECTOR_QUERY = gql`
     remote
     remoteBranch
   }
-  query BranchesForSelector($databaseName: String!) {
-    allBranches(databaseName: $databaseName) {
+  query BranchesForSelector($name: String!, $databaseName: String!) {
+    allBranches(name: $name, databaseName: $databaseName) {
       ...BranchForBranchSelector
     }
   }
@@ -30,8 +30,8 @@ export const TAG_LIST_QUERY = gql`
       ...TagForList
     }
   }
-  query TagList($databaseName: String!) {
-    tags(databaseName: $databaseName) {
+  query TagList($name: String!, $databaseName: String!) {
+    tags(name: $name, databaseName: $databaseName) {
       ...TagListForTagList
     }
   }
@@ -39,11 +39,13 @@ export const TAG_LIST_QUERY = gql`
 
 export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
   query TableNamesForBranch(
+    $name: String!
     $databaseName: String!
     $refName: String!
     $schemaName: String
   ) {
     tableNames(
+      name: $name
       databaseName: $databaseName
       refName: $refName
       schemaName: $schemaName

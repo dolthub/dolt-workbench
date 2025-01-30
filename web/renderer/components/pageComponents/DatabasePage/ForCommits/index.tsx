@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function ForCommits(props: Props) {
-  const { isDolt } = useDatabaseDetails();
+  const { isDolt } = useDatabaseDetails(props.params.connectionName);
   const notCommitLogPage =
     !props.params.refName || props.compare || !!props.params.diffRange;
   const commonProps = {

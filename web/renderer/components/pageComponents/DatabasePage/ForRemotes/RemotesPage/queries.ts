@@ -7,8 +7,8 @@ export const REMOTES_FOR_REMOTES_PAGE_QUERY = gql`
     url
     fetchSpecs
   }
-  query RemoteList($databaseName: String!, $offset: Int) {
-    remotes(databaseName: $databaseName, offset: $offset) {
+  query RemoteList(  name:$String! $databaseName: String!, $offset: Int) {
+    remotes(name:$name ,databaseName: $databaseName, offset: $offset) {
       list {
         ...Remote
       }
@@ -18,8 +18,8 @@ export const REMOTES_FOR_REMOTES_PAGE_QUERY = gql`
 `;
 
 export const DELETE_REMOTE = gql`
-  mutation DeleteRemote($remoteName: String!, $databaseName: String!) {
-    deleteRemote(remoteName: $remoteName, databaseName: $databaseName)
+  mutation DeleteRemote(  name:$String! $remoteName: String!, $databaseName: String!) {
+    deleteRemote(name:$name ,remoteName: $remoteName, databaseName: $databaseName)
   }
 `;
 
@@ -30,12 +30,14 @@ export const PULL_FROM_REMOTE = gql`
     message
   }
   mutation PullFromRemote(
+    name:$String!
     $remoteName: String!
     $branchName: String!
     $databaseName: String!
     $refName: String!
   ) {
     pullFromRemote(
+      name:$name 
       remoteName: $remoteName
       branchName: $branchName
       databaseName: $databaseName
@@ -52,12 +54,14 @@ export const PUSH_TO_REMOTE = gql`
     message
   }
   mutation PushToRemote(
+    name:$String!
     $remoteName: String!
     $branchName: String!
     $databaseName: String!
     $refName: String!
   ) {
     pushToRemote(
+      name:$name 
       remoteName: $remoteName
       branchName: $branchName
       databaseName: $databaseName

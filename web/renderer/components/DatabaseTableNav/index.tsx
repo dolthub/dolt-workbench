@@ -32,7 +32,7 @@ function Nav({
   initiallyOpen = false,
   isMobile = false,
 }: NavProps) {
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails( params.connectionName);
   const [open, setOpen] = useState(initiallyOpen || isInitiallyOpen(params));
   const toggleMenu = () => {
     setOpen(!open);

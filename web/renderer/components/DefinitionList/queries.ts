@@ -6,11 +6,13 @@ export const ROWS_FOR_SCHEMAS = gql`
     type
   }
   query RowsForDoltSchemas(
+    $name: String!
     $databaseName: String!
     $refName: String!
     $schemaName: String
   ) {
     doltSchemas(
+      name: $name
       databaseName: $databaseName
       refName: $refName
       schemaName: $schemaName
@@ -21,8 +23,16 @@ export const ROWS_FOR_SCHEMAS = gql`
 `;
 
 export const ROWS_FOR_PROCEDURES = gql`
-  query RowsForDoltProcedures($databaseName: String!, $refName: String!) {
-    doltProcedures(databaseName: $databaseName, refName: $refName) {
+  query RowsForDoltProcedures(
+    $name: String!
+    $databaseName: String!
+    $refName: String!
+  ) {
+    doltProcedures(
+      name: $name
+      databaseName: $databaseName
+      refName: $refName
+    ) {
       ...SchemaItem
     }
   }

@@ -13,7 +13,7 @@ type Props = {
 };
 
 export default function NotDoltWrapper(props: Props) {
-  const res = useDatabaseDetails();
+  const res = useDatabaseDetails(props.params.connectionName);
   if (res.loading) return <Loader loaded={false} />;
   if (res.error) return <ErrorMsg err={res.error} />;
   if (res.isDolt) {

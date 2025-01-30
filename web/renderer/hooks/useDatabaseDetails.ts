@@ -10,8 +10,10 @@ type ReturnType = {
   error?: ApolloErrorType;
 };
 
-export default function useDatabaseDetails(): ReturnType {
-  const res = useDoltDatabaseDetailsQuery();
+export default function useDatabaseDetails(connectionName: string): ReturnType {
+  const res = useDoltDatabaseDetailsQuery({
+    variables: { name: connectionName },
+  });
   const isDolt = res.data?.doltDatabaseDetails.isDolt ?? false;
   const isPostgres =
     res.data?.doltDatabaseDetails.type === DatabaseType.Postgres;

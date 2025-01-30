@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const DELETE_TAG_MUTATION = gql`
-  mutation DeleteTag($databaseName: String!, $tagName: String!) {
-    deleteTag(databaseName: $databaseName, tagName: $tagName)
+  mutation DeleteTag(name:$String! $databaseName: String!, $tagName: String!) {
+    deleteTag(name:$name databaseName: $databaseName, tagName: $tagName)
   }
 `;

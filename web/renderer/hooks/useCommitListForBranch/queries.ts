@@ -24,11 +24,17 @@ export const HISTORY_FOR_BRANCH_QUERY = gql`
     nextOffset
   }
   query HistoryForBranch(
+    $name: String!
     $databaseName: String!
     $refName: String!
     $offset: Int
   ) {
-    commits(databaseName: $databaseName, refName: $refName, offset: $offset) {
+    commits(
+      name: $name
+      databaseName: $databaseName
+      refName: $refName
+      offset: $offset
+    ) {
       ...CommitListForHistory
     }
   }

@@ -117,7 +117,7 @@ function Inner(props: InnerProps) {
 
 function ForDolt(props: Props) {
   const tagRes = useTagListQuery({
-    variables: props.params,
+    variables: {...props.params,name:props.params.connectionName},
   });
   const refIsTag = !!tagRes.data?.tags.list.find(
     t => t.tagName === props.params.refName,
@@ -126,7 +126,7 @@ function ForDolt(props: Props) {
 }
 
 export default function EditTableButtons(props: Props) {
-  const res = useDatabaseDetails();
+  const res = useDatabaseDetails(props.params.connectionName);
 
   if (!res.isDolt) return <Inner {...props} />;
   return <ForDolt {...props} />;

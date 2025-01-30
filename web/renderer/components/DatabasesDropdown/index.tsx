@@ -87,7 +87,7 @@ function Inner(props: InnerProps) {
 
 export default function DatabasesDropdown(props: Props) {
   const res = useDatabasesQuery();
-  const dbDetails = useDatabaseDetails();
+  const dbDetails = useDatabaseDetails(props.params.connectionName);
   if (res.loading || dbDetails.loading || res.error || !res.data) return null;
   return (
     <Inner

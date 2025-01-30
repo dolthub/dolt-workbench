@@ -20,7 +20,7 @@ export default function DatabasesPage() {
   useEffect(() => {
     if (!res.data) return;
     if (res.data.databases.length === 1) {
-      const { href, as } = database({ databaseName: res.data.databases[0] });
+      const { href, as } = database({ databaseName: res.data.databases[0]  });
       router.push(href, as).catch(console.error);
     }
   }, [res.data?.databases]);

@@ -44,7 +44,7 @@ type ExecutionProps = {
 };
 
 export function ExecutionMessage(props: ExecutionProps) {
-  const { isDolt } = useDatabaseDetails();
+  const { isDolt } = useDatabaseDetails(props.params.connectionName);
   return (
     <p className={css.status}>
       {props.rowsLen} {pluralize(props.rowsLen, "row")} selected

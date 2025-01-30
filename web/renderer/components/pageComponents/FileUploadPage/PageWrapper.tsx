@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function PageWrapper(props: Props) {
-  const doltRes = useDatabaseDetails();
+  const doltRes = useDatabaseDetails(props.params.connectionName);
   const { userHasWritePerms, loading } = useRole();
   const res = useDefaultBranchPageQuery({
     variables: { ...props.params, filterSystemTables: true },

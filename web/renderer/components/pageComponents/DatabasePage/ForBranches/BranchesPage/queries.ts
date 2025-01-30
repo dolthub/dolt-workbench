@@ -9,11 +9,17 @@ export const BRANCHES_FOR_BRANCHES_PAGE_QUERY = gql`
     lastCommitter
   }
   query BranchList(
+    $name: String!
     $databaseName: String!
     $sortBy: SortBranchesBy
     $offset: Int
   ) {
-    branches(databaseName: $databaseName, sortBy: $sortBy, offset: $offset) {
+    branches(
+      name: $name
+      databaseName: $databaseName
+      sortBy: $sortBy
+      offset: $offset
+    ) {
       list {
         ...Branch
       }
@@ -24,11 +30,13 @@ export const BRANCHES_FOR_BRANCHES_PAGE_QUERY = gql`
 
 export const REMOTE_BRANCHES = gql`
   query RemoteBranches(
+    $name: String!
     $databaseName: String!
     $sortBy: SortBranchesBy
     $offset: Int
   ) {
     remoteBranches(
+      name: $name
       databaseName: $databaseName
       sortBy: $sortBy
       offset: $offset
@@ -42,7 +50,15 @@ export const REMOTE_BRANCHES = gql`
 `;
 
 export const DELETE_BRANCH = gql`
-  mutation DeleteBranch($branchName: String!, $databaseName: String!) {
-    deleteBranch(branchName: $branchName, databaseName: $databaseName)
+  mutation DeleteBranch(
+    $name: String!
+    $branchName: String!
+    $databaseName: String!
+  ) {
+    deleteBranch(
+      name: $name
+      branchName: $branchName
+      databaseName: $databaseName
+    )
   }
 `;

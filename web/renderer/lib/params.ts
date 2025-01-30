@@ -1,6 +1,7 @@
 import { Maybe } from "@dolthub/web-utils";
 
 export type DatabaseParams = {
+  connectionName: string;
   databaseName: string;
 };
 

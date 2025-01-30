@@ -8,15 +8,21 @@ export const GET_STATUS = gql`
     staged
     status
   }
-  query GetStatus($databaseName: String!, $refName: String!) {
-    status(databaseName: $databaseName, refName: $refName) {
+  query GetStatus(    name:$String!
+    $databaseName: String!, $refName: String!) {
+    status(      name: $name
+      databaseName: $databaseName, refName: $refName) {
       ...Status
     }
   }
 `;
 
 export const RESTORE_ALL = gql`
-  mutation RestoreAll($databaseName: String!, $refName: String!) {
-    restoreAllTables(databaseName: $databaseName, refName: $refName)
+  mutation RestoreAll(    
+    name:$String!
+    $databaseName: String!, $refName: String!) {
+    restoreAllTables(      
+      name: $name,
+      databaseName: $databaseName, refName: $refName)
   }
 `;
