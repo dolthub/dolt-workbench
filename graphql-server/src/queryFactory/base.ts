@@ -32,9 +32,7 @@ export class BaseQueryFactory {
   }
 
   async currentDatabase(): Promise<string | undefined> {
-    return this.handleAsyncQuery(async qr => {
-      return qr.getCurrentDatabase();
-    });
+    return this.handleAsyncQuery(async qr => qr.getCurrentDatabase());
   }
 
   async createDatabase(args: t.DBArgs): Promise<void> {

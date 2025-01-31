@@ -41,9 +41,7 @@ export class ConnectionProvider {
     if (!(name in this.databases)) {
       throw new Error("Connection not found");
     }
-    if (!this.databases[name].qf) {
-      throw new Error("Data source service not initialized");
-    }
+
     return this.databases[name].qf;
   }
 
@@ -72,7 +70,7 @@ export class ConnectionProvider {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
-    const name = config.name;
+    const { name } = config;
     if (name in this.databases) {
       if (this.databases[name].ds.isInitialized) {
         await this.databases[name].ds.destroy();
@@ -89,9 +87,8 @@ export class ConnectionProvider {
     }
 
     const res = await newQueryFactory(config.type, ds);
-    const qf = res.qf;
 
-    this.databases[name] = { ds, config, qf };
+    this.databases[name] = { ds, config, qf: res.qf };
     return { isDolt: res.isDolt };
   }
 
