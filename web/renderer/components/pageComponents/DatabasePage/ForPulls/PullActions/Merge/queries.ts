@@ -2,14 +2,14 @@ import { gql } from "@apollo/client";
 
 export const MERGE_PULL = gql`
   mutation MergePull(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $fromBranchName: String!
     $toBranchName: String!
     $author: AuthorInfo
   ) {
     mergePull(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       fromBranchName: $fromBranchName
       toBranchName: $toBranchName

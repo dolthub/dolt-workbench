@@ -9,6 +9,7 @@ type Params = RequiredRefsParams & { tableName: string; refName: string };
 
 const tableParams: TableParams = {
   databaseName: "dbname",
+  connectionName: "connection",
   refName: "master",
   tableName: "test-table",
 };

@@ -5,7 +5,7 @@ export default function useDefaultBranch(params: DatabaseParams) {
   const { data, ...res } = useDefaultBranchPageQuery({
     variables: {
       databaseName: params.databaseName,
-      name: params.connectionName,
+      connectionName: params.connectionName,
       filterSystemTables: true,
     },
   });

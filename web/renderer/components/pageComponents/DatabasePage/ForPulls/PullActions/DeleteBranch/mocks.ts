@@ -10,6 +10,7 @@ import {
 import { BranchParams, PullParams } from "@lib/params";
 
 export const pullParams: Required<PullParams> = {
+  connectionName: "connection",
   databaseName: "test",
   refName: "main",
   fromBranchName: "taylor/feature-branch",
@@ -41,6 +42,7 @@ export const pullDetailsMock = (
 const branchParams: BranchParams = {
   branchName: pullParams.fromBranchName,
   databaseName: pullParams.databaseName,
+  connectionName: pullParams.connectionName,
 };
 
 export const branchExistsMock = (

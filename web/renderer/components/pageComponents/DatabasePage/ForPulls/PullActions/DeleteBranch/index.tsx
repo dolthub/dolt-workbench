@@ -24,6 +24,7 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   const params: DatabaseParams = {
+    connectionName: props.params.connectionName,
     databaseName: props.params.databaseName,
   };
   const branchParams: BranchParams = {
@@ -105,7 +106,7 @@ function Inner(props: InnerProps) {
 export default function DeleteBranch(props: Props) {
   const res = useGetBranchForPullQuery({
     variables: {
-      databaseName: props.params.databaseName,
+      ...props.params,
       branchName: props.params.fromBranchName,
     },
   });

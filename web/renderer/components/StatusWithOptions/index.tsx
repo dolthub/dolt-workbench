@@ -84,7 +84,7 @@ function Inner(props: InnerProps) {
 
 export default function StatusWithOptions(props: Props) {
   const res = useGetStatusQuery({
-    variables: { ...props.params, name: props.params.connectionName },
+    variables: props.params,
     fetchPolicy: "cache-and-network",
   });
   if (res.loading) return <Loader loaded={false} />;

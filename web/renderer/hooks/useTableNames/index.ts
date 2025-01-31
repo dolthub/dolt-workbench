@@ -17,7 +17,6 @@ export default function useTableNames(
 ): ReturnType {
   const variables = {
     ...params,
-    name: params.connectionName,
     filterSystemTables: true,
   };
   const { data, ...res } = useTableNamesQuery({

@@ -40,10 +40,8 @@ export default function NavLinks({ className, params }: Props) {
           renderChildren={refName => (
             <TableList
               params={{
-                databaseName: params.databaseName,
-                tableName: params.tableName,
+                ...params,
                 refName,
-                schemaName: params.schemaName,
               }}
             />
           )}

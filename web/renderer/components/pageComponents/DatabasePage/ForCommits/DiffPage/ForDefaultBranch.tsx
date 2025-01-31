@@ -10,7 +10,7 @@ type Props = {
 
 export default function ForDefaultBranch(props: Props) {
   const { data, loading } = useDefaultBranchPageQuery({
-    variables: { ...props.params, name: props.params.connectionName },
+    variables: props.params,
   });
   if (loading) return <Loader loaded={false} />;
   const refName = data?.defaultBranch?.branchName;

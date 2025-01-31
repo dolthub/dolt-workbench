@@ -17,13 +17,14 @@ type Props = {
   children?: JSX.Element | null;
   className?: string;
   params?: SqlQueryParams;
+  connectionName: string;
 };
 
 export default function DatabaseOptionsDropdown({
   onClickHideUnchangedCol,
   ...props
 }: Props): JSX.Element | null {
-  const { isMutation } = useSqlParser();
+  const { isMutation } = useSqlParser(props.connectionName);
   const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
 

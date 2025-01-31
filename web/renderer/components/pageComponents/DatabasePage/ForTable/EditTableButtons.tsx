@@ -30,7 +30,9 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   const { executeQuery, setEditorString, toggleSqlEditor } =
     useSqlEditorContext();
-  const { dropTable, insertIntoTable } = useSqlBuilder();
+  const { dropTable, insertIntoTable } = useSqlBuilder(
+    props.params.connectionName,
+  );
   const { columns } = useDataTableContext();
 
   const uploadParams: UploadParamsWithOptions = {
@@ -117,7 +119,7 @@ function Inner(props: InnerProps) {
 
 function ForDolt(props: Props) {
   const tagRes = useTagListQuery({
-    variables: { ...props.params, name: props.params.connectionName },
+    variables: props.params,
   });
   const refIsTag = !!tagRes.data?.tags.list.find(
     t => t.tagName === props.params.refName,

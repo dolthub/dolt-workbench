@@ -27,13 +27,13 @@ export const TABLE_LIST_FOR_SCHEMAS_QUERY = gql`
     }
   }
   query TableListForSchemas(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $schemaName: String
   ) {
     tables(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       schemaName: $schemaName

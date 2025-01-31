@@ -19,7 +19,7 @@ export class DocsResolver {
     @Args()
     args: RefArgs,
   ): Promise<DocList> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     const docRows = await conn.getDocs(args);
     if (!docRows?.length) return { list: [] };
     const sortedDocs = docRows.sort(d =>
@@ -34,7 +34,7 @@ export class DocsResolver {
   async docOrDefaultDoc(
     @Args() args: GetDefaultDocArgs,
   ): Promise<Doc | undefined> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     const docRows = await conn.getDocs(args);
     if (!docRows?.length) return undefined;
 

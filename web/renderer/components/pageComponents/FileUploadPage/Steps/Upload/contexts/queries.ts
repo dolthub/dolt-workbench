@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const LOAD_DATA = gql`
   mutation LoadData(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $schemaName: String
@@ -13,7 +13,7 @@ export const LOAD_DATA = gql`
     $modifier: LoadDataModifier
   ) {
     loadDataFile(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       schemaName: $schemaName

@@ -12,7 +12,7 @@ type ReturnType = {
 
 export default function useDatabaseDetails(connectionName: string): ReturnType {
   const res = useDoltDatabaseDetailsQuery({
-    variables: { name: connectionName },
+    variables: { connectionName },
   });
   const isDolt = res.data?.doltDatabaseDetails.isDolt ?? false;
   const isPostgres =

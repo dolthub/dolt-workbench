@@ -15,7 +15,7 @@ export default function FilterButton({ col, value }: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName } = params;
-  const { addWhereClauseToSelect } = useSqlBuilder();
+  const { addWhereClauseToSelect } = useSqlBuilder(params.connectionName);
 
   if (!tableName) return null;
 

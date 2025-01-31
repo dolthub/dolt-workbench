@@ -32,7 +32,7 @@ export default function usePullFromRemote(
     hook: usePullFromRemoteMutation,
     refetchQueries: currentBranch
       ? refetchRemoteBranchesQueries({
-          databaseName: params.databaseName,
+          ...params,
           toRefName: currentBranch,
           fromRefName: `${remote.name}/${remoteBranchName}`,
         })
@@ -55,10 +55,9 @@ export default function usePullFromRemote(
     e.preventDefault();
     const pullRes = await pull({
       variables: {
-        databaseName: params.databaseName,
+        ...params,
         remoteName: remote.name,
         branchName: remoteBranchName,
-        refName: params.refName,
       },
     });
     if (!pullRes.data) return;

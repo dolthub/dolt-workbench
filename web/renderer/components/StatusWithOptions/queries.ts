@@ -8,8 +8,16 @@ export const GET_STATUS = gql`
     staged
     status
   }
-  query GetStatus($name: String!, $databaseName: String!, $refName: String!) {
-    status(name: $name, databaseName: $databaseName, refName: $refName) {
+  query GetStatus(
+    $connectionName: String!
+    $databaseName: String!
+    $refName: String!
+  ) {
+    status(
+      connectionName: $connectionName
+      databaseName: $databaseName
+      refName: $refName
+    ) {
       ...Status
     }
   }
@@ -17,12 +25,12 @@ export const GET_STATUS = gql`
 
 export const RESTORE_ALL = gql`
   mutation RestoreAll(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
   ) {
     restoreAllTables(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
     )

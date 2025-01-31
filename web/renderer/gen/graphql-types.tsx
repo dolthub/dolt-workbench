@@ -28,11 +28,11 @@ export type Branch = {
   __typename?: 'Branch';
   _id: Scalars['ID']['output'];
   branchName: Scalars['String']['output'];
+  connectionName: Scalars['String']['output'];
   databaseName: Scalars['String']['output'];
   head?: Maybe<Scalars['String']['output']>;
   lastCommitter: Scalars['String']['output'];
   lastUpdated: Scalars['Timestamp']['output'];
-  name: Scalars['String']['output'];
   remote?: Maybe<Scalars['String']['output']>;
   remoteBranch?: Maybe<Scalars['String']['output']>;
   table?: Maybe<Table>;
@@ -105,10 +105,10 @@ export type CurrentDatabaseState = {
 
 export type DatabaseConnection = {
   __typename?: 'DatabaseConnection';
+  connectionName: Scalars['String']['output'];
   connectionUrl: Scalars['String']['output'];
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
   isDolt?: Maybe<Scalars['Boolean']['output']>;
-  name: Scalars['String']['output'];
   type?: Maybe<DatabaseType>;
   useSSL?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -250,39 +250,39 @@ export type Mutation = {
 
 
 export type MutationAddDatabaseConnectionArgs = {
+  connectionName: Scalars['String']['input'];
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type MutationAddRemoteArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
   remoteUrl: Scalars['String']['input'];
 };
 
 
 export type MutationCreateBranchArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   newBranchName: Scalars['String']['input'];
 };
 
 
 export type MutationCreateDatabaseArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 
 export type MutationCreateSchemaArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
 };
@@ -290,42 +290,42 @@ export type MutationCreateSchemaArgs = {
 
 export type MutationCreateTagArgs = {
   author?: InputMaybe<AuthorInfo>;
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteRemoteArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
 
 
 export type MutationDeleteTagArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
 };
 
 
 export type MutationLoadDataFileArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   file: Scalars['Upload']['input'];
   fileType: FileType;
   importOp: ImportOperation;
   modifier?: InputMaybe<LoadDataModifier>;
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
@@ -334,17 +334,17 @@ export type MutationLoadDataFileArgs = {
 
 export type MutationMergePullArgs = {
   author?: InputMaybe<AuthorInfo>;
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
 };
 
 
 export type MutationPullFromRemoteArgs = {
   branchName: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
@@ -352,15 +352,15 @@ export type MutationPullFromRemoteArgs = {
 
 export type MutationPushToRemoteArgs = {
   branchName: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
 
 
 export type MutationRemoveDatabaseConnectionArgs = {
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 };
 
 
@@ -370,8 +370,8 @@ export type MutationResetDatabaseArgs = {
 
 
 export type MutationRestoreAllTablesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
@@ -470,8 +470,8 @@ export type Query = {
 
 
 export type QueryAllBranchesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<SortBranchesBy>;
 };
@@ -479,21 +479,21 @@ export type QueryAllBranchesArgs = {
 
 export type QueryBranchArgs = {
   branchName: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 
 export type QueryBranchOrDefaultArgs = {
   branchName?: InputMaybe<Scalars['String']['input']>;
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 
 export type QueryBranchesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<SortBranchesBy>;
 };
@@ -501,9 +501,9 @@ export type QueryBranchesArgs = {
 
 export type QueryCommitsArgs = {
   afterCommitId?: InputMaybe<Scalars['String']['input']>;
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   excludingCommitsFromRefName?: InputMaybe<Scalars['String']['input']>;
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
   twoDot?: InputMaybe<Scalars['Boolean']['input']>;
@@ -511,34 +511,34 @@ export type QueryCommitsArgs = {
 
 
 export type QueryCurrentDatabaseArgs = {
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 };
 
 
 export type QueryDatabasesArgs = {
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 };
 
 
 export type QueryDatabasesByConnectionArgs = {
+  connectionName: Scalars['String']['input'];
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
 export type QueryDefaultBranchArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 
 export type QueryDiffStatArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName?: InputMaybe<Scalars['String']['input']>;
   toRefName: Scalars['String']['input'];
@@ -547,9 +547,9 @@ export type QueryDiffStatArgs = {
 
 
 export type QueryDiffSummariesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName?: InputMaybe<Scalars['String']['input']>;
   toRefName: Scalars['String']['input'];
@@ -558,83 +558,83 @@ export type QueryDiffSummariesArgs = {
 
 
 export type QueryDocOrDefaultDocArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   docType?: InputMaybe<DocType>;
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
 
 export type QueryDocsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
 
 export type QueryDoltDatabaseDetailsArgs = {
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 };
 
 
 export type QueryDoltProceduresArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
 
 export type QueryDoltSchemasArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryFetchRemoteArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
 };
 
 
 export type QueryPullWithDetailsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
 };
 
 
 export type QueryRemoteBranchDiffCountsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
 };
 
 
 export type QueryRemoteBranchesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<SortBranchesBy>;
 };
 
 
 export type QueryRemotesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
 export type QueryRowDiffsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   filterByRowType?: InputMaybe<DiffRowType>;
   fromRefName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
@@ -644,8 +644,8 @@ export type QueryRowDiffsArgs = {
 
 
 export type QueryRowsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -654,9 +654,9 @@ export type QueryRowsArgs = {
 
 
 export type QuerySchemaDiffArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
@@ -665,15 +665,15 @@ export type QuerySchemaDiffArgs = {
 
 
 export type QuerySchemasArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
 
 export type QuerySqlSelectArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -681,8 +681,8 @@ export type QuerySqlSelectArgs = {
 
 
 export type QuerySqlSelectForCsvDownloadArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -690,15 +690,15 @@ export type QuerySqlSelectForCsvDownloadArgs = {
 
 
 export type QueryStatusArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
 
 export type QueryTableArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
@@ -706,39 +706,39 @@ export type QueryTableArgs = {
 
 
 export type QueryTableNamesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryTablesArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
 export type QueryTagArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
 };
 
 
 export type QueryTagsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
 };
 
 
 export type QueryViewsArgs = {
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
 };
@@ -887,7 +887,7 @@ export type TextDiff = {
 };
 
 export type CreateDatabaseMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
@@ -895,7 +895,7 @@ export type CreateDatabaseMutationVariables = Exact<{
 export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
 
 export type CurrentDatabaseQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 }>;
 
 
@@ -911,11 +911,11 @@ export type ResetDatabaseMutation = { __typename?: 'Mutation', resetDatabase: bo
 export type CurrentConnectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null } | null };
+export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, connectionName: string, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null } | null };
 
 export type DatabasesByConnectionQueryVariables = Exact<{
   connectionUrl: Scalars['String']['input'];
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<DatabaseType>;
@@ -925,7 +925,7 @@ export type DatabasesByConnectionQueryVariables = Exact<{
 export type DatabasesByConnectionQuery = { __typename?: 'Query', databasesByConnection: Array<string> };
 
 export type GetTagQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
 }>;
@@ -934,7 +934,7 @@ export type GetTagQueryVariables = Exact<{
 export type GetTagQuery = { __typename?: 'Query', tag?: { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } } | null };
 
 export type GetBranchQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
@@ -943,7 +943,7 @@ export type GetBranchQueryVariables = Exact<{
 export type GetBranchQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null };
 
 export type SqlSelectForCsvDownloadQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
@@ -953,7 +953,7 @@ export type SqlSelectForCsvDownloadQueryVariables = Exact<{
 export type SqlSelectForCsvDownloadQuery = { __typename?: 'Query', sqlSelectForCsvDownload: string };
 
 export type DatabasesQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 }>;
 
 
@@ -962,7 +962,7 @@ export type DatabasesQuery = { __typename?: 'Query', databases: Array<string> };
 export type SchemaItemFragment = { __typename?: 'SchemaItem', name: string, type: SchemaType };
 
 export type RowsForDoltSchemasQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -972,7 +972,7 @@ export type RowsForDoltSchemasQueryVariables = Exact<{
 export type RowsForDoltSchemasQuery = { __typename?: 'Query', doltSchemas: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
 export type RowsForDoltProceduresQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
@@ -985,7 +985,7 @@ export type CommitForDiffSelectorFragment = { __typename?: 'Commit', _id: string
 export type CommitListForDiffSelectorFragment = { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } }> };
 
 export type CommitsForDiffSelectorQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
@@ -996,7 +996,7 @@ export type CommitsForDiffSelectorQuery = { __typename?: 'Query', commits: { __t
 export type DiffStatForDiffsFragment = { __typename?: 'DiffStat', rowsUnmodified: number, rowsAdded: number, rowsDeleted: number, rowsModified: number, cellsModified: number, rowCount: number, cellCount: number };
 
 export type DiffStatQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
@@ -1019,7 +1019,7 @@ export type RowDiffForTableListFragment = { __typename?: 'RowDiff', added?: { __
 export type RowDiffListWithColsFragment = { __typename?: 'RowDiffList', nextOffset?: number | null, list: Array<{ __typename?: 'RowDiff', added?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, deleted?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }>, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
 
 export type RowDiffsQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
@@ -1038,7 +1038,7 @@ export type SchemaDiffForTableListFragment = { __typename?: 'TextDiff', leftLine
 export type SchemaDiffFragment = { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null };
 
 export type SchemaDiffQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
@@ -1050,22 +1050,22 @@ export type SchemaDiffQueryVariables = Exact<{
 
 export type SchemaDiffQuery = { __typename?: 'Query', schemaDiff?: { __typename?: 'SchemaDiff', schemaPatch?: Array<string> | null, schemaDiff?: { __typename?: 'TextDiff', leftLines: string, rightLines: string } | null } | null };
 
-export type BranchForBranchSelectorFragment = { __typename?: 'Branch', branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null };
+export type BranchForBranchSelectorFragment = { __typename?: 'Branch', connectionName: string, branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null };
 
 export type BranchesForSelectorQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
 
-export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null }> };
+export type BranchesForSelectorQuery = { __typename?: 'Query', allBranches: Array<{ __typename?: 'Branch', connectionName: string, branchName: string, databaseName: string, remote?: string | null, remoteBranch?: string | null }> };
 
 export type TagForListFragment = { __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } };
 
 export type TagListForTagListFragment = { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
 
 export type TagListQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
@@ -1073,7 +1073,7 @@ export type TagListQueryVariables = Exact<{
 export type TagListQuery = { __typename?: 'Query', tags: { __typename?: 'TagList', list: Array<{ __typename?: 'Tag', _id: string, tagName: string, message: string, taggedAt: any, commitId: string, tagger: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> } };
 
 export type TableNamesForBranchQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -1089,7 +1089,7 @@ export type IndexForTableListFragment = { __typename?: 'Index', name: string, ty
 export type TableForSchemaListFragment = { __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> };
 
 export type TableListForSchemasQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -1099,7 +1099,7 @@ export type TableListForSchemasQueryVariables = Exact<{
 export type TableListForSchemasQuery = { __typename?: 'Query', tables: Array<{ __typename?: 'Table', _id: string, tableName: string, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }>, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, indexes: Array<{ __typename?: 'Index', name: string, type: string, comment: string, columns: Array<{ __typename?: 'IndexColumn', name: string, sqlType?: string | null }> }> }> };
 
 export type DatabaseSchemasQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
@@ -1108,7 +1108,7 @@ export type DatabaseSchemasQueryVariables = Exact<{
 export type DatabaseSchemasQuery = { __typename?: 'Query', schemas: Array<string> };
 
 export type CreateSchemaMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   schemaName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1117,10 +1117,25 @@ export type CreateSchemaMutationVariables = Exact<{
 
 export type CreateSchemaMutation = { __typename?: 'Mutation', createSchema: boolean };
 
+export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+
+export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null };
+
+export type SqlSelectForSqlDataTableQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  queryString: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, warnings?: Array<string> | null, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+
 export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
 
 export type GetStatusQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
@@ -1129,7 +1144,7 @@ export type GetStatusQueryVariables = Exact<{
 export type GetStatusQuery = { __typename?: 'Query', status: Array<{ __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string }> };
 
 export type RestoreAllMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
@@ -1142,7 +1157,7 @@ export type ColumnForTableListFragment = { __typename?: 'Column', name: string, 
 export type TableWithColumnsFragment = { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
 
 export type TableForBranchQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
@@ -1152,9 +1167,19 @@ export type TableForBranchQueryVariables = Exact<{
 
 export type TableForBranchQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> } };
 
+export type RowsForViewsQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+}>;
+
+
+export type RowsForViewsQuery = { __typename?: 'Query', views: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
+
 export type AddDatabaseConnectionMutationVariables = Exact<{
   connectionUrl: Scalars['String']['input'];
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<DatabaseType>;
@@ -1163,44 +1188,44 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: { __typename?: 'CurrentDatabaseState', currentDatabase?: string | null } };
 
-export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null };
+export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, connectionName: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null };
 
 export type StoredConnectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null }> };
+export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, connectionName: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null }> };
 
 export type RemoveConnectionMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 }>;
 
 
 export type RemoveConnectionMutation = { __typename?: 'Mutation', removeDatabaseConnection: boolean };
 
-export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
+export type BranchFragment = { __typename?: 'Branch', _id: string, branchName: string, connectionName: string, databaseName: string, lastUpdated: any, lastCommitter: string };
 
 export type BranchListQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   sortBy?: InputMaybe<SortBranchesBy>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+export type BranchListQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, connectionName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
 
 export type RemoteBranchesQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   sortBy?: InputMaybe<SortBranchesBy>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type RemoteBranchesQuery = { __typename?: 'Query', remoteBranches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
+export type RemoteBranchesQuery = { __typename?: 'Query', remoteBranches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', _id: string, branchName: string, connectionName: string, databaseName: string, lastUpdated: any, lastCommitter: string }> } };
 
 export type DeleteBranchMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
@@ -1209,7 +1234,7 @@ export type DeleteBranchMutationVariables = Exact<{
 export type DeleteBranchMutation = { __typename?: 'Mutation', deleteBranch: boolean };
 
 export type CreateBranchMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   newBranchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
@@ -1218,8 +1243,19 @@ export type CreateBranchMutationVariables = Exact<{
 
 export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: string };
 
+export type CommitForAfterCommitHistoryFragment = { __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
+
+export type HistoryForCommitQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  afterCommitId: Scalars['String']['input'];
+}>;
+
+
+export type HistoryForCommitQuery = { __typename?: 'Query', commits: { __typename?: 'CommitList', list: Array<{ __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } }> } };
+
 export type DefaultBranchPageQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
@@ -1235,7 +1271,7 @@ export type DocForDocPageFragment = { __typename?: 'Doc', docRow?: { __typename?
 export type DocListForDocPageFragment = { __typename?: 'DocList', list: Array<{ __typename?: 'Doc', docRow?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> };
 
 export type DocsRowsForDocPageQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 }>;
@@ -1246,7 +1282,7 @@ export type DocsRowsForDocPageQuery = { __typename?: 'Query', docs: { __typename
 export type DocColumnValuesForDocPageFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
 export type DocDataForDocPageQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   docType?: InputMaybe<DocType>;
@@ -1256,7 +1292,7 @@ export type DocDataForDocPageQueryVariables = Exact<{
 export type DocDataForDocPageQuery = { __typename?: 'Query', docOrDefaultDoc?: { __typename?: 'Doc', docRow?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null } | null };
 
 export type DocPageQueryNoBranchQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
@@ -1264,7 +1300,7 @@ export type DocPageQueryNoBranchQueryVariables = Exact<{
 export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?: { __typename?: 'Branch', _id: string, branchName: string } | null };
 
 export type GetBranchForPullQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
@@ -1273,7 +1309,7 @@ export type GetBranchForPullQueryVariables = Exact<{
 export type GetBranchForPullQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null };
 
 export type MergePullMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
@@ -1283,8 +1319,41 @@ export type MergePullMutationVariables = Exact<{
 
 export type MergePullMutation = { __typename?: 'Mutation', mergePull: boolean };
 
+export type PullDetailCommitFragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
+
+export type PullDetailSummaryFragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
+
+type PullDetailsForPullDetails_PullDetailCommit_Fragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
+
+type PullDetailsForPullDetails_PullDetailSummary_Fragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
+
+export type PullDetailsForPullDetailsFragment = PullDetailsForPullDetails_PullDetailCommit_Fragment | PullDetailsForPullDetails_PullDetailSummary_Fragment;
+
+export type PullDetailsFragment = { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null };
+
+export type PullDetailsForPullDetailsQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+}>;
+
+
+export type PullDetailsForPullDetailsQuery = { __typename?: 'Query', pullWithDetails: { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null } };
+
+export type RefPageQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type RefPageQuery = { __typename?: 'Query', branch?: { __typename?: 'Branch', _id: string } | null, tableNames: { __typename?: 'TableNames', list: Array<string> } };
+
 export type CreateTagMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
   message?: InputMaybe<Scalars['String']['input']>;
@@ -1295,8 +1364,94 @@ export type CreateTagMutationVariables = Exact<{
 
 export type CreateTagMutation = { __typename?: 'Mutation', createTag: string };
 
+export type DeleteTagMutationVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  tagName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteTagMutation = { __typename?: 'Mutation', deleteTag: boolean };
+
+export type AddRemoteMutationVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  remoteUrl: Scalars['String']['input'];
+}>;
+
+
+export type AddRemoteMutation = { __typename?: 'Mutation', addRemote: string };
+
+export type FetchRemoteQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type FetchRemoteQuery = { __typename?: 'Query', fetchRemote: { __typename?: 'FetchRes', success: boolean } };
+
+export type RemoteBranchDiffCountsFragment = { __typename?: 'RemoteBranchDiffCounts', ahead?: number | null, behind?: number | null };
+
+export type RemoteBranchDiffCountsQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  toRefName: Scalars['String']['input'];
+  fromRefName: Scalars['String']['input'];
+}>;
+
+
+export type RemoteBranchDiffCountsQuery = { __typename?: 'Query', remoteBranchDiffCounts: { __typename?: 'RemoteBranchDiffCounts', ahead?: number | null, behind?: number | null } };
+
+export type RemoteFragment = { __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null };
+
+export type RemoteListQueryVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type RemoteListQuery = { __typename?: 'Query', remotes: { __typename?: 'RemoteList', nextOffset?: number | null, list: Array<{ __typename?: 'Remote', _id: string, name: string, url: string, fetchSpecs?: Array<string> | null }> } };
+
+export type DeleteRemoteMutationVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DeleteRemoteMutation = { __typename?: 'Mutation', deleteRemote: boolean };
+
+export type PullResFragment = { __typename?: 'PullRes', fastForward: boolean, conflicts: number, message: string };
+
+export type PullFromRemoteMutationVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type PullFromRemoteMutation = { __typename?: 'Mutation', pullFromRemote: { __typename?: 'PullRes', fastForward: boolean, conflicts: number, message: string } };
+
+export type PushResFragment = { __typename?: 'PushRes', success: boolean, message: string };
+
+export type PushToRemoteMutationVariables = Exact<{
+  connectionName: Scalars['String']['input'];
+  remoteName: Scalars['String']['input'];
+  branchName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', success: boolean, message: string } };
+
 export type LoadDataMutationVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -1311,7 +1466,7 @@ export type LoadDataMutationVariables = Exact<{
 export type LoadDataMutation = { __typename?: 'Mutation', loadDataFile: boolean };
 
 export type DoltDatabaseDetailsQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
 }>;
 
 
@@ -1324,7 +1479,7 @@ export type ForeignKeyColumnForDataTableFragment = { __typename?: 'ForeignKeyCol
 export type ForeignKeysForDataTableFragment = { __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> };
 
 export type DataTableQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
@@ -1339,7 +1494,7 @@ export type RowForDataTableFragment = { __typename?: 'Row', columnValues: Array<
 export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> };
 
 export type RowsForDataTableQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
@@ -1353,7 +1508,7 @@ export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?:
 export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean };
 
 export type DiffSummariesQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   fromRefName: Scalars['String']['input'];
   toRefName: Scalars['String']['input'];
@@ -1371,7 +1526,7 @@ export type CommitForHistoryFragment = { __typename?: 'Commit', _id: string, mes
 export type CommitListForHistoryFragment = { __typename?: 'CommitList', nextOffset?: number | null, list: Array<{ __typename?: 'Commit', _id: string, message: string, commitId: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string } }> };
 
 export type HistoryForBranchQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
@@ -1383,7 +1538,7 @@ export type HistoryForBranchQuery = { __typename?: 'Query', commits: { __typenam
 export type BranchForCommitGraphFragment = { __typename?: 'Branch', branchName: string, head?: string | null };
 
 export type BranchListForCommitGraphQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
@@ -1392,7 +1547,7 @@ export type BranchListForCommitGraphQueryVariables = Exact<{
 export type BranchListForCommitGraphQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', branchName: string, head?: string | null }> } };
 
 export type TableNamesQueryVariables = Exact<{
-  name: Scalars['String']['input'];
+  connectionName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -1500,6 +1655,7 @@ export const SchemaDiffFragmentDoc = gql`
     ${SchemaDiffForTableListFragmentDoc}`;
 export const BranchForBranchSelectorFragmentDoc = gql`
     fragment BranchForBranchSelector on Branch {
+  connectionName
   branchName
   databaseName
   remote
@@ -1592,6 +1748,21 @@ export const TableForSchemaListFragmentDoc = gql`
     ${ForeignKeysForDataTableFragmentDoc}
 ${ColumnForTableListFragmentDoc}
 ${IndexForTableListFragmentDoc}`;
+export const RowForSqlDataTableFragmentDoc = gql`
+    fragment RowForSqlDataTable on Row {
+  columnValues {
+    displayValue
+  }
+}
+    `;
+export const ColumnForSqlDataTableFragmentDoc = gql`
+    fragment ColumnForSqlDataTable on Column {
+  name
+  isPrimaryKey
+  type
+  sourceTable
+}
+    `;
 export const StatusFragmentDoc = gql`
     fragment Status on Status {
   _id
@@ -1613,7 +1784,7 @@ export const TableWithColumnsFragmentDoc = gql`
 export const DatabaseConnectionFragmentDoc = gql`
     fragment DatabaseConnection on DatabaseConnection {
   connectionUrl
-  name
+  connectionName
   useSSL
   hideDoltFeatures
   type
@@ -1624,9 +1795,24 @@ export const BranchFragmentDoc = gql`
     fragment Branch on Branch {
   _id
   branchName
+  connectionName
   databaseName
   lastUpdated
   lastCommitter
+}
+    `;
+export const CommitForAfterCommitHistoryFragmentDoc = gql`
+    fragment CommitForAfterCommitHistory on Commit {
+  _id
+  commitId
+  parents
+  message
+  committedAt
+  committer {
+    _id
+    displayName
+    username
+  }
 }
     `;
 export const DocRowForDocPageFragmentDoc = gql`
@@ -1655,6 +1841,71 @@ export const DocColumnValuesForDocPageFragmentDoc = gql`
   columnValues {
     displayValue
   }
+}
+    `;
+export const PullDetailCommitFragmentDoc = gql`
+    fragment PullDetailCommit on PullDetailCommit {
+  _id
+  username
+  message
+  createdAt
+  commitId
+  parentCommitId
+}
+    `;
+export const PullDetailSummaryFragmentDoc = gql`
+    fragment PullDetailSummary on PullDetailSummary {
+  _id
+  username
+  createdAt
+  numCommits
+}
+    `;
+export const PullDetailsForPullDetailsFragmentDoc = gql`
+    fragment PullDetailsForPullDetails on PullDetails {
+  ... on PullDetailCommit {
+    ...PullDetailCommit
+  }
+  ... on PullDetailSummary {
+    ...PullDetailSummary
+  }
+}
+    ${PullDetailCommitFragmentDoc}
+${PullDetailSummaryFragmentDoc}`;
+export const PullDetailsFragmentDoc = gql`
+    fragment PullDetails on PullWithDetails {
+  _id
+  state
+  details {
+    ...PullDetailsForPullDetails
+  }
+}
+    ${PullDetailsForPullDetailsFragmentDoc}`;
+export const RemoteBranchDiffCountsFragmentDoc = gql`
+    fragment RemoteBranchDiffCounts on RemoteBranchDiffCounts {
+  ahead
+  behind
+}
+    `;
+export const RemoteFragmentDoc = gql`
+    fragment Remote on Remote {
+  _id
+  name
+  url
+  fetchSpecs
+}
+    `;
+export const PullResFragmentDoc = gql`
+    fragment PullRes on PullRes {
+  fastForward
+  conflicts
+  message
+}
+    `;
+export const PushResFragmentDoc = gql`
+    fragment PushRes on PushRes {
+  success
+  message
 }
     `;
 export const ColumnForDataTableFragmentDoc = gql`
@@ -1721,8 +1972,8 @@ export const BranchForCommitGraphFragmentDoc = gql`
 }
     `;
 export const CreateDatabaseDocument = gql`
-    mutation CreateDatabase($name: String!, $databaseName: String!) {
-  createDatabase(name: $name, databaseName: $databaseName)
+    mutation CreateDatabase($connectionName: String!, $databaseName: String!) {
+  createDatabase(connectionName: $connectionName, databaseName: $databaseName)
 }
     `;
 export type CreateDatabaseMutationFn = Apollo.MutationFunction<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
@@ -1740,7 +1991,7 @@ export type CreateDatabaseMutationFn = Apollo.MutationFunction<CreateDatabaseMut
  * @example
  * const [createDatabaseMutation, { data, loading, error }] = useCreateDatabaseMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *   },
  * });
@@ -1753,8 +2004,8 @@ export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDataba
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
 export const CurrentDatabaseDocument = gql`
-    query CurrentDatabase($name: String!) {
-  currentDatabase(name: $name)
+    query CurrentDatabase($connectionName: String!) {
+  currentDatabase(connectionName: $connectionName)
 }
     `;
 
@@ -1770,7 +2021,7 @@ export const CurrentDatabaseDocument = gql`
  * @example
  * const { data, loading, error } = useCurrentDatabaseQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *   },
  * });
  */
@@ -1825,7 +2076,7 @@ export const CurrentConnectionDocument = gql`
     query CurrentConnection {
   currentConnection {
     connectionUrl
-    name
+    connectionName
     hideDoltFeatures
     useSSL
     type
@@ -1866,10 +2117,10 @@ export type CurrentConnectionLazyQueryHookResult = ReturnType<typeof useCurrentC
 export type CurrentConnectionSuspenseQueryHookResult = ReturnType<typeof useCurrentConnectionSuspenseQuery>;
 export type CurrentConnectionQueryResult = Apollo.QueryResult<CurrentConnectionQuery, CurrentConnectionQueryVariables>;
 export const DatabasesByConnectionDocument = gql`
-    query DatabasesByConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+    query DatabasesByConnection($connectionUrl: String!, $connectionName: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
   databasesByConnection(
     connectionUrl: $connectionUrl
-    name: $name
+    connectionName: $connectionName
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
     type: $type
@@ -1890,7 +2141,7 @@ export const DatabasesByConnectionDocument = gql`
  * const { data, loading, error } = useDatabasesByConnectionQuery({
  *   variables: {
  *      connectionUrl: // value for 'connectionUrl'
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
  *      type: // value for 'type'
@@ -1914,8 +2165,12 @@ export type DatabasesByConnectionLazyQueryHookResult = ReturnType<typeof useData
 export type DatabasesByConnectionSuspenseQueryHookResult = ReturnType<typeof useDatabasesByConnectionSuspenseQuery>;
 export type DatabasesByConnectionQueryResult = Apollo.QueryResult<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>;
 export const GetTagDocument = gql`
-    query GetTag($name: String!, $databaseName: String!, $tagName: String!) {
-  tag(name: $name, databaseName: $databaseName, tagName: $tagName) {
+    query GetTag($connectionName: String!, $databaseName: String!, $tagName: String!) {
+  tag(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    tagName: $tagName
+  ) {
     ...TagForList
   }
 }
@@ -1933,7 +2188,7 @@ export const GetTagDocument = gql`
  * @example
  * const { data, loading, error } = useGetTagQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      tagName: // value for 'tagName'
  *   },
@@ -1956,8 +2211,12 @@ export type GetTagLazyQueryHookResult = ReturnType<typeof useGetTagLazyQuery>;
 export type GetTagSuspenseQueryHookResult = ReturnType<typeof useGetTagSuspenseQuery>;
 export type GetTagQueryResult = Apollo.QueryResult<GetTagQuery, GetTagQueryVariables>;
 export const GetBranchDocument = gql`
-    query GetBranch($name: String!, $branchName: String!, $databaseName: String!) {
-  branch(name: $name, branchName: $branchName, databaseName: $databaseName) {
+    query GetBranch($connectionName: String!, $branchName: String!, $databaseName: String!) {
+  branch(
+    connectionName: $connectionName
+    branchName: $branchName
+    databaseName: $databaseName
+  ) {
     _id
   }
 }
@@ -1975,7 +2234,7 @@ export const GetBranchDocument = gql`
  * @example
  * const { data, loading, error } = useGetBranchQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      branchName: // value for 'branchName'
  *      databaseName: // value for 'databaseName'
  *   },
@@ -1998,9 +2257,9 @@ export type GetBranchLazyQueryHookResult = ReturnType<typeof useGetBranchLazyQue
 export type GetBranchSuspenseQueryHookResult = ReturnType<typeof useGetBranchSuspenseQuery>;
 export type GetBranchQueryResult = Apollo.QueryResult<GetBranchQuery, GetBranchQueryVariables>;
 export const SqlSelectForCsvDownloadDocument = gql`
-    query SqlSelectForCsvDownload($name: String!, $databaseName: String!, $refName: String!, $queryString: String!) {
+    query SqlSelectForCsvDownload($connectionName: String!, $databaseName: String!, $refName: String!, $queryString: String!) {
   sqlSelectForCsvDownload(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     queryString: $queryString
@@ -2020,7 +2279,7 @@ export const SqlSelectForCsvDownloadDocument = gql`
  * @example
  * const { data, loading, error } = useSqlSelectForCsvDownloadQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      queryString: // value for 'queryString'
@@ -2044,8 +2303,8 @@ export type SqlSelectForCsvDownloadLazyQueryHookResult = ReturnType<typeof useSq
 export type SqlSelectForCsvDownloadSuspenseQueryHookResult = ReturnType<typeof useSqlSelectForCsvDownloadSuspenseQuery>;
 export type SqlSelectForCsvDownloadQueryResult = Apollo.QueryResult<SqlSelectForCsvDownloadQuery, SqlSelectForCsvDownloadQueryVariables>;
 export const DatabasesDocument = gql`
-    query Databases($name: String!) {
-  databases(name: $name)
+    query Databases($connectionName: String!) {
+  databases(connectionName: $connectionName)
 }
     `;
 
@@ -2061,7 +2320,7 @@ export const DatabasesDocument = gql`
  * @example
  * const { data, loading, error } = useDatabasesQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *   },
  * });
  */
@@ -2082,9 +2341,9 @@ export type DatabasesLazyQueryHookResult = ReturnType<typeof useDatabasesLazyQue
 export type DatabasesSuspenseQueryHookResult = ReturnType<typeof useDatabasesSuspenseQuery>;
 export type DatabasesQueryResult = Apollo.QueryResult<DatabasesQuery, DatabasesQueryVariables>;
 export const RowsForDoltSchemasDocument = gql`
-    query RowsForDoltSchemas($name: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
+    query RowsForDoltSchemas($connectionName: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
   doltSchemas(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     schemaName: $schemaName
@@ -2106,7 +2365,7 @@ export const RowsForDoltSchemasDocument = gql`
  * @example
  * const { data, loading, error } = useRowsForDoltSchemasQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      schemaName: // value for 'schemaName'
@@ -2130,8 +2389,12 @@ export type RowsForDoltSchemasLazyQueryHookResult = ReturnType<typeof useRowsFor
 export type RowsForDoltSchemasSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltSchemasSuspenseQuery>;
 export type RowsForDoltSchemasQueryResult = Apollo.QueryResult<RowsForDoltSchemasQuery, RowsForDoltSchemasQueryVariables>;
 export const RowsForDoltProceduresDocument = gql`
-    query RowsForDoltProcedures($name: String!, $databaseName: String!, $refName: String!) {
-  doltProcedures(name: $name, databaseName: $databaseName, refName: $refName) {
+    query RowsForDoltProcedures($connectionName: String!, $databaseName: String!, $refName: String!) {
+  doltProcedures(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+  ) {
     ...SchemaItem
   }
 }
@@ -2149,7 +2412,7 @@ export const RowsForDoltProceduresDocument = gql`
  * @example
  * const { data, loading, error } = useRowsForDoltProceduresQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *   },
@@ -2172,8 +2435,12 @@ export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRows
 export type RowsForDoltProceduresSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltProceduresSuspenseQuery>;
 export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
 export const CommitsForDiffSelectorDocument = gql`
-    query CommitsForDiffSelector($name: String!, $refName: String!, $databaseName: String!) {
-  commits(refName: $refName, name: $name, databaseName: $databaseName) {
+    query CommitsForDiffSelector($connectionName: String!, $refName: String!, $databaseName: String!) {
+  commits(
+    refName: $refName
+    connectionName: $connectionName
+    databaseName: $databaseName
+  ) {
     ...CommitListForDiffSelector
   }
 }
@@ -2191,7 +2458,7 @@ export const CommitsForDiffSelectorDocument = gql`
  * @example
  * const { data, loading, error } = useCommitsForDiffSelectorQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      refName: // value for 'refName'
  *      databaseName: // value for 'databaseName'
  *   },
@@ -2214,9 +2481,9 @@ export type CommitsForDiffSelectorLazyQueryHookResult = ReturnType<typeof useCom
 export type CommitsForDiffSelectorSuspenseQueryHookResult = ReturnType<typeof useCommitsForDiffSelectorSuspenseQuery>;
 export type CommitsForDiffSelectorQueryResult = Apollo.QueryResult<CommitsForDiffSelectorQuery, CommitsForDiffSelectorQueryVariables>;
 export const DiffStatDocument = gql`
-    query DiffStat($name: String!, $databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType, $tableName: String) {
+    query DiffStat($connectionName: String!, $databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType, $tableName: String) {
   diffStat(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     fromRefName: $fromRefName
     toRefName: $toRefName
@@ -2241,7 +2508,7 @@ export const DiffStatDocument = gql`
  * @example
  * const { data, loading, error } = useDiffStatQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      fromRefName: // value for 'fromRefName'
  *      toRefName: // value for 'toRefName'
@@ -2268,9 +2535,9 @@ export type DiffStatLazyQueryHookResult = ReturnType<typeof useDiffStatLazyQuery
 export type DiffStatSuspenseQueryHookResult = ReturnType<typeof useDiffStatSuspenseQuery>;
 export type DiffStatQueryResult = Apollo.QueryResult<DiffStatQuery, DiffStatQueryVariables>;
 export const RowDiffsDocument = gql`
-    query RowDiffs($name: String!, $databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType, $type: CommitDiffType) {
+    query RowDiffs($connectionName: String!, $databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType, $type: CommitDiffType) {
   rowDiffs(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     tableName: $tableName
     fromRefName: $fromRefName
@@ -2297,7 +2564,7 @@ export const RowDiffsDocument = gql`
  * @example
  * const { data, loading, error } = useRowDiffsQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
  *      fromRefName: // value for 'fromRefName'
@@ -2326,9 +2593,9 @@ export type RowDiffsLazyQueryHookResult = ReturnType<typeof useRowDiffsLazyQuery
 export type RowDiffsSuspenseQueryHookResult = ReturnType<typeof useRowDiffsSuspenseQuery>;
 export type RowDiffsQueryResult = Apollo.QueryResult<RowDiffsQuery, RowDiffsQueryVariables>;
 export const SchemaDiffDocument = gql`
-    query SchemaDiff($name: String!, $databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
+    query SchemaDiff($connectionName: String!, $databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   schemaDiff(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     tableName: $tableName
     fromRefName: $fromRefName
@@ -2353,7 +2620,7 @@ export const SchemaDiffDocument = gql`
  * @example
  * const { data, loading, error } = useSchemaDiffQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      tableName: // value for 'tableName'
  *      fromRefName: // value for 'fromRefName'
@@ -2380,8 +2647,8 @@ export type SchemaDiffLazyQueryHookResult = ReturnType<typeof useSchemaDiffLazyQ
 export type SchemaDiffSuspenseQueryHookResult = ReturnType<typeof useSchemaDiffSuspenseQuery>;
 export type SchemaDiffQueryResult = Apollo.QueryResult<SchemaDiffQuery, SchemaDiffQueryVariables>;
 export const BranchesForSelectorDocument = gql`
-    query BranchesForSelector($name: String!, $databaseName: String!) {
-  allBranches(name: $name, databaseName: $databaseName) {
+    query BranchesForSelector($connectionName: String!, $databaseName: String!) {
+  allBranches(connectionName: $connectionName, databaseName: $databaseName) {
     ...BranchForBranchSelector
   }
 }
@@ -2399,7 +2666,7 @@ export const BranchesForSelectorDocument = gql`
  * @example
  * const { data, loading, error } = useBranchesForSelectorQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *   },
  * });
@@ -2421,8 +2688,8 @@ export type BranchesForSelectorLazyQueryHookResult = ReturnType<typeof useBranch
 export type BranchesForSelectorSuspenseQueryHookResult = ReturnType<typeof useBranchesForSelectorSuspenseQuery>;
 export type BranchesForSelectorQueryResult = Apollo.QueryResult<BranchesForSelectorQuery, BranchesForSelectorQueryVariables>;
 export const TagListDocument = gql`
-    query TagList($name: String!, $databaseName: String!) {
-  tags(name: $name, databaseName: $databaseName) {
+    query TagList($connectionName: String!, $databaseName: String!) {
+  tags(connectionName: $connectionName, databaseName: $databaseName) {
     ...TagListForTagList
   }
 }
@@ -2440,7 +2707,7 @@ export const TagListDocument = gql`
  * @example
  * const { data, loading, error } = useTagListQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *   },
  * });
@@ -2462,9 +2729,9 @@ export type TagListLazyQueryHookResult = ReturnType<typeof useTagListLazyQuery>;
 export type TagListSuspenseQueryHookResult = ReturnType<typeof useTagListSuspenseQuery>;
 export type TagListQueryResult = Apollo.QueryResult<TagListQuery, TagListQueryVariables>;
 export const TableNamesForBranchDocument = gql`
-    query TableNamesForBranch($name: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
+    query TableNamesForBranch($connectionName: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
   tableNames(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     schemaName: $schemaName
@@ -2487,7 +2754,7 @@ export const TableNamesForBranchDocument = gql`
  * @example
  * const { data, loading, error } = useTableNamesForBranchQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      schemaName: // value for 'schemaName'
@@ -2511,9 +2778,9 @@ export type TableNamesForBranchLazyQueryHookResult = ReturnType<typeof useTableN
 export type TableNamesForBranchSuspenseQueryHookResult = ReturnType<typeof useTableNamesForBranchSuspenseQuery>;
 export type TableNamesForBranchQueryResult = Apollo.QueryResult<TableNamesForBranchQuery, TableNamesForBranchQueryVariables>;
 export const TableListForSchemasDocument = gql`
-    query TableListForSchemas($name: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
+    query TableListForSchemas($connectionName: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
   tables(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     schemaName: $schemaName
@@ -2536,7 +2803,7 @@ export const TableListForSchemasDocument = gql`
  * @example
  * const { data, loading, error } = useTableListForSchemasQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      schemaName: // value for 'schemaName'
@@ -2560,8 +2827,12 @@ export type TableListForSchemasLazyQueryHookResult = ReturnType<typeof useTableL
 export type TableListForSchemasSuspenseQueryHookResult = ReturnType<typeof useTableListForSchemasSuspenseQuery>;
 export type TableListForSchemasQueryResult = Apollo.QueryResult<TableListForSchemasQuery, TableListForSchemasQueryVariables>;
 export const DatabaseSchemasDocument = gql`
-    query DatabaseSchemas($name: String!, $databaseName: String!, $refName: String!) {
-  schemas(name: $name, databaseName: $databaseName, refName: $refName)
+    query DatabaseSchemas($connectionName: String!, $databaseName: String!, $refName: String!) {
+  schemas(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+  )
 }
     `;
 
@@ -2577,7 +2848,7 @@ export const DatabaseSchemasDocument = gql`
  * @example
  * const { data, loading, error } = useDatabaseSchemasQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *   },
@@ -2600,9 +2871,9 @@ export type DatabaseSchemasLazyQueryHookResult = ReturnType<typeof useDatabaseSc
 export type DatabaseSchemasSuspenseQueryHookResult = ReturnType<typeof useDatabaseSchemasSuspenseQuery>;
 export type DatabaseSchemasQueryResult = Apollo.QueryResult<DatabaseSchemasQuery, DatabaseSchemasQueryVariables>;
 export const CreateSchemaDocument = gql`
-    mutation CreateSchema($name: String!, $databaseName: String!, $schemaName: String!, $refName: String!) {
+    mutation CreateSchema($connectionName: String!, $databaseName: String!, $schemaName: String!, $refName: String!) {
   createSchema(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     schemaName: $schemaName
     refName: $refName
@@ -2624,7 +2895,7 @@ export type CreateSchemaMutationFn = Apollo.MutationFunction<CreateSchemaMutatio
  * @example
  * const [createSchemaMutation, { data, loading, error }] = useCreateSchemaMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      schemaName: // value for 'schemaName'
  *      refName: // value for 'refName'
@@ -2638,9 +2909,72 @@ export function useCreateSchemaMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateSchemaMutationHookResult = ReturnType<typeof useCreateSchemaMutation>;
 export type CreateSchemaMutationResult = Apollo.MutationResult<CreateSchemaMutation>;
 export type CreateSchemaMutationOptions = Apollo.BaseMutationOptions<CreateSchemaMutation, CreateSchemaMutationVariables>;
+export const SqlSelectForSqlDataTableDocument = gql`
+    query SqlSelectForSqlDataTable($connectionName: String!, $databaseName: String!, $refName: String!, $queryString: String!, $schemaName: String) {
+  sqlSelect(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+    queryString: $queryString
+    schemaName: $schemaName
+  ) {
+    queryExecutionStatus
+    queryExecutionMessage
+    columns {
+      ...ColumnForSqlDataTable
+    }
+    rows {
+      ...RowForSqlDataTable
+    }
+    warnings
+  }
+}
+    ${ColumnForSqlDataTableFragmentDoc}
+${RowForSqlDataTableFragmentDoc}`;
+
+/**
+ * __useSqlSelectForSqlDataTableQuery__
+ *
+ * To run a query within a React component, call `useSqlSelectForSqlDataTableQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSqlSelectForSqlDataTableQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSqlSelectForSqlDataTableQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      queryString: // value for 'queryString'
+ *      schemaName: // value for 'schemaName'
+ *   },
+ * });
+ */
+export function useSqlSelectForSqlDataTableQuery(baseOptions: Apollo.QueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables> & ({ variables: SqlSelectForSqlDataTableQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
+      }
+export function useSqlSelectForSqlDataTableLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
+        }
+export function useSqlSelectForSqlDataTableSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>(SqlSelectForSqlDataTableDocument, options);
+        }
+export type SqlSelectForSqlDataTableQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableQuery>;
+export type SqlSelectForSqlDataTableLazyQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableLazyQuery>;
+export type SqlSelectForSqlDataTableSuspenseQueryHookResult = ReturnType<typeof useSqlSelectForSqlDataTableSuspenseQuery>;
+export type SqlSelectForSqlDataTableQueryResult = Apollo.QueryResult<SqlSelectForSqlDataTableQuery, SqlSelectForSqlDataTableQueryVariables>;
 export const GetStatusDocument = gql`
-    query GetStatus($name: String!, $databaseName: String!, $refName: String!) {
-  status(name: $name, databaseName: $databaseName, refName: $refName) {
+    query GetStatus($connectionName: String!, $databaseName: String!, $refName: String!) {
+  status(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+  ) {
     ...Status
   }
 }
@@ -2658,7 +2992,7 @@ export const GetStatusDocument = gql`
  * @example
  * const { data, loading, error } = useGetStatusQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *   },
@@ -2681,8 +3015,12 @@ export type GetStatusLazyQueryHookResult = ReturnType<typeof useGetStatusLazyQue
 export type GetStatusSuspenseQueryHookResult = ReturnType<typeof useGetStatusSuspenseQuery>;
 export type GetStatusQueryResult = Apollo.QueryResult<GetStatusQuery, GetStatusQueryVariables>;
 export const RestoreAllDocument = gql`
-    mutation RestoreAll($name: String!, $databaseName: String!, $refName: String!) {
-  restoreAllTables(name: $name, databaseName: $databaseName, refName: $refName)
+    mutation RestoreAll($connectionName: String!, $databaseName: String!, $refName: String!) {
+  restoreAllTables(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+  )
 }
     `;
 export type RestoreAllMutationFn = Apollo.MutationFunction<RestoreAllMutation, RestoreAllMutationVariables>;
@@ -2700,7 +3038,7 @@ export type RestoreAllMutationFn = Apollo.MutationFunction<RestoreAllMutation, R
  * @example
  * const [restoreAllMutation, { data, loading, error }] = useRestoreAllMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *   },
@@ -2714,9 +3052,9 @@ export type RestoreAllMutationHookResult = ReturnType<typeof useRestoreAllMutati
 export type RestoreAllMutationResult = Apollo.MutationResult<RestoreAllMutation>;
 export type RestoreAllMutationOptions = Apollo.BaseMutationOptions<RestoreAllMutation, RestoreAllMutationVariables>;
 export const TableForBranchDocument = gql`
-    query TableForBranch($name: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String) {
+    query TableForBranch($connectionName: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String) {
   table(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     tableName: $tableName
@@ -2739,7 +3077,7 @@ export const TableForBranchDocument = gql`
  * @example
  * const { data, loading, error } = useTableForBranchQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      tableName: // value for 'tableName'
@@ -2763,11 +3101,59 @@ export type TableForBranchQueryHookResult = ReturnType<typeof useTableForBranchQ
 export type TableForBranchLazyQueryHookResult = ReturnType<typeof useTableForBranchLazyQuery>;
 export type TableForBranchSuspenseQueryHookResult = ReturnType<typeof useTableForBranchSuspenseQuery>;
 export type TableForBranchQueryResult = Apollo.QueryResult<TableForBranchQuery, TableForBranchQueryVariables>;
+export const RowsForViewsDocument = gql`
+    query RowsForViews($connectionName: String!, $databaseName: String!, $refName: String!, $schemaName: String) {
+  views(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+  ) {
+    ...SchemaItem
+  }
+}
+    ${SchemaItemFragmentDoc}`;
+
+/**
+ * __useRowsForViewsQuery__
+ *
+ * To run a query within a React component, call `useRowsForViewsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRowsForViewsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRowsForViewsQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *   },
+ * });
+ */
+export function useRowsForViewsQuery(baseOptions: Apollo.QueryHookOptions<RowsForViewsQuery, RowsForViewsQueryVariables> & ({ variables: RowsForViewsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RowsForViewsQuery, RowsForViewsQueryVariables>(RowsForViewsDocument, options);
+      }
+export function useRowsForViewsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RowsForViewsQuery, RowsForViewsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RowsForViewsQuery, RowsForViewsQueryVariables>(RowsForViewsDocument, options);
+        }
+export function useRowsForViewsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RowsForViewsQuery, RowsForViewsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RowsForViewsQuery, RowsForViewsQueryVariables>(RowsForViewsDocument, options);
+        }
+export type RowsForViewsQueryHookResult = ReturnType<typeof useRowsForViewsQuery>;
+export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsLazyQuery>;
+export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
+export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+    mutation AddDatabaseConnection($connectionUrl: String!, $connectionName: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
   addDatabaseConnection(
     connectionUrl: $connectionUrl
-    name: $name
+    connectionName: $connectionName
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
     type: $type
@@ -2792,7 +3178,7 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  * const [addDatabaseConnectionMutation, { data, loading, error }] = useAddDatabaseConnectionMutation({
  *   variables: {
  *      connectionUrl: // value for 'connectionUrl'
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
  *      type: // value for 'type'
@@ -2846,8 +3232,8 @@ export type StoredConnectionsLazyQueryHookResult = ReturnType<typeof useStoredCo
 export type StoredConnectionsSuspenseQueryHookResult = ReturnType<typeof useStoredConnectionsSuspenseQuery>;
 export type StoredConnectionsQueryResult = Apollo.QueryResult<StoredConnectionsQuery, StoredConnectionsQueryVariables>;
 export const RemoveConnectionDocument = gql`
-    mutation RemoveConnection($name: String!) {
-  removeDatabaseConnection(name: $name)
+    mutation RemoveConnection($connectionName: String!) {
+  removeDatabaseConnection(connectionName: $connectionName)
 }
     `;
 export type RemoveConnectionMutationFn = Apollo.MutationFunction<RemoveConnectionMutation, RemoveConnectionMutationVariables>;
@@ -2865,7 +3251,7 @@ export type RemoveConnectionMutationFn = Apollo.MutationFunction<RemoveConnectio
  * @example
  * const [removeConnectionMutation, { data, loading, error }] = useRemoveConnectionMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *   },
  * });
  */
@@ -2877,9 +3263,9 @@ export type RemoveConnectionMutationHookResult = ReturnType<typeof useRemoveConn
 export type RemoveConnectionMutationResult = Apollo.MutationResult<RemoveConnectionMutation>;
 export type RemoveConnectionMutationOptions = Apollo.BaseMutationOptions<RemoveConnectionMutation, RemoveConnectionMutationVariables>;
 export const BranchListDocument = gql`
-    query BranchList($name: String!, $databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+    query BranchList($connectionName: String!, $databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
   branches(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     sortBy: $sortBy
     offset: $offset
@@ -2904,7 +3290,7 @@ export const BranchListDocument = gql`
  * @example
  * const { data, loading, error } = useBranchListQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      sortBy: // value for 'sortBy'
  *      offset: // value for 'offset'
@@ -2928,9 +3314,9 @@ export type BranchListLazyQueryHookResult = ReturnType<typeof useBranchListLazyQ
 export type BranchListSuspenseQueryHookResult = ReturnType<typeof useBranchListSuspenseQuery>;
 export type BranchListQueryResult = Apollo.QueryResult<BranchListQuery, BranchListQueryVariables>;
 export const RemoteBranchesDocument = gql`
-    query RemoteBranches($name: String!, $databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+    query RemoteBranches($connectionName: String!, $databaseName: String!, $sortBy: SortBranchesBy, $offset: Int) {
   remoteBranches(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     sortBy: $sortBy
     offset: $offset
@@ -2955,7 +3341,7 @@ export const RemoteBranchesDocument = gql`
  * @example
  * const { data, loading, error } = useRemoteBranchesQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      sortBy: // value for 'sortBy'
  *      offset: // value for 'offset'
@@ -2979,8 +3365,12 @@ export type RemoteBranchesLazyQueryHookResult = ReturnType<typeof useRemoteBranc
 export type RemoteBranchesSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchesSuspenseQuery>;
 export type RemoteBranchesQueryResult = Apollo.QueryResult<RemoteBranchesQuery, RemoteBranchesQueryVariables>;
 export const DeleteBranchDocument = gql`
-    mutation DeleteBranch($name: String!, $branchName: String!, $databaseName: String!) {
-  deleteBranch(name: $name, branchName: $branchName, databaseName: $databaseName)
+    mutation DeleteBranch($connectionName: String!, $branchName: String!, $databaseName: String!) {
+  deleteBranch(
+    connectionName: $connectionName
+    branchName: $branchName
+    databaseName: $databaseName
+  )
 }
     `;
 export type DeleteBranchMutationFn = Apollo.MutationFunction<DeleteBranchMutation, DeleteBranchMutationVariables>;
@@ -2998,7 +3388,7 @@ export type DeleteBranchMutationFn = Apollo.MutationFunction<DeleteBranchMutatio
  * @example
  * const [deleteBranchMutation, { data, loading, error }] = useDeleteBranchMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      branchName: // value for 'branchName'
  *      databaseName: // value for 'databaseName'
  *   },
@@ -3012,9 +3402,9 @@ export type DeleteBranchMutationHookResult = ReturnType<typeof useDeleteBranchMu
 export type DeleteBranchMutationResult = Apollo.MutationResult<DeleteBranchMutation>;
 export type DeleteBranchMutationOptions = Apollo.BaseMutationOptions<DeleteBranchMutation, DeleteBranchMutationVariables>;
 export const CreateBranchDocument = gql`
-    mutation CreateBranch($name: String!, $newBranchName: String!, $databaseName: String!, $fromRefName: String!) {
+    mutation CreateBranch($connectionName: String!, $newBranchName: String!, $databaseName: String!, $fromRefName: String!) {
   createBranch(
-    name: $name
+    connectionName: $connectionName
     newBranchName: $newBranchName
     databaseName: $databaseName
     fromRefName: $fromRefName
@@ -3036,7 +3426,7 @@ export type CreateBranchMutationFn = Apollo.MutationFunction<CreateBranchMutatio
  * @example
  * const [createBranchMutation, { data, loading, error }] = useCreateBranchMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      newBranchName: // value for 'newBranchName'
  *      databaseName: // value for 'databaseName'
  *      fromRefName: // value for 'fromRefName'
@@ -3050,9 +3440,57 @@ export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
 export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
 export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
+export const HistoryForCommitDocument = gql`
+    query HistoryForCommit($connectionName: String!, $databaseName: String!, $afterCommitId: String!) {
+  commits(
+    connectionName: $connectionName
+    afterCommitId: $afterCommitId
+    databaseName: $databaseName
+  ) {
+    list {
+      ...CommitForAfterCommitHistory
+    }
+  }
+}
+    ${CommitForAfterCommitHistoryFragmentDoc}`;
+
+/**
+ * __useHistoryForCommitQuery__
+ *
+ * To run a query within a React component, call `useHistoryForCommitQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryForCommitQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryForCommitQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      afterCommitId: // value for 'afterCommitId'
+ *   },
+ * });
+ */
+export function useHistoryForCommitQuery(baseOptions: Apollo.QueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables> & ({ variables: HistoryForCommitQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
+      }
+export function useHistoryForCommitLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
+        }
+export function useHistoryForCommitSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<HistoryForCommitQuery, HistoryForCommitQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<HistoryForCommitQuery, HistoryForCommitQueryVariables>(HistoryForCommitDocument, options);
+        }
+export type HistoryForCommitQueryHookResult = ReturnType<typeof useHistoryForCommitQuery>;
+export type HistoryForCommitLazyQueryHookResult = ReturnType<typeof useHistoryForCommitLazyQuery>;
+export type HistoryForCommitSuspenseQueryHookResult = ReturnType<typeof useHistoryForCommitSuspenseQuery>;
+export type HistoryForCommitQueryResult = Apollo.QueryResult<HistoryForCommitQuery, HistoryForCommitQueryVariables>;
 export const DefaultBranchPageQueryDocument = gql`
-    query DefaultBranchPageQuery($name: String!, $databaseName: String!, $schemaName: String, $filterSystemTables: Boolean) {
-  defaultBranch(name: $name, databaseName: $databaseName) {
+    query DefaultBranchPageQuery($connectionName: String!, $databaseName: String!, $schemaName: String, $filterSystemTables: Boolean) {
+  defaultBranch(connectionName: $connectionName, databaseName: $databaseName) {
     _id
     branchName
     tableNames(schemaName: $schemaName, filterSystemTables: $filterSystemTables)
@@ -3072,7 +3510,7 @@ export const DefaultBranchPageQueryDocument = gql`
  * @example
  * const { data, loading, error } = useDefaultBranchPageQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      schemaName: // value for 'schemaName'
  *      filterSystemTables: // value for 'filterSystemTables'
@@ -3096,8 +3534,12 @@ export type DefaultBranchPageQueryLazyQueryHookResult = ReturnType<typeof useDef
 export type DefaultBranchPageQuerySuspenseQueryHookResult = ReturnType<typeof useDefaultBranchPageQuerySuspenseQuery>;
 export type DefaultBranchPageQueryQueryResult = Apollo.QueryResult<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>;
 export const DocsRowsForDocPageQueryDocument = gql`
-    query DocsRowsForDocPageQuery($name: String!, $databaseName: String!, $refName: String!) {
-  docs(name: $name, databaseName: $databaseName, refName: $refName) {
+    query DocsRowsForDocPageQuery($connectionName: String!, $databaseName: String!, $refName: String!) {
+  docs(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    refName: $refName
+  ) {
     ...DocListForDocPage
   }
 }
@@ -3115,7 +3557,7 @@ export const DocsRowsForDocPageQueryDocument = gql`
  * @example
  * const { data, loading, error } = useDocsRowsForDocPageQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *   },
@@ -3138,9 +3580,9 @@ export type DocsRowsForDocPageQueryLazyQueryHookResult = ReturnType<typeof useDo
 export type DocsRowsForDocPageQuerySuspenseQueryHookResult = ReturnType<typeof useDocsRowsForDocPageQuerySuspenseQuery>;
 export type DocsRowsForDocPageQueryQueryResult = Apollo.QueryResult<DocsRowsForDocPageQuery, DocsRowsForDocPageQueryVariables>;
 export const DocDataForDocPageDocument = gql`
-    query DocDataForDocPage($name: String!, $databaseName: String!, $refName: String!, $docType: DocType) {
+    query DocDataForDocPage($connectionName: String!, $databaseName: String!, $refName: String!, $docType: DocType) {
   docOrDefaultDoc(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     docType: $docType
@@ -3164,7 +3606,7 @@ export const DocDataForDocPageDocument = gql`
  * @example
  * const { data, loading, error } = useDocDataForDocPageQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      docType: // value for 'docType'
@@ -3188,8 +3630,8 @@ export type DocDataForDocPageLazyQueryHookResult = ReturnType<typeof useDocDataF
 export type DocDataForDocPageSuspenseQueryHookResult = ReturnType<typeof useDocDataForDocPageSuspenseQuery>;
 export type DocDataForDocPageQueryResult = Apollo.QueryResult<DocDataForDocPageQuery, DocDataForDocPageQueryVariables>;
 export const DocPageQueryNoBranchDocument = gql`
-    query DocPageQueryNoBranch($name: String!, $databaseName: String!) {
-  branchOrDefault(name: $name, databaseName: $databaseName) {
+    query DocPageQueryNoBranch($connectionName: String!, $databaseName: String!) {
+  branchOrDefault(connectionName: $connectionName, databaseName: $databaseName) {
     _id
     branchName
   }
@@ -3208,7 +3650,7 @@ export const DocPageQueryNoBranchDocument = gql`
  * @example
  * const { data, loading, error } = useDocPageQueryNoBranch({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *   },
  * });
@@ -3230,8 +3672,12 @@ export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPa
 export type DocPageQueryNoBranchSuspenseQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchSuspenseQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
 export const GetBranchForPullDocument = gql`
-    query GetBranchForPull($name: String!, $branchName: String!, $databaseName: String!) {
-  branch(name: $name, branchName: $branchName, databaseName: $databaseName) {
+    query GetBranchForPull($connectionName: String!, $branchName: String!, $databaseName: String!) {
+  branch(
+    connectionName: $connectionName
+    branchName: $branchName
+    databaseName: $databaseName
+  ) {
     _id
   }
 }
@@ -3249,7 +3695,7 @@ export const GetBranchForPullDocument = gql`
  * @example
  * const { data, loading, error } = useGetBranchForPullQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      branchName: // value for 'branchName'
  *      databaseName: // value for 'databaseName'
  *   },
@@ -3272,9 +3718,9 @@ export type GetBranchForPullLazyQueryHookResult = ReturnType<typeof useGetBranch
 export type GetBranchForPullSuspenseQueryHookResult = ReturnType<typeof useGetBranchForPullSuspenseQuery>;
 export type GetBranchForPullQueryResult = Apollo.QueryResult<GetBranchForPullQuery, GetBranchForPullQueryVariables>;
 export const MergePullDocument = gql`
-    mutation MergePull($name: String!, $databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $author: AuthorInfo) {
+    mutation MergePull($connectionName: String!, $databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $author: AuthorInfo) {
   mergePull(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     fromBranchName: $fromBranchName
     toBranchName: $toBranchName
@@ -3297,7 +3743,7 @@ export type MergePullMutationFn = Apollo.MutationFunction<MergePullMutation, Mer
  * @example
  * const [mergePullMutation, { data, loading, error }] = useMergePullMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      fromBranchName: // value for 'fromBranchName'
  *      toBranchName: // value for 'toBranchName'
@@ -3312,10 +3758,115 @@ export function useMergePullMutation(baseOptions?: Apollo.MutationHookOptions<Me
 export type MergePullMutationHookResult = ReturnType<typeof useMergePullMutation>;
 export type MergePullMutationResult = Apollo.MutationResult<MergePullMutation>;
 export type MergePullMutationOptions = Apollo.BaseMutationOptions<MergePullMutation, MergePullMutationVariables>;
+export const PullDetailsForPullDetailsDocument = gql`
+    query PullDetailsForPullDetails($connectionName: String!, $databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+  pullWithDetails(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+  ) {
+    ...PullDetails
+  }
+}
+    ${PullDetailsFragmentDoc}`;
+
+/**
+ * __usePullDetailsForPullDetailsQuery__
+ *
+ * To run a query within a React component, call `usePullDetailsForPullDetailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePullDetailsForPullDetailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePullDetailsForPullDetailsQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *   },
+ * });
+ */
+export function usePullDetailsForPullDetailsQuery(baseOptions: Apollo.QueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables> & ({ variables: PullDetailsForPullDetailsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+      }
+export function usePullDetailsForPullDetailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+        }
+export function usePullDetailsForPullDetailsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>(PullDetailsForPullDetailsDocument, options);
+        }
+export type PullDetailsForPullDetailsQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsQuery>;
+export type PullDetailsForPullDetailsLazyQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsLazyQuery>;
+export type PullDetailsForPullDetailsSuspenseQueryHookResult = ReturnType<typeof usePullDetailsForPullDetailsSuspenseQuery>;
+export type PullDetailsForPullDetailsQueryResult = Apollo.QueryResult<PullDetailsForPullDetailsQuery, PullDetailsForPullDetailsQueryVariables>;
+export const RefPageQueryDocument = gql`
+    query RefPageQuery($connectionName: String!, $refName: String!, $databaseName: String!, $schemaName: String, $filterSystemTables: Boolean) {
+  branch(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    branchName: $refName
+  ) {
+    _id
+  }
+  tableNames(
+    connectionName: $connectionName
+    refName: $refName
+    databaseName: $databaseName
+    schemaName: $schemaName
+    filterSystemTables: $filterSystemTables
+  ) {
+    list
+  }
+}
+    `;
+
+/**
+ * __useRefPageQuery__
+ *
+ * To run a query within a React component, call `useRefPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRefPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRefPageQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      refName: // value for 'refName'
+ *      databaseName: // value for 'databaseName'
+ *      schemaName: // value for 'schemaName'
+ *      filterSystemTables: // value for 'filterSystemTables'
+ *   },
+ * });
+ */
+export function useRefPageQuery(baseOptions: Apollo.QueryHookOptions<RefPageQuery, RefPageQueryVariables> & ({ variables: RefPageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+      }
+export function useRefPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+        }
+export function useRefPageQuerySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RefPageQuery, RefPageQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RefPageQuery, RefPageQueryVariables>(RefPageQueryDocument, options);
+        }
+export type RefPageQueryHookResult = ReturnType<typeof useRefPageQuery>;
+export type RefPageQueryLazyQueryHookResult = ReturnType<typeof useRefPageQueryLazyQuery>;
+export type RefPageQuerySuspenseQueryHookResult = ReturnType<typeof useRefPageQuerySuspenseQuery>;
+export type RefPageQueryQueryResult = Apollo.QueryResult<RefPageQuery, RefPageQueryVariables>;
 export const CreateTagDocument = gql`
-    mutation CreateTag($name: String!, $databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!, $author: AuthorInfo) {
+    mutation CreateTag($connectionName: String!, $databaseName: String!, $tagName: String!, $message: String, $fromRefName: String!, $author: AuthorInfo) {
   createTag(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     tagName: $tagName
     message: $message
@@ -3339,7 +3890,7 @@ export type CreateTagMutationFn = Apollo.MutationFunction<CreateTagMutation, Cre
  * @example
  * const [createTagMutation, { data, loading, error }] = useCreateTagMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      tagName: // value for 'tagName'
  *      message: // value for 'message'
@@ -3355,10 +3906,352 @@ export function useCreateTagMutation(baseOptions?: Apollo.MutationHookOptions<Cr
 export type CreateTagMutationHookResult = ReturnType<typeof useCreateTagMutation>;
 export type CreateTagMutationResult = Apollo.MutationResult<CreateTagMutation>;
 export type CreateTagMutationOptions = Apollo.BaseMutationOptions<CreateTagMutation, CreateTagMutationVariables>;
+export const DeleteTagDocument = gql`
+    mutation DeleteTag($connectionName: String!, $databaseName: String!, $tagName: String!) {
+  deleteTag(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    tagName: $tagName
+  )
+}
+    `;
+export type DeleteTagMutationFn = Apollo.MutationFunction<DeleteTagMutation, DeleteTagMutationVariables>;
+
+/**
+ * __useDeleteTagMutation__
+ *
+ * To run a mutation, you first call `useDeleteTagMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteTagMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteTagMutation, { data, loading, error }] = useDeleteTagMutation({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      tagName: // value for 'tagName'
+ *   },
+ * });
+ */
+export function useDeleteTagMutation(baseOptions?: Apollo.MutationHookOptions<DeleteTagMutation, DeleteTagMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteTagMutation, DeleteTagMutationVariables>(DeleteTagDocument, options);
+      }
+export type DeleteTagMutationHookResult = ReturnType<typeof useDeleteTagMutation>;
+export type DeleteTagMutationResult = Apollo.MutationResult<DeleteTagMutation>;
+export type DeleteTagMutationOptions = Apollo.BaseMutationOptions<DeleteTagMutation, DeleteTagMutationVariables>;
+export const AddRemoteDocument = gql`
+    mutation AddRemote($connectionName: String!, $databaseName: String!, $remoteName: String!, $remoteUrl: String!) {
+  addRemote(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    remoteName: $remoteName
+    remoteUrl: $remoteUrl
+  )
+}
+    `;
+export type AddRemoteMutationFn = Apollo.MutationFunction<AddRemoteMutation, AddRemoteMutationVariables>;
+
+/**
+ * __useAddRemoteMutation__
+ *
+ * To run a mutation, you first call `useAddRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addRemoteMutation, { data, loading, error }] = useAddRemoteMutation({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      remoteName: // value for 'remoteName'
+ *      remoteUrl: // value for 'remoteUrl'
+ *   },
+ * });
+ */
+export function useAddRemoteMutation(baseOptions?: Apollo.MutationHookOptions<AddRemoteMutation, AddRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddRemoteMutation, AddRemoteMutationVariables>(AddRemoteDocument, options);
+      }
+export type AddRemoteMutationHookResult = ReturnType<typeof useAddRemoteMutation>;
+export type AddRemoteMutationResult = Apollo.MutationResult<AddRemoteMutation>;
+export type AddRemoteMutationOptions = Apollo.BaseMutationOptions<AddRemoteMutation, AddRemoteMutationVariables>;
+export const FetchRemoteDocument = gql`
+    query FetchRemote($connectionName: String!, $remoteName: String!, $databaseName: String!) {
+  fetchRemote(
+    connectionName: $connectionName
+    remoteName: $remoteName
+    databaseName: $databaseName
+  ) {
+    success
+  }
+}
+    `;
+
+/**
+ * __useFetchRemoteQuery__
+ *
+ * To run a query within a React component, call `useFetchRemoteQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchRemoteQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchRemoteQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useFetchRemoteQuery(baseOptions: Apollo.QueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables> & ({ variables: FetchRemoteQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+      }
+export function useFetchRemoteLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+        }
+export function useFetchRemoteSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<FetchRemoteQuery, FetchRemoteQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<FetchRemoteQuery, FetchRemoteQueryVariables>(FetchRemoteDocument, options);
+        }
+export type FetchRemoteQueryHookResult = ReturnType<typeof useFetchRemoteQuery>;
+export type FetchRemoteLazyQueryHookResult = ReturnType<typeof useFetchRemoteLazyQuery>;
+export type FetchRemoteSuspenseQueryHookResult = ReturnType<typeof useFetchRemoteSuspenseQuery>;
+export type FetchRemoteQueryResult = Apollo.QueryResult<FetchRemoteQuery, FetchRemoteQueryVariables>;
+export const RemoteBranchDiffCountsDocument = gql`
+    query RemoteBranchDiffCounts($connectionName: String!, $databaseName: String!, $toRefName: String!, $fromRefName: String!) {
+  remoteBranchDiffCounts(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    toRefName: $toRefName
+    fromRefName: $fromRefName
+  ) {
+    ...RemoteBranchDiffCounts
+  }
+}
+    ${RemoteBranchDiffCountsFragmentDoc}`;
+
+/**
+ * __useRemoteBranchDiffCountsQuery__
+ *
+ * To run a query within a React component, call `useRemoteBranchDiffCountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteBranchDiffCountsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteBranchDiffCountsQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      toRefName: // value for 'toRefName'
+ *      fromRefName: // value for 'fromRefName'
+ *   },
+ * });
+ */
+export function useRemoteBranchDiffCountsQuery(baseOptions: Apollo.QueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables> & ({ variables: RemoteBranchDiffCountsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
+      }
+export function useRemoteBranchDiffCountsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
+        }
+export function useRemoteBranchDiffCountsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>(RemoteBranchDiffCountsDocument, options);
+        }
+export type RemoteBranchDiffCountsQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsQuery>;
+export type RemoteBranchDiffCountsLazyQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsLazyQuery>;
+export type RemoteBranchDiffCountsSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsSuspenseQuery>;
+export type RemoteBranchDiffCountsQueryResult = Apollo.QueryResult<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>;
+export const RemoteListDocument = gql`
+    query RemoteList($connectionName: String!, $databaseName: String!, $offset: Int) {
+  remotes(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    offset: $offset
+  ) {
+    list {
+      ...Remote
+    }
+    nextOffset
+  }
+}
+    ${RemoteFragmentDoc}`;
+
+/**
+ * __useRemoteListQuery__
+ *
+ * To run a query within a React component, call `useRemoteListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRemoteListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRemoteListQuery({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      databaseName: // value for 'databaseName'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useRemoteListQuery(baseOptions: Apollo.QueryHookOptions<RemoteListQuery, RemoteListQueryVariables> & ({ variables: RemoteListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+      }
+export function useRemoteListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RemoteListQuery, RemoteListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+        }
+export function useRemoteListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RemoteListQuery, RemoteListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RemoteListQuery, RemoteListQueryVariables>(RemoteListDocument, options);
+        }
+export type RemoteListQueryHookResult = ReturnType<typeof useRemoteListQuery>;
+export type RemoteListLazyQueryHookResult = ReturnType<typeof useRemoteListLazyQuery>;
+export type RemoteListSuspenseQueryHookResult = ReturnType<typeof useRemoteListSuspenseQuery>;
+export type RemoteListQueryResult = Apollo.QueryResult<RemoteListQuery, RemoteListQueryVariables>;
+export const DeleteRemoteDocument = gql`
+    mutation DeleteRemote($connectionName: String!, $remoteName: String!, $databaseName: String!) {
+  deleteRemote(
+    connectionName: $connectionName
+    remoteName: $remoteName
+    databaseName: $databaseName
+  )
+}
+    `;
+export type DeleteRemoteMutationFn = Apollo.MutationFunction<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
+
+/**
+ * __useDeleteRemoteMutation__
+ *
+ * To run a mutation, you first call `useDeleteRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRemoteMutation, { data, loading, error }] = useDeleteRemoteMutation({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      remoteName: // value for 'remoteName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDeleteRemoteMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRemoteMutation, DeleteRemoteMutationVariables>(DeleteRemoteDocument, options);
+      }
+export type DeleteRemoteMutationHookResult = ReturnType<typeof useDeleteRemoteMutation>;
+export type DeleteRemoteMutationResult = Apollo.MutationResult<DeleteRemoteMutation>;
+export type DeleteRemoteMutationOptions = Apollo.BaseMutationOptions<DeleteRemoteMutation, DeleteRemoteMutationVariables>;
+export const PullFromRemoteDocument = gql`
+    mutation PullFromRemote($connectionName: String!, $remoteName: String!, $branchName: String!, $databaseName: String!, $refName: String!) {
+  pullFromRemote(
+    connectionName: $connectionName
+    remoteName: $remoteName
+    branchName: $branchName
+    databaseName: $databaseName
+    refName: $refName
+  ) {
+    ...PullRes
+  }
+}
+    ${PullResFragmentDoc}`;
+export type PullFromRemoteMutationFn = Apollo.MutationFunction<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
+
+/**
+ * __usePullFromRemoteMutation__
+ *
+ * To run a mutation, you first call `usePullFromRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePullFromRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pullFromRemoteMutation, { data, loading, error }] = usePullFromRemoteMutation({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      remoteName: // value for 'remoteName'
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function usePullFromRemoteMutation(baseOptions?: Apollo.MutationHookOptions<PullFromRemoteMutation, PullFromRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PullFromRemoteMutation, PullFromRemoteMutationVariables>(PullFromRemoteDocument, options);
+      }
+export type PullFromRemoteMutationHookResult = ReturnType<typeof usePullFromRemoteMutation>;
+export type PullFromRemoteMutationResult = Apollo.MutationResult<PullFromRemoteMutation>;
+export type PullFromRemoteMutationOptions = Apollo.BaseMutationOptions<PullFromRemoteMutation, PullFromRemoteMutationVariables>;
+export const PushToRemoteDocument = gql`
+    mutation PushToRemote($connectionName: String!, $remoteName: String!, $branchName: String!, $databaseName: String!, $refName: String!) {
+  pushToRemote(
+    connectionName: $connectionName
+    remoteName: $remoteName
+    branchName: $branchName
+    databaseName: $databaseName
+    refName: $refName
+  ) {
+    ...PushRes
+  }
+}
+    ${PushResFragmentDoc}`;
+export type PushToRemoteMutationFn = Apollo.MutationFunction<PushToRemoteMutation, PushToRemoteMutationVariables>;
+
+/**
+ * __usePushToRemoteMutation__
+ *
+ * To run a mutation, you first call `usePushToRemoteMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `usePushToRemoteMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [pushToRemoteMutation, { data, loading, error }] = usePushToRemoteMutation({
+ *   variables: {
+ *      connectionName: // value for 'connectionName'
+ *      remoteName: // value for 'remoteName'
+ *      branchName: // value for 'branchName'
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function usePushToRemoteMutation(baseOptions?: Apollo.MutationHookOptions<PushToRemoteMutation, PushToRemoteMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<PushToRemoteMutation, PushToRemoteMutationVariables>(PushToRemoteDocument, options);
+      }
+export type PushToRemoteMutationHookResult = ReturnType<typeof usePushToRemoteMutation>;
+export type PushToRemoteMutationResult = Apollo.MutationResult<PushToRemoteMutation>;
+export type PushToRemoteMutationOptions = Apollo.BaseMutationOptions<PushToRemoteMutation, PushToRemoteMutationVariables>;
 export const LoadDataDocument = gql`
-    mutation LoadData($name: String!, $databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
+    mutation LoadData($connectionName: String!, $databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     schemaName: $schemaName
@@ -3385,7 +4278,7 @@ export type LoadDataMutationFn = Apollo.MutationFunction<LoadDataMutation, LoadD
  * @example
  * const [loadDataMutation, { data, loading, error }] = useLoadDataMutation({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      schemaName: // value for 'schemaName'
@@ -3405,8 +4298,8 @@ export type LoadDataMutationHookResult = ReturnType<typeof useLoadDataMutation>;
 export type LoadDataMutationResult = Apollo.MutationResult<LoadDataMutation>;
 export type LoadDataMutationOptions = Apollo.BaseMutationOptions<LoadDataMutation, LoadDataMutationVariables>;
 export const DoltDatabaseDetailsDocument = gql`
-    query DoltDatabaseDetails($name: String!) {
-  doltDatabaseDetails(name: $name) {
+    query DoltDatabaseDetails($connectionName: String!) {
+  doltDatabaseDetails(connectionName: $connectionName) {
     isDolt
     hideDoltFeatures
     type
@@ -3426,7 +4319,7 @@ export const DoltDatabaseDetailsDocument = gql`
  * @example
  * const { data, loading, error } = useDoltDatabaseDetailsQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *   },
  * });
  */
@@ -3447,9 +4340,9 @@ export type DoltDatabaseDetailsLazyQueryHookResult = ReturnType<typeof useDoltDa
 export type DoltDatabaseDetailsSuspenseQueryHookResult = ReturnType<typeof useDoltDatabaseDetailsSuspenseQuery>;
 export type DoltDatabaseDetailsQueryResult = Apollo.QueryResult<DoltDatabaseDetailsQuery, DoltDatabaseDetailsQueryVariables>;
 export const DataTableQueryDocument = gql`
-    query DataTableQuery($name: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String) {
+    query DataTableQuery($connectionName: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String) {
   table(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     tableName: $tableName
@@ -3479,7 +4372,7 @@ ${ForeignKeysForDataTableFragmentDoc}`;
  * @example
  * const { data, loading, error } = useDataTableQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      tableName: // value for 'tableName'
@@ -3504,9 +4397,9 @@ export type DataTableQueryLazyQueryHookResult = ReturnType<typeof useDataTableQu
 export type DataTableQuerySuspenseQueryHookResult = ReturnType<typeof useDataTableQuerySuspenseQuery>;
 export type DataTableQueryQueryResult = Apollo.QueryResult<DataTableQuery, DataTableQueryVariables>;
 export const RowsForDataTableQueryDocument = gql`
-    query RowsForDataTableQuery($name: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String, $offset: Int) {
+    query RowsForDataTableQuery($connectionName: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String, $offset: Int) {
   rows(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     tableName: $tableName
@@ -3530,7 +4423,7 @@ export const RowsForDataTableQueryDocument = gql`
  * @example
  * const { data, loading, error } = useRowsForDataTableQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      tableName: // value for 'tableName'
@@ -3556,9 +4449,9 @@ export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRows
 export type RowsForDataTableQuerySuspenseQueryHookResult = ReturnType<typeof useRowsForDataTableQuerySuspenseQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
 export const DiffSummariesDocument = gql`
-    query DiffSummaries($name: String!, $databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
+    query DiffSummaries($connectionName: String!, $databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   diffSummaries(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     fromRefName: $fromRefName
     toRefName: $toRefName
@@ -3582,7 +4475,7 @@ export const DiffSummariesDocument = gql`
  * @example
  * const { data, loading, error } = useDiffSummariesQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      fromRefName: // value for 'fromRefName'
  *      toRefName: // value for 'toRefName'
@@ -3608,9 +4501,9 @@ export type DiffSummariesLazyQueryHookResult = ReturnType<typeof useDiffSummarie
 export type DiffSummariesSuspenseQueryHookResult = ReturnType<typeof useDiffSummariesSuspenseQuery>;
 export type DiffSummariesQueryResult = Apollo.QueryResult<DiffSummariesQuery, DiffSummariesQueryVariables>;
 export const HistoryForBranchDocument = gql`
-    query HistoryForBranch($name: String!, $databaseName: String!, $refName: String!, $offset: Int) {
+    query HistoryForBranch($connectionName: String!, $databaseName: String!, $refName: String!, $offset: Int) {
   commits(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     offset: $offset
@@ -3632,7 +4525,7 @@ export const HistoryForBranchDocument = gql`
  * @example
  * const { data, loading, error } = useHistoryForBranchQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      offset: // value for 'offset'
@@ -3656,8 +4549,12 @@ export type HistoryForBranchLazyQueryHookResult = ReturnType<typeof useHistoryFo
 export type HistoryForBranchSuspenseQueryHookResult = ReturnType<typeof useHistoryForBranchSuspenseQuery>;
 export type HistoryForBranchQueryResult = Apollo.QueryResult<HistoryForBranchQuery, HistoryForBranchQueryVariables>;
 export const BranchListForCommitGraphDocument = gql`
-    query BranchListForCommitGraph($name: String!, $databaseName: String!, $offset: Int) {
-  branches(name: $name, databaseName: $databaseName, offset: $offset) {
+    query BranchListForCommitGraph($connectionName: String!, $databaseName: String!, $offset: Int) {
+  branches(
+    connectionName: $connectionName
+    databaseName: $databaseName
+    offset: $offset
+  ) {
     list {
       ...BranchForCommitGraph
     }
@@ -3678,7 +4575,7 @@ export const BranchListForCommitGraphDocument = gql`
  * @example
  * const { data, loading, error } = useBranchListForCommitGraphQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      offset: // value for 'offset'
  *   },
@@ -3701,9 +4598,9 @@ export type BranchListForCommitGraphLazyQueryHookResult = ReturnType<typeof useB
 export type BranchListForCommitGraphSuspenseQueryHookResult = ReturnType<typeof useBranchListForCommitGraphSuspenseQuery>;
 export type BranchListForCommitGraphQueryResult = Apollo.QueryResult<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>;
 export const TableNamesDocument = gql`
-    query TableNames($name: String!, $databaseName: String!, $refName: String!, $schemaName: String, $filterSystemTables: Boolean) {
+    query TableNames($connectionName: String!, $databaseName: String!, $refName: String!, $schemaName: String, $filterSystemTables: Boolean) {
   tableNames(
-    name: $name
+    connectionName: $connectionName
     databaseName: $databaseName
     refName: $refName
     schemaName: $schemaName
@@ -3726,7 +4623,7 @@ export const TableNamesDocument = gql`
  * @example
  * const { data, loading, error } = useTableNamesQuery({
  *   variables: {
- *      name: // value for 'name'
+ *      connectionName: // value for 'connectionName'
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
  *      schemaName: // value for 'schemaName'

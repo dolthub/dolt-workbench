@@ -82,7 +82,7 @@ function WithContext(props: TableProps) {
 }
 
 export default function DataTable(props: { params: DataTableParams }) {
-  const { selectFromTable } = useSqlBuilder();
+  const { selectFromTable } = useSqlBuilder(props.params.connectionName);
   const params: SqlQueryParams = {
     ...props.params,
     q: selectFromTable(props.params.tableName),

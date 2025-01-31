@@ -32,7 +32,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
     useDoltDatabaseDetailsQuery({
-      variables: { name: props.params.connectionName },
+      variables: { connectionName: props.params.connectionName },
     });
   const dbLink = getDbLink(databaseDetails?.doltDatabaseDetails);
   const [remoteName, setRemoteName] = useState("");

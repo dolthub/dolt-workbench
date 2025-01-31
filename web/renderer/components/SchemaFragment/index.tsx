@@ -30,7 +30,7 @@ type InnerProps = Props & {
 };
 
 function Inner({ rows, params }: InnerProps) {
-  const { selectFromTable } = useSqlBuilder();
+  const { selectFromTable } = useSqlBuilder(params.connectionName);
   const { isView, fragIdx } = getSchemaInfo(params.q);
   const { queryClickHandler } = useSqlEditorContext("Views");
   const { isMobile } = useReactiveWidth(1024);

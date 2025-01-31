@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const CURRENT_DATABASE = gql`
-  query CurrentDatabase($name: String!) {
-    currentDatabase(name: $name)
+  query CurrentDatabase($connectionName: String!) {
+    currentDatabase(connectionName: $connectionName)
   }
 `;
 
@@ -16,7 +16,7 @@ export const CURRENT_CONNECTION = gql`
   query CurrentConnection {
     currentConnection {
       connectionUrl
-      name
+      connectionName
       hideDoltFeatures
       useSSL
       type
@@ -28,14 +28,14 @@ export const CURRENT_CONNECTION = gql`
 export const DATABASES_BY_CONNECTION = gql`
   query DatabasesByConnection(
     $connectionUrl: String!
-    $name: String!
+    $connectionName: String!
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
     $type: DatabaseType
   ) {
     databasesByConnection(
       connectionUrl: $connectionUrl
-      name: $name
+      connectionName: $connectionName
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type

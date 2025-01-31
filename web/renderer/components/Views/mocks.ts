@@ -8,6 +8,7 @@ import chance from "@lib/chance";
 
 const databaseParams = {
   databaseName: "dbname",
+  connectionName: "connection",
 };
 const refName = "main";
 

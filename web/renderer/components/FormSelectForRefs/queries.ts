@@ -2,13 +2,14 @@ import { gql } from "@apollo/client";
 
 export const BRANCH_SELECTOR_QUERY = gql`
   fragment BranchForBranchSelector on Branch {
+    connectionName
     branchName
     databaseName
     remote
     remoteBranch
   }
-  query BranchesForSelector($name: String!, $databaseName: String!) {
-    allBranches(name: $name, databaseName: $databaseName) {
+  query BranchesForSelector($connectionName: String!, $databaseName: String!) {
+    allBranches(connectionName: $connectionName, databaseName: $databaseName) {
       ...BranchForBranchSelector
     }
   }
@@ -30,8 +31,8 @@ export const TAG_LIST_QUERY = gql`
       ...TagForList
     }
   }
-  query TagList($name: String!, $databaseName: String!) {
-    tags(name: $name, databaseName: $databaseName) {
+  query TagList($connectionName: String!, $databaseName: String!) {
+    tags(connectionName: $connectionName, databaseName: $databaseName) {
       ...TagListForTagList
     }
   }
@@ -39,13 +40,13 @@ export const TAG_LIST_QUERY = gql`
 
 export const TABLE_LIST_FOR_BRANCH_QUERY = gql`
   query TableNamesForBranch(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $schemaName: String
   ) {
     tableNames(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       schemaName: $schemaName

@@ -4,7 +4,7 @@ import { DatabaseType } from "../databases/database.enum";
 @Entity({ name: "database_connections" })
 export class DatabaseConnectionsEntity {
   @PrimaryColumn()
-  name: string;
+  connectionName: string;
 
   @Column()
   connectionUrl: string;

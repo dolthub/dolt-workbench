@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_DATABASE = gql`
-  mutation CreateDatabase($name: String!, $databaseName: String!) {
-    createDatabase(name: $name, databaseName: $databaseName)
+  mutation CreateDatabase($connectionName: String!, $databaseName: String!) {
+    createDatabase(connectionName: $connectionName, databaseName: $databaseName)
   }
 `;

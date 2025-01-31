@@ -46,7 +46,10 @@ export default function DatabaseItem({
     if (conn.type === DatabaseType.Postgres) {
       await resetDB({ variables: { newDatabase: databaseName } });
     }
-    const { href, as } = database({ databaseName });
+    const { href, as } = database({
+      connectionName: conn.connectionName,
+      databaseName,
+    });
     router.push(href, as).catch(console.error);
   };
 
@@ -58,7 +61,10 @@ export default function DatabaseItem({
     return <ErrorMsg err={err} />;
   }
   const dbName = excerpt(db, 32);
-  if (db === currentDatabase && conn.name === currentConnection.name) {
+  if (
+    db === currentDatabase &&
+    conn.connectionName === currentConnection.connectionName
+  ) {
     return (
       <span className={css.dbItem}>
         {dbName}

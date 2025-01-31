@@ -27,7 +27,9 @@ export type Props = {
 // FROM dolt_commit_diff_[tableName]
 // WHERE from_commit="[fromCommitId]" AND to_commit="[toCommitId]"
 export function useGetDoltCommitDiffQuery(props: Props): ReturnType {
-  const { convertToSqlSelect, isPostgres } = useSqlBuilder();
+  const { convertToSqlSelect, isPostgres } = useSqlBuilder(
+    props.params.connectionName,
+  );
 
   const generate = () => {
     const colsWithNamesAndVals = transformColsFromDiffCols(

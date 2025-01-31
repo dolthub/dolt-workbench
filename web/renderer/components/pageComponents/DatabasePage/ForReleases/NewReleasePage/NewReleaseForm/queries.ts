@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const CREATE_TAG_MUTATION = gql`
   mutation CreateTag(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $tagName: String!
     $message: String
@@ -10,7 +10,7 @@ export const CREATE_TAG_MUTATION = gql`
     $author: AuthorInfo
   ) {
     createTag(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       tagName: $tagName
       message: $message

@@ -46,9 +46,7 @@ export default function RemoteBranches({
   currentBranch,
 }: Props) {
   const res = useRemoteBranchesQuery({
-    variables: {
-      databaseName: params.databaseName,
-    },
+    variables: params,
   });
 
   const branchesRes = useBranchesForSelectorQuery({ variables: params });

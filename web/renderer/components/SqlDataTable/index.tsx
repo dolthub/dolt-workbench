@@ -61,10 +61,8 @@ function Inner(props: InnerProps) {
 function Query(props: Props) {
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
     variables: {
-      databaseName: props.params.databaseName,
-      refName: props.params.refName,
+      ...props.params,
       queryString: props.params.q,
-      schemaName: props.params.schemaName,
     },
     fetchPolicy: "cache-and-network",
   });

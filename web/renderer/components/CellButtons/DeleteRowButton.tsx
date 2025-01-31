@@ -21,7 +21,7 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
   const { executeQuery, setEditorString } = useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
-  const { deleteFromTable } = useSqlBuilder();
+  const { deleteFromTable } = useSqlBuilder(params.connectionName);
 
   if (!tableName || isUneditableDoltSystemTable(tableName)) return null;
 

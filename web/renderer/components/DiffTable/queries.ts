@@ -35,7 +35,7 @@ export const ROW_DIFFS = gql`
     nextOffset
   }
   query RowDiffs(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $tableName: String!
     $fromRefName: String!
@@ -46,7 +46,7 @@ export const ROW_DIFFS = gql`
     $type: CommitDiffType
   ) {
     rowDiffs(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       tableName: $tableName
       fromRefName: $fromRefName
@@ -73,7 +73,7 @@ export const SCHEMA_DIFF = gql`
     schemaPatch
   }
   query SchemaDiff(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $tableName: String!
     $fromRefName: String!
@@ -82,7 +82,7 @@ export const SCHEMA_DIFF = gql`
     $type: CommitDiffType
   ) {
     schemaDiff(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       tableName: $tableName
       fromRefName: $fromRefName

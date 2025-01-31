@@ -20,7 +20,7 @@ type Props = TimeoutProps & {
 };
 
 export default function SqlMessage(props: Props) {
-  const { isMultipleQueries } = useSqlParser();
+  const { isMultipleQueries } = useSqlParser(props.params.connectionName);
   if (props.gqlError) {
     if (
       isTimeoutError(props.gqlError.message) ||

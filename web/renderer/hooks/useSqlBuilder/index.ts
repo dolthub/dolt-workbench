@@ -11,9 +11,9 @@ import {
 import * as u from "./util";
 import { escapeSingleQuotes } from "./util";
 
-export default function useSqlBuilder() {
+export default function useSqlBuilder(connectionName: string) {
   const { sqlify, isPostgres, parseSelectQuery, getTableNames } =
-    useSqlParser();
+    useSqlParser(connectionName);
 
   function convertToSqlInsert(ins: Partial<Insert_Replace>): string {
     return sqlify(u.getSqlInsert(ins));

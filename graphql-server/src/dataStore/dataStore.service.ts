@@ -66,7 +66,9 @@ export class DataStoreService {
 
   async addStoredConnection(item: DatabaseConnection): Promise<void> {
     const repo = await this.getConnRepo();
-    const existing = await repo.findOneBy({ name: item.name });
+    const existing = await repo.findOneBy({
+      connectionName: item.connectionName,
+    });
 
     if (existing) {
       if (existing.connectionUrl === item.connectionUrl) return undefined;
@@ -77,8 +79,8 @@ export class DataStoreService {
     return undefined;
   }
 
-  async removeStoredConnection(name: string): Promise<void> {
+  async removeStoredConnection(connectionName: string): Promise<void> {
     const repo = await this.getConnRepo();
-    await repo.delete({ name });
+    await repo.delete({ connectionName });
   }
 }

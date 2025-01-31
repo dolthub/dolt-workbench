@@ -14,6 +14,7 @@ import css from "./index.module.css";
 import { getDiffTypeClassnameForRow } from "./utils";
 
 type Props = {
+  connectionName: string;
   row: RowForDataTableFragment;
   ridx: number;
   columns: ColumnForDataTableFragment[];

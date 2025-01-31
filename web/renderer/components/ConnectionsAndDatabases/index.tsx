@@ -34,7 +34,7 @@ function Inner({ connection, params, setNoDrag, className }: InnerProps) {
   useOnClickOutside(connectionsRef, () => {
     setIsOpen(false);
   });
-  const triggerText = `${excerpt(connection.name, 24)} / ${excerpt(params.databaseName, 24)}`;
+  const triggerText = `${excerpt(connection.connectionName, 24)} / ${excerpt(params.databaseName, 24)}`;
 
   return (
     <div className={cx(css.iconAndSelector, className)}>

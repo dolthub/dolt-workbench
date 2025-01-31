@@ -7,7 +7,7 @@ import { screen, waitFor } from "@testing-library/react";
 import { docsMock, markdown } from "../DocsPage/DocList/mocks";
 import NewDocForm from "./NewDocForm";
 
-const dbParams = { databaseName: "test" };
+const dbParams = { connectionName: "connection", databaseName: "test" };
 const params: RefParams = { ...dbParams, refName: "master" };
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");

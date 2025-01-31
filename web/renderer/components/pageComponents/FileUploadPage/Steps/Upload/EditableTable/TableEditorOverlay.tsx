@@ -10,6 +10,7 @@ import TableGrid from "./TableGrid";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   columns: ColumnForDataTableFragment[];
 };
 
@@ -29,7 +30,11 @@ function Inner(props: InnerProps) {
           </Button.Link>
           <h1 data-cy="spreadsheet-editor-title">Spreadsheet Editor</h1>
           {props.state.tableName && (
-            <UpdateQueryInfo tableName={props.state.tableName} forSpreadsheet />
+            <UpdateQueryInfo
+              connectionName={props.connectionName}
+              tableName={props.state.tableName}
+              forSpreadsheet
+            />
           )}
           <div>
             <div>

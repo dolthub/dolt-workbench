@@ -57,7 +57,7 @@ export class RemoteResolver {
 
   @Query(_returns => RemoteList)
   async remotes(@Args() args: DBArgsWithOffset): Promise<RemoteList> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
 
     const res = await conn.getRemotes({ ...args, offset: args.offset ?? 0 });
     return getRemoteListRes(res, args);
@@ -65,21 +65,21 @@ export class RemoteResolver {
 
   @Mutation(_returns => String)
   async addRemote(@Args() args: AddRemoteArgs): Promise<string> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     await conn.addRemote(args);
     return args.remoteName;
   }
 
   @Mutation(_returns => Boolean)
   async deleteRemote(@Args() args: RemoteArgs): Promise<boolean> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     await conn.callDeleteRemote(args);
     return true;
   }
 
   @Mutation(_returns => PullRes)
   async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<PullRes> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     const res = await conn.callPullRemote(args);
     if (res.length === 0) {
       throw new Error("No response from pull");
@@ -89,7 +89,7 @@ export class RemoteResolver {
 
   @Mutation(_returns => PushRes)
   async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<PushRes> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     const res = await conn.callPushRemote(args);
     if (res.length === 0) {
       throw new Error("No response from push");
@@ -99,7 +99,7 @@ export class RemoteResolver {
 
   @Query(_returns => FetchRes)
   async fetchRemote(@Args() args: RemoteArgs): Promise<FetchRes> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     const res = await conn.callFetchRemote(args);
     if (res.length === 0) {
       throw new Error("No response from fetch");
@@ -115,7 +115,7 @@ export class RemoteResolver {
   async remoteBranchDiffCounts(
     @Args() args: RemoteBranchDiffCountsArgs,
   ): Promise<RemoteBranchDiffCounts> {
-    const conn = this.conn.connection(args.name);
+    const conn = this.conn.connection(args.connectionName);
     const mergeBase = await conn.getMergeBase(args);
     const aheadLogs = await conn.getTwoDotLogs({
       toRefName: mergeBase,

@@ -52,7 +52,7 @@ export function ConfigProvider({ children }: Props) {
     try {
       const db = await mutateFn({
         variables: {
-          name: state.name,
+          connectionName: state.name,
           connectionUrl: getConnectionUrl(state),
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,
@@ -64,6 +64,7 @@ export function ConfigProvider({ children }: Props) {
         return;
       }
       const { href, as } = maybeDatabase(
+        state.name,
         db.data.addDatabaseConnection.currentDatabase,
       );
       await router.push(href, as);

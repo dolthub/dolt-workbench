@@ -18,7 +18,9 @@ type InnerProps = {
 };
 
 export default function List(props: InnerProps) {
-  const { showCreateQuery, isPostgres } = useSqlBuilder();
+  const { showCreateQuery, isPostgres } = useSqlBuilder(
+    props.params.connectionName,
+  );
   const { isDolt } = useDatabaseDetails(props.params.connectionName);
   const activeItem = getActiveItem(props.kind, props.params.q, isPostgres);
   const pluralKind = pluralize(2, props.kind.toLowerCase());

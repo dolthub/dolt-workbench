@@ -29,7 +29,7 @@ export default function WorkingDiff(props: Props) {
   const toRefName = "WORKING";
   const params = { ...props.params, toRefName, fromRefName };
 
-  const { getTableNames, loading } = useSqlParser();
+  const { getTableNames, loading } = useSqlParser(props.params.connectionName);
   if (loading) return <Loader loaded={false} />;
   const tns = getTableNames(params.q);
 

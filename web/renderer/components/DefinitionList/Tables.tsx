@@ -10,11 +10,7 @@ type Props = {
 };
 
 export default function Tables(props: Props) {
-  const res = useTableNames({
-    databaseName: props.params.databaseName,
-    refName: props.params.refName,
-    schemaName: props.params.schemaName,
-  });
+  const res = useTableNames(props.params);
 
   return (
     <QueryHandler

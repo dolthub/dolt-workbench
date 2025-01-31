@@ -12,8 +12,10 @@ type Props = {
 
 export default function HideColumnButton({ col, columns }: Props) {
   const { executeQuery } = useSqlEditorContext();
-  const { removeColumnFromQuery, selectFromTable } = useSqlBuilder();
   const { params } = useDataTableContext();
+  const { removeColumnFromQuery, selectFromTable } = useSqlBuilder(
+    params.connectionName,
+  );
   const q = params.q ?? selectFromTable(params.tableName ?? "");
 
   const onClick = async () => {

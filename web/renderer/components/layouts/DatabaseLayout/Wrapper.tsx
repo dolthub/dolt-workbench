@@ -24,7 +24,7 @@ type InnerProps = {
 function Inner(props: InnerProps) {
   const router = useRouter();
   const res = useCurrentDatabaseQuery({
-    variables: { name: props.connectionName },
+    variables: { connectionName: props.connectionName },
   });
   if (res.loading) {
     return <Loader loaded={false} />;

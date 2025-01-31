@@ -2,23 +2,27 @@ import { gql } from "@apollo/client";
 
 export const DB_SCHEMAS = gql`
   query DatabaseSchemas(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
   ) {
-    schemas(name: $name, databaseName: $databaseName, refName: $refName)
+    schemas(
+      connectionName: $connectionName
+      databaseName: $databaseName
+      refName: $refName
+    )
   }
 `;
 
 export const CREATE_SCHEMA = gql`
   mutation CreateSchema(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $schemaName: String!
     $refName: String!
   ) {
     createSchema(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       schemaName: $schemaName
       refName: $refName

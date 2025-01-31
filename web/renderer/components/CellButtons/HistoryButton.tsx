@@ -72,7 +72,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
   const { views, loading } = useViewList(params);
-  const isJoin = useQueryHasMultipleTables(params.q);
+  const isJoin = useQueryHasMultipleTables(params.connectionName, params.q);
 
   if (loading) {
     return (
@@ -128,8 +128,11 @@ function getIsView(tableName: string, views?: SchemaItemFragment[]): boolean {
   return views.some(v => v.name === tableName);
 }
 
-function useQueryHasMultipleTables(q?: string): boolean {
-  const { parseSelectQuery } = useSqlParser();
+function useQueryHasMultipleTables(
+  connectionName: string,
+  q?: string,
+): boolean {
+  const { parseSelectQuery } = useSqlParser(connectionName);
   if (!q) return false;
   const parsed = parseSelectQuery(q);
   if (!parsed?.from) return false;

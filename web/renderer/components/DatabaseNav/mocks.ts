@@ -4,7 +4,10 @@ import { defaultBranchMock } from "@components/pageComponents/DatabasePage/ForDe
 import { GetBranchDocument, GetTagDocument } from "@gen/graphql-types";
 import { DatabaseParams, RefParams } from "@lib/params";
 
-const dbParams: DatabaseParams = { databaseName: "test" };
+const dbParams: DatabaseParams = {
+  databaseName: "test",
+  connectionName: "connection",
+};
 export const refParams: RefParams = { ...dbParams, refName: "main" };
 
 export const mocks: MockedResponse[] = [
@@ -33,6 +36,7 @@ export const mocks: MockedResponse[] = [
   },
   defaultBranchMock({
     databaseName: refParams.databaseName,
+    connectionName: refParams.connectionName,
     branchName: refParams.refName,
   }),
 ];

@@ -65,7 +65,7 @@ type FKTableLinkProps = {
 };
 
 function FKTableLink(props: FKTableLinkProps) {
-  const { addWhereClauseToSelect } = useSqlBuilder();
+  const { addWhereClauseToSelect } = useSqlBuilder(props.params.connectionName);
 
   const q = addWhereClauseToSelect(
     props.table,

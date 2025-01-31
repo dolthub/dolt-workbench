@@ -8,15 +8,12 @@ import Upload from "./Steps/Upload";
 import { useFileUploadContext } from "./contexts/fileUploadLocalForage";
 import { UploadStage, getUploadStage } from "./enums";
 
-type InnerProps = {
+type Props = {
   stage?: string;
-};
-
-type Props = InnerProps & {
   params: UploadParamsWithOptions;
 };
 
-function Inner(props: InnerProps) {
+function Inner(props: Props) {
   const { clear, isDolt } = useFileUploadContext();
   const activeStage = getUploadStage(props.stage, isDolt);
 
@@ -29,19 +26,22 @@ function Inner(props: InnerProps) {
   return (
     <div>
       <Navigation activeStage={activeStage} />
-      <Stage activeStage={activeStage} />
+      <Stage activeStage={activeStage} params={props.params} />
     </div>
   );
 }
 
-function Stage(props: { activeStage: UploadStage }) {
+function Stage(props: {
+  params: UploadParamsWithOptions;
+  activeStage: UploadStage;
+}) {
   switch (props.activeStage) {
     case UploadStage.Branch:
       return <Branch />;
     case UploadStage.Table:
       return <Table />;
     case UploadStage.Upload:
-      return <Upload />;
+      return <Upload connectionName={props.params.connectionName} />;
     default:
       return <Branch />;
   }
@@ -50,7 +50,7 @@ function Stage(props: { activeStage: UploadStage }) {
 export default function FileUploadPage(props: Props) {
   return (
     <PageWrapper {...props}>
-      <Inner stage={props.stage} />
+      <Inner {...props} />
     </PageWrapper>
   );
 }

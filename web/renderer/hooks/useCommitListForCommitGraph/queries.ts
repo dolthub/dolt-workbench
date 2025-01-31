@@ -6,11 +6,15 @@ export const BRANCH_LIST_FOR_COMMIT_GRAPH_QUERY = gql`
     head
   }
   query BranchListForCommitGraph(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $offset: Int
   ) {
-    branches(name: $name, databaseName: $databaseName, offset: $offset) {
+    branches(
+      connectionName: $connectionName
+      databaseName: $databaseName
+      offset: $offset
+    ) {
       list {
         ...BranchForCommitGraph
       }

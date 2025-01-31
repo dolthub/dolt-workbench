@@ -19,7 +19,7 @@ type Props = {
 
 export default function DatabasesPage({ params }: Props) {
   const { isPostgres } = useDatabaseDetails(params.connectionName);
-  const res = useDatabasesQuery({ variables: { name: params.connectionName } });
+  const res = useDatabasesQuery({ variables: params });
   const router = useRouter();
 
   useEffect(() => {
@@ -65,6 +65,7 @@ export default function DatabasesPage({ params }: Props) {
             </p>
           )}
           <CreateDatabase
+            connectionName={params.connectionName}
             buttonClassName={css.button}
             isPostgres={isPostgres}
             showText

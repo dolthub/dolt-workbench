@@ -14,9 +14,12 @@ import { ReturnType } from "./types";
 
 // Takes dolt diff query that looks like "SELECT [columns] from dolt_(commit_)diff_[table] WHERE [conditions]"
 // and returns dolt history query that looks like "SELECT [columns] from dolt_history_[table] WHERE [conditions]"
-export function useGetDoltHistoryQuery(q: string): ReturnType {
-  const { getTableName, parseSelectQuery } = useSqlParser();
-  const { convertToSqlSelect, isPostgres } = useSqlBuilder();
+export function useGetDoltHistoryQuery(
+  connectionName: string,
+  q: string,
+): ReturnType {
+  const { getTableName, parseSelectQuery } = useSqlParser(connectionName);
+  const { convertToSqlSelect, isPostgres } = useSqlBuilder(connectionName);
   const queryWithoutClauses = removeClauses(q);
 
   const generate = (): string => {

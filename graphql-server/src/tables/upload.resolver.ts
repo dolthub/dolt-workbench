@@ -69,7 +69,7 @@ export class FileUploadResolver {
       return true;
     }
 
-    const conn = this.connResolver.connection(args.name);
+    const conn = this.connResolver.connection(args.connectionName);
     const qr = conn.getQR();
     const pgConnection = await qr.connect();
 

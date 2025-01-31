@@ -43,7 +43,6 @@ export default function TableSelector(props: Props) {
   const res = useTableNamesQuery({
     variables: {
       ...props.params,
-      name: props.params.connectionName,
       filterSystemTables: true,
     },
   });

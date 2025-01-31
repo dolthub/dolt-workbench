@@ -10,6 +10,7 @@ import { RefParams } from "@lib/params";
 export const params: RefParams = {
   refName: "main",
   databaseName: "dbname",
+  connectionName: "connection",
 };
 const date = Date.now();
 

@@ -41,7 +41,6 @@ export default function DocsPage({ params, title }: Props) {
   const res = useDocDataForDocPageQuery({
     variables: {
       ...params,
-      name: params.connectionName,
       docType: toDocType(params.docName),
     },
   });

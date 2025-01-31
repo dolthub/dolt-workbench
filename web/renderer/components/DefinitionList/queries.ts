@@ -6,13 +6,13 @@ export const ROWS_FOR_SCHEMAS = gql`
     type
   }
   query RowsForDoltSchemas(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $schemaName: String
   ) {
     doltSchemas(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       schemaName: $schemaName
@@ -24,12 +24,12 @@ export const ROWS_FOR_SCHEMAS = gql`
 
 export const ROWS_FOR_PROCEDURES = gql`
   query RowsForDoltProcedures(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
   ) {
     doltProcedures(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
     ) {

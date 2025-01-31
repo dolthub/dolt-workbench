@@ -81,6 +81,7 @@ describe("test addWhereClauseToSelect", () => {
 
 describe("test addWhereClauseToSelect for cell buttons", () => {
   const refParams = {
+    connectionName: "connectionname",
     databaseName: "dbname",
     refName: "master",
   };

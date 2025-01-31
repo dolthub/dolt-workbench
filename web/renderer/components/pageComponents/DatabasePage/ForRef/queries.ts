@@ -2,17 +2,21 @@ import { gql } from "@apollo/client";
 
 export const REF_PAGE_QUERY = gql`
   query RefPageQuery(
-    name:String!
+    $connectionName: String!
     $refName: String!
     $databaseName: String!
     $schemaName: String
     $filterSystemTables: Boolean
   ) {
-    branch(name:$name databaseName: $databaseName, branchName: $refName) {
+    branch(
+      connectionName: $connectionName
+      databaseName: $databaseName
+      branchName: $refName
+    ) {
       _id
     }
     tableNames(
-      name:$name
+      connectionName: $connectionName
       refName: $refName
       databaseName: $databaseName
       schemaName: $schemaName

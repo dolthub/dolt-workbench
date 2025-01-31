@@ -29,6 +29,7 @@ export default function MobileTable({ columns, rows, ...props }: Props) {
           setColumnStatus={props.setColumnStatus}
         />
         <Body
+          connectionName={props.connectionName}
           rows={rows}
           columns={columns}
           isMobile

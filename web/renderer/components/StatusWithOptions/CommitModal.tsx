@@ -22,7 +22,7 @@ export default function CommitModal(props: Props) {
   const [msg, setMsg] = useState(defaultMsg);
   const userHeaders = useUserHeaders();
   const [addCommitAuthor, setAddCommitAuthor] = useState(!!userHeaders);
-  const { getCallProcedure } = useSqlBuilder();
+  const { getCallProcedure } = useSqlBuilder(props.params.connectionName);
 
   const onSubmit = (e: SyntheticEvent) => {
     e.preventDefault();

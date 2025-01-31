@@ -17,8 +17,10 @@ type Props = {
 };
 
 function Inner({ params }: Props) {
-  const { isMutation } = useSqlParser();
-  const getIsDoltDiffTableQuery = useIsDoltDiffTableQuery();
+  const { isMutation } = useSqlParser(params.connectionName);
+  const getIsDoltDiffTableQuery = useIsDoltDiffTableQuery(
+    params.connectionName,
+  );
   const routeRefChangeTo = (p: RefParams) =>
     isMutation(params.q)
       ? ref(p)
@@ -55,7 +57,7 @@ function Inner({ params }: Props) {
 }
 
 export default function ForQuery(props: Props) {
-  const { isMutation } = useSqlParser();
+  const { isMutation } = useSqlParser(props.params.connectionName);
   return (
     <DataTableProvider
       {...props}

@@ -16,7 +16,10 @@ export default function HistoryTable(props: Props) {
   const { executeQuery } = useSqlEditorContext();
   const forRow = props.params.q.split(whitespace)[1] === "*";
   const [err, setErr] = useState("");
-  const { generateQuery } = useGetDoltHistoryQuery(props.params.q);
+  const { generateQuery } = useGetDoltHistoryQuery(
+    props.params.connectionName,
+    props.params.q,
+  );
 
   const onClick = async () => {
     // TODO(doltgres): Move to sql builder

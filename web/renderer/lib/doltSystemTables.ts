@@ -20,8 +20,10 @@ export function isShowSchemaFragmentQuery(q: string): boolean {
   return !!q.match(/show create (view|event|trigger|procedure)/gi);
 }
 
-export function useIsDoltDiffTableQuery(): (q: string) => boolean | undefined {
-  const { getTableName } = useSqlParser();
+export function useIsDoltDiffTableQuery(
+  connectionName: string,
+): (q: string) => boolean | undefined {
+  const { getTableName } = useSqlParser(connectionName);
   const generate = (q: string) => {
     // This is a workaround until all where clauses work
     const queryWithoutClauses = removeClauses(q);

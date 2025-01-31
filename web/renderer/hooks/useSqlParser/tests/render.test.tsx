@@ -11,7 +11,7 @@ export async function renderUseSqlParser(isPostgres = false) {
     </MockedProvider>
   );
 
-  const { result } = renderHook(() => useSqlParser(), {
+  const { result } = renderHook(() => useSqlParser("connection"), {
     wrapper,
   });
   await waitFor(() => result.current.isPostgres === isPostgres);

@@ -32,7 +32,6 @@ export default function ForDefaultBranch({
   const { data, loading, error } = useDefaultBranchPageQuery({
     variables: {
       ...params,
-      name: params.connectionName,
       filterSystemTables: true,
     },
   });

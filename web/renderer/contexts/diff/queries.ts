@@ -11,7 +11,7 @@ export const DIFF_SUMMARIES = gql`
     hasSchemaChanges
   }
   query DiffSummaries(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $fromRefName: String!
     $toRefName: String!
@@ -19,7 +19,7 @@ export const DIFF_SUMMARIES = gql`
     $type: CommitDiffType
   ) {
     diffSummaries(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       fromRefName: $fromRefName
       toRefName: $toRefName

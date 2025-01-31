@@ -46,6 +46,7 @@ export function buildFakeData(list: TagForListFragment[]): TagListQuery {
 
 export const databaseParams = {
   databaseName: "dbname",
+  connectionName: "connection",
 };
 
 // export const writePermRepoRoleMock = repoRoleMock(databaseParams, RepoRole.Writer);

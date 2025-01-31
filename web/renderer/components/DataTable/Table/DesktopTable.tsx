@@ -50,7 +50,12 @@ export default function DesktopTable({ columns, rows, ...props }: Props) {
           columnStatus={props.columnStatus}
           setColumnStatus={props.setColumnStatus}
         />
-        <Body rows={rows} columns={columns} columnStatus={props.columnStatus} />
+        <Body
+          rows={rows}
+          columns={columns}
+          columnStatus={props.columnStatus}
+          connectionName={props.connectionName}
+        />
       </table>
     </InfiniteScroll>
   );

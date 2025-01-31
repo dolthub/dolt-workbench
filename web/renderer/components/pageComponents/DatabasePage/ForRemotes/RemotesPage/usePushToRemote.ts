@@ -29,6 +29,7 @@ export default function usePushToRemote(
     hook: usePushToRemoteMutation,
     refetchQueries: remoteBranch
       ? refetchRemoteBranchesQueries({
+          connectionName: params.connectionName,
           databaseName: params.databaseName,
           toRefName: state.branchName,
           fromRefName: `${remote.name}/${remoteBranch}`,
@@ -48,7 +49,7 @@ export default function usePushToRemote(
     setState({ loading: true });
     const pushRes = await push({
       variables: {
-        databaseName: params.databaseName,
+        ...params,
         remoteName: remote.name,
         branchName: remoteBranch
           ? `${state.branchName}:${remoteBranch}`

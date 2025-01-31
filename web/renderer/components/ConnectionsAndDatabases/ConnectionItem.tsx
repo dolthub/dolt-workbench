@@ -25,17 +25,20 @@ export default function ConnectionItem({
 }: Props) {
   return (
     <Button.Link
-      key={conn.name}
+      key={conn.connectionName}
       className={cx(css.connection, {
-        [css.selected]: selectedConnection.name === conn.name,
+        [css.selected]:
+          selectedConnection.connectionName === conn.connectionName,
       })}
       onClick={async () => onSelected(conn)}
     >
       <div className={css.connectionTop}>
         <div className={css.nameAndLabel}>
-          <span className={css.connectionName}>{excerpt(conn.name, 16)}</span>
+          <span className={css.connectionName}>
+            {excerpt(conn.connectionName, 16)}
+          </span>
           <DatabaseTypeLabel conn={conn} />
-          {conn.name === currentConnection.name && (
+          {conn.connectionName === currentConnection.connectionName && (
             <MdRemoveRedEye className={css.viewing} />
           )}
         </div>

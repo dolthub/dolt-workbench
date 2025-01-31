@@ -17,7 +17,12 @@ function Inner(props: InnerProps) {
   return (
     <QueryHandler
       result={tableRes}
-      render={td => <TableEditorOverlay columns={td.table.columns} />}
+      render={td => (
+        <TableEditorOverlay
+          columns={td.table.columns}
+          connectionName={props.params.connectionName}
+        />
+      )}
     />
   );
 }

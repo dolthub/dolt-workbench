@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function SuccessMsg(props: Props) {
-  const { isMutation } = useSqlParser();
+  const { isMutation } = useSqlParser(props.params.connectionName);
   const lower = props.params.q.toLowerCase();
   if (isMutation(props.params.q)) {
     return (

@@ -27,7 +27,7 @@ export default function Item({
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
   return (
     <>
-      <li key={conn.name} className={css.connectionContainer}>
+      <li key={conn.connectionName} className={css.connectionContainer}>
         <div
           className={cx(css.line, css[borderClassName], {
             [css.shorterLine]: shorterLine,
@@ -44,7 +44,7 @@ export default function Item({
           </div>
           <div className={css.right}>
             <Button.Link
-              onClick={() => onDeleteClicked(conn.name)}
+              onClick={() => onDeleteClicked(conn.connectionName)}
               className={css.delete}
             >
               <IoMdClose />
@@ -52,7 +52,7 @@ export default function Item({
             <div className={css.typeAndName}>
               <DatabaseTypeLabel conn={conn} />
               <Button.Link onClick={onAdd} className={css.name}>
-                {conn.name}
+                {conn.connectionName}
               </Button.Link>
             </div>
           </div>

@@ -17,11 +17,15 @@ export const DOC_ROWS_FOR_DOC_PAGE = gql`
     }
   }
   query DocsRowsForDocPageQuery(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
   ) {
-    docs(name: $name, databaseName: $databaseName, refName: $refName) {
+    docs(
+      connectionName: $connectionName
+      databaseName: $databaseName
+      refName: $refName
+    ) {
       ...DocListForDocPage
     }
   }

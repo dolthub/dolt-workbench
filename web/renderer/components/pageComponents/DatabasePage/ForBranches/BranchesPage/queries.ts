@@ -4,18 +4,19 @@ export const BRANCHES_FOR_BRANCHES_PAGE_QUERY = gql`
   fragment Branch on Branch {
     _id
     branchName
+    connectionName
     databaseName
     lastUpdated
     lastCommitter
   }
   query BranchList(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $sortBy: SortBranchesBy
     $offset: Int
   ) {
     branches(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       sortBy: $sortBy
       offset: $offset
@@ -30,13 +31,13 @@ export const BRANCHES_FOR_BRANCHES_PAGE_QUERY = gql`
 
 export const REMOTE_BRANCHES = gql`
   query RemoteBranches(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $sortBy: SortBranchesBy
     $offset: Int
   ) {
     remoteBranches(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       sortBy: $sortBy
       offset: $offset
@@ -51,12 +52,12 @@ export const REMOTE_BRANCHES = gql`
 
 export const DELETE_BRANCH = gql`
   mutation DeleteBranch(
-    $name: String!
+    $connectionName: String!
     $branchName: String!
     $databaseName: String!
   ) {
     deleteBranch(
-      name: $name
+      connectionName: $connectionName
       branchName: $branchName
       databaseName: $databaseName
     )

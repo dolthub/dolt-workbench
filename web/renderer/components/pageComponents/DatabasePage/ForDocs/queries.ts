@@ -7,13 +7,13 @@ export const DOC_DATA_FOR_DOC_PAGE = gql`
     }
   }
   query DocDataForDocPage(
-    $name: String!
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $docType: DocType
   ) {
     docOrDefaultDoc(
-      name: $name
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       docType: $docType
@@ -26,8 +26,11 @@ export const DOC_DATA_FOR_DOC_PAGE = gql`
 `;
 
 export const DOC_PAGE_QUERY_NO_BRANCH = gql`
-  query DocPageQueryNoBranch($name: String!, $databaseName: String!) {
-    branchOrDefault(name: $name, databaseName: $databaseName) {
+  query DocPageQueryNoBranch($connectionName: String!, $databaseName: String!) {
+    branchOrDefault(
+      connectionName: $connectionName
+      databaseName: $databaseName
+    ) {
       _id
       branchName
     }
