@@ -1,10 +1,12 @@
-import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import Image from "next/legacy/image";
 import cx from "classnames";
-import { DatabaseTypeLabel } from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
+import {
+  DatabaseTypeLabel,
+  getDatabaseType,
+} from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
 import useAddConnection from "./useAddConnection";
 import css from "./index.module.css";
 
@@ -25,7 +27,7 @@ export default function Item({
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
   return (
     <>
-      <li key={conn.name} className={css.connectionContainer}>
+      <li key={conn.connectionName} className={css.connectionContainer}>
         <div
           className={cx(css.line, css[borderClassName], {
             [css.shorterLine]: shorterLine,
@@ -42,7 +44,7 @@ export default function Item({
           </div>
           <div className={css.right}>
             <Button.Link
-              onClick={() => onDeleteClicked(conn.name)}
+              onClick={() => onDeleteClicked(conn.connectionName)}
               className={css.delete}
             >
               <IoMdClose />
@@ -50,7 +52,7 @@ export default function Item({
             <div className={css.typeAndName}>
               <DatabaseTypeLabel conn={conn} />
               <Button.Link onClick={onAdd} className={css.name}>
-                {conn.name}
+                {conn.connectionName}
               </Button.Link>
             </div>
           </div>

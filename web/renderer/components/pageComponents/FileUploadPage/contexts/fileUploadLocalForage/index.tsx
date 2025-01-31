@@ -35,6 +35,7 @@ type Props = {
 
 export function FileUploadLocalForageProvider(props: Props) {
   const dbParams: DatabaseParams = {
+    connectionName: props.params.connectionName,
     databaseName: props.params.databaseName,
   };
   const name = `upload-${props.params.databaseName}-${props.params.uploadId}`;

@@ -17,7 +17,9 @@ type Props = ModalProps & {
 };
 
 export default function ResetModal(props: Props) {
-  const { getCallProcedure, isPostgres } = useSqlBuilder();
+  const { getCallProcedure, isPostgres } = useSqlBuilder(
+    props.params.connectionName,
+  );
   const { mutateFn, loading, err, client } = useMutation({
     hook: useRestoreAllMutation,
   });

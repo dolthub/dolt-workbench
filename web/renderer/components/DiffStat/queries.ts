@@ -11,6 +11,7 @@ export const DIFF_STAT = gql`
     cellCount
   }
   query DiffStat(
+    $connectionName: String!
     $databaseName: String!
     $fromRefName: String!
     $toRefName: String!
@@ -19,6 +20,7 @@ export const DIFF_STAT = gql`
     $tableName: String
   ) {
     diffStat(
+      connectionName: $connectionName
       databaseName: $databaseName
       fromRefName: $fromRefName
       toRefName: $toRefName

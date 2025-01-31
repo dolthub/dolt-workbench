@@ -30,7 +30,9 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   const { executeQuery, setEditorString, toggleSqlEditor } =
     useSqlEditorContext();
-  const { dropTable, insertIntoTable } = useSqlBuilder();
+  const { dropTable, insertIntoTable } = useSqlBuilder(
+    props.params.connectionName,
+  );
   const { columns } = useDataTableContext();
 
   const uploadParams: UploadParamsWithOptions = {
@@ -126,7 +128,7 @@ function ForDolt(props: Props) {
 }
 
 export default function EditTableButtons(props: Props) {
-  const res = useDatabaseDetails();
+  const res = useDatabaseDetails(props.params.connectionName);
 
   if (!res.isDolt) return <Inner {...props} />;
   return <ForDolt {...props} />;

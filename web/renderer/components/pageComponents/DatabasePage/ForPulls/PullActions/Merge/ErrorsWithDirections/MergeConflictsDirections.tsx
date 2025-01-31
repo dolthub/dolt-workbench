@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function MergeConflictsDirections({ params }: Props) {
-  const { getCallProcedure } = useSqlBuilder();
+  const { getCallProcedure } = useSqlBuilder(params.connectionName);
   const checkout = getCallProcedure("DOLT_CHECKOUT", [params.refName]);
   const merge = getCallProcedure("DOLT_MERGE", [params.fromBranchName]);
   const conflictsResolve = getCallProcedure("DOLT_CONFLICTS_RESOLVE", [

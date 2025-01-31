@@ -38,7 +38,12 @@ export function Inner({ columns, rows, message = null, ...props }: Props) {
         </div>
         {rows && columns ? (
           <div className={css.bottom}>
-            <Table {...props} rows={rows} columns={columns} />
+            <Table
+              {...props}
+              rows={rows}
+              columns={columns}
+              connectionName={props.params.connectionName}
+            />
           </div>
         ) : (
           <p data-cy="db-data-table-empty" className={css.noData}>
@@ -77,7 +82,7 @@ function WithContext(props: TableProps) {
 }
 
 export default function DataTable(props: { params: DataTableParams }) {
-  const { selectFromTable } = useSqlBuilder();
+  const { selectFromTable } = useSqlBuilder(props.params.connectionName);
   const params: SqlQueryParams = {
     ...props.params,
     q: selectFromTable(props.params.tableName),

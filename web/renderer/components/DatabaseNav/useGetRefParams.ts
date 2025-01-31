@@ -7,6 +7,7 @@ export default function useGetRefParams(params: RefParams) {
 
   const checkBranchExistRes = useGetBranchQuery({
     variables: {
+      connectionName: params.connectionName,
       databaseName: params.databaseName,
       branchName: params.refName,
     },
@@ -14,6 +15,7 @@ export default function useGetRefParams(params: RefParams) {
 
   const tagRes = useGetTagQuery({
     variables: {
+      connectionName: params.connectionName,
       databaseName: params.databaseName,
       tagName: params.refName,
     },

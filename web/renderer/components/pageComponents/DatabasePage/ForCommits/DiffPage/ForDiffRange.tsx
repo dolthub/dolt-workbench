@@ -21,6 +21,7 @@ function Inner(props: InnerProps) {
   const res = useHistoryForCommitQuery({
     variables: {
       databaseName,
+      connectionName: props.params.connectionName,
       afterCommitId: props.params.fromCommitId,
     },
   });

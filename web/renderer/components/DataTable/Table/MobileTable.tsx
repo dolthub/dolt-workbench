@@ -9,6 +9,7 @@ import Head from "./Head";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   hasMore?: boolean;
   loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];
@@ -28,6 +29,7 @@ export default function MobileTable({ columns, rows, ...props }: Props) {
           setColumnStatus={props.setColumnStatus}
         />
         <Body
+          connectionName={props.connectionName}
           rows={rows}
           columns={columns}
           isMobile

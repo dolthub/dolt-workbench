@@ -31,7 +31,7 @@ export default function useEditDoc(
     loading: false,
   });
   const router = useRouter();
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails(params.connectionName);
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();

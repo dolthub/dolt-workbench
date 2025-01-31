@@ -3,7 +3,11 @@ import { DatabaseParams } from "@lib/params";
 
 export default function useDefaultBranch(params: DatabaseParams) {
   const { data, ...res } = useDefaultBranchPageQuery({
-    variables: { databaseName: params.databaseName, filterSystemTables: true },
+    variables: {
+      databaseName: params.databaseName,
+      connectionName: params.connectionName,
+      filterSystemTables: true,
+    },
   });
   return {
     ...res,

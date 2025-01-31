@@ -27,7 +27,7 @@ export default function FetchButton({
     setLoading(true);
     const fetchRes = await fetch({
       variables: {
-        databaseName: params.databaseName,
+        ...params,
         remoteName: remote.name,
       },
       fetchPolicy: "network-only",

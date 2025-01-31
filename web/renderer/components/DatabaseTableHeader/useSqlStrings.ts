@@ -11,8 +11,9 @@ export function useSqlStrings(
   params: DatabasePageParams,
   empty = false,
 ): { sqlString: string; editorString: string } {
-  const { getDefaultQueryString, selectFromTable, isPostgres } =
-    useSqlBuilder();
+  const { getDefaultQueryString, selectFromTable, isPostgres } = useSqlBuilder(
+    params.connectionName,
+  );
   const { editorString, setEditorString } = useSqlEditorContext();
   const defaultQuery = getDefaultQueryString(params.schemaName);
 

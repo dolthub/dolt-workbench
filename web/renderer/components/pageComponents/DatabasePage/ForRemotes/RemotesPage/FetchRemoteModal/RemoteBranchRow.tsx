@@ -30,6 +30,7 @@ export default function RemoteBranchRow({
   );
   const res = useRemoteBranchDiffCountsQuery({
     variables: {
+      connectionName: params.connectionName,
       databaseName: params.databaseName,
       toRefName: currentBranch,
       fromRefName: branchNameWithRemoteName,

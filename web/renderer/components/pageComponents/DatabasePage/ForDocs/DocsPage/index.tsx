@@ -39,7 +39,10 @@ type Props = {
 
 export default function DocsPage({ params, title }: Props) {
   const res = useDocDataForDocPageQuery({
-    variables: { ...params, docType: toDocType(params.docName) },
+    variables: {
+      ...params,
+      docType: toDocType(params.docName),
+    },
   });
 
   return (
@@ -55,7 +58,12 @@ export default function DocsPage({ params, title }: Props) {
       leftNavInitiallyOpen
       title={title}
     >
-      <NotDoltWrapper showNotDoltMsg feature="Viewing docs" bigMsg>
+      <NotDoltWrapper
+        connectionName={params.connectionName}
+        showNotDoltMsg
+        feature="Viewing docs"
+        bigMsg
+      >
         <QueryHandler
           result={res}
           errComponent={<Page404 title="Error fetching database" />}

@@ -26,8 +26,10 @@ type ColumnWithNamesAndValue = {
 };
 
 export function useGetDoltDiffQuery(props: Props): ReturnType {
-  const { convertToSqlSelect } = useSqlBuilder();
-  const { parseSelectQuery, isPostgres } = useSqlParser();
+  const { convertToSqlSelect } = useSqlBuilder(props.params.connectionName);
+  const { parseSelectQuery, isPostgres } = useSqlParser(
+    props.params.connectionName,
+  );
 
   const generate = (): string => {
     const tableName = `dolt_diff_${props.params.tableName}`;

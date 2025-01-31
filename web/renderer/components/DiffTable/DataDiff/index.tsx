@@ -61,6 +61,7 @@ function Inner(props: InnerProps) {
     <div className={css.container}>
       <div className={css.topContainer}>
         <DatabaseOptionsDropdown
+          connectionName={props.params.connectionName}
           onClickHideUnchangedCol={onClickHideUnchangedCol}
           showingHideUnchangedCol={hideUnchangedCols}
           className={css.optionButton}

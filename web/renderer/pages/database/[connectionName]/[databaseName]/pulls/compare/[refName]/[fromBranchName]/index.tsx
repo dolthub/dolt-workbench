@@ -12,11 +12,7 @@ type Props = {
 const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
   <Page title={`Viewing pull diff for ${params.databaseName}`} noIndex>
     <DatabasePage.ForPullDiff
-      params={{
-        databaseName: params.databaseName,
-        fromBranchName: params.fromBranchName,
-        refName: params.refName,
-      }}
+      params={params}
       tableName={tableName ?? undefined}
     />
   </Page>

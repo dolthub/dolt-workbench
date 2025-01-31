@@ -13,7 +13,7 @@ type QueryProps = Props & {
 };
 
 export default function Wrapper(props: Props) {
-  const { isDolt } = useDatabaseDetails();
+  const { isDolt } = useDatabaseDetails(props.params.connectionName);
   if (props.params.refName && isDolt) {
     return (
       <Query

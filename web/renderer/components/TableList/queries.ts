@@ -17,12 +17,14 @@ export const GET_TABLE = gql`
     }
   }
   query TableForBranch(
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $tableName: String!
     $schemaName: String
   ) {
     table(
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       tableName: $tableName

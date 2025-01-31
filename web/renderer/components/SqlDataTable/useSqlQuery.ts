@@ -16,7 +16,7 @@ export default function useSqlQuery(
   client: ApolloClient<NormalizedCacheObject>,
   gqlError?: ApolloError,
 ): boolean {
-  const { isMutation } = useSqlParser();
+  const { isMutation } = useSqlParser(params.connectionName);
   const router = useRouter();
   const { addMutation } = useSessionQueryHistory(params.databaseName);
   const isMut = isMutation(params.q);

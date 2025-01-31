@@ -3,14 +3,14 @@ import { gql } from "@apollo/client";
 export const ADD_DATABASE_CONNECTION = gql`
   mutation AddDatabaseConnection(
     $connectionUrl: String!
-    $name: String!
+    $connectionName: String!
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
     $type: DatabaseType
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
-      name: $name
+      connectionName: $connectionName
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
@@ -23,7 +23,7 @@ export const ADD_DATABASE_CONNECTION = gql`
 export const STORED_CONNECTIONS = gql`
   fragment DatabaseConnection on DatabaseConnection {
     connectionUrl
-    name
+    connectionName
     useSSL
     hideDoltFeatures
     type
@@ -37,7 +37,7 @@ export const STORED_CONNECTIONS = gql`
 `;
 
 export const REMOVE_CONNECTION = gql`
-  mutation RemoveConnection($name: String!) {
-    removeDatabaseConnection(name: $name)
+  mutation RemoveConnection($connectionName: String!) {
+    removeDatabaseConnection(connectionName: $connectionName)
   }
 `;

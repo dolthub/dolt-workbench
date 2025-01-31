@@ -3,7 +3,10 @@ import { DeleteBranchDocument } from "@gen/graphql-types";
 import chance from "@lib/chance";
 import { BranchParams, DatabaseParams } from "@lib/params";
 
-export const dbParams: DatabaseParams = { databaseName: "test" };
+export const dbParams: DatabaseParams = {
+  databaseName: "test",
+  connectionName: "connection",
+};
 export const branchParams: BranchParams = { ...dbParams, branchName: "v1" };
 
 export const deleteMessage = chance.sentence();

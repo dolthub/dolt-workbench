@@ -71,7 +71,7 @@ export function Inner({ diffSummary, hideCellButtons }: InnerProps) {
 
 export default function DiffTable(props: Props) {
   const { activeTableName, diffSummaries } = useDiffContext();
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails(props.params.connectionName);
 
   if (!activeTableName) return null;
 

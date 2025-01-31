@@ -23,7 +23,9 @@ export class FileStoreService {
         return [];
       }
       const parsed = JSON.parse(file);
-      return parsed;
+      return parsed.map(p => {
+        return { ...p, connectionName: p.name };
+      });
     } catch (err) {
       console.error("Error reading store.json:", err);
       return [];
@@ -33,7 +35,9 @@ export class FileStoreService {
   addItemToStore(item: DatabaseConnection): void {
     const store = this.getStore();
 
-    const existingItem = store.find(storeItem => storeItem.name === item.name);
+    const existingItem = store.find(
+      storeItem => storeItem.connectionName === item.connectionName,
+    );
     if (existingItem) {
       if (existingItem.connectionUrl === item.connectionUrl) return;
       throw new Error("name already exists");
@@ -55,7 +59,7 @@ export class FileStoreService {
 
   removeItemFromStore(name: string): void {
     const store = this.getStore();
-    const newStore = store.filter(item => item.name !== name);
+    const newStore = store.filter(item => item.connectionName !== name);
     fs.writeFileSync(storePath, JSON.stringify(newStore), {
       encoding: "utf8",
     });

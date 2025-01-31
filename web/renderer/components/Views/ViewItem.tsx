@@ -14,7 +14,7 @@ type Props = {
 };
 
 export default function ViewItem(props: Props) {
-  const { selectFromTable } = useSqlBuilder();
+  const { selectFromTable } = useSqlBuilder(props.params.connectionName);
   const { name } = props.view;
   const { queryClickHandler } = useSqlEditorContext("Views");
   const viewingQuery = isActive(name, props.params.q);

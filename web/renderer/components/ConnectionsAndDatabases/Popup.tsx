@@ -45,6 +45,7 @@ export default function Popup({
           <span>DATABASES</span>
           <CreateDatabase
             isPostgres={currentConnection.type === DatabaseType.Postgres}
+            connectionName={currentConnection.connectionName}
           />
         </div>
       </div>
@@ -52,7 +53,7 @@ export default function Popup({
         <div className={css.left}>
           {storedConnections.map(conn => (
             <ConnectionItem
-              key={conn.name}
+              key={conn.connectionName}
               conn={conn}
               currentConnection={currentConnection}
               onSelected={onSelected}

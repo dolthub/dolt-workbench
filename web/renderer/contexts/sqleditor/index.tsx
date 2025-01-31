@@ -20,7 +20,7 @@ export const SqlEditorContext =
 // SqlEditorProvider should only be used in DatabasePage and the query catalog
 // page (to execute queries)
 export function SqlEditorProvider(props: Props) {
-  const { isMultipleQueries } = useSqlParser();
+  const { isMultipleQueries } = useSqlParser(props.params.connectionName);
   const { isMobile } = useReactiveWidth(1024);
   const [editorString, setEditorString] = useState("");
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);

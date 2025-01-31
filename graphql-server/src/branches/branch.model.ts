@@ -10,6 +10,9 @@ export class Branch {
   _id: string;
 
   @Field()
+  connectionName: string;
+
+  @Field()
   databaseName: string;
 
   @Field()
@@ -44,12 +47,14 @@ export class BranchList extends ListOffsetRes {
 }
 
 export function fromDoltBranchesRow(
+  connectionName: string,
   databaseName: string,
   b: RawRow,
   tns: string[] = [],
 ): Branch {
   return {
     _id: `databases/${databaseName}/branches/${b.name}`,
+    connectionName,
     databaseName,
     branchName: b.name,
     head: b.hash,
@@ -61,10 +66,14 @@ export function fromDoltBranchesRow(
   };
 }
 
-export const branchForNonDoltDB = (databaseName: string): Branch => {
+export const branchForNonDoltDB = (
+  connectionName: string,
+  databaseName: string,
+): Branch => {
   const branchName = "main";
   return {
     _id: `databases/${databaseName}/branches/${branchName}`,
+    connectionName,
     databaseName,
     branchName,
     lastUpdated: new Date(),

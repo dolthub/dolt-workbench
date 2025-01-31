@@ -9,8 +9,8 @@ function getQueryError(q: string, err: unknown): string {
   return `query: ${q}\nerror: ${err}`;
 }
 
-export default function useSqlParser() {
-  const { isPostgres, loading } = useDatabaseDetails();
+export default function useSqlParser(connectionName: string) {
+  const { isPostgres, loading } = useDatabaseDetails(connectionName);
 
   const opt = {
     database: isPostgres ? "POSTGRESQL" : "MYSQL",

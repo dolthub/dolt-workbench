@@ -19,6 +19,7 @@ jest.mock("next/router", () => {
 
 const params: RefParams = {
   databaseName: "test",
+  connectionName: "connection",
   refName: "main",
 };
 

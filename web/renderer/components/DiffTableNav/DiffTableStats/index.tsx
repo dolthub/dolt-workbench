@@ -7,12 +7,13 @@ import ListItem from "./ListItem";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   className?: string;
 };
 
 export default function DiffTableStats(props: Props) {
   const { diffSummaries, params, activeTableName, refName } = useDiffContext();
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails(props.connectionName);
   return (
     <ul className={cx(css.list, props.className)}>
       {diffSummaries.map(ds => (

@@ -38,7 +38,7 @@ export default function EditCellInput(props: Props) {
   const val = getDefaultVal(props.value, inputType);
   const [newValue, setNewValue] = useState(val);
   const [showTextarea, setShowTextarea] = useState(false);
-  const { updateTableQuery } = useSqlBuilder();
+  const { updateTableQuery } = useSqlBuilder(params.connectionName);
 
   if (!tableName) return null;
 

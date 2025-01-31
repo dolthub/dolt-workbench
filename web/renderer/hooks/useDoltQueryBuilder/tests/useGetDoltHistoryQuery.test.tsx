@@ -4,15 +4,20 @@ import { renderHookForMaybePostgres } from "./renderHookForMaybePostgres.test";
 import * as td from "./testDataDiff";
 import * as T from "./types";
 
+type Props = {
+  connectionName: string;
+  q: string;
+};
+
 type Tests = Array<
-  Omit<T.Test<string>, "args"> & { args: (isPG: boolean) => string }
+  Omit<T.Test<Props>, "args"> & { args: (isPG: boolean) => string }
 >;
 
 async function renderUseGetDoltHistoryQuery(
-  q: string,
+  args: Props,
   isPostgres = false,
 ): Promise<ReturnType> {
-  return renderHookForMaybePostgres(q, useGetDoltHistoryQuery, isPostgres);
+  return renderHookForMaybePostgres(args, useGetDoltHistoryQuery, isPostgres);
 }
 
 const tests: Tests = [
@@ -57,7 +62,7 @@ function executeTests(isPG = false) {
   tests.forEach(test => {
     it(`[${isPG ? "postgres" : "mysql"}] converts dolt_diff query to dolt_history query for ${test.desc}`, async () => {
       const { generateQuery } = await renderUseGetDoltHistoryQuery(
-        test.args(isPG),
+        { q: test.args(isPG), connectionName: "connection" },
         isPG,
       );
       expect(generateQuery()).toBe(test.expected(isPG));

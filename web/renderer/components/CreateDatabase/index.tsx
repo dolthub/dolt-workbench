@@ -14,6 +14,7 @@ import { SyntheticEvent, useState } from "react";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   buttonClassName?: string;
   isPostgres: boolean;
   showText?: boolean;
@@ -39,12 +40,17 @@ export default function CreateDatabase(props: Props) {
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { success } = await createDB({ variables: { databaseName } });
+    const { success } = await createDB({
+      variables: { connectionName: props.connectionName, databaseName },
+    });
     if (!success) return;
     if (props.isPostgres) {
       await resetDB({ variables: { newDatabase: databaseName } });
     }
-    const { href, as } = database({ databaseName });
+    const { href, as } = database({
+      connectionName: props.connectionName,
+      databaseName,
+    });
     router.push(href, as).catch(console.error);
   };
 

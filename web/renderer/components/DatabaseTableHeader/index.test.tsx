@@ -9,6 +9,7 @@ import DatabaseTableHeader from ".";
 import { DEFAULT_LIMIT, sampleCreateQueryForEmpty } from "./useSqlStrings";
 
 const dbParams = {
+  connectionName: "connection",
   databaseName: "test",
   schemaName: "mysch",
 };

@@ -16,7 +16,7 @@ export default function DropColumnButton({ col, refName }: Props) {
   const { executeQuery, setEditorString } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName } = params;
-  const { alterTableDropColQuery } = useSqlBuilder();
+  const { alterTableDropColQuery } = useSqlBuilder(params.connectionName);
 
   if (!tableName || !col.sourceTable || isDoltSystemTable(tableName)) {
     return null;

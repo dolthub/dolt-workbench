@@ -22,7 +22,7 @@ export default function CreateViewModal({
   ...props
 }: Props): JSX.Element {
   const { executeQuery, error } = useSqlEditorContext("Views");
-  const { createView } = useSqlBuilder();
+  const { createView } = useSqlBuilder(props.params.connectionName);
   const [name, setName] = useState("your_name_here");
   const [loading, setLoading] = useState(false);
   const query = createView(name, props.query);

@@ -40,7 +40,7 @@ export default function AddItemDropdown(props: Props) {
             >
               Upload a file
             </DropdownItem>
-            <NotDoltWrapper>
+            <NotDoltWrapper connectionName={props.params.connectionName}>
               <DropdownItem
                 url={newRelease(props.params)}
                 icon={<AiOutlineTag />}
@@ -51,7 +51,7 @@ export default function AddItemDropdown(props: Props) {
               </DropdownItem>
             </NotDoltWrapper>
             {props.params.refName && (
-              <NotDoltWrapper>
+              <NotDoltWrapper connectionName={props.params.connectionName}>
                 <DocsDropdownItem
                   params={{ ...props.params, refName: props.params.refName }}
                   userHasWritePerms={userHasWritePerms}

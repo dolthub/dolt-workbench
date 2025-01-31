@@ -132,7 +132,9 @@ export function DataTableProvider({
   children,
   showingWorkingDiff,
 }: Props) {
-  const { isMutation, requireTableNamesForSelect, loading } = useSqlParser();
+  const { isMutation, requireTableNamesForSelect, loading } = useSqlParser(
+    params.connectionName,
+  );
   const tableNames = useMemo(
     () =>
       "tableName" in params

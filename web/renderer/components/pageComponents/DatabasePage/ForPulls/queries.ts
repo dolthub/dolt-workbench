@@ -31,11 +31,13 @@ export const PULL_DETAILS_FOR_PULL_DETAILS = gql`
     }
   }
   query PullDetailsForPullDetails(
+    $connectionName: String!
     $databaseName: String!
     $fromBranchName: String!
     $toBranchName: String!
   ) {
     pullWithDetails(
+      connectionName: $connectionName
       databaseName: $databaseName
       fromBranchName: $fromBranchName
       toBranchName: $toBranchName

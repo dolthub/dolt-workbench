@@ -12,6 +12,7 @@ type Props = {
 function Query({ params }: Props) {
   const res = useHistoryForCommitQuery({
     variables: {
+      connectionName: params.connectionName,
       databaseName: params.databaseName,
       afterCommitId: params.toCommitId,
     },

@@ -10,6 +10,8 @@ import { PostgresQueryFactory } from "../queryFactory/postgres";
 import { replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
+  connectionName: string;
+
   hideDoltFeatures: boolean;
 
   connectionUrl: string;
@@ -29,11 +31,17 @@ export class ConnectionProvider {
 
   private workbenchConfig: WorkbenchConfig | undefined;
 
-  connection(): QueryFactory {
-    if (!this.qf) {
-      throw new Error("Data source service not initialized");
+  databases: Record<
+    string,
+    { ds: DataSource; qf: QueryFactory; config: WorkbenchConfig }
+  > = {};
+
+  connection(name: string): QueryFactory {
+    if (!(name in this.databases)) {
+      throw new Error("Connection not found");
     }
-    return this.qf;
+
+    return this.databases[name].qf;
   }
 
   // Used for file upload only, must destroy after using
@@ -61,18 +69,25 @@ export class ConnectionProvider {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
-    if (this.ds?.isInitialized) {
-      await this.ds.destroy();
+    const { connectionName } = config;
+    if (connectionName in this.databases) {
+      if (this.databases[connectionName].ds.isInitialized) {
+        await this.databases[connectionName].ds.destroy();
+      }
+    }
+    const ds = getDataSource(config);
+    try {
+      await ds.initialize();
+      await this.ds?.initialize();
+    } catch (err) {
+      // Don't store database if error initializing
+      delete this.databases[connectionName];
+      throw new Error(`Error starting new connection: ${err.message}`);
     }
 
-    this.workbenchConfig = config;
+    const res = await newQueryFactory(config.type, ds);
 
-    this.ds = getDataSource(config);
-
-    await this.ds.initialize();
-
-    const res = await newQueryFactory(config.type, this.ds);
-    this.qf = res.qf;
+    this.databases[connectionName] = { ds, config, qf: res.qf };
     return { isDolt: res.isDolt };
   }
 
@@ -104,6 +119,7 @@ export class ConnectionProvider {
 
 export function getDataSource(config: WorkbenchConfig): DataSource {
   const ds = new DataSource({
+    name: config.connectionName,
     applicationName: "Dolt Workbench",
     type: config.type,
     connectorPackage: config.type === "mysql" ? "mysql2" : undefined,

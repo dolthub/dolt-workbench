@@ -23,7 +23,12 @@ export default function ForBranches({ params, newBranch }: Props): JSX.Element {
       }
       routeRefChangeTo={urlParams => branches(urlParams)}
     >
-      <NotDoltWrapper showNotDoltMsg feature={feature} bigMsg>
+      <NotDoltWrapper
+        connectionName={params.connectionName}
+        showNotDoltMsg
+        feature={feature}
+        bigMsg
+      >
         {newBranch ? (
           <NewBranchPage params={params} />
         ) : (

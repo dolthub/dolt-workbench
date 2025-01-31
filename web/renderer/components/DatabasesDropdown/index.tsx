@@ -71,6 +71,7 @@ function Inner(props: InnerProps) {
             <li>
               <CreateDatabase
                 {...props}
+                connectionName={props.params.connectionName}
                 buttonClassName={cx(css.createDBButton, {
                   [css.roundTop]: !filtered.length,
                 })}
@@ -86,8 +87,10 @@ function Inner(props: InnerProps) {
 }
 
 export default function DatabasesDropdown(props: Props) {
-  const res = useDatabasesQuery();
-  const dbDetails = useDatabaseDetails();
+  const res = useDatabasesQuery({
+    variables: props.params,
+  });
+  const dbDetails = useDatabaseDetails(props.params.connectionName);
   if (res.loading || dbDetails.loading || res.error || !res.data) return null;
   return (
     <Inner

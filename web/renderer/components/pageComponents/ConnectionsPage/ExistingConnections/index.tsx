@@ -64,7 +64,7 @@ export default function ExistingConnections(props: Props) {
           {props.connections.map((conn, i) => (
             <Item
               conn={conn}
-              key={conn.name}
+              key={conn.connectionName}
               onDeleteClicked={onDeleteClicked}
               borderClassName={getBorderLineClassName(
                 props.connections.length,
@@ -82,7 +82,7 @@ export default function ExistingConnections(props: Props) {
         assetId={connectionNameToDelete}
         mutationProps={{
           hook: useRemoveConnectionMutation,
-          variables: { name: connectionNameToDelete },
+          variables: { connectionName: connectionNameToDelete },
           refetchQueries: [{ query: StoredConnectionsDocument }],
         }}
       />

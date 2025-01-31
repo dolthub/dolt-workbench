@@ -34,9 +34,10 @@ type Props = {
 };
 
 export function UploadProvider(props: Props) {
-  const { isDolt } = useDatabaseDetails();
   const router = useRouter();
   const { state: fuState, dbParams } = useFileUploadContext();
+  const { isDolt } = useDatabaseDetails(dbParams.connectionName);
+
   const [state, setState] = useSetState({
     ...defaultState,
     spreadsheetOverlayOpen:

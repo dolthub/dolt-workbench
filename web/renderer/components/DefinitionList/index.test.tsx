@@ -6,6 +6,7 @@ import * as mocks from "./mocks";
 const params = {
   refName: "main",
   databaseName: "dbname",
+  connectionName: "connection",
 };
 
 const tableList = [[], [mocks.tableOne], [mocks.tableOne, mocks.tableTwo]];

@@ -1,7 +1,7 @@
 import { gql } from "@apollo/client";
 
 export const DATABASES = gql`
-  query Databases {
-    databases
+  query Databases($connectionName: String!) {
+    databases(connectionName: $connectionName)
   }
 `;

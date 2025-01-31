@@ -13,12 +13,14 @@ export const SQL_SELECT_QUERY = gql`
     sourceTable
   }
   query SqlSelectForSqlDataTable(
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $queryString: String!
     $schemaName: String
   ) {
     sqlSelect(
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       queryString: $queryString

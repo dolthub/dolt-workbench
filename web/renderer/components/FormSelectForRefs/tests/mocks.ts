@@ -18,7 +18,10 @@ import chance from "@lib/chance";
 import { DatabaseParams, RefParams, TableParams } from "@lib/params";
 import { defaultBranchMock } from "@pageComponents/DatabasePage/ForDefaultBranch/mocks";
 
-export const fakeParams = { databaseName: "dbname" };
+export const fakeParams = {
+  databaseName: "dbname",
+  connectionName: "connection",
+};
 export const fakeBranchName = { name: "test-branch" };
 export const defaultBranchQuery = defaultBranchMock({
   ...fakeParams,

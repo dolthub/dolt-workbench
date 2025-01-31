@@ -6,10 +6,12 @@ import useSqlParser from "@hooks/useSqlParser";
 import css from "./index.module.css";
 
 export default function ShowAllColumns() {
-  const { getColumns } = useSqlParser();
-  const { convertToSqlWithNewCols, selectFromTable } = useSqlBuilder();
   const { executeQuery } = useSqlEditorContext();
   const { params, tableNames } = useDataTableContext();
+  const { convertToSqlWithNewCols, selectFromTable } = useSqlBuilder(
+    params.connectionName,
+  );
+  const { getColumns } = useSqlParser(params.connectionName);
 
   if (!params.tableName || tableNames.length > 1) return null;
 

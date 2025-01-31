@@ -13,8 +13,16 @@ export const HISTORY_FOR_COMMIT = gql`
       username
     }
   }
-  query HistoryForCommit($databaseName: String!, $afterCommitId: String!) {
-    commits(afterCommitId: $afterCommitId, databaseName: $databaseName) {
+  query HistoryForCommit(
+    $connectionName: String!
+    $databaseName: String!
+    $afterCommitId: String!
+  ) {
+    commits(
+      connectionName: $connectionName
+      afterCommitId: $afterCommitId
+      databaseName: $databaseName
+    ) {
       list {
         ...CommitForAfterCommitHistory
       }

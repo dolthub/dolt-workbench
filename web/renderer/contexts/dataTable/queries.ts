@@ -23,12 +23,14 @@ export const DATA_TABLE_QUERY = gql`
     }
   }
   query DataTableQuery(
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $tableName: String!
     $schemaName: String
   ) {
     table(
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       tableName: $tableName
@@ -58,6 +60,7 @@ export const ROWS_FOR_DATA_TABLE = gql`
     }
   }
   query RowsForDataTableQuery(
+    $connectionName: String!
     $databaseName: String!
     $refName: String!
     $tableName: String!
@@ -65,6 +68,7 @@ export const ROWS_FOR_DATA_TABLE = gql`
     $offset: Int
   ) {
     rows(
+      connectionName: $connectionName
       databaseName: $databaseName
       refName: $refName
       tableName: $tableName

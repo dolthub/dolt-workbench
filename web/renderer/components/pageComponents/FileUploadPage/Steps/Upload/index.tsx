@@ -10,7 +10,11 @@ import OpenSpreadsheetZone from "./OpenSpreadsheetZone";
 import useUploadContext, { UploadProvider } from "./contexts/upload";
 import css from "./index.module.css";
 
-export default function Upload() {
+type Props = {
+  connectionName: string;
+};
+
+export default function Upload({ connectionName }: Props) {
   const { initialLoad, error } = useFileUploadContext();
 
   if (initialLoad) return <Loader loaded={false} />;
@@ -18,12 +22,12 @@ export default function Upload() {
 
   return (
     <UploadProvider>
-      <Inner />
+      <Inner connectionName={connectionName} />
     </UploadProvider>
   );
 }
 
-function Inner() {
+function Inner({ connectionName }: Props) {
   const { state, updateLoad, error, getUploadUrl } = useFileUploadContext();
   const { onUpload, state: uState } = useUploadContext();
 
@@ -54,6 +58,7 @@ function Inner() {
         <UploadQueryInfo
           tableName={state.tableName}
           hideModifierOptions={uState.spreadsheetOverlayOpen}
+          connectionName={connectionName}
         />
         <ErrorMsg err={uState.error ?? error} />
       </div>

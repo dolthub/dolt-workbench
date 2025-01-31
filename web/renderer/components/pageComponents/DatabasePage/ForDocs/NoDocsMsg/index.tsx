@@ -29,7 +29,7 @@ export default function NoDocsMsg(props: Props) {
       </h2>
       <div className={css.bottom}>
         <AddFromWorkbench {...props} />
-        <AddFromSQL />
+        <AddFromSQL connectionName={props.params.connectionName} />
       </div>
     </div>
   );
@@ -57,8 +57,8 @@ function AddFromWorkbench(props: Props) {
   );
 }
 
-function AddFromSQL() {
-  const { getCallProcedure } = useSqlBuilder();
+function AddFromSQL(props: { connectionName: string }) {
+  const { getCallProcedure } = useSqlBuilder(props.connectionName);
   return (
     <>
       <h3>Adding a doc using SQL</h3>

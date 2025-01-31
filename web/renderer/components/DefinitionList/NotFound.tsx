@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function NotFound(props: Props) {
-  const { isDolt } = useDatabaseDetails();
+  const { isDolt } = useDatabaseDetails(props.params.connectionName);
   const label = `db-${props.name}-empty`;
   return (
     <p className={css.text} data-cy={label}>

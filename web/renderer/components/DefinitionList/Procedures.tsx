@@ -10,10 +10,7 @@ type Props = {
 
 export default function Procedures(props: Props) {
   const res = useRowsForDoltProceduresQuery({
-    variables: {
-      databaseName: props.params.databaseName,
-      refName: props.params.refName,
-    },
+    variables: props.params,
   });
 
   return (

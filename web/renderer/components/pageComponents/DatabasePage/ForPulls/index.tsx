@@ -110,7 +110,12 @@ export default function ForPulls(props: Props) {
       smallHeaderBreadcrumbs={<PullsBreadcrumbs params={props.params} />}
       hideDefaultTable
     >
-      <NotDoltWrapper showNotDoltMsg feature="Viewing pull requests" bigMsg>
+      <NotDoltWrapper
+        connectionName={props.params.connectionName}
+        showNotDoltMsg
+        feature="Viewing pull requests"
+        bigMsg
+      >
         <Inner {...props} />
       </NotDoltWrapper>
     </ForDefaultBranch>

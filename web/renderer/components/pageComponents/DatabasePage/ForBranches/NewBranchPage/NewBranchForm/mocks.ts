@@ -10,6 +10,7 @@ import { defaultBranchMock } from "../../../ForDefaultBranch/mocks";
 
 export const dbParams: DatabaseParams = {
   databaseName: "test",
+  connectionName: "connection",
 };
 export const fromBranch = mainBranch(dbParams);
 export const fromRefName: string = fromBranch.branchName;

@@ -5,6 +5,7 @@ import DoltDisabledSelector from "./DoltDisabledSelector";
 type Props = {
   children: JSX.Element;
   val: Maybe<string>;
+  connectionName: string;
   showLabel?: boolean;
 };
 
@@ -18,7 +19,7 @@ function Inner({ children, ...props }: InnerProps) {
 
 export default function NotDoltSelectWrapper(props: Props) {
   return (
-    <NotDoltWrapper>
+    <NotDoltWrapper connectionName={props.connectionName}>
       <Inner {...props}>{props.children}</Inner>
     </NotDoltWrapper>
   );

@@ -7,7 +7,7 @@ import { CreateTagDocument } from "@gen/graphql-types";
 import { defaultBranchMock } from "../../../ForDefaultBranch/mocks";
 import { generateFakeTag } from "../../ReleaseList/mocks";
 
-export const dbParams = { databaseName: "test" };
+export const dbParams = { databaseName: "test", connectionName: "connection" };
 export const fromBranch = mainBranch(dbParams);
 export const fromRefName: string = fromBranch.branchName;
 

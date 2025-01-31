@@ -17,7 +17,7 @@ type Props = {
 };
 
 export default function MobileSqlEditor(props: Props) {
-  const { isMutation } = useSqlParser();
+  const { isMutation } = useSqlParser(props.params.connectionName);
   const { editorString, setEditorString, executeQuery, setError } =
     useSqlEditorContext("Tables");
   const aceEditor = useRef<any>(null);

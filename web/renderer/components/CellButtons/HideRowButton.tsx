@@ -18,7 +18,7 @@ export default function HideRowButton(props: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
-  const { hideRowQuery } = useSqlBuilder();
+  const { hideRowQuery } = useSqlBuilder(params.connectionName);
 
   if (!tableName) return null;
 

@@ -18,8 +18,16 @@ export const COMMITS_FOR_DIFF_SELECTOR = gql`
       ...CommitForDiffSelector
     }
   }
-  query CommitsForDiffSelector($refName: String!, $databaseName: String!) {
-    commits(refName: $refName, databaseName: $databaseName) {
+  query CommitsForDiffSelector(
+    $connectionName: String!
+    $refName: String!
+    $databaseName: String!
+  ) {
+    commits(
+      refName: $refName
+      connectionName: $connectionName
+      databaseName: $databaseName
+    ) {
       ...CommitListForDiffSelector
     }
   }

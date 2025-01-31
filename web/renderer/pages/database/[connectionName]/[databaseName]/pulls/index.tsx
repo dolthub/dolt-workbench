@@ -14,6 +14,7 @@ const PullsPage: NextPage<Props> = ({ params }) => (
   <Page title={`Viewing pulls for ${params.databaseName}`} noIndex>
     <DatabasePage.ForPulls
       params={{
+        connectionName: params.connectionName,
         databaseName: params.databaseName,
         refName: params.refName ?? undefined,
         fromBranchName: params.from ?? undefined,

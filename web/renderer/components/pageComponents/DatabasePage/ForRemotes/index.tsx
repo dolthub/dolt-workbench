@@ -22,7 +22,12 @@ export default function ForRemotes({ params, newRemote }: Props): JSX.Element {
       title="remotes"
       routeRefChangeTo={remotes}
     >
-      <NotDoltWrapper showNotDoltMsg feature={feature} bigMsg>
+      <NotDoltWrapper
+        connectionName={params.connectionName}
+        showNotDoltMsg
+        feature={feature}
+        bigMsg
+      >
         {newRemote ? (
           <AddRemotePage params={params} />
         ) : (

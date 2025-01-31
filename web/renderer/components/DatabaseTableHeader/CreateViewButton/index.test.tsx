@@ -9,6 +9,7 @@ import * as mocks from "./mocks";
 const params: RefParams = {
   refName: "main",
   databaseName: "test",
+  connectionName: "connection",
 };
 const sqlString = `SELECT *\nFROM \`hhh\`\nLIMIT 200;\n`;
 const viewName = "fakename";

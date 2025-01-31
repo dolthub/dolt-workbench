@@ -7,7 +7,7 @@ export class DatabaseConnection {
   connectionUrl: string;
 
   @Field()
-  name: string;
+  connectionName: string;
 
   @Field({ nullable: true })
   hideDoltFeatures?: boolean;

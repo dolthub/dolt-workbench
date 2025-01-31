@@ -11,6 +11,7 @@ import Head from "./Head";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   hasMore?: boolean;
   loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];
@@ -49,7 +50,12 @@ export default function DesktopTable({ columns, rows, ...props }: Props) {
           columnStatus={props.columnStatus}
           setColumnStatus={props.setColumnStatus}
         />
-        <Body rows={rows} columns={columns} columnStatus={props.columnStatus} />
+        <Body
+          rows={rows}
+          columns={columns}
+          columnStatus={props.columnStatus}
+          connectionName={props.connectionName}
+        />
       </table>
     </InfiniteScroll>
   );

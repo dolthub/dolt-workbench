@@ -27,7 +27,7 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
   const notNullConstraint = !!props.currCol.constraints?.some(
     con => con.notNull,
   );
-  const { updateTableMakeNullQuery } = useSqlBuilder();
+  const { updateTableMakeNullQuery } = useSqlBuilder(params.connectionName);
 
   if (
     !tableName ||
