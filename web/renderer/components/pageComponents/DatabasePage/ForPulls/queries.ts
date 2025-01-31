@@ -31,7 +31,7 @@ export const PULL_DETAILS_FOR_PULL_DETAILS = gql`
     }
   }
   query PullDetailsForPullDetails(
-    name:$String!
+    name:String!
     $databaseName: String!
     $fromBranchName: String!
     $toBranchName: String!

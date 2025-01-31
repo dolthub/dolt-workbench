@@ -34,7 +34,7 @@ export default function WorkingDiff(props: Props) {
   const tns = getTableNames(params.q);
 
   return (
-    <NotDoltWrapper hideNotDolt>
+    <NotDoltWrapper connectionName={props.params.connectionName} hideNotDolt>
       <DiffProvider
         params={params}
         stayWithinPage

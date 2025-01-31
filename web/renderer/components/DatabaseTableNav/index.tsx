@@ -51,7 +51,11 @@ function Nav({
           {open && (
             <>
               <div>
-                <NotDoltSelectWrapper val={params.refName} showLabel>
+                <NotDoltSelectWrapper
+                  val={params.refName}
+                  connectionName={params.connectionName}
+                  showLabel
+                >
                   <BranchAndTagSelector
                     routeRefChangeTo={routeRefChangeTo}
                     params={params}
@@ -60,7 +64,7 @@ function Nav({
                 </NotDoltSelectWrapper>
               </div>
               <HideForNoWritesWrapper params={params}>
-                <NotDoltWrapper>
+                <NotDoltWrapper connectionName={params.connectionName}>
                   <NewBranchLink params={params} open={open} />
                 </NotDoltWrapper>
               </HideForNoWritesWrapper>

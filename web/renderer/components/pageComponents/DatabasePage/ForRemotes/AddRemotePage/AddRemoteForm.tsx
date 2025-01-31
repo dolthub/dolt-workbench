@@ -17,7 +17,7 @@ import { remotes } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import Link from "@components/links/Link";
-import { getDatabaseType } from "@components/DatabaseTypeLabel";
+import { getDatabaseType } from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
 import DoltLink from "@components/links/DoltLink";
 import DoltgresLink from "@components/links/DoltgresLink";
 import css from "./index.module.css";
@@ -31,7 +31,9 @@ type Props = {
 export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
-    useDoltDatabaseDetailsQuery();
+    useDoltDatabaseDetailsQuery({
+      variables: { name: props.params.connectionName },
+    });
   const dbLink = getDbLink(databaseDetails?.doltDatabaseDetails);
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");

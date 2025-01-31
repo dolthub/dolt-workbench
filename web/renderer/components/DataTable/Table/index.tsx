@@ -8,6 +8,7 @@ import MobileTable from "./MobileTable";
 import { getInitialColumnStatus } from "./utils";
 
 type Props = {
+  connectionName: string;
   hasMore?: boolean;
   loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];

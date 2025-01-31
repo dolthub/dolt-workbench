@@ -20,7 +20,9 @@ export default function ForPull(props: Props) {
       {...props}
       diffSelector={<DiffSelector.ForPull params={props.params} />}
       diffStat={<DiffStat params={params} />}
-      diffTables={<DiffTableStats />}
+      diffTables={
+        <DiffTableStats connectionName={props.params.connectionName} />
+      }
       forPull
     />
   );

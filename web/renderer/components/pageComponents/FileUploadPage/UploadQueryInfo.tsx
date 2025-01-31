@@ -8,10 +8,11 @@ type Props = {
   forSpreadsheet?: boolean;
   hideModifierOptions?: boolean;
   tableName: string;
+  connectionName: string;
 };
 
 export default function UploadQueryInfo(props: Props) {
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails(props.connectionName);
   return (
     <div>
       <div className={css.loadData}>

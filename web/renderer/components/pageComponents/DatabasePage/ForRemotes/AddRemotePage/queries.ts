@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const ADD_REMOTE = gql`
   mutation AddRemote(
-    name:$String!
+    name:String!
     $databaseName: String!
     $remoteName: String!
     $remoteUrl: String!

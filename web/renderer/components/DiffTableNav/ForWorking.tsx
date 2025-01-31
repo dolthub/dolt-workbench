@@ -21,7 +21,11 @@ export default function ForWorking(props: Props) {
             flat
           />
         </div>
-        <DiffTableStats {...props} className={css.wkTables} />
+        <DiffTableStats
+          {...props}
+          connectionName={props.params.connectionName}
+          className={css.wkTables}
+        />
       </div>
     </div>
   );

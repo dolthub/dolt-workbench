@@ -17,6 +17,7 @@ export default function ForNotDolt(props: Props) {
       routeRefChangeTo={commitLog}
     >
       <NotDoltWrapper
+        connectionName={props.params.connectionName}
         showNotDoltMsg
         feature={`Viewing ${props.compare ? "diffs" : "commit logs"}`}
         bigMsg

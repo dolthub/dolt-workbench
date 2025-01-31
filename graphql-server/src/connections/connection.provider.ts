@@ -37,7 +37,7 @@ export class ConnectionProvider {
   > = {};
 
   connection(name: string): QueryFactory {
-    console.log("name", name);
+    console.log("name", name, this.databases);
     if (!(name in this.databases)) {
       throw new Error("Connection not found");
     }

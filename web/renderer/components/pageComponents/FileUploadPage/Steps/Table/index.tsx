@@ -28,7 +28,7 @@ function Inner() {
     getUploadUrl,
   } = useFileUploadContext();
   const { onNext, disabled, state, setState } = useTable();
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres } = useDatabaseDetails(dbParams.connectionName);
 
   return (
     <StepLayout
@@ -74,6 +74,7 @@ function Inner() {
               <UploadQueryInfo
                 tableName={state.existingTable}
                 hideModifierOptions
+                connectionName={dbParams.connectionName}
               />
             </div>
           </TableOption>

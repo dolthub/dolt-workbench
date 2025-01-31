@@ -13,6 +13,7 @@ export const newConnection = connections.addStatic("new");
 
 export const database = (p: ps.DatabaseOptionalSchemaParams): Route =>
   databases
+    .addDynamic("connectionName", p.connectionName)
     .addDynamic("databaseName", p.databaseName)
     .withQuery({ schemaName: p.schemaName });
 

@@ -47,6 +47,7 @@ export function Inner({ diffSummary, hideCellButtons }: InnerProps) {
         <DiffTableStats
           diffSummary={diffSummary}
           hiddenColIndexes={hiddenColIndexes}
+          connectionName={params.connectionName}
         />
       </div>
       <TabButtons

@@ -1,5 +1,4 @@
-import { getDatabaseType } from "@components/DatabaseTypeLabel";
-import { DatabaseConnectionFragment } from "@gen/graphql-types";
+import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
 import css from "./index.module.css";
 
 type Props = {
@@ -35,5 +34,16 @@ export function DatabaseTypeLabel({ conn }: Props) {
       );
     default:
       return <span className={css.label}>{type}</span>;
+  }
+}
+
+export function getDatabaseType(t?: DatabaseType, isDolt?: boolean): string {
+  switch (t) {
+    case DatabaseType.Mysql:
+      return isDolt ? "Dolt" : "MySQL";
+    case DatabaseType.Postgres:
+      return isDolt ? "DoltgreSQL" : "PostgreSQL";
+    default:
+      return isDolt ? "Dolt" : "MySQL";
   }
 }

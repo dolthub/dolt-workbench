@@ -82,7 +82,9 @@ export class DatabaseResolver {
   ) {}
 
   @Query(_returns => String, { nullable: true })
-  async currentDatabase(name: string): Promise<string | undefined> {
+  async currentDatabase(
+    @Args() { name }: GetDoltDatabaseDetailsArgs,
+  ): Promise<string | undefined> {
     const conn = this.conn.connection(name);
     const currentDB = await conn.currentDatabase();
     return currentDB;
@@ -189,7 +191,7 @@ export class DatabaseResolver {
       this.fileStoreService.addItemToStore(storeArgs);
     }
 
-    const db = await this.currentDatabase(args.name);
+    const db = await this.currentDatabase(args);
     return { currentDatabase: db };
   }
 

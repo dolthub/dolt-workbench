@@ -510,6 +510,11 @@ export type QueryCommitsArgs = {
 };
 
 
+export type QueryCurrentDatabaseArgs = {
+  name: Scalars['String']['input'];
+};
+
+
 export type QueryDatabasesArgs = {
   name: Scalars['String']['input'];
 };
@@ -889,7 +894,9 @@ export type CreateDatabaseMutationVariables = Exact<{
 
 export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
 
-export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
+export type CurrentDatabaseQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+}>;
 
 
 export type CurrentDatabaseQuery = { __typename?: 'Query', currentDatabase?: string | null };
@@ -1110,6 +1117,26 @@ export type CreateSchemaMutationVariables = Exact<{
 
 export type CreateSchemaMutation = { __typename?: 'Mutation', createSchema: boolean };
 
+export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
+
+export type GetStatusQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type GetStatusQuery = { __typename?: 'Query', status: Array<{ __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string }> };
+
+export type RestoreAllMutationVariables = Exact<{
+  name: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type RestoreAllMutation = { __typename?: 'Mutation', restoreAllTables: boolean };
+
 export type ColumnForTableListFragment = { __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
 export type TableWithColumnsFragment = { __typename?: 'Table', _id: string, tableName: string, columns: Array<{ __typename?: 'Column', name: string, type: string, isPrimaryKey: boolean, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }> };
@@ -1190,6 +1217,16 @@ export type CreateBranchMutationVariables = Exact<{
 
 
 export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: string };
+
+export type DefaultBranchPageQueryVariables = Exact<{
+  name: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  filterSystemTables?: InputMaybe<Scalars['Boolean']['input']>;
+}>;
+
+
+export type DefaultBranchPageQuery = { __typename?: 'Query', defaultBranch?: { __typename?: 'Branch', _id: string, branchName: string, tableNames: Array<string> } | null };
 
 export type DocRowForDocPageFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
@@ -1555,6 +1592,15 @@ export const TableForSchemaListFragmentDoc = gql`
     ${ForeignKeysForDataTableFragmentDoc}
 ${ColumnForTableListFragmentDoc}
 ${IndexForTableListFragmentDoc}`;
+export const StatusFragmentDoc = gql`
+    fragment Status on Status {
+  _id
+  refName
+  tableName
+  staged
+  status
+}
+    `;
 export const TableWithColumnsFragmentDoc = gql`
     fragment TableWithColumns on Table {
   _id
@@ -1707,8 +1753,8 @@ export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDataba
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
 export const CurrentDatabaseDocument = gql`
-    query CurrentDatabase {
-  currentDatabase
+    query CurrentDatabase($name: String!) {
+  currentDatabase(name: $name)
 }
     `;
 
@@ -1724,10 +1770,11 @@ export const CurrentDatabaseDocument = gql`
  * @example
  * const { data, loading, error } = useCurrentDatabaseQuery({
  *   variables: {
+ *      name: // value for 'name'
  *   },
  * });
  */
-export function useCurrentDatabaseQuery(baseOptions?: Apollo.QueryHookOptions<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>) {
+export function useCurrentDatabaseQuery(baseOptions: Apollo.QueryHookOptions<CurrentDatabaseQuery, CurrentDatabaseQueryVariables> & ({ variables: CurrentDatabaseQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<CurrentDatabaseQuery, CurrentDatabaseQueryVariables>(CurrentDatabaseDocument, options);
       }
@@ -2591,6 +2638,81 @@ export function useCreateSchemaMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateSchemaMutationHookResult = ReturnType<typeof useCreateSchemaMutation>;
 export type CreateSchemaMutationResult = Apollo.MutationResult<CreateSchemaMutation>;
 export type CreateSchemaMutationOptions = Apollo.BaseMutationOptions<CreateSchemaMutation, CreateSchemaMutationVariables>;
+export const GetStatusDocument = gql`
+    query GetStatus($name: String!, $databaseName: String!, $refName: String!) {
+  status(name: $name, databaseName: $databaseName, refName: $refName) {
+    ...Status
+  }
+}
+    ${StatusFragmentDoc}`;
+
+/**
+ * __useGetStatusQuery__
+ *
+ * To run a query within a React component, call `useGetStatusQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetStatusQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetStatusQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useGetStatusQuery(baseOptions: Apollo.QueryHookOptions<GetStatusQuery, GetStatusQueryVariables> & ({ variables: GetStatusQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
+      }
+export function useGetStatusLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetStatusQuery, GetStatusQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
+        }
+export function useGetStatusSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetStatusQuery, GetStatusQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetStatusQuery, GetStatusQueryVariables>(GetStatusDocument, options);
+        }
+export type GetStatusQueryHookResult = ReturnType<typeof useGetStatusQuery>;
+export type GetStatusLazyQueryHookResult = ReturnType<typeof useGetStatusLazyQuery>;
+export type GetStatusSuspenseQueryHookResult = ReturnType<typeof useGetStatusSuspenseQuery>;
+export type GetStatusQueryResult = Apollo.QueryResult<GetStatusQuery, GetStatusQueryVariables>;
+export const RestoreAllDocument = gql`
+    mutation RestoreAll($name: String!, $databaseName: String!, $refName: String!) {
+  restoreAllTables(name: $name, databaseName: $databaseName, refName: $refName)
+}
+    `;
+export type RestoreAllMutationFn = Apollo.MutationFunction<RestoreAllMutation, RestoreAllMutationVariables>;
+
+/**
+ * __useRestoreAllMutation__
+ *
+ * To run a mutation, you first call `useRestoreAllMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRestoreAllMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [restoreAllMutation, { data, loading, error }] = useRestoreAllMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useRestoreAllMutation(baseOptions?: Apollo.MutationHookOptions<RestoreAllMutation, RestoreAllMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RestoreAllMutation, RestoreAllMutationVariables>(RestoreAllDocument, options);
+      }
+export type RestoreAllMutationHookResult = ReturnType<typeof useRestoreAllMutation>;
+export type RestoreAllMutationResult = Apollo.MutationResult<RestoreAllMutation>;
+export type RestoreAllMutationOptions = Apollo.BaseMutationOptions<RestoreAllMutation, RestoreAllMutationVariables>;
 export const TableForBranchDocument = gql`
     query TableForBranch($name: String!, $databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String) {
   table(
@@ -2928,6 +3050,51 @@ export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
 export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
 export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
+export const DefaultBranchPageQueryDocument = gql`
+    query DefaultBranchPageQuery($name: String!, $databaseName: String!, $schemaName: String, $filterSystemTables: Boolean) {
+  defaultBranch(name: $name, databaseName: $databaseName) {
+    _id
+    branchName
+    tableNames(schemaName: $schemaName, filterSystemTables: $filterSystemTables)
+  }
+}
+    `;
+
+/**
+ * __useDefaultBranchPageQuery__
+ *
+ * To run a query within a React component, call `useDefaultBranchPageQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDefaultBranchPageQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDefaultBranchPageQuery({
+ *   variables: {
+ *      name: // value for 'name'
+ *      databaseName: // value for 'databaseName'
+ *      schemaName: // value for 'schemaName'
+ *      filterSystemTables: // value for 'filterSystemTables'
+ *   },
+ * });
+ */
+export function useDefaultBranchPageQuery(baseOptions: Apollo.QueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables> & ({ variables: DefaultBranchPageQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+      }
+export function useDefaultBranchPageQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+        }
+export function useDefaultBranchPageQuerySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>(DefaultBranchPageQueryDocument, options);
+        }
+export type DefaultBranchPageQueryHookResult = ReturnType<typeof useDefaultBranchPageQuery>;
+export type DefaultBranchPageQueryLazyQueryHookResult = ReturnType<typeof useDefaultBranchPageQueryLazyQuery>;
+export type DefaultBranchPageQuerySuspenseQueryHookResult = ReturnType<typeof useDefaultBranchPageQuerySuspenseQuery>;
+export type DefaultBranchPageQueryQueryResult = Apollo.QueryResult<DefaultBranchPageQuery, DefaultBranchPageQueryVariables>;
 export const DocsRowsForDocPageQueryDocument = gql`
     query DocsRowsForDocPageQuery($name: String!, $databaseName: String!, $refName: String!) {
   docs(name: $name, databaseName: $databaseName, refName: $refName) {

@@ -52,7 +52,12 @@ export default function ForCommits(props: Props) {
       title="commitLog"
       routeRefChangeTo={commitLog}
     >
-      <NotDoltWrapper showNotDoltMsg feature="Viewing commit log" bigMsg>
+      <NotDoltWrapper
+        connectionName={props.params.connectionName}
+        showNotDoltMsg
+        feature="Viewing commit log"
+        bigMsg
+      >
         <CommitLog params={refParams} />
       </NotDoltWrapper>
     </DatabasePage>

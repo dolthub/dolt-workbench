@@ -16,13 +16,16 @@ type Props = {
 };
 
 type InnerProps = {
+  connectionName: string;
   children: ReactNode;
 };
 
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 function Inner(props: InnerProps) {
   const router = useRouter();
-  const res = useCurrentDatabaseQuery();
+  const res = useCurrentDatabaseQuery({
+    variables: { name: props.connectionName },
+  });
   if (res.loading) {
     return <Loader loaded={false} />;
   }
@@ -53,7 +56,9 @@ export function DatabaseLayoutWrapperOuter(props: Props) {
     <div className={css.appLayout}>
       <Navbar {...props} />
       <div className={css.layoutWrapperContainer} data-cy="db-layout-container">
-        <Inner {...props}>{props.children}</Inner>
+        <Inner {...props} connectionName={props.params.connectionName}>
+          {props.children}
+        </Inner>
       </div>
     </div>
   );

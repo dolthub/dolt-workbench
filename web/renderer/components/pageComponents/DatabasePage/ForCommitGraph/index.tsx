@@ -23,7 +23,12 @@ export default function ForCommitGraph({ params }: Props) {
         initialTabIndex={2}
         smallHeaderBreadcrumbs={<CommitGraphBreadcrumbs params={params} />}
       >
-        <NotDoltWrapper showNotDoltMsg feature="Viewing commit graph" bigMsg>
+        <NotDoltWrapper
+          connectionName={params.connectionName}
+          showNotDoltMsg
+          feature="Viewing commit graph"
+          bigMsg
+        >
           <CommitGraph params={params} />
         </NotDoltWrapper>
       </DatabasePage>

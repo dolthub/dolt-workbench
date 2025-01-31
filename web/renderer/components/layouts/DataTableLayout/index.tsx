@@ -15,7 +15,10 @@ export default function DataTableLayout(props: Props) {
     <div className={css.container}>
       {props.children}
       <div className={css.top}>
-        <NotDoltWrapper hideNotDolt>
+        <NotDoltWrapper
+          connectionName={props.params.connectionName}
+          hideNotDolt
+        >
           <StatusWithOptions {...props} className={css.status} />
         </NotDoltWrapper>
         <DatabaseOptionsDropdown

@@ -11,6 +11,7 @@ import Head from "./Head";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   hasMore?: boolean;
   loadMore: () => Promise<void>;
   rows: RowForDataTableFragment[];

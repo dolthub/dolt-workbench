@@ -4,6 +4,7 @@ import Link from "@components/links/Link";
 import { excerpt } from "@dolthub/web-utils";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { useDatabasesQuery } from "@gen/graphql-types";
+import { ConnectionParams } from "@lib/params";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { database } from "@lib/urls";
 import { FaDatabase } from "@react-icons/all-files/fa/FaDatabase";
@@ -11,7 +12,6 @@ import cx from "classnames";
 import { useRouter } from "next/router";
 import { useEffect } from "react";
 import css from "./index.module.css";
-import { ConnectionParams } from "@lib/params";
 
 type Props = {
   params: ConnectionParams;

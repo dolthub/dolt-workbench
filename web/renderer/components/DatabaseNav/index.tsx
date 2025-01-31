@@ -33,7 +33,14 @@ function Inner(props: Props) {
           if (tab === "Database") {
             return item;
           }
-          return <NotDoltWrapper key={tab}>{item}</NotDoltWrapper>;
+          return (
+            <NotDoltWrapper
+              connectionName={props.params.connectionName}
+              key={tab}
+            >
+              {item}
+            </NotDoltWrapper>
+          );
         })}
       </ul>
     </div>

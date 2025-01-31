@@ -4,6 +4,7 @@ import React, { ReactElement } from "react";
 import NotDoltMsg from "./NotDoltMsg";
 
 type Props = {
+  connectionName: string;
   children: ReactElement;
   showNotDoltMsg?: boolean;
   feature?: string;
@@ -13,7 +14,7 @@ type Props = {
 };
 
 export default function NotDoltWrapper(props: Props) {
-  const res = useDatabaseDetails(props.params.connectionName);
+  const res = useDatabaseDetails(props.connectionName);
   if (res.loading) return <Loader loaded={false} />;
   if (res.error) return <ErrorMsg err={res.error} />;
   if (res.isDolt) {

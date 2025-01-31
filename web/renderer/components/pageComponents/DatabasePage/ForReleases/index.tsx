@@ -24,7 +24,12 @@ export default function ForReleases(props: Props): JSX.Element {
       title="releases"
       routeRefChangeTo={releases}
     >
-      <NotDoltWrapper showNotDoltMsg feature={feature} bigMsg>
+      <NotDoltWrapper
+        connectionName={props.params.connectionName}
+        showNotDoltMsg
+        feature={feature}
+        bigMsg
+      >
         {props.newRelease ? (
           <NewReleasePage params={props.params} />
         ) : (

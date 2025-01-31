@@ -38,7 +38,12 @@ export function Inner({ columns, rows, message = null, ...props }: Props) {
         </div>
         {rows && columns ? (
           <div className={css.bottom}>
-            <Table {...props} rows={rows} columns={columns} />
+            <Table
+              {...props}
+              rows={rows}
+              columns={columns}
+              connectionName={props.params.connectionName}
+            />
           </div>
         ) : (
           <p data-cy="db-data-table-empty" className={css.noData}>

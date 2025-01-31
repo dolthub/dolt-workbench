@@ -16,6 +16,7 @@ import useCellDisplayValue from "./useCellDisplayValue";
 import { getDiffTypeClassnameForCell, getShowAceEditorForCell } from "./utils";
 
 type Props = {
+  connectionName: string;
   cell: ColumnValue;
   cidx: number;
   ridx: number;

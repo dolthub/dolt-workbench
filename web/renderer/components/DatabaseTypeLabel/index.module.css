@@ -1,7 +1,0 @@
-.label {
-  @apply bg-white/10 rounded h-6 flex justify-center items-center ml-1 px-2;
-
-  span {
-    @apply text-sm text-white font-medium;
-  }
-}

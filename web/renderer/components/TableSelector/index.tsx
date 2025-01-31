@@ -41,7 +41,11 @@ function Inner(props: InnerProps) {
 
 export default function TableSelector(props: Props) {
   const res = useTableNamesQuery({
-    variables: { ...props.params, filterSystemTables: true },
+    variables: {
+      ...props.params,
+      name: props.params.connectionName,
+      filterSystemTables: true,
+    },
   });
   return (
     <QueryHandler

@@ -25,7 +25,9 @@ export default function ForCommits(props: Props) {
           }}
         />
       }
-      diffTables={<DiffTableStats />}
+      diffTables={
+        <DiffTableStats connectionName={props.params.connectionName} />
+      }
     />
   );
 }

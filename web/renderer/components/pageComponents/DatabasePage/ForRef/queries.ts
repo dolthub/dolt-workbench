@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const REF_PAGE_QUERY = gql`
   query RefPageQuery(
-    name:$String!
+    name:String!
     $refName: String!
     $databaseName: String!
     $schemaName: String

@@ -17,6 +17,7 @@ import { CellStatusActionType, SetCellStatusAction } from "@lib/tableTypes";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   cidx: number;
   ridx: number;
   row: RowForDataTableFragment;
@@ -56,7 +57,7 @@ export default function CellDropdown(props: Props) {
         currCol={props.currentCol}
         isNull={isNull}
       />
-      <NotDoltWrapper>
+      <NotDoltWrapper connectionName={props.connectionName}>
         <HistoryButton {...props} />
       </NotDoltWrapper>
       <FilterButton value={props.rawVal} col={props.currentCol} />

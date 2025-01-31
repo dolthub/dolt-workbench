@@ -106,6 +106,7 @@ export class BranchResolver {
 
   @Query(_returns => Branch, { nullable: true })
   async defaultBranch(@Args() args: DBArgs): Promise<Branch | undefined> {
+    console.log("args", args);
     const branchNames = await this.branches(args);
     return getDefaultBranchFromBranchesList(branchNames.list);
   }

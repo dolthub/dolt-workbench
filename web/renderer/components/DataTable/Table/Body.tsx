@@ -12,6 +12,7 @@ import { ColumnStatus } from "@lib/tableTypes";
 import Row from "./Row";
 
 type Props = {
+  connectionName: string;
   rows: RowForDataTableFragment[];
   columns: ColumnForDataTableFragment[];
   isMobile?: boolean;

@@ -15,7 +15,11 @@ type ReturnType = {
 export default function useTableNames(
   params: RefOptionalSchemaParams,
 ): ReturnType {
-  const variables = { ...params, filterSystemTables: true };
+  const variables = {
+    ...params,
+    name: params.connectionName,
+    filterSystemTables: true,
+  };
   const { data, ...res } = useTableNamesQuery({
     variables,
     fetchPolicy: "cache-and-network",

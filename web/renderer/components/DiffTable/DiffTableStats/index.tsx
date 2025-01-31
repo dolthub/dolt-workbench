@@ -8,6 +8,7 @@ import Stats from "./Stats";
 import css from "./index.module.css";
 
 type Props = {
+  connectionName: string;
   hiddenColIndexes: number[];
   diffSummary: DiffSummaryFragment;
 };
@@ -17,6 +18,7 @@ export default function DiffTableStats(props: Props) {
   const { data, loading, error } = useDiffStatQuery({
     variables: {
       ...params,
+      name: props.connectionName,
       refName,
       tableName: props.diffSummary.tableName,
       type,

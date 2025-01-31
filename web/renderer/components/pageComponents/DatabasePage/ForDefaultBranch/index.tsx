@@ -30,7 +30,11 @@ export default function ForDefaultBranch({
   ...props
 }: Props) {
   const { data, loading, error } = useDefaultBranchPageQuery({
-    variables: { ...params, filterSystemTables: true },
+    variables: {
+      ...params,
+      name: params.connectionName,
+      filterSystemTables: true,
+    },
   });
   if (loading) return <Loader loaded={false} />;
 

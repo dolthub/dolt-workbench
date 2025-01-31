@@ -17,7 +17,12 @@ export default function NewDocPage({ params }: Props) {
       initialTabIndex={1}
       smallHeaderBreadcrumbs={<NewDocBreadcrumbs params={params} />}
     >
-      <NotDoltWrapper showNotDoltMsg feature="Creating docs" bigMsg>
+      <NotDoltWrapper
+        connectionName={params.connectionName}
+        showNotDoltMsg
+        feature="Creating docs"
+        bigMsg
+      >
         <NewDocForm params={params} />
       </NotDoltWrapper>
     </DatabasePage>
