@@ -42,7 +42,7 @@
     "@nestjs/typeorm": "^10.0.2",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
-    "graphql": "^16.9.0",
+    "graphql": "^16.10.0",
     "graphql-upload": "15.0.0",
     "mysql2": "^3.11.0",
     "pg": "^8.13.1",
