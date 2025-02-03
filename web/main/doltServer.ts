@@ -21,7 +21,6 @@ export function startDoltServer(
     "databases",
     connectionName,
   );
-
   // Create the folder for the connection
   createFolder(dbFolderPath);
 

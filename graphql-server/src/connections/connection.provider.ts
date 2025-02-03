@@ -10,6 +10,8 @@ import { PostgresQueryFactory } from "../queryFactory/postgres";
 import { replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
+  name: string;
+
   hideDoltFeatures: boolean;
 
   connectionUrl: string;
