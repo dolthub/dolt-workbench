@@ -215,6 +215,24 @@ ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow.webContents.send("toggle-left-sidebar");
 });
 
-ipcMain.on("start-dolt-server", (event, connectionName: string) => {
-  startDoltServer(mainWindow, connectionName);
-});
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  } else if (typeof error === "string") {
+    return error;
+  } else {
+    return "An unknown error occurred";
+  }
+}
+
+ipcMain.handle(
+  "start-dolt-server",
+  async (event, connectionName: string, port: string) => {
+    try {
+      await startDoltServer(mainWindow, connectionName, port);
+      return "Server started successfully";
+    } catch (error) {
+      throw new Error(getErrorMessage(error));
+    }
+  },
+);

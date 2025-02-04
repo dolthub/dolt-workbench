@@ -14,7 +14,7 @@ import css from "./index.module.css";
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
 export default function About() {
-  const { state, setState, onSubmit } = useConfigContext();
+  const { state, setState, onSubmit, error: connectErr } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [err, setErr] = useState<Error | undefined>(undefined);
   const [startDoltServer, setStartDoltServer] = useState(false);
@@ -33,10 +33,19 @@ export default function About() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    window.ipc.startDoltServer(state.name);
-    await onSubmit(e);
+    try {
+      const result = await window.ipc.invoke(
+        "start-dolt-server",
+        state.name,
+        state.port,
+      );
+      console.log(result); // "Server started successfully"
+      await onSubmit(e); // Now connect to the server
+    } catch (error) {
+      console.error("Failed to start Dolt server:", error);
+      // Show an error message to the user
+    }
   };
-
   return (
     <form onSubmit={onNext} className={css.form}>
       {forElectron && (
@@ -94,7 +103,7 @@ export default function About() {
           labelClassName={css.label}
         />
       )}
-      <ButtonsWithError error={err}>
+      <ButtonsWithError error={err || connectErr}>
         {startDoltServer ? (
           <Button
             type="submit"
