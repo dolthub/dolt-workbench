@@ -57,13 +57,16 @@ export default function About() {
           }}
           name="start-dolt-server"
           label="Start a dolt server"
-          description="Start a local dolt server and connect to it."
+          description="Start a local dolt server and connect to it. Make sure you have Dolt installed."
           className={css.checkbox}
         />
       )}
       <FormInput
         value={state.name}
-        onChangeString={n => setState({ name: n })}
+        onChangeString={n => {
+          setState({ name: n });
+          setErr(undefined);
+        }}
         label="Name"
         labelClassName={css.label}
         placeholder="my-database (required)"
@@ -77,6 +80,7 @@ export default function About() {
         val={state.type}
         onChangeValue={t => {
           if (!t) return;
+          setErr(undefined);
           setState({
             type: t,
             port: t === DatabaseType.Mysql ? "3306" : "5432",
@@ -97,7 +101,10 @@ export default function About() {
         <FormInput
           label="Port"
           value={state.port}
-          onChangeString={p => setState({ port: p })}
+          onChangeString={p => {
+            setState({ port: p });
+            setErr(undefined);
+          }}
           placeholder={state.type === DatabaseType.Mysql ? "3306" : "5432"}
           light
           labelClassName={css.label}
