@@ -213,6 +213,14 @@ export function startDoltServer(
 
                 reject(new Error(logMessage));
               }
+
+              // Ensure the process is not hanging and the port is released
+              if (!serverProcess.killed) {
+                console.log(
+                  "Ensuring the Dolt SQL Server process is terminated",
+                );
+                serverProcess.kill("SIGTERM"); // Attempt to kill the process gracefully
+              }
             });
           },
         );
