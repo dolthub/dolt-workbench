@@ -14,6 +14,10 @@ const handler = {
   },
   toggleLeftSidebar: (callback: () => {}) =>
     ipcRenderer.on("toggle-left-sidebar", _event => callback()),
+  startDoltServer: (connectionName: string) =>
+    ipcRenderer.send("start-dolt-server", connectionName),
+  getDoltServerError: (callback: (value: string) => {}) =>
+    ipcRenderer.on("server-error", (_event, value) => callback(value)),
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

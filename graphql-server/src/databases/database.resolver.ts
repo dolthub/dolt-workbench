@@ -218,6 +218,7 @@ function getWorkbenchConfigFromArgs(
 ): WorkbenchConfig {
   const type = args.type ?? DatabaseType.Mysql;
   return {
+    name: args.name,
     connectionUrl: args.connectionUrl,
     hideDoltFeatures: !!args.hideDoltFeatures,
     useSSL: !!args.useSSL,

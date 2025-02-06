@@ -13,6 +13,7 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
+import { startDoltServer } from "./doltServer";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -213,3 +214,25 @@ ipcMain.handle("api-config", async () => {
 ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow.webContents.send("toggle-left-sidebar");
 });
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  } else if (typeof error === "string") {
+    return error;
+  } else {
+    return "An unknown error occurred";
+  }
+}
+
+ipcMain.handle(
+  "start-dolt-server",
+  async (event, connectionName: string, port: string) => {
+    try {
+      await startDoltServer(mainWindow, connectionName, port);
+      return "Server started successfully";
+    } catch (error) {
+      throw new Error(getErrorMessage(error));
+    }
+  },
+);
