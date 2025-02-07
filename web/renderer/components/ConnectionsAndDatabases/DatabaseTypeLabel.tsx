@@ -8,7 +8,7 @@ type Props = {
 
 export function DatabaseTypeLabel({ conn }: Props) {
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
-  const isLocalDolt = conn.isLocalDolt;
+  const { isLocalDolt } = conn;
   switch (type) {
     case "Dolt":
       return (
@@ -16,7 +16,7 @@ export function DatabaseTypeLabel({ conn }: Props) {
           <span className={css.label}>
             <img src="/images/dolt-logo.png" alt="Dolt" />
           </span>
-          <span className={css.local}>local</span>
+          {isLocalDolt && <span className={css.local}>local</span>}
         </span>
       );
     case "MySQL":
