@@ -39,10 +39,6 @@ extraFiles:
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
     to: graphql-server/node_modules
-  - from: build/mac/Assets.car
-    to: Resources/Assets.car
-  - from: build/mac/AppIcon.icns
-    to: Resources/AppIcon.icns
 win:
   icon: build/appx/icon.ico
   signAndEditExecutable: true
