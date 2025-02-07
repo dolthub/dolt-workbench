@@ -57,6 +57,7 @@ export function ConfigProvider({ children }: Props) {
           hideDoltFeatures: state.hideDoltFeatures,
           useSSL: state.useSSL,
           type: state.type,
+          isLocalDolt: state.isLocalDolt,
         },
       });
       await res.client.clearStore();

@@ -7,6 +7,7 @@ export const ADD_DATABASE_CONNECTION = gql`
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
     $type: DatabaseType
+    $isLocalDolt: Boolean
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
@@ -14,6 +15,7 @@ export const ADD_DATABASE_CONNECTION = gql`
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
+      isLocalDolt: $isLocalDolt
     ) {
       currentDatabase
     }
@@ -28,6 +30,7 @@ export const STORED_CONNECTIONS = gql`
     hideDoltFeatures
     type
     isDolt
+    isLocalDolt
   }
   query StoredConnections {
     storedConnections {

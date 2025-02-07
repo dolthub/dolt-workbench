@@ -18,6 +18,7 @@ export const defaultState = {
   showAdvancedSettings: false,
   loading: false,
   type: DatabaseType.Mysql,
+  isLocalDolt: false,
 };
 
 export type ConfigState = typeof defaultState;

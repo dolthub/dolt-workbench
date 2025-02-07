@@ -35,6 +35,9 @@ class AddDatabaseConnectionArgs {
 
   @Field(_type => DatabaseType, { nullable: true })
   type?: DatabaseType;
+
+  @Field({ nullable: true })
+  isLocalDolt?: boolean;
 }
 
 @ObjectType()
@@ -98,6 +101,7 @@ export class DatabaseResolver {
       useSSL: config.useSSL,
       type: config.type,
       isDolt,
+      isLocalDolt: config.isLocalDolt,
     };
   }
 
@@ -168,7 +172,7 @@ export class DatabaseResolver {
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
     const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
-
+    console.log("args", storeArgs);
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);
     } else {
@@ -223,5 +227,6 @@ function getWorkbenchConfigFromArgs(
     hideDoltFeatures: !!args.hideDoltFeatures,
     useSSL: !!args.useSSL,
     type,
+    isLocalDolt: args.isLocalDolt,
   };
 }

@@ -21,6 +21,8 @@ export class WorkbenchConfig {
   type: DatabaseType;
 
   schema?: string; // Postgres only
+
+  isLocalDolt?: boolean;
 }
 
 @Injectable()

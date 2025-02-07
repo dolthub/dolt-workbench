@@ -52,12 +52,16 @@ export default function About() {
         <Checkbox
           checked={startDoltServer}
           onChange={() => {
-            setState({ useSSL: startDoltServer });
+            setState({
+              useSSL: startDoltServer,
+              port: startDoltServer ? "" : state.port,
+              isLocalDolt: !startDoltServer,
+            });
             setStartDoltServer(!startDoltServer);
           }}
           name="start-dolt-server"
           label="Start a dolt server"
-          description="Start a local dolt server and connect to it. Make sure you have Dolt installed."
+          description="Run a Dolt SQL server hosted directly within Workbench. The app supports only one internal server instance - attempting to create another will return an error. This restriction does not apply to external Dolt server connections."
           className={css.checkbox}
         />
       )}
@@ -72,31 +76,33 @@ export default function About() {
         placeholder="my-database (required)"
         light
       />
-      <FormSelect
-        outerClassName={css.typeSelect}
-        className={css.typeSelectInner}
-        labelClassName={css.label}
-        label="Type"
-        val={state.type}
-        onChangeValue={t => {
-          if (!t) return;
-          setErr(undefined);
-          setState({
-            type: t,
-            port: t === DatabaseType.Mysql ? "3306" : "5432",
-            username: t === DatabaseType.Mysql ? "root" : "postgres",
-          });
-        }}
-        options={[
-          { label: "MySQL/Dolt", value: DatabaseType.Mysql },
-          {
-            label: "Postgres/Doltgres",
-            value: DatabaseType.Postgres,
-          },
-        ]}
-        hideSelectedOptions
-        light
-      />
+      {!startDoltServer && (
+        <FormSelect
+          outerClassName={css.typeSelect}
+          className={css.typeSelectInner}
+          labelClassName={css.label}
+          label="Type"
+          val={state.type}
+          onChangeValue={t => {
+            if (!t) return;
+            setErr(undefined);
+            setState({
+              type: t,
+              port: t === DatabaseType.Mysql ? "3306" : "5432",
+              username: t === DatabaseType.Mysql ? "root" : "postgres",
+            });
+          }}
+          options={[
+            { label: "MySQL/Dolt", value: DatabaseType.Mysql },
+            {
+              label: "Postgres/Doltgres",
+              value: DatabaseType.Postgres,
+            },
+          ]}
+          hideSelectedOptions
+          light
+        />
+      )}
       {startDoltServer && (
         <FormInput
           label="Port"
@@ -105,7 +111,7 @@ export default function About() {
             setState({ port: p });
             setErr(undefined);
           }}
-          placeholder={state.type === DatabaseType.Mysql ? "3306" : "5432"}
+          placeholder="Enter port number"
           light
           labelClassName={css.label}
         />

@@ -20,4 +20,7 @@ export class DatabaseConnectionsEntity {
 
   @Column({ nullable: true })
   schema?: string;
+
+  @Column({ nullable: true })
+  isLocalDolt?: boolean;
 }

@@ -20,4 +20,7 @@ export class DatabaseConnection {
 
   @Field({ nullable: true })
   isDolt?: boolean;
+
+  @Field({ nullable: true })
+  isLocalDolt?: boolean;
 }

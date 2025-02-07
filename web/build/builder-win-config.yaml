@@ -39,6 +39,8 @@ extraFiles:
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
     to: graphql-server/node_modules
+  - from: build/appx/dolt.exe
+    to: Resources/dolt.exe
 win:
   icon: build/appx/icon.ico
   signAndEditExecutable: true

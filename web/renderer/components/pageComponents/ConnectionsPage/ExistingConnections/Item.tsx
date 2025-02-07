@@ -53,11 +53,11 @@ export default function Item({
                 {conn.name}
               </Button.Link>
             </div>
+            <ErrorMsg err={err} className={css.err} />
           </div>
         </div>
       </li>
       <Loader loaded={!loading} />
-      <ErrorMsg err={err} className={css.err} />
     </>
   );
 }

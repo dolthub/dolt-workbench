@@ -21,6 +21,7 @@ export const CURRENT_CONNECTION = gql`
       useSSL
       type
       isDolt
+      isLocalDolt
     }
   }
 `;
