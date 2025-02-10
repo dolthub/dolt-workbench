@@ -13,7 +13,7 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
-import { startDoltServer } from "./doltServer";
+import { removeDoltServerFolder, startDoltServer } from "./doltServer";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -231,6 +231,18 @@ ipcMain.handle(
     try {
       await startDoltServer(mainWindow, connectionName, port);
       return "Server started successfully";
+    } catch (error) {
+      throw new Error(getErrorMessage(error));
+    }
+  },
+);
+
+ipcMain.handle(
+  "remove-dolt-connection",
+  async (event, connectionName: string, port: string) => {
+    try {
+      await removeDoltServerFolder(connectionName, port);
+      return "Connection removed successfully";
     } catch (error) {
       throw new Error(getErrorMessage(error));
     }

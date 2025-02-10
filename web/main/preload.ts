@@ -16,6 +16,8 @@ const handler = {
     ipcRenderer.on("toggle-left-sidebar", _event => callback()),
   startDoltServer: (connectionName: string) =>
     ipcRenderer.send("start-dolt-server", connectionName),
+  removeDoltConnection: (connectionName: string, port: string) =>
+    ipcRenderer.send("remove-dolt-connection", connectionName, port),
   getDoltServerError: (callback: (value: string) => {}) =>
     ipcRenderer.on("server-error", (_event, value) => callback(value)),
 };

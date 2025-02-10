@@ -59,8 +59,6 @@ export function startDoltServer(
     }
     const doltPath = getDoltPaths();
 
-    console.log("dolt path", doltPath);
-
     // Initialize Dolt repository
     exec(`${doltPath} init`, { cwd: dbFolderPath }, (error, stdout, stderr) => {
       if (error) {
@@ -69,11 +67,7 @@ export function startDoltServer(
         mainWindow.webContents.send("server-error", errorMessage);
 
         // Clean up: Delete the folder
-        fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
-          if (err) {
-            console.error("Failed to delete folder:", err);
-          }
-        });
+        removeDoltServerFolder(connectionName, port);
 
         reject(new Error(errorMessage));
         return;
@@ -94,11 +88,8 @@ export function startDoltServer(
         if (logMessage.includes("already in use.")) {
           mainWindow.webContents.send("server-error", logMessage);
           // Clean up: Delete the folder
-          fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
-            if (err) {
-              console.error("Failed to delete folder:", err);
-            }
-          });
+          removeDoltServerFolder(connectionName, port);
+
           reject(new Error(logMessage));
         }
 
@@ -121,11 +112,7 @@ export function startDoltServer(
           mainWindow.webContents.send("server-error", errorMessage);
 
           // Clean up: Delete the folder
-          fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
-            if (err) {
-              console.error("Failed to delete folder:", err);
-            }
-          });
+          removeDoltServerFolder(connectionName, port);
 
           reject(new Error(errorMessage));
         }
@@ -140,16 +127,11 @@ export function startDoltServer(
 
       serverProcess.on("close", code => {
         const logMessage = `Dolt SQL Server process exited with code ${code}`;
-        console.log(logMessage);
         mainWindow.webContents.send("server-log", logMessage);
 
         if (code !== 0) {
           // Clean up: Delete the folder
-          fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
-            if (err) {
-              console.error("Failed to delete folder:", err);
-            }
-          });
+          removeDoltServerFolder(connectionName, port);
 
           reject(new Error(logMessage));
         }
@@ -161,5 +143,64 @@ export function startDoltServer(
         }
       });
     });
+  });
+}
+
+export function removeDoltServerFolder(connectionName: string, port: string) {
+  const dbFolderPath = path.join(
+    app.getPath("userData"),
+    "databases",
+    connectionName,
+  );
+
+  // Kill the process using the port
+  killProcessUsingPort(port);
+
+  // Delete the folder
+  fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
+    if (err) {
+      console.error("Failed to delete folder:", err);
+    } else {
+      console.log(`Successfully deleted folder: ${dbFolderPath}`);
+    }
+  });
+}
+
+// kill the process using the port
+function killProcessUsingPort(port: string) {
+  const command =
+    process.platform === "win32"
+      ? `netstat -ano | findstr :${port}`
+      : `lsof -i :${port} | grep LISTEN`;
+
+  exec(command, (err, stdout, stderr) => {
+    if (err) {
+      console.error(`Failed to find process using port ${port}:`, err);
+      return;
+    }
+
+    const lines = stdout.split("\n");
+    if (lines.length > 0) {
+      const line = lines[0].trim();
+      const pid =
+        process.platform === "win32"
+          ? line.split(/\s+/).pop()
+          : line.split(/\s+/)[1];
+
+      if (pid) {
+        const killCommand =
+          process.platform === "win32"
+            ? `taskkill /PID ${pid} /F`
+            : `kill -9 ${pid}`;
+
+        exec(killCommand, (err, stdout, stderr) => {
+          if (err) {
+            console.error(`Failed to kill process ${pid}:`, err);
+          } else {
+            console.log(`Successfully killed process ${pid}`);
+          }
+        });
+      }
+    }
   });
 }
