@@ -1,6 +1,6 @@
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { ROW_LIMIT } from "../../utils";
-import { tableWithSchema, tableWithoutSchema } from "../postgres/utils";
+import { tableWithoutSchema } from "../postgres/utils";
 import * as t from "../types";
 
 // Cannot use params here for the database revision. It will incorrectly
@@ -16,8 +16,12 @@ export function useDB(dbName: string, refName?: string, isDolt = true): string {
 
 export const listTablesQuery = `SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema = $1 AND table_catalog = $2`;
 
-export const columnsQuery = (schemaName: string, tableName: string) =>
-  `DESCRIBE ${tableWithSchema({ schemaName, tableName })};`;
+export const columnsQuery = (schemaName: string, tableName: string) => {
+  const table = tableName.includes(".")
+    ? tableName
+    : `${schemaName || "public"}."${tableName}"`;
+  return `DESCRIBE ${table};`;
+};
 
 export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE table_name=$1 AND table_schema=$2 AND table_catalog=$3
