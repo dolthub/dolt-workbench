@@ -90,8 +90,9 @@ export class DatabaseResolver {
     if (!config) return undefined;
     const isDolt = this.conn.getIsDolt();
     const storedConnections = await this.storedConnections();
-    const connectionName = storedConnections.find(
-      x => x.connectionUrl === config.connectionUrl,
+    const connectionName = storedConnections.find(x =>
+      // Handles connection URLs in config that contain database name
+      config.connectionUrl.startsWith(x.connectionUrl),
     )?.name;
     if (!connectionName) return undefined;
     return {
