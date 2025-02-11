@@ -100,5 +100,5 @@ export type PullParams = OptionalRefParams & {
 export type PullDiffParams = Required<PullParams>;
 
 export type PullDiffParamsOptionalTableName = PullDiffParams & {
-  tableName?: string;
+  tableName?: string | null;
 };
