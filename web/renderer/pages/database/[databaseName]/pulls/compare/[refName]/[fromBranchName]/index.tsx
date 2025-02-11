@@ -1,15 +1,13 @@
 import Page from "@components/util/Page";
-import { Maybe } from "@dolthub/web-utils";
-import { PullDiffParams } from "@lib/params";
+import { PullDiffParamsOptionalTableName, PullDiffParams } from "@lib/params";
 import DatabasePage from "@pageComponents/DatabasePage";
 import { GetServerSideProps, NextPage } from "next";
 
 type Props = {
-  params: PullDiffParams;
-  tableName?: Maybe<string>;
+  params: PullDiffParamsOptionalTableName;
 };
 
-const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
+const PullDiffPage: NextPage<Props> = ({ params }) => (
   <Page title={`Viewing pull diff for ${params.databaseName}`} noIndex>
     <DatabasePage.ForPullDiff
       params={{
@@ -17,7 +15,7 @@ const PullDiffPage: NextPage<Props> = ({ params, tableName }) => (
         fromBranchName: params.fromBranchName,
         refName: params.refName,
       }}
-      tableName={tableName ?? undefined}
+      tableName={params.tableName || undefined}
     />
   </Page>
 );
@@ -29,8 +27,10 @@ export const getServerSideProps: GetServerSideProps<Props> = async ({
 }) => {
   return {
     props: {
-      params: params as PullDiffParams,
-      tableName: query.tableName ? String(query.tableName) : null,
+      params: {
+        ...(params as PullDiffParams),
+        tableName: query.tableName ? String(query.tableName) : null,
+      },
     },
   };
 };
