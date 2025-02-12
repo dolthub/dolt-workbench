@@ -42,6 +42,8 @@ extraFiles:
     to: Resources/Assets.car
   - from: build/mac/AppIcon.icns
     to: Resources/AppIcon.icns
+  - from: build/mac/dolt
+    to: Resources/dolt
 mac:
   category: public.app-category.developer-tools
   icon: build/mac/AppIcon.icns

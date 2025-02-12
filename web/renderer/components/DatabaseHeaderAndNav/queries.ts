@@ -17,10 +17,12 @@ export const CURRENT_CONNECTION = gql`
     currentConnection {
       connectionUrl
       name
+      port
       hideDoltFeatures
       useSSL
       type
       isDolt
+      isLocalDolt
     }
   }
 `;
@@ -34,6 +36,24 @@ export const DATABASES_BY_CONNECTION = gql`
     $type: DatabaseType
   ) {
     databasesByConnection(
+      connectionUrl: $connectionUrl
+      name: $name
+      hideDoltFeatures: $hideDoltFeatures
+      useSSL: $useSSL
+      type: $type
+    )
+  }
+`;
+
+export const CHECK_CONNECTION = gql`
+  query CheckConnection(
+    $connectionUrl: String!
+    $name: String!
+    $hideDoltFeatures: Boolean
+    $useSSL: Boolean
+    $type: DatabaseType
+  ) {
+    checkConnection(
       connectionUrl: $connectionUrl
       name: $name
       hideDoltFeatures: $hideDoltFeatures

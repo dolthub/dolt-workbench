@@ -28,6 +28,9 @@ class AddDatabaseConnectionArgs {
   name: string;
 
   @Field({ nullable: true })
+  port?: string;
+
+  @Field({ nullable: true })
   hideDoltFeatures?: boolean;
 
   @Field({ nullable: true })
@@ -35,6 +38,9 @@ class AddDatabaseConnectionArgs {
 
   @Field(_type => DatabaseType, { nullable: true })
   type?: DatabaseType;
+
+  @Field({ nullable: true })
+  isLocalDolt?: boolean;
 }
 
 @ObjectType()
@@ -95,10 +101,12 @@ export class DatabaseResolver {
     return {
       connectionUrl: config.connectionUrl,
       name: connectionName,
+      port: config.port,
       hideDoltFeatures: config.hideDoltFeatures,
       useSSL: config.useSSL,
       type: config.type,
       isDolt,
+      isLocalDolt: config.isLocalDolt,
     };
   }
 
@@ -115,6 +123,25 @@ export class DatabaseResolver {
     const conn = this.conn.connection();
     const dbs = await conn.databases();
     return dbs;
+  }
+
+  @Query(_returns => Boolean)
+  async checkConnection(
+    @Args() args: AddDatabaseConnectionArgs,
+  ): Promise<boolean> {
+    if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
+      return true;
+    }
+    const workbenchConfig = getWorkbenchConfigFromArgs(args);
+    try {
+      const ds = getDataSource(workbenchConfig);
+      await ds.initialize();
+      await ds.query("SELECT 1");
+      return true;
+    } catch (error) {
+      console.error("Error checking connection:", error.message);
+      return false;
+    }
   }
 
   @Query(_returns => [String])
@@ -169,7 +196,6 @@ export class DatabaseResolver {
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
     const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
-
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);
     } else {
@@ -219,9 +245,12 @@ function getWorkbenchConfigFromArgs(
 ): WorkbenchConfig {
   const type = args.type ?? DatabaseType.Mysql;
   return {
+    name: args.name,
     connectionUrl: args.connectionUrl,
+    port: args.port,
     hideDoltFeatures: !!args.hideDoltFeatures,
     useSSL: !!args.useSSL,
     type,
+    isLocalDolt: args.isLocalDolt,
   };
 }

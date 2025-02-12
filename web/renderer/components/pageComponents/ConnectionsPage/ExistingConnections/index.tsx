@@ -20,10 +20,23 @@ type Props = {
 export default function ExistingConnections(props: Props) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [connectionNameToDelete, setConnectionNameToDelete] = useState("");
+  const [isLocalDolt, setIsLocalDolt] = useState(false);
+  const [port, setPort] = useState("");
 
-  const onDeleteClicked = (name: string) => {
+  const onDeleteClicked = (name: string, local: boolean, p: string) => {
     setConnectionNameToDelete(name);
     setDeleteModalOpen(true);
+    setIsLocalDolt(local);
+    setPort(p);
+  };
+
+  const removeLocalDoltFolder = async (name: string, p: string) => {
+    try {
+      const result = await window.ipc.invoke("remove-dolt-connection", name, p);
+      console.log(result);
+    } catch (error) {
+      console.error("Failed to remove local Dolt server:", error);
+    }
   };
 
   const router = useRouter();
@@ -65,7 +78,9 @@ export default function ExistingConnections(props: Props) {
             <Item
               conn={conn}
               key={conn.name}
-              onDeleteClicked={onDeleteClicked}
+              onDeleteClicked={(name: string) =>
+                onDeleteClicked(name, !!conn.isLocalDolt, conn.port || "")
+              }
               borderClassName={getBorderLineClassName(
                 props.connections.length,
                 i,
@@ -85,6 +100,11 @@ export default function ExistingConnections(props: Props) {
           variables: { name: connectionNameToDelete },
           refetchQueries: [{ query: StoredConnectionsDocument }],
         }}
+        callback={
+          isLocalDolt
+            ? async () => removeLocalDoltFolder(connectionNameToDelete, port)
+            : undefined
+        }
       />
     </div>
   );

@@ -107,7 +107,9 @@ export type DatabaseConnection = {
   connectionUrl: Scalars['String']['output'];
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
   isDolt?: Maybe<Scalars['Boolean']['output']>;
+  isLocalDolt?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
+  port?: Maybe<Scalars['String']['output']>;
   type?: Maybe<DatabaseType>;
   useSSL?: Maybe<Scalars['Boolean']['output']>;
 };
@@ -251,7 +253,9 @@ export type Mutation = {
 export type MutationAddDatabaseConnectionArgs = {
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  isLocalDolt?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  port?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -420,6 +424,7 @@ export type Query = {
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
   branches: BranchList;
+  checkConnection: Scalars['Boolean']['output'];
   commits: CommitList;
   currentConnection?: Maybe<DatabaseConnection>;
   currentDatabase?: Maybe<Scalars['String']['output']>;
@@ -481,6 +486,17 @@ export type QueryBranchesArgs = {
 };
 
 
+export type QueryCheckConnectionArgs = {
+  connectionUrl: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  isLocalDolt?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  port?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<DatabaseType>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+};
+
+
 export type QueryCommitsArgs = {
   afterCommitId?: InputMaybe<Scalars['String']['input']>;
   databaseName: Scalars['String']['input'];
@@ -494,7 +510,9 @@ export type QueryCommitsArgs = {
 export type QueryDatabasesByConnectionArgs = {
   connectionUrl: Scalars['String']['input'];
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  isLocalDolt?: InputMaybe<Scalars['Boolean']['input']>;
   name: Scalars['String']['input'];
+  port?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<DatabaseType>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
@@ -849,7 +867,7 @@ export type ResetDatabaseMutation = { __typename?: 'Mutation', resetDatabase: bo
 export type CurrentConnectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null } | null };
+export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, port?: string | null, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null, isLocalDolt?: boolean | null } | null };
 
 export type DatabasesByConnectionQueryVariables = Exact<{
   connectionUrl: Scalars['String']['input'];
@@ -861,6 +879,17 @@ export type DatabasesByConnectionQueryVariables = Exact<{
 
 
 export type DatabasesByConnectionQuery = { __typename?: 'Query', databasesByConnection: Array<string> };
+
+export type CheckConnectionQueryVariables = Exact<{
+  connectionUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+  type?: InputMaybe<DatabaseType>;
+}>;
+
+
+export type CheckConnectionQuery = { __typename?: 'Query', checkConnection: boolean };
 
 export type GetTagQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1099,17 +1128,19 @@ export type AddDatabaseConnectionMutationVariables = Exact<{
   hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
   useSSL?: InputMaybe<Scalars['Boolean']['input']>;
   type?: InputMaybe<DatabaseType>;
+  isLocalDolt?: InputMaybe<Scalars['Boolean']['input']>;
+  port?: InputMaybe<Scalars['String']['input']>;
 }>;
 
 
 export type AddDatabaseConnectionMutation = { __typename?: 'Mutation', addDatabaseConnection: { __typename?: 'CurrentDatabaseState', currentDatabase?: string | null } };
 
-export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null };
+export type DatabaseConnectionFragment = { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, port?: string | null, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null, isLocalDolt?: boolean | null };
 
 export type StoredConnectionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null }> };
+export type StoredConnectionsQuery = { __typename?: 'Query', storedConnections: Array<{ __typename?: 'DatabaseConnection', connectionUrl: string, name: string, port?: string | null, useSSL?: boolean | null, hideDoltFeatures?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null, isLocalDolt?: boolean | null }> };
 
 export type RemoveConnectionMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -1669,10 +1700,12 @@ export const DatabaseConnectionFragmentDoc = gql`
     fragment DatabaseConnection on DatabaseConnection {
   connectionUrl
   name
+  port
   useSSL
   hideDoltFeatures
   type
   isDolt
+  isLocalDolt
 }
     `;
 export const BranchFragmentDoc = gql`
@@ -1958,10 +1991,12 @@ export const CurrentConnectionDocument = gql`
   currentConnection {
     connectionUrl
     name
+    port
     hideDoltFeatures
     useSSL
     type
     isDolt
+    isLocalDolt
   }
 }
     `;
@@ -2045,6 +2080,54 @@ export type DatabasesByConnectionQueryHookResult = ReturnType<typeof useDatabase
 export type DatabasesByConnectionLazyQueryHookResult = ReturnType<typeof useDatabasesByConnectionLazyQuery>;
 export type DatabasesByConnectionSuspenseQueryHookResult = ReturnType<typeof useDatabasesByConnectionSuspenseQuery>;
 export type DatabasesByConnectionQueryResult = Apollo.QueryResult<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>;
+export const CheckConnectionDocument = gql`
+    query CheckConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+  checkConnection(
+    connectionUrl: $connectionUrl
+    name: $name
+    hideDoltFeatures: $hideDoltFeatures
+    useSSL: $useSSL
+    type: $type
+  )
+}
+    `;
+
+/**
+ * __useCheckConnectionQuery__
+ *
+ * To run a query within a React component, call `useCheckConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckConnectionQuery({
+ *   variables: {
+ *      connectionUrl: // value for 'connectionUrl'
+ *      name: // value for 'name'
+ *      hideDoltFeatures: // value for 'hideDoltFeatures'
+ *      useSSL: // value for 'useSSL'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useCheckConnectionQuery(baseOptions: Apollo.QueryHookOptions<CheckConnectionQuery, CheckConnectionQueryVariables> & ({ variables: CheckConnectionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckConnectionQuery, CheckConnectionQueryVariables>(CheckConnectionDocument, options);
+      }
+export function useCheckConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckConnectionQuery, CheckConnectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckConnectionQuery, CheckConnectionQueryVariables>(CheckConnectionDocument, options);
+        }
+export function useCheckConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CheckConnectionQuery, CheckConnectionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckConnectionQuery, CheckConnectionQueryVariables>(CheckConnectionDocument, options);
+        }
+export type CheckConnectionQueryHookResult = ReturnType<typeof useCheckConnectionQuery>;
+export type CheckConnectionLazyQueryHookResult = ReturnType<typeof useCheckConnectionLazyQuery>;
+export type CheckConnectionSuspenseQueryHookResult = ReturnType<typeof useCheckConnectionSuspenseQuery>;
+export type CheckConnectionQueryResult = Apollo.QueryResult<CheckConnectionQuery, CheckConnectionQueryVariables>;
 export const GetTagDocument = gql`
     query GetTag($databaseName: String!, $tagName: String!) {
   tag(databaseName: $databaseName, tagName: $tagName) {
@@ -2967,13 +3050,15 @@ export type RowsForViewsLazyQueryHookResult = ReturnType<typeof useRowsForViewsL
 export type RowsForViewsSuspenseQueryHookResult = ReturnType<typeof useRowsForViewsSuspenseQuery>;
 export type RowsForViewsQueryResult = Apollo.QueryResult<RowsForViewsQuery, RowsForViewsQueryVariables>;
 export const AddDatabaseConnectionDocument = gql`
-    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+    mutation AddDatabaseConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType, $isLocalDolt: Boolean, $port: String) {
   addDatabaseConnection(
     connectionUrl: $connectionUrl
     name: $name
     hideDoltFeatures: $hideDoltFeatures
     useSSL: $useSSL
     type: $type
+    isLocalDolt: $isLocalDolt
+    port: $port
   ) {
     currentDatabase
   }
@@ -2999,6 +3084,8 @@ export type AddDatabaseConnectionMutationFn = Apollo.MutationFunction<AddDatabas
  *      hideDoltFeatures: // value for 'hideDoltFeatures'
  *      useSSL: // value for 'useSSL'
  *      type: // value for 'type'
+ *      isLocalDolt: // value for 'isLocalDolt'
+ *      port: // value for 'port'
  *   },
  * });
  */
