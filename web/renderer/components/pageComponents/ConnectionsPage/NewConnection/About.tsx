@@ -38,6 +38,7 @@ export default function About() {
         "start-dolt-server",
         state.name,
         state.port,
+        true,
       );
       console.log(result); // "Server started successfully"
       await onSubmit(e); // Now connect to the server

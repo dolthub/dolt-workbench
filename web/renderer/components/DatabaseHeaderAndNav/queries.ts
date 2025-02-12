@@ -44,3 +44,21 @@ export const DATABASES_BY_CONNECTION = gql`
     )
   }
 `;
+
+export const CHECK_CONNECTION = gql`
+  query CheckConnection(
+    $connectionUrl: String!
+    $name: String!
+    $hideDoltFeatures: Boolean
+    $useSSL: Boolean
+    $type: DatabaseType
+  ) {
+    checkConnection(
+      connectionUrl: $connectionUrl
+      name: $name
+      hideDoltFeatures: $hideDoltFeatures
+      useSSL: $useSSL
+      type: $type
+    )
+  }
+`;

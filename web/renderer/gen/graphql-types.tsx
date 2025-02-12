@@ -424,6 +424,7 @@ export type Query = {
   branch?: Maybe<Branch>;
   branchOrDefault?: Maybe<Branch>;
   branches: BranchList;
+  checkConnection: Scalars['Boolean']['output'];
   commits: CommitList;
   currentConnection?: Maybe<DatabaseConnection>;
   currentDatabase?: Maybe<Scalars['String']['output']>;
@@ -482,6 +483,17 @@ export type QueryBranchesArgs = {
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   sortBy?: InputMaybe<SortBranchesBy>;
+};
+
+
+export type QueryCheckConnectionArgs = {
+  connectionUrl: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  isLocalDolt?: InputMaybe<Scalars['Boolean']['input']>;
+  name: Scalars['String']['input'];
+  port?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<DatabaseType>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -867,6 +879,17 @@ export type DatabasesByConnectionQueryVariables = Exact<{
 
 
 export type DatabasesByConnectionQuery = { __typename?: 'Query', databasesByConnection: Array<string> };
+
+export type CheckConnectionQueryVariables = Exact<{
+  connectionUrl: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  hideDoltFeatures?: InputMaybe<Scalars['Boolean']['input']>;
+  useSSL?: InputMaybe<Scalars['Boolean']['input']>;
+  type?: InputMaybe<DatabaseType>;
+}>;
+
+
+export type CheckConnectionQuery = { __typename?: 'Query', checkConnection: boolean };
 
 export type GetTagQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -2057,6 +2080,54 @@ export type DatabasesByConnectionQueryHookResult = ReturnType<typeof useDatabase
 export type DatabasesByConnectionLazyQueryHookResult = ReturnType<typeof useDatabasesByConnectionLazyQuery>;
 export type DatabasesByConnectionSuspenseQueryHookResult = ReturnType<typeof useDatabasesByConnectionSuspenseQuery>;
 export type DatabasesByConnectionQueryResult = Apollo.QueryResult<DatabasesByConnectionQuery, DatabasesByConnectionQueryVariables>;
+export const CheckConnectionDocument = gql`
+    query CheckConnection($connectionUrl: String!, $name: String!, $hideDoltFeatures: Boolean, $useSSL: Boolean, $type: DatabaseType) {
+  checkConnection(
+    connectionUrl: $connectionUrl
+    name: $name
+    hideDoltFeatures: $hideDoltFeatures
+    useSSL: $useSSL
+    type: $type
+  )
+}
+    `;
+
+/**
+ * __useCheckConnectionQuery__
+ *
+ * To run a query within a React component, call `useCheckConnectionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCheckConnectionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCheckConnectionQuery({
+ *   variables: {
+ *      connectionUrl: // value for 'connectionUrl'
+ *      name: // value for 'name'
+ *      hideDoltFeatures: // value for 'hideDoltFeatures'
+ *      useSSL: // value for 'useSSL'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useCheckConnectionQuery(baseOptions: Apollo.QueryHookOptions<CheckConnectionQuery, CheckConnectionQueryVariables> & ({ variables: CheckConnectionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CheckConnectionQuery, CheckConnectionQueryVariables>(CheckConnectionDocument, options);
+      }
+export function useCheckConnectionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CheckConnectionQuery, CheckConnectionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CheckConnectionQuery, CheckConnectionQueryVariables>(CheckConnectionDocument, options);
+        }
+export function useCheckConnectionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<CheckConnectionQuery, CheckConnectionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<CheckConnectionQuery, CheckConnectionQueryVariables>(CheckConnectionDocument, options);
+        }
+export type CheckConnectionQueryHookResult = ReturnType<typeof useCheckConnectionQuery>;
+export type CheckConnectionLazyQueryHookResult = ReturnType<typeof useCheckConnectionLazyQuery>;
+export type CheckConnectionSuspenseQueryHookResult = ReturnType<typeof useCheckConnectionSuspenseQuery>;
+export type CheckConnectionQueryResult = Apollo.QueryResult<CheckConnectionQuery, CheckConnectionQueryVariables>;
 export const GetTagDocument = gql`
     query GetTag($databaseName: String!, $tagName: String!) {
   tag(databaseName: $databaseName, tagName: $tagName) {

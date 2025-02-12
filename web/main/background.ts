@@ -13,7 +13,7 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
-import { removeDoltServerFolder, startDoltServer } from "./doltServer";
+import { removeDoltServerFolder, startServer } from "./doltServer";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -227,12 +227,13 @@ function getErrorMessage(error: unknown): string {
 
 ipcMain.handle(
   "start-dolt-server",
-  async (event, connectionName: string, port: string) => {
+  async (event, connectionName: string, port: string, init?: boolean) => {
     try {
-      await startDoltServer(mainWindow, connectionName, port);
-      return "Server started successfully";
+      await startServer(mainWindow, connectionName, port, init);
     } catch (error) {
       throw new Error(getErrorMessage(error));
+    } finally {
+      return "Server started successfully";
     }
   },
 );

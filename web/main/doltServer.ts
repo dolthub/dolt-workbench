@@ -1,5 +1,5 @@
 import fs from "fs";
-import path from "path";
+import path, { resolve } from "path";
 import { app, BrowserWindow } from "electron";
 import { exec } from "child_process";
 
@@ -11,7 +11,6 @@ type CreateFolderReturnType = {
 const isProd = process.env.NODE_ENV === "production";
 
 export function createFolder(folderPath: string): CreateFolderReturnType {
-  console.log(folderPath, fs.existsSync);
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath, { recursive: true }); // Create parent directories if they don't exist
     console.log(`Folder created at: ${folderPath}`);
@@ -38,28 +37,15 @@ function getDoltPaths(): string {
   }
 }
 
-export function startDoltServer(
-  mainWindow: BrowserWindow,
+//initialize the Dolt repository
+function initializeDoltRepository(
+  doltPath: string,
+  dbFolderPath: string,
   connectionName: string,
-  port: string,
+  port: number,
+  mainWindow: BrowserWindow,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const dbFolderPath = path.join(
-      app.getPath("userData"),
-      "databases",
-      connectionName,
-    );
-
-    // Create the folder for the connection
-    const { error, errorMsg } = createFolder(dbFolderPath);
-    if (error) {
-      mainWindow.webContents.send("server-error", errorMsg);
-      reject(new Error(errorMsg));
-      return;
-    }
-    const doltPath = getDoltPaths();
-
-    // Initialize Dolt repository
     exec(`${doltPath} init`, { cwd: dbFolderPath }, (error, stdout, stderr) => {
       if (error) {
         const errorMessage = `Error initializing Dolt: ${stderr}`;
@@ -67,7 +53,7 @@ export function startDoltServer(
         mainWindow.webContents.send("server-error", errorMessage);
 
         // Clean up: Delete the folder
-        removeDoltServerFolder(connectionName, port);
+        removeDoltServerFolder(connectionName, port.toString());
 
         reject(new Error(errorMessage));
         return;
@@ -75,75 +61,138 @@ export function startDoltServer(
 
       console.log(`Dolt initialized: ${stdout}`);
       mainWindow.webContents.send("server-log", `Dolt initialized: ${stdout}`);
-
-      // Start Dolt SQL server
-      const serverProcess = exec(`${doltPath} sql-server -P ${port}`, {
-        cwd: dbFolderPath,
-      });
-
-      const handleServerLog = (chunk: Buffer) => {
-        const logMessage = chunk.toString("utf8");
-        console.log("Server Log:", logMessage);
-        mainWindow.webContents.send("server-log", logMessage);
-        if (logMessage.includes("already in use.")) {
-          mainWindow.webContents.send("server-error", logMessage);
-          // Clean up: Delete the folder
-          removeDoltServerFolder(connectionName, port);
-
-          reject(new Error(logMessage));
-        }
-
-        // Resolve the promise when the server is ready
-        if (logMessage.includes("Server ready")) {
-          resolve();
-        }
-      };
-
-      const handleServerError = (chunk: Buffer) => {
-        const errorMessage = chunk.toString("utf8");
-        console.error("Server Error:", errorMessage);
-
-        // Check if the message is a warning or an error
-        if (errorMessage.includes("level=warning")) {
-          // Treat warnings as non-fatal
-          mainWindow.webContents.send("server-warning", errorMessage);
-        } else if (errorMessage.includes("level=error")) {
-          // Treat errors as fatal
-          mainWindow.webContents.send("server-error", errorMessage);
-
-          // Clean up: Delete the folder
-          removeDoltServerFolder(connectionName, port);
-
-          reject(new Error(errorMessage));
-        }
-        // Resolve the promise when the server is ready
-        if (errorMessage.includes("Server ready")) {
-          resolve();
-        }
-      };
-
-      serverProcess.stdout?.on("data", handleServerLog);
-      serverProcess.stderr?.on("data", handleServerError);
-
-      serverProcess.on("close", code => {
-        const logMessage = `Dolt SQL Server process exited with code ${code}`;
-        mainWindow.webContents.send("server-log", logMessage);
-
-        if (code !== 0) {
-          // Clean up: Delete the folder
-          removeDoltServerFolder(connectionName, port);
-
-          reject(new Error(logMessage));
-        }
-
-        // Ensure the process is not hanging and the port is released
-        if (!serverProcess.killed) {
-          console.log("Ensuring the Dolt SQL Server process is terminated");
-          serverProcess.kill("SIGTERM"); // Attempt to kill the process gracefully
-        }
-      });
+      resolve();
     });
   });
+}
+
+// start the Dolt SQL server
+function startServerProcess(
+  doltPath: string,
+  dbFolderPath: string,
+  port: string,
+  mainWindow: BrowserWindow,
+  connectionName: string,
+): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const serverProcess = exec(
+      `${doltPath} sql-server -P ${port}`,
+      {
+        cwd: dbFolderPath,
+      },
+      (error, stdout, stderr) => {
+        console.log("error", error);
+        console.log("stdout", stdout);
+        console.log("stderr", stderr);
+      },
+    );
+
+    const handleServerLog = (chunk: Buffer) => {
+      const logMessage = chunk.toString("utf8");
+      console.log("Server Log:", logMessage);
+      mainWindow.webContents.send("server-log", logMessage);
+
+      // Resolve the promise when the server is ready
+      if (logMessage.includes("Server ready")) {
+        resolve();
+      }
+    };
+
+    const handleServerError = (chunk: Buffer) => {
+      const errorMessage = chunk.toString("utf8");
+      console.error("Server Error:", errorMessage);
+
+      // Check if the message is a warning or an error
+      if (errorMessage.includes("level=warning")) {
+        // Treat warnings as non-fatal
+        mainWindow.webContents.send("server-warning", errorMessage);
+      } else if (errorMessage.includes("level=error")) {
+        // Treat errors as fatal
+        mainWindow.webContents.send("server-error", errorMessage);
+
+        reject(new Error(errorMessage));
+      } else {
+        mainWindow.webContents.send("server-log", errorMessage);
+      }
+
+      // Resolve the promise when the server is ready
+      if (errorMessage.includes("Server ready")) {
+        resolve();
+      }
+    };
+
+    serverProcess.stdout?.on("data", handleServerLog);
+    serverProcess.stderr?.on("data", handleServerError);
+
+    serverProcess.on("exit", (code: number) => {
+      const logMessage = `Dolt SQL Server process exited with code ${code}`;
+      mainWindow.webContents.send("server-log", logMessage);
+
+      if (code !== 0) {
+        reject(new Error(logMessage));
+      }
+
+      // Ensure the process is not hanging and the port is released
+      if (!serverProcess.killed) {
+        console.log("Ensuring the Dolt SQL Server process is terminated");
+        serverProcess.kill("SIGTERM"); // Attempt to kill the process gracefully
+      }
+    });
+  });
+}
+
+export async function startServer(
+  mainWindow: BrowserWindow,
+  connectionName: string,
+  port: string,
+  init?: boolean,
+): Promise<void> {
+  const dbFolderPath = isProd
+    ? path.join(app.getPath("userData"), "databases", connectionName)
+    : path.join(__dirname, "..", "build", "databases", connectionName);
+
+  const doltPath = getDoltPaths();
+
+  try {
+    if (init) {
+      // Create the folder for the connection
+      const { error, errorMsg } = createFolder(dbFolderPath);
+      if (error) {
+        mainWindow.webContents.send("server-error", errorMsg);
+        throw new Error(errorMsg);
+      }
+
+      // Initialize and start the server without checking if it's already running
+      await initializeDoltRepository(
+        doltPath,
+        dbFolderPath,
+        connectionName,
+        parseInt(port),
+        mainWindow,
+      );
+      await startServerProcess(
+        doltPath,
+        dbFolderPath,
+        port,
+        mainWindow,
+        connectionName,
+      );
+    } else {
+      // Check if the server is already running
+
+      // Start the server if it's not running
+      await startServerProcess(
+        doltPath,
+        dbFolderPath,
+        port,
+        mainWindow,
+        connectionName,
+      );
+    }
+  } catch (error) {
+    console.error("Failed to set up Dolt server:", error);
+    throw error;
+  }
 }
 
 export function removeDoltServerFolder(connectionName: string, port: string) {

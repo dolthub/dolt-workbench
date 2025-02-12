@@ -125,6 +125,22 @@ export class DatabaseResolver {
     return dbs;
   }
 
+  @Query(_returns => Boolean)
+  async checkConnection(
+    @Args() args: AddDatabaseConnectionArgs,
+  ): Promise<Boolean> {
+    const workbenchConfig = getWorkbenchConfigFromArgs(args);
+    try {
+      const ds = getDataSource(workbenchConfig);
+      await ds.initialize();
+      const res = await ds.query("SELECT 1");
+      return true;
+    } catch (error) {
+      console.error("Error checking connection:", error.message);
+      return false;
+    }
+  }
+
   @Query(_returns => [String])
   async databasesByConnection(
     @Args() args: AddDatabaseConnectionArgs,
