@@ -128,12 +128,15 @@ export class DatabaseResolver {
   @Query(_returns => Boolean)
   async checkConnection(
     @Args() args: AddDatabaseConnectionArgs,
-  ): Promise<Boolean> {
+  ): Promise<boolean> {
+    if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
+      return true;
+    }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     try {
       const ds = getDataSource(workbenchConfig);
       await ds.initialize();
-      const res = await ds.query("SELECT 1");
+      await ds.query("SELECT 1");
       return true;
     } catch (error) {
       console.error("Error checking connection:", error.message);
