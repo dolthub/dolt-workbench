@@ -16,6 +16,8 @@ export class WorkbenchConfig {
 
   connectionUrl: string;
 
+  port?: string;
+
   useSSL: boolean;
 
   type: DatabaseType;

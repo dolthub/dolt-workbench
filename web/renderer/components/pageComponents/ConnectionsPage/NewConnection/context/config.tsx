@@ -58,6 +58,7 @@ export function ConfigProvider({ children }: Props) {
           useSSL: state.useSSL,
           type: state.type,
           isLocalDolt: state.isLocalDolt,
+          port:state.port
         },
       });
       await res.client.clearStore();

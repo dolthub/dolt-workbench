@@ -10,6 +10,9 @@ export class DatabaseConnectionsEntity {
   connectionUrl: string;
 
   @Column({ nullable: true })
+  port?: string;
+
+  @Column({ nullable: true })
   hideDoltFeatures?: boolean;
 
   @Column()

@@ -21,11 +21,13 @@ export default function ExistingConnections(props: Props) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [connectionNameToDelete, setConnectionNameToDelete] = useState("");
   const [isLocalDolt, setIsLocalDolt] = useState(false);
+  const [port,setPort]=useState("")
 
-  const onDeleteClicked = (name: string, isLocalDolt: boolean,port:string) => {
-    setConnectionNameToDelete(name,port);
+  const onDeleteClicked = (name: string, isLocalDolt: boolean,connectionPort:string ) => {
+    setConnectionNameToDelete(name);
     setDeleteModalOpen(true);
     setIsLocalDolt(isLocalDolt);
+    setPort(connectionPort)
   };
 
   const removeLocalDoltFolder = async (name: string,port:string) => {
@@ -77,7 +79,7 @@ export default function ExistingConnections(props: Props) {
               conn={conn}
               key={conn.name}
               onDeleteClicked={(name: string) =>
-                onDeleteClicked(name, !!conn.isLocalDolt,conn.)
+                onDeleteClicked(name, !!conn.isLocalDolt,conn.port||"")
               }
               borderClassName={getBorderLineClassName(
                 props.connections.length,
@@ -100,7 +102,7 @@ export default function ExistingConnections(props: Props) {
         }}
         callback={
           isLocalDolt
-            ? () => removeLocalDoltFolder(connectionNameToDelete)
+            ? () => removeLocalDoltFolder(connectionNameToDelete,port)
             : undefined
         }
       />

@@ -17,6 +17,7 @@ export const CURRENT_CONNECTION = gql`
     currentConnection {
       connectionUrl
       name
+      port
       hideDoltFeatures
       useSSL
       type

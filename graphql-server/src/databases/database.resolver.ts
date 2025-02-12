@@ -28,6 +28,9 @@ class AddDatabaseConnectionArgs {
   name: string;
 
   @Field({ nullable: true })
+  port?: string;
+
+  @Field({ nullable: true })
   hideDoltFeatures?: boolean;
 
   @Field({ nullable: true })
@@ -98,6 +101,7 @@ export class DatabaseResolver {
     return {
       connectionUrl: config.connectionUrl,
       name: connectionName,
+      port: config.port,
       hideDoltFeatures: config.hideDoltFeatures,
       useSSL: config.useSSL,
       type: config.type,
@@ -173,7 +177,6 @@ export class DatabaseResolver {
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
     const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
-    console.log("args", storeArgs);
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);
     } else {
@@ -225,6 +228,7 @@ function getWorkbenchConfigFromArgs(
   return {
     name: args.name,
     connectionUrl: args.connectionUrl,
+    port: args.port,
     hideDoltFeatures: !!args.hideDoltFeatures,
     useSSL: !!args.useSSL,
     type,

@@ -8,6 +8,7 @@ export const ADD_DATABASE_CONNECTION = gql`
     $useSSL: Boolean
     $type: DatabaseType
     $isLocalDolt: Boolean
+    $port: String
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
@@ -16,6 +17,7 @@ export const ADD_DATABASE_CONNECTION = gql`
       useSSL: $useSSL
       type: $type
       isLocalDolt: $isLocalDolt
+      port: $port
     ) {
       currentDatabase
     }
@@ -26,6 +28,7 @@ export const STORED_CONNECTIONS = gql`
   fragment DatabaseConnection on DatabaseConnection {
     connectionUrl
     name
+    port
     useSSL
     hideDoltFeatures
     type
