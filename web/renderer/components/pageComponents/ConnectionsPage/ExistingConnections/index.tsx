@@ -78,7 +78,7 @@ export default function ExistingConnections(props: Props) {
               conn={conn}
               key={conn.name}
               onDeleteClicked={(name: string) =>
-                onDeleteClicked(name, !!conn.isLocalDolt, conn.port || "")
+                onDeleteClicked(name, !!conn.isLocalDolt)
               }
               borderClassName={getBorderLineClassName(
                 props.connections.length,
