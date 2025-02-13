@@ -42,6 +42,7 @@ export default function Advanced() {
       >
         Launch Workbench
       </Button>
+
       {state.loading && <SmallLoader loaded={!state.loading} />}
       <ErrorMsg err={error} />
       <Tooltip id="submit-message" />

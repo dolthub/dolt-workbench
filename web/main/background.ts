@@ -13,6 +13,9 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
+import { removeDoltServerFolder, startServer } from "./doltServer";
+import { ChildProcess } from "child_process";
+import { L } from "ace-builds-internal/lib/bidiutil";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -32,8 +35,9 @@ if (isProd) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
-let serverProcess: UtilityProcess | null;
+let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
+let doltServerProcess: ChildProcess | null;
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -50,16 +54,16 @@ function createGraphqlSeverProcess() {
           "main.js",
         )
       : path.join("../graphql-server", "dist", "main.js");
-  serverProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
+  graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
-  serverProcess?.stdout?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess?.stdout?.on("data", (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
     // Send the Server console.log messages to the main browser window
     mainWindow?.webContents.executeJavaScript(`
         console.info('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
   });
 
-  serverProcess?.stderr?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess?.stderr?.on("data", (chunk: Buffer) => {
     console.error("server error", chunk.toString("utf8"));
     // Send the Server console.error messages out to the main browser window
     mainWindow?.webContents.executeJavaScript(`
@@ -184,9 +188,13 @@ ipcMain.on("update-menu", (_event, databaseName?: string) => {
 });
 
 app.on("before-quit", () => {
-  if (serverProcess) {
-    serverProcess.kill();
-    serverProcess = null;
+  if (graphqlServerProcess) {
+    graphqlServerProcess.kill();
+    graphqlServerProcess = null;
+  }
+  if (doltServerProcess) {
+    doltServerProcess.kill();
+    doltServerProcess = null;
   }
 });
 
@@ -213,3 +221,52 @@ ipcMain.handle("api-config", async () => {
 ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow.webContents.send("toggle-left-sidebar");
 });
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  } else if (typeof error === "string") {
+    return error;
+  } else {
+    return "An unknown error occurred";
+  }
+}
+
+ipcMain.handle(
+  "start-dolt-server",
+  async (event, connectionName: string, port: string, init?: boolean) => {
+    try {
+      doltServerProcess = await startServer(
+        mainWindow,
+        connectionName,
+        port,
+        init,
+      );
+    } catch (error) {
+      throw new Error(getErrorMessage(error));
+    } finally {
+      return "Server started successfully";
+    }
+  },
+);
+
+ipcMain.handle(
+  "remove-dolt-connection",
+  async (event, connectionName: string) => {
+    if (doltServerProcess) {
+      doltServerProcess.kill();
+      doltServerProcess = null;
+    }
+    const dbFolderPath = isProd
+      ? path.join(app.getPath("userData"), "databases", connectionName)
+      : path.join(__dirname, "..", "build", "databases", connectionName);
+
+    try {
+      await removeDoltServerFolder(dbFolderPath);
+    } catch (error) {
+      throw new Error(getErrorMessage(error));
+    } finally {
+      return "Connection removed successfully";
+    }
+  },
+);
