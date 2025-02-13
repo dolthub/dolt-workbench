@@ -14,6 +14,8 @@ import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
 import { removeDoltServerFolder, startServer } from "./doltServer";
+import { ChildProcess } from "child_process";
+import { L } from "ace-builds-internal/lib/bidiutil";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -35,6 +37,7 @@ if (isProd) {
 
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
+let doltServerProcess: ChildProcess | null;
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -189,6 +192,10 @@ app.on("before-quit", () => {
     graphqlServerProcess.kill();
     graphqlServerProcess = null;
   }
+  if (doltServerProcess) {
+    doltServerProcess.kill();
+    doltServerProcess = null;
+  }
 });
 
 app.on("window-all-closed", () => {
@@ -229,7 +236,12 @@ ipcMain.handle(
   "start-dolt-server",
   async (event, connectionName: string, port: string, init?: boolean) => {
     try {
-      await startServer(mainWindow, connectionName, port, init);
+      doltServerProcess = await startServer(
+        mainWindow,
+        connectionName,
+        port,
+        init,
+      );
     } catch (error) {
       throw new Error(getErrorMessage(error));
     } finally {
@@ -240,7 +252,11 @@ ipcMain.handle(
 
 ipcMain.handle(
   "remove-dolt-connection",
-  async (event, connectionName: string, port: string) => {
+  async (event, connectionName: string) => {
+    if (doltServerProcess) {
+      doltServerProcess.kill();
+      doltServerProcess = null;
+    }
     const dbFolderPath = isProd
       ? path.join(app.getPath("userData"), "databases", connectionName)
       : path.join(__dirname, "..", "build", "databases", connectionName);

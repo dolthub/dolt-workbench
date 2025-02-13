@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { app, BrowserWindow } from "electron";
-import { exec } from "child_process";
+import { ChildProcess, exec } from "child_process";
 
 type ErrorReturnType = {
   errorMsg?: string;
@@ -14,7 +14,7 @@ export async function startServer(
   connectionName: string,
   port: string,
   init?: boolean,
-): Promise<void> {
+): Promise<ChildProcess | null> {
   const dbFolderPath = isProd
     ? path.join(app.getPath("userData"), "databases", connectionName)
     : path.join(__dirname, "..", "build", "databases", connectionName);
@@ -31,15 +31,10 @@ export async function startServer(
       }
 
       // Initialize and start the server without checking if it's already running
-      await initializeDoltRepository(
-        doltPath,
-        dbFolderPath,
-        connectionName,
-        mainWindow,
-      );
-      await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+      await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
+      return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
     } else {
-      await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+      return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
     }
   } catch (error) {
     console.error("Failed to set up Dolt server:", error);
@@ -82,7 +77,6 @@ function getDoltPaths(): string {
 function initializeDoltRepository(
   doltPath: string,
   dbFolderPath: string,
-  connectionName: string,
   mainWindow: BrowserWindow,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -136,7 +130,7 @@ function startServerProcess(
   dbFolderPath: string,
   port: string,
   mainWindow: BrowserWindow,
-): Promise<void> {
+): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
     const doltServerProcess = exec(
       `${doltPath} sql-server -P ${port}`,
@@ -160,7 +154,7 @@ function startServerProcess(
 
       // Resolve the promise when the server is ready
       if (logMessage.includes("Server ready")) {
-        resolve();
+        resolve(doltServerProcess);
       }
     };
 
@@ -182,17 +176,12 @@ function startServerProcess(
 
       // Resolve the promise when the server is ready
       if (errorMessage.includes("Server ready")) {
-        resolve();
+        resolve(doltServerProcess);
       }
     };
 
     doltServerProcess.stdout?.on("data", handleServerLog);
     doltServerProcess.stderr?.on("data", handleServerError);
-    app.on("before-quit", () => {
-      if (doltServerProcess) {
-        doltServerProcess.kill();
-      }
-    });
   });
 }
 

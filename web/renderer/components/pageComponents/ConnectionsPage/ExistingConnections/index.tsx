@@ -21,19 +21,17 @@ export default function ExistingConnections(props: Props) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [connectionNameToDelete, setConnectionNameToDelete] = useState("");
   const [isLocalDolt, setIsLocalDolt] = useState(false);
-  const [port, setPort] = useState("");
 
-  const onDeleteClicked = (name: string, local: boolean, p: string) => {
+  const onDeleteClicked = (name: string, local: boolean) => {
     setConnectionNameToDelete(name);
     setDeleteModalOpen(true);
     setIsLocalDolt(local);
-    setPort(p);
   };
 
   // TODO: need to reveal the remove folder error
-  const removeLocalDoltFolder = async (name: string, p: string) => {
+  const removeLocalDoltFolder = async (name: string) => {
     try {
-      const result = await window.ipc.invoke("remove-dolt-connection", name, p);
+      const result = await window.ipc.invoke("remove-dolt-connection", name);
       console.log(result);
     } catch (error) {
       console.error("Failed to remove local Dolt server:", error);
@@ -103,7 +101,7 @@ export default function ExistingConnections(props: Props) {
         }}
         callback={
           isLocalDolt
-            ? async () => removeLocalDoltFolder(connectionNameToDelete, port)
+            ? async () => removeLocalDoltFolder(connectionNameToDelete)
             : undefined
         }
       />
