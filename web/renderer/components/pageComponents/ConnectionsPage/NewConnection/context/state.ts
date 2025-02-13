@@ -1,4 +1,4 @@
-import { DatabaseType } from "@gen/graphql-types";
+import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
 import { SetApolloErrorType } from "@lib/errors/types";
 import { Dispatch, SyntheticEvent } from "react";
 
@@ -40,4 +40,5 @@ export type ConfigContextType = {
   error?: Error | undefined;
   setErr: SetApolloErrorType;
   clearState: () => void;
+  storedConnections?: DatabaseConnectionFragment[];
 };

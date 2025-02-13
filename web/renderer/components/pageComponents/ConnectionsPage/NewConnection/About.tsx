@@ -4,17 +4,25 @@ import {
   Checkbox,
   FormInput,
   FormSelect,
+  Tooltip,
   useTabsContext,
 } from "@dolthub/react-components";
 import { useEffect, useState } from "react";
-import { DatabaseType } from "@gen/graphql-types";
+import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
+import { ConfigState } from "./context/state";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
 export default function About() {
-  const { state, setState, onSubmit, error: connectErr } = useConfigContext();
+  const {
+    state,
+    setState,
+    onSubmit,
+    error: connectErr,
+    storedConnections,
+  } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [err, setErr] = useState<Error | undefined>(undefined);
   const [startDoltServer, setStartDoltServer] = useState(false);
@@ -43,8 +51,8 @@ export default function About() {
       console.log(result); // "Server started successfully"
       await onSubmit(e); // Now connect to the server
     } catch (error) {
+      setErr(Error(`Failed to start Dolt server:, ${error}`));
       console.error("Failed to start Dolt server:", error);
-      // Show an error message to the user
     }
   };
   return (
@@ -119,14 +127,29 @@ export default function About() {
       )}
       <ButtonsWithError error={err || connectErr}>
         {startDoltServer ? (
-          <Button
-            type="submit"
-            disabled={!state.name || state.type !== DatabaseType.Mysql}
-            className={css.button}
-            onClick={handleSubmit}
-          >
-            Start and Connect to Dolt Server
-          </Button>
+          <>
+            <Button
+              type="submit"
+              disabled={
+                getStartLocalDoltServerDisabled(state, storedConnections)
+                  .disabled
+              }
+              className={css.button}
+              onClick={handleSubmit}
+              data-tooltip-content={
+                getStartLocalDoltServerDisabled(state, storedConnections)
+                  .message
+              }
+              data-tooltip-id="add-local-dolt-server"
+            >
+              Start and Connect to Dolt Server
+            </Button>
+            <Tooltip
+              id="add-local-dolt-server"
+              className={css.tooltip}
+              place="bottom"
+            />
+          </>
         ) : (
           <Button type="submit" disabled={!state.name} className={css.button}>
             Next
@@ -135,4 +158,34 @@ export default function About() {
       </ButtonsWithError>
     </form>
   );
+}
+
+type DisabledReturnType = {
+  disabled: boolean;
+  message?: string;
+};
+
+function getStartLocalDoltServerDisabled(
+  state: ConfigState,
+  connections?: DatabaseConnectionFragment[],
+): DisabledReturnType {
+  const disabled =
+    !state.name ||
+    !state.port ||
+    !!connections?.some(connection => connection.isLocalDolt);
+
+  if (!state.name) {
+    return { disabled, message: "Must enter connection name." };
+  }
+  if (!state.port) {
+    return { disabled, message: "Must enter port." };
+  }
+  if (connections?.some(connection => connection.isLocalDolt)) {
+    return {
+      disabled,
+      message:
+        "Already have one internal dolt server instance, remove it before adding a new one.",
+    };
+  }
+  return { disabled };
 }

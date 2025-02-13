@@ -30,6 +30,7 @@ export default function ExistingConnections(props: Props) {
     setPort(p);
   };
 
+  // TODO: need to reveal the remove folder error
   const removeLocalDoltFolder = async (name: string, p: string) => {
     try {
       const result = await window.ipc.invoke("remove-dolt-connection", name, p);

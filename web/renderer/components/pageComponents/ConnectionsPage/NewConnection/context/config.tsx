@@ -4,7 +4,10 @@ import {
   useEffectOnMount,
   useSetState,
 } from "@dolthub/react-hooks";
-import { useAddDatabaseConnectionMutation } from "@gen/graphql-types";
+import {
+  useAddDatabaseConnectionMutation,
+  useStoredConnectionsQuery,
+} from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
 import { ReactNode, SyntheticEvent, useEffect, useMemo } from "react";
@@ -26,6 +29,8 @@ export function ConfigProvider({ children }: Props) {
   const { mutateFn, ...res } = useMutation({
     hook: useAddDatabaseConnectionMutation,
   });
+
+  const connectionsRes = useStoredConnectionsQuery();
 
   useEffectOnMount(() => {
     const isDocker = window.location.origin === "http://localhost:3000";
@@ -83,8 +88,9 @@ export function ConfigProvider({ children }: Props) {
       error: res.err,
       setErr: res.setErr,
       clearState,
+      storedConnections: connectionsRes.data?.storedConnections,
     };
-  }, [state, setState, onSubmit, res.err, clearState]);
+  }, [state, setState, onSubmit, res.err, clearState, connectionsRes]);
 
   return (
     <ConfigContext.Provider value={value}>{children}</ConfigContext.Provider>

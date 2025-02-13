@@ -1,30 +1,71 @@
 import fs from "fs";
-import path, { resolve } from "path";
+import path from "path";
 import { app, BrowserWindow } from "electron";
 import { exec } from "child_process";
 
-type CreateFolderReturnType = {
-  error: boolean;
+type ErrorReturnType = {
   errorMsg?: string;
 };
 
 const isProd = process.env.NODE_ENV === "production";
 
-export function createFolder(folderPath: string): CreateFolderReturnType {
+export async function startServer(
+  mainWindow: BrowserWindow,
+  connectionName: string,
+  port: string,
+  init?: boolean,
+): Promise<void> {
+  const dbFolderPath = isProd
+    ? path.join(app.getPath("userData"), "databases", connectionName)
+    : path.join(__dirname, "..", "build", "databases", connectionName);
+
+  const doltPath = getDoltPaths();
+
+  try {
+    if (init) {
+      // Create the folder for the connection
+      const { errorMsg } = createFolder(path.join(dbFolderPath));
+      if (errorMsg) {
+        mainWindow.webContents.send("server-error", errorMsg);
+        throw new Error(errorMsg);
+      }
+
+      // Initialize and start the server without checking if it's already running
+      await initializeDoltRepository(
+        doltPath,
+        dbFolderPath,
+        connectionName,
+        mainWindow,
+      );
+      await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    } else {
+      await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    }
+  } catch (error) {
+    console.error("Failed to set up Dolt server:", error);
+    throw error;
+  }
+}
+
+// create the folder for dolt database
+function createFolder(folderPath: string): ErrorReturnType {
   if (!fs.existsSync(folderPath)) {
     fs.mkdirSync(folderPath, { recursive: true }); // Create parent directories if they don't exist
     console.log(`Folder created at: ${folderPath}`);
-    return { error: false };
+    return { errorMsg: undefined };
   } else {
     const errorMsg = `A connection with this name ${folderPath} already exists. Please choose a different name.`;
     console.error(errorMsg);
     return {
-      error: true,
       errorMsg,
     };
   }
 }
 
+// Returns the path to the Dolt binary based on the platform and environment.
+// On macOS, the binary is stored in the app's resources folder in production,
+// and in the build/mac directory in dev env .
+// On Windows, the same logic applies, but the binary is named "dolt.exe" and in build/appx directory.
 function getDoltPaths(): string {
   if (process.platform === "darwin") {
     return isProd
@@ -37,29 +78,52 @@ function getDoltPaths(): string {
   }
 }
 
-//initialize the Dolt repository
+//initialize the Dolt repository, running dolt init in dbFolderPath
 function initializeDoltRepository(
   doltPath: string,
   dbFolderPath: string,
   connectionName: string,
-  port: number,
   mainWindow: BrowserWindow,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     exec(`${doltPath} init`, { cwd: dbFolderPath }, (error, stdout, stderr) => {
       if (error) {
-        const errorMessage = `Error initializing Dolt: ${stderr}`;
-        console.error(errorMessage);
-        mainWindow.webContents.send("server-error", errorMessage);
+        const initErr = `Error initializing Dolt: ${error}`;
+        mainWindow.webContents.send("server-error", initErr);
 
         // Clean up: Delete the folder
-        removeDoltServerFolder(connectionName, port.toString());
+        const { errorMsg: removeFolderErr } =
+          removeDoltServerFolder(dbFolderPath);
+        if (removeFolderErr) {
+          mainWindow.webContents.send("server-error", removeFolderErr);
+        }
 
-        reject(new Error(errorMessage));
+        reject(new Error(initErr));
         return;
       }
 
-      console.log(`Dolt initialized: ${stdout}`);
+      if (stderr) {
+        // Check if the message is a warning or an error
+        if (stderr.includes("level=warning")) {
+          // Treat warnings as non-fatal
+          mainWindow.webContents.send("server-warning", stderr);
+        } else if (stderr.includes("level=error")) {
+          // Treat errors as fatal
+          mainWindow.webContents.send("server-error", stderr);
+
+          // Clean up: Delete the folder
+          const { errorMsg: removeFolderErr } =
+            removeDoltServerFolder(dbFolderPath);
+          if (removeFolderErr) {
+            mainWindow.webContents.send("server-error", removeFolderErr);
+          }
+          reject(new Error(stderr));
+          return;
+        } else {
+          mainWindow.webContents.send("server-log", stderr);
+        }
+      }
+
       mainWindow.webContents.send("server-log", `Dolt initialized: ${stdout}`);
       resolve();
     });
@@ -72,24 +136,26 @@ function startServerProcess(
   dbFolderPath: string,
   port: string,
   mainWindow: BrowserWindow,
-  connectionName: string,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    const serverProcess = exec(
+    const doltServerProcess = exec(
       `${doltPath} sql-server -P ${port}`,
       {
         cwd: dbFolderPath,
       },
-      (error, stdout, stderr) => {
-        console.log("error", error);
-        console.log("stdout", stdout);
-        console.log("stderr", stderr);
+      error => {
+        if (error) {
+          const startServerErr = `Error start Dolt server: ${error}`;
+          mainWindow.webContents.send("server-error", startServerErr);
+
+          reject(new Error(startServerErr));
+          return;
+        }
       },
     );
 
     const handleServerLog = (chunk: Buffer) => {
       const logMessage = chunk.toString("utf8");
-      console.log("Server Log:", logMessage);
       mainWindow.webContents.send("server-log", logMessage);
 
       // Resolve the promise when the server is ready
@@ -100,7 +166,6 @@ function startServerProcess(
 
     const handleServerError = (chunk: Buffer) => {
       const errorMessage = chunk.toString("utf8");
-      console.error("Server Error:", errorMessage);
 
       // Check if the message is a warning or an error
       if (errorMessage.includes("level=warning")) {
@@ -121,135 +186,26 @@ function startServerProcess(
       }
     };
 
-    serverProcess.stdout?.on("data", handleServerLog);
-    serverProcess.stderr?.on("data", handleServerError);
-
-    serverProcess.on("exit", (code: number) => {
-      const logMessage = `Dolt SQL Server process exited with code ${code}`;
-      mainWindow.webContents.send("server-log", logMessage);
-
-      if (code !== 0) {
-        reject(new Error(logMessage));
-      }
-
-      // Ensure the process is not hanging and the port is released
-      if (!serverProcess.killed) {
-        console.log("Ensuring the Dolt SQL Server process is terminated");
-        serverProcess.kill("SIGTERM"); // Attempt to kill the process gracefully
+    doltServerProcess.stdout?.on("data", handleServerLog);
+    doltServerProcess.stderr?.on("data", handleServerError);
+    app.on("before-quit", () => {
+      if (doltServerProcess) {
+        doltServerProcess.kill();
       }
     });
   });
 }
 
-export async function startServer(
-  mainWindow: BrowserWindow,
-  connectionName: string,
-  port: string,
-  init?: boolean,
-): Promise<void> {
-  const dbFolderPath = isProd
-    ? path.join(app.getPath("userData"), "databases", connectionName)
-    : path.join(__dirname, "..", "build", "databases", connectionName);
-
-  const doltPath = getDoltPaths();
-
-  try {
-    if (init) {
-      // Create the folder for the connection
-      const { error, errorMsg } = createFolder(dbFolderPath);
-      if (error) {
-        mainWindow.webContents.send("server-error", errorMsg);
-        throw new Error(errorMsg);
-      }
-
-      // Initialize and start the server without checking if it's already running
-      await initializeDoltRepository(
-        doltPath,
-        dbFolderPath,
-        connectionName,
-        parseInt(port),
-        mainWindow,
-      );
-      await startServerProcess(
-        doltPath,
-        dbFolderPath,
-        port,
-        mainWindow,
-        connectionName,
-      );
-    } else {
-      // Check if the server is already running
-
-      // Start the server if it's not running
-      await startServerProcess(
-        doltPath,
-        dbFolderPath,
-        port,
-        mainWindow,
-        connectionName,
-      );
-    }
-  } catch (error) {
-    console.error("Failed to set up Dolt server:", error);
-    throw error;
-  }
-}
-
-export function removeDoltServerFolder(connectionName: string, port: string) {
-  const dbFolderPath = path.join(
-    app.getPath("userData"),
-    "databases",
-    connectionName,
-  );
-
-  // Kill the process using the port
-  killProcessUsingPort(port);
-
+export function removeDoltServerFolder(dbFolderPath: string): ErrorReturnType {
   // Delete the folder
   fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
     if (err) {
-      console.error("Failed to delete folder:", err);
-    } else {
-      console.log(`Successfully deleted folder: ${dbFolderPath}`);
+      return {
+        errorMsg: `Failed to delete folder: ${err}`,
+      };
     }
   });
-}
-
-// kill the process using the port
-function killProcessUsingPort(port: string) {
-  const command =
-    process.platform === "win32"
-      ? `netstat -ano | findstr :${port}`
-      : `lsof -i :${port} | grep LISTEN`;
-
-  exec(command, (err, stdout, stderr) => {
-    if (err) {
-      console.error(`Failed to find process using port ${port}:`, err);
-      return;
-    }
-
-    const lines = stdout.split("\n");
-    if (lines.length > 0) {
-      const line = lines[0].trim();
-      const pid =
-        process.platform === "win32"
-          ? line.split(/\s+/).pop()
-          : line.split(/\s+/)[1];
-
-      if (pid) {
-        const killCommand =
-          process.platform === "win32"
-            ? `taskkill /PID ${pid} /F`
-            : `kill -9 ${pid}`;
-
-        exec(killCommand, (err, stdout, stderr) => {
-          if (err) {
-            console.error(`Failed to kill process ${pid}:`, err);
-          } else {
-            console.log(`Successfully killed process ${pid}`);
-          }
-        });
-      }
-    }
-  });
+  return {
+    errorMsg: undefined,
+  };
 }

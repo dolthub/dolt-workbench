@@ -33,7 +33,7 @@ if (isProd) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
-let serverProcess: UtilityProcess | null;
+let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 
 function isExternalUrl(url: string) {
@@ -51,16 +51,16 @@ function createGraphqlSeverProcess() {
           "main.js",
         )
       : path.join("../graphql-server", "dist", "main.js");
-  serverProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
+  graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
-  serverProcess?.stdout?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess?.stdout?.on("data", (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
     // Send the Server console.log messages to the main browser window
     mainWindow?.webContents.executeJavaScript(`
         console.info('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
   });
 
-  serverProcess?.stderr?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess?.stderr?.on("data", (chunk: Buffer) => {
     console.error("server error", chunk.toString("utf8"));
     // Send the Server console.error messages out to the main browser window
     mainWindow?.webContents.executeJavaScript(`
@@ -185,9 +185,9 @@ ipcMain.on("update-menu", (_event, databaseName?: string) => {
 });
 
 app.on("before-quit", () => {
-  if (serverProcess) {
-    serverProcess.kill();
-    serverProcess = null;
+  if (graphqlServerProcess) {
+    graphqlServerProcess.kill();
+    graphqlServerProcess = null;
   }
 });
 
@@ -241,11 +241,16 @@ ipcMain.handle(
 ipcMain.handle(
   "remove-dolt-connection",
   async (event, connectionName: string, port: string) => {
+    const dbFolderPath = isProd
+      ? path.join(app.getPath("userData"), "databases", connectionName)
+      : path.join(__dirname, "..", "build", "databases", connectionName);
+
     try {
-      await removeDoltServerFolder(connectionName, port);
-      return "Connection removed successfully";
+      await removeDoltServerFolder(dbFolderPath);
     } catch (error) {
       throw new Error(getErrorMessage(error));
+    } finally {
+      return "Connection removed successfully";
     }
   },
 );
