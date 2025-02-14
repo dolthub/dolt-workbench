@@ -15,7 +15,6 @@ import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
 import { removeDoltServerFolder, startServer } from "./doltServer";
 import { ChildProcess } from "child_process";
-import { L } from "ace-builds-internal/lib/bidiutil";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -222,16 +221,6 @@ ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow.webContents.send("toggle-left-sidebar");
 });
 
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message;
-  } else if (typeof error === "string") {
-    return error;
-  } else {
-    return "An unknown error occurred";
-  }
-}
-
 ipcMain.handle(
   "start-dolt-server",
   async (event, connectionName: string, port: string, init?: boolean) => {
@@ -253,6 +242,7 @@ ipcMain.handle(
 ipcMain.handle(
   "remove-dolt-connection",
   async (event, connectionName: string) => {
+    // if doltServerProcess is running, kill it
     if (doltServerProcess) {
       doltServerProcess.kill();
       doltServerProcess = null;
@@ -262,7 +252,13 @@ ipcMain.handle(
       : path.join(__dirname, "..", "build", "databases", connectionName);
 
     try {
-      await removeDoltServerFolder(dbFolderPath);
+      const { errorMsg } = await removeDoltServerFolder(
+        dbFolderPath,
+        mainWindow,
+      );
+      if (errorMsg) {
+        throw new Error(errorMsg);
+      }
     } catch (error) {
       throw new Error(getErrorMessage(error));
     } finally {
@@ -270,3 +266,13 @@ ipcMain.handle(
     }
   },
 );
+
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) {
+    return error.message;
+  } else if (typeof error === "string") {
+    return error;
+  } else {
+    return "An unknown error occurred";
+  }
+}

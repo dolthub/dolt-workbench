@@ -15,6 +15,9 @@ export async function startServer(
   port: string,
   init?: boolean,
 ): Promise<ChildProcess | null> {
+  // Set the path for the database folder
+  // In production, it's in the userData directory
+  // In development, it's in the build directory since the development userData directory clears its contents every time the app is rerun in dev mode
   const dbFolderPath = isProd
     ? path.join(app.getPath("userData"), "databases", connectionName)
     : path.join(__dirname, "..", "build", "databases", connectionName);
@@ -32,10 +35,8 @@ export async function startServer(
 
       // Initialize and start the server without checking if it's already running
       await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
-      return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
-    } else {
-      return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
     }
+    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to set up Dolt server:", error);
     throw error;
@@ -73,7 +74,7 @@ function getDoltPaths(): string {
   }
 }
 
-//initialize the Dolt repository, running dolt init in dbFolderPath
+//initialize the Dolt repository by running `dolt init` in dbFolderPath
 function initializeDoltRepository(
   doltPath: string,
   dbFolderPath: string,
@@ -86,8 +87,10 @@ function initializeDoltRepository(
         mainWindow.webContents.send("server-error", initErr);
 
         // Clean up: Delete the folder
-        const { errorMsg: removeFolderErr } =
-          removeDoltServerFolder(dbFolderPath);
+        const { errorMsg: removeFolderErr } = removeDoltServerFolder(
+          dbFolderPath,
+          mainWindow,
+        );
         if (removeFolderErr) {
           mainWindow.webContents.send("server-error", removeFolderErr);
         }
@@ -106,8 +109,10 @@ function initializeDoltRepository(
           mainWindow.webContents.send("server-error", stderr);
 
           // Clean up: Delete the folder
-          const { errorMsg: removeFolderErr } =
-            removeDoltServerFolder(dbFolderPath);
+          const { errorMsg: removeFolderErr } = removeDoltServerFolder(
+            dbFolderPath,
+            mainWindow,
+          );
           if (removeFolderErr) {
             mainWindow.webContents.send("server-error", removeFolderErr);
           }
@@ -124,7 +129,7 @@ function initializeDoltRepository(
   });
 }
 
-// start the Dolt SQL server
+// start the Dolt SQL server and return the server process
 function startServerProcess(
   doltPath: string,
   dbFolderPath: string,
@@ -170,8 +175,6 @@ function startServerProcess(
         mainWindow.webContents.send("server-error", errorMessage);
 
         reject(new Error(errorMessage));
-      } else {
-        mainWindow.webContents.send("server-log", errorMessage);
       }
 
       // Resolve the promise when the server is ready
@@ -185,10 +188,17 @@ function startServerProcess(
   });
 }
 
-export function removeDoltServerFolder(dbFolderPath: string): ErrorReturnType {
+export function removeDoltServerFolder(
+  dbFolderPath: string,
+  mainWindow: BrowserWindow,
+): ErrorReturnType {
   // Delete the folder
   fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
     if (err) {
+      mainWindow.webContents.send(
+        `server-error:Failed to delete folder, folder:${dbFolderPath}, `,
+        err,
+      );
       return {
         errorMsg: `Failed to delete folder: ${err}`,
       };

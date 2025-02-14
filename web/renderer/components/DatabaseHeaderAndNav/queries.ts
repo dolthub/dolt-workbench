@@ -45,20 +45,22 @@ export const DATABASES_BY_CONNECTION = gql`
   }
 `;
 
-export const CHECK_CONNECTION = gql`
-  query CheckConnection(
+export const DOLT_SERVER_STATUS = gql`
+  query DoltServerStatus(
     $connectionUrl: String!
     $name: String!
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
     $type: DatabaseType
   ) {
-    checkConnection(
+    doltServerStatus(
       connectionUrl: $connectionUrl
       name: $name
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
-    )
+    ) {
+      active
+    }
   }
 `;

@@ -70,7 +70,7 @@ export default function About() {
           }}
           name="start-dolt-server"
           label="Start a dolt server"
-          description="Run a Dolt SQL server hosted directly within Workbench. The app supports only one internal server instance - attempting to create another will return an error. This restriction does not apply to external Dolt server connections."
+          description="Run a Dolt SQL server hosted directly within Workbench. The app supports only one internal server instance, this restriction does not apply to external Dolt server connections."
           className={css.checkbox}
         />
       )}
@@ -175,10 +175,10 @@ function getStartLocalDoltServerDisabled(
     !!connections?.some(connection => connection.isLocalDolt);
 
   if (!state.name) {
-    return { disabled, message: "Must enter connection name." };
+    return { disabled, message: "Connection name is required." };
   }
   if (!state.port) {
-    return { disabled, message: "Must enter port." };
+    return { disabled, message: "Port is required." };
   }
   if (connections?.some(connection => connection.isLocalDolt)) {
     return {

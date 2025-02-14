@@ -61,6 +61,12 @@ class CurrentDatabaseState {
   currentDatabase?: string;
 }
 
+@ObjectType()
+class DoltServerStatus {
+  @Field({ nullable: true })
+  active?: boolean;
+}
+
 @ArgsType()
 class RemoveDatabaseConnectionArgs {
   @Field()
@@ -125,22 +131,24 @@ export class DatabaseResolver {
     return dbs;
   }
 
-  @Query(_returns => Boolean)
-  async checkConnection(
+  // Checking if the internal dolt server is running
+  @Query(_returns => DoltServerStatus)
+  async doltServerStatus(
     @Args() args: AddDatabaseConnectionArgs,
-  ): Promise<boolean> {
+  ): Promise<DoltServerStatus> {
+    // if current connection is the same as the internal dolt server, return true
     if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
-      return true;
+      return { active: true };
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
     try {
       const ds = getDataSource(workbenchConfig);
       await ds.initialize();
       await ds.query("SELECT 1");
-      return true;
+      return { active: true };
     } catch (error) {
       console.error("Error checking connection:", error.message);
-      return false;
+      return { active: false };
     }
   }
 

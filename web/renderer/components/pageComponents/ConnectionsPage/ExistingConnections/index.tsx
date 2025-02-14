@@ -21,21 +21,20 @@ export default function ExistingConnections(props: Props) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [connectionNameToDelete, setConnectionNameToDelete] = useState("");
   const [isLocalDolt, setIsLocalDolt] = useState(false);
-
   const onDeleteClicked = (name: string, local: boolean) => {
     setConnectionNameToDelete(name);
     setDeleteModalOpen(true);
     setIsLocalDolt(local);
   };
 
-  // TODO: need to reveal the remove folder error
-  const removeLocalDoltFolder = async (name: string) => {
+  const removeLocalDoltFolder = () => {
     try {
-      const result = await window.ipc.invoke("remove-dolt-connection", name);
-      console.log(result);
+      window.ipc.invoke("remove-dolt-connection", connectionNameToDelete);
     } catch (error) {
       console.error("Failed to remove local Dolt server:", error);
+      return new Error(`Failed to remove local Dolt server: ${error}`);
     }
+    return undefined;
   };
 
   const router = useRouter();
@@ -99,9 +98,10 @@ export default function ExistingConnections(props: Props) {
           variables: { name: connectionNameToDelete },
           refetchQueries: [{ query: StoredConnectionsDocument }],
         }}
-        callback={
+        callback={isLocalDolt ? () => removeLocalDoltFolder() : undefined}
+        alertMessage={
           isLocalDolt
-            ? async () => removeLocalDoltFolder(connectionNameToDelete)
+            ? "This action will permanently delete the local Dolt server and all associated data stored within it. This cannot be undone."
             : undefined
         }
       />

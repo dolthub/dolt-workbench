@@ -123,6 +123,10 @@ type CurrentDatabaseState {
   currentDatabase: String
 }
 
+type DoltServerStatus {
+  active: Boolean
+}
+
 type DiffStat {
   rowsUnmodified: Float!
   rowsAdded: Float!
@@ -328,7 +332,7 @@ type Query {
   currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
-  checkConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): Boolean!
+  doltServerStatus(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): DoltServerStatus!
   databasesByConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): [String!]!
   schemas(databaseName: String!, refName: String!): [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
