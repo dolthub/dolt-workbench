@@ -156,7 +156,10 @@ export class DatabaseResolver {
   async databasesByConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string[]> {
-    if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
+    if (
+      this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl &&
+      this.conn.getWorkbenchConfig()?.name === args.name
+    ) {
       return this.databases();
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
