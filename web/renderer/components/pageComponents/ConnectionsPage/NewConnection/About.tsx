@@ -21,6 +21,7 @@ export default function About() {
     setState,
     onSubmit,
     error: connectErr,
+    setErr: setConnectErr,
     storedConnections,
   } = useConfigContext();
 
@@ -49,13 +50,18 @@ export default function About() {
         state.port,
         true,
       );
-      console.log(result); // "Server started successfully"
-      await onSubmit(e); // Now connect to the server
+
+      if (result !== "success") {
+        setErr(Error(result));
+        throw new Error(result);
+      }
+      await onSubmit(e);
     } catch (error) {
-      setErr(Error(`Failed to start Dolt server:, ${error}`));
-      console.error("Failed to start Dolt server:", error);
+      console.log("error", error);
+      setErr(Error(` ${error}`));
     }
   };
+
   return (
     <form onSubmit={onNext} className={css.form}>
       {forElectron && (
@@ -96,6 +102,7 @@ export default function About() {
           onChangeValue={t => {
             if (!t) return;
             setErr(undefined);
+            setConnectErr(undefined);
             setState({
               type: t,
               port: t === DatabaseType.Mysql ? "3306" : "5432",
@@ -120,6 +127,7 @@ export default function About() {
           onChangeString={p => {
             setState({ port: p });
             setErr(undefined);
+            setConnectErr(undefined);
           }}
           placeholder="Enter port number"
           light

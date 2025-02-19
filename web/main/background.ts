@@ -13,7 +13,11 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
-import { removeDoltServerFolder, startServer } from "./doltServer";
+import {
+  getErrorMessage,
+  removeDoltServerFolder,
+  startServer,
+} from "./doltServer";
 import { ChildProcess } from "child_process";
 
 const isProd = process.env.NODE_ENV === "production";
@@ -223,7 +227,7 @@ ipcMain.handle("toggle-left-sidebar", () => {
 
 ipcMain.handle(
   "start-dolt-server",
-  async (event, connectionName: string, port: string, init?: boolean) => {
+  async (_, connectionName: string, port: string, init?: boolean) => {
     try {
       doltServerProcess = await startServer(
         mainWindow,
@@ -231,51 +235,66 @@ ipcMain.handle(
         port,
         init,
       );
+      if (!doltServerProcess) {
+        throw new Error("Failed to start Dolt server");
+      }
+      return "success";
     } catch (error) {
-      throw new Error(getErrorMessage(error));
-    } finally {
-      return "Server started successfully";
-    }
-  },
-);
-
-ipcMain.handle(
-  "remove-dolt-connection",
-  async (event, connectionName: string) => {
-    try {
-      // if doltServerProcess is running, kill it
       if (doltServerProcess) {
-        const killed = doltServerProcess.kill();
-        if (!killed) {
-          throw new Error("Failed to kill Dolt server process");
-        }
+        doltServerProcess.kill();
         doltServerProcess = null;
       }
-      const dbFolderPath = isProd
-        ? path.join(app.getPath("userData"), "databases", connectionName)
-        : path.join(__dirname, "..", "build", "databases", connectionName);
-      const { errorMsg } = await removeDoltServerFolder(
-        dbFolderPath,
-        mainWindow,
-      );
-      if (errorMsg) {
-        console.error(errorMsg);
-        throw new Error(errorMsg);
+      if (init) {
+        const dbFolderPath = isProd
+          ? path.join(app.getPath("userData"), "databases", connectionName)
+          : path.join(__dirname, "..", "build", "databases", connectionName);
+
+        try {
+          const { errorMsg } = await removeDoltServerFolder(
+            dbFolderPath,
+            mainWindow,
+          );
+          if (errorMsg) {
+            console.error("Cleanup failed:", errorMsg);
+            mainWindow.webContents.send(
+              "server-error",
+              `Cleanup failed: ${errorMsg}`,
+            );
+          }
+        } catch (cleanupError) {
+          console.error("Folder deletion error:", cleanupError);
+          mainWindow.webContents.send(
+            "server-error",
+            `Failed to clean up files: ${getErrorMessage(cleanupError)}`,
+          );
+        }
       }
-    } catch (error) {
-      throw new Error(getErrorMessage(error));
-    } finally {
-      return "Connection removed successfully";
+      return new Error(getErrorMessage(error));
     }
   },
 );
 
-function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return error.message;
-  } else if (typeof error === "string") {
-    return error;
-  } else {
-    return "An unknown error occurred";
+ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
+  try {
+    // if doltServerProcess is running, kill it
+    console.log("kill doltServerProcess", doltServerProcess);
+    if (doltServerProcess) {
+      doltServerProcess.kill("SIGTERM");
+      // Wait for process to exit
+      await new Promise(resolve => {
+        doltServerProcess?.once("exit", resolve);
+      });
+
+      doltServerProcess = null;
+    }
+    // Delete folder with retries
+    const dbFolderPath = isProd
+      ? path.join(app.getPath("userData"), "databases", connectionName)
+      : path.join(__dirname, "..", "build", "databases", connectionName);
+
+    const { errorMsg } = await removeDoltServerFolder(dbFolderPath, mainWindow);
+    if (errorMsg) throw new Error(errorMsg);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
   }
-}
+});
