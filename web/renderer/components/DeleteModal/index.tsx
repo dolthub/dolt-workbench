@@ -15,7 +15,7 @@ type Props<TData, TVariables> = {
   assetId?: string;
   btnText?: string;
   mutationProps: MutationProps<TData, TVariables>;
-  callback?: (d: TData) => Error | void;
+  callback?: (d: TData) => Error | undefined;
   children?: ReactNode;
   className?: string;
   buttonDataCy?: string;

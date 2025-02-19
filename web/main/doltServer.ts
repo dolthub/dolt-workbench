@@ -36,7 +36,13 @@ export async function startServer(
       // Initialize and start the server without checking if it's already running
       await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
     }
-    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    return await startServerProcess(
+      doltPath,
+      dbFolderPath,
+      port,
+      mainWindow,
+      init,
+    );
   } catch (error) {
     console.error("Failed to set up Dolt server:", error);
     throw error;
@@ -129,12 +135,12 @@ function initializeDoltRepository(
   });
 }
 
-// start the Dolt SQL server and return the server process
 function startServerProcess(
   doltPath: string,
   dbFolderPath: string,
   port: string,
   mainWindow: BrowserWindow,
+  init?: boolean,
 ): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
     const doltServerProcess = exec(
@@ -142,9 +148,67 @@ function startServerProcess(
       {
         cwd: dbFolderPath,
       },
-      error => {
+      (error, stderr, stdout) => {
+        if (stderr) {
+          // Check if the message is a warning or an error
+          if (stderr.includes("level=warning")) {
+            // Treat warnings as non-fatal
+            mainWindow.webContents.send("server-warning", stderr);
+          } else if (stderr.includes("level=error")) {
+            // Treat errors as fatal
+            mainWindow.webContents.send("server-error", stderr);
+            if (init) {
+              // Clean up: Delete the folder
+              const { errorMsg: removeFolderErr } = removeDoltServerFolder(
+                dbFolderPath,
+                mainWindow,
+              );
+
+              if (removeFolderErr) {
+                mainWindow.webContents.send("server-error", removeFolderErr);
+              }
+            }
+            reject(new Error(stderr));
+
+            return;
+          }
+
+          if (stderr.includes(`Port ${port} already in use`)) {
+            mainWindow.webContents.send("server-error", stderr);
+            if (init) {
+              // Clean up: Delete the folder
+              const { errorMsg: removeFolderErr } = removeDoltServerFolder(
+                dbFolderPath,
+                mainWindow,
+              );
+
+              if (removeFolderErr) {
+                mainWindow.webContents.send("server-error", removeFolderErr);
+              }
+            }
+            reject(new Error(stderr));
+            return;
+          }
+
+          // Resolve the promise when the server is ready
+          if (stderr.includes("Server ready")) {
+            resolve(doltServerProcess);
+            return;
+          }
+        }
+
+        if (stdout) {
+          mainWindow.webContents.send("server-log", stdout);
+          // Resolve the promise when the server is ready
+          if (stdout.includes("Server ready")) {
+            resolve(doltServerProcess);
+            return;
+          }
+        }
+
         if (error) {
           const startServerErr = `Error start Dolt server: ${error}`;
+          console.log(startServerErr);
           mainWindow.webContents.send("server-error", startServerErr);
 
           reject(new Error(startServerErr));
@@ -160,26 +224,34 @@ function startServerProcess(
       // Resolve the promise when the server is ready
       if (logMessage.includes("Server ready")) {
         resolve(doltServerProcess);
+        return;
       }
     };
 
     const handleServerError = (chunk: Buffer) => {
       const errorMessage = chunk.toString("utf8");
-
       // Check if the message is a warning or an error
       if (errorMessage.includes("level=warning")) {
         // Treat warnings as non-fatal
         mainWindow.webContents.send("server-warning", errorMessage);
+        return;
       } else if (errorMessage.includes("level=error")) {
         // Treat errors as fatal
         mainWindow.webContents.send("server-error", errorMessage);
-
         reject(new Error(errorMessage));
+        return;
+      }
+
+      if (errorMessage.includes("already in use")) {
+        mainWindow.webContents.send("server-error", errorMessage);
+        reject(new Error(errorMessage));
+        return;
       }
 
       // Resolve the promise when the server is ready
       if (errorMessage.includes("Server ready")) {
         resolve(doltServerProcess);
+        return;
       }
     };
 
@@ -196,7 +268,7 @@ export function removeDoltServerFolder(
   fs.rm(dbFolderPath, { recursive: true, force: true }, err => {
     if (err) {
       mainWindow.webContents.send(
-        `server-error:Failed to delete folder, folder:${dbFolderPath}, `,
+        `server-error: Failed to delete folder, folder:${dbFolderPath}, `,
         err,
       );
       return {

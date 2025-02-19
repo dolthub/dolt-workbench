@@ -1,5 +1,5 @@
 Prerequisite:
-Download Dolt binaries from the latest release.
+Download Dolt binaries from the [latest release](https://github.com/dolthub/dolt/releases/latest).
 
 - For macOS, place the dolt binary in web/build/mac.
 - For Windows, place the dolt.exe binary in web/build/appx.

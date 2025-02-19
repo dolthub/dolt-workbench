@@ -3,6 +3,7 @@ import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import Image from "next/legacy/image";
+import { useState } from "react";
 import cx from "classnames";
 import { DatabaseTypeLabel } from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
 import useAddConnection from "./useAddConnection";
@@ -24,11 +25,14 @@ export default function Item({
   shorterLine,
 }: Props) {
   const { onAdd, err, loading, doltServerIsActive } = useAddConnection(conn);
-
+  const [startDoltServerError, setStartDoltServerError] = useState<
+    Error | undefined
+  >(undefined);
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
-  const handleSubmit = async (e: React.FormEvent) => {
+
+  const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!doltServerIsActive) {
+    if (forElectron && conn.isLocalDolt && !doltServerIsActive) {
       try {
         await window.ipc.invoke(
           "start-dolt-server",
@@ -37,7 +41,9 @@ export default function Item({
           false,
         );
       } catch (error) {
-        console.error("Failed to start Dolt server:", error);
+        setStartDoltServerError(
+          new Error(`Failed to start Dolt server: ${error}`),
+        );
       }
     }
     await onAdd();
@@ -69,14 +75,11 @@ export default function Item({
             </Button.Link>
             <div className={css.typeAndName}>
               <DatabaseTypeLabel conn={conn} />
-              <Button.Link
-                onClick={forElectron && conn.isLocalDolt ? handleSubmit : onAdd}
-                className={css.name}
-              >
+              <Button.Link onClick={onSubmit} className={css.name}>
                 {conn.name}
               </Button.Link>
             </div>
-            <ErrorMsg err={err} className={css.err} />
+            <ErrorMsg err={err || startDoltServerError} className={css.err} />
           </div>
         </div>
       </li>

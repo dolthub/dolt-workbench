@@ -23,6 +23,7 @@ export default function About() {
     error: connectErr,
     storedConnections,
   } = useConfigContext();
+
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [err, setErr] = useState<Error | undefined>(undefined);
   const [startDoltServer, setStartDoltServer] = useState(false);
@@ -69,8 +70,8 @@ export default function About() {
             setStartDoltServer(!startDoltServer);
           }}
           name="start-dolt-server"
-          label="Start a dolt server"
-          description="Run a Dolt SQL server hosted directly within Workbench. The app supports only one internal server instance, this restriction does not apply to external Dolt server connections."
+          label="Start a Dolt server"
+          description="Run a Dolt SQL server hosted directly within the Workbench. The app supports only one internal server instance, but this restriction does not apply to external Dolt server connections."
           className={css.checkbox}
         />
       )}
@@ -173,7 +174,9 @@ function getStartLocalDoltServerDisabled(
     !state.name ||
     !state.port ||
     !!connections?.some(connection => connection.isLocalDolt);
-
+  if (!disabled) {
+    return { disabled };
+  }
   if (!state.name) {
     return { disabled, message: "Connection name is required." };
   }

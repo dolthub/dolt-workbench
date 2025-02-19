@@ -242,21 +242,24 @@ ipcMain.handle(
 ipcMain.handle(
   "remove-dolt-connection",
   async (event, connectionName: string) => {
-    // if doltServerProcess is running, kill it
-    if (doltServerProcess) {
-      doltServerProcess.kill();
-      doltServerProcess = null;
-    }
-    const dbFolderPath = isProd
-      ? path.join(app.getPath("userData"), "databases", connectionName)
-      : path.join(__dirname, "..", "build", "databases", connectionName);
-
     try {
+      // if doltServerProcess is running, kill it
+      if (doltServerProcess) {
+        const killed = doltServerProcess.kill();
+        if (!killed) {
+          throw new Error("Failed to kill Dolt server process");
+        }
+        doltServerProcess = null;
+      }
+      const dbFolderPath = isProd
+        ? path.join(app.getPath("userData"), "databases", connectionName)
+        : path.join(__dirname, "..", "build", "databases", connectionName);
       const { errorMsg } = await removeDoltServerFolder(
         dbFolderPath,
         mainWindow,
       );
       if (errorMsg) {
+        console.error(errorMsg);
         throw new Error(errorMsg);
       }
     } catch (error) {

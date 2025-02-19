@@ -141,14 +141,17 @@ export class DatabaseResolver {
       return { active: true };
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
+    const ds = getDataSource(workbenchConfig);
+
     try {
-      const ds = getDataSource(workbenchConfig);
       await ds.initialize();
       await ds.query("SELECT 1");
       return { active: true };
     } catch (error) {
       console.error("Error checking connection:", error.message);
       return { active: false };
+    } finally {
+      await ds.destroy();
     }
   }
 

@@ -80,6 +80,7 @@ export function ConfigProvider({ children }: Props) {
       setState({ loading: false });
     }
   };
+
   const value = useMemo(() => {
     return {
       state,
@@ -87,6 +88,7 @@ export function ConfigProvider({ children }: Props) {
       onSubmit,
       error: res.err,
       setErr: res.setErr,
+
       clearState,
       storedConnections: connectionsRes.data?.storedConnections,
     };
