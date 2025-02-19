@@ -40,11 +40,11 @@ export default function Item({
           conn.port,
           false,
         );
-        await onAdd();
       } catch (error) {
         setStartDoltServerError(new Error(`${error}`));
       }
     }
+    await onAdd();
   };
 
   return (

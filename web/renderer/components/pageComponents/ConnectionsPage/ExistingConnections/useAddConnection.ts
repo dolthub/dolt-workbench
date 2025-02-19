@@ -40,7 +40,7 @@ export default function useAddConnection(
 
   return {
     onAdd,
-    err: res.error,
+    err: res.error || doltServerStatus.error,
     loading: res.loading,
     doltServerIsActive: !!doltServerStatus.data?.doltServerStatus.active,
   };

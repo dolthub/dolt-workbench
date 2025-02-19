@@ -229,6 +229,7 @@ ipcMain.handle(
   "start-dolt-server",
   async (_, connectionName: string, port: string, init?: boolean) => {
     try {
+      console.log("start-dolt-server", connectionName, port, init);
       doltServerProcess = await startServer(
         mainWindow,
         connectionName,
@@ -277,7 +278,6 @@ ipcMain.handle(
 ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
   try {
     // if doltServerProcess is running, kill it
-    console.log("kill doltServerProcess", doltServerProcess);
     if (doltServerProcess) {
       doltServerProcess.kill("SIGTERM");
       // Wait for process to exit

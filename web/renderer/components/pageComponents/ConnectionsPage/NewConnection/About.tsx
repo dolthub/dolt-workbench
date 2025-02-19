@@ -4,62 +4,24 @@ import {
   Checkbox,
   FormInput,
   FormSelect,
-  Tooltip,
   useTabsContext,
 } from "@dolthub/react-components";
-import { useEffect, useState } from "react";
-import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
+import { useState } from "react";
+import { DatabaseType } from "@gen/graphql-types";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
-import { ConfigState } from "./context/state";
+import StartDoltServerForm from "./StartDoltServerForm";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
 export default function About() {
-  const {
-    state,
-    setState,
-    onSubmit,
-    error: connectErr,
-    setErr: setConnectErr,
-    storedConnections,
-  } = useConfigContext();
+  const { state, setState, error, setErr } = useConfigContext();
 
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
-  const [err, setErr] = useState<Error | undefined>(undefined);
   const [startDoltServer, setStartDoltServer] = useState(false);
 
   const onNext = () => {
     setActiveTabIndex(activeTabIndex + 1);
-  };
-
-  useEffect(() => {
-    if (forElectron) {
-      window.ipc.getDoltServerError(async (msg: string) => {
-        setErr(Error(msg));
-      });
-    }
-  }, []);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    try {
-      const result = await window.ipc.invoke(
-        "start-dolt-server",
-        state.name,
-        state.port,
-        true,
-      );
-
-      if (result !== "success") {
-        setErr(Error(result));
-        throw new Error(result);
-      }
-      await onSubmit(e);
-    } catch (error) {
-      console.log("error", error);
-      setErr(Error(` ${error}`));
-    }
   };
 
   return (
@@ -67,10 +29,10 @@ export default function About() {
       {forElectron && (
         <Checkbox
           checked={startDoltServer}
-          onChange={() => {
+          onChange={e => {
             setState({
               useSSL: startDoltServer,
-              port: startDoltServer ? "" : state.port,
+              port: e.target.checked ? "" : state.port,
               isLocalDolt: !startDoltServer,
             });
             setStartDoltServer(!startDoltServer);
@@ -81,122 +43,55 @@ export default function About() {
           className={css.checkbox}
         />
       )}
-      <FormInput
-        value={state.name}
-        onChangeString={n => {
-          setState({ name: n });
-          setErr(undefined);
-        }}
-        label="Name"
-        labelClassName={css.label}
-        placeholder="my-database (required)"
-        light
-      />
-      {!startDoltServer && (
-        <FormSelect
-          outerClassName={css.typeSelect}
-          className={css.typeSelectInner}
-          labelClassName={css.label}
-          label="Type"
-          val={state.type}
-          onChangeValue={t => {
-            if (!t) return;
-            setErr(undefined);
-            setConnectErr(undefined);
-            setState({
-              type: t,
-              port: t === DatabaseType.Mysql ? "3306" : "5432",
-              username: t === DatabaseType.Mysql ? "root" : "postgres",
-            });
-          }}
-          options={[
-            { label: "MySQL/Dolt", value: DatabaseType.Mysql },
-            {
-              label: "Postgres/Doltgres",
-              value: DatabaseType.Postgres,
-            },
-          ]}
-          hideSelectedOptions
-          light
-        />
-      )}
-      {startDoltServer && (
-        <FormInput
-          label="Port"
-          value={state.port}
-          onChangeString={p => {
-            setState({ port: p });
-            setErr(undefined);
-            setConnectErr(undefined);
-          }}
-          placeholder="Enter port number"
-          light
-          labelClassName={css.label}
-        />
-      )}
-      <ButtonsWithError error={err || connectErr}>
-        {startDoltServer ? (
-          <>
-            <Button
-              type="submit"
-              disabled={
-                getStartLocalDoltServerDisabled(state, storedConnections)
-                  .disabled
-              }
-              className={css.button}
-              onClick={handleSubmit}
-              data-tooltip-content={
-                getStartLocalDoltServerDisabled(state, storedConnections)
-                  .message
-              }
-              data-tooltip-id="add-local-dolt-server"
-            >
-              Start and Connect to Dolt Server
+      {startDoltServer ? (
+        <StartDoltServerForm />
+      ) : (
+        <>
+          <FormInput
+            value={state.name}
+            onChangeString={n => {
+              setState({ name: n });
+              setErr(undefined);
+            }}
+            label="Name"
+            labelClassName={css.label}
+            placeholder="my-database (required)"
+            light
+          />
+
+          <FormSelect
+            outerClassName={css.typeSelect}
+            className={css.typeSelectInner}
+            labelClassName={css.label}
+            label="Type"
+            val={state.type}
+            onChangeValue={t => {
+              if (!t) return;
+              setErr(undefined);
+              setState({
+                type: t,
+                port: t === DatabaseType.Mysql ? "3306" : "5432",
+                username: t === DatabaseType.Mysql ? "root" : "postgres",
+              });
+            }}
+            options={[
+              { label: "MySQL/Dolt", value: DatabaseType.Mysql },
+              {
+                label: "Postgres/Doltgres",
+                value: DatabaseType.Postgres,
+              },
+            ]}
+            hideSelectedOptions
+            light
+          />
+
+          <ButtonsWithError error={error}>
+            <Button type="submit" disabled={!state.name} className={css.button}>
+              Next
             </Button>
-            <Tooltip
-              id="add-local-dolt-server"
-              className={css.tooltip}
-              place="bottom"
-            />
-          </>
-        ) : (
-          <Button type="submit" disabled={!state.name} className={css.button}>
-            Next
-          </Button>
-        )}
-      </ButtonsWithError>
+          </ButtonsWithError>
+        </>
+      )}
     </form>
   );
-}
-
-type DisabledReturnType = {
-  disabled: boolean;
-  message?: string;
-};
-
-function getStartLocalDoltServerDisabled(
-  state: ConfigState,
-  connections?: DatabaseConnectionFragment[],
-): DisabledReturnType {
-  const disabled =
-    !state.name ||
-    !state.port ||
-    !!connections?.some(connection => connection.isLocalDolt);
-  if (!disabled) {
-    return { disabled };
-  }
-  if (!state.name) {
-    return { disabled, message: "Connection name is required." };
-  }
-  if (!state.port) {
-    return { disabled, message: "Port is required." };
-  }
-  if (connections?.some(connection => connection.isLocalDolt)) {
-    return {
-      disabled,
-      message:
-        "Already have one internal dolt server instance, remove it before adding a new one.",
-    };
-  }
-  return { disabled };
 }

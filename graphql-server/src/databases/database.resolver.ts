@@ -150,8 +150,6 @@ export class DatabaseResolver {
     } catch (error) {
       console.error("Error checking connection:", error.message);
       return { active: false };
-    } finally {
-      await ds.destroy();
     }
   }
 

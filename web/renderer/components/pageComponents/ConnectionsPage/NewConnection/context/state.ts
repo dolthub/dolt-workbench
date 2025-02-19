@@ -41,4 +41,5 @@ export type ConfigContextType = {
   setErr: SetApolloErrorType;
   clearState: () => void;
   storedConnections?: DatabaseConnectionFragment[];
+  onStartDoltServer: (e: SyntheticEvent) => Promise<void>;
 };
