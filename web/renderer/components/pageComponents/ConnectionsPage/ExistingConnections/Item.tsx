@@ -3,7 +3,7 @@ import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import Image from "next/legacy/image";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import cx from "classnames";
 import { DatabaseTypeLabel } from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
 import useAddConnection from "./useAddConnection";
@@ -30,20 +30,22 @@ export default function Item({
   >(undefined);
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
 
-  const onSubmit = async (e: React.FormEvent) => {
+  const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    if (forElectron && conn.isLocalDolt && !doltServerIsActive) {
-      try {
-        await window.ipc.invoke(
-          "start-dolt-server",
-          conn.name,
-          conn.port,
-          false,
-        );
-      } catch (error) {
-        setStartDoltServerError(new Error(`${error}`));
-      }
+    const restartDoltServer =
+      forElectron && conn.isLocalDolt && !doltServerIsActive;
+
+    if (!restartDoltServer) {
+      await onAdd();
+      return;
     }
+
+    try {
+      await window.ipc.invoke("start-dolt-server", conn.name, conn.port, false);
+    } catch (error) {
+      setStartDoltServerError(new Error(`${error}`));
+    }
+
     await onAdd();
   };
 
