@@ -2,7 +2,7 @@
   "private": true,
   "name": "dolt-workbench",
   "description": "SQL workbench for MySQL and PostgreSQL databases",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "main": "app/background.js",
   "author": "DoltHub",
   "packageManager": "yarn@4.5.0",
