@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { app, BrowserWindow } from "electron";
+import { rimraf } from "rimraf";
 import { ChildProcess, exec, spawn } from "child_process";
 
 type ErrorReturnType = {
@@ -192,7 +193,11 @@ export async function removeDoltServerFolder(
 ): Promise<ErrorReturnType> {
   for (let i = 0; i < retries; i++) {
     try {
-      await fs.promises.rm(dbFolderPath, { recursive: true, force: true });
+      if (process.platform === "darwin") {
+        await fs.promises.rm(dbFolderPath, { recursive: true, force: true });
+      } else {
+        await rimraf(dbFolderPath);
+      }
       return { errorMsg: undefined };
     } catch (err) {
       if (i === retries - 1) {
