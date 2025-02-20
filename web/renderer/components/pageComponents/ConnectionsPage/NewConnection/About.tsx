@@ -16,7 +16,6 @@ const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
 export default function About() {
   const { state, setState, error, setErr } = useConfigContext();
-
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [startDoltServer, setStartDoltServer] = useState(false);
 
@@ -58,7 +57,6 @@ export default function About() {
             placeholder="my-database (required)"
             light
           />
-
           <FormSelect
             outerClassName={css.typeSelect}
             className={css.typeSelectInner}
@@ -84,7 +82,6 @@ export default function About() {
             hideSelectedOptions
             light
           />
-
           <ButtonsWithError error={error}>
             <Button type="submit" disabled={!state.name} className={css.button}>
               Next

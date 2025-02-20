@@ -2,9 +2,11 @@ import {
   Button,
   ButtonsWithError,
   FormInput,
-  Tooltip,
+  Popup,
 } from "@dolthub/react-components";
+import { connections as connectionsUrl } from "@lib/urls";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
+import Link from "@components/links/Link";
 import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
@@ -18,6 +20,11 @@ export default function StartDoltServerForm() {
     storedConnections,
     onStartDoltServer,
   } = useConfigContext();
+
+  const { disabled, message } = getStartLocalDoltServerDisabled(
+    state,
+    storedConnections,
+  );
   return (
     <>
       <FormInput
@@ -42,26 +49,31 @@ export default function StartDoltServerForm() {
         light
         labelClassName={css.label}
       />
-      <ButtonsWithError error={error}>
-        <Button
-          type="submit"
-          disabled={
-            getStartLocalDoltServerDisabled(state, storedConnections).disabled
+      <ButtonsWithError error={error} className={css.buttons}>
+        <Popup
+          position="bottom center"
+          on={["hover"]}
+          contentStyle={{
+            fontSize: "0.875rem",
+            width: "fit-content",
+          }}
+          closeOnDocumentClick
+          trigger={
+            <div>
+              <Button
+                type="submit"
+                disabled={disabled}
+                className={css.button}
+                onClick={onStartDoltServer}
+              >
+                Start and Connect to Dolt Server
+              </Button>
+            </div>
           }
-          className={css.button}
-          onClick={onStartDoltServer}
-          data-tooltip-content={
-            getStartLocalDoltServerDisabled(state, storedConnections).message
-          }
-          data-tooltip-id="add-local-dolt-server"
+          disabled={!disabled}
         >
-          Start and Connect to Dolt Server
-        </Button>
-        <Tooltip
-          id="add-local-dolt-server"
-          className={css.tooltip}
-          place="bottom"
-        />
+          {disabled && <div className={css.popup}>{message}</div>}
+        </Popup>
       </ButtonsWithError>
     </>
   );
@@ -69,7 +81,7 @@ export default function StartDoltServerForm() {
 
 type DisabledReturnType = {
   disabled: boolean;
-  message?: string;
+  message?: React.ReactNode;
 };
 
 function getStartLocalDoltServerDisabled(
@@ -84,16 +96,23 @@ function getStartLocalDoltServerDisabled(
     return { disabled };
   }
   if (!state.name) {
-    return { disabled, message: "Connection name is required." };
+    return { disabled, message: <span>Connection name is required.</span> };
   }
   if (!state.port) {
-    return { disabled, message: "Port is required." };
+    return { disabled, message: <span>Port is required.</span> };
   }
   if (connections?.some(connection => connection.isLocalDolt)) {
     return {
       disabled,
-      message:
-        "Already have one internal dolt server instance, remove it before adding a new one.",
+      message: (
+        <div>
+          <p>Already have one internal dolt server instance.</p>
+          <p>
+            Go to <Link {...connectionsUrl}>Connections</Link> and remove it
+            before adding a new one.
+          </p>
+        </div>
+      ),
     };
   }
   return { disabled };
