@@ -51,12 +51,12 @@ export function ConfigProvider({ children }: Props) {
     }
   }, [res.err]);
 
-  useEffect(() => {
+  useEffectOnMount(() => {
     if (!forElectron) return;
     window.ipc.getDoltServerError(async (msg: string) => {
       setErr(Error(msg));
     });
-  }, []);
+  });
 
   const clearState = () => {
     setState(defaultState);
