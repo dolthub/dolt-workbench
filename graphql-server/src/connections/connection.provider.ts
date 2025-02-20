@@ -10,15 +10,21 @@ import { PostgresQueryFactory } from "../queryFactory/postgres";
 import { replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
+  name: string;
+
   hideDoltFeatures: boolean;
 
   connectionUrl: string;
+
+  port?: string;
 
   useSSL: boolean;
 
   type: DatabaseType;
 
   schema?: string; // Postgres only
+
+  isLocalDolt?: boolean;
 }
 
 @Injectable()

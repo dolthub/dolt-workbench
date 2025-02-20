@@ -17,10 +17,12 @@ export const CURRENT_CONNECTION = gql`
     currentConnection {
       connectionUrl
       name
+      port
       hideDoltFeatures
       useSSL
       type
       isDolt
+      isLocalDolt
     }
   }
 `;
@@ -40,5 +42,25 @@ export const DATABASES_BY_CONNECTION = gql`
       useSSL: $useSSL
       type: $type
     )
+  }
+`;
+
+export const DOLT_SERVER_STATUS = gql`
+  query DoltServerStatus(
+    $connectionUrl: String!
+    $name: String!
+    $hideDoltFeatures: Boolean
+    $useSSL: Boolean
+    $type: DatabaseType
+  ) {
+    doltServerStatus(
+      connectionUrl: $connectionUrl
+      name: $name
+      hideDoltFeatures: $hideDoltFeatures
+      useSSL: $useSSL
+      type: $type
+    ) {
+      active
+    }
   }
 `;

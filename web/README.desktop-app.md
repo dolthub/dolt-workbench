@@ -1,3 +1,9 @@
+Prerequisite:
+Download Dolt binaries from the [latest release](https://github.com/dolthub/dolt/releases/latest).
+
+- For macOS, place the dolt binary in web/build/mac.
+- For Windows, place the dolt.exe binary in web/build/appx.
+
 ## Run the desktop app in dev mode:
 
 1. Rebuild `graphql-server` (if changes were made):

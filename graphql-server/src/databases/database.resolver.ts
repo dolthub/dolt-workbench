@@ -28,6 +28,9 @@ class AddDatabaseConnectionArgs {
   name: string;
 
   @Field({ nullable: true })
+  port?: string;
+
+  @Field({ nullable: true })
   hideDoltFeatures?: boolean;
 
   @Field({ nullable: true })
@@ -35,6 +38,9 @@ class AddDatabaseConnectionArgs {
 
   @Field(_type => DatabaseType, { nullable: true })
   type?: DatabaseType;
+
+  @Field({ nullable: true })
+  isLocalDolt?: boolean;
 }
 
 @ObjectType()
@@ -53,6 +59,12 @@ class DoltDatabaseDetails {
 class CurrentDatabaseState {
   @Field({ nullable: true })
   currentDatabase?: string;
+}
+
+@ObjectType()
+class DoltServerStatus {
+  @Field({ nullable: true })
+  active?: boolean;
 }
 
 @ArgsType()
@@ -95,10 +107,12 @@ export class DatabaseResolver {
     return {
       connectionUrl: config.connectionUrl,
       name: connectionName,
+      port: config.port,
       hideDoltFeatures: config.hideDoltFeatures,
       useSSL: config.useSSL,
       type: config.type,
       isDolt,
+      isLocalDolt: config.isLocalDolt,
     };
   }
 
@@ -117,11 +131,36 @@ export class DatabaseResolver {
     return dbs;
   }
 
+  // Checking if the internal dolt server is running
+  @Query(_returns => DoltServerStatus)
+  async doltServerStatus(
+    @Args() args: AddDatabaseConnectionArgs,
+  ): Promise<DoltServerStatus> {
+    // if current connection is the same as the internal dolt server, return true
+    if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
+      return { active: true };
+    }
+    const workbenchConfig = getWorkbenchConfigFromArgs(args);
+    const ds = getDataSource(workbenchConfig);
+
+    try {
+      await ds.initialize();
+      await ds.query("SELECT 1");
+      return { active: true };
+    } catch (error) {
+      console.error("Error checking connection:", error.message);
+      return { active: false };
+    }
+  }
+
   @Query(_returns => [String])
   async databasesByConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string[]> {
-    if (this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl) {
+    if (
+      this.conn.getWorkbenchConfig()?.connectionUrl === args.connectionUrl &&
+      this.conn.getWorkbenchConfig()?.name === args.name
+    ) {
       return this.databases();
     }
     const workbenchConfig = getWorkbenchConfigFromArgs(args);
@@ -169,7 +208,6 @@ export class DatabaseResolver {
 
     const { isDolt } = await this.conn.addConnection(workbenchConfig);
     const storeArgs = { ...workbenchConfig, name: args.name, isDolt };
-
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.addStoredConnection(storeArgs);
     } else {
@@ -219,9 +257,12 @@ function getWorkbenchConfigFromArgs(
 ): WorkbenchConfig {
   const type = args.type ?? DatabaseType.Mysql;
   return {
+    name: args.name,
     connectionUrl: args.connectionUrl,
+    port: args.port,
     hideDoltFeatures: !!args.hideDoltFeatures,
     useSSL: !!args.useSSL,
     type,
+    isLocalDolt: args.isLocalDolt,
   };
 }

@@ -13,6 +13,12 @@ import {
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
+import {
+  getErrorMessage,
+  removeDoltServerFolder,
+  startServer,
+} from "./doltServer";
+import { ChildProcess } from "child_process";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -32,8 +38,9 @@ if (isProd) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
-let serverProcess: UtilityProcess | null;
+let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
+let doltServerProcess: ChildProcess | null;
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -50,16 +57,16 @@ function createGraphqlSeverProcess() {
           "main.js",
         )
       : path.join("../graphql-server", "dist", "main.js");
-  serverProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
+  graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
-  serverProcess?.stdout?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess?.stdout?.on("data", (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
     // Send the Server console.log messages to the main browser window
     mainWindow?.webContents.executeJavaScript(`
         console.info('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
   });
 
-  serverProcess?.stderr?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess?.stderr?.on("data", (chunk: Buffer) => {
     console.error("server error", chunk.toString("utf8"));
     // Send the Server console.error messages out to the main browser window
     mainWindow?.webContents.executeJavaScript(`
@@ -184,9 +191,13 @@ ipcMain.on("update-menu", (_event, databaseName?: string) => {
 });
 
 app.on("before-quit", () => {
-  if (serverProcess) {
-    serverProcess.kill();
-    serverProcess = null;
+  if (graphqlServerProcess) {
+    graphqlServerProcess.kill();
+    graphqlServerProcess = null;
+  }
+  if (doltServerProcess) {
+    doltServerProcess.kill();
+    doltServerProcess = null;
   }
 });
 
@@ -212,4 +223,78 @@ ipcMain.handle("api-config", async () => {
 
 ipcMain.handle("toggle-left-sidebar", () => {
   mainWindow.webContents.send("toggle-left-sidebar");
+});
+
+ipcMain.handle(
+  "start-dolt-server",
+  async (_, connectionName: string, port: string, init?: boolean) => {
+    try {
+      console.log("start-dolt-server", connectionName, port, init);
+      doltServerProcess = await startServer(
+        mainWindow,
+        connectionName,
+        port,
+        init,
+      );
+      if (!doltServerProcess) {
+        throw new Error("Failed to start Dolt server");
+      }
+      return "success";
+    } catch (error) {
+      if (doltServerProcess) {
+        doltServerProcess.kill();
+        doltServerProcess = null;
+      }
+      if (init) {
+        const dbFolderPath = isProd
+          ? path.join(app.getPath("userData"), "databases", connectionName)
+          : path.join(__dirname, "..", "build", "databases", connectionName);
+
+        try {
+          const { errorMsg } = await removeDoltServerFolder(
+            dbFolderPath,
+            mainWindow,
+          );
+          if (errorMsg) {
+            console.error("Cleanup failed:", errorMsg);
+            mainWindow.webContents.send(
+              "server-error",
+              `Cleanup failed: ${errorMsg}`,
+            );
+          }
+        } catch (cleanupError) {
+          console.error("Folder deletion error:", cleanupError);
+          mainWindow.webContents.send(
+            "server-error",
+            `Failed to clean up files: ${getErrorMessage(cleanupError)}`,
+          );
+        }
+      }
+      return new Error(getErrorMessage(error));
+    }
+  },
+);
+
+ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
+  try {
+    // if doltServerProcess is running, kill it
+    if (doltServerProcess) {
+      doltServerProcess.kill("SIGTERM");
+      // Wait for process to exit
+      await new Promise(resolve => {
+        doltServerProcess?.once("exit", resolve);
+      });
+
+      doltServerProcess = null;
+    }
+    // Delete folder with retries
+    const dbFolderPath = isProd
+      ? path.join(app.getPath("userData"), "databases", connectionName)
+      : path.join(__dirname, "..", "build", "databases", connectionName);
+
+    const { errorMsg } = await removeDoltServerFolder(dbFolderPath, mainWindow);
+    if (errorMsg) throw new Error(errorMsg);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
 });

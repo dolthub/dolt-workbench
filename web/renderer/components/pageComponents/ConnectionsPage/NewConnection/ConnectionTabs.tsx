@@ -16,17 +16,23 @@ import { useConfigContext } from "./context/config";
 import { ConfigState } from "./context/state";
 
 export default function ConnectionTabs() {
-  const { setErr } = useConfigContext();
+  const { setErr, state } = useConfigContext();
   const clearErr = () => setErr(undefined);
 
   return (
     <Tabs initialActiveIndex={0} afterSetTabIndex={clearErr}>
       <TabList className={css.tabList}>
-        {["About", "Connection", "Advanced"].map((tab, i) => (
-          <CustomTab key={tab} index={i}>
-            {tab}
-          </CustomTab>
-        ))}
+        {state.isLocalDolt
+          ? [
+              <CustomTab key="About" index={0}>
+                About
+              </CustomTab>,
+            ]
+          : ["About", "Connection", "Advanced"].map((tab, i) => (
+              <CustomTab key={tab} index={i}>
+                {tab}
+              </CustomTab>
+            ))}
       </TabList>
       <CustomTabPanel index={0}>
         <About />

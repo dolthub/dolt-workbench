@@ -1,6 +1,7 @@
 import {
   DatabaseConnectionFragment,
   useAddDatabaseConnectionMutation,
+  useDoltServerStatusQuery,
 } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
 import { maybeDatabase } from "@lib/urls";
@@ -10,6 +11,7 @@ type ReturnType = {
   onAdd: () => Promise<void>;
   err: ApolloErrorType;
   loading: boolean;
+  doltServerIsActive?: boolean;
 };
 
 export default function useAddConnection(
@@ -17,7 +19,9 @@ export default function useAddConnection(
 ): ReturnType {
   const router = useRouter();
   const [addDb, res] = useAddDatabaseConnectionMutation();
-
+  const doltServerStatus = useDoltServerStatusQuery({
+    variables: conn,
+  });
   const onAdd = async () => {
     try {
       const db = await addDb({ variables: conn });
@@ -34,5 +38,10 @@ export default function useAddConnection(
     }
   };
 
-  return { onAdd, err: res.error, loading: res.loading };
+  return {
+    onAdd,
+    err: res.error || doltServerStatus.error,
+    loading: res.loading,
+    doltServerIsActive: !!doltServerStatus.data?.doltServerStatus.active,
+  };
 }

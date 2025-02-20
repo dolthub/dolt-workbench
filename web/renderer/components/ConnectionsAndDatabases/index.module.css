@@ -78,11 +78,20 @@
   @apply text-left;
 }
 
-.label {
+.doltLabels {
+  @apply flex;
+}
+
+.label,
+.local {
   @apply text-sm px-3 h-5 bg-[#EFF2F3] rounded-full flex items-center justify-center ml-4;
   img {
     @apply h-[0.65rem];
   }
+}
+
+.local {
+  @apply text-mint-200 font-bold;
 }
 
 .connectionUrl {

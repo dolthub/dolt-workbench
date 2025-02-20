@@ -10,6 +10,9 @@ export class DatabaseConnection {
   name: string;
 
   @Field({ nullable: true })
+  port?: string;
+
+  @Field({ nullable: true })
   hideDoltFeatures?: boolean;
 
   @Field({ nullable: true })
@@ -20,4 +23,7 @@ export class DatabaseConnection {
 
   @Field({ nullable: true })
   isDolt?: boolean;
+
+  @Field({ nullable: true })
+  isLocalDolt?: boolean;
 }

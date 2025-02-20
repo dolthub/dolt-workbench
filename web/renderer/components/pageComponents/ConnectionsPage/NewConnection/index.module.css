@@ -122,9 +122,17 @@
   @apply mb-8;
 }
 
+.buttons {
+  @apply flex flex-col;
+}
+
 .button {
-  @apply mt-8 min-w-36 py-2 bg-coral-300;
+  @apply mt-8 mr-2 min-w-36 py-2 bg-coral-300;
   &:hover {
     @apply bg-coral-400;
   }
+}
+
+.popup {
+  @apply text-storm-600 py-2 px-4 text-center;
 }

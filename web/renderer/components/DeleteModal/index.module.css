@@ -1,3 +1,7 @@
 .bold {
   @apply font-semibold;
 }
+
+.alert {
+  @apply text-red-400 font-semibold;
+}

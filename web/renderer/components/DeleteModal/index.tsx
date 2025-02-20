@@ -15,10 +15,11 @@ type Props<TData, TVariables> = {
   assetId?: string;
   btnText?: string;
   mutationProps: MutationProps<TData, TVariables>;
-  callback?: (d: TData) => void;
+  callback?: (d: TData) => Error | undefined;
   children?: ReactNode;
   className?: string;
   buttonDataCy?: string;
+  alertMessage?: string;
 };
 
 export default function DeleteModal<TData, TVariables>({
@@ -48,7 +49,13 @@ export default function DeleteModal<TData, TVariables>({
       variables: mutationProps.variables,
     });
     if (!success || !data) return;
-    if (props.callback) props.callback(data);
+    if (props.callback) {
+      const error = props.callback(data);
+      if (error) {
+        setErr(error);
+        return;
+      }
+    }
     onClose();
   };
 
@@ -78,6 +85,7 @@ export default function DeleteModal<TData, TVariables>({
           {props.cannotBeUndone && " This cannot be undone."}
         </p>
       )}
+      {props.alertMessage && <p className={css.alert}>{props.alertMessage}</p>}
       {children}
     </Modal>
   );

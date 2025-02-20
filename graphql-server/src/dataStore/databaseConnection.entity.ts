@@ -10,6 +10,9 @@ export class DatabaseConnectionsEntity {
   connectionUrl: string;
 
   @Column({ nullable: true })
+  port?: string;
+
+  @Column({ nullable: true })
   hideDoltFeatures?: boolean;
 
   @Column()
@@ -20,4 +23,7 @@ export class DatabaseConnectionsEntity {
 
   @Column({ nullable: true })
   schema?: string;
+
+  @Column({ nullable: true })
+  isLocalDolt?: boolean;
 }

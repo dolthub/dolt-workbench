@@ -100,10 +100,12 @@ type CommitList {
 type DatabaseConnection {
   connectionUrl: String!
   name: String!
+  port: String
   hideDoltFeatures: Boolean
   useSSL: Boolean
   type: DatabaseType
   isDolt: Boolean
+  isLocalDolt: Boolean
 }
 
 enum DatabaseType {
@@ -119,6 +121,10 @@ type DoltDatabaseDetails {
 
 type CurrentDatabaseState {
   currentDatabase: String
+}
+
+type DoltServerStatus {
+  active: Boolean
 }
 
 type DiffStat {
@@ -326,7 +332,8 @@ type Query {
   currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
-  databasesByConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): [String!]!
+  doltServerStatus(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): DoltServerStatus!
+  databasesByConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): [String!]!
   schemas(databaseName: String!, refName: String!): [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
@@ -380,7 +387,7 @@ enum DiffRowType {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(connectionUrl: String!, name: String!, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType): CurrentDatabaseState!
+  addDatabaseConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
   createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!

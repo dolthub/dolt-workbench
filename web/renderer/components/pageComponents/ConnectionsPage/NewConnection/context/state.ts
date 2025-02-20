@@ -1,4 +1,4 @@
-import { DatabaseType } from "@gen/graphql-types";
+import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
 import { SetApolloErrorType } from "@lib/errors/types";
 import { Dispatch, SyntheticEvent } from "react";
 
@@ -18,6 +18,7 @@ export const defaultState = {
   showAdvancedSettings: false,
   loading: false,
   type: DatabaseType.Mysql,
+  isLocalDolt: false,
 };
 
 export type ConfigState = typeof defaultState;
@@ -39,4 +40,6 @@ export type ConfigContextType = {
   error?: Error | undefined;
   setErr: SetApolloErrorType;
   clearState: () => void;
+  storedConnections?: DatabaseConnectionFragment[];
+  onStartDoltServer: (e: SyntheticEvent) => Promise<void>;
 };
