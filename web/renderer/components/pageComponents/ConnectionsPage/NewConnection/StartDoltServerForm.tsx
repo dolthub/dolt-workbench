@@ -91,10 +91,9 @@ function getStartLocalDoltServerDisabled(
   const disabled =
     !state.name ||
     !state.port ||
-    !!connections?.some(
-      connection =>
-        connection.isLocalDolt || connections?.some(c => c.name === state.name),
-    );
+    !!connections?.some(connection => connection.isLocalDolt) ||
+    !!connections?.some(c => c.name === state.name);
+
   if (!disabled) {
     return { disabled };
   }
