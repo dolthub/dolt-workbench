@@ -89,7 +89,7 @@ function initializeDoltRepository(
 ): Promise<void> {
   return new Promise((resolve, reject) => {
     exec(
-      `${doltPath} init`,
+      `${doltPath} init --name 'local_user' --email 'user@local.com'`,
       { cwd: dbFolderPath },
       async (error, stdout, stderr) => {
         if (error) {
