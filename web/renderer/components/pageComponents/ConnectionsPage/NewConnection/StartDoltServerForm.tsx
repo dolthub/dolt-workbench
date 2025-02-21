@@ -91,7 +91,10 @@ function getStartLocalDoltServerDisabled(
   const disabled =
     !state.name ||
     !state.port ||
-    !!connections?.some(connection => connection.isLocalDolt);
+    !!connections?.some(
+      connection =>
+        connection.isLocalDolt || connections?.some(c => c.name === state.name),
+    );
   if (!disabled) {
     return { disabled };
   }
@@ -113,6 +116,12 @@ function getStartLocalDoltServerDisabled(
           </p>
         </div>
       ),
+    };
+  }
+  if (connections?.some(c => c.name === state.name)) {
+    return {
+      disabled,
+      message: <span>Connection name already exists.</span>,
     };
   }
   return { disabled };
