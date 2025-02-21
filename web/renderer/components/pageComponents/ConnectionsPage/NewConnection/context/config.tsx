@@ -44,6 +44,7 @@ export function ConfigProvider({ children }: Props) {
 
   useEffect(() => {
     if (!res.err) return;
+    setErr(res.err);
     if (
       res.err.message.includes("The server does not support SSL connections")
     ) {
