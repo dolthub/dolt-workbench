@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { app, BrowserWindow } from "electron";
 import { rimraf } from "rimraf";
-import { ChildProcess, exec, spawn } from "child_process";
+import { ChildProcess, execFile, spawn } from "child_process";
 
 type ErrorReturnType = {
   errorMsg?: string;
@@ -88,8 +88,10 @@ function initializeDoltRepository(
   mainWindow: BrowserWindow,
 ): Promise<void> {
   return new Promise((resolve, reject) => {
-    exec(
-      `${doltPath} init --name 'local_user' --email 'user@local.com'`,
+    // execFile bypasses the shell, handles spaces in doltPath
+    execFile(
+      doltPath,
+      ["init", "--name", "local_user", "--email", "user@local.com"],
       { cwd: dbFolderPath },
       async (error, stdout, stderr) => {
         if (error) {
