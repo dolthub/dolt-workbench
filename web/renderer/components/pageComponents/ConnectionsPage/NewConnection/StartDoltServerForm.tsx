@@ -3,6 +3,7 @@ import {
   ButtonsWithError,
   FormInput,
   Popup,
+  SmallLoader,
 } from "@dolthub/react-components";
 import { connections as connectionsUrl } from "@lib/urls";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
@@ -67,6 +68,10 @@ export default function StartDoltServerForm() {
                 onClick={onStartDoltServer}
               >
                 Start and Connect to Dolt Server
+                <SmallLoader
+                  loaded={!state.loading}
+                  options={{ top: "1.5rem", left: "49%" }}
+                />
               </Button>
             </div>
           }
