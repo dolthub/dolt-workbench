@@ -46,7 +46,7 @@ export default function StartDoltServerForm() {
           setState({ port: p });
           setErr(undefined);
         }}
-        placeholder="e.g. 1234 (required)"
+        placeholder="e.g. 3658 (required)"
         light
         labelClassName={css.label}
       />
