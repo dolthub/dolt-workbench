@@ -36,7 +36,7 @@ export default function StartDoltServerForm() {
         }}
         label="Name"
         labelClassName={css.label}
-        placeholder="my-database (required)"
+        placeholder="e.g. my-database (required)"
         light
       />
       <FormInput
@@ -46,7 +46,7 @@ export default function StartDoltServerForm() {
           setState({ port: p });
           setErr(undefined);
         }}
-        placeholder="Enter port number"
+        placeholder="e.g. 3658 (required)"
         light
         labelClassName={css.label}
       />
