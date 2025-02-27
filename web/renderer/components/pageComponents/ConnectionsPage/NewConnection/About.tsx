@@ -31,7 +31,7 @@ export default function About() {
           onChange={e => {
             setState({
               useSSL: startDoltServer,
-              port: e.target.checked ? "1234" : state.port,
+              port: e.target.checked ? "3658" : state.port,
               isLocalDolt: !startDoltServer,
             });
             setStartDoltServer(!startDoltServer);
