@@ -9,10 +9,10 @@ import {
 import { ColumnStatus } from "@lib/tableTypes";
 import cx from "classnames";
 import { useState } from "react";
+import AddRowButton from "@components/CellButtons/AddRowButton";
 import Cell from "./Cell";
 import css from "./index.module.css";
 import { getDiffTypeClassnameForRow } from "./utils";
-import AddRowButton from "@components/CellButtons/AddRowButton";
 
 type Props = {
   row: RowForDataTableFragment;
@@ -42,7 +42,7 @@ export default function Row(props: Props) {
           >
             <HideRowButton {...props} />
             <DeleteRowButton {...props} />
-            <AddRowButton {...props} />
+            <AddRowButton />
             <CopyRowButton {...props} />
           </CellDropdown>
         )}

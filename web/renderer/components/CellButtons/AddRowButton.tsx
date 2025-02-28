@@ -1,29 +1,22 @@
-import { useSqlEditorContext } from "@contexts/sqleditor";
-import css from "./index.module.css";
 import { useDataTableContext } from "@contexts/dataTable";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
-import { toPKColsMapQueryCols } from "./utils";
-import {
-  ColumnForDataTableFragment,
-  RowForDataTableFragment,
-} from "@gen/graphql-types";
+import { useSqlSelectForSqlDataTableLazyQuery } from "@gen/graphql-types";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button } from "@dolthub/react-components";
-import { ColumnValue } from "@hooks/useSqlBuilder/util";
 import { randomNum } from "@dolthub/web-utils";
+import { table } from "@lib/urls";
+import { useRouter } from "next/router";
+import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
+import css from "./index.module.css";
 
-type Props = {
-  row: RowForDataTableFragment;
-  columns: ColumnForDataTableFragment[];
-  refName?: string;
-};
-
-export default function AddRowButton(props: Props) {
-  const { executeQuery, setEditorString } = useSqlEditorContext();
+export default function AddRowButton() {
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
   const { insertIntoTable } = useSqlBuilder();
+
+  const [insertRow] = useSqlSelectForSqlDataTableLazyQuery();
+  const router = useRouter();
 
   if (!tableName || isUneditableDoltSystemTable(tableName)) return null;
 
@@ -38,12 +31,20 @@ export default function AddRowButton(props: Props) {
         };
       }) ?? [],
     );
-    setEditorString(query);
-    await executeQuery({
-      ...params,
-      refName: props.refName ?? params.refName,
-      query,
+    const res = await insertRow({
+      variables: {
+        databaseName: params.databaseName,
+        refName: params.refName,
+        queryString: query,
+        schemaName: params.schemaName,
+      },
+      fetchPolicy: "no-cache",
     });
+    await res.client
+      .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
+      .catch(console.error);
+    const { href, as } = table({ ...params, tableName });
+    router.push(href, as).catch(console.error);
   };
 
   return (
