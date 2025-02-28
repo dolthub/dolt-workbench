@@ -27,7 +27,7 @@ export default function AddRowButton() {
     const emptyRow = generateEmptyRow(columns);
     const query = insertIntoTable(
       tableName,
-      columns?.map(c => c.name) ?? [],
+      columns.map(c => c.name),
       emptyRow,
     );
     const res = await insertRow({
