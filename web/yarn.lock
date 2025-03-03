@@ -7939,9 +7939,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commit-graph@npm:^2.3.8":
-  version: 2.3.8
-  resolution: "commit-graph@npm:2.3.8"
+"commit-graph@npm:^2.3.9":
+  version: 2.3.9
+  resolution: "commit-graph@npm:2.3.9"
   dependencies:
     "@dolthub/react-components": "npm:^0.2.7"
     "@dolthub/react-hooks": "npm:^0.1.7"
@@ -7958,7 +7958,7 @@ __metadata:
   peerDependencies:
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-  checksum: 10c0/4b4ddb134a0fd36e8b0b3743ed5e0a2a377d471c7c7df4ebaabf3fb5fb1280290d0a573e03e81ff65c6edb524db2ea00aef9479d0c5fb831c343bcc257cfc73d
+  checksum: 10c0/1e737b204ca88e5290f0d2f8b86cbd4145b03a27ce02f4acd52cfa77b09983fafeac32d058cec4901292c135adceabbfc0e324da781c085f50e85764a51dca1e
   languageName: node
   linkType: hard
 
@@ -8996,7 +8996,7 @@ __metadata:
     babel-jest: "npm:^29.7.0"
     chance: "npm:^1.1.11"
     classnames: "npm:^2.3.2"
-    commit-graph: "npm:^2.3.8"
+    commit-graph: "npm:^2.3.9"
     cssnano: "npm:^7.0.6"
     diff: "npm:^5.1.0"
     electron: "npm:^34.0.1"
