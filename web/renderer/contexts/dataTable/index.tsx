@@ -3,6 +3,7 @@ import { useContextWithError } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
+  ColumnValue,
   ForeignKeysForDataTableFragment,
   RowForDataTableFragment,
   RowsForDataTableQuery,
@@ -34,6 +35,9 @@ type DataTableContextType = {
   error?: ApolloError;
   showingWorkingDiff: boolean;
   tableNames: string[];
+  onAddRow?: () => void;
+  pendingRow?: RowForDataTableFragment[];
+  setPendingRow?: (r: RowForDataTableFragment[]) => void;
 };
 
 export const DataTableContext =
@@ -61,6 +65,7 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const [rows, setRows] = useState(rowRes.data?.rows.list);
+  const [pendingRow, setPendingRow] = useState<RowForDataTableFragment[]>([]);
   const [offset, setOffset] = useState(rowRes.data?.rows.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
 
@@ -90,6 +95,11 @@ function ProviderForTableName(props: TableProps) {
     setOffset(newOffset);
   }, [offset, props.params, rowRes.client, rows]);
 
+  const onAddRow = () => {
+    const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
+    setPendingRow([emptyRow]);
+  };
+
   const value = useMemo(() => {
     return {
       params: props.params,
@@ -102,6 +112,8 @@ function ProviderForTableName(props: TableProps) {
       error: tableRes.error ?? rowRes.error,
       showingWorkingDiff: !!props.showingWorkingDiff,
       tableNames: props.tableNames,
+      onAddRow,
+      pendingRow,
     };
   }, [
     loadMore,
@@ -117,6 +129,9 @@ function ProviderForTableName(props: TableProps) {
     tableRes.loading,
     props.showingWorkingDiff,
     props.tableNames,
+    onAddRow,
+    pendingRow,
+    setPendingRow,
   ]);
 
   return (
@@ -173,4 +188,46 @@ export function DataTableProvider({
 
 export function useDataTableContext(): DataTableContextType {
   return useContextWithError(DataTableContext);
+}
+
+function generateEmptyRow(
+  columns: ColumnForDataTableFragment[],
+): RowForDataTableFragment {
+  const emptyRow = columns.map(column => {
+    const isNotNull =
+      column.constraints?.some(constraint => constraint.notNull) || false;
+
+    let value: string;
+    if (isNotNull) {
+      switch (column.type.toLowerCase()) {
+        case "int":
+        case "integer":
+        case "bigint":
+          value = "0"; // Default integer value
+          break;
+        case "varchar":
+        case "char":
+        case "text":
+        case "string":
+          value = ""; // Empty string
+          break;
+        case "datetime":
+        case "timestamp":
+          value = new Date().toISOString(); // Current timestamp
+          break;
+        case "boolean":
+          value = "false";
+          break;
+        default:
+          value = "";
+          break;
+      }
+    } else {
+      value = "";
+    }
+
+    return { __typename: "ColumnValue", displayValue: value } as ColumnValue;
+  });
+
+  return { __typename: "Row", columnValues: emptyRow };
 }

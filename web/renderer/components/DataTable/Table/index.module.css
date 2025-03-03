@@ -39,7 +39,7 @@
 
   th,
   td {
-    @apply border-b border-stone-100 relative pr-10 pl-6 lg:pl-2;
+    @apply h-6 border-b border-stone-100 relative pr-10 pl-8 lg:pl-2;
 
     &:first-of-type {
       @apply pl-0 pr-1 border-none bg-white min-w-0;
@@ -195,4 +195,23 @@
   tbody {
     @apply whitespace-pre;
   }
+}
+
+.editButtons {
+  @apply absolute top-1;
+
+  button:not(:last-child) {
+    @apply mr-0.5;
+  }
+
+  button:last-child {
+    @apply text-red-400;
+  }
+}
+.right {
+  @apply right-1;
+}
+
+.altRight {
+  @apply right-px;
 }

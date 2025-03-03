@@ -10,6 +10,7 @@ import {
 } from "@gen/graphql-types";
 import { ColumnStatus } from "@lib/tableTypes";
 import Row from "./Row";
+import PendingRow from "./PendingRow";
 
 type Props = {
   rows: RowForDataTableFragment[];
@@ -19,17 +20,20 @@ type Props = {
 };
 
 export default function Body(props: Props) {
-  const { columns } = useDataTableContext();
+  const { columns, pendingRow } = useDataTableContext();
   const showRowDropdown =
     !isKeyless(columns) && queryShowingPKs(props.columns, columns);
   const cols = getTableColsFromQueryCols(props.columns, columns);
-
+  console.log("pendingRow", pendingRow);
   return (
     <tbody
       data-cy={`${
         props.isMobile ? "mobile-" : "desktop-"
       }db-data-table-table-body`}
     >
+      {pendingRow && (
+        <PendingRow {...props} columns={cols} row={pendingRow[0]} />
+      )}
       {props.rows.map((r, ridx) => (
         // eslint-disable-next-line react/jsx-key
         <Row

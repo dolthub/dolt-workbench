@@ -9,7 +9,6 @@ import {
 import { ColumnStatus } from "@lib/tableTypes";
 import cx from "classnames";
 import { useState } from "react";
-import AddRowButton from "@components/CellButtons/AddRowButton";
 import Cell from "./Cell";
 import css from "./index.module.css";
 import { getDiffTypeClassnameForRow } from "./utils";
@@ -42,7 +41,6 @@ export default function Row(props: Props) {
           >
             <HideRowButton {...props} />
             <DeleteRowButton {...props} />
-            <AddRowButton />
             <CopyRowButton {...props} />
           </CellDropdown>
         )}

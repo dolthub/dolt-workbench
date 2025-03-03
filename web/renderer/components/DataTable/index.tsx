@@ -84,7 +84,7 @@ export default function DataTable(props: { params: DataTableParams }) {
   };
   return (
     <>
-      <DataTableLayout params={params}>
+      <DataTableLayout params={params} tableName={props.params.tableName}>
         <WithContext params={{ ...props.params, q: params.q }} />
       </DataTableLayout>
       <AddRowsButton {...props} />
