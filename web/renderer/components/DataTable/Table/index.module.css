@@ -223,3 +223,7 @@
 .submitButton {
   @apply text-green-400;
 }
+
+.tooltip {
+  @apply z-10;
+}
