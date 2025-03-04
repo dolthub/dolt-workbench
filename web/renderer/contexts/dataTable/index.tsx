@@ -70,7 +70,7 @@ function ProviderForTableName(props: TableProps) {
   >(undefined);
   const [offset, setOffset] = useState(rowRes.data?.rows.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
-  console.log("pendingRow", pendingRow);
+
   useEffect(() => {
     setRows(rowRes.data?.rows.list);
     setOffset(rowRes.data?.rows.nextOffset);

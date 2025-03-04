@@ -78,7 +78,6 @@ export default function DatabaseOptionsDropdown({
               </DropdownItem>
             )}
             {props.params &&
-              onAddRow &&
               props.tableName &&
               !isUneditableDoltSystemTable(props.tableName) && (
                 <HideForNoWritesWrapper params={props.params}>
