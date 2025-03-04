@@ -6,6 +6,7 @@ import {
 import { useDataTableContext } from "@contexts/dataTable";
 import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import useSqlBuilder from "@hooks/useSqlBuilder";
+import { Tooltip } from "@dolthub/react-components";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import PendingCell from "./PendingCell";
 import css from "./index.module.css";
@@ -44,9 +45,23 @@ export default function PendingRow(props: Props) {
 
   return (
     <tr className={css.row}>
-      <td className={css.buttons}>
-        <AiOutlineCheck className={css.save} onClick={onSave} />
-        <IoMdClose className={css.deleteRow} onClick={onDelete} />
+      <td>
+        <div className={css.buttons}>
+          <AiOutlineCheck
+            className={css.save}
+            onClick={onSave}
+            data-tooltip-content="Submit changes"
+            data-tooltip-id="submit-changes"
+          />
+          <IoMdClose
+            className={css.deleteRow}
+            onClick={onDelete}
+            data-tooltip-content="Remove row"
+            data-tooltip-id="remove-row"
+          />
+          <Tooltip id="submit-changes" className={css.tooltip} place="right" />
+          <Tooltip id="remove-row" className={css.tooltip} place="right" />
+        </div>
       </td>
       {props.row.columnValues.map((c, cidx) => (
         // eslint-disable-next-line react/jsx-key

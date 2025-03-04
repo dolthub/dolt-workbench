@@ -17,3 +17,7 @@
 .optionsButton {
   @apply mt-2;
 }
+
+.addRowButton {
+  @apply text-sm px-4 mt-2 mr-3 w-24;
+}

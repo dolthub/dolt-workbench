@@ -8,10 +8,6 @@ import { CgCompress } from "@react-icons//all-files/cg/CgCompress";
 import { RiFileDownloadLine } from "@react-icons/all-files/ri/RiFileDownloadLine";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
-import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
-import { useDataTableContext } from "@contexts/dataTable";
-import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import css from "./index.module.css";
 import CsvModal from "./CsvModal";
 
@@ -31,7 +27,6 @@ export default function DatabaseOptionsDropdown({
   const { isMutation } = useSqlParser();
   const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const { onAddRow } = useDataTableContext();
 
   useEffectOnMount(() => {
     document.addEventListener("wheel", fakeEscapePress);
@@ -77,22 +72,6 @@ export default function DatabaseOptionsDropdown({
                 </>
               </DropdownItem>
             )}
-            {props.params &&
-              props.tableName &&
-              !isUneditableDoltSystemTable(props.tableName) && (
-                <HideForNoWritesWrapper params={props.params}>
-                  <DropdownItem
-                    data-cy="toggle-trim-button"
-                    onClick={() => {
-                      onAddRow();
-                      fakeEscapePress();
-                    }}
-                    icon={<AiOutlinePlus />}
-                  >
-                    Add one row
-                  </DropdownItem>
-                </HideForNoWritesWrapper>
-              )}
             {props.params && (
               <DropdownItem
                 data-cy="open-download-csv-modal-button"
