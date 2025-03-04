@@ -99,6 +99,9 @@
 
 .cell {
   @apply align-top min-w-[130px] max-w-[400px];
+  span {
+    @apply w-full inline-block;
+  }
 }
 
 .longContent {
@@ -203,15 +206,32 @@
   button:not(:last-child) {
     @apply mr-0.5;
   }
-
-  button:last-child {
-    @apply text-red-400;
-  }
 }
+
+.cancelButton {
+  @apply text-red-400;
+}
+
 .right {
   @apply right-1;
 }
 
 .altRight {
   @apply right-px;
+}
+
+.buttons {
+  @apply flex items-center h-full justify-center;
+  svg {
+    @apply cursor-pointer mx-1;
+  }
+}
+
+.deleteRow {
+  @apply text-red-400;
+}
+
+.save,
+.submitButton {
+  @apply text-green-400;
 }

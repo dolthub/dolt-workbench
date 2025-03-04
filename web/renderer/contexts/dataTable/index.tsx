@@ -35,9 +35,9 @@ type DataTableContextType = {
   error?: ApolloError;
   showingWorkingDiff: boolean;
   tableNames: string[];
-  onAddRow?: () => void;
-  pendingRow?: RowForDataTableFragment[];
-  setPendingRow?: (r: RowForDataTableFragment[]) => void;
+  onAddRow: () => void;
+  pendingRow?: RowForDataTableFragment;
+  setPendingRow: (r: RowForDataTableFragment | undefined) => void;
 };
 
 export const DataTableContext =
@@ -65,10 +65,12 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const [rows, setRows] = useState(rowRes.data?.rows.list);
-  const [pendingRow, setPendingRow] = useState<RowForDataTableFragment[]>([]);
+  const [pendingRow, setPendingRow] = useState<
+    RowForDataTableFragment | undefined
+  >(undefined);
   const [offset, setOffset] = useState(rowRes.data?.rows.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
-
+  console.log("pendingRow", pendingRow);
   useEffect(() => {
     setRows(rowRes.data?.rows.list);
     setOffset(rowRes.data?.rows.nextOffset);
@@ -97,7 +99,7 @@ function ProviderForTableName(props: TableProps) {
 
   const onAddRow = () => {
     const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
-    setPendingRow([emptyRow]);
+    setPendingRow(emptyRow);
   };
 
   const value = useMemo(() => {
@@ -114,6 +116,7 @@ function ProviderForTableName(props: TableProps) {
       tableNames: props.tableNames,
       onAddRow,
       pendingRow,
+      setPendingRow,
     };
   }, [
     loadMore,
@@ -164,6 +167,9 @@ export function DataTableProvider({
       hasMore: false,
       showingWorkingDiff: !!showingWorkingDiff,
       tableNames,
+      onAddRow: () => {},
+      pendingRow: undefined,
+      setPendingRow: () => {},
     };
   }, [params, showingWorkingDiff, tableNames]);
 

@@ -99,7 +99,11 @@ export default function EditCellInput(props: Props) {
           <Btn type="submit" title="submit">
             <AiOutlineCheck />
           </Btn>
-          <Btn onClick={props.cancelEditing} title="cancel">
+          <Btn
+            onClick={props.cancelEditing}
+            title="cancel"
+            className={css.cancelButton}
+          >
             <AiOutlineClose />
           </Btn>
         </div>

@@ -3,23 +3,21 @@ import { Btn } from "@dolthub/react-components";
 import { isNullValue } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { getBitDisplayValue } from "@lib/dataTable";
-import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import { BiText } from "@react-icons/all-files/bi/BiText";
 import { VscCircleSlash } from "@react-icons/all-files/vsc/VscCircleSlash";
 import Input from "@components/EditCellInput/Input";
-import cx from "classnames";
 import { HTMLInputTypeAttribute, useState } from "react";
 import css from "./index.module.css";
 
 type Props = {
   value: string;
   currentCol: ColumnForDataTableFragment;
-  cancelEditing: () => void;
   largerMarginRight?: boolean;
+  cidx: number;
 };
 
 export default function EditPendingCell(props: Props) {
-  const { params } = useDataTableContext();
+  const { params, pendingRow, setPendingRow } = useDataTableContext();
   const { tableName } = params;
 
   const isNull = isNullValue(props.value);
@@ -30,40 +28,42 @@ export default function EditPendingCell(props: Props) {
 
   if (!tableName) return null;
 
+  const onEdit = (value: string) => {
+    setNewValue(value);
+    const newRColumnValues = pendingRow?.columnValues.map((c, cidx) => {
+      if (cidx === props.cidx) {
+        return {
+          ...c,
+          displayValue: value,
+        };
+      }
+      return c;
+    });
+    setPendingRow({ __typename: "Row", columnValues: newRColumnValues || [] });
+  };
+
   return (
     <>
       <Input
         isNull={isNull}
         newValue={newValue}
-        setNewValue={setNewValue}
+        setNewValue={onEdit}
         currColType={props.currentCol.type}
         showTextarea={showTextarea}
         inputType={inputType}
         largerMarginRight={props.largerMarginRight}
       />
-
-      <div
-        className={cx(css.editButtons, {
-          [css.right]: !(props.largerMarginRight && inputType !== "textarea"),
-          [css.altRight]: props.largerMarginRight && inputType !== "textarea",
-        })}
-      >
-        {inputType !== "textarea" && (
-          <Btn
-            onClick={() => setShowTextarea(!showTextarea)}
-            className={css.textButton}
-          >
-            <span>
-              <BiText />
-              {showTextarea && <VscCircleSlash className={css.noTextIcon} />}
-            </span>
-          </Btn>
-        )}
-
-        <Btn onClick={props.cancelEditing} title="cancel">
-          <AiOutlineCheck />
+      {inputType !== "textarea" && (
+        <Btn
+          onClick={() => setShowTextarea(!showTextarea)}
+          className={css.textButton}
+        >
+          <span>
+            <BiText />
+            {showTextarea && <VscCircleSlash className={css.noTextIcon} />}
+          </span>
         </Btn>
-      </div>
+      )}
     </>
   );
 }
