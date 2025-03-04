@@ -31,7 +31,7 @@ export default function Body(props: Props) {
         props.isMobile ? "mobile-" : "desktop-"
       }db-data-table-table-body`}
     >
-      {pendingRow && (
+      {!!pendingRow?.length && (
         <PendingRow {...props} columns={cols} row={pendingRow[0]} />
       )}
       {props.rows.map((r, ridx) => (

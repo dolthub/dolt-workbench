@@ -17,6 +17,7 @@ type Props = {
 };
 
 export default function PendingRow(props: Props) {
+  console.log(props.row);
   const [showDropdown, setShowDropdown] = useState(false);
   return (
     <tr className={css.row}>
