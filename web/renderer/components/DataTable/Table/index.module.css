@@ -200,18 +200,6 @@
   }
 }
 
-.editButtons {
-  @apply absolute top-1;
-
-  button:not(:last-child) {
-    @apply mr-0.5;
-  }
-}
-
-.cancelButton {
-  @apply text-red-400;
-}
-
 .right {
   @apply right-1;
 }

@@ -14,7 +14,6 @@ type Props = {
 export default function Head(props: Props) {
   const { columns } = useDataTableContext();
   const cols = getTableColsFromQueryCols(props.columns, columns);
-
   return (
     <thead>
       <tr

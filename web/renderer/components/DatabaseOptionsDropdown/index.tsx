@@ -8,8 +8,8 @@ import { CgCompress } from "@react-icons//all-files/cg/CgCompress";
 import { RiFileDownloadLine } from "@react-icons/all-files/ri/RiFileDownloadLine";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
-import css from "./index.module.css";
 import CsvModal from "./CsvModal";
+import css from "./index.module.css";
 
 type Props = {
   onClickHideUnchangedCol?: () => void;
@@ -17,7 +17,6 @@ type Props = {
   children?: JSX.Element | null;
   className?: string;
   params?: SqlQueryParams;
-  tableName?: string;
 };
 
 export default function DatabaseOptionsDropdown({

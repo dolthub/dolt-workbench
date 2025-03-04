@@ -41,6 +41,7 @@ export default function PendingRow(props: Props) {
       }) || [],
     );
     await executeQuery({ ...params, query });
+    setPendingRow(undefined);
   };
 
   return (

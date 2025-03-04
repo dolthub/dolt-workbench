@@ -40,7 +40,7 @@ export default function useCellDisplayValue(
   return { displayCellVal, setDisplayCellVal, cellStatus, setCellStatus };
 }
 
-export function getCellValue(
+function getCellValue(
   value: string,
   currCol: ColumnForDataTableFragment,
   cellStatusAction?: CellStatusActionType,

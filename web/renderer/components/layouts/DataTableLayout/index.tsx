@@ -39,7 +39,6 @@ export default function DataTableLayout(props: Props) {
         <DatabaseOptionsDropdown
           className={css.optionsButton}
           params={props.params}
-          tableName={props.tableName}
         />
       </div>
     </div>
