@@ -1,8 +1,11 @@
 import { useDataTableContext } from "@contexts/dataTable";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
+import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { ColumnStatus, SetColumnStatus } from "@lib/tableTypes";
 import { getTableColsFromQueryCols } from "@components/CellButtons/utils";
+import { Btn } from "@dolthub/react-components";
 import HeadCell from "./HeadCell";
+import css from "./index.module.css";
 
 type Props = {
   columns: ColumnForDataTableFragment[];
@@ -12,7 +15,7 @@ type Props = {
 };
 
 export default function Head(props: Props) {
-  const { columns } = useDataTableContext();
+  const { columns, onAddRow, pendingRow } = useDataTableContext();
   const cols = getTableColsFromQueryCols(props.columns, columns);
   return (
     <thead>
@@ -21,7 +24,17 @@ export default function Head(props: Props) {
           props.isMobile ? "mobile-" : "desktop-"
         }db-data-table-columns`}
       >
-        <th />
+        <th>
+          <Btn
+            onClick={() => {
+              onAddRow();
+            }}
+            disabled={!!pendingRow?.columnValues.length}
+            className={css.addRowBtn}
+          >
+            <AiOutlinePlusCircle />
+          </Btn>
+        </th>
         {cols.map((c, i) => (
           <HeadCell {...props} key={c.name} col={c} idx={i} />
         ))}

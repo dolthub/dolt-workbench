@@ -208,22 +208,29 @@
   @apply right-px;
 }
 
+.pendingRow {
+  @apply h-full;
+}
+
 .buttons {
-  @apply flex items-center h-full justify-center;
-  svg {
-    @apply cursor-pointer mx-1;
-  }
+  @apply h-full  border-none;
 }
 
-.deleteRow {
-  @apply text-red-400;
+.buttonGroup {
+  @apply flex items-start flex-col;
 }
 
-.save,
-.submitButton {
+.save {
   @apply text-green-400;
 }
 
 .tooltip {
   @apply z-10;
+}
+
+.addRowBtn {
+  @apply flex mx-2;
+  svg {
+    @apply w-5 h-5;
+  }
 }

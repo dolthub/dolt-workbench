@@ -1,13 +1,12 @@
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { useDataTableContext } from "@contexts/dataTable";
-import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
 import useSqlBuilder from "@hooks/useSqlBuilder";
-import { Tooltip } from "@dolthub/react-components";
+import { Button } from "@dolthub/react-components";
 import { useSqlEditorContext } from "@contexts/sqleditor";
+import cx from "classnames";
 import PendingCell from "./PendingCell";
 import css from "./index.module.css";
 
@@ -45,23 +44,22 @@ export default function PendingRow(props: Props) {
   };
 
   return (
-    <tr className={css.row}>
-      <td>
-        <div className={css.buttons}>
-          <AiOutlineCheck
-            className={css.save}
-            onClick={onSave}
-            data-tooltip-content="Submit changes"
-            data-tooltip-id="submit-changes"
-          />
-          <IoMdClose className={css.deleteRow} onClick={onDelete} />
-          <Tooltip id="submit-changes" className={css.tooltip} place="right" />
-        </div>
-      </td>
+    <tr className={cx(css.row, css.pendingRow)}>
+      <td />
       {props.row.columnValues.map((c, cidx) => (
         // eslint-disable-next-line react/jsx-key
         <PendingCell {...props} cell={c} cidx={cidx} />
       ))}
+      <td className={css.buttons}>
+        <Button.Group className={css.buttonGroup}>
+          <Button.Link onClick={onSave} className={css.save}>
+            submit
+          </Button.Link>
+          <Button.Link onClick={onDelete} red>
+            cancel
+          </Button.Link>
+        </Button.Group>
+      </td>
     </tr>
   );
 }

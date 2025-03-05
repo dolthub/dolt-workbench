@@ -8,8 +8,12 @@ import { CgCompress } from "@react-icons//all-files/cg/CgCompress";
 import { RiFileDownloadLine } from "@react-icons/all-files/ri/RiFileDownloadLine";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
-import CsvModal from "./CsvModal";
+import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
+import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { useDataTableContext } from "@contexts/dataTable";
+import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import css from "./index.module.css";
+import CsvModal from "./CsvModal";
 
 type Props = {
   onClickHideUnchangedCol?: () => void;
@@ -17,6 +21,7 @@ type Props = {
   children?: JSX.Element | null;
   className?: string;
   params?: SqlQueryParams;
+  tableName?: string;
 };
 
 export default function DatabaseOptionsDropdown({
@@ -26,6 +31,7 @@ export default function DatabaseOptionsDropdown({
   const { isMutation } = useSqlParser();
   const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
+  const { onAddRow, pendingRow } = useDataTableContext();
 
   useEffectOnMount(() => {
     document.addEventListener("wheel", fakeEscapePress);
@@ -71,6 +77,23 @@ export default function DatabaseOptionsDropdown({
                 </>
               </DropdownItem>
             )}
+            {props.params &&
+              props.tableName &&
+              !isUneditableDoltSystemTable(props.tableName) && (
+                <HideForNoWritesWrapper params={props.params}>
+                  <DropdownItem
+                    data-cy="toggle-trim-button"
+                    onClick={() => {
+                      onAddRow();
+                      fakeEscapePress();
+                    }}
+                    icon={<AiOutlinePlus />}
+                    disabled={!!pendingRow?.columnValues.length}
+                  >
+                    Add a row
+                  </DropdownItem>
+                </HideForNoWritesWrapper>
+              )}
             {props.params && (
               <DropdownItem
                 data-cy="open-download-csv-modal-button"
@@ -103,6 +126,7 @@ type ItemProps = {
   icon: ReactNode;
   onClick?: () => void;
   ["data-cy"]?: string;
+  disabled?: boolean;
 };
 
 export function DropdownItem(props: ItemProps) {
@@ -112,6 +136,7 @@ export function DropdownItem(props: ItemProps) {
         onClick={props.onClick}
         className={css.optionButton}
         data-cy={props["data-cy"]}
+        disabled={props.disabled}
       >
         <span>{props.icon}</span>
         {props.children}
