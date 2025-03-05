@@ -209,17 +209,17 @@ function generateEmptyRow(
         case "int":
         case "integer":
         case "bigint":
-          value = "0"; // Default integer value
+          value = "0"; 
           break;
         case "varchar":
         case "char":
         case "text":
         case "string":
-          value = ""; // Empty string
+          value = "";  
           break;
         case "datetime":
         case "timestamp":
-          value = new Date().toISOString(); // Current timestamp
+          value = new Date().toISOString();  
           break;
         case "boolean":
           value = "false";
