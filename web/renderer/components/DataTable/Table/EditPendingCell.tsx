@@ -2,11 +2,11 @@ import { useDataTableContext } from "@contexts/dataTable";
 import { Btn } from "@dolthub/react-components";
 import { isNullValue } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { getBitDisplayValue } from "@lib/dataTable";
 import { BiText } from "@react-icons/all-files/bi/BiText";
 import { VscCircleSlash } from "@react-icons/all-files/vsc/VscCircleSlash";
 import Input from "@components/EditCellInput/Input";
-import { HTMLInputTypeAttribute, useState } from "react";
+import { getDefaultVal, getInputType } from "@components/EditCellInput";
+import { useState } from "react";
 import css from "./index.module.css";
 
 type Props = {
@@ -66,29 +66,4 @@ export default function EditPendingCell(props: Props) {
       )}
     </>
   );
-}
-
-function getInputType(type: string): HTMLInputTypeAttribute {
-  const lower = type.toLowerCase();
-  if (lower.includes("int") || lower === "year") return "number";
-  if (lower === "datetime" || lower === "timestamp") return "datetime";
-  if (lower === "date") return "date";
-  if (lower.includes("time")) return "time";
-  if (
-    lower.includes("text") ||
-    lower.includes("char") ||
-    lower.includes("blob")
-  ) {
-    return "textarea";
-  }
-  if (lower.includes("enum")) return "dropdown";
-  if (lower.includes("json")) return "json";
-  if (lower.includes("bit(1)")) return "bit(1)";
-  return "text";
-}
-
-function getDefaultVal(value: string, inputType: string): string {
-  if (isNullValue(value)) return "";
-  if (inputType === "bit(1)") return getBitDisplayValue(value);
-  return value;
 }

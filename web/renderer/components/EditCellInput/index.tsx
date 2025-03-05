@@ -108,7 +108,7 @@ export default function EditCellInput(props: Props) {
   );
 }
 
-function getInputType(type: string): HTMLInputTypeAttribute {
+export function getInputType(type: string): HTMLInputTypeAttribute {
   const lower = type.toLowerCase();
   if (lower.includes("int") || lower === "year") return "number";
   if (lower === "datetime" || lower === "timestamp") return "datetime";
@@ -127,7 +127,7 @@ function getInputType(type: string): HTMLInputTypeAttribute {
   return "text";
 }
 
-function getDefaultVal(value: string, inputType: string): string {
+export function getDefaultVal(value: string, inputType: string): string {
   if (isNullValue(value)) return "";
   if (inputType === "bit(1)") return getBitDisplayValue(value);
   return value;
