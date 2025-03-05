@@ -54,14 +54,8 @@ export default function PendingRow(props: Props) {
             data-tooltip-content="Submit changes"
             data-tooltip-id="submit-changes"
           />
-          <IoMdClose
-            className={css.deleteRow}
-            onClick={onDelete}
-            data-tooltip-content="Remove row"
-            data-tooltip-id="remove-row"
-          />
+          <IoMdClose className={css.deleteRow} onClick={onDelete} />
           <Tooltip id="submit-changes" className={css.tooltip} place="right" />
-          <Tooltip id="remove-row" className={css.tooltip} place="right" />
         </div>
       </td>
       {props.row.columnValues.map((c, cidx) => (
