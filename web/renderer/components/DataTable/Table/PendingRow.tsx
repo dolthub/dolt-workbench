@@ -47,18 +47,17 @@ export default function PendingRow(props: Props) {
   return (
     <tr className={cx(css.row, css.pendingRow)}>
       <td className={css.buttons}>
-        <div>
-          <IoMdClose className={css.deleteRow} onClick={onDelete} />
-        </div>
+        <IoMdClose className={css.deleteRow} onClick={onDelete} />
       </td>
       {props.row.columnValues.map((c, cidx) => (
         // eslint-disable-next-line react/jsx-key
         <PendingCell {...props} cell={c} cidx={cidx} />
       ))}
       <td className={css.buttons}>
-        <Button.Link onClick={onSave} className={css.save}>
+        <Button onClick={onSave} size="small" className={css.submitButton}>
           submit
-        </Button.Link>
+        </Button>
+        <IoMdClose className={css.deleteRow} onClick={onDelete} />
       </td>
     </tr>
   );

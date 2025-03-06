@@ -213,11 +213,7 @@
 }
 
 .buttons {
-  @apply h-full border-none;
-}
-
-.save {
-  @apply text-green-400;
+  @apply h-full border-none flex items-center mt-2;
 }
 
 .tooltip {
@@ -226,6 +222,10 @@
 
 .deleteRow {
   @apply text-red-400 mx-2 cursor-pointer;
+}
+
+.submitButton {
+  @apply text-xs;
 }
 
 .addRowBtn {
