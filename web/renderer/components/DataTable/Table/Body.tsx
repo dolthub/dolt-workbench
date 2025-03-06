@@ -24,6 +24,7 @@ export default function Body(props: Props) {
   const showRowDropdown =
     !isKeyless(columns) && queryShowingPKs(props.columns, columns);
   const cols = getTableColsFromQueryCols(props.columns, columns);
+  
   return (
     <tbody
       data-cy={`${
