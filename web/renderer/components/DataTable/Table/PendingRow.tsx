@@ -7,6 +7,7 @@ import useSqlBuilder from "@hooks/useSqlBuilder";
 import { Button } from "@dolthub/react-components";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import cx from "classnames";
+import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
 import PendingCell from "./PendingCell";
 import css from "./index.module.css";
 
@@ -45,20 +46,19 @@ export default function PendingRow(props: Props) {
 
   return (
     <tr className={cx(css.row, css.pendingRow)}>
-      <td />
+      <td className={css.buttons}>
+        <div>
+          <IoMdClose className={css.deleteRow} onClick={onDelete} />
+        </div>
+      </td>
       {props.row.columnValues.map((c, cidx) => (
         // eslint-disable-next-line react/jsx-key
         <PendingCell {...props} cell={c} cidx={cidx} />
       ))}
       <td className={css.buttons}>
-        <Button.Group className={css.buttonGroup}>
-          <Button.Link onClick={onSave} className={css.save}>
-            submit
-          </Button.Link>
-          <Button.Link onClick={onDelete} red>
-            cancel
-          </Button.Link>
-        </Button.Group>
+        <Button.Link onClick={onSave} className={css.save}>
+          submit
+        </Button.Link>
       </td>
     </tr>
   );

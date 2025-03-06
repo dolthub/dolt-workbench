@@ -25,15 +25,17 @@ export default function Head(props: Props) {
         }db-data-table-columns`}
       >
         <th>
-          <Btn
-            onClick={() => {
-              onAddRow();
-            }}
-            disabled={!!pendingRow?.columnValues.length}
-            className={css.addRowBtn}
-          >
-            <AiOutlinePlusCircle />
-          </Btn>
+          {!pendingRow?.columnValues.length && (
+            <Btn
+              onClick={() => {
+                onAddRow();
+              }}
+              disabled={!!pendingRow?.columnValues.length}
+              className={css.addRowBtn}
+            >
+              <AiOutlinePlusCircle />
+            </Btn>
+          )}
         </th>
         {cols.map((c, i) => (
           <HeadCell {...props} key={c.name} col={c} idx={i} />

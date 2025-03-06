@@ -213,11 +213,7 @@
 }
 
 .buttons {
-  @apply h-full  border-none;
-}
-
-.buttonGroup {
-  @apply flex items-start flex-col;
+  @apply h-full border-none;
 }
 
 .save {
@@ -226,6 +222,10 @@
 
 .tooltip {
   @apply z-10;
+}
+
+.deleteRow {
+  @apply text-red-400 mx-2 cursor-pointer;
 }
 
 .addRowBtn {
