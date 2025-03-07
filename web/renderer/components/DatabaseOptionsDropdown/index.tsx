@@ -31,7 +31,7 @@ export default function DatabaseOptionsDropdown({
   const { isMutation } = useSqlParser();
   const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const { onAddRow, pendingRow } = useDataTableContext();
+  const { onAddEmptyRow, pendingRow } = useDataTableContext();
 
   useEffectOnMount(() => {
     document.addEventListener("wheel", fakeEscapePress);
@@ -84,7 +84,7 @@ export default function DatabaseOptionsDropdown({
                   <DropdownItem
                     data-cy="toggle-trim-button"
                     onClick={() => {
-                      onAddRow();
+                      onAddEmptyRow();
                       fakeEscapePress();
                     }}
                     icon={<AiOutlinePlus />}

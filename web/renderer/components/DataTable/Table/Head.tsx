@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function Head(props: Props) {
-  const { columns, onAddRow, pendingRow } = useDataTableContext();
+  const { columns, onAddEmptyRow, pendingRow } = useDataTableContext();
   const cols = getTableColsFromQueryCols(props.columns, columns);
   return (
     <thead>
@@ -28,7 +28,7 @@ export default function Head(props: Props) {
           {!pendingRow?.columnValues.length && (
             <Btn
               onClick={() => {
-                onAddRow();
+                onAddEmptyRow();
               }}
               disabled={!!pendingRow?.columnValues.length}
               className={css.addRowBtn}

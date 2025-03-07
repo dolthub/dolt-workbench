@@ -15,7 +15,6 @@ type Props = {
 
 export default function Input(props: Props) {
   const placeholder = props.isNull ? "NULL" : "Enter value";
-  console.log(props);
   if (
     props.showTextarea ||
     props.inputType === "textarea" ||
