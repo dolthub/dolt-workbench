@@ -39,7 +39,7 @@
 
   th,
   td {
-    @apply border-b border-stone-100 relative pr-10 pl-6 lg:pl-2;
+    @apply h-6 border-b border-stone-100 relative pr-10 pl-8 lg:pl-2;
 
     &:first-of-type {
       @apply pl-0 pr-1 border-none bg-white min-w-0;
@@ -99,6 +99,9 @@
 
 .cell {
   @apply align-top min-w-[130px] max-w-[400px];
+  span {
+    @apply w-full inline-block;
+  }
 }
 
 .longContent {
@@ -194,5 +197,40 @@
   th,
   tbody {
     @apply whitespace-pre;
+  }
+}
+
+.right {
+  @apply right-1;
+}
+
+.altRight {
+  @apply right-px;
+}
+
+.pendingRow {
+  @apply h-full;
+}
+
+.buttons {
+  @apply h-full border-none flex items-center mt-2;
+}
+
+.tooltip {
+  @apply z-10;
+}
+
+.deleteRow {
+  @apply text-red-400 mx-2 cursor-pointer;
+}
+
+.submitButton {
+  @apply text-xs;
+}
+
+.addRowBtn {
+  @apply flex mx-2;
+  svg {
+    @apply w-5 h-5;
   }
 }

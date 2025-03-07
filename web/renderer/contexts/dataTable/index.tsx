@@ -19,6 +19,7 @@ import {
   TableParams,
 } from "@lib/params";
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { generateEmptyRow } from "./utils";
 
 type DataTableParams = TableParams & { offset?: number; schemaName?: string };
 
@@ -34,6 +35,9 @@ type DataTableContextType = {
   error?: ApolloError;
   showingWorkingDiff: boolean;
   tableNames: string[];
+  onAddEmptyRow: () => void;
+  pendingRow?: RowForDataTableFragment;
+  setPendingRow: (r: RowForDataTableFragment | undefined) => void;
 };
 
 export const DataTableContext =
@@ -61,6 +65,9 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const [rows, setRows] = useState(rowRes.data?.rows.list);
+  const [pendingRow, setPendingRow] = useState<
+    RowForDataTableFragment | undefined
+  >(undefined);
   const [offset, setOffset] = useState(rowRes.data?.rows.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
 
@@ -90,6 +97,11 @@ function ProviderForTableName(props: TableProps) {
     setOffset(newOffset);
   }, [offset, props.params, rowRes.client, rows]);
 
+  const onAddEmptyRow = () => {
+    const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
+    setPendingRow(emptyRow);
+  };
+
   const value = useMemo(() => {
     return {
       params: props.params,
@@ -102,6 +114,9 @@ function ProviderForTableName(props: TableProps) {
       error: tableRes.error ?? rowRes.error,
       showingWorkingDiff: !!props.showingWorkingDiff,
       tableNames: props.tableNames,
+      onAddEmptyRow,
+      pendingRow,
+      setPendingRow,
     };
   }, [
     loadMore,
@@ -117,6 +132,9 @@ function ProviderForTableName(props: TableProps) {
     tableRes.loading,
     props.showingWorkingDiff,
     props.tableNames,
+    onAddEmptyRow,
+    pendingRow,
+    setPendingRow,
   ]);
 
   return (
@@ -149,6 +167,9 @@ export function DataTableProvider({
       hasMore: false,
       showingWorkingDiff: !!showingWorkingDiff,
       tableNames,
+      onAddEmptyRow: () => {},
+      pendingRow: undefined,
+      setPendingRow: () => {},
     };
   }, [params, showingWorkingDiff, tableNames]);
 

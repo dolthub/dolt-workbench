@@ -8,6 +8,7 @@ import css from "./index.module.css";
 type Props = {
   children: ReactNode;
   params: SqlQueryParams;
+  tableName?: string;
 };
 
 export default function DataTableLayout(props: Props) {
@@ -21,6 +22,7 @@ export default function DataTableLayout(props: Props) {
         <DatabaseOptionsDropdown
           className={css.optionsButton}
           params={props.params}
+          tableName={props.tableName}
         />
       </div>
     </div>
