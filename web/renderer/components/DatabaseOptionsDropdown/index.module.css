@@ -36,3 +36,10 @@
 .fileName {
   @apply py-4;
 }
+
+.disabled {
+  @apply text-storm-200;
+  &:hover {
+    @apply text-storm-200;
+  }
+}

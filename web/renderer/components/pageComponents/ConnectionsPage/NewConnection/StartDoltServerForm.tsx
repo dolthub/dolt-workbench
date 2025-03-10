@@ -63,7 +63,7 @@ export default function StartDoltServerForm() {
             <div>
               <Button
                 type="submit"
-                disabled={disabled}
+                disabled={disabled || state.loading}
                 className={css.button}
                 onClick={onStartDoltServer}
               >
