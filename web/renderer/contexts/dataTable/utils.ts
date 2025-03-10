@@ -8,16 +8,8 @@ export function generateEmptyRow(
   columns: ColumnForDataTableFragment[],
 ): RowForDataTableFragment {
   const emptyRow = columns.map(column => {
-    const isNotNull =
-      column.constraints?.some(constraint => constraint.notNull) || false;
-
-    let value: string;
-    if (isNotNull) {
-      value = getDefaultColumnValue(column);
-    } else {
-      value = "";
-    }
-
+    const value = getDefaultColumnValue(column);
+    console.log(column.type, value);
     return { __typename: "ColumnValue", displayValue: value } as ColumnValue;
   });
 
@@ -25,22 +17,30 @@ export function generateEmptyRow(
 }
 
 function getDefaultColumnValue(column: ColumnForDataTableFragment): string {
-  switch (column.type.toLowerCase()) {
-    case "int":
-    case "integer":
-    case "bigint":
-      return "0";
-    case "varchar":
-    case "char":
-    case "text":
-    case "string":
-      return "";
-    case "datetime":
-    case "timestamp":
-      return new Date().toISOString();
-    case "boolean":
-      return "false";
-    default:
-      return "";
+  const isNotNull =
+    column.constraints?.some(constraint => constraint.notNull) || false;
+
+  const columnType = column.type.toLowerCase();
+  if (columnType.includes("int")) {
+    return "0";
   }
+  if (
+    columnType.includes("char") ||
+    columnType.includes("text") ||
+    columnType.includes("string")
+  ) {
+    return "";
+  }
+  if (columnType.includes("date") || columnType.includes("timestamp")) {
+    return new Date().toISOString();
+  }
+  if (columnType.includes("boolean")) {
+    return "false";
+  }
+
+  if (!isNotNull) {
+    return "";
+  }
+
+  return "NULL";
 }

@@ -30,7 +30,7 @@ export default function EditPendingCell(props: Props) {
 
   const onEdit = (value: string) => {
     setNewValue(value);
-    const newRColumnValues = pendingRow?.columnValues.map((c, cidx) => {
+    const newColumnValues = pendingRow?.columnValues.map((c, cidx) => {
       if (cidx === props.cidx) {
         return {
           ...c,
@@ -39,7 +39,7 @@ export default function EditPendingCell(props: Props) {
       }
       return c;
     });
-    setPendingRow({ __typename: "Row", columnValues: newRColumnValues || [] });
+    setPendingRow({ __typename: "Row", columnValues: newColumnValues || [] });
   };
 
   return (
