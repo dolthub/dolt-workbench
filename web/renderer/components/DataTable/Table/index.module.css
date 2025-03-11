@@ -77,7 +77,7 @@
 }
 
 .tableWithDiff {
-  @apply pb-0;
+  @apply pb-40;
 }
 
 .key {
