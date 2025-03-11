@@ -71,6 +71,9 @@
   tr:hover {
     @apply bg-stone-50;
   }
+  .pendingRow:hover {
+    @apply bg-white;
+  }
 }
 
 .tableWithDiff {
@@ -229,7 +232,7 @@
 }
 
 .addRowBtn {
-  @apply flex mx-2;
+  @apply flex mx-2 text-storm-200;
   svg {
     @apply w-5 h-5;
   }

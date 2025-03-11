@@ -134,7 +134,7 @@ export function DropdownItem(props: ItemProps) {
     <li>
       <Btn
         onClick={props.onClick}
-        className={css.optionButton}
+        className={cx(css.optionButton, { [css.disabled]: props.disabled })}
         data-cy={props["data-cy"]}
         disabled={props.disabled}
       >
