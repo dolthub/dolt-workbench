@@ -9,7 +9,6 @@ export function generateEmptyRow(
 ): RowForDataTableFragment {
   const emptyRow = columns.map(column => {
     const value = getDefaultColumnValue(column);
-    console.log(column.type, value);
     return { __typename: "ColumnValue", displayValue: value } as ColumnValue;
   });
 
