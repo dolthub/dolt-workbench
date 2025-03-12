@@ -4,10 +4,12 @@ import {
   FormInput,
   Popup,
   SmallLoader,
+  Checkbox,
 } from "@dolthub/react-components";
 import { connections as connectionsUrl } from "@lib/urls";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import Link from "@components/links/Link";
+import { useState } from "react";
 import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
@@ -21,20 +23,45 @@ export default function StartDoltServerForm() {
     storedConnections,
     onStartDoltServer,
   } = useConfigContext();
+  const [cloneDolt, setCloneDolt] = useState(false);
 
   const { disabled, message } = getStartLocalDoltServerDisabled(
     state,
     storedConnections,
   );
+
   return (
     <>
+      <Checkbox
+        checked={cloneDolt}
+        onChange={() => {
+          setCloneDolt(!cloneDolt);
+        }}
+        name="clone-dolt-server"
+        label="Clone a Dolt database"
+        description="Clone a dolt database from DoltHub"
+        className={css.checkbox}
+      />
+      {cloneDolt && (
+        <FormInput
+          value={state.name}
+          onChangeString={n => {
+            setState({ name: n });
+            setErr(undefined);
+          }}
+          label="Owner Name"
+          labelClassName={css.label}
+          placeholder="e.g. dolthub"
+          light
+        />
+      )}
       <FormInput
         value={state.name}
         onChangeString={n => {
           setState({ name: n });
           setErr(undefined);
         }}
-        label="Name"
+        label="Database Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
         light
