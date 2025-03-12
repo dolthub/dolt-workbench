@@ -35,6 +35,7 @@ export default function StartDoltServerForm() {
       <Checkbox
         checked={cloneDolt}
         onChange={() => {
+          setState({ cloneDolt: !cloneDolt });
           setCloneDolt(!cloneDolt);
         }}
         name="clone-dolt-server"
@@ -44,9 +45,9 @@ export default function StartDoltServerForm() {
       />
       {cloneDolt && (
         <FormInput
-          value={state.name}
-          onChangeString={n => {
-            setState({ name: n });
+          value={state.owner}
+          onChangeString={owner => {
+            setState({ owner });
             setErr(undefined);
           }}
           label="Owner Name"

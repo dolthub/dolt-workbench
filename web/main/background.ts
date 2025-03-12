@@ -227,7 +227,13 @@ ipcMain.handle("toggle-left-sidebar", () => {
 
 ipcMain.handle(
   "start-dolt-server",
-  async (_, connectionName: string, port: string, init?: boolean) => {
+  async (
+    _,
+    connectionName: string,
+    port: string,
+    init?: boolean,
+    owner?: string,
+  ) => {
     try {
       console.log("start-dolt-server", connectionName, port, init);
       doltServerProcess = await startServer(
@@ -235,6 +241,7 @@ ipcMain.handle(
         connectionName,
         port,
         init,
+        owner,
       );
       if (!doltServerProcess) {
         throw new Error("Failed to start Dolt server");

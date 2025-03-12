@@ -15,6 +15,7 @@ export async function startServer(
   connectionName: string,
   port: string,
   init?: boolean,
+  owner?: string,
 ): Promise<ChildProcess | null> {
   // Set the path for the database folder
   // In production, it's in the userData directory
@@ -36,7 +37,12 @@ export async function startServer(
 
       // Initialize and start the server without checking if it's already running
       await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
+    } else {
+      if (owner) {
+        await cloneDatabase(owner, connectionName, doltPath, mainWindow);
+      }
     }
+
     return await startServerProcess(
       doltPath,
       dbFolderPath,
@@ -96,6 +102,57 @@ function initializeDoltRepository(
       async (error, stdout, stderr) => {
         if (error) {
           const initErr = `Error initializing Dolt: ${error}`;
+          mainWindow.webContents.send("server-error", initErr);
+
+          reject(new Error(initErr));
+          return;
+        }
+
+        if (stderr) {
+          // Check if the message is a warning or an error
+          if (stderr.includes("level=warning")) {
+            // Treat warnings as non-fatal
+            mainWindow.webContents.send("server-warning", stderr);
+          } else if (stderr.includes("level=error")) {
+            // Treat errors as fatal
+            mainWindow.webContents.send("server-error", stderr);
+
+            reject(new Error(stderr));
+            return;
+          } else {
+            mainWindow.webContents.send("server-log", stderr);
+          }
+        }
+
+        mainWindow.webContents.send(
+          "server-log",
+          `Dolt initialized: ${stdout}`,
+        );
+        resolve();
+      },
+    );
+  });
+}
+
+function cloneDatabase(
+  owner: string,
+  database: string,
+  doltPath: string,
+  mainWindow: BrowserWindow,
+): Promise<void> {
+  const dbsFolderPath = isProd
+    ? path.join(app.getPath("userData"), "databases")
+    : path.join(__dirname, "..", "build", "databases");
+
+  return new Promise((resolve, reject) => {
+    // execFile bypasses the shell, handles spaces in doltPath
+    execFile(
+      doltPath,
+      ["clone", `${owner}/${database}`],
+      { cwd: dbsFolderPath },
+      async (error, stdout, stderr) => {
+        if (error) {
+          const initErr = `Error cloning database ${owner}/${database}: ${error}`;
           mainWindow.webContents.send("server-error", initErr);
 
           reject(new Error(initErr));
