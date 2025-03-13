@@ -165,11 +165,9 @@ function cloneDatabase(
       },
     );
 
-    // Capture real-time stderr output (where progress appears)
     child.stderr?.on("data", data => {
       const output = data.toString();
 
-      // Parse progress updates using patterns from clonePrint
       const progressMatch = output.match(
         /(\d+) of (\d+) chunks complete\. (\d+) chunks being downloaded/,
       );
@@ -183,9 +181,8 @@ function cloneDatabase(
         });
       }
 
-      // Handle file-specific progress
       const fileMatch = output.match(
-        /Downloading file: ([\w-]+) \((\d+) chunks\) - ([\d.]+)% downloaded, ([\w/]+)/s,
+        /Downloading file: ([\w-]+) \((\d+) chunks\) - ([\d.]+)% downloaded, ([\w\/]+)/,
       );
 
       if (fileMatch) {
