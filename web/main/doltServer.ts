@@ -145,43 +145,59 @@ function cloneDatabase(
     : path.join(__dirname, "..", "build", "databases");
 
   return new Promise((resolve, reject) => {
-    // execFile bypasses the shell, handles spaces in doltPath
-    execFile(
+    const execOptions = {
+      cwd: dbsFolderPath,
+      maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+      windowsHide: true,
+    };
+
+    const child = execFile(
       doltPath,
       ["clone", `${owner}/${database}`],
-      { cwd: dbsFolderPath },
-      async (error, stdout, stderr) => {
+      execOptions,
+      (error, stdout, stderr) => {
         if (error) {
-          const initErr = `Error cloning database ${owner}/${database}: ${error}`;
-          mainWindow.webContents.send("server-error", initErr);
-
-          reject(new Error(initErr));
-          return;
+          const errMsg = `Clone failed: ${error.message}`;
+          mainWindow.webContents.send("server-error", errMsg);
+          return reject(new Error(errMsg));
         }
-
-        if (stderr) {
-          // Check if the message is a warning or an error
-          if (stderr.includes("level=warning")) {
-            // Treat warnings as non-fatal
-            mainWindow.webContents.send("server-warning", stderr);
-          } else if (stderr.includes("level=error")) {
-            // Treat errors as fatal
-            mainWindow.webContents.send("server-error", stderr);
-
-            reject(new Error(stderr));
-            return;
-          } else {
-            mainWindow.webContents.send("server-log", stderr);
-          }
-        }
-
-        mainWindow.webContents.send(
-          "server-log",
-          `Dolt initialized: ${stdout}`,
-        );
         resolve();
       },
     );
+
+    // Capture real-time stderr output (where progress appears)
+    child.stderr?.on("data", data => {
+      const output = data.toString();
+
+      // Parse progress updates using patterns from clonePrint
+      const progressMatch = output.match(
+        /(\d+) of (\d+) chunks complete\. (\d+) chunks being downloaded/,
+      );
+
+      if (progressMatch) {
+        const [, downloaded, total, downloading] = progressMatch;
+        mainWindow.webContents.send("clone-progress", {
+          downloaded: parseInt(downloaded),
+          total: parseInt(total),
+          downloading: parseInt(downloading),
+        });
+      }
+
+      // Handle file-specific progress
+      const fileMatch = output.match(
+        /Downloading file: ([\w-]+) \((\d+) chunks\) - ([\d.]+)% downloaded, ([\w/]+)/s,
+      );
+
+      if (fileMatch) {
+        const [, fileId, chunks, percent, rate] = fileMatch;
+        mainWindow.webContents.send("file-progress", {
+          fileId,
+          chunks: parseInt(chunks),
+          percent: parseFloat(percent),
+          rate,
+        });
+      }
+    });
   });
 }
 
