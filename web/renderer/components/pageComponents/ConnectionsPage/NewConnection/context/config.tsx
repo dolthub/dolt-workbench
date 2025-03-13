@@ -102,7 +102,8 @@ export function ConfigProvider({ children }: Props) {
         "start-dolt-server",
         state.name,
         state.port,
-        true,
+        !state.cloneDolt,
+        state.owner,
       );
 
       if (result !== "success") {

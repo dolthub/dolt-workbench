@@ -15,6 +15,7 @@ export async function startServer(
   connectionName: string,
   port: string,
   init?: boolean,
+  owner?: string,
 ): Promise<ChildProcess | null> {
   // Set the path for the database folder
   // In production, it's in the userData directory
@@ -36,7 +37,12 @@ export async function startServer(
 
       // Initialize and start the server without checking if it's already running
       await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
+    } else {
+      if (owner) {
+        await cloneDatabase(owner, connectionName, doltPath, mainWindow);
+      }
     }
+
     return await startServerProcess(
       doltPath,
       dbFolderPath,
@@ -125,6 +131,70 @@ function initializeDoltRepository(
         resolve();
       },
     );
+  });
+}
+
+function cloneDatabase(
+  owner: string,
+  database: string,
+  doltPath: string,
+  mainWindow: BrowserWindow,
+): Promise<void> {
+  const dbsFolderPath = isProd
+    ? path.join(app.getPath("userData"), "databases")
+    : path.join(__dirname, "..", "build", "databases");
+
+  return new Promise((resolve, reject) => {
+    const execOptions = {
+      cwd: dbsFolderPath,
+      maxBuffer: 1024 * 1024 * 10, // 10MB buffer
+      windowsHide: true,
+    };
+
+    const child = execFile(
+      doltPath,
+      ["clone", `${owner}/${database}`],
+      execOptions,
+      (error, stdout, stderr) => {
+        if (error) {
+          const errMsg = `Clone failed: ${error.message}`;
+          mainWindow.webContents.send("server-error", errMsg);
+          return reject(new Error(errMsg));
+        }
+        resolve();
+      },
+    );
+
+    child.stderr?.on("data", data => {
+      const output = data.toString();
+
+      const progressMatch = output.match(
+        /(\d+) of (\d+) chunks complete\. (\d+) chunks being downloaded/,
+      );
+
+      if (progressMatch) {
+        const [, downloaded, total, downloading] = progressMatch;
+        mainWindow.webContents.send("clone-progress", {
+          downloaded: parseInt(downloaded),
+          total: parseInt(total),
+          downloading: parseInt(downloading),
+        });
+      }
+
+      const fileMatch = output.match(
+        /Downloading file: ([\w-]+) \((\d+) chunks\) - ([\d.]+)% downloaded, ([\w\/]+)/,
+      );
+
+      if (fileMatch) {
+        const [, fileId, chunks, percent, rate] = fileMatch;
+        mainWindow.webContents.send("file-progress", {
+          fileId,
+          chunks: parseInt(chunks),
+          percent: parseFloat(percent),
+          rate,
+        });
+      }
+    });
   });
 }
 
