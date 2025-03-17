@@ -69,7 +69,9 @@ export class DataStoreService {
     const existing = await repo.findOneBy({ name: item.name });
 
     if (existing) {
-      if (existing.connectionUrl === item.connectionUrl) return undefined;
+      // Handles connection URLs in config that contain database name
+      if (item.connectionUrl.startsWith(existing.connectionUrl))
+        return undefined;
       throw new Error("name already exists");
     }
 
