@@ -143,7 +143,8 @@ export class PostgresQueryFactory
         if (args.schemaName) {
           await changeSchema(qr, args.schemaName);
         }
-        return qr.query(args.queryString, []);
+        const res = await qr.query(args.queryString, []);
+        return { rows: res };
       },
       args.databaseName,
       args.refName,
