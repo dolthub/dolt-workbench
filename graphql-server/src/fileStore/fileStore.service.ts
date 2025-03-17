@@ -35,7 +35,8 @@ export class FileStoreService {
 
     const existingItem = store.find(storeItem => storeItem.name === item.name);
     if (existingItem) {
-      if (existingItem.connectionUrl === item.connectionUrl) return;
+      // Handles connection URLs in config that contain database name
+      if (item.connectionUrl.startsWith(existingItem.connectionUrl)) return;
       throw new Error("name already exists");
     }
 

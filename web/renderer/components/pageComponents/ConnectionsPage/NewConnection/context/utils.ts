@@ -4,7 +4,9 @@ import { ConfigState } from "./state";
 export function getConnectionUrl(state: ConfigState): string {
   if (state.connectionUrl) return state.connectionUrl;
   const prefix = state.type === DatabaseType.Mysql ? "mysql" : "postgresql";
-  return `${prefix}://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`;
+  return state.password
+    ? `${prefix}://${state.username}:${state.password}@${state.host}:${state.port}/${state.database}`
+    : `${prefix}://${state.username}@${state.host}:${state.port}/${state.database}`;
 }
 
 type GetCanSubmitReturnType = {
