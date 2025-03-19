@@ -19,7 +19,7 @@ import CloneDoltDatabaseForm from "./CloneDoltDatabaseForm";
 export default function ConnectionTabs() {
   const { setErr, state } = useConfigContext();
   const clearErr = () => setErr(undefined);
- 
+
   return (
     <Tabs initialActiveIndex={0} afterSetTabIndex={clearErr}>
       <TabList className={css.tabList}>
