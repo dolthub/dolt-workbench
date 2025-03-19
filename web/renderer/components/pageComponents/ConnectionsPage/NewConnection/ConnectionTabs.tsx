@@ -14,33 +14,45 @@ import Advanced from "./Advanced";
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
 import { ConfigState } from "./context/state";
+import CloneDoltDatabaseForm from "./CloneDoltDatabaseForm";
 
 export default function ConnectionTabs() {
   const { setErr, state } = useConfigContext();
   const clearErr = () => setErr(undefined);
-
+ 
   return (
     <Tabs initialActiveIndex={0} afterSetTabIndex={clearErr}>
       <TabList className={css.tabList}>
-        {state.isLocalDolt
-          ? [
-              <CustomTab key="About" index={0}>
-                About
-              </CustomTab>,
-            ]
-          : ["About", "Connection", "Advanced"].map((tab, i) => (
-              <CustomTab key={tab} index={i}>
-                {tab}
-              </CustomTab>
-            ))}
+        {state.cloneDolt && [
+          <CustomTab key="About" index={0}>
+            Clone
+          </CustomTab>,
+        ]}
+        {state.isLocalDolt && [
+          <CustomTab key="About" index={0}>
+            About
+          </CustomTab>,
+        ]}
+        {!state.isLocalDolt &&
+          !state.cloneDolt &&
+          ["About", "Connection", "Advanced"].map((tab, i) => (
+            <CustomTab key={tab} index={i + 1}>
+              {tab}
+            </CustomTab>
+          ))}
       </TabList>
-      <CustomTabPanel index={0}>
+      {state.cloneDolt && (
+        <CustomTabPanel index={0}>
+          <CloneDoltDatabaseForm />
+        </CustomTabPanel>
+      )}
+      <CustomTabPanel index={1}>
         <About />
       </CustomTabPanel>
-      <CustomTabPanel index={1}>
+      <CustomTabPanel index={2}>
         <Connection />
       </CustomTabPanel>
-      <CustomTabPanel index={2}>
+      <CustomTabPanel index={3}>
         <Advanced />
       </CustomTabPanel>
     </Tabs>

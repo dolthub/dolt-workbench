@@ -11,15 +11,16 @@ import Link from "@components/links/Link";
 import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
+import StartDoltServerForm from "./StartDoltServerForm";
 
-export default function StartDoltServerForm() {
+export default function CloneDoltDatabaseForm() {
   const {
     state,
     setState,
     error,
     setErr,
     storedConnections,
-    onStartDoltServer,
+    onCloneDoltHubDatabase,
   } = useConfigContext();
 
   const { disabled, message } = getStartLocalDoltServerDisabled(
@@ -27,8 +28,21 @@ export default function StartDoltServerForm() {
     storedConnections,
   );
 
-  return (
+  return state.cloneFinished ? (
+    <StartDoltServerForm />
+  ) : (
     <>
+      <FormInput
+        value={state.owner}
+        onChangeString={owner => {
+          setState({ owner });
+          setErr(undefined);
+        }}
+        label="Owner Name"
+        labelClassName={css.label}
+        placeholder="e.g. dolthub"
+        light
+      />
       <FormInput
         value={state.name}
         onChangeString={n => {
@@ -40,17 +54,7 @@ export default function StartDoltServerForm() {
         placeholder="e.g. my-database (required)"
         light
       />
-      <FormInput
-        label="Port"
-        value={state.port}
-        onChangeString={p => {
-          setState({ port: p });
-          setErr(undefined);
-        }}
-        placeholder="e.g. 3658 (required)"
-        light
-        labelClassName={css.label}
-      />
+
       <ButtonsWithError error={error} className={css.buttons}>
         <Popup
           position="bottom center"
@@ -66,9 +70,9 @@ export default function StartDoltServerForm() {
                 type="submit"
                 disabled={disabled || state.loading}
                 className={css.button}
-                onClick={onStartDoltServer}
+                onClick={onCloneDoltHubDatabase}
               >
-                Start and Connect to Dolt Server
+                Start clone
                 <SmallLoader
                   loaded={!state.loading}
                   options={{ top: "1.5rem", left: "49%" }}
@@ -96,19 +100,19 @@ function getStartLocalDoltServerDisabled(
 ): DisabledReturnType {
   const disabled =
     !state.name ||
-    !state.port ||
-    !!connections?.some(connection => connection.isLocalDolt) ||
-    !!connections?.some(c => c.name === state.name);
+    !state.owner ||
+    !!connections?.some(connection => connection.isLocalDolt);
 
   if (!disabled) {
     return { disabled };
   }
   if (!state.name) {
-    return { disabled, message: <span>Connection name is required.</span> };
+    return { disabled, message: <span>Database name is required.</span> };
   }
-  if (!state.port) {
-    return { disabled, message: <span>Port is required.</span> };
+  if (!state.owner) {
+    return { disabled, message: <span>Owner name is required.</span> };
   }
+
   if (connections?.some(connection => connection.isLocalDolt)) {
     return {
       disabled,
@@ -123,11 +127,6 @@ function getStartLocalDoltServerDisabled(
       ),
     };
   }
-  if (connections?.some(c => c.name === state.name)) {
-    return {
-      disabled,
-      message: <span>Connection name already exists.</span>,
-    };
-  }
+
   return { disabled };
 }

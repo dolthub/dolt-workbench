@@ -118,6 +118,28 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
+  const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setState({ loading: true, cloneFinished: false });
+    try {
+      const result = await window.ipc.invoke(
+        "clone-dolthub-db",
+        state.owner,
+        state.name,
+      );
+
+      if (result !== "success") {
+        setErr(Error(result));
+        return;
+      }
+      setState({ cloneFinished: true });
+    } catch (error) {
+      setErr(Error(` ${error}`));
+    } finally {
+      setState({ loading: false });
+    }
+  };
+
   const value = useMemo(() => {
     return {
       state,
@@ -128,6 +150,7 @@ export function ConfigProvider({ children }: Props) {
       clearState,
       storedConnections: connectionsRes.data?.storedConnections,
       onStartDoltServer,
+      onCloneDoltHubDatabase,
     };
   }, [
     state,
@@ -137,6 +160,7 @@ export function ConfigProvider({ children }: Props) {
     clearState,
     connectionsRes,
     onStartDoltServer,
+    onCloneDoltHubDatabase,
   ]);
 
   return (

@@ -14,12 +14,10 @@ const handler = {
   },
   toggleLeftSidebar: (callback: () => {}) =>
     ipcRenderer.on("toggle-left-sidebar", _event => callback()),
-  startDoltServer: (
-    connectionName: string,
-    port: string,
-    init?: boolean,
-    owner?: string,
-  ) => ipcRenderer.send("start-dolt-server", connectionName, port, init, owner),
+  cloneDatabase: (owner: string, databaseName: string) =>
+    ipcRenderer.send("clone-dolthub-db", owner, databaseName),
+  startDoltServer: (connectionName: string, port: string, init?: boolean) =>
+    ipcRenderer.send("start-dolt-server", connectionName, port, init),
   removeDoltConnection: (connectionName: string) =>
     ipcRenderer.send("remove-dolt-connection", connectionName),
   getDoltServerError: (callback: (value: string) => {}) =>

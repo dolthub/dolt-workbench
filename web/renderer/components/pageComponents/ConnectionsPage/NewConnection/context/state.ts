@@ -21,6 +21,7 @@ export const defaultState = {
   type: DatabaseType.Mysql,
   isLocalDolt: false,
   cloneDolt: false,
+  cloneFinished: false,
 };
 
 export type ConfigState = typeof defaultState;
@@ -44,4 +45,5 @@ export type ConfigContextType = {
   clearState: () => void;
   storedConnections?: DatabaseConnectionFragment[];
   onStartDoltServer: (e: SyntheticEvent) => Promise<void>;
+  onCloneDoltHubDatabase: (e: SyntheticEvent) => Promise<void>;
 };
