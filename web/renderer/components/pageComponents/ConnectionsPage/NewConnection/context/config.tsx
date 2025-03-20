@@ -120,8 +120,16 @@ export function ConfigProvider({ children }: Props) {
 
   const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
     e.preventDefault();
-    setState({ loading: true });
+    setState({ loading: true, progress: 0 });
+    let interval;
+    let progress = 0;
     try {
+      interval = setInterval(() => {
+        progress += 10;
+        setState({
+          progress: Math.min(progress, 95),
+        });
+      }, 500);
       const result = await window.ipc.invoke(
         "clone-dolthub-db",
         state.owner,
@@ -133,11 +141,20 @@ export function ConfigProvider({ children }: Props) {
         setErr(Error(result));
         return;
       }
+      // Complete progress to 100%
+      setState({ progress: 100 });
+
       await onSubmit(e);
     } catch (error) {
       setErr(Error(` ${error}`));
     } finally {
-      setState({ loading: false });
+      if (interval) {
+        clearInterval(interval);
+      }
+      setState({
+        loading: false,
+        progress: state.progress === 100 ? 0 : state.progress,
+      });
     }
   };
 

@@ -3,7 +3,6 @@ import {
   ButtonsWithError,
   FormInput,
   Popup,
-  SmallLoader,
 } from "@dolthub/react-components";
 import { connections as connectionsUrl } from "@lib/urls";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
@@ -90,11 +89,16 @@ export default function CloneDoltDatabaseForm() {
                 className={css.button}
                 onClick={onCloneDoltHubDatabase}
               >
-                Start
-                <SmallLoader
-                  loaded={!state.loading}
-                  options={{ top: "1.5rem", left: "49%" }}
-                />
+                {state.loading ? (
+                  <div className={css.progressContainer}>
+                    <div
+                      className={css.progressBar}
+                      style={{ transform: `scaleX(${state.progress / 100})` }}
+                    />
+                  </div>
+                ) : (
+                  "Start Clone"
+                )}
               </Button>
             </div>
           }

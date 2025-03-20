@@ -49,7 +49,7 @@ export default function About() {
             checked={cloneDolt}
             onChange={e => {
               setState({
-                useSSL: startDoltServer,
+                useSSL: cloneDolt,
                 port: e.target.checked ? "3658" : state.port,
                 isLocalDolt: !cloneDolt,
                 cloneDolt: !cloneDolt,

@@ -136,3 +136,12 @@
 .popup {
   @apply text-storm-600 py-2 px-4 text-center;
 }
+
+.progressContainer {
+  @apply h-full overflow-hidden w-full;
+}
+
+.progressBar {
+  @apply h-full bg-green-400;
+  transform-origin: left;
+}
