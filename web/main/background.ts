@@ -14,7 +14,7 @@ import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
 import {
-  cloneDatabase,
+  cloneAndStartDatabase,
   getErrorMessage,
   removeDoltServerFolder,
   startServer,
@@ -308,15 +308,27 @@ ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
 
 ipcMain.handle(
   "clone-dolthub-db",
-  async (_, owner: string, databaseName: string) => {
+  async (_, owner: string, databaseName: string, port: string) => {
     try {
-      await cloneDatabase(owner, databaseName, mainWindow);
+      doltServerProcess = await cloneAndStartDatabase(
+        owner,
+        databaseName,
+        port,
+        mainWindow,
+      );
+      if (!doltServerProcess) {
+        throw new Error("Failed to start Dolt server");
+      }
       return "success";
     } catch (cloneError) {
-      console.error("Folder deletion error:", cloneError);
+      if (doltServerProcess) {
+        doltServerProcess.kill();
+        doltServerProcess = null;
+      }
+
       mainWindow.webContents.send(
         "server-error",
-        `Failed to clean up files: ${getErrorMessage(cloneError)}`,
+        `Failed to clone database ${owner}/${databaseName}: ${getErrorMessage(cloneError)}`,
       );
       return new Error(getErrorMessage(cloneError));
     }

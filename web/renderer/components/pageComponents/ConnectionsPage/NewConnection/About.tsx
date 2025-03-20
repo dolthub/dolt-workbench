@@ -47,8 +47,13 @@ export default function About() {
           />
           <Checkbox
             checked={cloneDolt}
-            onChange={() => {
-              setState({ cloneDolt: !cloneDolt });
+            onChange={e => {
+              setState({
+                useSSL: startDoltServer,
+                port: e.target.checked ? "3658" : state.port,
+                isLocalDolt: !cloneDolt,
+                cloneDolt: !cloneDolt,
+              });
               setCloneDolt(!cloneDolt);
             }}
             name="clone-dolt-server"

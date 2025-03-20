@@ -11,7 +11,6 @@ import Link from "@components/links/Link";
 import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
-import StartDoltServerForm from "./StartDoltServerForm";
 
 export default function CloneDoltDatabaseForm() {
   const {
@@ -28,9 +27,7 @@ export default function CloneDoltDatabaseForm() {
     storedConnections,
   );
 
-  return state.cloneFinished ? (
-    <StartDoltServerForm />
-  ) : (
+  return (
     <>
       <FormInput
         value={state.owner}
@@ -44,17 +41,38 @@ export default function CloneDoltDatabaseForm() {
         light
       />
       <FormInput
+        value={state.database}
+        onChangeString={n => {
+          setState({ database: n });
+          setErr(undefined);
+        }}
+        label="Remote Database Name"
+        labelClassName={css.label}
+        placeholder="e.g. my-database (required)"
+        light
+      />
+      <FormInput
         value={state.name}
         onChangeString={n => {
           setState({ name: n });
           setErr(undefined);
         }}
-        label="Database Name"
+        label="Connection Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
         light
       />
-
+      <FormInput
+        label="Port"
+        value={state.port}
+        onChangeString={p => {
+          setState({ port: p });
+          setErr(undefined);
+        }}
+        placeholder="e.g. 3658 (required)"
+        light
+        labelClassName={css.label}
+      />
       <ButtonsWithError error={error} className={css.buttons}>
         <Popup
           position="bottom center"
@@ -72,7 +90,7 @@ export default function CloneDoltDatabaseForm() {
                 className={css.button}
                 onClick={onCloneDoltHubDatabase}
               >
-                Start clone
+                Start
                 <SmallLoader
                   loaded={!state.loading}
                   options={{ top: "1.5rem", left: "49%" }}

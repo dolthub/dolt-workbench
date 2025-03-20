@@ -21,7 +21,6 @@ export const defaultState = {
   type: DatabaseType.Mysql,
   isLocalDolt: false,
   cloneDolt: false,
-  cloneFinished: false,
 };
 
 export type ConfigState = typeof defaultState;

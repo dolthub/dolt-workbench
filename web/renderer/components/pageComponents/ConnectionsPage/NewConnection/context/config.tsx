@@ -120,19 +120,20 @@ export function ConfigProvider({ children }: Props) {
 
   const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
     e.preventDefault();
-    setState({ loading: true, cloneFinished: false });
+    setState({ loading: true });
     try {
       const result = await window.ipc.invoke(
         "clone-dolthub-db",
         state.owner,
-        state.name,
+        state.database,
+        state.port,
       );
 
       if (result !== "success") {
         setErr(Error(result));
         return;
       }
-      setState({ cloneFinished: true });
+      await onSubmit(e);
     } catch (error) {
       setErr(Error(` ${error}`));
     } finally {

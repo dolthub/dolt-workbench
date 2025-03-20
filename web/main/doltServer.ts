@@ -129,7 +129,35 @@ function initializeDoltRepository(
   });
 }
 
-export function cloneDatabase(
+export async function cloneAndStartDatabase(
+  owner: string,
+  database: string,
+  port: string,
+  mainWindow: BrowserWindow,
+): Promise<ChildProcess | null> {
+  const dbsFolderPath = isProd
+    ? path.join(app.getPath("userData"), "databases")
+    : path.join(__dirname, "..", "build", "databases");
+  const doltPath = getDoltPaths();
+  const dbFolderPath = path.join(dbsFolderPath, database);
+
+  try {
+    await cloneDatabase(owner, database, mainWindow);
+
+    return await startServerProcess(
+      doltPath,
+      dbFolderPath,
+      port,
+      mainWindow,
+      false,
+    );
+  } catch (error) {
+    console.error("Failed to clone database:", error);
+    throw error;
+  }
+}
+
+function cloneDatabase(
   owner: string,
   database: string,
   mainWindow: BrowserWindow,
@@ -145,12 +173,11 @@ export function cloneDatabase(
       maxBuffer: 1024 * 1024 * 10, // 10MB buffer
       windowsHide: true,
     };
-
     execFile(
       doltPath,
       ["clone", `${owner}/${database}`],
       execOptions,
-      (error, stdout, stderr) => {
+      async (error, stdout, stderr) => {
         if (error) {
           console.log(error);
           const errMsg = `Clone failed: ${error.message}`;
@@ -168,37 +195,6 @@ export function cloneDatabase(
         resolve();
       },
     );
-
-    // child.stderr?.on("data", data => {
-    //   const output = data.toString();
-
-    //   const progressMatch = output.match(
-    //     /(\d+) of (\d+) chunks complete\. (\d+) chunks being downloaded/,
-    //   );
-
-    //   if (progressMatch) {
-    //     const [, downloaded, total, downloading] = progressMatch;
-    //     mainWindow.webContents.send("clone-progress", {
-    //       downloaded: parseInt(downloaded),
-    //       total: parseInt(total),
-    //       downloading: parseInt(downloading),
-    //     });
-    //   }
-
-    //   const fileMatch = output.match(
-    //     /Downloading file: ([\w-]+) \((\d+) chunks\) - ([\d.]+)% downloaded, ([\w\/]+)/,
-    //   );
-
-    //   if (fileMatch) {
-    //     const [, fileId, chunks, percent, rate] = fileMatch;
-    //     mainWindow.webContents.send("file-progress", {
-    //       fileId,
-    //       chunks: parseInt(chunks),
-    //       percent: parseFloat(percent),
-    //       rate,
-    //     });
-    //   }
-    // });
   });
 }
 
@@ -210,7 +206,7 @@ function startServerProcess(
   init?: boolean,
 ): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
-    console.log("Starting Dolt server...");
+    console.log("Starting Dolt server...", dbFolderPath, port);
     const doltServerProcess = spawn(doltPath, ["sql-server", "-P", port], {
       cwd: dbFolderPath,
       stdio: "pipe",
