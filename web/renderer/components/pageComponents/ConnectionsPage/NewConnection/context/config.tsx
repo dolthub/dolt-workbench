@@ -125,11 +125,11 @@ export function ConfigProvider({ children }: Props) {
     let progress = 0;
     try {
       interval = setInterval(() => {
-        progress += 10;
+        progress += 0.05;
         setState({
           progress: Math.min(progress, 95),
         });
-      }, 500);
+      }, 10);
       const result = await window.ipc.invoke(
         "clone-dolthub-db",
         state.owner,
@@ -139,6 +139,7 @@ export function ConfigProvider({ children }: Props) {
 
       if (result !== "success") {
         setErr(Error(result));
+        setState({ progress: 0 });
         return;
       }
       // Complete progress to 100%

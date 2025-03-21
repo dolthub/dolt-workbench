@@ -83,23 +83,26 @@ export default function CloneDoltDatabaseForm() {
           closeOnDocumentClick
           trigger={
             <div>
-              <Button
-                type="submit"
-                disabled={disabled || state.loading}
-                className={css.button}
-                onClick={onCloneDoltHubDatabase}
-              >
-                {state.loading ? (
+              {state.loading ? (
+                <div className={css.cloneProgress}>
+                  <span>Cloning..</span>
                   <div className={css.progressContainer}>
                     <div
                       className={css.progressBar}
                       style={{ transform: `scaleX(${state.progress / 100})` }}
                     />
                   </div>
-                ) : (
-                  "Start Clone"
-                )}
-              </Button>
+                </div>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={disabled || state.loading}
+                  className={css.button}
+                  onClick={onCloneDoltHubDatabase}
+                >
+                  Start Clone
+                </Button>
+              )}
             </div>
           }
           disabled={!disabled}

@@ -137,11 +137,18 @@
   @apply text-storm-600 py-2 px-4 text-center;
 }
 
+.cloneProgress {
+  @apply flex flex-col items-start;
+  span {
+    @apply pl-2 pb-2 text-sm text-storm-600;
+  }
+}
+
 .progressContainer {
-  @apply h-full overflow-hidden w-full;
+  @apply rounded-md h-3 w-56 overflow-hidden bg-stone-50;
 }
 
 .progressBar {
-  @apply h-full bg-green-400;
+  @apply h-full bg-green-400 rounded-md;
   transform-origin: left;
 }
