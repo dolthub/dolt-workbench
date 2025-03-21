@@ -145,10 +145,10 @@
 }
 
 .progressContainer {
-  @apply rounded-md h-3 w-56 overflow-hidden bg-stone-50;
+  @apply rounded-md h-4 w-80 overflow-hidden bg-stone-50;
 }
 
 .progressBar {
-  @apply h-full bg-green-400 rounded-md;
+  @apply h-full bg-green-400 rounded-l-md;
   transform-origin: left;
 }
