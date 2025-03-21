@@ -3,7 +3,6 @@ import {
   ButtonsWithError,
   FormInput,
   Popup,
-  SmallLoader,
 } from "@dolthub/react-components";
 import { connections as connectionsUrl } from "@lib/urls";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
@@ -12,14 +11,14 @@ import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 
-export default function StartDoltServerForm() {
+export default function CloneDoltDatabaseForm() {
   const {
     state,
     setState,
     error,
     setErr,
     storedConnections,
-    onStartDoltServer,
+    onCloneDoltHubDatabase,
   } = useConfigContext();
 
   const { disabled, message } = getStartLocalDoltServerDisabled(
@@ -30,12 +29,34 @@ export default function StartDoltServerForm() {
   return (
     <>
       <FormInput
+        value={state.owner}
+        onChangeString={owner => {
+          setState({ owner });
+          setErr(undefined);
+        }}
+        label="Owner Name"
+        labelClassName={css.label}
+        placeholder="e.g. dolthub"
+        light
+      />
+      <FormInput
+        value={state.database}
+        onChangeString={n => {
+          setState({ database: n });
+          setErr(undefined);
+        }}
+        label="Remote Database Name"
+        labelClassName={css.label}
+        placeholder="e.g. my-database (required)"
+        light
+      />
+      <FormInput
         value={state.name}
         onChangeString={n => {
           setState({ name: n });
           setErr(undefined);
         }}
-        label="Database Name"
+        label="Connection Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
         light
@@ -62,18 +83,26 @@ export default function StartDoltServerForm() {
           closeOnDocumentClick
           trigger={
             <div>
-              <Button
-                type="submit"
-                disabled={disabled || state.loading}
-                className={css.button}
-                onClick={onStartDoltServer}
-              >
-                Start and Connect to Dolt Server
-                <SmallLoader
-                  loaded={!state.loading}
-                  options={{ top: "1.5rem", left: "49%" }}
-                />
-              </Button>
+              {state.loading ? (
+                <div className={css.cloneProgress}>
+                  <span>Cloning..</span>
+                  <div className={css.progressContainer}>
+                    <div
+                      className={css.progressBar}
+                      style={{ transform: `scaleX(${state.progress / 100})` }}
+                    />
+                  </div>
+                </div>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={disabled || state.loading}
+                  className={css.button}
+                  onClick={onCloneDoltHubDatabase}
+                >
+                  Start Clone
+                </Button>
+              )}
             </div>
           }
           disabled={!disabled}
@@ -96,19 +125,19 @@ function getStartLocalDoltServerDisabled(
 ): DisabledReturnType {
   const disabled =
     !state.name ||
-    !state.port ||
-    !!connections?.some(connection => connection.isLocalDolt) ||
-    !!connections?.some(c => c.name === state.name);
+    !state.owner ||
+    !!connections?.some(connection => connection.isLocalDolt);
 
   if (!disabled) {
     return { disabled };
   }
   if (!state.name) {
-    return { disabled, message: <span>Connection name is required.</span> };
+    return { disabled, message: <span>Database name is required.</span> };
   }
-  if (!state.port) {
-    return { disabled, message: <span>Port is required.</span> };
+  if (!state.owner) {
+    return { disabled, message: <span>Owner name is required.</span> };
   }
+
   if (connections?.some(connection => connection.isLocalDolt)) {
     return {
       disabled,
@@ -123,11 +152,6 @@ function getStartLocalDoltServerDisabled(
       ),
     };
   }
-  if (connections?.some(c => c.name === state.name)) {
-    return {
-      disabled,
-      message: <span>Connection name already exists.</span>,
-    };
-  }
+
   return { disabled };
 }

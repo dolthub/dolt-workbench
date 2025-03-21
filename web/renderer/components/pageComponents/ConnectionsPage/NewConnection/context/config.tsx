@@ -102,7 +102,8 @@ export function ConfigProvider({ children }: Props) {
         "start-dolt-server",
         state.name,
         state.port,
-        true,
+        !state.cloneDolt,
+        state.owner,
       );
 
       if (result !== "success") {
@@ -117,6 +118,47 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
+  const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    setState({ loading: true, progress: 0 });
+    let interval;
+    let progress = 0;
+    try {
+      interval = setInterval(() => {
+        progress += 0.05;
+        setState({
+          progress: Math.min(progress, 95),
+        });
+      }, 10);
+      const result = await window.ipc.invoke(
+        "clone-dolthub-db",
+        state.owner,
+        state.database,
+        state.port,
+      );
+
+      if (result !== "success") {
+        setErr(Error(result));
+        setState({ progress: 0 });
+        return;
+      }
+      // Complete progress to 100%
+      setState({ progress: 100 });
+
+      await onSubmit(e);
+    } catch (error) {
+      setErr(Error(` ${error}`));
+    } finally {
+      if (interval) {
+        clearInterval(interval);
+      }
+      setState({
+        loading: false,
+        progress: state.progress === 100 ? 0 : state.progress,
+      });
+    }
+  };
+
   const value = useMemo(() => {
     return {
       state,
@@ -127,6 +169,7 @@ export function ConfigProvider({ children }: Props) {
       clearState,
       storedConnections: connectionsRes.data?.storedConnections,
       onStartDoltServer,
+      onCloneDoltHubDatabase,
     };
   }, [
     state,
@@ -136,6 +179,7 @@ export function ConfigProvider({ children }: Props) {
     clearState,
     connectionsRes,
     onStartDoltServer,
+    onCloneDoltHubDatabase,
   ]);
 
   return (
