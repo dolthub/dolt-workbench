@@ -102,9 +102,6 @@
 
 .cell {
   @apply align-top min-w-[130px] max-w-[400px];
-  span {
-    @apply w-full inline-block;
-  }
 }
 
 .longContent {
