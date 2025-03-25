@@ -71,7 +71,7 @@ export default function About() {
           <FormInput
             value={state.name}
             onChangeString={n => {
-              setState({ name: n });
+              setState({ name: n.trim() });
               setErr(undefined);
             }}
             label="Name"
