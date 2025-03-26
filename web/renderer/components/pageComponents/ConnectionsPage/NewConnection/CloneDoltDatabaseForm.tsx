@@ -31,7 +31,7 @@ export default function CloneDoltDatabaseForm() {
       <FormInput
         value={state.owner}
         onChangeString={owner => {
-          setState({ owner: owner.trim() });
+          setState({ owner });
           setErr(undefined);
         }}
         label="Owner Name"
@@ -42,7 +42,7 @@ export default function CloneDoltDatabaseForm() {
       <FormInput
         value={state.database}
         onChangeString={n => {
-          setState({ database: n.trim() });
+          setState({ database: n });
           setErr(undefined);
         }}
         label="Remote Database Name"
@@ -53,7 +53,7 @@ export default function CloneDoltDatabaseForm() {
       <FormInput
         value={state.name}
         onChangeString={n => {
-          setState({ name: n.trim() });
+          setState({ name: n });
           setErr(undefined);
         }}
         label="Connection Name"

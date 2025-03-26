@@ -100,10 +100,9 @@ export function ConfigProvider({ children }: Props) {
     try {
       const result = await window.ipc.invoke(
         "start-dolt-server",
-        state.name,
+        state.name.trim(),
         state.port,
         !state.cloneDolt,
-        state.owner,
       );
 
       if (result !== "success") {
@@ -132,8 +131,8 @@ export function ConfigProvider({ children }: Props) {
       }, 10);
       const result = await window.ipc.invoke(
         "clone-dolthub-db",
-        state.owner,
-        state.database,
+        state.owner.trim(),
+        state.database.trim(),
         state.port,
       );
 
