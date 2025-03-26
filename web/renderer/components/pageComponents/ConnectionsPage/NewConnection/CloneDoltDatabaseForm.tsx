@@ -58,7 +58,7 @@ export default function CloneDoltDatabaseForm() {
         }}
         label="Connection Name"
         labelClassName={css.label}
-        placeholder="e.g. my-database (required)"
+        placeholder="e.g. my-connection (required)"
         light
       />
       <FormInput
@@ -85,7 +85,7 @@ export default function CloneDoltDatabaseForm() {
             <div>
               {state.loading ? (
                 <div className={css.cloneProgress}>
-                  <span>Cloning..</span>
+                  <span>Cloning...</span>
                   <div className={css.progressContainer}>
                     <div
                       className={css.progressBar}
@@ -123,24 +123,16 @@ function getStartLocalDoltServerDisabled(
   state: ConfigState,
   connections?: DatabaseConnectionFragment[],
 ): DisabledReturnType {
-  const disabled =
-    !state.name ||
-    !state.owner ||
-    !!connections?.some(connection => connection.isLocalDolt);
-
-  if (!disabled) {
-    return { disabled };
-  }
   if (!state.name) {
-    return { disabled, message: <span>Database name is required.</span> };
+    return { disabled: true, message: <span>Database name is required.</span> };
   }
   if (!state.owner) {
-    return { disabled, message: <span>Owner name is required.</span> };
+    return { disabled: true, message: <span>Owner name is required.</span> };
   }
 
   if (connections?.some(connection => connection.isLocalDolt)) {
     return {
-      disabled,
+      disabled: true,
       message: (
         <div>
           <p>Already have one internal dolt server instance.</p>
@@ -153,5 +145,5 @@ function getStartLocalDoltServerDisabled(
     };
   }
 
-  return { disabled };
+  return { disabled: false };
 }

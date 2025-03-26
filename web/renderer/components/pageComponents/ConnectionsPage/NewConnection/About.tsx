@@ -19,11 +19,11 @@ export default function About() {
   const { state, setState, error, setErr } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [startDoltServer, setStartDoltServer] = useState(false);
+  const [cloneDolt, setCloneDolt] = useState(false);
 
   const onNext = () => {
     setActiveTabIndex(activeTabIndex + 1);
   };
-  const [cloneDolt, setCloneDolt] = useState(false);
 
   return (
     <form onSubmit={onNext} className={css.form}>
@@ -58,7 +58,7 @@ export default function About() {
             }}
             name="clone-dolt-server"
             label="Clone a remote Dolt database"
-            description="Clone a dolt database from DoltHub"
+            description="Clone a Dolt database from DoltHub"
             className={css.checkbox}
             disabled={startDoltServer}
           />
