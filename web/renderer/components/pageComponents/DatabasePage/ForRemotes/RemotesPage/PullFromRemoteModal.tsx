@@ -12,7 +12,6 @@ import {
 import { OptionalRefParams } from "@lib/params";
 import Link from "@components/links/Link";
 import usePullFromRemote from "./usePullFromRemote";
-
 import css from "./index.module.css";
 
 type Props = {
@@ -35,7 +34,6 @@ export default function PullFromRemoteModal({
   const {
     onSubmit,
     onClose,
-
     message,
     setMessage,
     loading,

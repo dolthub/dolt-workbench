@@ -20,6 +20,8 @@ const handler = {
     ipcRenderer.send("remove-dolt-connection", connectionName),
   getDoltServerError: (callback: (value: string) => {}) =>
     ipcRenderer.on("server-error", (_event, value) => callback(value)),
+  doltLogin: (connectionName: string) =>
+    ipcRenderer.send("dolt-login", connectionName),
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

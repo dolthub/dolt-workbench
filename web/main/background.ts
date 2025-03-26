@@ -14,6 +14,7 @@ import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
 import {
+  doltLogin,
   getErrorMessage,
   removeDoltServerFolder,
   startServer,
@@ -294,6 +295,14 @@ ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
 
     const { errorMsg } = await removeDoltServerFolder(dbFolderPath, mainWindow);
     if (errorMsg) throw new Error(errorMsg);
+  } catch (error) {
+    throw new Error(getErrorMessage(error));
+  }
+});
+
+ipcMain.handle("dolt-login", async (_, connectionName: string) => {
+  try {
+    await doltLogin(connectionName, mainWindow);
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

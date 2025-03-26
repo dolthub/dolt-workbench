@@ -225,3 +225,45 @@ export function getErrorMessage(error: unknown): string {
     return "An unknown error occurred";
   }
 }
+
+export async function doltLogin(
+  connectionName: string,
+  mainWindow: BrowserWindow,
+): Promise<void> {
+  const dbFolderPath = isProd
+    ? path.join(app.getPath("userData"), "databases", connectionName)
+    : path.join(__dirname, "..", "build", "databases", connectionName);
+  const doltPath = getDoltPaths();
+  try {
+    execFile(
+      doltPath,
+      ["login"],
+      { cwd: dbFolderPath },
+      async (error, stdout, stderr) => {
+        if (error) {
+          mainWindow.webContents.send(
+            "server-error: dolt login failed,",
+            error,
+          );
+          throw error;
+        }
+        if (stderr) {
+          if (stderr.includes("level=warning")) {
+            // Treat warnings as non-fatal
+            mainWindow.webContents.send("server-warning", stderr);
+          } else if (stderr.includes("level=error")) {
+            // Treat errors as fatal
+            mainWindow.webContents.send("server-error", stderr);
+            throw new Error(stderr);
+          } else {
+            mainWindow.webContents.send("server-log", stderr);
+          }
+        }
+        mainWindow.webContents.send("server-log", `Dolt login: ${stdout}`);
+      },
+    );
+  } catch (error) {
+    console.error("Failed to login", error);
+    throw error;
+  }
+}
