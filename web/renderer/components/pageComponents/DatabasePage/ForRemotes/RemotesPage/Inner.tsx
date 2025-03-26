@@ -1,5 +1,5 @@
 import { Button } from "@dolthub/react-components";
-import { RemoteFragment, useCurrentConnectionQuery, useDeleteRemoteMutation,  } from "@gen/graphql-types";
+import { RemoteFragment, useDeleteRemoteMutation } from "@gen/graphql-types";
 import InfiniteScroll from "react-infinite-scroller";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import Link from "@components/links/Link";
@@ -10,6 +10,7 @@ import { refetchRemoteQueries } from "@lib/refetchQueries";
 import { OptionalRefParams } from "@lib/params";
 import RemoteRow from "./RemoteRow";
 import css from "./index.module.css";
+import DoltLoginButton from "./DoltLoginButton";
 
 type InnerProps = {
   params: OptionalRefParams;
@@ -31,26 +32,13 @@ export default function Inner({
     setRemoteNameToDelete(r.name);
     setDeleteModalOpen(true);
   };
- 
-  const res = useCurrentConnectionQuery();
-
-  const isLocalDolt=res.data?.currentConnection?.isLocalDolt;
-
-  const onLogin=async ()=>{
-   try{
-    window.ipc.invoke("dolt-login",res.data?.currentConnection?.name);
-   }catch(error){
-    console.error("Failed to login",error)
-    return error
-   }
-  }
 
   return (
     <div className={css.container}>
       <div className={css.top}>
         <h1>Remotes</h1>
         <div className={css.topRight}>
-          {isLocalDolt&&<Button onClick={onLogin}>Dolt Login</Button>}
+          <DoltLoginButton />
           <HideForNoWritesWrapper params={params}>
             <Link {...createUrl} className={css.white}>
               <Button>Add Remote</Button>

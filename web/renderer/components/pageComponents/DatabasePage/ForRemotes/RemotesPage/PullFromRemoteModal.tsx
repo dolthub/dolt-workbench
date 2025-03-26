@@ -31,22 +31,15 @@ export default function PullFromRemoteModal({
   const pullIntoBranch = params.refName || defaultBranchName;
   const [branchName, setBranchName] = useState("");
 
-  const {
-    onSubmit,
-    onClose,
-    message,
-    setMessage,
-    loading,
-    err,
-    setErr,
-  } = usePullFromRemote(
-    { ...params, refName: pullIntoBranch },
-    remote,
-    branchName,
-    undefined,
-    setBranchName,
-    setIsOpen,
-  );
+  const { onSubmit, onClose, message, setMessage, loading, err, setErr } =
+    usePullFromRemote(
+      { ...params, refName: pullIntoBranch },
+      remote,
+      branchName,
+      undefined,
+      setBranchName,
+      setIsOpen,
+    );
 
   return (
     <ModalOuter
