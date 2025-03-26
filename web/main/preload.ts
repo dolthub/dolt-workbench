@@ -14,6 +14,8 @@ const handler = {
   },
   toggleLeftSidebar: (callback: () => {}) =>
     ipcRenderer.on("toggle-left-sidebar", _event => callback()),
+  cloneDatabase: (owner: string, databaseName: string, port: string) =>
+    ipcRenderer.send("clone-dolthub-db", owner, databaseName, port),
   startDoltServer: (connectionName: string, port: string, init?: boolean) =>
     ipcRenderer.send("start-dolt-server", connectionName, port, init),
   removeDoltConnection: (connectionName: string) =>

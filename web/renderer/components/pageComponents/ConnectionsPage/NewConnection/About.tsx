@@ -11,6 +11,7 @@ import { DatabaseType } from "@gen/graphql-types";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 import StartDoltServerForm from "./StartDoltServerForm";
+import CloneDoltDatabaseForm from "./CloneDoltDatabaseForm";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
@@ -18,6 +19,7 @@ export default function About() {
   const { state, setState, error, setErr } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [startDoltServer, setStartDoltServer] = useState(false);
+  const [cloneDolt, setCloneDolt] = useState(false);
 
   const onNext = () => {
     setActiveTabIndex(activeTabIndex + 1);
@@ -26,25 +28,45 @@ export default function About() {
   return (
     <form onSubmit={onNext} className={css.form}>
       {forElectron && (
-        <Checkbox
-          checked={startDoltServer}
-          onChange={e => {
-            setState({
-              useSSL: startDoltServer,
-              port: e.target.checked ? "3658" : state.port,
-              isLocalDolt: !startDoltServer,
-            });
-            setStartDoltServer(!startDoltServer);
-          }}
-          name="start-dolt-server"
-          label="Start a Dolt server"
-          description="Run a Dolt SQL server hosted directly within the Workbench. The app supports only one internal server instance, but this restriction does not apply to external Dolt server connections."
-          className={css.checkbox}
-        />
+        <>
+          <Checkbox
+            checked={startDoltServer}
+            onChange={e => {
+              setState({
+                useSSL: startDoltServer,
+                port: e.target.checked ? "3658" : state.port,
+                isLocalDolt: !startDoltServer,
+              });
+              setStartDoltServer(!startDoltServer);
+            }}
+            name="start-dolt-server"
+            label="Start a fresh Dolt server"
+            description="Run a Dolt SQL server hosted directly within the Workbench. The app supports only one internal server instance, but this restriction does not apply to external Dolt server connections."
+            className={css.checkbox}
+            disabled={cloneDolt}
+          />
+          <Checkbox
+            checked={cloneDolt}
+            onChange={e => {
+              setState({
+                useSSL: cloneDolt,
+                port: e.target.checked ? "3658" : state.port,
+                isLocalDolt: !cloneDolt,
+                cloneDolt: !cloneDolt,
+              });
+              setCloneDolt(!cloneDolt);
+            }}
+            name="clone-dolt-server"
+            label="Clone a remote Dolt database"
+            description="Clone a Dolt database from DoltHub"
+            className={css.checkbox}
+            disabled={startDoltServer}
+          />
+        </>
       )}
-      {startDoltServer ? (
-        <StartDoltServerForm />
-      ) : (
+      {startDoltServer && <StartDoltServerForm />}
+      {cloneDolt && <CloneDoltDatabaseForm />}
+      {!startDoltServer && !cloneDolt && (
         <>
           <FormInput
             value={state.name}
