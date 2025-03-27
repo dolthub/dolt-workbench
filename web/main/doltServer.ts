@@ -3,6 +3,7 @@ import path from "path";
 import { app, BrowserWindow } from "electron";
 import { rimraf } from "rimraf";
 import { ChildProcess, execFile, spawn } from "child_process";
+import { stdin } from "process";
 
 type ErrorReturnType = {
   errorMsg?: string;
@@ -294,4 +295,56 @@ export function getErrorMessage(error: unknown): string {
   } else {
     return "An unknown error occurred";
   }
+}
+
+export async function doltLogin(
+  connectionName: string,
+  mainWindow: BrowserWindow,
+): Promise<{ email: string; username: string }> {
+  return new Promise((resolve, reject) => {
+    const dbFolderPath = isProd
+      ? path.join(app.getPath("userData"), "databases", connectionName)
+      : path.join(__dirname, "..", "build", "databases", connectionName);
+    const doltPath = getDoltPaths();
+
+    execFile(
+      doltPath,
+      ["login"],
+      { cwd: dbFolderPath, maxBuffer: 1024 * 1024 * 10 },
+      async (error, stdout, stderr) => {
+        if (error) {
+          mainWindow.webContents.send(
+            "server-error: dolt login failed,",
+            error,
+          );
+          return reject(error);
+        }
+
+        if (stderr) {
+          if (stderr.includes("level=warning")) {
+            // Treat warnings as non-fatal
+            mainWindow.webContents.send("server-warning", stderr);
+          } else if (stderr.includes("level=error")) {
+            // Treat errors as fatal
+            mainWindow.webContents.send("server-error", stderr);
+            return reject(new Error(stderr));
+          } else {
+            mainWindow.webContents.send("server-log", stderr);
+          }
+        }
+        // Check for successful login pattern
+        const successMatch = stdout.match(
+          /Key successfully associated with user:\s+([^\s]+)\s+email\s+([^\s]+)/,
+        );
+        if (successMatch) {
+          const [, username, email] = successMatch;
+          // Resolve the promise with user data
+          resolve({ email, username });
+        } else {
+          reject(new Error("Login verification failed"));
+        }
+        mainWindow.webContents.send("server-log", `Dolt login: ${stdout}`);
+      },
+    );
+  });
 }
