@@ -136,3 +136,19 @@
 .popup {
   @apply text-storm-600 py-2 px-4 text-center;
 }
+
+.cloneProgress {
+  @apply flex flex-col items-start;
+  span {
+    @apply pl-2 pb-2 text-sm text-storm-600;
+  }
+}
+
+.progressContainer {
+  @apply rounded-md h-4 w-80 overflow-hidden bg-stone-50;
+}
+
+.progressBar {
+  @apply h-full bg-green-400 rounded-l-md;
+  transform-origin: left;
+}

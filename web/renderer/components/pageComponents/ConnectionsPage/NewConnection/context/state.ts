@@ -3,6 +3,7 @@ import { SetApolloErrorType } from "@lib/errors/types";
 import { Dispatch, SyntheticEvent } from "react";
 
 export const defaultState = {
+  owner: "",
   name: "",
   host: "",
   hostPlaceholder: "127.0.0.1",
@@ -19,6 +20,8 @@ export const defaultState = {
   loading: false,
   type: DatabaseType.Mysql,
   isLocalDolt: false,
+  cloneDolt: false,
+  progress: 0,
 };
 
 export type ConfigState = typeof defaultState;
@@ -42,4 +45,5 @@ export type ConfigContextType = {
   clearState: () => void;
   storedConnections?: DatabaseConnectionFragment[];
   onStartDoltServer: (e: SyntheticEvent) => Promise<void>;
+  onCloneDoltHubDatabase: (e: SyntheticEvent) => Promise<void>;
 };
