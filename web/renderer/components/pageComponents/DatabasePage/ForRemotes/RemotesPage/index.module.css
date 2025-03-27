@@ -7,7 +7,7 @@
 }
 
 .topRight {
-  @apply flex;
+  @apply flex items-center;
 }
 
 .table {
@@ -68,4 +68,8 @@
 
 .loginButton {
   @apply h-8 mr-4;
+}
+
+.successMsg {
+  @apply text-green-400 text-sm mr-3;
 }

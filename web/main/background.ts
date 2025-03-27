@@ -303,10 +303,13 @@ ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
 
 ipcMain.handle("dolt-login", async (_, connectionName: string) => {
   try {
-    await doltLogin(connectionName, mainWindow);
-    return "success";
+    const result = await doltLogin(connectionName, mainWindow);
+    return { success: true, ...result };
   } catch (error) {
-    throw new Error(getErrorMessage(error));
+    return {
+      success: false,
+      error: getErrorMessage(error),
+    };
   }
 });
 
