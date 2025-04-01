@@ -50,19 +50,6 @@ function Inner({ connection }: InnerProps) {
         loginPromise.then(() => null),
       ]);
 
-      if (!requestId) {
-        // Login completed before we got the ID (very fast success/failure)
-        const result = await loginPromise;
-        if (result.success) {
-          setLoggedInUser({
-            email: result.email,
-            username: result.username,
-          });
-          success.start();
-        }
-        return;
-      }
-
       const result = await loginPromise;
       if (result.success) {
         setLoggedInUser({
@@ -70,9 +57,6 @@ function Inner({ connection }: InnerProps) {
           username: result.username,
         });
         success.start();
-      }
-      if (!result.success) {
-        setErr(new Error(result.error || "Login failed"));
       }
     } catch (error) {
       setErr(new Error(`Failed to login: ${error}`));
