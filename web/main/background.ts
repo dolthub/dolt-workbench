@@ -310,7 +310,6 @@ ipcMain.handle("dolt-login", async (event, connectionName: string) => {
       mainWindow,
       activeExecutions,
     );
-    console.log(activeExecutions);
     return { success: true, ...result };
   } catch (error) {
     return {

@@ -69,8 +69,11 @@ function Inner({ connection }: InnerProps) {
 
   const cancelLogin = async () => {
     if (cancelId) {
-      const success = await window.ipc.invoke("cancel-dolt-login", cancelId);
-      if (success) {
+      const cancelSuccess = await window.ipc.invoke(
+        "cancel-dolt-login",
+        cancelId,
+      );
+      if (cancelSuccess) {
         setPending(false);
         setErr(undefined);
         setLoggedInUser(undefined);
@@ -83,7 +86,7 @@ function Inner({ connection }: InnerProps) {
   if (!connection?.isDolt) return null;
 
   return (
-    <>
+    <div>
       {success.active ? (
         <div className={css.successMsg}>
           Logged in as {loggedInUser?.username} ({loggedInUser?.email})
@@ -105,7 +108,7 @@ function Inner({ connection }: InnerProps) {
           {err && <ErrorMsg err={err} />}
         </div>
       )}
-    </>
+    </div>
   );
 }
 
