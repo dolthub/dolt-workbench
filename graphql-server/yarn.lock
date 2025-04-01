@@ -772,7 +772,7 @@ __metadata:
     "@dolthub/web-utils": "npm:^0.1.2"
     "@nestjs/apollo": "npm:^13.0.3"
     "@nestjs/cli": "npm:^11.0.2"
-    "@nestjs/common": "npm:^10.4.6"
+    "@nestjs/common": "npm:^11.0.12"
     "@nestjs/config": "npm:^4.0.0"
     "@nestjs/core": "npm:^10.4.5"
     "@nestjs/graphql": "npm:^12.2.1"
@@ -1645,12 +1645,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/common@npm:^10.4.6":
-  version: 10.4.6
-  resolution: "@nestjs/common@npm:10.4.6"
+"@nestjs/common@npm:^11.0.12":
+  version: 11.0.12
+  resolution: "@nestjs/common@npm:11.0.12"
   dependencies:
     iterare: "npm:1.2.1"
-    tslib: "npm:2.7.0"
+    tslib: "npm:2.8.1"
     uid: "npm:2.0.2"
   peerDependencies:
     class-transformer: "*"
@@ -1662,7 +1662,7 @@ __metadata:
       optional: true
     class-validator:
       optional: true
-  checksum: 10c0/8bfa30ffbca605ae5b5c1b79d0fc6f9edc3b4538880e083dcde7a6e6ae5721d4bd64212a768eb9d921be878da7098e2ca2da390eedb97e4b3a724dfb6039d9e7
+  checksum: 10c0/cf8976279dfd04e6a6c2f909e36dcfb4d06207e8dc0eafffcd966fc2d7a147ce511f0ca616c9157fe7c1a316e81241b372d569ab8b8b0aa587cd42283ce0f0f2
   languageName: node
   linkType: hard
 
