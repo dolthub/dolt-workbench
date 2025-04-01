@@ -43,6 +43,7 @@ if (isProd) {
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
+const activeExecutions = new Map<string, ChildProcess>();
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -301,9 +302,15 @@ ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
   }
 });
 
-ipcMain.handle("dolt-login", async (_, connectionName: string) => {
+ipcMain.handle("dolt-login", async (event, connectionName: string) => {
   try {
-    const result = await doltLogin(connectionName, mainWindow);
+    const result = await doltLogin(
+      event,
+      connectionName,
+      mainWindow,
+      activeExecutions,
+    );
+    console.log(activeExecutions);
     return { success: true, ...result };
   } catch (error) {
     return {
@@ -311,6 +318,16 @@ ipcMain.handle("dolt-login", async (_, connectionName: string) => {
       error: getErrorMessage(error),
     };
   }
+});
+
+ipcMain.handle("cancel-dolt-login", (_, requestId: string) => {
+  const child = activeExecutions.get(requestId);
+  if (child) {
+    child.kill();
+    activeExecutions.delete(requestId);
+    return true;
+  }
+  return false;
 });
 
 ipcMain.handle(

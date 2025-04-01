@@ -22,28 +22,77 @@ function Inner({ connection }: InnerProps) {
     undefined,
   );
   const [pending, setPending] = useState(false);
-
+  const [cancelId, setCancelId] = useState<string | null>(null);
   const success = useDelay(3000);
 
   const onLogin = async () => {
+    let requestId: string | null = null;
+
     try {
       setPending(true);
-      const result = await window.ipc.invoke("dolt-login", connection?.name);
+      setErr(undefined);
+
+      // Set up the listener for login process id
+      const idPromise = new Promise<string>(resolve => {
+        window.ipc.onLoginStarted((receivedId: string) => {
+          resolve(receivedId);
+        });
+      });
+
+      // Start login process
+      const loginPromise = window.ipc.doltLogin(connection?.name);
+
+      // Wait for either the ID or login completion
+      requestId = await Promise.race([
+        idPromise.then(id => {
+          setCancelId(id);
+        }),
+        loginPromise.then(() => null),
+      ]);
+
+      if (!requestId) {
+        // Login completed before we got the ID (very fast success/failure)
+        const result = await loginPromise;
+        if (result.success) {
+          setLoggedInUser({
+            email: result.email,
+            username: result.username,
+          });
+          success.start();
+        }
+        return;
+      }
+
+      const result = await loginPromise;
       if (result.success) {
-        // Login succeeded - update UI state
         setLoggedInUser({
           email: result.email,
           username: result.username,
         });
         success.start();
-      } else {
-        // Show error message
+      }
+      if (!result.success) {
         setErr(new Error(result.error || "Login failed"));
       }
     } catch (error) {
-      setErr(new Error(`Failed to login ${error}`));
+      setErr(new Error(`Failed to login: ${error}`));
     } finally {
       setPending(false);
+      // Cleanup ID reference
+      if (requestId) setCancelId(null);
+    }
+  };
+
+  const cancelLogin = async () => {
+    if (cancelId) {
+      const success = await window.ipc.invoke("cancel-dolt-login", cancelId);
+      if (success) {
+        setPending(false);
+        setErr(undefined);
+        setLoggedInUser(undefined);
+      } else {
+        setErr(new Error("Cancel Login failed"));
+      }
     }
   };
 
@@ -56,15 +105,22 @@ function Inner({ connection }: InnerProps) {
           Logged in as {loggedInUser?.username} ({loggedInUser?.email})
         </div>
       ) : (
-        <Button
-          onClick={onLogin}
-          className={css.loginButton}
-          disabled={pending}
-        >
-          {pending ? "Login..." : "Dolt Login"}
-        </Button>
+        <div>
+          <Button
+            onClick={onLogin}
+            className={css.loginButton}
+            disabled={pending}
+          >
+            {pending ? "Login..." : "Dolt Login"}
+          </Button>
+          {pending && (
+            <Button.Link onClick={cancelLogin} className={css.loginButton}>
+              cancel
+            </Button.Link>
+          )}
+          {err && <ErrorMsg err={err} />}
+        </div>
       )}
-      <ErrorMsg err={err} />
     </>
   );
 }

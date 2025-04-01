@@ -23,7 +23,12 @@ const handler = {
   getDoltServerError: (callback: (value: string) => {}) =>
     ipcRenderer.on("server-error", (_event, value) => callback(value)),
   doltLogin: (connectionName: string) =>
-    ipcRenderer.send("dolt-login", connectionName),
+    ipcRenderer.invoke("dolt-login", connectionName),
+  cancelDoltLogin: (requestId: string) =>
+    ipcRenderer.send("cancel-dolt-login", requestId),
+  onLoginStarted: (callback: (requestId: string) => void) => {
+    ipcRenderer.on("login-started", (_event, requestId) => callback(requestId));
+  },
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

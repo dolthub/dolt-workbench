@@ -1,9 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, IpcMainInvokeEvent } from "electron";
 import { rimraf } from "rimraf";
 import { ChildProcess, execFile, spawn } from "child_process";
-import { stdin } from "process";
+import { v4 as randomUUID } from "uuid";
 
 type ErrorReturnType = {
   errorMsg?: string;
@@ -39,13 +39,7 @@ export async function startServer(
       await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
     }
 
-    return await startServerProcess(
-      doltPath,
-      dbFolderPath,
-      port,
-      mainWindow,
-      init,
-    );
+    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to set up Dolt server:", error);
     throw error;
@@ -145,13 +139,7 @@ export async function cloneAndStartDatabase(
   try {
     await cloneDatabase(owner, database, mainWindow);
 
-    return await startServerProcess(
-      doltPath,
-      dbFolderPath,
-      port,
-      mainWindow,
-      false,
-    );
+    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to clone database:", error);
     throw error;
@@ -204,7 +192,6 @@ function startServerProcess(
   dbFolderPath: string,
   port: string,
   mainWindow: BrowserWindow,
-  init?: boolean,
 ): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
     console.log("Starting Dolt server...", dbFolderPath, port);
@@ -298,16 +285,22 @@ export function getErrorMessage(error: unknown): string {
 }
 
 export async function doltLogin(
+  event: IpcMainInvokeEvent,
   connectionName: string,
   mainWindow: BrowserWindow,
+  activeProcesses: Map<string, ChildProcess>,
 ): Promise<{ email: string; username: string }> {
+  const requestId = randomUUID();
   return new Promise((resolve, reject) => {
     const dbFolderPath = isProd
       ? path.join(app.getPath("userData"), "databases", connectionName)
       : path.join(__dirname, "..", "build", "databases", connectionName);
     const doltPath = getDoltPaths();
 
-    execFile(
+    // Return the cancellation ID immediately
+    event.sender.send("login-started", requestId);
+
+    const child = execFile(
       doltPath,
       ["login"],
       { cwd: dbFolderPath, maxBuffer: 1024 * 1024 * 10 },
@@ -346,5 +339,6 @@ export async function doltLogin(
         mainWindow.webContents.send("server-log", `Dolt login: ${stdout}`);
       },
     );
+    activeProcesses.set(requestId, child);
   });
 }
