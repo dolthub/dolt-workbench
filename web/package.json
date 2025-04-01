@@ -91,7 +91,7 @@
     "@types/react-timeago": "^4.1.4",
     "@types/url-parse": "^1",
     "@typescript-eslint/eslint-plugin": "^7.1.0",
-    "@typescript-eslint/parser": "^8.16.0",
+    "@typescript-eslint/parser": "^8.29.0",
     "autoprefixer": "^10.4.19",
     "babel-jest": "^29.7.0",
     "cssnano": "^7.0.6",
