@@ -2644,13 +2644,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.5, @dolthub/web-utils@npm:^0.1.8":
+"@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.5":
   version: 0.1.8
   resolution: "@dolthub/web-utils@npm:0.1.8"
   dependencies:
     node-sql-parser: "npm:^5.0.0"
     timeago.js: "npm:^4.0.2"
   checksum: 10c0/a865139e7724797cf4fa4cca2b9fb155100119489e51def778e391d39649eaa4781e02a9996bb7b6aa6b0ae336660c1ef8095457e185428e45c43ae9500ccb31
+  languageName: node
+  linkType: hard
+
+"@dolthub/web-utils@npm:^0.1.9":
+  version: 0.1.9
+  resolution: "@dolthub/web-utils@npm:0.1.9"
+  dependencies:
+    node-sql-parser: "npm:^5.3.5"
+    timeago.js: "npm:^4.0.2"
+  checksum: 10c0/15e98e80615c09e0461cd10d738c54dd12f73526c0d2556740dc5830f280c073d1b4aeccb73e3a1817251f82a1716a09d6d35b6e718627b2c40b8cb731e087e7
   languageName: node
   linkType: hard
 
@@ -8965,7 +8975,7 @@ __metadata:
     "@dolthub/react-components": "npm:^0.2.8"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
-    "@dolthub/web-utils": "npm:^0.1.8"
+    "@dolthub/web-utils": "npm:^0.1.9"
     "@electron/osx-sign": "npm:^1.3.2"
     "@graphql-codegen/cli": "npm:^5.0.4"
     "@graphql-codegen/fragment-matcher": "npm:^5.0.0"
@@ -14680,6 +14690,16 @@ __metadata:
     "@types/pegjs": "npm:^0.10.0"
     big-integer: "npm:^1.6.48"
   checksum: 10c0/bdaf5f52054f25215e0d5caf778c107ba8de9e073b2361281fc47cf1e8d7a4656178272909c7064d210aa6dfb267da702177e3dc5ffef5d638524094edc5c746
+  languageName: node
+  linkType: hard
+
+"node-sql-parser@npm:^5.3.5":
+  version: 5.3.8
+  resolution: "node-sql-parser@npm:5.3.8"
+  dependencies:
+    "@types/pegjs": "npm:^0.10.0"
+    big-integer: "npm:^1.6.48"
+  checksum: 10c0/6eea30b0687088396441f8025eedbb9d95a5e5f84a0fb6596bc99eec998a3387c79ee806fbbd152439e47d8b04d20e06b0b06e056798b48194b67b3b73ed010d
   languageName: node
   linkType: hard
 
