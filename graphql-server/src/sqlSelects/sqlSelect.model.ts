@@ -3,6 +3,8 @@ import * as column from "../columns/column.model";
 import { RawRow } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { QueryExecutionStatus } from "./sqlSelect.enums";
+import { ROW_LIMIT, getNextOffset } from "../utils";
+import { RowList } from "../rows/row.model";
 
 @ObjectType()
 export class SqlSelect {
@@ -21,8 +23,8 @@ export class SqlSelect {
   @Field(_type => [column.Column])
   columns: column.Column[];
 
-  @Field(_type => [row.Row])
-  rows: row.Row[];
+  @Field(_type => RowList)
+  rows: RowList;
 
   @Field(_type => QueryExecutionStatus)
   queryExecutionStatus: QueryExecutionStatus;
@@ -39,6 +41,7 @@ export function fromSqlSelectRow(
   refName: string,
   doltRows: RawRow | RawRow[] | undefined,
   queryString: string,
+  offset: number,
   warnings?: string[],
 ): SqlSelect {
   const res = {
@@ -46,7 +49,7 @@ export function fromSqlSelectRow(
     databaseName,
     refName,
     queryString,
-    rows: [],
+    rows: { list: [] },
     columns: [],
     queryExecutionStatus: QueryExecutionStatus.Success,
     queryExecutionMessage: "",
@@ -71,11 +74,19 @@ export function fromSqlSelectRow(
   if (!doltRows.length) {
     return res;
   }
-
-  const rows: row.Row[] = doltRows.map(row.fromDoltRowRes);
+  const rows: row.Row[] = doltRows
+    .slice(offset, offset + ROW_LIMIT)
+    .map(row.fromDoltRowRes);
   const columns: column.Column[] = Object.keys(doltRows[0]).map(c => {
     return { name: c, isPrimaryKey: false, type: "unknown" };
   });
 
-  return { ...res, columns, rows };
+  return {
+    ...res,
+    columns,
+    rows: {
+      list: rows,
+      nextOffset: getNextOffset(doltRows.length, offset),
+    },
+  };
 }
