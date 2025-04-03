@@ -646,6 +646,7 @@ export type QuerySchemasArgs = {
 
 export type QuerySqlSelectArgs = {
   databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   queryString: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -654,6 +655,7 @@ export type QuerySqlSelectArgs = {
 
 export type QuerySqlSelectForCsvDownloadArgs = {
   databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   queryString: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -792,7 +794,7 @@ export type SqlSelect = {
   queryExecutionStatus: QueryExecutionStatus;
   queryString: Scalars['String']['output'];
   refName: Scalars['String']['output'];
-  rows: Array<Row>;
+  rows: RowList;
   warnings?: Maybe<Array<Scalars['String']['output']>>;
 };
 
@@ -1076,15 +1078,18 @@ export type RowForSqlDataTableFragment = { __typename?: 'Row', columnValues: Arr
 
 export type ColumnForSqlDataTableFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null };
 
+export type RowListForSqlDataTableRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> };
+
 export type SqlSelectForSqlDataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   queryString: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, warnings?: Array<string> | null, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null }>, rows: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, warnings?: Array<string> | null, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
 
@@ -1668,13 +1673,6 @@ export const TableForSchemaListFragmentDoc = gql`
     ${ForeignKeysForDataTableFragmentDoc}
 ${ColumnForTableListFragmentDoc}
 ${IndexForTableListFragmentDoc}`;
-export const RowForSqlDataTableFragmentDoc = gql`
-    fragment RowForSqlDataTable on Row {
-  columnValues {
-    displayValue
-  }
-}
-    `;
 export const ColumnForSqlDataTableFragmentDoc = gql`
     fragment ColumnForSqlDataTable on Column {
   name
@@ -1683,6 +1681,21 @@ export const ColumnForSqlDataTableFragmentDoc = gql`
   sourceTable
 }
     `;
+export const RowForSqlDataTableFragmentDoc = gql`
+    fragment RowForSqlDataTable on Row {
+  columnValues {
+    displayValue
+  }
+}
+    `;
+export const RowListForSqlDataTableRowsFragmentDoc = gql`
+    fragment RowListForSqlDataTableRows on RowList {
+  nextOffset
+  list {
+    ...RowForSqlDataTable
+  }
+}
+    ${RowForSqlDataTableFragmentDoc}`;
 export const StatusFragmentDoc = gql`
     fragment Status on Status {
   _id
@@ -2837,12 +2850,13 @@ export type CreateSchemaMutationHookResult = ReturnType<typeof useCreateSchemaMu
 export type CreateSchemaMutationResult = Apollo.MutationResult<CreateSchemaMutation>;
 export type CreateSchemaMutationOptions = Apollo.BaseMutationOptions<CreateSchemaMutation, CreateSchemaMutationVariables>;
 export const SqlSelectForSqlDataTableDocument = gql`
-    query SqlSelectForSqlDataTable($databaseName: String!, $refName: String!, $queryString: String!, $schemaName: String) {
+    query SqlSelectForSqlDataTable($databaseName: String!, $refName: String!, $queryString: String!, $schemaName: String, $offset: Int) {
   sqlSelect(
     databaseName: $databaseName
     refName: $refName
     queryString: $queryString
     schemaName: $schemaName
+    offset: $offset
   ) {
     queryExecutionStatus
     queryExecutionMessage
@@ -2850,13 +2864,13 @@ export const SqlSelectForSqlDataTableDocument = gql`
       ...ColumnForSqlDataTable
     }
     rows {
-      ...RowForSqlDataTable
+      ...RowListForSqlDataTableRows
     }
     warnings
   }
 }
     ${ColumnForSqlDataTableFragmentDoc}
-${RowForSqlDataTableFragmentDoc}`;
+${RowListForSqlDataTableRowsFragmentDoc}`;
 
 /**
  * __useSqlSelectForSqlDataTableQuery__
@@ -2874,6 +2888,7 @@ ${RowForSqlDataTableFragmentDoc}`;
  *      refName: // value for 'refName'
  *      queryString: // value for 'queryString'
  *      schemaName: // value for 'schemaName'
+ *      offset: // value for 'offset'
  *   },
  * });
  */

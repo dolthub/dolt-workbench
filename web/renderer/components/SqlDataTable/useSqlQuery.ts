@@ -1,10 +1,7 @@
-import {
-  ApolloClient,
-  ApolloError,
-  NormalizedCacheObject,
-} from "@apollo/client";
+import { ApolloClient, NormalizedCacheObject } from "@apollo/client";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import useSqlParser from "@hooks/useSqlParser";
+import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { databases } from "@lib/urls";
@@ -14,7 +11,7 @@ import { useEffect } from "react";
 export default function useSqlQuery(
   params: SqlQueryParams,
   client: ApolloClient<NormalizedCacheObject>,
-  gqlError?: ApolloError,
+  gqlError?: ApolloErrorType,
 ): boolean {
   const { isMutation } = useSqlParser();
   const router = useRouter();

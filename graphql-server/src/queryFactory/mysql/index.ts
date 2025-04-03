@@ -16,6 +16,7 @@ import {
   mapTablesRes,
   notDoltError,
 } from "./utils";
+import { ROW_LIMIT } from "src/utils";
 
 export class MySQLQueryFactory
   extends BaseQueryFactory

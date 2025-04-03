@@ -1,4 +1,4 @@
-import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { RawRows } from "../queryFactory/types";
 import { getCellValue } from "../rows/row.model";
@@ -9,6 +9,9 @@ import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";
 export class SqlSelectArgs extends RefMaybeSchemaArgs {
   @Field()
   queryString: string;
+
+  @Field(_type => Int, { nullable: true })
+  offset?: number;
 }
 
 @Resolver(_of => SqlSelect)
@@ -18,12 +21,15 @@ export class SqlSelectResolver {
   @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
     const conn = this.conn.connection();
-    const res = await conn.getSqlSelect(args);
+    const offset = args.offset ?? 0;
+    const res = await conn.getSqlSelect({ ...args });
+
     return fromSqlSelectRow(
       args.databaseName,
       args.refName,
       res.rows,
       args.queryString,
+      offset,
       res.warnings,
     );
   }
@@ -31,7 +37,8 @@ export class SqlSelectResolver {
   @Query(_returns => String)
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
     const conn = this.conn.connection();
-    const res = await conn.getSqlSelect(args);
+    const offset = args.offset ?? 0;
+    const res = await conn.getSqlSelect({ ...args });
     return toCsvString(res.rows);
   }
 }

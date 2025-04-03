@@ -81,7 +81,7 @@ export default function SchemaFragment(props: Props) {
   return (
     <QueryHandler
       result={res}
-      render={data => <Inner {...props} rows={data.sqlSelect.rows} />}
+      render={data => <Inner {...props} rows={data.sqlSelect.rows.list} />}
     />
   );
 }
