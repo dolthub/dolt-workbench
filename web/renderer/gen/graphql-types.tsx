@@ -245,6 +245,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
+  doltLogin: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
   pullFromRemote: PullRes;
@@ -316,6 +317,11 @@ export type MutationDeleteRemoteArgs = {
 export type MutationDeleteTagArgs = {
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
+};
+
+
+export type MutationDoltLoginArgs = {
+  databaseName: Scalars['String']['input'];
 };
 
 
