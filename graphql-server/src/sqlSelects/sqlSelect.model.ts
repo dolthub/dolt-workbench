@@ -3,7 +3,7 @@ import * as column from "../columns/column.model";
 import { RawRow } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { QueryExecutionStatus } from "./sqlSelect.enums";
-import { getNextOffset, ROW_LIMIT } from "src/utils";
+import { ROW_LIMIT, getNextOffset } from "../utils";
 import { RowList } from "../rows/row.model";
 
 @ObjectType()

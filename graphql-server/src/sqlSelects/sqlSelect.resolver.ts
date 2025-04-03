@@ -37,7 +37,6 @@ export class SqlSelectResolver {
   @Query(_returns => String)
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
     const conn = this.conn.connection();
-    const offset = args.offset ?? 0;
     const res = await conn.getSqlSelect({ ...args });
     return toCsvString(res.rows);
   }
