@@ -3,8 +3,8 @@ import { useSetState } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForSqlDataTableFragment,
+  QueryExecutionStatus,
   RowForDataTableFragment,
-  RowListForSqlDataTableRowsFragment,
   SqlSelectForSqlDataTableDocument,
   SqlSelectForSqlDataTableQuery,
   SqlSelectForSqlDataTableQueryVariables,
@@ -21,20 +21,22 @@ export const defaultState = {
   rows: [] as RowForDataTableFragment[],
   cols: [] as ColumnForSqlDataTableFragment[],
   warnings: [] as string[],
+  executionStatus: undefined as unknown as QueryExecutionStatus,
+  executionMessage: "",
 };
 export type RowsState = typeof defaultState;
 
-function getDefaultState(
-  rowList?: RowListForSqlDataTableRowsFragment,
-  cols?: ColumnForSqlDataTableFragment[],
-  warnings?: string[],
-): RowsState {
+function getDefaultState(data?: SqlSelectForSqlDataTableQuery): RowsState {
   return {
     ...defaultState,
-    rows: rowList?.list ?? [],
-    cols: cols ?? [],
-    offset: rowList?.nextOffset,
-    warnings: warnings ?? [],
+    rows: data?.sqlSelect.rows.list ?? [],
+    cols: data?.sqlSelect.columns || [],
+    offset: data?.sqlSelect.rows.nextOffset,
+    warnings: data?.sqlSelect.warnings ?? [],
+    executionStatus:
+      data?.sqlSelect.queryExecutionStatus ||
+      (undefined as unknown as QueryExecutionStatus),
+    executionMessage: data?.sqlSelect.queryExecutionMessage || "",
   };
 }
 
@@ -58,25 +60,13 @@ export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
     fetchPolicy: "cache-and-network",
   });
 
-  const [state, setState] = useSetState(
-    getDefaultState(
-      data?.sqlSelect.rows,
-      data?.sqlSelect.columns,
-      data?.sqlSelect.warnings || [],
-    ),
-  );
+  const [state, setState] = useSetState(getDefaultState(data));
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
   const [err, setErr] = useApolloError(error);
 
   useEffect(() => {
     if (loading || error || !data) return;
-    setState(
-      getDefaultState(
-        data.sqlSelect.rows,
-        data.sqlSelect.columns,
-        data.sqlSelect.warnings || [],
-      ),
-    );
+    setState(getDefaultState(data));
   }, [loading, error, data, setState]);
 
   const handleQuery = async (
@@ -96,7 +86,6 @@ export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
         query: SqlSelectForSqlDataTableDocument,
         variables: { ...params, queryString: params.q, offset },
       });
-      console.log(res.data.sqlSelect.rows.list);
       setRows(res.data.sqlSelect.rows.list);
       setState({ offset: res.data.sqlSelect.rows.nextOffset });
     } catch (er) {

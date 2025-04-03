@@ -29,7 +29,13 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   const isMut = useSqlQuery(props.params, props.client, props.error);
-  const msg = <SqlMessage {...props} rowsLen={props.state.rows.length} />;
+  const msg = (
+    <SqlMessage
+      params={props.params}
+      {...props.state}
+      rowsLen={props.state.rows.length}
+    />
+  );
   return (
     <>
       <DataTableLayout params={props.params}>
