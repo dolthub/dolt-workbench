@@ -73,7 +73,7 @@ function createFolder(folderPath: string): ErrorReturnType {
 function getDoltPaths(): string {
   if (process.platform === "darwin") {
     return isProd
-      ? path.join(process.resourcesPath, "dolt")
+      ? path.join(process.resourcesPath, "..", "MacOS", "dolt")
       : path.join(__dirname, "..", "build", "mac", "dolt");
   } else {
     return isProd
@@ -173,6 +173,12 @@ function cloneDatabase(
       maxBuffer: 1024 * 1024 * 10, // 10MB buffer
       windowsHide: true,
     };
+    mainWindow.webContents.send(
+      "clone path",
+      dbsFolderPath,
+      "execOptions",
+      execOptions,
+    );
     execFile(
       doltPath,
       ["clone", `${owner}/${database}`],
@@ -266,6 +272,7 @@ export async function removeDoltServerFolder(
   for (let i = 0; i < retries; i++) {
     try {
       if (process.platform === "darwin") {
+        mainWindow.webContents.send("remove db", dbFolderPath);
         await fs.promises.rm(dbFolderPath, { recursive: true, force: true });
       } else {
         await rimraf(dbFolderPath);
