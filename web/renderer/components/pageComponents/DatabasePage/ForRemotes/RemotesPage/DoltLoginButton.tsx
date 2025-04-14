@@ -25,6 +25,8 @@ function Inner({ connection }: InnerProps) {
   const [cancelId, setCancelId] = useState<string | null>(null);
   const success = useDelay(3000);
 
+  if (!connection?.isLocalDolt) return null;
+
   const onLogin = async () => {
     let requestId: string | null = null;
 
@@ -40,7 +42,7 @@ function Inner({ connection }: InnerProps) {
       });
 
       // Start login process
-      const loginPromise = window.ipc.doltLogin(connection?.name);
+      const loginPromise = window.ipc.doltLogin(connection.name);
 
       // Wait for either the ID or login completion
       requestId = await Promise.race([
@@ -83,8 +85,6 @@ function Inner({ connection }: InnerProps) {
     }
   };
 
-  if (!connection?.isDolt) return null;
-
   return (
     <div>
       {success.active ? (
@@ -114,6 +114,7 @@ function Inner({ connection }: InnerProps) {
 
 export default function DoltLoginButton() {
   const res = useCurrentConnectionQuery();
+
   return (
     <QueryHandler
       result={{ ...res, data: res.data }}
