@@ -12,17 +12,25 @@ export const SQL_SELECT_QUERY = gql`
     type
     sourceTable
   }
+  fragment RowListForSqlDataTableRows on RowList {
+    nextOffset
+    list {
+      ...RowForSqlDataTable
+    }
+  }
   query SqlSelectForSqlDataTable(
     $databaseName: String!
     $refName: String!
     $queryString: String!
     $schemaName: String
+    $offset: Int
   ) {
     sqlSelect(
       databaseName: $databaseName
       refName: $refName
       queryString: $queryString
       schemaName: $schemaName
+      offset: $offset
     ) {
       queryExecutionStatus
       queryExecutionMessage
@@ -30,7 +38,7 @@ export const SQL_SELECT_QUERY = gql`
         ...ColumnForSqlDataTable
       }
       rows {
-        ...RowForSqlDataTable
+        ...RowListForSqlDataTableRows
       }
       warnings
     }

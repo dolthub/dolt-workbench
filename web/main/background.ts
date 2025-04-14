@@ -9,6 +9,7 @@ import {
   UtilityProcess,
   IpcMainEvent,
   systemPreferences,
+  crashReporter,
 } from "electron";
 import serve from "electron-serve";
 import { createWindow } from "./helpers";
@@ -33,6 +34,17 @@ process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
 
 const HEADER_HEIGHT = 48;
 const MACOS_TRAFFIC_LIGHTS_HEIGHT = 16;
+
+crashReporter.start({
+  submitURL: "", // Required but can be empty when uploadToServer=false
+  uploadToServer: false, // Disable server upload
+  compress: false, // Disable compression for local storage
+  rateLimit: false, // Disable rate limiting for testing
+  ignoreSystemCrashHandler: false, // Let OS handle crashes too
+  globalExtra: {
+    _companyName: "DoltHub",
+  },
+});
 
 if (isProd) {
   serve({ directory: "app" });

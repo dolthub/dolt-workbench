@@ -71,9 +71,9 @@ export async function waitForVisibleValueToClick(
     ).not.toBeInTheDocument(),
   );
 
-  expect(
-    await screen.findByLabelText(`single-value-${selected}`),
-  ).toBeVisible();
+  await waitFor(() => {
+    expect(screen.getByLabelText(`single-value-${selected}`)).toBeVisible();
+  });
 
   await user.click(screen.getByText(selected));
 }

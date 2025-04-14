@@ -254,7 +254,7 @@ type SqlSelect {
   refName: String!
   queryString: String!
   columns: [Column!]!
-  rows: [Row!]!
+  rows: RowList!
   queryExecutionStatus: QueryExecutionStatus!
   queryExecutionMessage: String!
   warnings: [String!]
@@ -350,8 +350,8 @@ type Query {
   doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
-  sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!): SqlSelect!
-  sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!): String!
+  sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!, offset: Int): SqlSelect!
+  sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!, offset: Int): String!
   status(databaseName: String!, refName: String!): [Status!]!
   table(tableName: String!, refName: String!, databaseName: String!, schemaName: String): Table!
   tableNames(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): TableNames!

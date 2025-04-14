@@ -1,57 +1,55 @@
-import {
-  ApolloClient,
-  ApolloError,
-  NormalizedCacheObject,
-} from "@apollo/client";
+import { ApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { Button, Loader } from "@dolthub/react-components";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
-import {
-  ColumnForSqlDataTableFragment,
-  QueryExecutionStatus,
-  RowForDataTableFragment,
-  useSqlSelectForSqlDataTableQuery,
-} from "@gen/graphql-types";
 import { SqlQueryParams } from "@lib/params";
 import { useState } from "react";
 import { Maybe } from "@dolthub/web-utils";
+import { ApolloErrorType } from "@lib/errors/types";
 import SqlMessage from "./SqlMessage";
 import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
 import css from "./index.module.css";
 import useSqlQuery from "./useSqlQuery";
+import useSqlSelectRows, { RowsState } from "./useSqlSelectRows";
 
 type Props = {
   params: SqlQueryParams;
 };
 
 type InnerProps = Props & {
-  gqlError?: ApolloError;
-  executionStatus?: QueryExecutionStatus;
-  executionMessage?: string;
-  rows?: RowForDataTableFragment[];
-  columns?: ColumnForSqlDataTableFragment[];
-  client: ApolloClient<NormalizedCacheObject>;
+  fetchMore: () => Promise<void>;
+  state: RowsState;
+  hasMore: boolean;
+  client: ApolloClient<any>;
+  error?: ApolloErrorType;
   warnings?: Maybe<string[]>;
 };
 
 function Inner(props: InnerProps) {
-  const isMut = useSqlQuery(props.params, props.client, props.gqlError);
-  const msg = <SqlMessage {...props} rowsLen={props.rows?.length ?? 0} />;
+  const isMut = useSqlQuery(props.params, props.client, props.error);
+  const msg = (
+    <SqlMessage
+      params={props.params}
+      {...props.state}
+      rowsLen={props.state.rows.length}
+    />
+  );
   return (
     <>
       <DataTableLayout params={props.params}>
         <InnerDataTable
           params={props.params}
-          rows={props.rows}
-          columns={props.columns}
-          loadMore={async () => {}}
+          rows={props.state.rows}
+          columns={props.state.cols}
+          loadMore={props.fetchMore}
           message={msg}
           warnings={props.warnings}
+          hasMore={props.hasMore}
         />
       </DataTableLayout>
-      {isMut && !isReadOnlyDatabaseRevisionError(props.gqlError) && (
+      {isMut && !isReadOnlyDatabaseRevisionError(props.error) && (
         <WorkingDiff {...props} />
       )}
     </>
@@ -59,28 +57,19 @@ function Inner(props: InnerProps) {
 }
 
 function Query(props: Props) {
-  const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
-    variables: {
-      databaseName: props.params.databaseName,
-      refName: props.params.refName,
-      queryString: props.params.q,
-      schemaName: props.params.schemaName,
-    },
-    fetchPolicy: "cache-and-network",
-  });
+  const { state, fetchMore, hasMore, loading, client } = useSqlSelectRows(
+    props.params,
+  );
 
   if (loading) return <Loader loaded={false} />;
 
   return (
     <Inner
-      gqlError={error}
-      executionStatus={data?.sqlSelect.queryExecutionStatus}
-      executionMessage={data?.sqlSelect.queryExecutionMessage}
-      rows={data?.sqlSelect.rows}
-      columns={data?.sqlSelect.columns}
-      params={props.params}
+      {...props}
+      state={state}
+      fetchMore={fetchMore}
+      hasMore={hasMore}
       client={client}
-      warnings={data?.sqlSelect.warnings}
     />
   );
 }
