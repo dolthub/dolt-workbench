@@ -307,11 +307,32 @@ export async function doltLogin(
     // Return the cancellation ID immediately
     event.sender.send("login-started", requestId);
 
+    let timedOut = false;
+    const timeoutDuration = 5 * 60 * 1000; // 5 minutes
+
+    let timeoutId = setTimeout(() => {
+      timedOut = true;
+      if (child) {
+        child.kill(); // Terminate the process
+      }
+      activeProcesses.delete(requestId);
+      mainWindow.webContents.send(
+        "server-error",
+        "Login timed out after 5 minutes",
+      );
+      reject(new Error("Login timed out"));
+    }, timeoutDuration);
+
     const child = execFile(
       doltPath,
       ["login"],
       { cwd: dbFolderPath, maxBuffer: 1024 * 1024 * 10 },
       async (error, stdout, stderr) => {
+        // Early return if timeout already handled
+        if (timedOut) return;
+        clearTimeout(timeoutId);
+        activeProcesses.delete(requestId);
+
         if (error) {
           mainWindow.webContents.send(
             "server-error: dolt login failed,",
