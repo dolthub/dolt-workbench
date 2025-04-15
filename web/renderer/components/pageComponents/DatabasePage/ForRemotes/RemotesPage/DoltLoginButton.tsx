@@ -97,7 +97,7 @@ function Inner({ connection }: InnerProps) {
       {success.active ? (
         <div className={css.successMsg}>
           {loggedInUser
-            ? `Logged in as ${loggedInUser?.username} (${loggedInUser?.email})`
+            ? `Logged in as ${loggedInUser.username} (${loggedInUser.email})`
             : "Logged in successfully!"}
         </div>
       ) : (
