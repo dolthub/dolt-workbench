@@ -2,7 +2,7 @@ directories:
   output: dist
   buildResources: build
 appId: com.dolthub.dolt-workbench
-productName: Dolt-Workbench
+productName: DoltWorkbench
 buildVersion: 0.3.26
 copyright: Copyright © 2024 <DoltHub Inc>
 files:
