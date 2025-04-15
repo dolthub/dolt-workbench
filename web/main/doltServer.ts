@@ -308,7 +308,7 @@ export async function doltLogin(
     event.sender.send("login-started", requestId);
 
     let timedOut = false;
-    const timeoutDuration = 5 * 60 * 1000; // 5 minutes
+    const timeoutDuration = 1 * 60 * 1000; // 1 minutes
 
     let timeoutId = setTimeout(() => {
       timedOut = true;

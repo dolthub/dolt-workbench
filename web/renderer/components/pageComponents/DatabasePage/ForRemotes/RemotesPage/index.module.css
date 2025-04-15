@@ -66,10 +66,18 @@
   @apply mx-8 mb-8 whitespace-pre-wrap;
 }
 
+.buttons {
+  @apply flex items-center;
+}
+
 .loginButton {
-  @apply h-8 mr-4;
+  @apply h-8 mr-4 flex items-center;
 }
 
 .successMsg {
   @apply text-green-400 text-sm mr-3;
+}
+
+.infoIcon {
+  @apply ml-2;
 }

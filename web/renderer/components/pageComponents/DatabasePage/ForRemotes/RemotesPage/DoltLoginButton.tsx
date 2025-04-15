@@ -1,10 +1,17 @@
-import { Button, ErrorMsg, QueryHandler } from "@dolthub/react-components";
+import {
+  Button,
+  ErrorMsg,
+  Popup,
+  QueryHandler,
+} from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
 import { useState } from "react";
+import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
 import { useDelay } from "@dolthub/react-hooks";
+import Link from "@components/links/Link";
 import css from "./index.module.css";
 
 type InnerProps = {
@@ -60,12 +67,12 @@ function Inner({ connection }: InnerProps) {
         });
         success.start();
       }
+      // Cleanup ID reference
+      if (requestId) setCancelId(null);
     } catch (error) {
       setErr(new Error(`Failed to login: ${error}`));
     } finally {
       setPending(false);
-      // Cleanup ID reference
-      if (requestId) setCancelId(null);
     }
   };
 
@@ -89,17 +96,38 @@ function Inner({ connection }: InnerProps) {
     <div>
       {success.active ? (
         <div className={css.successMsg}>
-          Logged in as {loggedInUser?.username} ({loggedInUser?.email})
+          {loggedInUser
+            ? `Logged in as ${loggedInUser?.username} (${loggedInUser?.email})`
+            : "Logged in successfully!"}
         </div>
       ) : (
-        <div>
+        <div className={css.buttons}>
           <Button
             onClick={onLogin}
             className={css.loginButton}
             disabled={pending}
           >
-            {pending ? "Login..." : "Dolt Login"}
+            {pending ? "Logging in..." : "Dolt Login"}
+            <Popup
+              on="hover"
+              position="bottom center"
+              offsetX={6}
+              offsetY={6}
+              contentStyle={{ width: "400px", padding: "15px" }}
+              trigger={<BsFillQuestionCircleFill className={css.infoIcon} />}
+            >
+              <p>
+                dolt login authenticates your local dolt client to DoltHub.com,
+                associates your client with your DoltHub identity. To learn more
+                about dolt login, see our{" "}
+                <Link href="https://docs.dolthub.com/cli-reference/cli#dolt-login">
+                  documentation
+                </Link>
+                .
+              </p>
+            </Popup>
           </Button>
+
           {pending && (
             <Button.Link onClick={cancelLogin} className={css.loginButton}>
               cancel
@@ -117,7 +145,7 @@ export default function DoltLoginButton() {
 
   return (
     <QueryHandler
-      result={{ ...res, data: res.data }}
+      result={res}
       render={data => <Inner connection={data.currentConnection} />}
     />
   );
