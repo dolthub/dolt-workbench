@@ -6,6 +6,10 @@
   @apply flex justify-between pt-6;
 }
 
+.topRight {
+  @apply flex items-center;
+}
+
 .table {
   @apply border border-stone-100 border-separate rounded-lg text-primary mx-auto my-10 overflow-x-auto block;
   border-spacing: 0;
@@ -60,4 +64,20 @@
 
 .message {
   @apply mx-8 mb-8 whitespace-pre-wrap;
+}
+
+.buttons {
+  @apply flex items-center;
+}
+
+.loginButton {
+  @apply h-8 mr-4 flex items-center;
+}
+
+.successMsg {
+  @apply text-green-400 text-sm mr-3;
+}
+
+.infoIcon {
+  @apply ml-2;
 }

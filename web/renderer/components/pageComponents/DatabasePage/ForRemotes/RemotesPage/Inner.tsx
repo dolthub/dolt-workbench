@@ -1,6 +1,5 @@
 import { Button } from "@dolthub/react-components";
 import { RemoteFragment, useDeleteRemoteMutation } from "@gen/graphql-types";
-
 import InfiniteScroll from "react-infinite-scroller";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import Link from "@components/links/Link";
@@ -11,6 +10,7 @@ import { refetchRemoteQueries } from "@lib/refetchQueries";
 import { OptionalRefParams } from "@lib/params";
 import RemoteRow from "./RemoteRow";
 import css from "./index.module.css";
+import DoltLoginButton from "./DoltLoginButton";
 
 type InnerProps = {
   params: OptionalRefParams;
@@ -32,11 +32,13 @@ export default function Inner({
     setRemoteNameToDelete(r.name);
     setDeleteModalOpen(true);
   };
+
   return (
     <div className={css.container}>
       <div className={css.top}>
         <h1>Remotes</h1>
         <div className={css.topRight}>
+          <DoltLoginButton />
           <HideForNoWritesWrapper params={params}>
             <Link {...createUrl} className={css.white}>
               <Button>Add Remote</Button>

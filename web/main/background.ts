@@ -15,6 +15,7 @@ import serve from "electron-serve";
 import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
 import {
+  doltLogin,
   cloneAndStartDatabase,
   getErrorMessage,
   removeDoltServerFolder,
@@ -54,6 +55,7 @@ if (isProd) {
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
+const activeExecutions = new Map<string, ChildProcess>();
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -310,6 +312,33 @@ ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
+});
+
+ipcMain.handle("dolt-login", async (event, connectionName: string) => {
+  try {
+    const result = await doltLogin(
+      event,
+      connectionName,
+      mainWindow,
+      activeExecutions,
+    );
+    return { success: true, ...result };
+  } catch (error) {
+    return {
+      success: false,
+      error: getErrorMessage(error),
+    };
+  }
+});
+
+ipcMain.handle("cancel-dolt-login", (_, requestId: string) => {
+  const child = activeExecutions.get(requestId);
+  if (child) {
+    child.kill();
+    activeExecutions.delete(requestId);
+    return true;
+  }
+  return false;
 });
 
 ipcMain.handle(
