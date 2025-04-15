@@ -2,8 +2,8 @@ directories:
   output: dist
   buildResources: build
 appId: com.dolthub.dolt-workbench
-productName: DoltWorkbench
-buildVersion: 0.3.25
+productName: Dolt-Workbench
+buildVersion: 0.3.26
 copyright: Copyright © 2024 <DoltHub Inc>
 files:
   - filter:
@@ -33,6 +33,7 @@ files:
       - node_modules/require-from-string
       - node_modules/semver
       - node_modules/type-fest
+      - node_modules/uuid
 extraFiles:
   - from: ../graphql-server/dist
     to: graphql-server/dist
@@ -52,7 +53,7 @@ mac:
     CFBundleIconFile: AppIcon
   target:
     - target: dmg
-  artifactName: ${productName}-mac-${arch}.${ext}
+  artifactName: ${productName}-mac-${arch}-${buildVersion}.${ext}
   hardenedRuntime: true
   gatekeeperAssess: false
   asarUnpack:
