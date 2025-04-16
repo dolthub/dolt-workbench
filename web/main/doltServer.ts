@@ -1,5 +1,5 @@
 import fs from "fs";
-import path, { resolve } from "path";
+import path from "path";
 import { app, BrowserWindow, IpcMainInvokeEvent } from "electron";
 import { rimraf } from "rimraf";
 import { ChildProcess, execFile, spawn } from "child_process";
@@ -147,7 +147,14 @@ export async function cloneAndStartDatabase(
   }
   try {
     await cloneDatabase(owner, database, connectionFolderPath, mainWindow);
-    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    if (init) {
+      return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    } else {
+      const child = execFile(doltPath, ["sql", "-q", `use ${database}`], {
+        cwd: connectionFolderPath,
+      });
+      return child;
+    }
   } catch (error) {
     console.error("Failed to clone database:", error);
     throw error;
