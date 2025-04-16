@@ -11,7 +11,11 @@ import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 
-export default function CloneDoltDatabaseForm() {
+type Props = {
+  init?: boolean;
+};
+
+export default function CloneDoltDatabaseForm({ init }: Props) {
   const {
     state,
     setState,
@@ -24,8 +28,8 @@ export default function CloneDoltDatabaseForm() {
   const { disabled, message } = getStartLocalDoltServerDisabled(
     state,
     storedConnections,
+    init,
   );
-
   return (
     <>
       <FormInput
@@ -50,17 +54,19 @@ export default function CloneDoltDatabaseForm() {
         placeholder="e.g. my-database (required)"
         light
       />
-      <FormInput
-        value={state.name}
-        onChangeString={n => {
-          setState({ name: n });
-          setErr(undefined);
-        }}
-        label="Connection Name"
-        labelClassName={css.label}
-        placeholder="e.g. my-connection (required)"
-        light
-      />
+      {init && (
+        <FormInput
+          value={state.name}
+          onChangeString={n => {
+            setState({ name: n });
+            setErr(undefined);
+          }}
+          label="Connection Name"
+          labelClassName={css.label}
+          placeholder="e.g. my-connection (required)"
+          light
+        />
+      )}
       <FormInput
         label="Port"
         value={state.port}
@@ -98,7 +104,7 @@ export default function CloneDoltDatabaseForm() {
                   type="submit"
                   disabled={disabled || state.loading}
                   className={css.button}
-                  onClick={onCloneDoltHubDatabase}
+                  onClick={async e => onCloneDoltHubDatabase(e, init)}
                 >
                   Start Clone
                 </Button>
@@ -122,15 +128,16 @@ type DisabledReturnType = {
 function getStartLocalDoltServerDisabled(
   state: ConfigState,
   connections?: DatabaseConnectionFragment[],
+  init?: boolean,
 ): DisabledReturnType {
-  if (!state.name) {
+  if (!state.database) {
     return { disabled: true, message: <span>Database name is required.</span> };
   }
   if (!state.owner) {
     return { disabled: true, message: <span>Owner name is required.</span> };
   }
 
-  if (connections?.some(connection => connection.isLocalDolt)) {
+  if (init && connections?.some(connection => connection.isLocalDolt)) {
     return {
       disabled: true,
       message: (

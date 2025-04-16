@@ -343,15 +343,24 @@ ipcMain.handle("cancel-dolt-login", (_, requestId: string) => {
 
 ipcMain.handle(
   "clone-dolthub-db",
-  async (_, owner: string, databaseName: string, port: string) => {
+  async (
+    _,
+    owner: string,
+    databaseName: string,
+    connectionName: string,
+    port: string,
+    init?: boolean,
+  ) => {
     try {
       doltServerProcess = await cloneAndStartDatabase(
         owner,
         databaseName,
+        connectionName,
         port,
         mainWindow,
+        init,
       );
-      if (!doltServerProcess) {
+      if (init && !doltServerProcess) {
         throw new Error("Failed to start Dolt server");
       }
       return "success";

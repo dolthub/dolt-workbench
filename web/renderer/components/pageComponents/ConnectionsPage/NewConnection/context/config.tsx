@@ -66,7 +66,7 @@ export function ConfigProvider({ children }: Props) {
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true });
-
+    console.log("submit", state);
     try {
       const db = await mutateFn({
         variables: {
@@ -109,6 +109,7 @@ export function ConfigProvider({ children }: Props) {
         setErr(Error(result));
         return;
       }
+      console.log("clone succeed");
       await onSubmit(e);
     } catch (error) {
       setErr(Error(` ${error}`));
@@ -117,7 +118,7 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
+  const onCloneDoltHubDatabase = async (e: SyntheticEvent, init?: boolean) => {
     e.preventDefault();
     setState({ loading: true, progress: 0 });
     let interval;
@@ -133,7 +134,9 @@ export function ConfigProvider({ children }: Props) {
         "clone-dolthub-db",
         state.owner.trim(),
         state.database.trim(),
+        state.name,
         state.port,
+        init,
       );
 
       if (result !== "success") {
