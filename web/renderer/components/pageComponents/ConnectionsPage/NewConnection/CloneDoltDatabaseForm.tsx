@@ -4,8 +4,15 @@ import {
   FormInput,
   Popup,
 } from "@dolthub/react-components";
-import { connections as connectionsUrl } from "@lib/urls";
-import { DatabaseConnectionFragment } from "@gen/graphql-types";
+import { connections as connectionsUrl, database } from "@lib/urls";
+import {
+  DatabaseConnectionFragment,
+  DatabasesDocument,
+  useDoltCloneMutation,
+} from "@gen/graphql-types";
+import useMutation from "@hooks/useMutation";
+import { SyntheticEvent } from "react";
+import { useRouter } from "next/router";
 import Link from "@components/links/Link";
 import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
@@ -30,6 +37,29 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
     storedConnections,
     init,
   );
+  const { mutateFn: doltClone } = useMutation({
+    hook: useDoltCloneMutation,
+    refetchQueries: [{ query: DatabasesDocument }],
+  });
+  // const { mutateFn: resetDB  } = useMutation({
+  //   hook: useResetDatabaseMutation,
+  // });
+  const router = useRouter();
+
+  const onSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault();
+    const { success } = await doltClone({
+      variables: {
+        ownerName: state.owner.trim(),
+        databaseName: state.database.trim(),
+      },
+    });
+    if (!success) return;
+
+    const { href, as } = database({ databaseName: state.database.trim() });
+    router.push(href, as).catch(console.error);
+  };
+
   return (
     <>
       <FormInput
@@ -104,7 +134,9 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
                   type="submit"
                   disabled={disabled || state.loading}
                   className={css.button}
-                  onClick={async e => onCloneDoltHubDatabase(e, init)}
+                  onClick={async e =>
+                    init ? onCloneDoltHubDatabase(e, init) : onSubmit(e)
+                  }
                 >
                   Start Clone
                 </Button>

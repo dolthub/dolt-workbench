@@ -245,6 +245,7 @@ export type Mutation = {
   deleteBranch: Scalars['Boolean']['output'];
   deleteRemote: Scalars['Boolean']['output'];
   deleteTag: Scalars['Boolean']['output'];
+  doltClone: Scalars['Boolean']['output'];
   loadDataFile: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
   pullFromRemote: PullRes;
@@ -316,6 +317,12 @@ export type MutationDeleteRemoteArgs = {
 export type MutationDeleteTagArgs = {
   databaseName: Scalars['String']['input'];
   tagName: Scalars['String']['input'];
+};
+
+
+export type MutationDoltCloneArgs = {
+  databaseName: Scalars['String']['input'];
+  ownerName: Scalars['String']['input'];
 };
 
 
@@ -858,6 +865,14 @@ export type CreateDatabaseMutationVariables = Exact<{
 
 
 export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: boolean };
+
+export type DoltCloneMutationVariables = Exact<{
+  ownerName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+}>;
+
+
+export type DoltCloneMutation = { __typename?: 'Mutation', doltClone: boolean };
 
 export type CurrentDatabaseQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1936,6 +1951,38 @@ export function useCreateDatabaseMutation(baseOptions?: Apollo.MutationHookOptio
 export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDatabaseMutation>;
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
+export const DoltCloneDocument = gql`
+    mutation DoltClone($ownerName: String!, $databaseName: String!) {
+  doltClone(ownerName: $ownerName, databaseName: $databaseName)
+}
+    `;
+export type DoltCloneMutationFn = Apollo.MutationFunction<DoltCloneMutation, DoltCloneMutationVariables>;
+
+/**
+ * __useDoltCloneMutation__
+ *
+ * To run a mutation, you first call `useDoltCloneMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDoltCloneMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [doltCloneMutation, { data, loading, error }] = useDoltCloneMutation({
+ *   variables: {
+ *      ownerName: // value for 'ownerName'
+ *      databaseName: // value for 'databaseName'
+ *   },
+ * });
+ */
+export function useDoltCloneMutation(baseOptions?: Apollo.MutationHookOptions<DoltCloneMutation, DoltCloneMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DoltCloneMutation, DoltCloneMutationVariables>(DoltCloneDocument, options);
+      }
+export type DoltCloneMutationHookResult = ReturnType<typeof useDoltCloneMutation>;
+export type DoltCloneMutationResult = Apollo.MutationResult<DoltCloneMutation>;
+export type DoltCloneMutationOptions = Apollo.BaseMutationOptions<DoltCloneMutation, DoltCloneMutationVariables>;
 export const CurrentDatabaseDocument = gql`
     query CurrentDatabase {
   currentDatabase

@@ -5,3 +5,9 @@ export const CREATE_DATABASE = gql`
     createDatabase(databaseName: $databaseName)
   }
 `;
+
+export const DOLT_CLONE = gql`
+  mutation DoltClone($ownerName: String!, $databaseName: String!) {
+    doltClone(ownerName: $ownerName, databaseName: $databaseName)
+  }
+`;

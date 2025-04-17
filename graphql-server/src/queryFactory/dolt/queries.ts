@@ -155,3 +155,7 @@ export function getOrderByFromDiffCols(cols: RawRows): string {
 export const callResetHard = `CALL DOLT_RESET("--hard")`;
 
 export const callCheckoutTable = `CALL DOLT_CHECKOUT(?)`;
+
+export function callDoltClone(ownerName: string, dbName?: string): string {
+  return `CALL DOLT_CLONE('${ownerName}/${dbName}','${dbName}')`;
+}

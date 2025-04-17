@@ -392,6 +392,7 @@ type Mutation {
   createDatabase(databaseName: String!): Boolean!
   createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!
   resetDatabase(newDatabase: String): Boolean!
+  doltClone(databaseName: String!, ownerName: String!): Boolean!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
   addRemote(remoteName: String!, databaseName: String!, remoteUrl: String!): String!
