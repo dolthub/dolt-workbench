@@ -5,13 +5,15 @@ import {
   useSetState,
 } from "@dolthub/react-hooks";
 import {
+  DatabasesByConnectionDocument,
   useAddDatabaseConnectionMutation,
+  useDoltCloneMutation,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
 import { ReactNode, SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { maybeDatabase } from "@lib/urls";
+import { database, maybeDatabase } from "@lib/urls";
 import { ConfigContextType, defaultState, getDefaultState } from "./state";
 import { getConnectionUrl } from "./utils";
 
@@ -117,7 +119,12 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
+  const { mutateFn: doltClone, err: cloneErr } = useMutation({
+    hook: useDoltCloneMutation,
+    refetchQueries: [{ query: DatabasesByConnectionDocument }],
+  });
+
+  const onCloneDoltHubDatabase = async (e: SyntheticEvent, init?: boolean) => {
     e.preventDefault();
     setState({ loading: true, progress: 0 });
     let interval;
@@ -129,23 +136,39 @@ export function ConfigProvider({ children }: Props) {
           progress: Math.min(progress, 95),
         });
       }, 10);
-      const result = await window.ipc.invoke(
-        "clone-dolthub-db",
-        state.owner.trim(),
-        state.database.trim(),
-        state.name,
-        state.port,
-      );
+      if (init) {
+        const result = await window.ipc.invoke(
+          "clone-dolthub-db",
+          state.owner.trim(),
+          state.database.trim(),
+          state.name,
+          state.port,
+        );
+        if (result !== "success") {
+          setErr(Error(result));
+          return;
+        }
+        // Complete progress to 100%
+        setState({ progress: 100 });
 
-      if (result !== "success") {
-        setErr(Error(result));
-        setState({ progress: 0 });
-        return;
+        await onSubmit(e);
+      } else {
+        const { success } = await doltClone({
+          variables: {
+            ownerName: state.owner.trim(),
+            databaseName: state.database.trim(),
+          },
+        });
+        if (!success) {
+          setErr(cloneErr);
+          return;
+        }
+        // Complete progress to 100%
+        setState({ progress: 100 });
+
+        const { href, as } = database({ databaseName: state.database.trim() });
+        router.push(href, as).catch(console.error);
       }
-      // Complete progress to 100%
-      setState({ progress: 100 });
-
-      await onSubmit(e);
     } catch (error) {
       setErr(Error(` ${error}`));
     } finally {
