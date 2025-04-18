@@ -13,6 +13,7 @@ import { useCurrentConnectionQuery } from "@gen/graphql-types";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
+import css from "./index.module.css";
 
 type InnerProps = {
   onClose: () => void;
@@ -69,6 +70,7 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
             name="clone-dolt-server"
             label="Clone a remote Dolt database"
             description="Clone a Dolt database from DoltHub"
+            className={css.checkbox}
           />
         )}
       />
