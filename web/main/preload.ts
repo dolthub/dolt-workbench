@@ -19,7 +19,6 @@ const handler = {
     databaseName: string,
     connectionName: string,
     port: string,
-    init?: boolean,
   ) =>
     ipcRenderer.send(
       "clone-dolthub-db",
@@ -27,7 +26,6 @@ const handler = {
       databaseName,
       connectionName,
       port,
-      init,
     ),
   startDoltServer: (connectionName: string, port: string, init?: boolean) =>
     ipcRenderer.send("start-dolt-server", connectionName, port, init),

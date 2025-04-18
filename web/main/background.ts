@@ -349,7 +349,6 @@ ipcMain.handle(
     databaseName: string,
     connectionName: string,
     port: string,
-    init?: boolean,
   ) => {
     try {
       doltServerProcess = await cloneAndStartDatabase(
@@ -358,11 +357,8 @@ ipcMain.handle(
         connectionName,
         port,
         mainWindow,
-        init,
       );
-      if (init && !doltServerProcess) {
-        throw new Error("Failed to start Dolt server");
-      }
+
       return "success";
     } catch (cloneError) {
       if (doltServerProcess) {

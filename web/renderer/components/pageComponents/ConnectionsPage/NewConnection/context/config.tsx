@@ -109,7 +109,6 @@ export function ConfigProvider({ children }: Props) {
         setErr(Error(result));
         return;
       }
-      console.log("clone succeed");
       await onSubmit(e);
     } catch (error) {
       setErr(Error(` ${error}`));
@@ -118,7 +117,7 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onCloneDoltHubDatabase = async (e: SyntheticEvent, init?: boolean) => {
+  const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true, progress: 0 });
     let interval;
@@ -136,7 +135,6 @@ export function ConfigProvider({ children }: Props) {
         state.database.trim(),
         state.name,
         state.port,
-        init,
       );
 
       if (result !== "success") {

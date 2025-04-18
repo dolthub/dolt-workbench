@@ -130,7 +130,6 @@ export async function cloneAndStartDatabase(
   connectionName: string,
   port: string,
   mainWindow: BrowserWindow,
-  init?: boolean,
 ): Promise<ChildProcess | null> {
   const dbsFolderPath = isProd
     ? path.join(app.getPath("userData"), "databases")
@@ -138,23 +137,15 @@ export async function cloneAndStartDatabase(
   const doltPath = getDoltPaths();
   const connectionFolderPath = path.join(dbsFolderPath, connectionName);
   const dbFolderPath = path.join(connectionFolderPath, database);
-  if (init) {
+
+  try {
     const { errorMsg } = createFolder(path.join(connectionFolderPath));
     if (errorMsg) {
       mainWindow.webContents.send("server-error", errorMsg);
       throw new Error(errorMsg);
     }
-  }
-  try {
     await cloneDatabase(owner, database, connectionFolderPath, mainWindow);
-    if (init) {
-      return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
-    } else {
-      const child = execFile(doltPath, ["sql", "-q", `use ${database}`], {
-        cwd: connectionFolderPath,
-      });
-      return child;
-    }
+    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to clone database:", error);
     throw error;

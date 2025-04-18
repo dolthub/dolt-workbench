@@ -7,7 +7,7 @@ import {
 import { connections as connectionsUrl, database } from "@lib/urls";
 import {
   DatabaseConnectionFragment,
-  DatabasesDocument,
+  DatabasesByConnectionDocument,
   useDoltCloneMutation,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
@@ -39,25 +39,46 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
   );
   const { mutateFn: doltClone } = useMutation({
     hook: useDoltCloneMutation,
-    refetchQueries: [{ query: DatabasesDocument }],
+    refetchQueries: [{ query: DatabasesByConnectionDocument }],
   });
-  // const { mutateFn: resetDB  } = useMutation({
-  //   hook: useResetDatabaseMutation,
-  // });
+
   const router = useRouter();
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    const { success } = await doltClone({
-      variables: {
-        ownerName: state.owner.trim(),
-        databaseName: state.database.trim(),
-      },
-    });
-    if (!success) return;
+    setState({ loading: true, progress: 0 });
+    let interval;
+    let progress = 0;
+    try {
+      interval = setInterval(() => {
+        progress += 0.05;
+        setState({
+          progress: Math.min(progress, 95),
+        });
+      }, 10);
+      const { success } = await doltClone({
+        variables: {
+          ownerName: state.owner.trim(),
+          databaseName: state.database.trim(),
+        },
+      });
+      if (!success) return;
+      // Complete progress to 100%
+      setState({ progress: 100 });
 
-    const { href, as } = database({ databaseName: state.database.trim() });
-    router.push(href, as).catch(console.error);
+      const { href, as } = database({ databaseName: state.database.trim() });
+      router.push(href, as).catch(console.error);
+    } catch (err) {
+      setErr(Error(` ${err}`));
+    } finally {
+      if (interval) {
+        clearInterval(interval);
+      }
+      setState({
+        loading: false,
+        progress: state.progress === 100 ? 0 : state.progress,
+      });
+    }
   };
 
   return (
@@ -135,7 +156,7 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
                   disabled={disabled || state.loading}
                   className={css.button}
                   onClick={async e =>
-                    init ? onCloneDoltHubDatabase(e, init) : onSubmit(e)
+                    init ? onCloneDoltHubDatabase(e) : onSubmit(e)
                   }
                 >
                   Start Clone
