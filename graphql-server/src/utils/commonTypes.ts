@@ -13,6 +13,12 @@ export class DBArgs {
 }
 
 @ArgsType()
+export class CloneArgs extends DBArgs {
+  @Field()
+  ownerName: string;
+}
+
+@ArgsType()
 export class SchemaArgs extends DBArgs {
   @Field()
   schemaName: string;

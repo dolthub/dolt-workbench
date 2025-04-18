@@ -495,6 +495,12 @@ export class DoltQueryFactory
     );
     return Object.values(res[0])[0] as string;
   }
+
+  async callDoltClone(args: t.CloneArgs): Promise<void> {
+    return this.handleAsyncQuery(async qr =>
+      qr.query(qh.callDoltClone(args.ownerName, args.databaseName)),
+    );
+  }
 }
 
 async function getTableInfoWithQR(

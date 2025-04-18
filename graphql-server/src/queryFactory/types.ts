@@ -2,6 +2,7 @@ import { SortBranchesBy } from "../branches/branch.enum";
 import { DiffRowType } from "../rowDiffs/rowDiff.enums";
 
 export type DBArgs = { databaseName: string };
+export type CloneArgs = DBArgs & { ownerName: string };
 export type SchemaArgs = DBArgs & { schemaName: string };
 export type RefArgs = DBArgs & { refName: string };
 export type RefSchemaArgs = RefArgs & { schemaName: string };

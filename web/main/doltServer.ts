@@ -127,6 +127,7 @@ function initializeDoltRepository(
 export async function cloneAndStartDatabase(
   owner: string,
   database: string,
+  connectionName: string,
   port: string,
   mainWindow: BrowserWindow,
 ): Promise<ChildProcess | null> {
@@ -134,11 +135,16 @@ export async function cloneAndStartDatabase(
     ? path.join(app.getPath("userData"), "databases")
     : path.join(__dirname, "..", "build", "databases");
   const doltPath = getDoltPaths();
-  const dbFolderPath = path.join(dbsFolderPath, database);
+  const connectionFolderPath = path.join(dbsFolderPath, connectionName);
+  const dbFolderPath = path.join(connectionFolderPath, database);
 
   try {
-    await cloneDatabase(owner, database, mainWindow);
-
+    const { errorMsg } = createFolder(path.join(connectionFolderPath));
+    if (errorMsg) {
+      mainWindow.webContents.send("server-error", errorMsg);
+      throw new Error(errorMsg);
+    }
+    await cloneDatabase(owner, database, connectionFolderPath, mainWindow);
     return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to clone database:", error);
@@ -149,22 +155,20 @@ export async function cloneAndStartDatabase(
 function cloneDatabase(
   owner: string,
   database: string,
+  connectionFolderPath: string,
   mainWindow: BrowserWindow,
 ): Promise<void> {
-  const dbsFolderPath = isProd
-    ? path.join(app.getPath("userData"), "databases")
-    : path.join(__dirname, "..", "build", "databases");
   const doltPath = getDoltPaths();
 
   return new Promise((resolve, reject) => {
     const execOptions = {
-      cwd: dbsFolderPath,
+      cwd: connectionFolderPath,
       maxBuffer: 1024 * 1024 * 10, // 10MB buffer
       windowsHide: true,
     };
     mainWindow.webContents.send(
       "clone path",
-      dbsFolderPath,
+      connectionFolderPath,
       "execOptions",
       execOptions,
     );

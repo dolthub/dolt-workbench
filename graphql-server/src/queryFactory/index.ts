@@ -95,6 +95,8 @@ export declare class QueryFactory {
 
   callDeleteBranch(args: t.BranchArgs): t.PR;
 
+  callDoltClone(args: t.CloneArgs): Promise<void>;
+
   getLogs(args: t.RefArgs, offset: number): t.PR;
 
   getTwoDotLogs(args: t.RefsArgs): t.PR;
