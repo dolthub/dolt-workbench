@@ -1,7 +1,7 @@
-import { ApolloError } from "@apollo/client";
 import { ErrorMsg, isTimeoutError } from "@dolthub/react-components";
 import { QueryExecutionStatus } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
+import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
 import SuccessMsg from "./SuccessMsg";
 import TimeoutMessage from "./TimeoutMsg";
@@ -14,13 +14,14 @@ type TimeoutProps = {
 };
 
 type Props = TimeoutProps & {
-  gqlError?: ApolloError;
+  gqlError?: ApolloErrorType;
   executionStatus?: QueryExecutionStatus;
   executionMessage?: string;
 };
 
 export default function SqlMessage(props: Props) {
   const { isMultipleQueries } = useSqlParser();
+  console.log("ERROR 1", props.gqlError);
   if (props.gqlError) {
     if (
       isTimeoutError(props.gqlError.message) ||

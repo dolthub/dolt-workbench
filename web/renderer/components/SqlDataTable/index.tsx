@@ -3,10 +3,10 @@ import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { Button, Loader } from "@dolthub/react-components";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
-import { SqlQueryParams } from "@lib/params";
-import { useState } from "react";
 import { Maybe } from "@dolthub/web-utils";
 import { ApolloErrorType } from "@lib/errors/types";
+import { SqlQueryParams } from "@lib/params";
+import { useState } from "react";
 import SqlMessage from "./SqlMessage";
 import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
@@ -32,7 +32,9 @@ function Inner(props: InnerProps) {
   const msg = (
     <SqlMessage
       params={props.params}
-      {...props.state}
+      gqlError={props.error}
+      executionMessage={props.state.executionMessage}
+      executionStatus={props.state.executionStatus}
       rowsLen={props.state.rows.length}
     />
   );
@@ -57,15 +59,15 @@ function Inner(props: InnerProps) {
 }
 
 function Query(props: Props) {
-  const { state, fetchMore, hasMore, loading, client } = useSqlSelectRows(
-    props.params,
-  );
+  const { state, fetchMore, hasMore, loading, client, error } =
+    useSqlSelectRows(props.params);
 
   if (loading) return <Loader loaded={false} />;
 
   return (
     <Inner
       {...props}
+      error={error}
       state={state}
       fetchMore={fetchMore}
       hasMore={hasMore}
