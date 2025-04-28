@@ -34,6 +34,11 @@ export function ConfigProvider({ children }: Props) {
     hook: useAddDatabaseConnectionMutation,
   });
 
+  const { mutateFn: doltClone, err: cloneErr } = useMutation({
+    hook: useDoltCloneMutation,
+    refetchQueries: [{ query: DatabasesByConnectionDocument }],
+  });
+
   const connectionsRes = useStoredConnectionsQuery();
   const [err, setErr] = useState<Error | undefined>(
     res.err || connectionsRes.error,
@@ -45,14 +50,14 @@ export function ConfigProvider({ children }: Props) {
   });
 
   useEffect(() => {
-    if (!res.err) return;
-    setErr(res.err);
+    if (!res.err && !cloneErr) return;
+    setErr(res.err || cloneErr);
     if (
-      res.err.message.includes("The server does not support SSL connections")
+      res.err?.message.includes("The server does not support SSL connections")
     ) {
       setState({ showAdvancedSettings: true });
     }
-  }, [res.err]);
+  }, [res.err, cloneErr]);
 
   useEffectOnMount(() => {
     if (!forElectron) return;
@@ -119,11 +124,6 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const { mutateFn: doltClone, err: cloneErr } = useMutation({
-    hook: useDoltCloneMutation,
-    refetchQueries: [{ query: DatabasesByConnectionDocument }],
-  });
-
   const onCloneDoltHubDatabase = async (e: SyntheticEvent, init?: boolean) => {
     e.preventDefault();
     setState({ loading: true, progress: 0 });
@@ -160,7 +160,6 @@ export function ConfigProvider({ children }: Props) {
           },
         });
         if (!success) {
-          setErr(cloneErr);
           return;
         }
         // Complete progress to 100%
