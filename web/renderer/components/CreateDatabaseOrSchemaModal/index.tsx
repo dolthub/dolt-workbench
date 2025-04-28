@@ -1,5 +1,4 @@
 import CloneDoltDatabaseForm from "@components/pageComponents/ConnectionsPage/NewConnection/CloneDoltDatabaseForm";
-import { useConfigContext } from "@components/pageComponents/ConnectionsPage/NewConnection/context/config";
 import {
   Button,
   FormInput,
@@ -7,12 +6,10 @@ import {
   ModalInner,
 } from "@dolthub/react-components";
 import { initialUppercase } from "@dolthub/web-utils";
-import { useCurrentConnectionQuery } from "@gen/graphql-types";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
 import CloneDatabaseCheckbox from "./CloneDatabaseCheckbox";
-import NotDoltWrapper from "@components/util/NotDoltWrapper";
 
 type InnerProps = {
   onClose: () => void;
