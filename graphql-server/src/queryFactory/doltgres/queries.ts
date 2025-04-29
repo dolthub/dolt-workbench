@@ -176,3 +176,7 @@ export const callPullRemote = `SELECT DOLT_PULL($1::text, $2::text)`;
 export const callPushRemote = `SELECT DOLT_PUSH($1::text, $2::text)`;
 
 export const callFetchRemote = `SELECT DOLT_FETCH($1::text)`;
+
+export function callDoltClone(ownerName: string, dbName: string): string {
+  return `CALL DOLT_CLONE('${ownerName}/${dbName}','${dbName}')`;
+}

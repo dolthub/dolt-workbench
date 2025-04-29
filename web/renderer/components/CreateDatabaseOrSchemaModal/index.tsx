@@ -1,4 +1,3 @@
-import CloneDoltDatabaseForm from "@components/pageComponents/ConnectionsPage/NewConnection/CloneDoltDatabaseForm";
 import {
   Button,
   FormInput,
@@ -9,8 +8,8 @@ import { initialUppercase } from "@dolthub/web-utils";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
-import CloneDatabaseCheckbox from "./CloneDatabaseCheckbox";
-import css from "./index.module.css"
+import css from "./index.module.css";
+import CloneDatabaseForm from "@components/CloneDatabaseForm.tsx";
 
 type InnerProps = {
   onClose: () => void;
@@ -48,17 +47,15 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
   }
 
   return (
-    <form onSubmit={props.onSubmit} className={css.form}>
-      {props.isDolt && (
-        <CloneDatabaseCheckbox
-          cloneDolt={cloneDolt}
-          setCloneDolt={setCloneDolt}
-        />
-      )}
+    <form onSubmit={props.onSubmit}>
       <ModalInner>
-        {cloneDolt ? (
-          <CloneDoltDatabaseForm />
-        ) : (
+        {props.isDolt && (
+          <CloneDatabaseForm
+            cloneDolt={cloneDolt}
+            setCloneDolt={setCloneDolt}
+          />
+        )}
+        {!cloneDolt && (
           <FormInput
             value={props.name}
             label={`${initialUppercase(props.label)} name`}

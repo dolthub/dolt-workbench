@@ -1,0 +1,36 @@
+.form .checkbox {
+  svg {
+    @apply -top-1;
+  }
+}
+
+.cloneProgress {
+  @apply flex flex-col items-start;
+  span {
+    @apply pl-2 pb-2 text-sm text-storm-600;
+  }
+}
+
+.progressContainer {
+  @apply rounded-md h-4 w-80 overflow-hidden bg-stone-50;
+}
+
+.progressBar {
+  @apply h-full bg-green-400 rounded-l-md;
+  transform-origin: left;
+}
+
+.buttons {
+  @apply flex flex-col;
+}
+
+.button {
+  @apply mt-8 mr-2 min-w-36 py-2 bg-coral-300;
+  &:hover {
+    @apply bg-coral-400;
+  }
+}
+
+.label {
+  @apply text-left;
+}

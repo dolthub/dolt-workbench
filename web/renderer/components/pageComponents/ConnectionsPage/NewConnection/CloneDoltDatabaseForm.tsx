@@ -12,10 +12,10 @@ import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 
 type Props = {
-  init?: boolean;
+  forInit?: boolean;
 };
 
-export default function CloneDoltDatabaseForm({ init }: Props) {
+export default function CloneDoltDatabaseForm({ forInit }: Props) {
   const {
     state,
     setState,
@@ -28,7 +28,7 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
   const { disabled, message } = getStartLocalDoltServerDisabled(
     state,
     storedConnections,
-    init,
+    forInit,
   );
 
   return (
@@ -55,7 +55,7 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
         placeholder="e.g. my-database (required)"
         light
       />
-      {init && (
+      {forInit && (
         <>
           <FormInput
             value={state.name}
@@ -108,7 +108,7 @@ export default function CloneDoltDatabaseForm({ init }: Props) {
                   type="submit"
                   disabled={disabled || state.loading}
                   className={css.button}
-                  onClick={async e => onCloneDoltHubDatabase(e, init)}
+                  onClick={async e => onCloneDoltHubDatabase(e, forInit)}
                 >
                   Start Clone
                 </Button>
@@ -132,7 +132,7 @@ type DisabledReturnType = {
 function getStartLocalDoltServerDisabled(
   state: ConfigState,
   connections?: DatabaseConnectionFragment[],
-  init?: boolean,
+  forInit?: boolean,
 ): DisabledReturnType {
   if (!state.database) {
     return { disabled: true, message: <span>Database name is required.</span> };
@@ -141,7 +141,7 @@ function getStartLocalDoltServerDisabled(
     return { disabled: true, message: <span>Owner name is required.</span> };
   }
 
-  if (init && connections?.some(connection => connection.isLocalDolt)) {
+  if (forInit && connections?.some(connection => connection.isLocalDolt)) {
     return {
       disabled: true,
       message: (

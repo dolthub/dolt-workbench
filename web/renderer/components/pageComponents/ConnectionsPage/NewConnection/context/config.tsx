@@ -124,7 +124,10 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onCloneDoltHubDatabase = async (e: SyntheticEvent, init?: boolean) => {
+  const onCloneDoltHubDatabase = async (
+    e: SyntheticEvent,
+    forInit?: boolean,
+  ) => {
     e.preventDefault();
     setState({ loading: true, progress: 0 });
     let interval;
@@ -136,7 +139,7 @@ export function ConfigProvider({ children }: Props) {
           progress: Math.min(progress, 95),
         });
       }, 10);
-      if (init) {
+      if (forInit) {
         const result = await window.ipc.invoke(
           "clone-dolthub-db",
           state.owner.trim(),

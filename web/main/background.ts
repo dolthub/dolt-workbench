@@ -358,7 +358,9 @@ ipcMain.handle(
         port,
         mainWindow,
       );
-
+      if (!doltServerProcess) {
+        throw new Error("Failed to start Dolt server");
+      }
       return "success";
     } catch (cloneError) {
       if (doltServerProcess) {

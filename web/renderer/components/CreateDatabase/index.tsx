@@ -11,7 +11,6 @@ import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCirc
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
-import { ConfigProvider } from "@components/pageComponents/ConnectionsPage/NewConnection/context/config";
 import css from "./index.module.css";
 
 type Props = {
@@ -51,7 +50,7 @@ export default function CreateDatabase(props: Props) {
   };
 
   return (
-    <ConfigProvider>
+    <div>
       <Loader loaded={!res.loading && !resetRes.loading} />
       <Button.Link
         onClick={() => setIsOpen(true)}
@@ -78,6 +77,6 @@ export default function CreateDatabase(props: Props) {
           label="database"
         />
       </ModalOuter>
-    </ConfigProvider>
+    </div>
   );
 }

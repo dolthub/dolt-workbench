@@ -477,6 +477,10 @@ export class DoltgresQueryFactory
   async callFetchRemote(args: t.RemoteArgs): t.PR {
     return this.query(qh.callFetchRemote, [args.remoteName], args.databaseName);
   }
+
+  async callDoltClone(args: t.CloneArgs): Promise<void> {
+    return this.query(qh.callDoltClone(args.ownerName, args.databaseName), []);
+  }
 }
 
 async function getTableInfoWithQR(
