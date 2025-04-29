@@ -8,8 +8,7 @@ import { initialUppercase } from "@dolthub/web-utils";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
-import css from "./index.module.css";
-import CloneDatabaseForm from "@components/CloneDatabaseForm.tsx";
+import CloneDatabaseForm from "@components/CloneDatabaseForm";
 
 type InnerProps = {
   onClose: () => void;

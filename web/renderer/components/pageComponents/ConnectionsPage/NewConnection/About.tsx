@@ -8,10 +8,10 @@ import {
 } from "@dolthub/react-components";
 import { useState } from "react";
 import { DatabaseType } from "@gen/graphql-types";
+import CloneForm from "@components/CloneDatabaseForm/CloneForm";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 import StartDoltServerForm from "./StartDoltServerForm";
-import CloneDoltDatabaseForm from "./CloneDoltDatabaseForm";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
@@ -65,7 +65,7 @@ export default function About() {
         </>
       )}
       {startDoltServer && <StartDoltServerForm />}
-      {cloneDolt && <CloneDoltDatabaseForm forInit />}
+      {cloneDolt && <CloneForm forInit />}
       {!startDoltServer && !cloneDolt && (
         <>
           <FormInput
