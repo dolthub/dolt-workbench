@@ -1,12 +1,12 @@
 import { useOnClickOutside, useSetState } from "@dolthub/react-hooks";
-import { useRef } from "react";
 import { RefParams } from "@lib/params";
 import { Diff } from "commit-graph";
+import { useRef } from "react";
 import useDiffForTableListLazy from "./useDiffForTableListLazy";
 
 const defaultState = {
   showOverview: false,
-  showOverviewButton: false,
+  showOverviewButton: true,
   diffOverview: undefined as Diff | undefined,
 };
 

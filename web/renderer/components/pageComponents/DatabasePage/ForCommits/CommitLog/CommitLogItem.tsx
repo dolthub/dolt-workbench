@@ -1,13 +1,14 @@
+import { getCommit } from "@components/CommitGraph/utils";
 import CommitLink from "@components/links/CommitLink";
 import { Button, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
+import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import { RefParams } from "@lib/params";
 import cx from "classnames";
 import { DiffSection } from "commit-graph";
-import { getCommit } from "@components/CommitGraph/utils";
-import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import css from "./index.module.css";
+import ResetRevertCommit from "./ResetRevertCommit";
 
 type UserProps = {
   commit: CommitForHistoryFragment;
@@ -55,19 +56,25 @@ export default function CommitLogItem(props: Props) {
             {commit.message}
           </CommitLink>
         </div>
-        {state.showOverviewButton && !!commit.parents.length && (
-          <Button.Link
-            type="button"
-            className={css.showOverviewButton}
-            onClick={async () => {
-              setState({ showOverview: true });
-              const result = await getDiff(commit.parents[0], commit.commitId);
-              setState({ diffOverview: result });
-            }}
-          >
-            See commit overview
-          </Button.Link>
-        )}
+        <div>
+          {state.showOverviewButton && !!commit.parents.length && (
+            <Button.Link
+              type="button"
+              className={css.showOverviewButton}
+              onClick={async () => {
+                setState({ showOverview: true });
+                const result = await getDiff(
+                  commit.parents[0],
+                  commit.commitId,
+                );
+                setState({ diffOverview: result });
+              }}
+            >
+              See commit overview
+            </Button.Link>
+          )}
+          <ResetRevertCommit {...props} />
+        </div>
       </div>
       <div className={css.itemBottom}>
         <span>

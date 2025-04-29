@@ -1,0 +1,11 @@
+.button {
+  @apply ml-4;
+}
+
+.option {
+  @apply my-1 mx-0.5 flex items-center;
+
+  svg {
+    @apply mr-1.5 text-lg;
+  }
+}

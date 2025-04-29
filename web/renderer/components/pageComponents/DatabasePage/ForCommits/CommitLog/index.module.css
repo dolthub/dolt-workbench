@@ -128,8 +128,16 @@
   }
 }
 
+.uncommittedRight {
+  @apply flex items-center;
+}
+
 .showOverviewButton {
   @apply leading-5;
+}
+
+.hideOverviewButton {
+  @apply invisible;
 }
 
 .focused {
@@ -138,4 +146,11 @@
 
 .hovered {
   @apply bg-stone-50;
+}
+
+.resetButton {
+  @apply my-0;
+  svg {
+    @apply text-primary ml-4 text-lg;
+  }
 }
