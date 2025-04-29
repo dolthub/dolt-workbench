@@ -1,3 +1,8 @@
-.checkbox {
+.form .checkbox {
   @apply my-4 mx-6;
+  svg{
+    @apply -top-1;
+  }
 }
+
+ 

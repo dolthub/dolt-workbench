@@ -73,7 +73,7 @@ export function ConfigProvider({ children }: Props) {
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true });
-    console.log("submit", state);
+
     try {
       const db = await mutateFn({
         variables: {

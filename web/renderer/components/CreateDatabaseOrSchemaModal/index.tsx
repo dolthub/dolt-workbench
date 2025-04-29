@@ -10,6 +10,7 @@ import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
 import CloneDatabaseCheckbox from "./CloneDatabaseCheckbox";
+import css from "./index.module.css"
 
 type InnerProps = {
   onClose: () => void;
@@ -47,7 +48,7 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
   }
 
   return (
-    <form onSubmit={props.onSubmit}>
+    <form onSubmit={props.onSubmit} className={css.form}>
       {props.isDolt && (
         <CloneDatabaseCheckbox
           cloneDolt={cloneDolt}
