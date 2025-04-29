@@ -4,7 +4,7 @@
     "**/*.ts",
     "**/*.tsx",
     "jest.setup.ts"
-, "renderer/components/CloneDatabaseForm"  ],
+  ],
   "compilerOptions": {
     "downlevelIteration": true,
     "incremental": true,
