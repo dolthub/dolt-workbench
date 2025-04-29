@@ -86,7 +86,6 @@ function Item(props: ItemProps) {
           >
             See commit overview
           </Button.Link>
-
           <Button.Link
             onClick={() => setResetIsOpen(true)}
             data-tooltip-id="reset-changes"

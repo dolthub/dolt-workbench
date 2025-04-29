@@ -6,7 +6,7 @@ import useDiffForTableListLazy from "./useDiffForTableListLazy";
 
 const defaultState = {
   showOverview: false,
-  showOverviewButton: true,
+  showOverviewButton: false,
   diffOverview: undefined as Diff | undefined,
 };
 
