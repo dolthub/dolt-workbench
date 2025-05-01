@@ -2591,9 +2591,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/react-components@npm:^0.2.8":
-  version: 0.2.8
-  resolution: "@dolthub/react-components@npm:0.2.8"
+"@dolthub/react-components@npm:^0.2.9":
+  version: 0.2.9
+  resolution: "@dolthub/react-components@npm:0.2.9"
   dependencies:
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
@@ -2605,16 +2605,16 @@ __metadata:
     numeral: "npm:^2.0.6"
     react-copy-to-clipboard: "npm:^5.1.0"
     react-loader: "npm:^2.4.7"
-    react-markdown: "npm:^9.0.1"
+    react-markdown: "npm:^10.0.0"
     react-select: "npm:^5.8.3"
     react-tooltip: "npm:^5.28.0"
     reactjs-popup: "npm:^2.0.6"
-    remark-gfm: "npm:^4.0.0"
+    remark-gfm: "npm:^4.0.1"
     tailwindcss: "npm:^3.4.1"
   peerDependencies:
     react: ^18
     react-dom: ^18
-  checksum: 10c0/7708505e0e4b1fc610b52813ca703c9b8fa5d1204e7f1ea141361cde24b209d59b4c1c3def419066e3d2765489815721285015ae5a53905dd3ffeb5e3e17e1ac
+  checksum: 10c0/4fe182ccea952a08287d85edb4f4058ee0eb584e9f873a43817eea79244944dd092bc822b84b5c6e8ef7cf1207b6932e61487f54cfb5c3c82dc37466d4cb9837
   languageName: node
   linkType: hard
 
@@ -8962,7 +8962,7 @@ __metadata:
   resolution: "dolt-workbench@workspace:."
   dependencies:
     "@apollo/client": "npm:^3.9.9"
-    "@dolthub/react-components": "npm:^0.2.8"
+    "@dolthub/react-components": "npm:^0.2.9"
     "@dolthub/react-contexts": "npm:^0.1.0"
     "@dolthub/react-hooks": "npm:^0.1.7"
     "@dolthub/web-utils": "npm:^0.1.9"
@@ -16553,6 +16553,28 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-markdown@npm:^10.0.0":
+  version: 10.1.0
+  resolution: "react-markdown@npm:10.1.0"
+  dependencies:
+    "@types/hast": "npm:^3.0.0"
+    "@types/mdast": "npm:^4.0.0"
+    devlop: "npm:^1.0.0"
+    hast-util-to-jsx-runtime: "npm:^2.0.0"
+    html-url-attributes: "npm:^3.0.0"
+    mdast-util-to-hast: "npm:^13.0.0"
+    remark-parse: "npm:^11.0.0"
+    remark-rehype: "npm:^11.0.0"
+    unified: "npm:^11.0.0"
+    unist-util-visit: "npm:^5.0.0"
+    vfile: "npm:^6.0.0"
+  peerDependencies:
+    "@types/react": ">=18"
+    react: ">=18"
+  checksum: 10c0/4a5dc7d15ca6d05e9ee95318c1904f83b111a76f7588c44f50f1d54d4c97193b84e4f64c4b592057c989228238a2590306cedd0c4d398e75da49262b2b5ae1bf
+  languageName: node
+  linkType: hard
+
 "react-markdown@npm:^9.0.1":
   version: 9.0.1
   resolution: "react-markdown@npm:9.0.1"
@@ -16907,6 +16929,20 @@ __metadata:
     remark-stringify: "npm:^11.0.0"
     unified: "npm:^11.0.0"
   checksum: 10c0/db0aa85ab718d475c2596e27c95be9255d3b0fc730a4eda9af076b919f7dd812f7be3ac020611a8dbe5253fd29671d7b12750b56e529fdc32dfebad6dbf77403
+  languageName: node
+  linkType: hard
+
+"remark-gfm@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "remark-gfm@npm:4.0.1"
+  dependencies:
+    "@types/mdast": "npm:^4.0.0"
+    mdast-util-gfm: "npm:^3.0.0"
+    micromark-extension-gfm: "npm:^3.0.0"
+    remark-parse: "npm:^11.0.0"
+    remark-stringify: "npm:^11.0.0"
+    unified: "npm:^11.0.0"
+  checksum: 10c0/427ecc6af3e76222662061a5f670a3e4e33ec5fffe2cabf04034da6a3f9a1bda1fc023e838a636385ba314e66e2bebbf017ca61ebea357eb0f5200fe0625a4b7
   languageName: node
   linkType: hard
 
