@@ -48,7 +48,7 @@
     "pg": "^8.13.1",
     "pg-copy-streams": "^6.0.6",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.5.4",
+    "rxjs": "^7.8.2",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
