@@ -36,7 +36,43 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@apollo/client@npm:^3.7.0, @apollo/client@npm:^3.9.9":
+"@apollo/client@npm:^3.8.0":
+  version: 3.13.8
+  resolution: "@apollo/client@npm:3.13.8"
+  dependencies:
+    "@graphql-typed-document-node/core": "npm:^3.1.1"
+    "@wry/caches": "npm:^1.0.0"
+    "@wry/equality": "npm:^0.5.6"
+    "@wry/trie": "npm:^0.5.0"
+    graphql-tag: "npm:^2.12.6"
+    hoist-non-react-statics: "npm:^3.3.2"
+    optimism: "npm:^0.18.0"
+    prop-types: "npm:^15.7.2"
+    rehackt: "npm:^0.1.0"
+    symbol-observable: "npm:^4.0.0"
+    ts-invariant: "npm:^0.10.3"
+    tslib: "npm:^2.3.0"
+    zen-observable-ts: "npm:^1.2.5"
+  peerDependencies:
+    graphql: ^15.0.0 || ^16.0.0
+    graphql-ws: ^5.5.5 || ^6.0.3
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0 || >=19.0.0-rc
+    subscriptions-transport-ws: ^0.9.0 || ^0.11.0
+  peerDependenciesMeta:
+    graphql-ws:
+      optional: true
+    react:
+      optional: true
+    react-dom:
+      optional: true
+    subscriptions-transport-ws:
+      optional: true
+  checksum: 10c0/0e5032c1ae1dbef72a01f87af06b84bf505d60e71eba7cb9f20f8284778d8ead65fc1b7eacc570eccb8d045577d7194e38401fbfbdf56c197e159ca91ef11755
+  languageName: node
+  linkType: hard
+
+"@apollo/client@npm:^3.9.9":
   version: 3.11.8
   resolution: "@apollo/client@npm:3.11.8"
   dependencies:
@@ -4853,14 +4889,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/apollo-upload-client@npm:^17":
-  version: 17.0.5
-  resolution: "@types/apollo-upload-client@npm:17.0.5"
+"@types/apollo-upload-client@npm:^18":
+  version: 18.0.0
+  resolution: "@types/apollo-upload-client@npm:18.0.0"
   dependencies:
-    "@apollo/client": "npm:^3.7.0"
+    "@apollo/client": "npm:^3.8.0"
     "@types/extract-files": "npm:*"
     graphql: "npm:14 - 16"
-  checksum: 10c0/ce3ea0bb1579867b7a8da16edab7c4ba56a174e820238a087f748f1d8be5d65fbd6ba796961023722f86e78425e459e5fb51d05414ecf4acd59880e0f4b8b1ac
+  checksum: 10c0/e733c3a2abe6286da5557e393c0fcc9946bfdeb9115aabc978d7443f58ada466cb56ba98331d25266664186c6e424aea783eadd4fb7870c3d93f5b3fcafc696a
   languageName: node
   linkType: hard
 
@@ -6459,15 +6495,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-upload-client@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "apollo-upload-client@npm:17.0.0"
+"apollo-upload-client@npm:^18.0.1":
+  version: 18.0.1
+  resolution: "apollo-upload-client@npm:18.0.1"
   dependencies:
-    extract-files: "npm:^11.0.0"
+    extract-files: "npm:^13.0.0"
   peerDependencies:
-    "@apollo/client": ^3.0.0
+    "@apollo/client": ^3.8.0
     graphql: 14 - 16
-  checksum: 10c0/bddc4c26b7e81ec0b01885d969e007d1d0f44466d126594b91e0a3e375813b81f0e0b76ffedb4c78414ceddb126cb13428ca9715783ce5b6c4e299f482150bd7
+  checksum: 10c0/30803d91df5ee32231afc8e15fa52be2a46b11c827255e8028b4f49149bcc8e4b4d4469e33d4331e63e12aa697e9a5e359a32ae3608335c51a76dbe62ad55bcb
   languageName: node
   linkType: hard
 
@@ -8976,7 +9012,7 @@ __metadata:
     "@testing-library/jest-dom": "npm:^6.6.3"
     "@testing-library/react": "npm:^16.2.0"
     "@testing-library/user-event": "npm:^14.5.2"
-    "@types/apollo-upload-client": "npm:^17"
+    "@types/apollo-upload-client": "npm:^18"
     "@types/chance": "npm:^1.1.5"
     "@types/diff": "npm:^5.2.1"
     "@types/jest": "npm:^29.5.6"
@@ -8991,7 +9027,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": "npm:^7.1.0"
     "@typescript-eslint/parser": "npm:^8.29.0"
     ace-builds: "npm:^1.37.5"
-    apollo-upload-client: "npm:^17.0.0"
+    apollo-upload-client: "npm:^18.0.1"
     autoprefixer: "npm:^10.4.19"
     babel-jest: "npm:^29.7.0"
     chance: "npm:^1.1.11"
@@ -10200,6 +10236,15 @@ __metadata:
   version: 11.0.0
   resolution: "extract-files@npm:11.0.0"
   checksum: 10c0/7ac1cd693d081099d7c29f2b36aad199f92c5ea234c2016eb37ba213dddaefe74d54566f0675de5917d35cf98670183c2c9a0d96094727eb2c6dae02be7fc308
+  languageName: node
+  linkType: hard
+
+"extract-files@npm:^13.0.0":
+  version: 13.0.0
+  resolution: "extract-files@npm:13.0.0"
+  dependencies:
+    is-plain-obj: "npm:^4.1.0"
+  checksum: 10c0/ee1e6e37f24fcb7de5019c0dc054f3e075664f63b5a9bd38c9ba1a32481ed1e77fd237adf826a7f6c7a1db406d9db4428f8ae4395fb2dfb602235b15f8f4bc3e
   languageName: node
   linkType: hard
 
@@ -11954,7 +11999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-plain-obj@npm:^4.0.0":
+"is-plain-obj@npm:^4.0.0, is-plain-obj@npm:^4.1.0":
   version: 4.1.0
   resolution: "is-plain-obj@npm:4.1.0"
   checksum: 10c0/32130d651d71d9564dc88ba7e6fda0e91a1010a3694648e9f4f47bb6080438140696d3e3e15c741411d712e47ac9edc1a8a9de1fe76f3487b0d90be06ac9975e
