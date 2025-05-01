@@ -45,5 +45,4 @@ export type ConfigContextType = {
   clearState: () => void;
   storedConnections?: DatabaseConnectionFragment[];
   onStartDoltServer: (e: SyntheticEvent) => Promise<void>;
-  onCloneDoltHubDatabase: (e: SyntheticEvent, init?: boolean) => Promise<void>;
 };

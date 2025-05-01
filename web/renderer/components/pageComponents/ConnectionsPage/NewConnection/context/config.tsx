@@ -5,15 +5,13 @@ import {
   useSetState,
 } from "@dolthub/react-hooks";
 import {
-  DatabasesByConnectionDocument,
   useAddDatabaseConnectionMutation,
-  useDoltCloneMutation,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { useRouter } from "next/router";
 import { ReactNode, SyntheticEvent, useEffect, useMemo, useState } from "react";
-import { database, maybeDatabase } from "@lib/urls";
+import { maybeDatabase } from "@lib/urls";
 import { ConfigContextType, defaultState, getDefaultState } from "./state";
 import { getConnectionUrl } from "./utils";
 
@@ -34,11 +32,6 @@ export function ConfigProvider({ children }: Props) {
     hook: useAddDatabaseConnectionMutation,
   });
 
-  const { mutateFn: doltClone, err: cloneErr } = useMutation({
-    hook: useDoltCloneMutation,
-    refetchQueries: [{ query: DatabasesByConnectionDocument }],
-  });
-
   const connectionsRes = useStoredConnectionsQuery();
   const [err, setErr] = useState<Error | undefined>(
     res.err || connectionsRes.error,
@@ -50,14 +43,14 @@ export function ConfigProvider({ children }: Props) {
   });
 
   useEffect(() => {
-    if (!res.err && !cloneErr) return;
-    setErr(res.err || cloneErr);
+    if (!res.err) return;
+    setErr(res.err);
     if (
-      res.err?.message.includes("The server does not support SSL connections")
+      res.err.message.includes("The server does not support SSL connections")
     ) {
       setState({ showAdvancedSettings: true });
     }
-  }, [res.err, cloneErr]);
+  }, [res.err]);
 
   useEffectOnMount(() => {
     if (!forElectron) return;
@@ -124,66 +117,6 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onCloneDoltHubDatabase = async (
-    e: SyntheticEvent,
-    forInit?: boolean,
-  ) => {
-    e.preventDefault();
-    setState({ loading: true, progress: 0 });
-    let interval;
-    let progress = 0;
-    try {
-      interval = setInterval(() => {
-        progress += 0.05;
-        setState({
-          progress: Math.min(progress, 95),
-        });
-      }, 10);
-      if (forInit) {
-        const result = await window.ipc.invoke(
-          "clone-dolthub-db",
-          state.owner.trim(),
-          state.database.trim(),
-          state.name,
-          state.port,
-        );
-        if (result !== "success") {
-          setErr(Error(result));
-          return;
-        }
-        // Complete progress to 100%
-        setState({ progress: 100 });
-
-        await onSubmit(e);
-      } else {
-        const { success } = await doltClone({
-          variables: {
-            ownerName: state.owner.trim(),
-            databaseName: state.database.trim(),
-          },
-        });
-        if (!success) {
-          return;
-        }
-        // Complete progress to 100%
-        setState({ progress: 100 });
-
-        const { href, as } = database({ databaseName: state.database.trim() });
-        router.push(href, as).catch(console.error);
-      }
-    } catch (error) {
-      setErr(Error(` ${error}`));
-    } finally {
-      if (interval) {
-        clearInterval(interval);
-      }
-      setState({
-        loading: false,
-        progress: state.progress === 100 ? 0 : state.progress,
-      });
-    }
-  };
-
   const value = useMemo(() => {
     return {
       state,
@@ -194,7 +127,6 @@ export function ConfigProvider({ children }: Props) {
       clearState,
       storedConnections: connectionsRes.data?.storedConnections,
       onStartDoltServer,
-      onCloneDoltHubDatabase,
     };
   }, [
     state,
@@ -204,7 +136,6 @@ export function ConfigProvider({ children }: Props) {
     clearState,
     connectionsRes,
     onStartDoltServer,
-    onCloneDoltHubDatabase,
   ]);
 
   return (
