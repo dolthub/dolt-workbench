@@ -760,7 +760,7 @@ __metadata:
   dependencies:
     "@apollo/server": "npm:^4.11.2"
     "@dolthub/web-utils": "npm:^0.1.2"
-    "@nestjs/apollo": "npm:^13.0.4"
+    "@nestjs/apollo": "npm:^13.1.0"
     "@nestjs/cli": "npm:^11.0.5"
     "@nestjs/common": "npm:^11.0.16"
     "@nestjs/config": "npm:^4.0.2"
@@ -1749,9 +1749,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/apollo@npm:^13.0.4":
-  version: 13.0.4
-  resolution: "@nestjs/apollo@npm:13.0.4"
+"@nestjs/apollo@npm:^13.1.0":
+  version: 13.1.0
+  resolution: "@nestjs/apollo@npm:13.1.0"
   dependencies:
     "@apollo/server-plugin-landing-page-graphql-playground": "npm:4.0.1"
     iterall: "npm:1.3.0"
@@ -1773,7 +1773,7 @@ __metadata:
       optional: true
     "@as-integrations/fastify":
       optional: true
-  checksum: 10c0/4ca4f8d59411b492ae3f5c0fef81fee28a4724339d1ee94a990299550317859ce1b596e18f6f06e7200c3f1501fd22d6f0c122c73f01e0bef800591a9a66b700
+  checksum: 10c0/21dc8127a65607290fd179ee111f0d073fa34c0b022b080d69c3ebc8657cb09993e2bf2a89e53aae9a1b2d74c2cd230e1d014a74893cbbc5723f9ef92027877c
   languageName: node
   linkType: hard
 
