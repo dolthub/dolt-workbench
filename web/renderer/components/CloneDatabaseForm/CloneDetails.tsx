@@ -1,22 +1,22 @@
-import { useConfigContext } from "@components/pageComponents/ConnectionsPage/NewConnection/context/config";
 import { Checkbox } from "@dolthub/react-components";
+import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
+import { ConfigState } from "@components/pageComponents/ConnectionsPage/NewConnection/context/state";
 import css from "./index.module.css";
 import CloneForm from "./CloneForm";
+import { useClone } from "./useClone";
 
 type Props = {
   cloneDolt: boolean;
   setCloneDolt: (c: boolean) => void;
-  forInit?: boolean;
-  name?: string;
+  currentConnection: DatabaseConnectionFragment;
 };
 
 export default function CloneDetails({
   cloneDolt,
   setCloneDolt,
-  name,
-  forInit,
+  currentConnection,
 }: Props) {
-  const { state, setState } = useConfigContext();
+  const { state, setState } = useClone(getConnectionState(currentConnection));
 
   return (
     <div className={css.form}>
@@ -28,7 +28,6 @@ export default function CloneDetails({
             port: e.target.checked ? "3658" : state.port,
             isLocalDolt: !cloneDolt,
             cloneDolt: !cloneDolt,
-            name,
           });
           setCloneDolt(!cloneDolt);
         }}
@@ -37,7 +36,33 @@ export default function CloneDetails({
         description="Clone a Dolt database from DoltHub"
         className={css.checkbox}
       />
-      {cloneDolt && <CloneForm forInit={forInit} />}
+      {cloneDolt && <CloneForm forInit connectionState={state} />}
     </div>
   );
+}
+
+function getConnectionState(
+  currentConnection: DatabaseConnectionFragment,
+): ConfigState {
+  return {
+    name: currentConnection.name,
+    owner: "",
+    host: "",
+    hostPlaceholder: "127.0.0.1",
+    port: currentConnection.port || "3658",
+    username: "root",
+    password: "",
+    database: "",
+    connectionUrl: currentConnection.connectionUrl,
+    hideDoltFeatures: currentConnection.hideDoltFeatures || false,
+    useSSL: currentConnection.useSSL || true,
+    showAbout: true,
+    showConnectionDetails: false,
+    showAdvancedSettings: false,
+    loading: false,
+    type: currentConnection.type || DatabaseType.Mysql,
+    isLocalDolt: currentConnection.isLocalDolt || false,
+    cloneDolt: true,
+    progress: 0,
+  };
 }

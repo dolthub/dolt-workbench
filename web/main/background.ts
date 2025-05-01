@@ -368,6 +368,30 @@ ipcMain.handle(
         doltServerProcess = null;
       }
 
+      const dbFolderPath = isProd
+        ? path.join(app.getPath("userData"), "databases", connectionName)
+        : path.join(__dirname, "..", "build", "databases", connectionName);
+
+      try {
+        const { errorMsg } = await removeDoltServerFolder(
+          dbFolderPath,
+          mainWindow,
+        );
+        if (errorMsg) {
+          console.error("Cleanup failed:", errorMsg);
+          mainWindow.webContents.send(
+            "server-error",
+            `Cleanup failed: ${errorMsg}`,
+          );
+        }
+      } catch (cleanupError) {
+        console.error("Folder deletion error:", cleanupError);
+        mainWindow.webContents.send(
+          "server-error",
+          `Failed to clean up files: ${getErrorMessage(cleanupError)}`,
+        );
+      }
+
       mainWindow.webContents.send(
         "server-error",
         `Failed to clone database ${owner}/${databaseName}: ${getErrorMessage(cloneError)}`,

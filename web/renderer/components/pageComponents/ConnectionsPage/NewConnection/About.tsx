@@ -65,7 +65,7 @@ export default function About() {
         </>
       )}
       {startDoltServer && <StartDoltServerForm />}
-      {cloneDolt && <CloneForm forInit />}
+      {cloneDolt && <CloneForm connectionState={state} forInit />}
       {!startDoltServer && !cloneDolt && (
         <>
           <FormInput

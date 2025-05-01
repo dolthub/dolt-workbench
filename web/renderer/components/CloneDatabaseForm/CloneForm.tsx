@@ -4,23 +4,25 @@ import {
   FormInput,
   Popup,
 } from "@dolthub/react-components";
-import { useConfigContext } from "@components/pageComponents/ConnectionsPage/NewConnection/context/config";
+import { ConfigState } from "@components/pageComponents/ConnectionsPage/NewConnection/context/state";
 import css from "./index.module.css";
 import { getStartLocalDoltServerDisabled } from "./utils";
+import { useClone } from "./useClone";
 
 type Props = {
+  connectionState: ConfigState;
   forInit?: boolean;
 };
 
-export default function CloneForm({ forInit }: Props) {
+export default function CloneForm({ connectionState, forInit }: Props) {
   const {
     state,
     setState,
-    error,
+    err,
     setErr,
     storedConnections,
     onCloneDoltHubDatabase,
-  } = useConfigContext();
+  } = useClone(connectionState);
 
   const { disabled, message } = getStartLocalDoltServerDisabled(
     state,
@@ -79,7 +81,7 @@ export default function CloneForm({ forInit }: Props) {
           />
         </>
       )}
-      <ButtonsWithError error={error} className={css.buttons}>
+      <ButtonsWithError error={err} className={css.buttons}>
         <Popup
           position="bottom center"
           on={["hover"]}
@@ -105,7 +107,9 @@ export default function CloneForm({ forInit }: Props) {
                   type="submit"
                   disabled={disabled || state.loading}
                   className={css.button}
-                  onClick={async e => onCloneDoltHubDatabase(e, forInit)}
+                  onClick={async e =>
+                    onCloneDoltHubDatabase(e, !forInit, forInit)
+                  }
                 >
                   Start Clone
                 </Button>
