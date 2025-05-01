@@ -36,7 +36,7 @@ export default function CloneDetails({
         description="Clone a Dolt database from DoltHub"
         className={css.checkbox}
       />
-      {cloneDolt && <CloneForm forInit connectionState={state} />}
+      {cloneDolt && <CloneForm connectionState={state} />}
     </div>
   );
 }
