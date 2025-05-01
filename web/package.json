@@ -72,7 +72,7 @@
   "devDependencies": {
     "@electron/osx-sign": "^2.0.0",
     "@graphql-codegen/cli": "^5.0.5",
-    "@graphql-codegen/fragment-matcher": "^5.0.0",
+    "@graphql-codegen/fragment-matcher": "^5.1.0",
     "@graphql-codegen/typescript-operations": "^4.4.0",
     "@graphql-codegen/typescript-react-apollo": "^4.0.0",
     "@testing-library/dom": "^10.4.0",
