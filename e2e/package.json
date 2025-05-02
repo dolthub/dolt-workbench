@@ -1,0 +1,16 @@
+{
+  "name": "workbench-e2e",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "yarn start-servers && yarn cypress-open",
+    "test:ci": "yarn start-servers && yarn cypress-run",
+    "start-servers": "concurrently -k -n 'GRAPHQL,WEB' -c 'bgBlue.bold,bgMagenta.bold' 'yarn --cwd ../graphql-server dev' 'yarn --cwd ../web dev'",
+    "cypress-open": "wait-on -t 60000 http://localhost:3000/health http://localhost:3002 && cypress open",
+    "cypress-run": "wait-on -t 60000 http://localhost:3000/health http://localhost:3002 && cypress run"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cypress": "^13.6.0",
+    "wait-on": "^7.2.0"
+  }
+}
