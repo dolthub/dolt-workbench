@@ -1,9 +1,17 @@
 import { Checkbox } from "@dolthub/react-components";
 import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
 import { ConfigState } from "@components/pageComponents/ConnectionsPage/NewConnection/context/state";
+import useMutation from "@hooks/useMutation";
+import {
+  DatabasesByConnectionDocument,
+  useDoltCloneMutation,
+} from "@gen/graphql-types";
 import css from "./index.module.css";
 import CloneForm from "./CloneForm";
 import { useClone } from "./useClone";
+import { database } from "@lib/urls";
+import { useRouter } from "next/router";
+import { SyntheticEvent, useEffect, useState } from "react";
 
 type Props = {
   cloneDolt: boolean;
@@ -16,53 +24,83 @@ export default function CloneDetails({
   setCloneDolt,
   currentConnection,
 }: Props) {
-  const { state, setState } = useClone(getConnectionState(currentConnection));
+  const { mutateFn: doltClone, ...res } = useMutation({
+    hook: useDoltCloneMutation,
+    refetchQueries: [{ query: DatabasesByConnectionDocument }],
+  });
+  const router = useRouter();
+  const [progress, setProgress] = useState(0);
+  const [err, setErr] = useState<Error | undefined>(undefined);
+  const [loading, setLoading] = useState(res.loading);
+
+  useEffect(() => {
+    if (!res.err) return;
+    setErr(res.err);
+  }, [res.err]);
+
+  if (currentConnection.type === DatabaseType.Postgres) {
+    return <></>;
+  }
+
+  const onCloneDoltHubDatabase = async (
+    e: SyntheticEvent,
+    owner: string,
+    databaseName: string,
+  ) => {
+    e.preventDefault();
+    let interval;
+    setProgress(0);
+    setErr(undefined);
+    setLoading(true);
+
+    try {
+      interval = setInterval(() => {
+        setProgress(Math.min(progress + 0.05, 95));
+      }, 10);
+      const { success } = await doltClone({
+        variables: {
+          ownerName: owner.trim(),
+          databaseName: databaseName.trim(),
+        },
+      });
+      if (!success) {
+        return;
+      }
+      // Complete progress to 100%
+      setProgress(100);
+
+      const { href, as } = database({ databaseName: databaseName.trim() });
+      router.push(href, as).catch(console.error);
+    } catch (_) {
+    } finally {
+      if (interval) {
+        clearInterval(interval);
+      }
+      setLoading(false);
+      setProgress(progress === 100 ? 0 : progress);
+    }
+  };
 
   return (
     <div className={css.form}>
       <Checkbox
         checked={cloneDolt}
-        onChange={e => {
-          setState({
-            useSSL: cloneDolt,
-            port: e.target.checked ? "3658" : state.port,
-            isLocalDolt: !cloneDolt,
-            cloneDolt: !cloneDolt,
-          });
+        onChange={() => {
           setCloneDolt(!cloneDolt);
         }}
         name="clone-dolt-server"
-        label="Clone a remote Dolt database"
-        description="Clone a Dolt database from DoltHub"
+        label="Clone a remote Dolt database from DoltHub"
         className={css.checkbox}
       />
-      {cloneDolt && <CloneForm connectionState={state} />}
+      {cloneDolt && (
+        <CloneForm
+          onCloneDoltHubDatabase={onCloneDoltHubDatabase}
+          progress={progress}
+          loading={loading}
+          error={err}
+          setErr={setErr}
+        />
+      )}
     </div>
   );
-}
-
-function getConnectionState(
-  currentConnection: DatabaseConnectionFragment,
-): ConfigState {
-  return {
-    name: currentConnection.name,
-    owner: "",
-    host: "",
-    hostPlaceholder: "127.0.0.1",
-    port: currentConnection.port || "3658",
-    username: "root",
-    password: "",
-    database: "",
-    connectionUrl: currentConnection.connectionUrl,
-    hideDoltFeatures: currentConnection.hideDoltFeatures || false,
-    useSSL: currentConnection.useSSL || true,
-    showAbout: true,
-    showConnectionDetails: false,
-    showAdvancedSettings: false,
-    loading: false,
-    type: currentConnection.type || DatabaseType.Mysql,
-    isLocalDolt: currentConnection.isLocalDolt || false,
-    cloneDolt: true,
-    progress: 0,
-  };
 }

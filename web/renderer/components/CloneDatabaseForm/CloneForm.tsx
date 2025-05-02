@@ -8,34 +8,45 @@ import { ConfigState } from "@components/pageComponents/ConnectionsPage/NewConne
 import css from "./index.module.css";
 import { getStartLocalDoltServerDisabled } from "./utils";
 import { useClone } from "./useClone";
+import { SyntheticEvent, useState } from "react";
+import useMutation from "@hooks/useMutation";
+import {
+  DatabasesByConnectionDocument,
+  useDoltCloneMutation,
+} from "@gen/graphql-types";
+import { SetApolloErrorType } from "@lib/errors/types";
 
 type Props = {
-  connectionState: ConfigState;
-  forInit?: boolean;
+  onCloneDoltHubDatabase: (
+    e: SyntheticEvent,
+    owner: string,
+    databaseName: string,
+  ) => Promise<void>;
+  progress: number;
+  loading: boolean;
+  error?: Error | undefined;
+  setErr: SetApolloErrorType;
 };
 
-export default function CloneForm({ connectionState, forInit }: Props) {
-  const {
-    state,
-    setState,
-    err,
-    setErr,
-    storedConnections,
-    onCloneDoltHubDatabase,
-  } = useClone(connectionState);
+export default function CloneForm({
+  onCloneDoltHubDatabase,
+  progress,
+  loading,
+  error,
+  setErr,
+}: Props) {
+  const [owner, setOwner] = useState("");
+  const [remoteDbName, setRemoteDbName] = useState("");
+  const [newDbName, setNewDbName] = useState("");
 
-  const { disabled, message } = getStartLocalDoltServerDisabled(
-    state,
-    storedConnections,
-    forInit,
-  );
+  const { disabled, message } = getDisabled(owner, remoteDbName);
 
   return (
     <>
       <FormInput
-        value={state.owner}
-        onChangeString={owner => {
-          setState({ owner });
+        value={owner}
+        onChangeString={val => {
+          setOwner(val);
           setErr(undefined);
         }}
         label="Owner Name"
@@ -44,9 +55,10 @@ export default function CloneForm({ connectionState, forInit }: Props) {
         light
       />
       <FormInput
-        value={state.database}
-        onChangeString={n => {
-          setState({ database: n });
+        value={remoteDbName}
+        onChangeString={dbName => {
+          setRemoteDbName(dbName);
+          setNewDbName(dbName);
           setErr(undefined);
         }}
         label="Remote Database Name"
@@ -54,34 +66,18 @@ export default function CloneForm({ connectionState, forInit }: Props) {
         placeholder="e.g. my-database (required)"
         light
       />
-      {forInit && (
-        <>
-          <FormInput
-            value={state.name}
-            onChangeString={n => {
-              setState({ name: n });
-              setErr(undefined);
-            }}
-            label="Connection Name"
-            labelClassName={css.label}
-            placeholder="e.g. my-connection (required)"
-            light
-          />
-
-          <FormInput
-            label="Port"
-            value={state.port}
-            onChangeString={p => {
-              setState({ port: p });
-              setErr(undefined);
-            }}
-            placeholder="e.g. 3658 (required)"
-            light
-            labelClassName={css.label}
-          />
-        </>
-      )}
-      <ButtonsWithError error={err} className={css.buttons}>
+      <FormInput
+        value={newDbName}
+        onChangeString={dbName => {
+          setNewDbName(dbName);
+          setErr(undefined);
+        }}
+        label="New Database Name"
+        labelClassName={css.label}
+        placeholder="e.g. my-database (required)"
+        light
+      />
+      <ButtonsWithError error={error} className={css.buttons}>
         <Popup
           position="bottom center"
           on={["hover"]}
@@ -92,23 +88,23 @@ export default function CloneForm({ connectionState, forInit }: Props) {
           closeOnDocumentClick
           trigger={
             <div>
-              {state.loading ? (
+              {loading ? (
                 <div className={css.cloneProgress}>
                   <span>Cloning...</span>
                   <div className={css.progressContainer}>
                     <div
                       className={css.progressBar}
-                      style={{ transform: `scaleX(${state.progress / 100})` }}
+                      style={{ transform: `scaleX(${progress / 100})` }}
                     />
                   </div>
                 </div>
               ) : (
                 <Button
                   type="submit"
-                  disabled={disabled || state.loading}
+                  disabled={disabled || loading}
                   className={css.button}
                   onClick={async e =>
-                    onCloneDoltHubDatabase(e, !forInit, forInit)
+                    onCloneDoltHubDatabase(e, owner, remoteDbName)
                   }
                 >
                   Start Clone
@@ -119,8 +115,28 @@ export default function CloneForm({ connectionState, forInit }: Props) {
           disabled={!disabled}
         >
           {disabled && <div className={css.popup}>{message}</div>}
+          <div></div>
         </Popup>
       </ButtonsWithError>
     </>
   );
+}
+
+type DisabledReturnType = {
+  disabled: boolean;
+  message?: React.ReactNode;
+};
+
+export function getDisabled(
+  owner: string,
+  database?: string,
+): DisabledReturnType {
+  if (!database) {
+    return { disabled: true, message: <span>Database name is required.</span> };
+  }
+  if (!owner) {
+    return { disabled: true, message: <span>Owner name is required.</span> };
+  }
+
+  return { disabled: false };
 }

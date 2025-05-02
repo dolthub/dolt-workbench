@@ -11,7 +11,6 @@ type DisabledReturnType = {
 export function getStartLocalDoltServerDisabled(
   state: ConfigState,
   connections?: DatabaseConnectionFragment[],
-  forInit?: boolean,
 ): DisabledReturnType {
   if (!state.database) {
     return { disabled: true, message: <span>Database name is required.</span> };
@@ -20,7 +19,7 @@ export function getStartLocalDoltServerDisabled(
     return { disabled: true, message: <span>Owner name is required.</span> };
   }
 
-  if (forInit && connections?.some(connection => connection.isLocalDolt)) {
+  if (connections?.some(connection => connection.isLocalDolt)) {
     return {
       disabled: true,
       message: (
