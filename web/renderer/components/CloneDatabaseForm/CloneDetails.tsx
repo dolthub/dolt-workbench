@@ -1,17 +1,16 @@
 import { Checkbox } from "@dolthub/react-components";
-import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
-import { ConfigState } from "@components/pageComponents/ConnectionsPage/NewConnection/context/state";
-import useMutation from "@hooks/useMutation";
 import {
+  DatabaseConnectionFragment,
+  DatabaseType,
   DatabasesByConnectionDocument,
   useDoltCloneMutation,
 } from "@gen/graphql-types";
-import css from "./index.module.css";
-import CloneForm from "./CloneForm";
-import { useClone } from "./useClone";
+import useMutation from "@hooks/useMutation";
 import { database } from "@lib/urls";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useEffect, useState } from "react";
+import css from "./index.module.css";
+import CloneForm from "./CloneForm";
 
 type Props = {
   cloneDolt: boolean;
@@ -39,7 +38,7 @@ export default function CloneDetails({
   }, [res.err]);
 
   if (currentConnection.type === DatabaseType.Postgres) {
-    return <></>;
+    return null;
   }
 
   const onCloneDoltHubDatabase = async (
@@ -72,6 +71,7 @@ export default function CloneDetails({
       const { href, as } = database({ databaseName: databaseName.trim() });
       router.push(href, as).catch(console.error);
     } catch (_) {
+      // handled by res.error
     } finally {
       if (interval) {
         clearInterval(interval);

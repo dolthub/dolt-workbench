@@ -4,17 +4,9 @@ import {
   FormInput,
   Popup,
 } from "@dolthub/react-components";
-import { ConfigState } from "@components/pageComponents/ConnectionsPage/NewConnection/context/state";
-import css from "./index.module.css";
-import { getStartLocalDoltServerDisabled } from "./utils";
-import { useClone } from "./useClone";
 import { SyntheticEvent, useState } from "react";
-import useMutation from "@hooks/useMutation";
-import {
-  DatabasesByConnectionDocument,
-  useDoltCloneMutation,
-} from "@gen/graphql-types";
 import { SetApolloErrorType } from "@lib/errors/types";
+import css from "./index.module.css";
 
 type Props = {
   onCloneDoltHubDatabase: (
@@ -115,7 +107,6 @@ export default function CloneForm({
           disabled={!disabled}
         >
           {disabled && <div className={css.popup}>{message}</div>}
-          <div></div>
         </Popup>
       </ButtonsWithError>
     </>
