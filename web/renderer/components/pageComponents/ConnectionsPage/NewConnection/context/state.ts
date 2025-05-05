@@ -48,6 +48,7 @@ export type ConfigContextType = {
   onCloneDoltHubDatabase: (
     e: SyntheticEvent,
     owner: string,
-    databaseName: string,
+    remoteDbName: string,
+    newDbName: string,
   ) => Promise<void>;
 };

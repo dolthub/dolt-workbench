@@ -13,7 +13,7 @@ type Props = {
     e: SyntheticEvent,
     owner: string,
     remoteDbName: string,
-    databaseName: string,
+    newDbName: string,
   ) => Promise<void>;
   progress: number;
   loading: boolean;

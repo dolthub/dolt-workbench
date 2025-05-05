@@ -45,7 +45,7 @@ export default function CloneDetails({
     e: SyntheticEvent,
     owner: string,
     remoteDbName: string,
-    dbName: string,
+    newDbName: string,
   ) => {
     e.preventDefault();
     let interval;
@@ -63,7 +63,7 @@ export default function CloneDetails({
         variables: {
           ownerName: owner.trim(),
           remoteDbName: remoteDbName.trim(),
-          databaseName: dbName.trim(),
+          databaseName: newDbName.trim(),
         },
       });
       if (!success) {
@@ -72,7 +72,7 @@ export default function CloneDetails({
       // Complete progress to 100%
       setProgress(100);
 
-      const { href, as } = database({ databaseName: dbName.trim() });
+      const { href, as } = database({ databaseName: newDbName.trim() });
       router.push(href, as).catch(console.error);
     } catch (_) {
       // handled by res.error

@@ -396,7 +396,7 @@ ipcMain.handle(
 
       mainWindow.webContents.send(
         "server-error",
-        `Failed to clone database ${owner}/${databaseName}: ${getErrorMessage(cloneError)}`,
+        `Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`,
       );
       return new Error(getErrorMessage(cloneError));
     }
