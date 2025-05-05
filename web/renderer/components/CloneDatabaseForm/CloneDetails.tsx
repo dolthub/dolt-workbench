@@ -44,22 +44,26 @@ export default function CloneDetails({
   const onCloneDoltHubDatabase = async (
     e: SyntheticEvent,
     owner: string,
-    databaseName: string,
+    remoteDbName: string,
+    dbName: string,
   ) => {
     e.preventDefault();
     let interval;
+    let progressPercent = 0;
     setProgress(0);
     setErr(undefined);
     setLoading(true);
 
     try {
       interval = setInterval(() => {
-        setProgress(Math.min(progress + 0.05, 95));
+        progressPercent += 0.05;
+        setProgress(Math.min(progressPercent, 95));
       }, 10);
       const { success } = await doltClone({
         variables: {
           ownerName: owner.trim(),
-          databaseName: databaseName.trim(),
+          remoteDbName: remoteDbName.trim(),
+          databaseName: dbName.trim(),
         },
       });
       if (!success) {
@@ -68,7 +72,7 @@ export default function CloneDetails({
       // Complete progress to 100%
       setProgress(100);
 
-      const { href, as } = database({ databaseName: databaseName.trim() });
+      const { href, as } = database({ databaseName: dbName.trim() });
       router.push(href, as).catch(console.error);
     } catch (_) {
       // handled by res.error

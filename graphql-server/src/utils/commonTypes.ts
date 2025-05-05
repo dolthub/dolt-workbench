@@ -16,6 +16,9 @@ export class DBArgs {
 export class CloneArgs extends DBArgs {
   @Field()
   ownerName: string;
+
+  @Field()
+  remoteDbName: string;
 }
 
 @ArgsType()

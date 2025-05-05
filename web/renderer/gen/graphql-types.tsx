@@ -323,6 +323,7 @@ export type MutationDeleteTagArgs = {
 export type MutationDoltCloneArgs = {
   databaseName: Scalars['String']['input'];
   ownerName: Scalars['String']['input'];
+  remoteDbName: Scalars['String']['input'];
 };
 
 
@@ -868,6 +869,7 @@ export type CreateDatabaseMutation = { __typename?: 'Mutation', createDatabase: 
 
 export type DoltCloneMutationVariables = Exact<{
   ownerName: Scalars['String']['input'];
+  remoteDbName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
 }>;
 
@@ -1952,8 +1954,12 @@ export type CreateDatabaseMutationHookResult = ReturnType<typeof useCreateDataba
 export type CreateDatabaseMutationResult = Apollo.MutationResult<CreateDatabaseMutation>;
 export type CreateDatabaseMutationOptions = Apollo.BaseMutationOptions<CreateDatabaseMutation, CreateDatabaseMutationVariables>;
 export const DoltCloneDocument = gql`
-    mutation DoltClone($ownerName: String!, $databaseName: String!) {
-  doltClone(ownerName: $ownerName, databaseName: $databaseName)
+    mutation DoltClone($ownerName: String!, $remoteDbName: String!, $databaseName: String!) {
+  doltClone(
+    ownerName: $ownerName
+    remoteDbName: $remoteDbName
+    databaseName: $databaseName
+  )
 }
     `;
 export type DoltCloneMutationFn = Apollo.MutationFunction<DoltCloneMutation, DoltCloneMutationVariables>;
@@ -1972,6 +1978,7 @@ export type DoltCloneMutationFn = Apollo.MutationFunction<DoltCloneMutation, Dol
  * const [doltCloneMutation, { data, loading, error }] = useDoltCloneMutation({
  *   variables: {
  *      ownerName: // value for 'ownerName'
+ *      remoteDbName: // value for 'remoteDbName'
  *      databaseName: // value for 'databaseName'
  *   },
  * });

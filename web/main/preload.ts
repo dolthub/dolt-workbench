@@ -16,14 +16,16 @@ const handler = {
     ipcRenderer.on("toggle-left-sidebar", _event => callback()),
   cloneDatabase: (
     owner: string,
-    databaseName: string,
+    remoteDatabase: string,
+    newDbName: string,
     connectionName: string,
     port: string,
   ) =>
     ipcRenderer.send(
       "clone-dolthub-db",
       owner,
-      databaseName,
+      remoteDatabase,
+      newDbName,
       connectionName,
       port,
     ),

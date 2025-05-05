@@ -12,6 +12,7 @@ type Props = {
   onCloneDoltHubDatabase: (
     e: SyntheticEvent,
     owner: string,
+    remoteDbName: string,
     databaseName: string,
   ) => Promise<void>;
   progress: number;
@@ -30,7 +31,6 @@ export default function CloneForm({
   const [owner, setOwner] = useState("");
   const [remoteDbName, setRemoteDbName] = useState("");
   const [newDbName, setNewDbName] = useState("");
-
   const { disabled, message } = getDisabled(owner, remoteDbName);
 
   return (
@@ -96,7 +96,7 @@ export default function CloneForm({
                   disabled={disabled || loading}
                   className={css.button}
                   onClick={async e =>
-                    onCloneDoltHubDatabase(e, owner, remoteDbName)
+                    onCloneDoltHubDatabase(e, owner, remoteDbName, newDbName)
                   }
                 >
                   Start Clone

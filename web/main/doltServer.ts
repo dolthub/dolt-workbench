@@ -126,7 +126,8 @@ function initializeDoltRepository(
 
 export async function cloneAndStartDatabase(
   owner: string,
-  database: string,
+  remoteDatabase: string,
+  newDbName: string,
   connectionName: string,
   port: string,
   mainWindow: BrowserWindow,
@@ -136,7 +137,7 @@ export async function cloneAndStartDatabase(
     : path.join(__dirname, "..", "build", "databases");
   const doltPath = getDoltPaths();
   const connectionFolderPath = path.join(dbsFolderPath, connectionName);
-  const dbFolderPath = path.join(connectionFolderPath, database);
+  const dbFolderPath = path.join(connectionFolderPath, newDbName);
 
   try {
     const { errorMsg } = createFolder(path.join(connectionFolderPath));
@@ -144,7 +145,13 @@ export async function cloneAndStartDatabase(
       mainWindow.webContents.send("server-error", errorMsg);
       throw new Error(errorMsg);
     }
-    await cloneDatabase(owner, database, connectionFolderPath, mainWindow);
+    await cloneDatabase(
+      owner,
+      remoteDatabase,
+      newDbName,
+      connectionFolderPath,
+      mainWindow,
+    );
     return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to clone database:", error);
@@ -154,7 +161,8 @@ export async function cloneAndStartDatabase(
 
 function cloneDatabase(
   owner: string,
-  database: string,
+  remoteDatabase: string,
+  newDbName: string,
   connectionFolderPath: string,
   mainWindow: BrowserWindow,
 ): Promise<void> {
@@ -174,7 +182,7 @@ function cloneDatabase(
     );
     execFile(
       doltPath,
-      ["clone", `${owner}/${database}`],
+      ["clone", `${owner}/${remoteDatabase}`, `${newDbName}`],
       execOptions,
       async (error, stdout, stderr) => {
         if (error) {

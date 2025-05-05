@@ -346,14 +346,16 @@ ipcMain.handle(
   async (
     _,
     owner: string,
-    databaseName: string,
+    remoteDatabase: string,
+    newDbName: string,
     connectionName: string,
     port: string,
   ) => {
     try {
       doltServerProcess = await cloneAndStartDatabase(
         owner,
-        databaseName,
+        remoteDatabase,
+        newDbName,
         connectionName,
         port,
         mainWindow,
