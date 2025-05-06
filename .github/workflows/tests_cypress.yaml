@@ -52,16 +52,12 @@ jobs:
       - name: Run tests
         working-directory: ./workbench-cypress 
         run: |
-
-          # Wait for servers to start
           npx wait-on -t 120000 \
             tcp:localhost:$GRAPHQL_PORT \
             http://localhost:$WEB_PORT
           
-          # Run Cypress tests
           yarn cy-run-local
           
-          # Capture server logs if tests fail
           if [ $? -ne 0 ]; then
             echo "=== GraphQL Server Log ==="
             cat ../graphql-server/graphql-server.log
@@ -69,8 +65,7 @@ jobs:
             cat ../web/web-server.log
           fi
           
-          # Cleanup processes
-          kill $GRAPHQL_PID $WEB_PID
+ 
         env:
           CYPRESS_LOCAL: true
           NODE_ENV: test
