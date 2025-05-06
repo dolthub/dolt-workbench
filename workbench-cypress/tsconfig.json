@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "target": "es5",
+    "lib": ["es5", "dom"],
+    "outDir": "dist",
+    "rootDir": "cypress",
+    "baseUrl": ".",
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "types": ["cypress", "node"],
+    "paths": {
+      "@utils/*": ["cypress/e2e/utils/*"],
+      "@sharedTests/*": ["cypress/e2e/utils/sharedTests/*"]
+    }
+  },
+  "exclude": ["dist"],
+  "include": ["cypress"]
+}
