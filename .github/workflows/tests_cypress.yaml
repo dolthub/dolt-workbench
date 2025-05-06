@@ -43,12 +43,9 @@ jobs:
           # Start servers and store PIDs
           echo "Starting servers..."
           cd ../graphql-server
-          yarn build
+          yarn dev & GRAPHQL_PID=$!
           cd ../web
-          yarn dev:app
-
-          echo "Curl server"
-          curl -i localhost:7777
+          yarn dev & WEB_PID=$!
 
           # Run Cypress 
           cd ../workbench-cypress
