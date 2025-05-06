@@ -1,6 +1,9 @@
 name: Workbench Tests
-on: 
-  workflow_dispatch
+on:
+  pull_request:
+    paths:
+      - "workbench-cypress/**"
+  workflow_dispatch:
 
 env:
   GRAPHQL_PORT: 9002
