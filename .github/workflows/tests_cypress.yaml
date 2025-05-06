@@ -47,6 +47,9 @@ jobs:
           cd ../web
           yarn dev:app
 
+          echo "Curl server"
+          curl -i localhost:7777
+
           # Run Cypress 
           cd ../workbench-cypress
           yarn cy-run-local 
