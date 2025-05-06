@@ -36,46 +36,40 @@ jobs:
         working-directory: ./workbench-cypress 
         run: |
           yarn
-
-      - name: Start GraphQL server in background
-        working-directory: ./graphql-server
-        run: |
-          nohup yarn dev > graphql-server.log 2>&1 &
-          GRAPHQL_PID=$!
-      
-      - name: Start Web server in background
-        working-directory: ./web
-        run: |
-          nohup yarn dev > web-server.log 2>&1 &
-          WEB_PID=$!
  
       - name: Run tests
         working-directory: ./workbench-cypress 
         run: |
-          npx wait-on -t 120000 \
-            tcp:localhost:$GRAPHQL_PORT \
-            http://localhost:$WEB_PORT
-          
-          yarn cy-run-local
-          
-          if [ $? -ne 0 ]; then
-            echo "=== GraphQL Server Log ==="
-            cat ../graphql-server/graphql-server.log
-            echo "=== Web Server Log ==="
-            cat ../web/web-server.log
-          fi
-          
- 
-        env:
-          CYPRESS_LOCAL: true
-          NODE_ENV: test
-          HOST: 0.0.0.0
-          PORT: $WEB_PORT
+          # Start servers and store PIDs
+          echo "Starting servers..."
+          nohup ../graphql-server/yarn dev -- --host 0.0.0.0 --port $GRAPHQL_PORT > ../graphql-server.log 2>&1 &
+          GRAPHQL_PID=$!
+          nohup ../web/yarn dev -H 0.0.0.0 -p $WEB_PORT > ../web.log 2>&1 &
+          WEB_PID=$!
+
+          # Cleanup trap
+          trap "kill -9 $GRAPHQL_PID $WEB_PID || true" EXIT
+
+          # Wait for FULL server readiness
+          echo "Waiting for servers to be ready..."
+          npx wait-on -t 180000 \
+            http://localhost:$WEB_PORT/healthz \
+            http://localhost:$GRAPHQL_PORT/health \
+            tcp:localhost:$GRAPHQL_PORT
+
+          # Add additional stabilization
+          sleep 5  # Extra buffer for app initialization
+          curl -v http://localhost:$WEB_PORT
+
+          # Run Cypress with CI-specific settings
+          yarn cy-run-local --config defaultCommandTimeout=15000,pageLoadTimeout=30000
 
       - name: Save screenshots of failed tests
         uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: cypress-screenshots-${{ matrix.runs-on }}
-          path: cypress/screenshots-${{ matrix.runs-on }}
-          retention-days: 7
+          name: cypress-screenshots
+          path: |
+            cypress/screenshots/**/*.png
+            cypress/videos/**/*.mp4
+          retention-days: 3
