@@ -51,12 +51,7 @@ jobs:
           echo "Waiting for servers to be ready..."
           npx wait-on -t 180000 \
             http://localhost:$WEB_PORT \
-            http://localhost:$GRAPHQL_PORT \
             tcp:localhost:$GRAPHQL_PORT
-
-          # Add additional stabilization
-          sleep 5  # Extra buffer for app initialization
-          curl -v http://localhost:$WEB_PORT
 
           # Run Cypress with CI-specific settings
           yarn cy-run-local 
