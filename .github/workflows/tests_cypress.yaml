@@ -1,5 +1,6 @@
 name: Workbench Tests
-on: workflow_dispatch
+on: 
+  workflow_dispatch
 
 env:
   GRAPHQL_PORT: 9002
