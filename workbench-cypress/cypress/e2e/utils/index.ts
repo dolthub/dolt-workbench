@@ -27,16 +27,17 @@ export const clickOpts: Partial<Cypress.ClickOptions> = {
 type TestsArgs = {
   tests: Tests;
   currentPage: string;
+  pageName: string;
 };
 
-export function runTests({ tests, currentPage }: TestsArgs) {
-  beforeEach(() => {
-    // Visit page and log in if needed
+export function runTests({ tests, currentPage, pageName }: TestsArgs) {
+  before(() => {
+    // Visit page
     cy.visitPage(currentPage);
   });
 
-  tests.forEach(t => {
-    it(t.description, () => {
+  it(`run tests for ${pageName}`, () => {
+    tests.forEach(t => {
       cy.log(t.description);
 
       if (t.skip) return;

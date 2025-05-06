@@ -12,5 +12,5 @@ describe(pageName, () => {
       "Connect the workbench to any MySQL or PostgreSQL compatible database. ",
     ),
   ];
-  runTests({ tests, currentPage });
+  runTests({ tests, currentPage, pageName });
 });

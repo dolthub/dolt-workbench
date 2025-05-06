@@ -1,0 +1,71 @@
+name: Workbench Tests
+on: workflow_dispatch
+
+env:
+  GRAPHQL_PORT: 9002
+  WEB_PORT: 3002
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: |
+          cd ./graphql-server && yarn 
+          cd ./web && yarn 
+          cd ./workbench-cypress && yarn 
+
+      - name: Run servers and tests
+        run: |
+          # Start GraphQL server in background
+          cd ./graphql-server
+          nohup yarn dev > graphql-server.log 2>&1 &
+          GRAPHQL_PID=$!
+          
+          # Start Web server in background
+          cd ./web
+          nohup yarn dev > web-server.log 2>&1 &
+          WEB_PID=$!
+          
+          # Wait for servers to start
+          cd ./workbench-cypress
+          npx wait-on -t 120000 \
+            tcp:localhost:$GRAPHQL_PORT \
+            http://localhost:$WEB_PORT
+          
+          # Run Cypress tests
+          yarn cy-run-local
+          
+          # Capture server logs if tests fail
+          if [ $? -ne 0 ]; then
+            echo "=== GraphQL Server Log ==="
+            cat ../graphql-server/graphql-server.log
+            echo "=== Web Server Log ==="
+            cat ../web/web-server.log
+          fi
+          
+          # Cleanup processes
+          kill $GRAPHQL_PID $WEB_PID
+        env:
+          CYPRESS_LOCAL: true
+          NODE_ENV: test
+          HOST: 0.0.0.0
+          PORT: $WEB_PORT
+
+      - name: Save screenshots of failed tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots-${{ matrix.runs-on }}
+          path: cypress/screenshots-${{ matrix.runs-on }}
+          retention-days: 7

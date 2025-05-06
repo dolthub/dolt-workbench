@@ -1,0 +1,27 @@
+name: Run graphql CI
+on:
+  pull_request:
+    paths:
+      - "workbench-cypress/**"
+  workflow_dispatch:
+
+concurrency:
+  group: ci-graphql-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+      - name: Install and run graphql CI
+        working-directory: ./workbench-cypress
+        run: |
+          yarn
+          yarn run ci

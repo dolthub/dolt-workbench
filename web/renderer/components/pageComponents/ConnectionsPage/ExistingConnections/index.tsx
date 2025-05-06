@@ -49,8 +49,8 @@ export default function ExistingConnections(props: Props) {
   return (
     <div className={css.outer}>
       <div className={css.text}>
-        <h1>Connections</h1>
-        <p>
+        <h1 data-cy="connections-title">Connections</h1>
+        <p data-cy="welcome-message">
           Connect the workbench to any MySQL or PostgreSQL compatible database.
           Use <DoltLink /> or <DoltgresLink /> to unlock version control
           features.
