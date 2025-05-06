@@ -53,8 +53,8 @@ jobs:
           # Wait for FULL server readiness
           echo "Waiting for servers to be ready..."
           npx wait-on -t 180000 \
-            http://localhost:$WEB_PORT/healthz \
-            http://localhost:$GRAPHQL_PORT/health \
+            http://localhost:$WEB_PORT \
+            http://localhost:$GRAPHQL_PORT \
             tcp:localhost:$GRAPHQL_PORT
 
           # Add additional stabilization
