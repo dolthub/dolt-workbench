@@ -46,14 +46,8 @@ jobs:
           yarn dev & GRAPHQL_PID=$!
           cd ../web
           yarn dev & WEB_PID=$!
- 
-          # Wait for FULL server readiness
-          echo "Waiting for servers to be ready..."
-          npx wait-on -t 180000 \
-            http://localhost:$WEB_PORT \
-            tcp:localhost:$GRAPHQL_PORT
 
-          # Run Cypress with CI-specific settings
+          # Run Cypress 
           cd ../workbench-cypress
           yarn cy-run-local 
 
