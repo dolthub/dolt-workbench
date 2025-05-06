@@ -54,6 +54,7 @@ jobs:
             tcp:localhost:$GRAPHQL_PORT
 
           # Run Cypress with CI-specific settings
+          cd ../workbench-cypress
           yarn cy-run-local 
 
       - name: Save screenshots of failed tests
