@@ -42,14 +42,11 @@ jobs:
         run: |
           # Start servers and store PIDs
           echo "Starting servers..."
-          nohup ../graphql-server/yarn dev -- --host 0.0.0.0 --port $GRAPHQL_PORT > ../graphql-server.log 2>&1 &
-          GRAPHQL_PID=$!
-          nohup ../web/yarn dev -H 0.0.0.0 -p $WEB_PORT > ../web.log 2>&1 &
-          WEB_PID=$!
-
-          # Cleanup trap
-          trap "kill -9 $GRAPHQL_PID $WEB_PID || true" EXIT
-
+          cd ../graphql-server
+          yarn dev & GRAPHQL_PID=$!
+          cd ../web
+          yarn dev & WEB_PID=$!
+ 
           # Wait for FULL server readiness
           echo "Waiting for servers to be ready..."
           npx wait-on -t 180000 \
@@ -62,7 +59,7 @@ jobs:
           curl -v http://localhost:$WEB_PORT
 
           # Run Cypress with CI-specific settings
-          yarn cy-run-local --config defaultCommandTimeout=15000,pageLoadTimeout=30000
+          yarn cy-run-local 
 
       - name: Save screenshots of failed tests
         uses: actions/upload-artifact@v4
