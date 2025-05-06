@@ -54,7 +54,6 @@ jobs:
         run: |
 
           # Wait for servers to start
-          cd ./workbench-cypress
           npx wait-on -t 120000 \
             tcp:localhost:$GRAPHQL_PORT \
             http://localhost:$WEB_PORT
