@@ -1,4 +1,4 @@
-name: Run graphql CI
+name: Run cypress CI
 on:
   pull_request:
     paths:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 concurrency:
-  group: ci-graphql-${{ github.event.pull_request.number || github.ref }}
+  group: ci-cypress-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
 jobs:
