@@ -6,7 +6,7 @@ const currentPage = "/";
 
 describe(pageName, () => {
   const tests = [
-    shouldFindAndContain("connections-title", "Connections"),
+    shouldFindAndContain("welcome-title", "Welcome to the Dolt Workbench"),
     shouldFindAndContain(
       "welcome-message",
       "Connect the workbench to any MySQL or PostgreSQL compatible database. ",
