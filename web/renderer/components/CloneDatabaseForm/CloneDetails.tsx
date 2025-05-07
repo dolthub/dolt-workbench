@@ -25,7 +25,12 @@ export default function CloneDetails({
 }: Props) {
   const { mutateFn: doltClone, ...res } = useMutation({
     hook: useDoltCloneMutation,
-    refetchQueries: [{ query: DatabasesByConnectionDocument }],
+    refetchQueries: [
+      {
+        query: DatabasesByConnectionDocument,
+        variables: { ...currentConnection },
+      },
+    ],
   });
   const router = useRouter();
   const [progress, setProgress] = useState(0);
@@ -69,11 +74,11 @@ export default function CloneDetails({
       if (!success) {
         return;
       }
-      // Complete progress to 100%
-      setProgress(100);
 
       const { href, as } = database({ databaseName: newDbName.trim() });
       router.push(href, as).catch(console.error);
+      // Complete progress to 100%
+      setProgress(100);
     } catch (_) {
       // handled by res.error
     } finally {

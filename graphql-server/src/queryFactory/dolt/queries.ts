@@ -156,10 +156,4 @@ export const callResetHard = `CALL DOLT_RESET("--hard")`;
 
 export const callCheckoutTable = `CALL DOLT_CHECKOUT(?)`;
 
-export function callDoltClone(
-  ownerName: string,
-  remoteDbName: string,
-  dbName: string,
-): string {
-  return `CALL DOLT_CLONE('${ownerName}/${remoteDbName}','${dbName}')`;
-}
+export const callDoltClone = `CALL DOLT_CLONE(?,?)`;

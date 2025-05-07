@@ -259,7 +259,8 @@ export class DatabaseResolver {
   @Mutation(_returns => Boolean)
   async doltClone(@Args() args: CloneArgs): Promise<boolean> {
     const conn = this.conn.connection();
-    await conn.callDoltClone(args);
+    const remoteDbPath = `${args.ownerName}/${args.remoteDbName}`;
+    await conn.callDoltClone({ remoteDbPath, databaseName: args.databaseName });
     return true;
   }
 }
