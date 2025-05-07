@@ -34,12 +34,13 @@ export function runTests({ tests, currentPage, pageName }: TestsArgs) {
   before(() => {
     // Visit page
     cy.visitPage(currentPage);
+    cy.screenshot();
   });
 
   it(`run tests for ${pageName}`, () => {
     tests.forEach(t => {
       cy.log(t.description);
-
+      cy.screenshot();
       if (t.skip) return;
 
       testAssertion(t);
@@ -55,7 +56,6 @@ export function runTests({ tests, currentPage, pageName }: TestsArgs) {
       if (t.scrollTo) {
         handleScrollTo(t.scrollTo);
       }
-      cy.screenshot();
     });
   });
 }
