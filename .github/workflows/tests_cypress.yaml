@@ -56,9 +56,5 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots
-          path: |
-            cypress/screenshots/**/*.png
-            cypress/videos/**/*.mp4
-          include-hidden-files: true
-          if-no-files-found: error
-          retention-days: 3
+          path: cypress/screenshots
+          retention-days: 7
