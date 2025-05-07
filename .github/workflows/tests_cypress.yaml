@@ -56,5 +56,5 @@ jobs:
         if: failure()
         with:
           name: cypress-screenshots
-          path: cypress/screenshots
+          path: workbench-cypress/cypress/screenshots
           retention-days: 7
