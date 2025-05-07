@@ -17,6 +17,7 @@ type Props = {
   buttonClassName?: string;
   isPostgres: boolean;
   showText?: boolean;
+  isDolt?: boolean;
 };
 
 export default function CreateDatabase(props: Props) {

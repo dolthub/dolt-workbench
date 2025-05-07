@@ -45,6 +45,7 @@ export default function Popup({
           <span>DATABASES</span>
           <CreateDatabase
             isPostgres={currentConnection.type === DatabaseType.Postgres}
+            isDolt={!!state.connection.isDolt}
           />
         </div>
       </div>

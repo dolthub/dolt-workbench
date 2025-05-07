@@ -343,11 +343,20 @@ ipcMain.handle("cancel-dolt-login", (_, requestId: string) => {
 
 ipcMain.handle(
   "clone-dolthub-db",
-  async (_, owner: string, databaseName: string, port: string) => {
+  async (
+    _,
+    owner: string,
+    remoteDatabase: string,
+    newDbName: string,
+    connectionName: string,
+    port: string,
+  ) => {
     try {
       doltServerProcess = await cloneAndStartDatabase(
         owner,
-        databaseName,
+        remoteDatabase,
+        newDbName,
+        connectionName,
         port,
         mainWindow,
       );
@@ -361,9 +370,33 @@ ipcMain.handle(
         doltServerProcess = null;
       }
 
+      const dbFolderPath = isProd
+        ? path.join(app.getPath("userData"), "databases", connectionName)
+        : path.join(__dirname, "..", "build", "databases", connectionName);
+
+      try {
+        const { errorMsg } = await removeDoltServerFolder(
+          dbFolderPath,
+          mainWindow,
+        );
+        if (errorMsg) {
+          console.error("Cleanup failed:", errorMsg);
+          mainWindow.webContents.send(
+            "server-error",
+            `Cleanup failed: ${errorMsg}`,
+          );
+        }
+      } catch (cleanupError) {
+        console.error("Folder deletion error:", cleanupError);
+        mainWindow.webContents.send(
+          "server-error",
+          `Failed to clean up files: ${getErrorMessage(cleanupError)}`,
+        );
+      }
+
       mainWindow.webContents.send(
         "server-error",
-        `Failed to clone database ${owner}/${databaseName}: ${getErrorMessage(cloneError)}`,
+        `Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`,
       );
       return new Error(getErrorMessage(cloneError));
     }

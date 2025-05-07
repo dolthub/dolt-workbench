@@ -347,4 +347,8 @@ export class MySQLQueryFactory
   async getMergeBase(_: t.RefsArgs): Promise<string> {
     throw notDoltError("merge base");
   }
+
+  async callDoltClone(_: t.CloneArgs): Promise<void> {
+    throw notDoltError("dolt clone");
+  }
 }

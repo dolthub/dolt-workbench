@@ -5,6 +5,7 @@ import {
   useSetState,
 } from "@dolthub/react-hooks";
 import {
+  DatabasesByConnectionDocument,
   useAddDatabaseConnectionMutation,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
@@ -30,6 +31,7 @@ export function ConfigProvider({ children }: Props) {
   const [state, setState] = useSetState(defaultState);
   const { mutateFn, ...res } = useMutation({
     hook: useAddDatabaseConnectionMutation,
+    refetchQueries: [{ query: DatabasesByConnectionDocument }],
   });
 
   const connectionsRes = useStoredConnectionsQuery();
@@ -117,9 +119,14 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onCloneDoltHubDatabase = async (e: SyntheticEvent) => {
+  const onCloneDoltHubDatabase = async (
+    e: SyntheticEvent,
+    owner: string,
+    remoteDbName: string,
+    newDbName: string,
+  ) => {
     e.preventDefault();
-    setState({ loading: true, progress: 0 });
+    setState({ loading: true, progress: 0, database: newDbName, owner });
     let interval;
     let progress = 0;
     try {
@@ -129,10 +136,13 @@ export function ConfigProvider({ children }: Props) {
           progress: Math.min(progress, 95),
         });
       }, 10);
+
       const result = await window.ipc.invoke(
         "clone-dolthub-db",
-        state.owner.trim(),
-        state.database.trim(),
+        owner.trim(),
+        remoteDbName.trim(),
+        newDbName.trim(),
+        state.name,
         state.port,
       );
 
