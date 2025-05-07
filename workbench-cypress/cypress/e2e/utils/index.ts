@@ -34,7 +34,7 @@ export function runTests({ tests, currentPage, pageName }: TestsArgs) {
   before(() => {
     // Visit page
     cy.visitPage(currentPage);
-    cy.screenshot();
+    cy.screenshot("visitPage.png");
   });
 
   it(`run tests for ${pageName}`, () => {
