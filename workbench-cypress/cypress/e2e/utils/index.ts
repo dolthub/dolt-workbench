@@ -55,7 +55,7 @@ export function runTests({ tests, currentPage, pageName }: TestsArgs) {
       if (t.scrollTo) {
         handleScrollTo(t.scrollTo);
       }
-      cy.screenshot(),
+      cy.screenshot();
     });
   });
 }
