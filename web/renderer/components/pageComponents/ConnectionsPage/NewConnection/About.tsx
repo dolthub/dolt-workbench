@@ -8,15 +8,16 @@ import {
 } from "@dolthub/react-components";
 import { useState } from "react";
 import { DatabaseType } from "@gen/graphql-types";
+import CloneForm from "@components/CloneDatabaseForm/CloneForm";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 import StartDoltServerForm from "./StartDoltServerForm";
-import CloneDoltDatabaseForm from "./CloneDoltDatabaseForm";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
 export default function About() {
-  const { state, setState, error, setErr } = useConfigContext();
+  const { state, setState, error, setErr, onCloneDoltHubDatabase } =
+    useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [startDoltServer, setStartDoltServer] = useState(false);
   const [cloneDolt, setCloneDolt] = useState(false);
@@ -57,15 +58,47 @@ export default function About() {
               setCloneDolt(!cloneDolt);
             }}
             name="clone-dolt-server"
-            label="Clone a remote Dolt database"
-            description="Clone a Dolt database from DoltHub"
+            label="Clone a remote Dolt database from DoltHub"
             className={css.checkbox}
             disabled={startDoltServer}
           />
         </>
       )}
       {startDoltServer && <StartDoltServerForm />}
-      {cloneDolt && <CloneDoltDatabaseForm />}
+      {cloneDolt && (
+        <>
+          <FormInput
+            value={state.name}
+            onChangeString={n => {
+              setState({ name: n });
+              setErr(undefined);
+            }}
+            label="Connection Name"
+            labelClassName={css.label}
+            placeholder="e.g. my-connection (required)"
+            light
+          />
+
+          <FormInput
+            label="Port"
+            value={state.port}
+            onChangeString={p => {
+              setState({ port: p });
+              setErr(undefined);
+            }}
+            placeholder="e.g. 3658 (required)"
+            light
+            labelClassName={css.label}
+          />
+          <CloneForm
+            onCloneDoltHubDatabase={onCloneDoltHubDatabase}
+            setErr={setErr}
+            error={error}
+            progress={state.progress}
+            loading={state.loading}
+          />
+        </>
+      )}
       {!startDoltServer && !cloneDolt && (
         <>
           <FormInput

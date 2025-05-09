@@ -7,7 +7,8 @@ import {
 import { initialUppercase } from "@dolthub/web-utils";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
-import { SyntheticEvent } from "react";
+import { SyntheticEvent, useState } from "react";
+import CloneDatabaseForm from "@components/CloneDatabaseForm";
 
 type InnerProps = {
   onClose: () => void;
@@ -16,10 +17,13 @@ type InnerProps = {
   onSubmit: (e: SyntheticEvent) => void;
   err?: ApolloErrorType;
   label: "schema" | "database";
+  isDolt?: boolean;
 };
 
 export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
   const { userHasWritePerms, writesEnabled } = useRole();
+  const [cloneDolt, setCloneDolt] = useState(false);
+
   if (!userHasWritePerms) {
     return (
       <div>
@@ -40,21 +44,32 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
       </div>
     );
   }
+
   return (
     <form onSubmit={props.onSubmit}>
       <ModalInner>
-        <FormInput
-          value={props.name}
-          label={`${initialUppercase(props.label)} name`}
-          onChangeString={props.setName}
-          placeholder={`Choose a name for your ${props.label}`}
-          light
-        />
+        {props.isDolt && (
+          <CloneDatabaseForm
+            cloneDolt={cloneDolt}
+            setCloneDolt={setCloneDolt}
+          />
+        )}
+        {!cloneDolt && (
+          <FormInput
+            value={props.name}
+            label={`${initialUppercase(props.label)} name`}
+            onChangeString={props.setName}
+            placeholder={`Choose a name for your ${props.label}`}
+            light
+          />
+        )}
       </ModalInner>
       <ModalButtons err={props.err} onRequestClose={props.onClose}>
-        <Button type="submit" disabled={!props.name.length}>
-          Create
-        </Button>
+        {!cloneDolt && (
+          <Button type="submit" disabled={!props.name.length}>
+            Create
+          </Button>
+        )}
       </ModalButtons>
     </form>
   );

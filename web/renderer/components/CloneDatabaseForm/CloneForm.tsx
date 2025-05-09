@@ -4,34 +4,41 @@ import {
   FormInput,
   Popup,
 } from "@dolthub/react-components";
-import { connections as connectionsUrl } from "@lib/urls";
-import { DatabaseConnectionFragment } from "@gen/graphql-types";
-import Link from "@components/links/Link";
-import { ConfigState } from "./context/state";
-import { useConfigContext } from "./context/config";
+import { SyntheticEvent, useState } from "react";
+import { SetApolloErrorType } from "@lib/errors/types";
 import css from "./index.module.css";
 
-export default function CloneDoltDatabaseForm() {
-  const {
-    state,
-    setState,
-    error,
-    setErr,
-    storedConnections,
-    onCloneDoltHubDatabase,
-  } = useConfigContext();
+type Props = {
+  onCloneDoltHubDatabase: (
+    e: SyntheticEvent,
+    owner: string,
+    remoteDbName: string,
+    newDbName: string,
+  ) => Promise<void>;
+  progress: number;
+  loading: boolean;
+  error?: Error | undefined;
+  setErr: SetApolloErrorType;
+};
 
-  const { disabled, message } = getStartLocalDoltServerDisabled(
-    state,
-    storedConnections,
-  );
+export default function CloneForm({
+  onCloneDoltHubDatabase,
+  progress,
+  loading,
+  error,
+  setErr,
+}: Props) {
+  const [owner, setOwner] = useState("");
+  const [remoteDbName, setRemoteDbName] = useState("");
+  const [newDbName, setNewDbName] = useState("");
+  const { disabled, message } = getDisabled(owner, remoteDbName);
 
   return (
     <>
       <FormInput
-        value={state.owner}
-        onChangeString={owner => {
-          setState({ owner });
+        value={owner}
+        onChangeString={val => {
+          setOwner(val);
           setErr(undefined);
         }}
         label="Owner Name"
@@ -40,9 +47,10 @@ export default function CloneDoltDatabaseForm() {
         light
       />
       <FormInput
-        value={state.database}
-        onChangeString={n => {
-          setState({ database: n });
+        value={remoteDbName}
+        onChangeString={dbName => {
+          setRemoteDbName(dbName);
+          setNewDbName(dbName);
           setErr(undefined);
         }}
         label="Remote Database Name"
@@ -51,26 +59,15 @@ export default function CloneDoltDatabaseForm() {
         light
       />
       <FormInput
-        value={state.name}
-        onChangeString={n => {
-          setState({ name: n });
+        value={newDbName}
+        onChangeString={dbName => {
+          setNewDbName(dbName);
           setErr(undefined);
         }}
-        label="Connection Name"
+        label="New Database Name"
         labelClassName={css.label}
-        placeholder="e.g. my-connection (required)"
+        placeholder="e.g. my-database (required)"
         light
-      />
-      <FormInput
-        label="Port"
-        value={state.port}
-        onChangeString={p => {
-          setState({ port: p });
-          setErr(undefined);
-        }}
-        placeholder="e.g. 3658 (required)"
-        light
-        labelClassName={css.label}
       />
       <ButtonsWithError error={error} className={css.buttons}>
         <Popup
@@ -83,22 +80,24 @@ export default function CloneDoltDatabaseForm() {
           closeOnDocumentClick
           trigger={
             <div>
-              {state.loading ? (
+              {loading ? (
                 <div className={css.cloneProgress}>
                   <span>Cloning...</span>
                   <div className={css.progressContainer}>
                     <div
                       className={css.progressBar}
-                      style={{ transform: `scaleX(${state.progress / 100})` }}
+                      style={{ transform: `scaleX(${progress / 100})` }}
                     />
                   </div>
                 </div>
               ) : (
                 <Button
                   type="submit"
-                  disabled={disabled || state.loading}
+                  disabled={disabled || loading}
                   className={css.button}
-                  onClick={onCloneDoltHubDatabase}
+                  onClick={async e =>
+                    onCloneDoltHubDatabase(e, owner, remoteDbName, newDbName)
+                  }
                 >
                   Start Clone
                 </Button>
@@ -119,30 +118,15 @@ type DisabledReturnType = {
   message?: React.ReactNode;
 };
 
-function getStartLocalDoltServerDisabled(
-  state: ConfigState,
-  connections?: DatabaseConnectionFragment[],
+export function getDisabled(
+  owner: string,
+  database?: string,
 ): DisabledReturnType {
-  if (!state.name) {
+  if (!database) {
     return { disabled: true, message: <span>Database name is required.</span> };
   }
-  if (!state.owner) {
+  if (!owner) {
     return { disabled: true, message: <span>Owner name is required.</span> };
-  }
-
-  if (connections?.some(connection => connection.isLocalDolt)) {
-    return {
-      disabled: true,
-      message: (
-        <div>
-          <p>Already have one internal dolt server instance.</p>
-          <p>
-            Go to <Link {...connectionsUrl}>Connections</Link> and remove it
-            before adding a new one.
-          </p>
-        </div>
-      ),
-    };
   }
 
   return { disabled: false };
