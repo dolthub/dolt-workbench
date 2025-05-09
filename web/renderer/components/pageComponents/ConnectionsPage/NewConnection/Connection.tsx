@@ -12,9 +12,9 @@ export default function Connection() {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
-
+  console.log(activeTabIndex)
   return (
-    <form onSubmit={onNext} className={css.form}>
+    <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
       <FormInput
         value={state.connectionUrl}
         onChangeString={c => setState({ connectionUrl: c })}
@@ -25,6 +25,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-url-input"
       />
       <div className={css.or}>OR</div>
       <FormInput
@@ -77,6 +78,7 @@ export default function Connection() {
         type="submit"
         disabled={!state.connectionUrl && (!state.host || !state.port)}
         className={css.button}
+        data-cy="next-connection"
       >
         Next
       </Button>

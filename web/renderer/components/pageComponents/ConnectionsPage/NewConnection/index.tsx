@@ -16,7 +16,7 @@ type InnerProps = {
 
 function Inner({ showWelcomeMsg }: InnerProps) {
   return (
-    <div className={css.databaseForm}>
+    <div className={css.databaseForm} data-cy="add-connection-form">
       {showWelcomeMsg && <WelcomeMessage />}
       <div className={css.whiteContainer}>
         <div className={css.top}>

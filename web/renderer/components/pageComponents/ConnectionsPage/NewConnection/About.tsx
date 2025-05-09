@@ -27,7 +27,7 @@ export default function About() {
   };
 
   return (
-    <form onSubmit={onNext} className={css.form}>
+    <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
       {forElectron && (
         <>
           <Checkbox
@@ -111,6 +111,7 @@ export default function About() {
             labelClassName={css.label}
             placeholder="my-database (required)"
             light
+            data-cy="connection-name-input"
           />
           <FormSelect
             outerClassName={css.typeSelect}
@@ -136,9 +137,10 @@ export default function About() {
             ]}
             hideSelectedOptions
             light
+            data-cy="connection-type-selector"
           />
           <ButtonsWithError error={error}>
-            <Button type="submit" disabled={!state.name} className={css.button}>
+            <Button type="submit" disabled={!state.name} className={css.button} data-cy="next-about">
               Next
             </Button>
           </ButtonsWithError>
