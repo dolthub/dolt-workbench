@@ -48,7 +48,7 @@ jobs:
           yarn dev & WEB_PID=$!
           # Run Cypress 
           cd ../workbench-cypress
-          yarn cy-run-local 
+          yarn cy-chrome
 
       - name: Save screenshots of failed tests
         uses: actions/upload-artifact@v4
