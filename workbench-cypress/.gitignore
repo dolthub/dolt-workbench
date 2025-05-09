@@ -1,0 +1,35 @@
+.DS_Store
+
+# ignore stored screenshots and videos
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+
+# compiled output
+dist
+node_modules
+
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.eslintcache
+
+# Local secrets
+*.env
+*.env.json
+
+tsconfig.tsbuildinfo
+
+# yarn
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*

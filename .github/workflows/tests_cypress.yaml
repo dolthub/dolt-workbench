@@ -1,0 +1,59 @@
+name: Workbench Tests
+on:
+  pull_request:
+    paths:
+      - "workbench-cypress/**"
+  workflow_dispatch:
+
+env:
+  GRAPHQL_PORT: 9002
+  WEB_PORT: 3002
+
+jobs:
+  cypress-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Enable Corepack
+        run: corepack enable
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Install graphql dependencies
+        working-directory: ./graphql-server
+        run: |
+          yarn
+
+      - name: Install web dependencies
+        working-directory: ./web
+        run: |
+          yarn
+
+      - name: Install cypress dependencies
+        working-directory: ./workbench-cypress 
+        run: |
+          yarn
+ 
+      - name: Run tests
+        working-directory: ./workbench-cypress 
+        run: |
+          # Start servers and store PIDs
+          echo "Starting servers..."
+          cd ../graphql-server
+          yarn dev & GRAPHQL_PID=$!
+          cd ../web
+          yarn dev & WEB_PID=$!
+          # Run Cypress 
+          cd ../workbench-cypress
+          yarn cy-chrome
+
+      - name: Save screenshots of failed tests
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: workbench-cypress/cypress/screenshots
+          retention-days: 7

@@ -1,0 +1,39 @@
+{
+  "name": "workbench-cypress",
+  "version": "0.1.0",
+  "description": "",
+  "author": "DoltHub",
+  "private": true,
+  "packageManager": "yarn@4.5.0",
+  "scripts": {
+    "cy-chrome": "cypress run --browser chrome",
+    "cy-open-local": "CYPRESS_LOCAL=true cypress open --config baseUrl=http://localhost:3002,numTestsKeptInMemory=0",
+    "cy-run-local": "CYPRESS_LOCAL=true cypress run --config baseUrl=http://localhost:3002",
+    "ci": "npm-run-all prettier compile lint",
+    "compile": "tsc -b",
+    "lint": "eslint --cache --ext .ts,.js .",
+    "prettier": "prettier --check 'cypress/**/*.{ts,js}'",
+    "prettier:fix": "prettier --write 'cypress/**/*.{ts,js}'"
+  },
+  "dependencies": {
+    "cypress": "^14.3.2",
+    "typescript": "^5.8.3"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.26.4",
+    "@babel/core": "^7.27.1",
+    "@babel/preset-env": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@cypress/github-action": "^6.8.0",
+    "@typescript-eslint/eslint-plugin": "^7.14.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-airbnb-typescript": "^18.0.0",
+    "eslint-config-prettier": "^10.1.2",
+    "eslint-plugin-cypress": "^4.3.0",
+    "eslint-plugin-import": "^2.31.0",
+    "npm-run-all2": "^7.0.2",
+    "prettier": "^3.5.3"
+  }
+}
