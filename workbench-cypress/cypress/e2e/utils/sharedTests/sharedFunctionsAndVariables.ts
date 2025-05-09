@@ -1,4 +1,8 @@
-import { newExpectation, newShouldArgs } from "../helpers";
+import {
+  newExpectation,
+  newExpectationWithTypeString,
+  newShouldArgs,
+} from "../helpers";
 import { ClickFlow, Expectation, Selector, ShouldArgs, Tests } from "../types";
 
 export const beVisibleAndContain = (value: string | string[]) =>
@@ -53,3 +57,36 @@ export function newExpectationWithClickFlows(
 ): Expectation {
   return { description, selector, shouldArgs, clickFlows, skip };
 }
+
+export const shouldClickAndFind = (
+  dataCyToClick: string,
+  dataCyToFind: string,
+): Expectation =>
+  newExpectationWithClickFlows(
+    `should find and click ${getDesc(dataCyToClick)}`,
+    `[data-cy=${dataCyToClick}]`,
+    beVisible,
+    [
+      newClickFlow(`[data-cy=${dataCyToClick}]`, [
+        shouldBeVisible(dataCyToFind),
+      ]),
+    ],
+  );
+
+export const shouldTypeString = (dataCy: string, value: string) =>
+  newExpectationWithTypeString(
+    `should type in ${getDesc(dataCy)} input`,
+    `[data-cy=${dataCy}]`,
+    beVisible,
+    { value },
+  );
+
+export const shouldFindButton = (
+  dataCy: string,
+  disabled = false,
+): Expectation =>
+  newExpectation(
+    `should find${disabled ? "disabled" : "enabled"} ${getDesc(dataCy)}`,
+    `[data-cy=${dataCy}]`,
+    newShouldArgs(disabled ? "be.disabled" : "be.enabled"),
+  );

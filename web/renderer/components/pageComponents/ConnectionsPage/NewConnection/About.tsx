@@ -111,7 +111,7 @@ export default function About() {
             labelClassName={css.label}
             placeholder="my-database (required)"
             light
-            name="connection-name"
+            data-cy="connection-name-input"
           />
           <FormSelect
             outerClassName={css.typeSelect}
@@ -140,7 +140,7 @@ export default function About() {
             data-cy="connection-type-selector"
           />
           <ButtonsWithError error={error}>
-            <Button type="submit" disabled={!state.name} className={css.button} data-cy="about-next-button">
+            <Button type="submit" disabled={!state.name} className={css.button} data-cy="next-about">
               Next
             </Button>
           </ButtonsWithError>
