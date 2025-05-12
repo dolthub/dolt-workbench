@@ -135,6 +135,7 @@ function addConnectionForCypressTesting(connectionName: string) {
 }
 
 Cypress.Commands.add("deleteTestConnection", (connectionName: string) => {
+  cy.visitAndWait("/connections");
   cy.get(`[data-cy=delete-${connectionName}-button]`, opts).should(
     "be.enabled",
   );
