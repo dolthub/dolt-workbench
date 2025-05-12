@@ -31,7 +31,7 @@ const testConnectionTab = [
   shouldBeVisible("connection-user-input"),
   shouldBeVisible("connection-password-input"),
   shouldBeVisible("connection-database-input"),
-  shouldFindButton(" next-connection", false),
+  shouldFindButton("next-connection", false),
   shouldClickAndFind("next-connection", "active-tab"),
 ];
 
