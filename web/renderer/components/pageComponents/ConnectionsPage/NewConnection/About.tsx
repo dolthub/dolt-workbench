@@ -6,7 +6,7 @@ import {
   FormSelect,
   useTabsContext,
 } from "@dolthub/react-components";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { DatabaseType } from "@gen/graphql-types";
 import CloneForm from "@components/CloneDatabaseForm/CloneForm";
 import { useConfigContext } from "./context/config";
@@ -22,7 +22,8 @@ export default function About() {
   const [startDoltServer, setStartDoltServer] = useState(false);
   const [cloneDolt, setCloneDolt] = useState(false);
 
-  const onNext = () => {
+  const onNext = ( e: SyntheticEvent,) => {
+    e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
 

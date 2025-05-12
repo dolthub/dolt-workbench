@@ -12,7 +12,7 @@ export default function Connection() {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
-  console.log(activeTabIndex)
+
   return (
     <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
       <FormInput
@@ -36,6 +36,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-host-input"
       />
       <FormInput
         label="Port"
@@ -45,6 +46,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-port-input"
       />
       <FormInput
         label="User"
@@ -54,6 +56,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-user-input"
       />
       <FormInput
         label="Password"
@@ -64,6 +67,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-password-input"
       />
       <FormInput
         label="Database"
@@ -73,6 +77,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-database-input"
       />
       <Button
         type="submit"
