@@ -49,6 +49,8 @@ jobs:
           # Run Cypress 
           cd ../workbench-cypress
           yarn cy-chrome
+        env:
+          WORKBENCH_CONNECTION_URL: ${{ secrets.WORKBENCH_CONNECTION_URL}}
 
       - name: Save screenshots of failed tests
         uses: actions/upload-artifact@v4

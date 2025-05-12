@@ -8,7 +8,7 @@ import {
   shouldTypeString,
 } from "./sharedFunctionsAndVariables";
 
-const connectionUrl = Cypress.env("WORKBENCH_CONNECTION_STRING");
+const connectionUrl = Cypress.env("WORKBENCH_CONNECTION_URL");
 
 const testAboutTab = (connectionName: string): Tests => [
   shouldFindAndContain("active-tab", "About"),
