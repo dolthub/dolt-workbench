@@ -36,12 +36,13 @@ jobs:
         working-directory: ./workbench-cypress 
         run: |
           yarn
-      - name: Debug Connection URL
-        run: |
-          echo "Connection URL: $WORKBENCH_CONNECTION_URL"
+
       - name: Run tests
         working-directory: ./workbench-cypress 
+        env:
+          WORKBENCH_CONNECTION_URL: ${{ secrets.WORKBENCH_CONNECTION_URL}}
         run: |
+          echo "Connection URL: $WORKBENCH_CONNECTION_URL"
           # Start servers and store PIDs
           echo "Starting servers..."
           cd ../graphql-server
@@ -51,8 +52,7 @@ jobs:
           # Run Cypress 
           cd ../workbench-cypress
           yarn cy-chrome
-        env:
-          WORKBENCH_CONNECTION_URL: ${{ secrets.WORKBENCH_CONNECTION_URL}}
+      
 
       - name: Save screenshots of failed tests
         uses: actions/upload-artifact@v4
