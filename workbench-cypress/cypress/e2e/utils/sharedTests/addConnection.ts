@@ -35,6 +35,7 @@ const testAdvancedTab = [
   ...shouldFindCheckbox("use-ssl-checkbox", true),
   ...shouldFindCheckbox("hide-dolt-features-checkbox", false),
   shouldFindButton("launch-workbench-button", false),
+  shouldClickAndFind("launch-workbench-button", "database-test-button"),
 ];
 
 export const addWorkbenchTestConnection = (connectionName: string): Tests => [

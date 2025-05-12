@@ -36,7 +36,7 @@ export default function DatabasesPage() {
           {res.data?.databases.length ? (
             <ul className={css.dbList}>
               {res.data.databases.map(db => (
-                <li key={db}>
+                <li key={db} data-cy={`database-${db}-button`}>
                   <Link {...database({ databaseName: db })}>
                     <div className={css.database}>
                       <FaDatabase />
