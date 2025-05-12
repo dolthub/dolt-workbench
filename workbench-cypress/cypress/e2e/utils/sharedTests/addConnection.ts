@@ -20,7 +20,7 @@ const testAboutTab = (connectionName: string): Tests => [
 
 const testConnectionTab = [
   shouldFindAndContain("active-tab", "Connection"),
-  shouldTypeString("connection-url-input", connectionUrl),
+  shouldTypeString("connection-url-input", "test-url"),
   shouldBeVisible("connection-host-input"),
   shouldBeVisible("connection-port-input"),
   shouldBeVisible("connection-user-input"),
