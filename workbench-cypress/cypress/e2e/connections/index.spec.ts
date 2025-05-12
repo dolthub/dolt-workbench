@@ -22,8 +22,8 @@ describe(pageName, () => {
       newShouldArgs("be.visible.and.have.length.of.at.least", 1),
     ),
     shouldFindAndContain(
-      "connection-workbench-cypress-test",
-      "workbench-cypress-test",
+      "connection-CypressTestConnection",
+      "CypressTestConnection",
     ),
   ];
   runTests({ tests, currentPage, pageName });

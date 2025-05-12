@@ -18,3 +18,13 @@ import "./commands";
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+before(() => {
+  // Only create the connection if it doesn't exist
+  cy.addConnection("CypressTestConnection");
+});
+
+// Cleanup
+after(() => {
+  cy.deleteTestConnection("CypressTestConnection");
+});
