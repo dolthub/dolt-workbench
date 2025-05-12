@@ -74,6 +74,7 @@ export default function Item({
             <Button.Link
               onClick={() => onDeleteClicked(conn.name)}
               className={css.delete}
+              data-cy={`delete-${conn.name}-button`}
             >
               <IoMdClose />
             </Button.Link>

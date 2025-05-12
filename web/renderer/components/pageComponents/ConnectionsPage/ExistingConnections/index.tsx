@@ -108,6 +108,7 @@ export default function ExistingConnections(props: Props) {
             ? "This action will permanently delete the local Dolt server and all associated data stored within it. This cannot be undone."
             : undefined
         }
+        buttonDataCy="delete-connection-confirm-button"
       />
     </div>
   );
