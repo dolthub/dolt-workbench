@@ -29,7 +29,11 @@ export default function ConnectionTabs() {
               </CustomTab>,
             ]
           : ["About", "Connection", "Advanced"].map((tab, i) => (
-              <CustomTab key={tab} index={i} data-cy={`connection-tabs-${tab.toLowerCase()}`}>
+              <CustomTab
+                key={tab}
+                index={i}
+                data-cy={`connection-tabs-${tab.toLowerCase()}`}
+              >
                 {tab}
               </CustomTab>
             ))}
@@ -60,7 +64,11 @@ function CustomTabPanel(props: PanelProps) {
   );
 }
 
-function CustomTab(props: { index: number; children: string,  ["data-cy"]?: string }) {
+function CustomTab(props: {
+  index: number;
+  children: string;
+  ["data-cy"]?: string;
+}) {
   const { activeTabIndex } = useTabsContext();
   const isActive = props.index === activeTabIndex;
   const { state } = useConfigContext();

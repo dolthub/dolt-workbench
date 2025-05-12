@@ -22,7 +22,7 @@ export default function About() {
   const [startDoltServer, setStartDoltServer] = useState(false);
   const [cloneDolt, setCloneDolt] = useState(false);
 
-  const onNext = ( e: SyntheticEvent,) => {
+  const onNext = (e: SyntheticEvent) => {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
@@ -141,7 +141,12 @@ export default function About() {
             data-cy="connection-type-selector"
           />
           <ButtonsWithError error={error}>
-            <Button type="submit" disabled={!state.name} className={css.button} data-cy="next-about">
+            <Button
+              type="submit"
+              disabled={!state.name}
+              className={css.button}
+              data-cy="next-about"
+            >
               Next
             </Button>
           </ButtonsWithError>
