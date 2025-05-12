@@ -17,7 +17,7 @@ export default function NavItem(props: Props) {
   if (props.hide) return null;
   if (props.doltDisabled) {
     return (
-      <li className={css.disabledTab}>
+      <li className={css.disabledTab} data-cy="db-tab-disabled">
         <span
           className={css.innerTab}
           data-tooltip-place="left"
@@ -31,7 +31,7 @@ export default function NavItem(props: Props) {
   }
   const url = getUrlForRefName(props.params, props.name);
   return (
-    <li>
+    <li data-cy={`db-${props.name.toLowerCase().split(" ").join("-")}-tab`}>
       <Link
         className={cx(css.tab, {
           [css.active]: props.i === props.initialTabIndex,
