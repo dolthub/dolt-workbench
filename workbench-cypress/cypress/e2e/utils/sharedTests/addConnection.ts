@@ -8,7 +8,7 @@ import {
   shouldTypeString,
 } from "./sharedFunctionsAndVariables";
 
-// const connectionUrl = Cypress.env("WORKBENCH_CONNECTION_URL");
+const connectionUrl = Cypress.env("WORKBENCH_CONNECTION_URL");
 
 const testAboutTab = (connectionName: string): Tests => [
   shouldFindAndContain("active-tab", "About"),
@@ -20,7 +20,7 @@ const testAboutTab = (connectionName: string): Tests => [
 
 const testConnectionTab = [
   shouldFindAndContain("active-tab", "Connection"),
-  shouldTypeString("connection-url-input", "test-url"),
+  shouldTypeString("connection-url-input", connectionUrl),
   shouldBeVisible("connection-host-input"),
   shouldBeVisible("connection-port-input"),
   shouldBeVisible("connection-user-input"),

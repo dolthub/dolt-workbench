@@ -40,9 +40,8 @@ jobs:
       - name: Run tests
         working-directory: ./workbench-cypress 
         env:
-          WORKBENCH_CONNECTION_URL: ${{ secrets.WORKBENCH_CONNECTION_URL}}
+          CYPRESS_WORKBENCH_CONNECTION_URL: ${{ secrets.WORKBENCH_CONNECTION_URL}}
         run: |
-          echo "Connection URL: $WORKBENCH_CONNECTION_URL"
           # Start servers and store PIDs
           echo "Starting servers..."
           cd ../graphql-server
