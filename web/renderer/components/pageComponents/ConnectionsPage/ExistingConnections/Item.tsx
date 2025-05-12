@@ -51,7 +51,11 @@ export default function Item({
 
   return (
     <>
-      <li key={conn.name} className={css.connectionContainer}>
+      <li
+        key={conn.name}
+        className={css.connectionContainer}
+        data-cy={`connection-${conn.name}`}
+      >
         <div
           className={cx(css.line, css[borderClassName], {
             [css.shorterLine]: shorterLine,
