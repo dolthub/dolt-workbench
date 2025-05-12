@@ -36,7 +36,9 @@ jobs:
         working-directory: ./workbench-cypress 
         run: |
           yarn
- 
+      - name: Debug Connection URL
+        run: |
+          echo "Connection URL: $WORKBENCH_CONNECTION_URL"
       - name: Run tests
         working-directory: ./workbench-cypress 
         run: |
