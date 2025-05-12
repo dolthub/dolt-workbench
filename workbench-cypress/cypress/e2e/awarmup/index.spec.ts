@@ -9,6 +9,8 @@ import {
 } from "@utils/sharedTests/sharedFunctionsAndVariables";
 import { Tests } from "@utils/types";
 
+// This should be the first test to set up the connection
+
 const pageName = "New Connection";
 const currentPage = "/connections/new";
 const connectionUrl = Cypress.env("WORKBENCH_CONNECTION_URL");
