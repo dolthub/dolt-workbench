@@ -132,6 +132,9 @@ function addConnectionForCypressTesting(connectionName: string) {
   );
   cy.get("[data-cy=launch-workbench-button]", opts).should("be.enabled");
   cy.get("[data-cy=launch-workbench-button]", opts).click(clickOpts);
+
+  // Check successfully launched workbench
+  cy.get("[data-cy=databases-list]", opts).should("be.visible");
 }
 
 Cypress.Commands.add("deleteTestConnection", (connectionName: string) => {
@@ -144,4 +147,7 @@ Cypress.Commands.add("deleteTestConnection", (connectionName: string) => {
     "be.enabled",
   );
   cy.get("[data-cy=delete-connection-confirm-button]", opts).click(clickOpts);
+  cy.get("[data-cy=connection-CypressTestConnection]", opts).should(
+    "not.exist",
+  );
 });
