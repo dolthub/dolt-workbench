@@ -67,11 +67,15 @@ export default function ExistingConnections(props: Props) {
             <div className={css.leftLine} />
           </div>
         </div>
-        <Button className={css.newConnection} onClick={onClick}>
+        <Button
+          className={css.newConnection}
+          onClick={onClick}
+          data-cy="add-connection-button"
+        >
           Add Connection
         </Button>
         <div className={css.rightLine} />
-        <ul>
+        <ul data-cy="connections-list">
           {props.connections.map((conn, i) => (
             <Item
               conn={conn}
@@ -104,6 +108,7 @@ export default function ExistingConnections(props: Props) {
             ? "This action will permanently delete the local Dolt server and all associated data stored within it. This cannot be undone."
             : undefined
         }
+        buttonDataCy="delete-connection-confirm-button"
       />
     </div>
   );

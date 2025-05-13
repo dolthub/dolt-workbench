@@ -13,5 +13,9 @@ declare namespace Cypress {
     visitPage(currentPage: string): void;
 
     visitAndWait(path: string): void;
+
+    addConnection(connectionName: string): void;
+
+    deleteTestConnection(connectionName: string): void;
   }
 }

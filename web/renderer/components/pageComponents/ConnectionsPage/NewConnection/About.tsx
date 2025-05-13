@@ -6,7 +6,7 @@ import {
   FormSelect,
   useTabsContext,
 } from "@dolthub/react-components";
-import { useState } from "react";
+import { SyntheticEvent, useState } from "react";
 import { DatabaseType } from "@gen/graphql-types";
 import CloneForm from "@components/CloneDatabaseForm/CloneForm";
 import { useConfigContext } from "./context/config";
@@ -22,12 +22,13 @@ export default function About() {
   const [startDoltServer, setStartDoltServer] = useState(false);
   const [cloneDolt, setCloneDolt] = useState(false);
 
-  const onNext = () => {
+  const onNext = (e: SyntheticEvent) => {
+    e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
 
   return (
-    <form onSubmit={onNext} className={css.form}>
+    <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
       {forElectron && (
         <>
           <Checkbox
@@ -111,6 +112,7 @@ export default function About() {
             labelClassName={css.label}
             placeholder="my-database (required)"
             light
+            data-cy="connection-name-input"
           />
           <FormSelect
             outerClassName={css.typeSelect}
@@ -136,9 +138,15 @@ export default function About() {
             ]}
             hideSelectedOptions
             light
+            data-cy="connection-type-selector"
           />
           <ButtonsWithError error={error}>
-            <Button type="submit" disabled={!state.name} className={css.button}>
+            <Button
+              type="submit"
+              disabled={!state.name}
+              className={css.button}
+              data-cy="next-about"
+            >
               Next
             </Button>
           </ButtonsWithError>

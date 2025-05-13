@@ -24,12 +24,16 @@ export default function ConnectionTabs() {
       <TabList className={css.tabList}>
         {state.isLocalDolt
           ? [
-              <CustomTab key="About" index={0}>
+              <CustomTab key="About" index={0} data-cy="connection-tabs-about">
                 About
               </CustomTab>,
             ]
           : ["About", "Connection", "Advanced"].map((tab, i) => (
-              <CustomTab key={tab} index={i}>
+              <CustomTab
+                key={tab}
+                index={i}
+                data-cy={`connection-tabs-${tab.toLowerCase()}`}
+              >
                 {tab}
               </CustomTab>
             ))}
@@ -60,7 +64,11 @@ function CustomTabPanel(props: PanelProps) {
   );
 }
 
-function CustomTab(props: { index: number; children: string }) {
+function CustomTab(props: {
+  index: number;
+  children: string;
+  ["data-cy"]?: string;
+}) {
   const { activeTabIndex } = useTabsContext();
   const isActive = props.index === activeTabIndex;
   const { state } = useConfigContext();
@@ -76,7 +84,7 @@ function CustomTab(props: { index: number; children: string }) {
       disabled={getDisabled(props.children, state)}
     >
       {isCompleted && <FiCheck className={css.check} />}
-      <span>{props.children}</span>
+      <span data-cy={props["data-cy"]}>{props.children}</span>
     </Tab>
   );
 }

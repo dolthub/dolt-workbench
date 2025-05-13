@@ -51,7 +51,11 @@ export default function Item({
 
   return (
     <>
-      <li key={conn.name} className={css.connectionContainer}>
+      <li
+        key={conn.name}
+        className={css.connectionContainer}
+        data-cy={`connection-${conn.name}`}
+      >
         <div
           className={cx(css.line, css[borderClassName], {
             [css.shorterLine]: shorterLine,
@@ -70,6 +74,7 @@ export default function Item({
             <Button.Link
               onClick={() => onDeleteClicked(conn.name)}
               className={css.delete}
+              data-cy={`delete-${conn.name}-button`}
             >
               <IoMdClose />
             </Button.Link>

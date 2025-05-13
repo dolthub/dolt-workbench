@@ -14,7 +14,7 @@ export default function Connection() {
   };
 
   return (
-    <form onSubmit={onNext} className={css.form}>
+    <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
       <FormInput
         value={state.connectionUrl}
         onChangeString={c => setState({ connectionUrl: c })}
@@ -25,6 +25,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-url-input"
       />
       <div className={css.or}>OR</div>
       <FormInput
@@ -35,6 +36,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-host-input"
       />
       <FormInput
         label="Port"
@@ -44,6 +46,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-port-input"
       />
       <FormInput
         label="User"
@@ -53,6 +56,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-user-input"
       />
       <FormInput
         label="Password"
@@ -63,6 +67,7 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-password-input"
       />
       <FormInput
         label="Database"
@@ -72,11 +77,13 @@ export default function Connection() {
         horizontal
         light
         labelClassName={css.label}
+        data-cy="connection-database-input"
       />
       <Button
         type="submit"
         disabled={!state.connectionUrl && (!state.host || !state.port)}
         className={css.button}
+        data-cy="next-connection"
       >
         Next
       </Button>

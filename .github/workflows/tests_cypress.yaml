@@ -36,9 +36,11 @@ jobs:
         working-directory: ./workbench-cypress 
         run: |
           yarn
- 
+
       - name: Run tests
         working-directory: ./workbench-cypress 
+        env:
+          CYPRESS_WORKBENCH_CONNECTION_URL: ${{ secrets.WORKBENCH_CONNECTION_URL}}
         run: |
           # Start servers and store PIDs
           echo "Starting servers..."
@@ -49,6 +51,7 @@ jobs:
           # Run Cypress 
           cd ../workbench-cypress
           yarn cy-chrome
+      
 
       - name: Save screenshots of failed tests
         uses: actions/upload-artifact@v4

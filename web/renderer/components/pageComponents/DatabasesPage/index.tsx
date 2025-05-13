@@ -34,9 +34,9 @@ export default function DatabasesPage() {
             Choose an existing database or create a new database to get started.
           </p>
           {res.data?.databases.length ? (
-            <ul className={css.dbList}>
+            <ul className={css.dbList} data-cy="databases-list">
               {res.data.databases.map(db => (
-                <li key={db}>
+                <li key={db} data-cy={`database-${db}-button`}>
                   <Link {...database({ databaseName: db })}>
                     <div className={css.database}>
                       <FaDatabase />

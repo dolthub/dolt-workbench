@@ -14,7 +14,7 @@ export default function Advanced() {
   const { canSubmit, message } = getCanSubmit(state);
 
   return (
-    <form onSubmit={onSubmit} className={css.form}>
+    <form onSubmit={onSubmit} className={css.form} data-cy="advanced-tab-form">
       <Checkbox
         checked={state.useSSL}
         onChange={() => setState({ useSSL: !state.useSSL })}
@@ -39,6 +39,7 @@ export default function Advanced() {
         data-tooltip-id="submit-message"
         data-tooltip-content={message}
         data-tooltip-hidden={canSubmit}
+        data-cy="launch-workbench-button"
       >
         Launch Workbench
       </Button>
