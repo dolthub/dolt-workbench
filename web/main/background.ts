@@ -52,6 +52,10 @@ if (isProd) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
+if (process.platform === "linux") {
+  app.commandLine.appendSwitch("--no-sandbox");
+}
+
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;

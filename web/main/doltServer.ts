@@ -70,6 +70,10 @@ function getDoltPaths(): string {
     return isProd
       ? path.join(process.resourcesPath, "..", "MacOS", "dolt")
       : path.join(__dirname, "..", "build", "mac", "dolt");
+  } else if (process.platform === "linux") {
+    return isProd
+      ? path.join(process.resourcesPath, "dolt")
+      : path.join(__dirname, "..", "build", "linux", "dolt");
   } else {
     return isProd
       ? path.join(process.resourcesPath, "dolt.exe")
