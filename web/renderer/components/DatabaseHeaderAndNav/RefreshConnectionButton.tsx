@@ -34,6 +34,7 @@ export default function ResetConnectionButton() {
         onClick={onClick}
         data-tooltip-content="Refresh connection"
         data-tooltip-id="refresh-connection"
+        data-cy="reset-button"
       >
         <SmallLoader
           loaded={!loading}

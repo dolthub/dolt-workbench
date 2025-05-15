@@ -16,6 +16,7 @@
     "prettier:fix": "prettier --write 'cypress/**/*.{ts,js}'"
   },
   "dependencies": {
+    "@dolthub/web-utils": "^0.1.9",
     "cypress": "^14.3.2",
     "typescript": "^5.8.3"
   },

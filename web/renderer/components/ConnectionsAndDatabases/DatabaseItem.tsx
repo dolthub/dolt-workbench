@@ -60,7 +60,7 @@ export default function DatabaseItem({
   const dbName = excerpt(db, 32);
   if (db === currentDatabase && conn.name === currentConnection.name) {
     return (
-      <span className={css.dbItem}>
+      <span className={css.dbItem} data-cy={`database-${dbName}`}>
         {dbName}
         <MdRemoveRedEye className={css.viewing} />
       </span>
@@ -70,6 +70,7 @@ export default function DatabaseItem({
     <Button.Link
       className={cx(css.dbItem, css.link)}
       onClick={async () => onClick(db)}
+      data-cy={`database-${dbName}`}
     >
       {dbName}
     </Button.Link>

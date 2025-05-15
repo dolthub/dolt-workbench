@@ -30,7 +30,7 @@ function Inner(props: InnerProps) {
   });
 
   return (
-    <div>
+    <div data-cy="db-tables-table-list">
       <Tooltip id="primary-key-tip" content="primary key" place="left" />
       {props.tables.length ? (
         <ol className={css.tableList}>

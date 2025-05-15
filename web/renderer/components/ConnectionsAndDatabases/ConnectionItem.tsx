@@ -30,6 +30,7 @@ export default function ConnectionItem({
         [css.selected]: selectedConnection.name === conn.name,
       })}
       onClick={async () => onSelected(conn)}
+      data-cy={`connection-${conn.name}`}
     >
       <div className={css.connectionTop}>
         <div className={css.nameAndLabel}>

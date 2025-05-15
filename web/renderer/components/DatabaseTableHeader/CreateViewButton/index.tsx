@@ -19,6 +19,7 @@ export default function CreateViewButton(props: Props) {
         <Button
           onClick={() => setIsOpen(true)}
           className={css.button}
+          data-cy="create-view-button"
           size="small"
         >
           Create View

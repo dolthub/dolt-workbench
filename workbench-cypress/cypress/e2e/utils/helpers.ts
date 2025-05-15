@@ -1,4 +1,11 @@
-import { Expectation, Selector, ShouldArgs, TypeStringType } from "./types";
+import {
+  ClickFlow,
+  Expectation,
+  Selector,
+  ShouldArgs,
+  Tests,
+  TypeStringType,
+} from "./types";
 
 // Expectations
 
@@ -24,4 +31,41 @@ export function newExpectationWithTypeString(
   skip = false,
 ): Expectation {
   return { description, selector, shouldArgs, typeString, skip };
+}
+
+export function newExpectationWithScrollIntoView(
+  description: string,
+  selector: Selector,
+  shouldArgs: ShouldArgs,
+  scrollIntoView: boolean,
+  skip = false,
+  timeout?: number,
+): Expectation {
+  return { description, selector, scrollIntoView, shouldArgs, skip, timeout };
+}
+
+// Click flows
+
+export function newClickFlow(
+  toClickBefore: Selector,
+  expectations: Tests,
+  toClickAfter?: Selector,
+  force = false,
+): ClickFlow {
+  return {
+    toClickBefore,
+    expectations,
+    toClickAfter,
+    force,
+  };
+}
+
+export function newExpectationWithClickFlows(
+  description: string,
+  selector: string,
+  shouldArgs: ShouldArgs,
+  clickFlows: ClickFlow[],
+  skip = false,
+): Expectation {
+  return { description, selector, shouldArgs, clickFlows, skip };
 }
