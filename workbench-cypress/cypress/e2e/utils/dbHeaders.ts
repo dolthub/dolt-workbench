@@ -1,4 +1,4 @@
-import { excerpt } from "@dolthub/web-utils";
+import excerpt from "./excerpt";
 import {
   newClickFlow,
   newExpectation,
@@ -72,7 +72,7 @@ const testDatabaseSelector = (connectionName: string, dbName: string) => {
     ),
     shouldBeVisible("connections-list"),
     shouldBeVisible(`connection-${connectionName}`),
-    shouldBeVisible(`database-${dbName}`),
+    shouldBeVisible(`current-database-${dbName}`),
     newExpectationWithClickFlows(
       "should find and click  database-selector-button",
       "[data-cy=database-selector-button]",

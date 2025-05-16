@@ -28,16 +28,12 @@ const testTable = "incidents";
 const hasDocs = true;
 
 describe(pageName, () => {
-  const commonTests = [
+  const tests = [
     newExpectation(
       "should not find empty database",
       "[data-cy=db-data-table-empty]",
       notExist,
     ),
-  ];
-
-  const tests = [
-    ...commonTests,
     shouldNotExist("db-doc-markdown"),
     ...testDBHeader(connectionName, dbName, hasDocs),
     ...tableExpectations(false, true, 3, testTable),

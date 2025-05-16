@@ -60,7 +60,7 @@ export default function DatabaseItem({
   const dbName = excerpt(db, 32);
   if (db === currentDatabase && conn.name === currentConnection.name) {
     return (
-      <span className={css.dbItem} data-cy={`database-${dbName}`}>
+      <span className={css.dbItem} data-cy={`current-database-${dbName}`}>
         {dbName}
         <MdRemoveRedEye className={css.viewing} />
       </span>

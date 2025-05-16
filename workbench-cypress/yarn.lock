@@ -1465,16 +1465,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.1.9":
-  version: 0.1.9
-  resolution: "@dolthub/web-utils@npm:0.1.9"
-  dependencies:
-    node-sql-parser: "npm:^5.3.5"
-    timeago.js: "npm:^4.0.2"
-  checksum: 10c0/15e98e80615c09e0461cd10d738c54dd12f73526c0d2556740dc5830f280c073d1b4aeccb73e3a1817251f82a1716a09d6d35b6e718627b2c40b8cb731e087e7
-  languageName: node
-  linkType: hard
-
 "@eslint-community/eslint-utils@npm:^4.2.0, @eslint-community/eslint-utils@npm:^4.4.0":
   version: 4.7.0
   resolution: "@eslint-community/eslint-utils@npm:4.7.0"
@@ -1889,13 +1879,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/f294ba23e441b4f919394d0e4c80f3f33e858e6f1db0561317148da2db3d3c67809fd1a38de481328933b0d5c6174db40cb6ab65f12b2cf3309df7f07a8e46f6
-  languageName: node
-  linkType: hard
-
-"@types/pegjs@npm:^0.10.0":
-  version: 0.10.6
-  resolution: "@types/pegjs@npm:0.10.6"
-  checksum: 10c0/ee4a31cf07679ae5422fec95e499ad059483a9ab2815af1ada0ee858a00af6c7e6579a8e172810c1c9db04005941bef96d0dd2c28648769211f57df330f9c30f
   languageName: node
   linkType: hard
 
@@ -2474,13 +2457,6 @@ __metadata:
   version: 3.0.2
   resolution: "before-after-hook@npm:3.0.2"
   checksum: 10c0/dea640f9e88a1085372c9bcc974b7bf379267490693da92ec102a7d8b515dd1e95f00ef575a146b83ca638104c57406c3427d37bdf082f602dde4b56d05bba14
-  languageName: node
-  linkType: hard
-
-"big-integer@npm:^1.6.48":
-  version: 1.6.52
-  resolution: "big-integer@npm:1.6.52"
-  checksum: 10c0/9604224b4c2ab3c43c075d92da15863077a9f59e5d4205f4e7e76acd0cd47e8d469ec5e5dba8d9b32aa233951893b29329ca56ac80c20ce094b4a647a66abae0
   languageName: node
   linkType: hard
 
@@ -5183,16 +5159,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-sql-parser@npm:^5.3.5":
-  version: 5.3.9
-  resolution: "node-sql-parser@npm:5.3.9"
-  dependencies:
-    "@types/pegjs": "npm:^0.10.0"
-    big-integer: "npm:^1.6.48"
-  checksum: 10c0/d518c064301632e1c74a35aaec905150665ec483077a2fc2383b9a57485e0f16306d678874fcf5779568326469593b5aa2c8594fcb4a27af639708f359fa9983
-  languageName: node
-  linkType: hard
-
 "nopt@npm:^8.0.0":
   version: 8.1.0
   resolution: "nopt@npm:8.1.0"
@@ -6341,13 +6307,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"timeago.js@npm:^4.0.2":
-  version: 4.0.2
-  resolution: "timeago.js@npm:4.0.2"
-  checksum: 10c0/e4cf66df2dfa2bc17db6e7a7c591d1e877e09e91e118784347a0b2390c38d7d292d2742e29edde9cdf4eaec61e8c4ef9b9f9c8b539f03d2613403dd7ccfc6cc8
-  languageName: node
-  linkType: hard
-
 "tinyglobby@npm:^0.2.12":
   version: 0.2.13
   resolution: "tinyglobby@npm:0.2.13"
@@ -6864,7 +6823,6 @@ __metadata:
     "@babel/preset-env": "npm:^7.27.1"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@cypress/github-action": "npm:^6.8.0"
-    "@dolthub/web-utils": "npm:^0.1.9"
     "@typescript-eslint/eslint-plugin": "npm:^7.14.1"
     "@typescript-eslint/parser": "npm:^8.31.1"
     cypress: "npm:^14.3.2"
