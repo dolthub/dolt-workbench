@@ -1,12 +1,46 @@
 import {
+  newClickFlow,
   newExpectation,
+  newExpectationWithClickFlows,
   newExpectationWithTypeString,
   newShouldArgs,
 } from "../helpers";
-import { ClickFlow, Expectation, Selector, ShouldArgs, Tests } from "../types";
+import { Expectation } from "../types";
 
 export const beVisibleAndContain = (value: string | string[]) =>
   newShouldArgs("be.visible.and.contain", value);
+
+function getDesc(dataCy: string): string {
+  return dataCy.replace(/-/g, " ");
+}
+
+export const beVisible = newShouldArgs("be.visible");
+export const notBeVisible = newShouldArgs("not.be.visible");
+export const notExist = newShouldArgs("not.exist");
+
+export const shouldBeVisible = (dataCy: string, desc?: string): Expectation =>
+  newExpectation(
+    `should find ${desc ?? getDesc(dataCy)}`,
+    `[data-cy=${dataCy}]`,
+    beVisible,
+  );
+
+export const shouldNotBeVisible = (
+  dataCy: string,
+  desc?: string,
+): Expectation =>
+  newExpectation(
+    `should not find ${desc ?? getDesc(dataCy)}`,
+    `[data-cy=${dataCy}]`,
+    notBeVisible,
+  );
+
+export const shouldNotExist = (dataCy: string): Expectation =>
+  newExpectation(
+    `should not find ${getDesc(dataCy)}`,
+    `[data-cy=${dataCy}]`,
+    notExist,
+  );
 
 export const shouldFindAndContain = (
   dataCy: string,
@@ -18,45 +52,6 @@ export const shouldFindAndContain = (
     `[data-cy=${dataCy}]`,
     beVisibleAndContain(text),
   );
-
-function getDesc(dataCy: string): string {
-  return dataCy.replace(/-/g, " ");
-}
-
-export const beVisible = newShouldArgs("be.visible");
-
-export const shouldBeVisible = (dataCy: string, desc?: string): Expectation =>
-  newExpectation(
-    `should find ${desc ?? getDesc(dataCy)}`,
-    `[data-cy=${dataCy}]`,
-    beVisible,
-  );
-
-// Click flows
-
-export function newClickFlow(
-  toClickBefore: Selector,
-  expectations: Tests,
-  toClickAfter?: Selector,
-  force = false,
-): ClickFlow {
-  return {
-    toClickBefore,
-    expectations,
-    toClickAfter,
-    force,
-  };
-}
-
-export function newExpectationWithClickFlows(
-  description: string,
-  selector: string,
-  shouldArgs: ShouldArgs,
-  clickFlows: ClickFlow[],
-  skip = false,
-): Expectation {
-  return { description, selector, shouldArgs, clickFlows, skip };
-}
 
 export const shouldClickAndFind = (
   dataCyToClick: string,

@@ -60,6 +60,7 @@ function Inner({ connection, params, setNoDrag, className }: InnerProps) {
         }}
         triggerText={triggerText}
         buttonClassName={css.selector}
+        data-cy="database-selector-button"
       >
         <div className={css.popup} ref={connectionsRef}>
           <Popup

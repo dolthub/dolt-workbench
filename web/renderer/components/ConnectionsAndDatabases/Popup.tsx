@@ -28,7 +28,7 @@ export default function Popup({
   state,
 }: Props) {
   return (
-    <div className={css.container}>
+    <div className={css.container} data-cy="connection-and-database-popup">
       <div className={css.top}>
         <div className={cx(css.header, css.left)}>
           <span>CONNECTIONS</span>
@@ -50,7 +50,7 @@ export default function Popup({
         </div>
       </div>
       <div className={css.middle}>
-        <div className={css.left}>
+        <div className={css.left} data-cy="connections-list">
           {storedConnections.map(conn => (
             <ConnectionItem
               key={conn.name}
@@ -61,7 +61,7 @@ export default function Popup({
             />
           ))}
         </div>
-        <div className={css.right}>
+        <div className={css.right} data-cy="databases-list">
           {state.loading && <SmallLoader loaded={!state.loading} />}
           {state.databases.map(db => (
             <DatabaseItem
