@@ -21,7 +21,7 @@ export default function DocMarkdown({ params, rowData }: Props) {
   const [showEditor, setShowEditor] = useState(false);
 
   return (
-    <div className={css.markdown}>
+    <div className={css.markdown} data-cy="db-doc-markdown">
       <div className={css.titleGroup}>
         <Title
           doltDocsQueryDocName={doltDocsQueryDocName}

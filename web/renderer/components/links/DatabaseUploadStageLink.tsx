@@ -14,11 +14,7 @@ type Props = LinkProps & {
 
 export default function DatabaseUploadStageLink({ children, ...props }: Props) {
   return (
-    <Link
-      {...props}
-      {...uploadStage({ ...props.params, stage: props.stage })}
-      data-cy={`file-upload-${props.dataCyPrefix}${props.stage}-link`}
-    >
+    <Link {...props} {...uploadStage({ ...props.params, stage: props.stage })}>
       {children}
     </Link>
   );
