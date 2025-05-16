@@ -2,8 +2,8 @@ import {
   newClickFlow,
   newExpectation,
   newExpectationWithClickFlows,
-} from "./helpers";
-import { beVisible } from "./sharedTests/sharedFunctionsAndVariables";
+} from "../helpers";
+import { beVisible } from "./sharedFunctionsAndVariables";
 
 const sqlEditorClickFlow = newClickFlow(
   "[data-cy=sql-editor-collapsed]",

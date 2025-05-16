@@ -4,9 +4,9 @@ import {
   newExpectationWithClickFlows,
   newExpectationWithScrollIntoView,
   newShouldArgs,
-} from "./helpers";
-import { beVisible, notExist } from "./sharedTests/sharedFunctionsAndVariables";
-import { ClickFlow, Expectation, ShouldArgs, Tests } from "./types";
+} from "../helpers";
+import { beVisible, notExist } from "./sharedFunctionsAndVariables";
+import { ClickFlow, Expectation, ShouldArgs, Tests } from "../types";
 
 export const clickToOpenNavClickFlow: ClickFlow = newClickFlow(
   "[data-cy=left-nav-toggle-icon]",

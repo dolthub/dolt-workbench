@@ -1,9 +1,8 @@
-import excerpt from "./excerpt";
 import {
   newClickFlow,
   newExpectation,
   newExpectationWithClickFlows,
-} from "./helpers";
+} from "../helpers";
 import {
   beVisible,
   notExist,
@@ -11,8 +10,9 @@ import {
   shouldClickAndFind,
   shouldFindAndContain,
   shouldNotExist,
-} from "./sharedTests/sharedFunctionsAndVariables";
-import { Expectation, ShouldArgs } from "./types";
+} from "./sharedFunctionsAndVariables";
+import { Expectation, ShouldArgs } from "../types";
+import excerpt from "./excerpt";
 
 export const testTabs = (visibility: ShouldArgs): Expectation[] => {
   const tabsVisibility = visibility.chainer === "be.visible" ? "" : "not ";
