@@ -19,7 +19,7 @@ export const clickToOpenNavClickFlow: ClickFlow = newClickFlow(
   ],
 );
 
-export const checkViewsClickflow: ClickFlow = newClickFlow(
+export const checkViewsClickFlow: ClickFlow = newClickFlow(
   `[data-cy=tab-views]`,
   [
     newExpectation(
@@ -35,7 +35,7 @@ export const checkViewsClickflow: ClickFlow = newClickFlow(
   ],
 );
 
-export const checkSchemaClickflow: ClickFlow = newClickFlow(
+export const checkSchemaClickFlow: ClickFlow = newClickFlow(
   `[data-cy=tab-schemas]`,
   [
     newExpectation(
@@ -198,7 +198,7 @@ export const testTablesSection = (
       "should open left database navigation",
       "[data-cy=left-nav-toggle-icon]",
       beVisible,
-      [clickToOpenNavClickFlow, checkViewsClickflow, checkSchemaClickflow],
+      [clickToOpenNavClickFlow, checkViewsClickFlow, checkSchemaClickFlow],
     ),
     ...tableExpectations(hasDocs, loggedIn, tableLen, testTable),
   ];
