@@ -49,6 +49,7 @@ yalc.lock
 /build/mac/*.provisionprofile
 /build/mac/dolt
 /build/appx/dolt.exe
+/build/linux/dolt
 /build/databases
 
 # electron app build
