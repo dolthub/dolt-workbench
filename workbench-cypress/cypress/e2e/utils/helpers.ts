@@ -23,6 +23,16 @@ export function newShouldArgs(chainer: string, value?: any): ShouldArgs {
   return { chainer, value };
 }
 
+export function newExpectationWithURL(
+  description: string,
+  selector: Selector,
+  shouldArgs: ShouldArgs,
+  url: string,
+  skip = false,
+): Expectation {
+  return { description, selector, shouldArgs, skip, url };
+}
+
 export function newExpectationWithTypeString(
   description: string,
   selector: Selector,

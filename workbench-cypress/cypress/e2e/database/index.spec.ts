@@ -1,9 +1,9 @@
-import { testDBHeader } from "@utils/dbHeaders";
+import { testDBHeader } from "@utils/sharedTests/dbHeaders";
 import {
   tableExpectations,
   testSchemaSection,
   testViewsSection,
-} from "@utils/dbLeftNav";
+} from "@utils/sharedTests/dbLeftNav";
 import {
   newClickFlow,
   newExpectation,
@@ -16,7 +16,7 @@ import {
   shouldNotExist,
   shouldTypeString,
 } from "@utils/sharedTests/sharedFunctionsAndVariables";
-import { testSqlConsole } from "@utils/sqlEditor";
+import { testSqlConsole } from "@utils/sharedTests/sqlEditor";
 
 const pageName = "Database";
 const connectionName = "CypressTestConnection";
