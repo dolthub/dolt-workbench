@@ -16,6 +16,7 @@ import {
   shouldNotExist,
   shouldTypeString,
 } from "@utils/sharedTests/sharedFunctionsAndVariables";
+import { testSqlConsole } from "@utils/sqlEditor";
 
 const pageName = "Database";
 const connectionName = "CypressTestConnection";
@@ -54,6 +55,7 @@ describe(pageName, () => {
       ],
     ),
     testSchemaSection(hasBranch, 3, testTable),
+    testSqlConsole,
   ];
   runTests({ tests, currentPage, pageName });
 });

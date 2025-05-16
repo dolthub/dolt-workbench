@@ -38,7 +38,7 @@ export default function DatabaseTableHeader(props: Props) {
         <Buttons sqlString={editorString} params={props.params} />
       </div>
       {showSqlEditor ? (
-        <SqlEditor {...props} />
+        <SqlEditor {...props} data-cy="sql-editor-expanded" />
       ) : (
         <Btn
           data-cy="sql-editor-collapsed"
