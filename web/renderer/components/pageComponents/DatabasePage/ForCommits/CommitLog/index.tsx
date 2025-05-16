@@ -73,7 +73,7 @@ function Inner({ commits, ...props }: InnerProps) {
             className={css.scrollContainer}
           >
             <Uncommitted params={props.params} />
-            <ol className={css.list}>
+            <ol className={css.list} data-cy="commit-log-commits-list">
               {commits.map((c, i) => {
                 const lastCommit = commits[i - 1];
                 return (
