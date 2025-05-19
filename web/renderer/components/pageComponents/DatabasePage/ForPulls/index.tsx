@@ -58,7 +58,7 @@ function ForBranches(props: BranchesProps) {
 function Inner(props: Props) {
   const [pullState, setPullState] = useState<PullState | undefined>();
   return (
-    <div>
+    <div data-cy="pull-page-details">
       <div className={css.top}>
         <BranchSelectForm params={props.params} />
         <div>
@@ -92,7 +92,7 @@ function Inner(props: Props) {
           setPullState={setPullState}
         />
       ) : (
-        <p className={css.selectBranches}>
+        <p className={css.selectBranches} data-cy="select-to-view-pulls">
           Select branches to view pull request
         </p>
       )}
