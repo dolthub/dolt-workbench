@@ -11,6 +11,19 @@ type ErrorReturnType = {
 
 const isProd = process.env.NODE_ENV === "production";
 
+function getDatabasesPath() {
+  if (isProd) {
+    // Use ~/.local/share for Linux (more persistent than ~/.config)
+    const linuxDbRoot =
+      process.platform === "linux"
+        ? path.join(app.getPath("home"), ".local", "share", app.getName())
+        : app.getPath("userData");
+
+    return path.join(linuxDbRoot, "databases");
+  }
+  return path.join(__dirname, "..", "build", "databases");
+}
+
 export async function startServer(
   mainWindow: BrowserWindow,
   connectionName: string,
@@ -20,9 +33,7 @@ export async function startServer(
   // Set the path for the database folder
   // In production, it's in the userData directory
   // In development, it's in the build directory since the development userData directory clears its contents every time the app is rerun in dev mode
-  const dbFolderPath = isProd
-    ? path.join(app.getPath("userData"), "databases", connectionName)
-    : path.join(__dirname, "..", "build", "databases", connectionName);
+  const dbFolderPath = path.join(getDatabasesPath(), connectionName);
 
   const doltPath = getDoltPaths();
 
@@ -136,9 +147,7 @@ export async function cloneAndStartDatabase(
   port: string,
   mainWindow: BrowserWindow,
 ): Promise<ChildProcess | null> {
-  const dbsFolderPath = isProd
-    ? path.join(app.getPath("userData"), "databases")
-    : path.join(__dirname, "..", "build", "databases");
+  const dbsFolderPath = getDatabasesPath();
   const doltPath = getDoltPaths();
   const connectionFolderPath = path.join(dbsFolderPath, connectionName);
   const dbFolderPath = path.join(connectionFolderPath, newDbName);
@@ -269,10 +278,11 @@ function startServerProcess(
 }
 
 export async function removeDoltServerFolder(
-  dbFolderPath: string,
+  connectionName: string,
   mainWindow: BrowserWindow,
   retries = 3,
 ): Promise<ErrorReturnType> {
+  const dbFolderPath = path.join(getDatabasesPath(), connectionName);
   for (let i = 0; i < retries; i++) {
     try {
       if (process.platform === "darwin") {
@@ -315,9 +325,7 @@ export async function doltLogin(
 ): Promise<{ email: string; username: string }> {
   const requestId = randomUUID();
   return new Promise((resolve, reject) => {
-    const dbFolderPath = isProd
-      ? path.join(app.getPath("userData"), "databases", connectionName)
-      : path.join(__dirname, "..", "build", "databases", connectionName);
+    const dbFolderPath = path.join(getDatabasesPath(), connectionName);
     const doltPath = getDoltPaths();
 
     // Return the cancellation ID immediately

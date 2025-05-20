@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: Dolt-Workbench
-buildVersion: 0.3.19
+buildVersion: 0.3.20
 copyright: Copyright © 2024 DoltHub Inc
 icon: build/linux/icon.png
 files:
@@ -41,18 +41,16 @@ extraFiles:
   - from: ../graphql-server/node_modules
     to: graphql-server/node_modules
   - from: build/linux/dolt
-    to: Resources/dolt
-  - from: "chrome-sandbox"
-    to: "chrome-sandbox"
+    to: resources/dolt
+
 linux:
   icon: build/linux/icon.png
   category: "Development"
-  artifactName: ${productName}-linux-${arch}.${ext}
-  target: ["AppImage", "deb"]
+  target: ["AppImage"]
+  artifactName: "${productName}-linux-${arch}.${ext}"
+  executableName: "dolt-workbench"
+  synopsis: "SQL workbench for MySQL and PostgreSQL"
+  asar: false
   maintainer: "DoltHub Team <support@dolthub.com>"
-  executableArgs: []  # Explicitly empty to override defaults
-  desktop:
-    StartupWMClass: "Dolt-Workbench"
 
 npmRebuild: false
-electronVersion: 31.7.1
