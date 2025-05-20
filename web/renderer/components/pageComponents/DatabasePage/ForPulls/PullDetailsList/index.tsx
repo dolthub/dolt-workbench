@@ -19,7 +19,7 @@ type InnerProps = Props & {
 
 export default function PullDetailsList({ pullDetails, params }: InnerProps) {
   return pullDetails.details?.length ? (
-    <ul className={css.list}>
+    <ul className={css.list} data-cy="pull-details-list">
       <div className={css.verticalLine} />
       {pullDetails.details.map(c => (
         <>
