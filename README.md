@@ -14,6 +14,30 @@ There are a few ways to install the Dolt Workbench:
 - [Pull the Docker Hub image](https://hub.docker.com/r/dolthub/dolt-workbench)
 - [Build from source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
 
+### Linux Experimental Build
+
+We now provide experimental Linux builds (.AppImage). Please note:
+
+- Currently only tested on Ubuntu 25.04
+- May encounter sandbox restrictions due to [Ubuntu's AppImage policies](https://github.com/electron/electron/issues/42510#issuecomment-2171583086)
+
+If You Encounter Sandbox Errors when running `./ Dolt-Workbench-linux-arm64.AppImage`, If you see:
+```bash
+The SUID sandbox helper binary was found, but is not configured correctly.
+```
+
+Solutions (choose one)::
+
+1. Lift restrictions temporarily:
+```bash
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+``` 
+
+2. Run with sandbox disabled (required each launch):
+```bash
+./ Dolt-Workbench-linux-arm64.AppImage --no-sandbox
+```
+
 ## Features
 
 Whether you decide to connect this workbench to a MySQL, Dolt, or PostgreSQL database, the

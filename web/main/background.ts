@@ -53,6 +53,8 @@ if (isProd) {
 }
 
 if (process.platform === "linux") {
+  // Workaround for Linux /dev/shm restrictions (AppImages, Docker, etc)
+  // Required for DevTools and GPU acceleration
   app.commandLine.appendSwitch("disable-dev-shm-usage");
 }
 
