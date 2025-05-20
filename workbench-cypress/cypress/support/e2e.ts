@@ -25,6 +25,6 @@ before(() => {
 });
 
 // Cleanup
-// after(() => {
-//   cy.deleteTestConnection("CypressTestConnection");
-// });
+after(() => {
+  cy.deleteTestConnection("CypressTestConnection");
+});
