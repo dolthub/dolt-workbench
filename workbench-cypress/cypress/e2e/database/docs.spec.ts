@@ -1,6 +1,10 @@
 import { testDBHeader } from "@utils/dbHeaders";
 import { newExpectation, newShouldArgs } from "@utils/helpers";
 import { runTests } from "@utils/index";
+import {
+  shouldFindAndContain,
+  shouldNotExist,
+} from "@utils/sharedTests/sharedFunctionsAndVariables";
 
 const pageName = "Docs page";
 const dbName = "us-jails";
@@ -10,34 +14,20 @@ const connectionName = "CypressTestConnection";
 const hasDocs = true;
 
 describe(pageName, () => {
-  const notExist = newShouldArgs("not.exist");
-
-  const commonTests = [
-    newExpectation(
-      "should not have no docs header",
-      "[data-cy=no-docs-found]",
-      notExist,
-    ),
-    newExpectation(
-      "should not have instructions to add a doc",
-      "[data-cy=add-docs-instructions]",
-      notExist,
-    ),
+  const tests = [
+    ...testDBHeader(connectionName, dbName, hasDocs),
+    shouldNotExist("no-docs-found"),
+    shouldNotExist("add-docs-instructions"),
     newExpectation(
       "should find docs list",
       "[data-cy=db-docs-list] > li",
       newShouldArgs("be.visible.and.have.length", 2),
     ),
-    newExpectation(
+    shouldFindAndContain(
+      "db-doc-markdown",
+      "README.md",
       "should find doc markdown",
-      "[data-cy=db-doc-markdown]",
-      newShouldArgs("be.visible.and.contain", "README.md"),
     ),
-  ];
-
-  const tests = [
-    ...testDBHeader(connectionName, dbName, hasDocs),
-    ...commonTests,
   ];
 
   runTests({ tests, currentPage, pageName });

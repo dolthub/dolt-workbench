@@ -1,6 +1,11 @@
 import { testDBHeader } from "@utils/dbHeaders";
 import { newExpectation, newShouldArgs } from "@utils/helpers";
 import { runTests } from "@utils/index";
+import {
+  beVisible,
+  shouldBeVisible,
+  shouldNotExist,
+} from "@utils/sharedTests/sharedFunctionsAndVariables";
 
 const pageName = "Releases page";
 const dbName = "us-jails";
@@ -9,29 +14,18 @@ const connectionName = "CypressTestConnection";
 const hasDocs = true;
 
 describe(pageName, () => {
-  const notExist = newShouldArgs("not.exist");
-  const beVisible = newShouldArgs("be.visible");
-
-  const commonTests = [
-    newExpectation(
-      "should not find empty releases message",
-      "[data-cy=release-list-no-releases]",
-      notExist,
-    ),
+  const tests = [
+    ...testDBHeader(connectionName, dbName, hasDocs),
+    shouldNotExist("release-list-no-releases"),
     newExpectation(
       "should have at least one tag",
       "[data-cy=release-list-item]",
       newShouldArgs("be.visible.and.have.length.of.at.least", 1),
     ),
-    newExpectation(
-      "should have release header",
-      "[data-cy=release-list-header]",
-      beVisible,
-    ),
-    newExpectation(
+    shouldBeVisible("release-list-header", "should have release header"),
+    shouldBeVisible(
+      "release-list-latest-label",
       "should find latest release label",
-      "[data-cy=release-list-latest-label]",
-      beVisible,
     ),
     newExpectation(
       "should find first release name",
@@ -43,11 +37,6 @@ describe(pageName, () => {
       "[data-cy=release-list-item-date]:first",
       beVisible,
     ),
-  ];
-
-  const tests = [
-    ...testDBHeader(connectionName, dbName, hasDocs),
-    ...commonTests,
   ];
 
   runTests({ tests, currentPage, pageName });

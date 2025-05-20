@@ -19,7 +19,7 @@ const newRows = [
   ["101", "2020-03-10", "2020-03-11", "0", "3", "0"],
 ];
 
-describe(`${pageName} renders expected components on different devices`, () => {
+describe(pageName, () => {
   const tests = [
     newExpectationWithClickFlows(
       "should show edit table button",

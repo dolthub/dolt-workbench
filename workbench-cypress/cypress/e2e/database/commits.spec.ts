@@ -3,7 +3,7 @@ import { newExpectation, newShouldArgs } from "@utils/helpers";
 import { runTests } from "@utils/index";
 import {
   beVisible,
-  notExist,
+  shouldNotExist,
 } from "@utils/sharedTests/sharedFunctionsAndVariables";
 
 const pageName = "Commit log page";
@@ -14,12 +14,9 @@ const connectionName = "CypressTestConnection";
 const hasDocs = true;
 
 describe(pageName, () => {
-  const commonTests = [
-    newExpectation(
-      "should not find empty commits message",
-      "[data-cy=commit-log-no-commits]",
-      notExist,
-    ),
+  const tests = [
+    ...testDBHeader(connectionName, dbName, hasDocs),
+    shouldNotExist("commit-log-no-commits"),
     newExpectation(
       "should find commits list with at least 3 commits",
       "[data-cy=commit-log-commits-list] > li",
@@ -30,11 +27,6 @@ describe(pageName, () => {
       "[data-cy=commit-log-item-date]:first",
       beVisible,
     ),
-  ];
-
-  const tests = [
-    ...testDBHeader(connectionName, dbName, hasDocs),
-    ...commonTests,
     newExpectation(
       "should find first commit commit links",
       "[data-cy=commit-log-item]:first a",
