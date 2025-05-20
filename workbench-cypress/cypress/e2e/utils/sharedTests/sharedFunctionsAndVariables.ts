@@ -5,7 +5,7 @@ import {
   newExpectationWithTypeString,
   newShouldArgs,
 } from "../helpers";
-import { Expectation } from "../types";
+import { Expectation, Tests } from "../types";
 
 export const beVisibleAndContain = (value: string | string[]) =>
   newShouldArgs("be.visible.and.contain", value);
@@ -105,3 +105,42 @@ export const shouldFindCheckbox = (
     newShouldArgs(disabled ? "be.disabled" : "be.enabled"),
   ),
 ];
+
+export function checkValueInGridTests(grids: string[][]): Tests {
+  const tests: Tests = [];
+  grids.forEach((row: string[], rowidx: number) => {
+    row.forEach((val: string, colidx: number) => {
+      tests.push(
+        newExpectation(
+          `should have value in row ${rowidx} in column ${colidx}`,
+          `[aria-rowindex="${rowidx + 2}"]>[aria-colindex="${colidx + 2}"]`,
+          beVisibleAndContain(val),
+        ),
+      );
+    });
+  });
+  return tests;
+}
+
+// type function for spreadsheet input
+export function getTypeInGridTests(
+  grids: string[][],
+  skipClear = false,
+): Tests {
+  const tests: Tests = [];
+  grids.forEach((row: string[], rowidx: number) => {
+    row.forEach((val: string, colidx: number) => {
+      tests.push(
+        newExpectationWithTypeString(
+          `should enter value in row ${rowidx} in column ${colidx}`,
+          `[aria-rowindex="${rowidx + 2}"]>[aria-colindex="${colidx + 2}"]`,
+          beVisible,
+          // The first character activates the cell so that we can type. It is
+          // not included in the typed value.
+          { value: `0${val}`, skipClear },
+        ),
+      );
+    });
+  });
+  return tests;
+}
