@@ -21,15 +21,15 @@ We now provide experimental Linux builds (.AppImage). Please note:
 - Currently only tested on Ubuntu 25.04
 - May encounter sandbox restrictions due to [Ubuntu's AppImage policies](https://github.com/electron/electron/issues/42510#issuecomment-2171583086)
 
-If You Encounter Sandbox Errors when running `./ Dolt-Workbench-linux-arm64.AppImage`, If you see:
+If you encounter Sandbox errors when running `./ Dolt-Workbench-linux-arm64.AppImage` and see:
 
 ```bash
 The SUID sandbox helper binary was found, but is not configured correctly.
 ```
 
-Solutions (choose one)::
+Try one of these solutions:
 
-1. Lift restrictions temporarily (last until reboot):
+1. Lift restrictions temporarily (lasts until reboot):
 
 ```bash
 sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
