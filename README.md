@@ -18,16 +18,18 @@ There are a few ways to install the Dolt Workbench:
 
 We now provide experimental Linux builds (.AppImage). Please note:
 
-- Currently only tested on Ubuntu 25.04
-- May encounter sandbox restrictions due to [Ubuntu's AppImage policies](https://github.com/electron/electron/issues/42510#issuecomment-2171583086)
+- Currently tested on Ubuntu 25.04 and NixOS 24.11
+- Behavior may vary between distributions due to different system policies
 
-If you encounter Sandbox errors when running `./ Dolt-Workbench-linux-arm64.AppImage` and see:
+#### For Ubuntu Systems
+
+If you encounter sandbox errors when running `./Dolt-Workbench-linux-arm64.AppImage` and see:
 
 ```bash
 The SUID sandbox helper binary was found, but is not configured correctly.
 ```
 
-Try one of these solutions:
+This sandbox restriction is due to [Ubuntu's AppImage policies](https://github.com/electron/electron/issues/42510#issuecomment-2171583086). Try one of these solutions:
 
 1. Lift restrictions temporarily (lasts until reboot):
 
@@ -38,7 +40,22 @@ sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
 2. Run with sandbox disabled (required each launch):
 
 ```bash
-./ Dolt-Workbench-linux-arm64.AppImage --no-sandbox
+./Dolt-Workbench-linux-arm64.AppImage --no-sandbox
+```
+
+#### For NixOS
+
+1. Make the AppImage executable:
+
+```bash
+chmod +x Dolt-Workbench-linux-arm64.AppImage
+```
+
+2. Use `appimage-run` to run the app:
+
+```bash
+nix-shell -p appimage-run
+appimage-run ./Dolt-Workbench-linux-arm64.AppImage
 ```
 
 ## Features
