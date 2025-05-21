@@ -94,6 +94,8 @@ export const threeDotSchemaDiffQuery = (
 export const getCallMerge = (hasAuthor = false) =>
   `SELECT DOLT_MERGE($1::text, '--no-ff', '-m', $2::text${getAuthorNameString(hasAuthor, "$3::text")})`;
 
+export const mergeConflictsSummaryQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY($1::text, $2::text)`;
+
 // TAGS
 
 export const callDeleteTag = `SELECT DOLT_TAG('-d', $1::text)`;
