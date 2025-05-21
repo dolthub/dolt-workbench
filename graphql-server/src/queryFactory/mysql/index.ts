@@ -316,6 +316,10 @@ export class MySQLQueryFactory
     throw notDoltError("get row sided diffs");
   }
 
+  async getPullConflictsSummary(_args: t.BranchesArgs): t.PR {
+    throw notDoltError("get pull conflicts summary");
+  }
+
   async restoreAllTables(_args: t.RefArgs): t.PR {
     throw notDoltError("restore all tables");
   }
