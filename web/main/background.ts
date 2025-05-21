@@ -52,6 +52,12 @@ if (isProd) {
   app.setPath("userData", `${app.getPath("userData")} (development)`);
 }
 
+if (process.platform === "linux") {
+  // Workaround for Linux /dev/shm restrictions (AppImages, Docker, etc)
+  // Required for DevTools and GPU acceleration
+  app.commandLine.appendSwitch("disable-dev-shm-usage");
+}
+
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
@@ -157,6 +163,7 @@ app.on("ready", async () => {
     acceptFirstMouse: true,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: process.platform === "linux",
     },
   });
 
@@ -261,13 +268,9 @@ ipcMain.handle(
         doltServerProcess = null;
       }
       if (init) {
-        const dbFolderPath = isProd
-          ? path.join(app.getPath("userData"), "databases", connectionName)
-          : path.join(__dirname, "..", "build", "databases", connectionName);
-
         try {
           const { errorMsg } = await removeDoltServerFolder(
-            dbFolderPath,
+            connectionName,
             mainWindow,
           );
           if (errorMsg) {
@@ -302,12 +305,11 @@ ipcMain.handle("remove-dolt-connection", async (_, connectionName: string) => {
 
       doltServerProcess = null;
     }
-    // Delete folder with retries
-    const dbFolderPath = isProd
-      ? path.join(app.getPath("userData"), "databases", connectionName)
-      : path.join(__dirname, "..", "build", "databases", connectionName);
 
-    const { errorMsg } = await removeDoltServerFolder(dbFolderPath, mainWindow);
+    const { errorMsg } = await removeDoltServerFolder(
+      connectionName,
+      mainWindow,
+    );
     if (errorMsg) throw new Error(errorMsg);
   } catch (error) {
     throw new Error(getErrorMessage(error));
@@ -370,13 +372,9 @@ ipcMain.handle(
         doltServerProcess = null;
       }
 
-      const dbFolderPath = isProd
-        ? path.join(app.getPath("userData"), "databases", connectionName)
-        : path.join(__dirname, "..", "build", "databases", connectionName);
-
       try {
         const { errorMsg } = await removeDoltServerFolder(
-          dbFolderPath,
+          connectionName,
           mainWindow,
         );
         if (errorMsg) {
