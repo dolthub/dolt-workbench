@@ -397,6 +397,26 @@ export class DoltQueryFactory
     );
   }
 
+  async getPullConflictsSummary(args: t.BranchesArgs): t.PR {
+    return this.query(
+      qh.mergeConflictsSummaryQuery,
+      [args.fromBranchName, args.toBranchName],
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getPullRowConflicts(
+    args: t.BranchesArgs & { tableName: string },
+  ): t.PR {
+    return this.query(
+      qh.mergeConflictsQuery,
+      [args.fromBranchName, args.toBranchName, args.tableName],
+      args.databaseName,
+      args.refName,
+    );
+  }
+
   async restoreAllTables(args: t.RefArgs): t.PR {
     return this.queryQR(
       async qr => {

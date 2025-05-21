@@ -123,6 +123,13 @@ export const pullDiff = (p: ps.PullDiffParams): Route =>
     .addDynamic("refName", p.refName, ENCODE)
     .addDynamic("fromBranchName", p.fromBranchName, ENCODE);
 
+export const pullConflicts = (p: ps.PullDiffParamsOptionalTableName): Route =>
+  staticPulls(p)
+    .addStatic("conflicts")
+    .addDynamic("refName", p.refName, ENCODE)
+    .addDynamic("fromBranchName", p.fromBranchName, ENCODE)
+    .withQuery({ tableName: p.tableName });
+
 export const newRelease = (p: ps.OptionalRefParams): Route =>
   releases(p).addStatic("new").withQuery({ refName: p.refName });
 

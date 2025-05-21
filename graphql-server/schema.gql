@@ -177,6 +177,25 @@ type DocList {
   list: [Doc!]!
 }
 
+type RowConflict {
+  base: Row
+  ours: Row
+  theirs: Row
+}
+
+type RowConflictList {
+  nextOffset: Int
+  list: [RowConflict!]!
+  columns: [String!]!
+}
+
+type PullConflictSummary {
+  _id: ID!
+  tableName: String!
+  numDataConflicts: Int
+  numSchemaConflicts: Int
+}
+
 type PullSummary {
   _id: ID!
   commits: CommitList!
@@ -211,6 +230,38 @@ type PullDetailCommit {
   createdAt: Timestamp!
   commitId: String!
   parentCommitId: String
+}
+
+type Remote {
+  _id: ID!
+  name: String!
+  url: String!
+  fetchSpecs: [String!]
+}
+
+type RemoteList {
+  nextOffset: Int
+  list: [Remote!]!
+}
+
+type PullRes {
+  fastForward: Boolean!
+  conflicts: Int!
+  message: String!
+}
+
+type PushRes {
+  success: Boolean!
+  message: String!
+}
+
+type FetchRes {
+  success: Boolean!
+}
+
+type RemoteBranchDiffCounts {
+  ahead: Int
+  behind: Int
 }
 
 type RowDiff {
@@ -288,38 +339,6 @@ type TagList {
   list: [Tag!]!
 }
 
-type Remote {
-  _id: ID!
-  name: String!
-  url: String!
-  fetchSpecs: [String!]
-}
-
-type RemoteList {
-  nextOffset: Int
-  list: [Remote!]!
-}
-
-type PullRes {
-  fastForward: Boolean!
-  conflicts: Int!
-  message: String!
-}
-
-type PushRes {
-  success: Boolean!
-  message: String!
-}
-
-type FetchRes {
-  success: Boolean!
-}
-
-type RemoteBranchDiffCounts {
-  ahead: Int
-  behind: Int
-}
-
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -340,6 +359,8 @@ type Query {
   diffSummaries(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): [DiffSummary!]!
   docs(databaseName: String!, refName: String!): DocList!
   docOrDefaultDoc(refName: String!, databaseName: String!, docType: DocType): Doc
+  pullConflictsSummary(databaseName: String!, fromBranchName: String!, toBranchName: String!): [PullConflictSummary!]
+  pullRowConflicts(fromBranchName: String!, toBranchName: String!, databaseName: String!, tableName: String!): RowConflictList!
   pullWithDetails(databaseName: String!, fromBranchName: String!, toBranchName: String!): PullWithDetails!
   remotes(databaseName: String!, offset: Int): RemoteList!
   fetchRemote(databaseName: String!, remoteName: String!): FetchRes!

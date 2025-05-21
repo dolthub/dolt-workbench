@@ -1,7 +1,6 @@
 import { Maybe } from "@dolthub/web-utils";
 import { Field, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
-import { Column } from "../columns/column.model";
 import { RawRow, RawRows } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { ROW_LIMIT, getNextOffset } from "../utils";
@@ -23,8 +22,8 @@ export class RowDiffList extends ListOffsetRes {
   @Field(_type => [RowDiff])
   list: RowDiff[];
 
-  @Field(_type => [Column])
-  columns: Column[];
+  @Field(_type => [column.Column])
+  columns: column.Column[];
 }
 
 @ObjectType()

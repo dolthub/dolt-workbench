@@ -1,4 +1,5 @@
 import { ApolloError } from "@apollo/client";
+import { createCustomContext } from "@dolthub/react-contexts";
 import { useContextWithError } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import {
@@ -12,7 +13,6 @@ import {
   useRowsForDataTableQuery,
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import { createCustomContext } from "@lib/createCustomContext";
 import {
   RefOptionalSchemaParams,
   SqlQueryParams,
