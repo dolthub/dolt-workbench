@@ -68,6 +68,7 @@ export default function PullFromRemoteModal({
             }}
             placeholder="Enter branch name from the remote to pull from"
             light
+            data-cy="remote-branch-name-input"
           />
         </ModalInner>
         <ModalButtons err={err} onRequestClose={onClose}>

@@ -29,6 +29,7 @@ export default function RemoteUrl({
         label="Add remote url"
         placeholder="i.e. https://url-of-remote.com"
         className={css.input}
+        data-cy="other-remote-url-input"
       />
     );
   }
@@ -45,6 +46,7 @@ export default function RemoteUrl({
           label="Host"
           placeholder="Url of your host, i.e. https://doltlab.dolthub.com:50051"
           className={css.input}
+          data-cy="doltlab-remote-host-input"
         />
       )}
       <FormInput
@@ -58,6 +60,7 @@ export default function RemoteUrl({
         label="Owner Name"
         placeholder="Owner of your database, i.e. dolthub"
         className={css.input}
+        data-cy="dolthub-remote-owner-name-input"
       />
       <FormInput
         value={dbName}
@@ -70,6 +73,7 @@ export default function RemoteUrl({
         label="Database Name"
         placeholder="Name of your database, i.e. example-db"
         className={css.input}
+        data-cy="dolthub-remote-database-name-input"
       />
     </div>
   );

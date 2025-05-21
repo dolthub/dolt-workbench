@@ -41,7 +41,7 @@ export default function Inner({
           <DoltLoginButton />
           <HideForNoWritesWrapper params={params}>
             <Link {...createUrl} className={css.white}>
-              <Button>Add Remote</Button>
+              <Button data-cy="add-remote-button">Add Remote</Button>
             </Link>
           </HideForNoWritesWrapper>
         </div>
