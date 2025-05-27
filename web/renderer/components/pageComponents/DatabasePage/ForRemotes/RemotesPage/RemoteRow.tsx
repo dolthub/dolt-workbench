@@ -29,8 +29,12 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
 
   return (
     <tr>
-      <td>{remote.name}</td>
-      <td>{remote.url}</td>
+      <td data-cy={`remote-name-${remote.name.split(" ").join("-")}`}>
+        {remote.name}
+      </td>
+      <td data-cy={`remote-url-${remote.name.split(" ").join("-")}`}>
+        {remote.url}
+      </td>
       <td>{remote.fetchSpecs?.join(",")}</td>
       <td>
         <HideForNoWritesWrapper params={params}>
@@ -45,9 +49,10 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
             onClose={() => setOpen(false)}
             triggerText="Actions"
             open={open}
+            data-cy={`remote-${remote.name}-action-button`}
           >
             <div>
-              <ul>
+              <ul data-cy="actions-dropdown">
                 <FetchButton
                   setFetchModalOpen={setFetchModalOpen}
                   setErr={setFetchError}
@@ -60,6 +65,7 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                     fakeEscapePress();
                   }}
                   icon={<IoPushOutline className={css.pullIcon} />}
+                  data-cy="pull-button"
                 >
                   Pull from remote
                 </DropdownItem>
@@ -69,12 +75,14 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
                     fakeEscapePress();
                   }}
                   icon={<IoPushOutline />}
+                  data-cy="push-button"
                 >
                   Push to remote
                 </DropdownItem>
                 <DropdownItem
                   onClick={onDeleteClicked}
                   icon={<FaRegTrashAlt className={css.trashIcon} />}
+                  data-cy="delete-button"
                 >
                   Remove remote
                 </DropdownItem>

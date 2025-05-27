@@ -44,7 +44,7 @@ export default function FetchButton({
   };
 
   return (
-    <DropdownItem onClick={onClick} icon={<HiRefresh />}>
+    <DropdownItem onClick={onClick} icon={<HiRefresh />} data-cy="fetch-button">
       <div>
         <SmallLoader loaded={!loading} />
         <span>Fetch from remote</span>

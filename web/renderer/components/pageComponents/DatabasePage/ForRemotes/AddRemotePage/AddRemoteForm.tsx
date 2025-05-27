@@ -65,7 +65,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
 
   return (
     <div>
-      <form onSubmit={onSubmit}>
+      <form onSubmit={onSubmit} data-cy="add-remote-form">
         <div className={css.remoteForm}>
           <FormInput
             value={remoteName}
@@ -73,6 +73,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             label="Add remote name"
             placeholder="i.e. origin"
             className={css.input}
+            data-cy="remote-name-input"
           />
           <span className={css.label}>Remote type</span>
           <Radios type={type} setType={setType} />
@@ -88,7 +89,11 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             stackedButton={isMobile}
             error={err}
           >
-            <Button type="submit" disabled={!remoteName || !remoteUrl}>
+            <Button
+              type="submit"
+              disabled={!remoteName || !remoteUrl}
+              data-cy="add-remote-button"
+            >
               Add remote
             </Button>
           </ButtonsWithError>

@@ -1,6 +1,6 @@
-import { testDBHeader } from "@utils/dbHeaders";
 import { newExpectation, newShouldArgs } from "@utils/helpers";
 import { runTests } from "@utils/index";
+import { testDBHeader } from "@utils/sharedTests/dbHeaders";
 import {
   beVisible,
   shouldNotExist,
