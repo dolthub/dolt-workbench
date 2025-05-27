@@ -1,6 +1,5 @@
 import {
   beExist,
-  beVisible,
   shouldBeVisible,
 } from "@sharedTests/sharedFunctionsAndVariables";
 import { testDBHeader } from "@utils/sharedTests/dbHeaders";
