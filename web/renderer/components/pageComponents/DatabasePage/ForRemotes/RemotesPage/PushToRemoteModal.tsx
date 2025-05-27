@@ -52,6 +52,7 @@ export default function PushToRemoteModal({
             }}
             placeholder="Enter branch name to push to remote"
             light
+            data-cy="branch-name-input"
           />
         </ModalInner>
         <ModalButtons err={state.err} onRequestClose={onClose}>

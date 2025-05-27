@@ -22,7 +22,7 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   return (
-    <table className={css.table}>
+    <table className={css.table} data-cy="fetch-from-remote-table">
       <thead>
         <tr>
           <th>Remote {pluralize(props.remoteBranches.length, "branch")}</th>

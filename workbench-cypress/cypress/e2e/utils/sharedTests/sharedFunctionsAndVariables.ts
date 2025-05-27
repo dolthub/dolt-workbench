@@ -16,6 +16,7 @@ function getDesc(dataCy: string): string {
 
 export const beVisible = newShouldArgs("be.visible");
 export const notBeVisible = newShouldArgs("not.be.visible");
+export const beExist = newShouldArgs("exist");
 export const notExist = newShouldArgs("not.exist");
 export const haveLengthAtLeast = (length: number) =>
   newShouldArgs("be.visible.and.have.length.of.at.least", length);
