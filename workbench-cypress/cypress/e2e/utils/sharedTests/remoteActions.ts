@@ -24,11 +24,7 @@ const openActionModal = (testParams: TestParams): Tests => [
     beVisible,
     [
       newClickFlow(`[data-cy=remote-${testParams.remoteName}-action-button]`, [
-        newExpectation(
-          "should show actions dropdown",
-          "[data-cy=actions-dropdown]",
-          beVisible,
-        ),
+        shouldBeVisible("actions-dropdown", "should show actions dropdown"),
       ]),
     ],
   ),

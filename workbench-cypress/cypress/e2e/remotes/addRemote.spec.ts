@@ -1,4 +1,5 @@
 import {
+  beExist,
   beVisible,
   shouldBeVisible,
 } from "@sharedTests/sharedFunctionsAndVariables";
@@ -15,32 +16,32 @@ const hasDocs = true;
 describe(pageName, () => {
   const formTestsForRemoteType = [
     newExpectationWithClickFlows(
-      `should find DoltHub radio`,
-      `[data-cy=DoltHub-radio`,
-      beVisible,
+      "should find DoltHub radio",
+      "[data-cy=remote-type-dolthub]",
+      beExist,
       [
-        newClickFlow(`[data-cy=DoltHub-radio]`, [
+        newClickFlow("[data-cy=remote-type-dolthub]", [
           shouldBeVisible("dolthub-remote-owner-name-input"),
           shouldBeVisible("dolthub-remote-database-name-input"),
         ]),
       ],
     ),
     newExpectationWithClickFlows(
-      `should find DoltLab radio`,
-      `[data-cy=DoltLab-radio]`,
-      beVisible,
+      "should find DoltLab radio",
+      "[data-cy=remote-type-doltlab]",
+      beExist,
       [
-        newClickFlow(`[data-cy=DoltLab-radio]`, [
+        newClickFlow("[data-cy=remote-type-doltlab]", [
           shouldBeVisible("doltlab-remote-host-input"),
         ]),
       ],
     ),
     newExpectationWithClickFlows(
-      `should find Other radio`,
-      `[data-cy=Other-radio]`,
-      beVisible,
+      "should find Other radio",
+      "[data-cy=remote-type-other]",
+      beExist,
       [
-        newClickFlow(`[data-cy=Other-radio]`, [
+        newClickFlow("[data-cy=remote-type-other]", [
           shouldBeVisible("other-remote-url-input"),
         ]),
       ],

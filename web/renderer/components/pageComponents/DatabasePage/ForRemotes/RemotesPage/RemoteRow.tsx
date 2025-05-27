@@ -29,8 +29,12 @@ export default function RemoteRow({ remote, onDeleteClicked, params }: Props) {
 
   return (
     <tr>
-      <td data-cy={`remote-name-${remote.name}`}>{remote.name}</td>
-      <td data-cy={`remote-url-${remote.name}`}>{remote.url}</td>
+      <td data-cy={`remote-name-${remote.name.split(" ").join("-")}`}>
+        {remote.name}
+      </td>
+      <td data-cy={`remote-url-${remote.name.split(" ").join("-")}`}>
+        {remote.url}
+      </td>
       <td>{remote.fetchSpecs?.join(",")}</td>
       <td>
         <HideForNoWritesWrapper params={params}>
