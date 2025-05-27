@@ -14,6 +14,50 @@ There are a few ways to install the Dolt Workbench:
 - [Pull the Docker Hub image](https://hub.docker.com/r/dolthub/dolt-workbench)
 - [Build from source](https://github.com/dolthub/dolt-workbench?tab=readme-ov-file#getting-started-from-source)
 
+### Linux Experimental Build
+
+We now provide experimental Linux builds (.AppImage). Please note:
+
+- Currently tested on Ubuntu 25.04 and NixOS 24.11
+- Behavior may vary between distributions due to different system policies
+
+#### For Ubuntu Systems
+
+If you encounter sandbox errors when running `./Dolt-Workbench-linux-arm64.AppImage` and see:
+
+```bash
+The SUID sandbox helper binary was found, but is not configured correctly.
+```
+
+This sandbox restriction is due to [Ubuntu's AppImage policies](https://github.com/electron/electron/issues/42510#issuecomment-2171583086). Try one of these solutions:
+
+1. Lift restrictions temporarily (lasts until reboot):
+
+```bash
+sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+```
+
+2. Run with sandbox disabled (required each launch):
+
+```bash
+./Dolt-Workbench-linux-arm64.AppImage --no-sandbox
+```
+
+#### For NixOS
+
+1. Make the AppImage executable:
+
+```bash
+chmod +x Dolt-Workbench-linux-arm64.AppImage
+```
+
+2. Use `appimage-run` to run the app:
+
+```bash
+nix-shell -p appimage-run
+appimage-run ./Dolt-Workbench-linux-arm64.AppImage
+```
+
 ## Features
 
 Whether you decide to connect this workbench to a MySQL, Dolt, or PostgreSQL database, the

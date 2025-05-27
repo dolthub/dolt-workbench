@@ -8,7 +8,7 @@ import { runTests } from "@utils/index";
 import { selectBranch } from "@utils/sharedTests/changeBranch";
 import { testDBHeader } from "@utils/sharedTests/dbHeaders";
 
-const pageName = "Pull requests page with open pulls";
+const pageName = "Open pull page";
 const connectionName = "CypressTestConnection";
 const dbName = "us-jails";
 const baseBranch = "main";

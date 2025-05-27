@@ -3,7 +3,7 @@ import { testDBHeader } from "@utils/sharedTests/dbHeaders";
 import { runTests } from "@utils/index";
 import { selectBranch } from "@utils/sharedTests/changeBranch";
 
-const pageName = "Pull requests page";
+const pageName = "Merged pull page";
 const connectionName = "CypressTestConnection";
 const dbName = "us-jails";
 const baseBranch = "main";

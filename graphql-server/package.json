@@ -88,5 +88,8 @@
     },
     "coverageDirectory": "./coverage",
     "testEnvironment": "node"
+  },
+  "resolutions": {
+    "multer": "2.0.0"
   }
 }
