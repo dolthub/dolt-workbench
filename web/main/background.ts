@@ -12,13 +12,16 @@ import {
   crashReporter,
 } from "electron";
 import serve from "electron-serve";
-import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
 import { startServer } from "./doltServer";
 import { ChildProcess } from "child_process";
 import { doltLogin } from "./doltLogin";
-import { getErrorMessage, removeDoltServerFolder } from "./helper";
+import {
+  getErrorMessage,
+  removeDoltServerFolder,
+} from "./helpers/removeDoltServerFolder";
 import { cloneAndStartDatabase } from "./doltClone";
+import { createWindow } from "./helpers/createWindow";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");

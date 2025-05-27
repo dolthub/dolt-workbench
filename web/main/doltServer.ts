@@ -1,13 +1,11 @@
 import path from "path";
 import { BrowserWindow } from "electron";
 import { ChildProcess, execFile, spawn } from "child_process";
-import { createFolder, getDatabasesPath, getDoltPaths } from "./filePath";
-
-type ErrorReturnType = {
-  errorMsg?: string;
-};
-
-const isProd = process.env.NODE_ENV === "production";
+import {
+  createFolder,
+  getDatabasesPath,
+  getDoltPaths,
+} from "./helpers/filePath";
 
 export async function startServer(
   mainWindow: BrowserWindow,

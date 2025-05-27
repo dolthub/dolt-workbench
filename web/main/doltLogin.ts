@@ -2,7 +2,7 @@ import path from "path";
 import { BrowserWindow, IpcMainInvokeEvent } from "electron";
 import { ChildProcess, execFile } from "child_process";
 import { v4 as randomUUID } from "uuid";
-import { getDatabasesPath, getDoltPaths } from "./filePath";
+import { getDatabasesPath, getDoltPaths } from "./helpers/filePath";
 
 export async function doltLogin(
   event: IpcMainInvokeEvent,

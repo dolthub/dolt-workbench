@@ -1,7 +1,11 @@
 import path from "path";
 import { BrowserWindow } from "electron";
 import { ChildProcess, execFile } from "child_process";
-import { createFolder, getDatabasesPath, getDoltPaths } from "./filePath";
+import {
+  createFolder,
+  getDatabasesPath,
+  getDoltPaths,
+} from "./helpers/filePath";
 import { startServerProcess } from "./doltServer";
 
 export async function cloneAndStartDatabase(
