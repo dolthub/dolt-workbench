@@ -12,16 +12,16 @@ import {
   crashReporter,
 } from "electron";
 import serve from "electron-serve";
-import { createWindow } from "./helpers";
 import { initMenu } from "./helpers/menu";
+import { startServer } from "./doltServer";
+import { ChildProcess } from "child_process";
+import { doltLogin } from "./doltLogin";
 import {
-  doltLogin,
-  cloneAndStartDatabase,
   getErrorMessage,
   removeDoltServerFolder,
-  startServer,
-} from "./doltServer";
-import { ChildProcess } from "child_process";
+} from "./helpers/removeDoltServerFolder";
+import { cloneAndStartDatabase } from "./doltClone";
+import { createWindow } from "./helpers/createWindow";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -53,8 +53,7 @@ if (isProd) {
 }
 
 if (process.platform === "linux") {
-  // Workaround for Linux /dev/shm restrictions (AppImages, Docker, etc)
-  // Required for DevTools and GPU acceleration
+  // Workaround for Linux /dev/shm permission restrictions
   app.commandLine.appendSwitch("disable-dev-shm-usage");
 }
 
