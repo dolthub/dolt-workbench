@@ -40,13 +40,15 @@ extraFiles:
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
     to: graphql-server/node_modules
-  - from: build/linux/dolt
+  - from: "build/linux/dolt-${arch}"
     to: resources/dolt
 
 linux:
   icon: build/linux/icon.png
   category: "Development"
-  target: ["AppImage"]
+  target:
+    - target: "AppImage"
+      arch: ["x64","arm64"]
   artifactName: "${productName}-linux-${arch}.${ext}"
   executableName: "dolt-workbench"
   synopsis: "SQL workbench for MySQL and PostgreSQL"
