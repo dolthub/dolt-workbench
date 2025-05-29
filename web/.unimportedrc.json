@@ -1,8 +1,5 @@
 {
-  "entry": [
-    "renderer/pages/**/*.{js,ts,tsx}",
-    "main/*.{js,ts,jsx,tsx}"
-  ],
+  "entry": ["renderer/pages/**/*.{js,ts,tsx}", "main/*.{js,ts,jsx,tsx}"],
   "ignorePatterns": [
     "**/node_modules/**",
     "**/__tests__/**",
@@ -22,10 +19,6 @@
     "**/MockedProvider.tsx",
     "**/hooks/useMockRouter.ts"
   ],
-  "ignoreUnused": [
-    "next",
-    "react",
-    "react-dom"
-  ],
+  "ignoreUnused": ["next", "react", "react-dom"],
   "ignoreUnresolved": []
 }

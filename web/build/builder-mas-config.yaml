@@ -9,7 +9,7 @@ files:
   - filter:
       - app
       - package.json
-      - '!node_modules/**/*'
+      - "!node_modules/**/*"
       - node_modules/ajv
       - node_modules/ajv-formats
       - node_modules/atomically
@@ -55,12 +55,12 @@ mac:
     - target: mas
       arch: universal
   asarUnpack:
-    - '**/*.node'
+    - "**/*.node"
   artifactName: ${productName}-mac-${arch}-${buildVersion}.${ext}
   type: distribution
   notarize:
     teamId: FK9YU86WZ5
-  x64ArchFiles: '*'
+  x64ArchFiles: "*"
   hardenedRuntime: false
   gatekeeperAssess: false
   provisioningProfile: build/mac/MacAppStore.provisionprofile

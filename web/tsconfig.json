@@ -1,21 +1,12 @@
 {
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    "jest.setup.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "jest.setup.ts"],
   "compilerOptions": {
     "downlevelIteration": true,
     "incremental": true,
     "types": ["node"],
     "baseUrl": ".",
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -28,39 +19,20 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "paths": {
-      "@components/*": [
-        "renderer/components/*"
-      ],
-      "@pageComponents/*": [
-        "renderer/components/pageComponents/*"
-      ],
-      "@layouts/*": [
-        "renderer/components/layouts/*"
-      ],
-      "@contexts/*": [
-        "renderer/contexts/*"
-      ],
-      "@gen/*": [
-        "renderer/gen/*"
-      ],
-      "@hooks/*": [
-        "renderer/hooks/*"
-      ],
-      "@lib/*": [
-        "renderer/lib/*"
-      ]
-    }, 
+      "@components/*": ["renderer/components/*"],
+      "@pageComponents/*": ["renderer/components/pageComponents/*"],
+      "@layouts/*": ["renderer/components/layouts/*"],
+      "@contexts/*": ["renderer/contexts/*"],
+      "@gen/*": ["renderer/gen/*"],
+      "@hooks/*": ["renderer/hooks/*"],
+      "@lib/*": ["renderer/lib/*"]
+    },
     "plugins": [
       {
         "name": "next"
       }
     ],
-    "strictNullChecks": true,
+    "strictNullChecks": true
   },
-  "exclude": [
-    "node_modules",
-    "web/next.config.js",
-    "app",
-    "dist"
-  ]
+  "exclude": ["node_modules", "web/next.config.js", "app", "dist"]
 }

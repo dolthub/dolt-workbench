@@ -15,7 +15,7 @@ describe("tests GoBack", () => {
 
   it("renders with mobile styles when isMobile is true", () => {
     const { container } = setup(
-      <GoBack url={mockRoute} pageName="Test Page" isMobile />
+      <GoBack url={mockRoute} pageName="Test Page" isMobile />,
     );
 
     const goBackDiv = container.firstChild as HTMLElement;
@@ -24,7 +24,7 @@ describe("tests GoBack", () => {
 
   it("renders without mobile styles when isMobile is false", () => {
     const { container } = setup(
-      <GoBack url={mockRoute} pageName="Test Page" isMobile={false} />
+      <GoBack url={mockRoute} pageName="Test Page" isMobile={false} />,
     );
 
     const goBackDiv = container.firstChild as HTMLElement;
@@ -34,7 +34,7 @@ describe("tests GoBack", () => {
   it("applies custom className when provided", () => {
     const customClass = "custom-class";
     const { container } = setup(
-      <GoBack url={mockRoute} pageName="Test Page" className={customClass} />
+      <GoBack url={mockRoute} pageName="Test Page" className={customClass} />,
     );
 
     const goBackDiv = container.firstChild as HTMLElement;
@@ -44,9 +44,8 @@ describe("tests GoBack", () => {
   it("renders with icon", () => {
     setup(<GoBack url={mockRoute} pageName="Test Page" />);
 
-    // Check that the icon component is rendered (by checking for the svg element)
-    const icon = document.querySelector("svg");
-    expect(icon).toBeInTheDocument();
+    // Check that the icon component is rendered
+    expect(screen.getByRole("link")).toContainHTML("svg");
   });
 
   it("sets correct href on link from route", () => {
@@ -70,7 +69,7 @@ describe("tests GoBack", () => {
         pageName="Complex Page"
         isMobile
         className={customClass}
-      />
+      />,
     );
 
     const goBackDiv = container.firstChild as HTMLElement;

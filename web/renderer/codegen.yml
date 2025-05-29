@@ -17,4 +17,3 @@ generates:
       - "fragment-matcher"
     config:
       apolloClientVersion: 3
-      

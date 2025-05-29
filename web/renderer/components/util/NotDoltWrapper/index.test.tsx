@@ -1,5 +1,6 @@
 import { ApolloError } from "@apollo/client";
 import { MockedProvider, MockedResponse } from "@apollo/client/testing";
+import { DoltDatabaseDetailsDocument } from "@gen/graphql-types";
 import { setup, waitForQueryLoaders } from "@lib/testUtils.test";
 import { screen } from "@testing-library/react";
 import NotDoltWrapper from ".";
@@ -13,7 +14,7 @@ const TestChild = ({ doltDisabled = false }: { doltDisabled?: boolean }) => (
 );
 
 const errorMock: MockedResponse = {
-  request: { query: require("@gen/graphql-types").DoltDatabaseDetailsDocument },
+  request: { query: DoltDatabaseDetailsDocument },
   error: new ApolloError({ errorMessage: "Database connection failed" }),
 };
 
@@ -24,7 +25,9 @@ describe("tests NotDoltWrapper", () => {
 
   it("shows loader when loading", () => {
     const loadingMock: MockedResponse = {
-      request: { query: require("@gen/graphql-types").DoltDatabaseDetailsDocument },
+      request: {
+        query: DoltDatabaseDetailsDocument,
+      },
       result: {
         data: null,
       },
@@ -34,7 +37,7 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[loadingMock]}>
         <NotDoltWrapper {...defaultProps} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     expect(screen.getByRole("progressbar")).toBeInTheDocument();
@@ -44,7 +47,7 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[errorMock]}>
         <NotDoltWrapper {...defaultProps} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
@@ -56,7 +59,7 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(true, false)]}>
         <NotDoltWrapper {...defaultProps} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
@@ -70,26 +73,24 @@ describe("tests NotDoltWrapper", () => {
     const { container } = setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
         <NotDoltWrapper {...defaultProps} hideNotDolt />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it("shows NotDoltMsg when showNotDoltMsg is true and not Dolt", async () => {
     setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
         <NotDoltWrapper {...defaultProps} showNotDoltMsg />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
-    expect(
-      screen.getByText(/This is not a Dolt database/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/This is not a Dolt database/)).toBeInTheDocument();
     expect(screen.getByText("documentation")).toBeInTheDocument();
   });
 
@@ -97,13 +98,15 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
         <NotDoltWrapper {...defaultProps} showNotDoltMsg feature="Branches" />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
     expect(
-      screen.getByText(/Branches is a Dolt feature and this is not a Dolt database/)
+      screen.getByText(
+        /Branches is a Dolt feature and this is not a Dolt database/,
+      ),
     ).toBeInTheDocument();
   });
 
@@ -111,31 +114,29 @@ describe("tests NotDoltWrapper", () => {
     const { container } = setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
         <NotDoltWrapper {...defaultProps} showNotDoltMsg bigMsg />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
-    const msgContainer = container.querySelector(".big");
-    expect(msgContainer).toBeInTheDocument();
+    expect(container.firstChild).toHaveClass("big");
   });
 
   it("applies custom className to NotDoltMsg", async () => {
     const customClass = "custom-class";
     const { container } = setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
-        <NotDoltWrapper 
-          {...defaultProps} 
-          showNotDoltMsg 
-          className={customClass} 
+        <NotDoltWrapper
+          {...defaultProps}
+          showNotDoltMsg
+          className={customClass}
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
-    const msgContainer = container.querySelector(`.${customClass}`);
-    expect(msgContainer).toBeInTheDocument();
+    expect(container.firstChild).toHaveClass(customClass);
   });
 
   it("clones children with doltDisabled when disableDoltFeature is true", async () => {
@@ -143,7 +144,7 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
         <NotDoltWrapper {...defaultProps} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
@@ -157,7 +158,7 @@ describe("tests NotDoltWrapper", () => {
     const { container } = setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, true)]}>
         <NotDoltWrapper {...defaultProps} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
@@ -170,18 +171,18 @@ describe("tests NotDoltWrapper", () => {
   it("prioritizes hideNotDolt over other conditions", async () => {
     const { container } = setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
-        <NotDoltWrapper 
-          {...defaultProps} 
-          hideNotDolt 
-          showNotDoltMsg 
+        <NotDoltWrapper
+          {...defaultProps}
+          hideNotDolt
+          showNotDoltMsg
           feature="Test Feature"
         />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
-    expect(container.firstChild).toBeNull();
+    expect(container).toBeEmptyDOMElement();
     expect(screen.queryByText(/Test Feature/)).not.toBeInTheDocument();
   });
 
@@ -189,14 +190,12 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false)]}>
         <NotDoltWrapper {...defaultProps} showNotDoltMsg />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();
 
-    expect(
-      screen.getByText(/This is not a Dolt database/)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/This is not a Dolt database/)).toBeInTheDocument();
     expect(screen.queryByTestId("test-child")).not.toBeInTheDocument();
     expect(screen.queryByTestId("dolt-disabled")).not.toBeInTheDocument();
   });
@@ -205,7 +204,7 @@ describe("tests NotDoltWrapper", () => {
     setup(
       <MockedProvider mocks={[mocks.databaseDetailsMock(false, false, true)]}>
         <NotDoltWrapper {...defaultProps} />
-      </MockedProvider>
+      </MockedProvider>,
     );
 
     await waitForQueryLoaders();

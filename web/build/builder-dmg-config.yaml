@@ -9,7 +9,7 @@ files:
   - filter:
       - app
       - package.json
-      - '!node_modules/**/*'
+      - "!node_modules/**/*"
       - node_modules/ajv
       - node_modules/ajv-formats
       - node_modules/atomically
@@ -57,7 +57,7 @@ mac:
   hardenedRuntime: true
   gatekeeperAssess: false
   asarUnpack:
-    - '**/*.node'
+    - "**/*.node"
   provisioningProfile: build/mac/AppleDevelopment.provisionprofile
   entitlements: build/mac/entitlements.plist
   entitlementsInherit: build/mac/entitlements.inherit.plist
