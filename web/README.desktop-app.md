@@ -46,7 +46,13 @@ yarn build
 yarn
 ```
 
-4. Build the package
+4. download the latest dolt binaries:
+
+```bash
+yarn download:dolt
+```
+
+5. Build the package
 
 To build for MAC store:
 
