@@ -49,6 +49,7 @@ yarn
 4. download the latest dolt binaries:
 
 ```bash
+# in web
 yarn download:dolt
 ```
 
