@@ -81,6 +81,15 @@ export class RemoteArgs extends DBArgs {
   remoteName: string;
 }
 
+@ArgsType()
+export class PullArgs extends DBArgs {
+  @Field()
+  fromBranchName: string;
+
+  @Field()
+  toBranchName: string;
+}
+
 @InputType()
 export class AuthorInfo {
   @Field()

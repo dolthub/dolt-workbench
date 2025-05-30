@@ -8,17 +8,8 @@ import {
 } from "@nestjs/graphql";
 import { CommitResolver } from "../commits/commit.resolver";
 import { ConnectionProvider } from "../connections/connection.provider";
-import { AuthorInfo, DBArgs } from "../utils/commonTypes";
+import { AuthorInfo, PullArgs } from "../utils/commonTypes";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
-
-@ArgsType()
-class PullArgs extends DBArgs {
-  @Field()
-  fromBranchName: string;
-
-  @Field()
-  toBranchName: string;
-}
 
 @ArgsType()
 class MergePullArgs extends PullArgs {

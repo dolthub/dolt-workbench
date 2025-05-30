@@ -55,8 +55,24 @@
   @apply text-sm mt-4;
 }
 
-.note {
-  @apply font-normal text-storm-200 mt-0.5 py-1 block;
+.conflictsNote {
+  @apply font-normal my-0.5 py-1 block;
+
+  ul {
+    @apply mb-5 mt-3;
+  }
+
+  li {
+    @apply flex my-1 text-sm;
+  }
+}
+
+.conflictsTable {
+  @apply flex items-center w-36;
+
+  svg {
+    @apply mr-2;
+  }
 }
 
 .icon {
