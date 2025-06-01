@@ -2635,6 +2635,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dolthub/react-hooks@npm:^0.1.8":
+  version: 0.1.8
+  resolution: "@dolthub/react-hooks@npm:0.1.8"
+  dependencies:
+    "@dolthub/web-utils": "npm:^0.1.5"
+    js-cookie: "npm:^3.0.5"
+    react-hotkeys: "npm:^2.0.0"
+  peerDependencies:
+    react: ^19.1.0
+    react-dom: ^19.1.0
+  checksum: 10c0/606e4b150f8ee5540aeb6d5747c5375e9cfd645149a87f9037eea436ab63d12afed8354e12454b2caeb752223c484697d73e5f41683207c1670f3791f4cfeb68
+  languageName: node
+  linkType: hard
+
 "@dolthub/web-utils@npm:^0.1.2, @dolthub/web-utils@npm:^0.1.5":
   version: 0.1.8
   resolution: "@dolthub/web-utils@npm:0.1.8"
@@ -8987,7 +9001,7 @@ __metadata:
     "@apollo/client": "npm:^3.9.9"
     "@dolthub/react-components": "npm:^0.2.9"
     "@dolthub/react-contexts": "npm:^0.1.0"
-    "@dolthub/react-hooks": "npm:^0.1.7"
+    "@dolthub/react-hooks": "npm:^0.1.8"
     "@dolthub/web-utils": "npm:^0.1.9"
     "@electron/osx-sign": "npm:^2.0.0"
     "@graphql-codegen/cli": "npm:^5.0.5"
