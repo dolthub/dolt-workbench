@@ -33,7 +33,7 @@ export default function useAddConnection(
         db.data.addDatabaseConnection.currentDatabase,
       );
       router.push(href, as).catch(console.error);
-    } catch (_) {
+    } catch {
       // Handled by res.error
     }
   };

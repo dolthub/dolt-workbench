@@ -17,7 +17,7 @@ describe("tests DeleteModal", () => {
         <DeleteModal
           asset="object"
           isOpen
-          setIsOpen={(_: boolean) => {}}
+          setIsOpen={(_isOpen: boolean) => {}}
           mutationProps={{
             hook: useDeleteBranchMutation,
             variables: mocks.branchParams,
