@@ -512,7 +512,10 @@ async function getTableInfoWithQR(
     args.tableName,
     `${args.databaseName}/${args.refName}`,
   ]);
-  const idxRows = await query(qh.indexQuery, [args.tableName]);
+  const idxRows = await query(qh.indexQuery, [
+    args.tableName,
+    `${args.databaseName}/${args.refName}`,
+  ]);
   return {
     tableName: args.tableName,
     columns: columns.map(c => column.fromDoltRowRes(c, args.tableName)),
