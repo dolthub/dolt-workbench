@@ -5,12 +5,11 @@ import { DatabaseConnection } from "../databases/database.model";
 
 const storePath =
   process.env.NEXT_PUBLIC_FOR_ELECTRON === "true"
-    ? path.join(process.env.NEXT_PUBLIC_USER_DATA_PATH || "", "store.json")
+    ? path.join(process.env.NEXT_PUBLIC_USER_DATA_PATH ?? "", "store.json")
     : resolve(__dirname, "../../store/store.json");
 
 @Injectable()
 export class FileStoreService {
-  // eslint-disable-next-line class-methods-use-this
   getStore(): DatabaseConnection[] {
     if (!fs.existsSync(storePath)) {
       return [];
@@ -42,8 +41,8 @@ export class FileStoreService {
 
     store.push(item);
     if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
-      if (!fs.existsSync(process.env.NEXT_PUBLIC_USER_DATA_PATH || "")) {
-        fs.mkdirSync(process.env.NEXT_PUBLIC_USER_DATA_PATH || "");
+      if (!fs.existsSync(process.env.NEXT_PUBLIC_USER_DATA_PATH ?? "")) {
+        fs.mkdirSync(process.env.NEXT_PUBLIC_USER_DATA_PATH ?? "");
       }
     } else if (!fs.existsSync(resolve(__dirname, "../../store"))) {
       fs.mkdirSync(resolve(__dirname, "../../store"));

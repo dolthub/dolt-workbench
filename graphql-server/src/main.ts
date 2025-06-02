@@ -1,7 +1,6 @@
 import { NestFactory } from "@nestjs/core";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-// eslint-disable-next-line import/extensions
 import graphqlUploadExpress from "graphql-upload/graphqlUploadExpress.js";
 import { AppModule } from "./app.module";
 

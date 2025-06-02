@@ -8,7 +8,7 @@ import {
 
 @ObjectType()
 export class PullDetailCommit {
-  @Field(_type => ID)
+  @Field(() => ID)
   _id: string;
 
   @Field()
@@ -17,7 +17,7 @@ export class PullDetailCommit {
   @Field()
   message: string;
 
-  @Field(_type => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   createdAt: Date;
 
   @Field()
@@ -29,13 +29,13 @@ export class PullDetailCommit {
 
 @ObjectType()
 export class PullDetailSummary {
-  @Field(_type => ID)
+  @Field(() => ID)
   _id: string;
 
   @Field()
   username: string;
 
-  @Field(_type => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   createdAt: Date;
 
   @Field()

@@ -29,18 +29,18 @@ class ListRowDiffsArgs extends DBArgsWithOffset {
   @Field()
   tableName: string;
 
-  @Field(_type => DiffRowType, { nullable: true })
+  @Field(() => DiffRowType, { nullable: true })
   filterByRowType?: DiffRowType;
 
-  @Field(_type => CommitDiffType, { nullable: true })
+  @Field(() => CommitDiffType, { nullable: true })
   type?: CommitDiffType;
 }
 
-@Resolver(_of => RowDiff)
+@Resolver(() => RowDiff)
 export class RowDiffResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(_returns => RowDiffList)
+  @Query(() => RowDiffList)
   async rowDiffs(
     @Args()
     { databaseName, tableName, refName, ...args }: ListRowDiffsArgs,

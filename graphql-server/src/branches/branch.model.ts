@@ -6,7 +6,7 @@ import { ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()
 export class Branch {
-  @Field(_type => ID)
+  @Field(() => ID)
   _id: string;
 
   @Field()
@@ -18,13 +18,13 @@ export class Branch {
   @Field()
   lastCommitter: string;
 
-  @Field(_type => GraphQLTimestamp)
+  @Field(() => GraphQLTimestamp)
   lastUpdated: Date;
 
-  @Field(_type => table.Table, { nullable: true })
+  @Field(() => table.Table, { nullable: true })
   table?: table.Table;
 
-  @Field(_type => [String])
+  @Field(() => [String])
   tableNames: string[];
 
   @Field({ nullable: true })
@@ -39,7 +39,7 @@ export class Branch {
 
 @ObjectType()
 export class BranchList extends ListOffsetRes {
-  @Field(_type => [Branch])
+  @Field(() => [Branch])
   list: Branch[];
 }
 

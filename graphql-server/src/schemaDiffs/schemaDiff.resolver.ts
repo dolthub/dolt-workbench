@@ -18,15 +18,15 @@ class SchemaDiffArgs extends DBArgs {
   @Field()
   tableName: string;
 
-  @Field(_type => CommitDiffType, { nullable: true })
+  @Field(() => CommitDiffType, { nullable: true })
   type?: CommitDiffType;
 }
 
-@Resolver(_of => SchemaDiff)
+@Resolver(() => SchemaDiff)
 export class SchemaDiffResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(_returns => SchemaDiff, { nullable: true })
+  @Query(() => SchemaDiff, { nullable: true })
   async schemaDiff(
     @Args() args: SchemaDiffArgs,
   ): Promise<SchemaDiff | undefined> {

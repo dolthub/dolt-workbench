@@ -55,7 +55,6 @@ export class PostgresQueryFactory
     );
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async checkoutDatabase(qr: QueryRunner, dbName: string): Promise<void> {
     const currentDb = await qr.getCurrentDatabase();
     if (dbName !== currentDb) {

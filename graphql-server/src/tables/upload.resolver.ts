@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { ReadStream } from "fs";
-// eslint-disable-next-line import/extensions, @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { from as copyFrom } from "pg-copy-streams";
 import { pipeline } from "stream/promises";
@@ -22,24 +22,24 @@ export interface FileUpload {
 
 @ArgsType()
 class TableImportArgs extends TableMaybeSchemaArgs {
-  @Field(_type => ImportOperation)
+  @Field(() => ImportOperation)
   importOp: ImportOperation;
 
-  @Field(_type => FileType)
+  @Field(() => FileType)
   fileType: FileType;
 
   @Field(() => GraphQLUpload)
   file: Promise<FileUpload>;
 
-  @Field(_type => LoadDataModifier, { nullable: true })
+  @Field(() => LoadDataModifier, { nullable: true })
   modifier?: LoadDataModifier;
 }
 
-@Resolver(_of => Table)
+@Resolver(() => Table)
 export class FileUploadResolver {
   constructor(private readonly connResolver: ConnectionProvider) {}
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
     const config = this.connResolver.getWorkbenchConfig();
     if (!config) throw new Error("Workbench config not found");
@@ -96,7 +96,7 @@ async function getIsDolt(conn: any): Promise<boolean> {
   try {
     const res = await conn.query("SELECT dolt_version()");
     return !!res;
-  } catch (err) {
+  } catch {
     // ignore
   }
   return false;

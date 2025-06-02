@@ -41,7 +41,7 @@ class AddDatabaseConnectionArgs {
   @Field({ nullable: true })
   useSSL?: boolean;
 
-  @Field(_type => DatabaseType, { nullable: true })
+  @Field(() => DatabaseType, { nullable: true })
   type?: DatabaseType;
 
   @Field({ nullable: true })
@@ -56,7 +56,7 @@ class DoltDatabaseDetails {
   @Field()
   hideDoltFeatures: boolean;
 
-  @Field(_type => DatabaseType)
+  @Field(() => DatabaseType)
   type: DatabaseType;
 }
 
@@ -84,7 +84,7 @@ class ResetConnectionArgs {
   newDatabase?: string;
 }
 
-@Resolver(_of => DatabaseConnection)
+@Resolver(() => DatabaseConnection)
 export class DatabaseResolver {
   constructor(
     private readonly conn: ConnectionProvider,
@@ -92,13 +92,13 @@ export class DatabaseResolver {
     private readonly dataStoreService: DataStoreService,
   ) {}
 
-  @Query(_returns => String, { nullable: true })
+  @Query(() => String, { nullable: true })
   async currentDatabase(): Promise<string | undefined> {
     const conn = this.conn.connection();
     return conn.currentDatabase();
   }
 
-  @Query(_returns => DatabaseConnection, { nullable: true })
+  @Query(() => DatabaseConnection, { nullable: true })
   async currentConnection(): Promise<DatabaseConnection | undefined> {
     const config = this.conn.getWorkbenchConfig();
     if (!config) return undefined;
@@ -121,7 +121,7 @@ export class DatabaseResolver {
     };
   }
 
-  @Query(_returns => [DatabaseConnection])
+  @Query(() => [DatabaseConnection])
   async storedConnections(): Promise<DatabaseConnection[]> {
     if (this.dataStoreService.hasDataStoreConfig()) {
       return this.dataStoreService.getStoredConnections();
@@ -129,7 +129,7 @@ export class DatabaseResolver {
     return this.fileStoreService.getStore();
   }
 
-  @Query(_returns => [String])
+  @Query(() => [String])
   async databases(): Promise<string[]> {
     const conn = this.conn.connection();
     const dbs = await conn.databases();
@@ -137,7 +137,7 @@ export class DatabaseResolver {
   }
 
   // Checking if the internal dolt server is running
-  @Query(_returns => DoltServerStatus)
+  @Query(() => DoltServerStatus)
   async doltServerStatus(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<DoltServerStatus> {
@@ -158,7 +158,7 @@ export class DatabaseResolver {
     }
   }
 
-  @Query(_returns => [String])
+  @Query(() => [String])
   async databasesByConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<string[]> {
@@ -181,7 +181,7 @@ export class DatabaseResolver {
     }
   }
 
-  @Query(_returns => [String])
+  @Query(() => [String])
   async schemas(@Args() args: RefArgs): Promise<string[]> {
     const conn = this.conn.connection();
     if (!conn.schemas) return [];
@@ -194,7 +194,7 @@ export class DatabaseResolver {
     );
   }
 
-  @Query(_returns => DoltDatabaseDetails)
+  @Query(() => DoltDatabaseDetails)
   async doltDatabaseDetails(): Promise<DoltDatabaseDetails> {
     const workbenchConfig = this.conn.getWorkbenchConfig();
     const conn = this.conn.connection();
@@ -205,7 +205,7 @@ export class DatabaseResolver {
     };
   }
 
-  @Mutation(_returns => CurrentDatabaseState)
+  @Mutation(() => CurrentDatabaseState)
   async addDatabaseConnection(
     @Args() args: AddDatabaseConnectionArgs,
   ): Promise<CurrentDatabaseState> {
@@ -223,7 +223,7 @@ export class DatabaseResolver {
     return { currentDatabase: db };
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async removeDatabaseConnection(
     @Args() args: RemoveDatabaseConnectionArgs,
   ): Promise<boolean> {
@@ -235,14 +235,14 @@ export class DatabaseResolver {
     return true;
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async createDatabase(@Args() args: DBArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.createDatabase(args);
     return true;
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async createSchema(@Args() args: RefSchemaArgs): Promise<boolean> {
     const conn = this.conn.connection();
     if (!conn.createSchema) return false;
@@ -250,13 +250,13 @@ export class DatabaseResolver {
     return true;
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async resetDatabase(@Args() args: ResetConnectionArgs): Promise<boolean> {
     await this.conn.resetDS(args.newDatabase);
     return true;
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async doltClone(@Args() args: CloneArgs): Promise<boolean> {
     const conn = this.conn.connection();
     const remoteDbPath = `${args.ownerName}/${args.remoteDbName}`;

@@ -18,7 +18,7 @@ export class DatabaseConnection {
   @Field({ nullable: true })
   useSSL?: boolean;
 
-  @Field(_type => DatabaseType, { nullable: true })
+  @Field(() => DatabaseType, { nullable: true })
   type?: DatabaseType;
 
   @Field({ nullable: true })

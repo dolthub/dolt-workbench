@@ -14,18 +14,18 @@ export class ListCommitsArgs extends DBArgsWithOffset {
   @Field({ nullable: true })
   afterCommitId?: string;
 
-  @Field(_type => Boolean, { nullable: true })
+  @Field(() => Boolean, { nullable: true })
   twoDot?: boolean;
 
   @Field({ nullable: true })
   excludingCommitsFromRefName?: string;
 }
 
-@Resolver(_of => Commit)
+@Resolver(() => Commit)
 export class CommitResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(_returns => CommitList)
+  @Query(() => CommitList)
   async commits(
     @Args()
     args: ListCommitsArgs,
