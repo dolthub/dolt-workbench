@@ -5,9 +5,18 @@ import { RawRows } from "../types";
 
 export const columnsQuery = `DESCRIBE ??`;
 
-export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-WHERE table_name=? AND table_schema=? 
-AND referenced_table_schema IS NOT NULL`;
+// Use ORDINAL_POSITION from INFORMATION_SCHEMA.COLUMNS to get the column's position within the table
+export const foreignKeysQuery = `SELECT 
+  kcu.*,
+  cols.ORDINAL_POSITION 
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS kcu
+JOIN INFORMATION_SCHEMA.COLUMNS AS cols
+  ON kcu.TABLE_SCHEMA = cols.TABLE_SCHEMA
+  AND kcu.TABLE_NAME = cols.TABLE_NAME
+  AND kcu.COLUMN_NAME = cols.COLUMN_NAME
+WHERE kcu.table_name = ? 
+  AND kcu.table_schema = ? 
+  AND kcu.referenced_table_schema IS NOT NULL`;
 
 export const indexQuery = `SELECT 
   table_name, 
