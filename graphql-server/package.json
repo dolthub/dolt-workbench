@@ -46,7 +46,7 @@
     "graphql-upload": "15.0.0",
     "mysql2": "^3.11.0",
     "pg": "^8.13.1",
-    "pg-copy-streams": "^6.0.6",
+    "pg-copy-streams": "^7.0.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "typeorm": "^0.3.20"

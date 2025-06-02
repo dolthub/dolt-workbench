@@ -790,7 +790,7 @@ __metadata:
     jest: "npm:^29.7.0"
     mysql2: "npm:^3.11.0"
     pg: "npm:^8.13.1"
-    pg-copy-streams: "npm:^6.0.6"
+    pg-copy-streams: "npm:^7.0.0"
     prettier: "npm:^3.5.3"
     reflect-metadata: "npm:^0.2.2"
     rxjs: "npm:^7.8.2"
@@ -8151,13 +8151,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"obuf@npm:^1.1.2":
-  version: 1.1.2
-  resolution: "obuf@npm:1.1.2"
-  checksum: 10c0/520aaac7ea701618eacf000fc96ae458e20e13b0569845800fc582f81b386731ab22d55354b4915d58171db00e79cfcd09c1638c02f89577ef092b38c65b7d81
-  languageName: node
-  linkType: hard
-
 "on-finished@npm:2.4.1, on-finished@npm:^2.4.1":
   version: 2.4.1
   resolution: "on-finished@npm:2.4.1"
@@ -8423,12 +8416,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pg-copy-streams@npm:^6.0.6":
-  version: 6.0.6
-  resolution: "pg-copy-streams@npm:6.0.6"
-  dependencies:
-    obuf: "npm:^1.1.2"
-  checksum: 10c0/4edefe7395c4adb54a0cd5887cc21441c6e41f731f6c3203c6d6a57b208c5bb1cefded28eaabf0b5dd13fe297ab146ad8270ac8c537b69cd644c51386be231bc
+"pg-copy-streams@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "pg-copy-streams@npm:7.0.0"
+  checksum: 10c0/451d4919774c2a318529ed734e7f1cd33ee08f277379bfdd19cf625dd5cd5031b09bea41a07af8f42091a8642b2a5a541cee2aa234069e7e70e6a8765d1da3e6
   languageName: node
   linkType: hard
 
