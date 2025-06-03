@@ -1,4 +1,4 @@
-import { getCommit } from "@components/CommitGraph/utils";
+import { useCommit } from "@components/CommitGraph/useCommit";
 import CommitLink from "@components/links/CommitLink";
 import { Button, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
@@ -24,7 +24,7 @@ export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
   const { state, setState, err, getDiff, loading, diffRef } =
     useCommitOverview(params);
-
+  const commitDiffDetails = useCommit(commit, params);
   return (
     <li
       className={cx(css.item, {
@@ -96,7 +96,7 @@ export default function CommitLogItem(props: Props) {
       {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
-            commit={getCommit(commit, params)}
+            commit={commitDiffDetails}
             diff={state.diffOverview}
             loading={loading}
             forDolt

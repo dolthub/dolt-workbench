@@ -3,7 +3,7 @@ import { BranchHeads } from "@hooks/useCommitListForCommitGraph";
 import { RefParams } from "@lib/params";
 import { CommitGraph as Graph, Diff } from "commit-graph";
 import css from "./index.module.css";
-import { branchPathColors, getCommits } from "./utils";
+import { branchPathColors, getCommits } from "./useCommit";
 
 type Props = {
   params: RefParams;

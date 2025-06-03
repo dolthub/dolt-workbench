@@ -1,4 +1,4 @@
-import { getCommit } from "@components/CommitGraph/utils";
+import { useCommit } from "@components/CommitGraph/useCommit";
 import Link from "@components/links/Link";
 import ResetModal from "@components/StatusWithOptions/ResetModal";
 import { Button, ErrorMsg, Loader, Tooltip } from "@dolthub/react-components";
@@ -47,7 +47,7 @@ function Item(props: ItemProps) {
       emailAddress: "",
     },
   };
-
+  const commitDiffDetails = useCommit(commit, props.params);
   return (
     <li
       className={cx(css.item, {
@@ -105,7 +105,7 @@ function Item(props: ItemProps) {
       {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
-            commit={getCommit(commit, props.params)}
+            commit={commitDiffDetails}
             diff={state.diffOverview}
             loading={loading}
             forDolt
