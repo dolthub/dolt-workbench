@@ -3,14 +3,13 @@ import { RefParams } from "@lib/params";
 import { colors as customColors } from "@lib/tailwind";
 import { commit } from "@lib/urls";
 import { Commit } from "commit-graph";
-import { useRouter } from "next/router";
+import { NextRouter } from "next/router";
 
-export function useCommit(
+export function getCommit(
   c: CommitForHistoryFragment,
   params: RefParams,
+  router: NextRouter,
 ): Commit {
-  const router = useRouter();
-
   return {
     sha: c.commitId,
     commit: {
@@ -31,32 +30,12 @@ export function useCommit(
   };
 }
 
-export function useCommits(
+export function getCommits(
   commits: CommitForHistoryFragment[],
   params: RefParams,
+  router: NextRouter,
 ): Commit[] {
-  const router = useRouter();
-
-  return commits.map(c => {
-    return {
-      sha: c.commitId,
-      commit: {
-        author: {
-          name: c.committer.username || "",
-          date: c.committedAt,
-          email: c.committer.emailAddress,
-        },
-        message: c.message,
-      },
-      parents: c.parents.map(p => {
-        return { sha: p };
-      }),
-      onCommitNavigate: () => {
-        const { href, as } = commit({ ...params, commitId: c.commitId });
-        router.push(href, as).catch(console.error);
-      },
-    };
-  });
+  return commits.map(c => getCommit(c, params, router));
 }
 
 // colors to choose from for branch paths

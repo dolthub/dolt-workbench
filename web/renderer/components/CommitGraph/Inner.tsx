@@ -3,7 +3,8 @@ import { BranchHeads } from "@hooks/useCommitListForCommitGraph";
 import { RefParams } from "@lib/params";
 import { CommitGraph as Graph, Diff } from "commit-graph";
 import css from "./index.module.css";
-import { branchPathColors, useCommits } from "./useCommit";
+import { branchPathColors, getCommits } from "./utils";
+import { useRouter } from "next/router";
 
 type Props = {
   params: RefParams;
@@ -15,12 +16,12 @@ type Props = {
 };
 
 export default function Inner(props: Props) {
-  const commits = useCommits(props.commits, props.params);
+  const router = useRouter();
 
   return (
     <div className={css.graphContainer}>
       <Graph.WithInfiniteScroll
-        commits={commits}
+        commits={getCommits(props.commits, props.params, router)}
         branchHeads={props.branchHeads}
         currentBranch={props.params.refName}
         graphStyle={{

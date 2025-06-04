@@ -1,4 +1,4 @@
-import { useCommit } from "@components/CommitGraph/useCommit";
+import { getCommit } from "@components/CommitGraph/utils";
 import CommitLink from "@components/links/CommitLink";
 import { Button, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
@@ -9,6 +9,7 @@ import cx from "classnames";
 import { DiffSection } from "commit-graph";
 import css from "./index.module.css";
 import ResetRevertCommit from "./ResetRevertCommit";
+import { useRouter } from "next/router";
 
 type UserProps = {
   commit: CommitForHistoryFragment;
@@ -24,7 +25,8 @@ export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
   const { state, setState, err, getDiff, loading, diffRef } =
     useCommitOverview(params);
-  const commitDiffDetails = useCommit(commit, params);
+  const router = useRouter();
+
   return (
     <li
       className={cx(css.item, {
@@ -96,7 +98,7 @@ export default function CommitLogItem(props: Props) {
       {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
-            commit={commitDiffDetails}
+            commit={getCommit(commit, params, router)}
             diff={state.diffOverview}
             loading={loading}
             forDolt

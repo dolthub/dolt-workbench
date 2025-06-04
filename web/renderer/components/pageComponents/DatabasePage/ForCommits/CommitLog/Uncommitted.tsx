@@ -1,4 +1,4 @@
-import { useCommit } from "@components/CommitGraph/useCommit";
+import { getCommit } from "@components/CommitGraph/utils";
 import Link from "@components/links/Link";
 import ResetModal from "@components/StatusWithOptions/ResetModal";
 import { Button, ErrorMsg, Loader, Tooltip } from "@dolthub/react-components";
@@ -15,6 +15,7 @@ import cx from "classnames";
 import { DiffSection } from "commit-graph";
 import { useState } from "react";
 import css from "./index.module.css";
+import { useRouter } from "next/router";
 
 type Props = {
   params: RefParams;
@@ -47,7 +48,7 @@ function Item(props: ItemProps) {
       emailAddress: "",
     },
   };
-  const commitDiffDetails = useCommit(commit, props.params);
+  const router = useRouter();
   return (
     <li
       className={cx(css.item, {
@@ -105,7 +106,7 @@ function Item(props: ItemProps) {
       {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
-            commit={commitDiffDetails}
+            commit={getCommit(commit, props.params, router)}
             diff={state.diffOverview}
             loading={loading}
             forDolt
