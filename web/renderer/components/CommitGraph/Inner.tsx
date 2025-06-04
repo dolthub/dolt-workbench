@@ -15,8 +15,8 @@ type Props = {
 };
 
 export default function Inner(props: Props) {
-  const commits=useCommits(props.commits,props.params)
-  
+  const commits = useCommits(props.commits, props.params);
+
   return (
     <div className={css.graphContainer}>
       <Graph.WithInfiniteScroll
