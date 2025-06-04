@@ -4914,9 +4914,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@rollup/plugin-typescript@npm:11.1.6":
-  version: 11.1.6
-  resolution: "@rollup/plugin-typescript@npm:11.1.6"
+"@rollup/plugin-typescript@npm:12.1.2":
+  version: 12.1.2
+  resolution: "@rollup/plugin-typescript@npm:12.1.2"
   dependencies:
     "@rollup/pluginutils": "npm:^5.1.0"
     resolve: "npm:^1.22.1"
@@ -4929,7 +4929,7 @@ __metadata:
       optional: true
     tslib:
       optional: true
-  checksum: 10c0/5347cd73ac28d4cf2401a3e689864a1a0df8f3ae029abd9c38525cbc84bcfa16c3a32a0ac5698dac65ec531ba7cf8332e14f5fc7f8fa501193da23320a134c5c
+  checksum: 10c0/f447e23371bb1815030446ada3f57608bc6665f8aa2cd7343c4aa18021790fa3ba4783146ea576fb650d6ec68876182d0bc789a05b1a9163c09b16c17efdf868
   languageName: node
   linkType: hard
 
@@ -8174,14 +8174,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"commit-graph@npm:^2.3.9":
-  version: 2.3.9
-  resolution: "commit-graph@npm:2.3.9"
+"commit-graph@npm:^2.3.12":
+  version: 2.3.12
+  resolution: "commit-graph@npm:2.3.12"
   dependencies:
     "@dolthub/react-components": "npm:^0.2.7"
     "@dolthub/react-hooks": "npm:^0.1.7"
     "@dolthub/web-utils": "npm:^0.1.5"
-    "@rollup/plugin-typescript": "npm:11.1.6"
+    "@rollup/plugin-typescript": "npm:12.1.2"
     classnames: "npm:^2.3.2"
     react: "npm:>=18.0.0"
     react-copy-to-clipboard: "npm:^5.1.0"
@@ -8193,7 +8193,7 @@ __metadata:
   peerDependencies:
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-  checksum: 10c0/1e737b204ca88e5290f0d2f8b86cbd4145b03a27ce02f4acd52cfa77b09983fafeac32d058cec4901292c135adceabbfc0e324da781c085f50e85764a51dca1e
+  checksum: 10c0/15e713c062131948d8b5d17137f6d1ab60d2bc92afef8c1a9b82865305c0b389d4184cb4a7d38d9cb458474a59c79c238ed3501707570db50c110e36f0f12af9
   languageName: node
   linkType: hard
 
@@ -9226,7 +9226,7 @@ __metadata:
     babel-jest: "npm:^29.7.0"
     chance: "npm:^1.1.11"
     classnames: "npm:^2.3.2"
-    commit-graph: "npm:^2.3.9"
+    commit-graph: "npm:^2.3.12"
     cssnano: "npm:^7.0.7"
     diff: "npm:^5.1.0"
     electron: "npm:^36.3.2"

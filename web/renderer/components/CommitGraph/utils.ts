@@ -2,8 +2,14 @@ import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { colors as customColors } from "@lib/tailwind";
 import { commit } from "@lib/urls";
+import { Commit } from "commit-graph";
+import { NextRouter } from "next/router";
 
-export function getCommit(c: CommitForHistoryFragment, params: RefParams) {
+export function getCommit(
+  c: CommitForHistoryFragment,
+  params: RefParams,
+  router: NextRouter,
+): Commit {
   return {
     sha: c.commitId,
     commit: {
@@ -17,15 +23,19 @@ export function getCommit(c: CommitForHistoryFragment, params: RefParams) {
     parents: c.parents.map(p => {
       return { sha: p };
     }),
-    html_url: commit({ ...params, commitId: c.commitId }).asPathname(),
+    onCommitNavigate: () => {
+      const { href, as } = commit({ ...params, commitId: c.commitId });
+      router.push(href, as).catch(console.error);
+    },
   };
 }
 
 export function getCommits(
   commits: CommitForHistoryFragment[],
   params: RefParams,
-) {
-  return commits.map(c => getCommit(c, params));
+  router: NextRouter,
+): Commit[] {
+  return commits.map(c => getCommit(c, params, router));
 }
 
 // colors to choose from for branch paths

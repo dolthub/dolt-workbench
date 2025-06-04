@@ -21,12 +21,15 @@ files:
       - node_modules/env-paths
       - node_modules/fast-deep-equal
       - node_modules/fast-uri
+      - node_modules/find-up
       - node_modules/is-obj
       - node_modules/json-schema-traverse
       - node_modules/json-schema-typed
       - node_modules/locate-path
       - node_modules/mimic-fn
       - node_modules/onetime
+      - node_modules/path-exists
+      - node_modules/p-limit
       - node_modules/p-locate
       - node_modules/p-try
       - node_modules/pkg-up
@@ -61,4 +64,4 @@ mac:
   provisioningProfile: build/mac/AppleDevelopment.provisionprofile
   entitlements: build/mac/entitlements.plist
   entitlementsInherit: build/mac/entitlements.inherit.plist
-electronVersion: 31.7.1
+electronVersion: 36.3.2

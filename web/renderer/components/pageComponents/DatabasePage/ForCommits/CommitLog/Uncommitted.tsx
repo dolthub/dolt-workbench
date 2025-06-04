@@ -12,6 +12,7 @@ import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import cx from "classnames";
+import { useRouter } from "next/router";
 import { DiffSection } from "commit-graph";
 import { useState } from "react";
 import css from "./index.module.css";
@@ -47,7 +48,7 @@ function Item(props: ItemProps) {
       emailAddress: "",
     },
   };
-
+  const router = useRouter();
   return (
     <li
       className={cx(css.item, {
@@ -105,7 +106,7 @@ function Item(props: ItemProps) {
       {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
-            commit={getCommit(commit, props.params)}
+            commit={getCommit(commit, props.params, router)}
             diff={state.diffOverview}
             loading={loading}
             forDolt
