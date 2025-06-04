@@ -1,10 +1,10 @@
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { BranchHeads } from "@hooks/useCommitListForCommitGraph";
 import { RefParams } from "@lib/params";
+import { useRouter } from "next/router";
 import { CommitGraph as Graph, Diff } from "commit-graph";
 import css from "./index.module.css";
 import { branchPathColors, getCommits } from "./utils";
-import { useRouter } from "next/router";
 
 type Props = {
   params: RefParams;

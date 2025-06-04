@@ -12,10 +12,10 @@ import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import cx from "classnames";
+import { useRouter } from "next/router";
 import { DiffSection } from "commit-graph";
 import { useState } from "react";
 import css from "./index.module.css";
-import { useRouter } from "next/router";
 
 type Props = {
   params: RefParams;

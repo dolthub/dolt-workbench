@@ -5,11 +5,11 @@ import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import { RefParams } from "@lib/params";
+import { useRouter } from "next/router";
 import cx from "classnames";
 import { DiffSection } from "commit-graph";
 import css from "./index.module.css";
 import ResetRevertCommit from "./ResetRevertCommit";
-import { useRouter } from "next/router";
 
 type UserProps = {
   commit: CommitForHistoryFragment;
