@@ -2,9 +2,13 @@ import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { colors as customColors } from "@lib/tailwind";
 import { commit } from "@lib/urls";
+import { Commit } from "commit-graph";
 import { useRouter } from "next/router";
 
-export function useCommit(c: CommitForHistoryFragment, params: RefParams) {
+export function useCommit(
+  c: CommitForHistoryFragment,
+  params: RefParams,
+): Commit {
   const { href, as } = commit({ ...params, commitId: c.commitId });
   const router = useRouter();
 
@@ -21,7 +25,7 @@ export function useCommit(c: CommitForHistoryFragment, params: RefParams) {
     parents: c.parents.map(p => {
       return { sha: p };
     }),
-    onCommitClick: () => {
+    onCommitNavigate: () => {
       router.push(href, as).catch(console.error);
     },
   };
@@ -30,7 +34,7 @@ export function useCommit(c: CommitForHistoryFragment, params: RefParams) {
 export function getCommits(
   commits: CommitForHistoryFragment[],
   params: RefParams,
-) {
+): Commit[] {
   return commits.map(c => useCommit(c, params));
 }
 
