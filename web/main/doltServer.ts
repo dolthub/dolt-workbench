@@ -102,6 +102,7 @@ export function startServerProcess(
 
     doltServerProcess.stdout?.on("data", async data => {
       const logMsg = data.toString();
+      console.log("dolt server process log", logMsg);
       if (
         logMsg.includes("level=error") ||
         logMsg.includes(`Port ${port} already in use`)
@@ -121,6 +122,7 @@ export function startServerProcess(
 
     doltServerProcess.stderr?.on("data", async data => {
       const errorMsg = data.toString();
+      console.log("dolt server process stderr", errorMsg);
       // Check if the message is a warning or an error
       if (errorMsg.includes("level=warning")) {
         // Treat warnings as non-fatal
