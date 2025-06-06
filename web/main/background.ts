@@ -362,6 +362,7 @@ ipcMain.handle(
         mainWindow,
       );
       if (!doltServerProcess) {
+        console.error("Failed to start Dolt server");
         throw new Error("Failed to start Dolt server");
       }
       return "success";
@@ -390,7 +391,9 @@ ipcMain.handle(
           `Failed to clean up files: ${getErrorMessage(cleanupError)}`,
         );
       }
-
+      console.error(
+        `Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`,
+      );
       mainWindow.webContents.send(
         "server-error",
         `Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`,
