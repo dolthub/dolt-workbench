@@ -397,6 +397,15 @@ export class DoltQueryFactory
     );
   }
 
+  async getPullConflictsSummary(args: t.BranchesArgs): t.PR {
+    return this.query(
+      qh.mergeConflictsSummaryQuery,
+      [args.fromBranchName, args.toBranchName],
+      args.databaseName,
+      args.refName,
+    );
+  }
+
   async restoreAllTables(args: t.RefArgs): t.PR {
     return this.queryQR(
       async qr => {
