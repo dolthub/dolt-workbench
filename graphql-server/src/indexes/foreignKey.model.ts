@@ -21,7 +21,7 @@ export class ForeignKey {
   @Field()
   referencedTableName: string;
 
-  @Field(_type => [ForeignKeyColumn])
+  @Field(() => [ForeignKeyColumn])
   foreignKeyColumn: ForeignKeyColumn[];
 }
 

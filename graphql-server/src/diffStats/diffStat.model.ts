@@ -3,25 +3,25 @@ import { RawRow, RawRows } from "../queryFactory/types";
 
 @ObjectType()
 export class DiffStat {
-  @Field(_type => Float)
+  @Field(() => Float)
   rowsUnmodified: number;
 
-  @Field(_type => Float)
+  @Field(() => Float)
   rowsAdded: number;
 
-  @Field(_type => Float)
+  @Field(() => Float)
   rowsDeleted: number;
 
-  @Field(_type => Float)
+  @Field(() => Float)
   rowsModified: number;
 
-  @Field(_type => Float)
+  @Field(() => Float)
   cellsModified: number;
 
-  @Field(_type => Float)
+  @Field(() => Float)
   rowCount: number;
 
-  @Field(_type => Float)
+  @Field(() => Float)
   cellCount: number;
 }
 

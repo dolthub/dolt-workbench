@@ -89,7 +89,7 @@ export function ConfigProvider({ children }: Props) {
         db.data.addDatabaseConnection.currentDatabase,
       );
       await router.push(href, as);
-    } catch (_) {
+    } catch {
       // Handled by res.error
     } finally {
       setState({ loading: false });

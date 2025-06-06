@@ -49,18 +49,18 @@ export class CreateBranchArgs extends DBArgs {
 
 @ArgsType()
 class ListBranchesArgs extends DBArgsWithOffset {
-  @Field(_type => SortBranchesBy, { nullable: true })
+  @Field(() => SortBranchesBy, { nullable: true })
   sortBy?: SortBranchesBy;
 }
 
-@Resolver(_of => Branch)
+@Resolver(() => Branch)
 export class BranchResolver {
   constructor(
     private readonly conn: ConnectionProvider,
     private readonly tableResolver: TableResolver,
   ) {}
 
-  @Query(_returns => Branch, { nullable: true })
+  @Query(() => Branch, { nullable: true })
   async branch(@Args() args: BranchArgs): Promise<Branch | undefined> {
     const conn = this.conn.connection();
     const res = await conn.getBranch(args);
@@ -68,7 +68,7 @@ export class BranchResolver {
     return fromDoltBranchesRow(args.databaseName, res);
   }
 
-  @Query(_returns => Branch, { nullable: true })
+  @Query(() => Branch, { nullable: true })
   async branchOrDefault(
     @Args()
     { branchName, ...args }: GetBranchOrDefaultArgs,
@@ -80,14 +80,14 @@ export class BranchResolver {
     return branch;
   }
 
-  @Query(_returns => BranchList)
+  @Query(() => BranchList)
   async branches(@Args() args: ListBranchesArgs): Promise<BranchList> {
     const conn = this.conn.connection();
     const res = await conn.getBranches({ ...args, offset: args.offset ?? 0 });
     return fromBranchListRes(res, args);
   }
 
-  @Query(_returns => BranchList)
+  @Query(() => BranchList)
   async remoteBranches(@Args() args: ListBranchesArgs): Promise<BranchList> {
     const conn = this.conn.connection();
     const res = await conn.getRemoteBranches({
@@ -97,34 +97,34 @@ export class BranchResolver {
     return fromBranchListRes(res, args);
   }
 
-  @Query(_returns => [Branch])
+  @Query(() => [Branch])
   async allBranches(@Args() args: ListBranchesArgs): Promise<Branch[]> {
     const conn = this.conn.connection();
     const res = await conn.getAllBranches(args);
     return res.map(b => fromDoltBranchesRow(args.databaseName, b));
   }
 
-  @Query(_returns => Branch, { nullable: true })
+  @Query(() => Branch, { nullable: true })
   async defaultBranch(@Args() args: DBArgs): Promise<Branch | undefined> {
     const branchNames = await this.branches(args);
     return getDefaultBranchFromBranchesList(branchNames.list);
   }
 
-  @Mutation(_returns => String)
+  @Mutation(() => String)
   async createBranch(@Args() args: CreateBranchArgs): Promise<string> {
     const conn = this.conn.connection();
     await conn.createNewBranch({ ...args, branchName: args.newBranchName });
     return args.newBranchName;
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async deleteBranch(@Args() args: BranchArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.callDeleteBranch(args);
     return true;
   }
 
-  @ResolveField(_returns => Table, { nullable: true })
+  @ResolveField(() => Table, { nullable: true })
   async table(
     @Parent() branch: Branch,
     @Args() { tableName }: GetBranchTableArgs,
@@ -136,7 +136,7 @@ export class BranchResolver {
     });
   }
 
-  @ResolveField(_returns => [String])
+  @ResolveField(() => [String])
   async tableNames(
     @Parent() branch: Branch,
     @Args() { filterSystemTables, schemaName }: FilterSystemTablesArgs,

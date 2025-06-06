@@ -139,7 +139,7 @@ export default function useSqlParser() {
     try {
       const { ast } = parser.parse(queryString);
       return Array.isArray(ast) && ast.length > 1;
-    } catch (err) {
+    } catch {
       return false;
     }
   }

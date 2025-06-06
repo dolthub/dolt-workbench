@@ -6,7 +6,7 @@ import { DBArgsWithOffset, ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()
 export class Remote {
-  @Field(_type => ID)
+  @Field(() => ID)
   _id: string;
 
   @Field()
@@ -15,13 +15,13 @@ export class Remote {
   @Field()
   url: string;
 
-  @Field(_type => [String], { nullable: true })
+  @Field(() => [String], { nullable: true })
   fetchSpecs?: string[];
 }
 
 @ObjectType()
 export class RemoteList extends ListOffsetRes {
-  @Field(_type => [Remote])
+  @Field(() => [Remote])
   list: Remote[];
 }
 
@@ -30,7 +30,7 @@ export class PullRes {
   @Field()
   fastForward: boolean;
 
-  @Field(_type => Int)
+  @Field(() => Int)
   conflicts: number;
 
   @Field()
@@ -54,10 +54,10 @@ export class FetchRes {
 
 @ObjectType()
 export class RemoteBranchDiffCounts {
-  @Field(_type => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   ahead?: number;
 
-  @Field(_type => Int, { nullable: true })
+  @Field(() => Int, { nullable: true })
   behind?: number;
 }
 

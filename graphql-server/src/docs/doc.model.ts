@@ -17,7 +17,7 @@ export class Doc {
 
 @ObjectType()
 export class DocList {
-  @Field(_type => [Doc])
+  @Field(() => [Doc])
   list: Doc[];
 }
 
@@ -26,7 +26,7 @@ export class EditDocRes {
   @Field()
   newBranchName: string;
 
-  @Field(_type => Doc, { nullable: true })
+  @Field(() => Doc, { nullable: true })
   doc?: Doc;
 }
 
