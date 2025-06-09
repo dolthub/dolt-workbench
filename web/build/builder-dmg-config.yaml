@@ -56,7 +56,7 @@ mac:
     CFBundleIconFile: AppIcon
   target:
     - target: dmg
-  artifactName: ${productName}-mac-${arch}-${buildVersion}.${ext}
+  artifactName: ${productName}-mac-${arch}.${ext}
   hardenedRuntime: true
   gatekeeperAssess: false
   asarUnpack:
