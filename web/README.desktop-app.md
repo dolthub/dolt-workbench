@@ -29,9 +29,7 @@ yarn dev:app
 
 ### Build the package
 
-1. Fetch the changes from [workbench repo](https://github.com/dolthub/dolt-workbench), merge the changes into your local [desktop repo](https://github.com/dolthub/dolt-workbench-desktop)
-
-2. Install dependencies and build in the `graphql-server` directory:
+1. Install dependencies and build in the `graphql-server` directory:
 
 ```bash
 # in `graphql-server`
@@ -39,21 +37,21 @@ yarn
 yarn build
 ```
 
-3. Install dependencies in web:
+2. Install dependencies in web:
 
 ```bash
 # in web
 yarn
 ```
 
-4. download the latest dolt binaries:
+3. download the latest dolt binaries:
 
 ```bash
 # in web
 yarn download:dolt
 ```
 
-5. Build the package
+4. Build the package
 
 To build for MAC store:
 
@@ -88,7 +86,7 @@ Go to appstoreconnect.apple.com and click Apps > Dolt Workbench, Click the `+` s
 
 We can code sign the `Dolt Workbench-mac-arm64.dmg` file and allow people to download it from the release page on Github.
 
-To code sign the file, we will set `SIGNING_CERTIFICATE`, `TEAM_ID`, `APPLE_ID` and `APPLE_ID_PASSWORD` in `web/build/mac/.env` file. To get "APPLE_ID_PASSWORD" in this step. Go to [Apple ID](https://account.apple.com/account/manage), in Sign-in and Security section, find `App-Specific Password`. Create one app-specific password for your app.
+To code sign this file, we will set `SIGNING_CERTIFICATE`, `TEAM_ID`, `APPLE_ID` and `APPLE_ID_PASSWORD` in `web/build/mac/.env` file. To get "APPLE_ID_PASSWORD" in this step, go to your [Apple ID](https://account.apple.com/account/manage), look for the Sign-in and Security section, where you'll find `App-Specific Password`. Create one app-specific password for your app.
 
 ![App specific password](../images/app-specific-password.png)
 
