@@ -54,3 +54,11 @@ export function createFolder(folderPath: string): ErrorReturnType {
     };
   }
 }
+
+export function getSocketPath() {
+  // Use the app's temp directory (sandbox-compatible)
+  const socketDir = app.getPath("temp");
+
+  // Create a customized filename without special characters
+  return path.join(socketDir, "dolt.sock");
+}
