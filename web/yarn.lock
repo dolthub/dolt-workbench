@@ -2621,6 +2621,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@dolthub/react-contexts@npm:^0.1.1":
+  version: 0.1.1
+  resolution: "@dolthub/react-contexts@npm:0.1.1"
+  dependencies:
+    "@dolthub/react-hooks": "npm:^0.1.7"
+  peerDependencies:
+    react: ^19.1.0
+    react-dom: ^19.1.0
+  checksum: 10c0/0168f44c4009a275a45c61612ff778da6bf784ced93238980f27d8f7b2ffad28b40b27a59de2ad905f3fc6934968135c5ae3b31a2ba91e16728712815cd32936
+  languageName: node
+  linkType: hard
+
 "@dolthub/react-hooks@npm:^0.1.6, @dolthub/react-hooks@npm:^0.1.7":
   version: 0.1.7
   resolution: "@dolthub/react-hooks@npm:0.1.7"
@@ -9191,7 +9203,7 @@ __metadata:
   dependencies:
     "@apollo/client": "npm:^3.9.9"
     "@dolthub/react-components": "npm:^0.2.9"
-    "@dolthub/react-contexts": "npm:^0.1.0"
+    "@dolthub/react-contexts": "npm:^0.1.1"
     "@dolthub/react-hooks": "npm:^0.1.8"
     "@dolthub/web-utils": "npm:^0.1.9"
     "@electron/osx-sign": "npm:^2.0.0"
