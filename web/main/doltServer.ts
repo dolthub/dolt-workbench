@@ -1,10 +1,12 @@
 import path from "path";
 import { BrowserWindow } from "electron";
 import { ChildProcess, execFile, spawn } from "child_process";
+import fs from "fs";
 import {
   createFolder,
   getDatabasesPath,
   getDoltPaths,
+  getSocketPath,
 } from "./helpers/filePath";
 
 export async function startServer(
@@ -94,11 +96,23 @@ export function startServerProcess(
   mainWindow: BrowserWindow,
 ): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
+    const socketPath = getSocketPath();
+
+    // Ensure directory exists and clean up old socket
+    fs.mkdirSync(path.dirname(socketPath), { recursive: true });
+    try {
+      fs.unlinkSync(socketPath);
+    } catch {}
+
     console.log("Starting Dolt server...", dbFolderPath, port);
-    const doltServerProcess = spawn(doltPath, ["sql-server", "-P", port], {
-      cwd: dbFolderPath,
-      stdio: "pipe",
-    });
+    const doltServerProcess = spawn(
+      doltPath,
+      ["sql-server", "-P", port, "--socket", socketPath],
+      {
+        cwd: dbFolderPath,
+        stdio: "pipe",
+      },
+    );
 
     doltServerProcess.stdout?.on("data", async data => {
       const logMsg = data.toString();
