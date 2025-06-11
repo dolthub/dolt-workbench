@@ -29,7 +29,7 @@ See this this blog for more details: https://www.dolthub.com/blog/2024-10-02-how
 
 ### Prerequisites for Windows
 
-Ask Tim to invite you to our DoltHub organization for Microsoft Developer.
+Ask Tim to invite you to our DoltHub organization in the [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/apps-and-games/overview). The Dolt Workbench is published in the Microsoft Store [here](https://apps.microsoft.com/detail/9nq8lqph9vvh?hl=en-us&gl=US).
 
 ### Build the packages
 
