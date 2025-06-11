@@ -90,6 +90,6 @@
     "testEnvironment": "node"
   },
   "resolutions": {
-    "multer": "2.0.0"
+    "multer": "2.0.1"
   }
 }
