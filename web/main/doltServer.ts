@@ -98,16 +98,11 @@ export function startServerProcess(
   return new Promise((resolve, reject) => {
     const socketPath = getSocketPath();
 
-    // Ensure directory exists and clean up old socket
-    fs.mkdirSync(path.dirname(socketPath), { recursive: true });
-    try {
-      fs.unlinkSync(socketPath);
-    } catch {}
-
     console.log("Starting Dolt server...", dbFolderPath, port);
+    const argsArray=process.platform==="darwin"?["sql-server", "-P", port, "--socket", socketPath]:["sql-server", "-P", port]
     const doltServerProcess = spawn(
       doltPath,
-      ["sql-server", "-P", port, "--socket", socketPath],
+      argsArray,
       {
         cwd: dbFolderPath,
         stdio: "pipe",
