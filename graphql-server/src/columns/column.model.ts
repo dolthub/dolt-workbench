@@ -21,7 +21,7 @@ export class Column {
   @Field({ nullable: true })
   sourceTable?: string;
 
-  @Field(_type => [ColConstraint], { nullable: true })
+  @Field(() => [ColConstraint], { nullable: true })
   constraints?: ColConstraint[];
 }
 

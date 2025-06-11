@@ -51,11 +51,11 @@ export class RemoteBranchDiffCountsArgs extends DBArgs {
   toRefName: string;
 }
 
-@Resolver(_of => Remote)
+@Resolver(() => Remote)
 export class RemoteResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(_returns => RemoteList)
+  @Query(() => RemoteList)
   async remotes(@Args() args: DBArgsWithOffset): Promise<RemoteList> {
     const conn = this.conn.connection();
 
@@ -63,21 +63,21 @@ export class RemoteResolver {
     return getRemoteListRes(res, args);
   }
 
-  @Mutation(_returns => String)
+  @Mutation(() => String)
   async addRemote(@Args() args: AddRemoteArgs): Promise<string> {
     const conn = this.conn.connection();
     await conn.addRemote(args);
     return args.remoteName;
   }
 
-  @Mutation(_returns => Boolean)
+  @Mutation(() => Boolean)
   async deleteRemote(@Args() args: RemoteArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.callDeleteRemote(args);
     return true;
   }
 
-  @Mutation(_returns => PullRes)
+  @Mutation(() => PullRes)
   async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<PullRes> {
     const conn = this.conn.connection();
     const res = await conn.callPullRemote(args);
@@ -87,7 +87,7 @@ export class RemoteResolver {
     return fromPullRes(res[0]);
   }
 
-  @Mutation(_returns => PushRes)
+  @Mutation(() => PushRes)
   async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<PushRes> {
     const conn = this.conn.connection();
     const res = await conn.callPushRemote(args);
@@ -97,7 +97,7 @@ export class RemoteResolver {
     return fromPushRes(res[0]);
   }
 
-  @Query(_returns => FetchRes)
+  @Query(() => FetchRes)
   async fetchRemote(@Args() args: RemoteArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
     const res = await conn.callFetchRemote(args);
@@ -111,7 +111,7 @@ export class RemoteResolver {
   // 1. Identify the merge base of the two branches.
   // 2. Calculate the 'ahead' count as the number of commits on the local branch that come after the merge base.
   // 3. Calculate the 'behind' count as the number of commits on the remote branch that come after the merge base.
-  @Query(_returns => RemoteBranchDiffCounts)
+  @Query(() => RemoteBranchDiffCounts)
   async remoteBranchDiffCounts(
     @Args() args: RemoteBranchDiffCountsArgs,
   ): Promise<RemoteBranchDiffCounts> {

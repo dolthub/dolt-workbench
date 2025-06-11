@@ -10,11 +10,11 @@ class ListTableArgs extends RefMaybeSchemaArgs {
   filterSystemTables?: boolean;
 }
 
-@Resolver(_of => Table)
+@Resolver(() => Table)
 export class TableResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(_returns => Table)
+  @Query(() => Table)
   async table(@Args() args: TableMaybeSchemaArgs): Promise<Table> {
     const conn = this.conn.connection();
     const res = await conn.getTableInfo(args);
@@ -24,14 +24,14 @@ export class TableResolver {
     return fromDoltRowRes(args.databaseName, args.refName, res);
   }
 
-  @Query(_returns => TableNames)
+  @Query(() => TableNames)
   async tableNames(@Args() args: ListTableArgs): Promise<TableNames> {
     const conn = this.conn.connection();
     const res = await conn.getTableNames(args, args.filterSystemTables);
     return { list: res };
   }
 
-  @Query(_returns => [Table])
+  @Query(() => [Table])
   async tables(@Args() args: ListTableArgs): Promise<Table[]> {
     const conn = this.conn.connection();
     const tableNames = await conn.getTableNames(args, args.filterSystemTables);

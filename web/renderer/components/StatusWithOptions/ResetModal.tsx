@@ -29,7 +29,7 @@ export default function ResetModal(props: Props) {
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
-    } catch (_) {
+    } catch {
       // Handled by useMutation
     }
   };

@@ -3,7 +3,7 @@ import { RawRow } from "../queryFactory/types";
 
 @ObjectType()
 export class DoltWriter {
-  @Field(_type => ID)
+  @Field(() => ID)
   _id: string;
 
   @Field()
@@ -19,7 +19,7 @@ export class DoltWriter {
 export function fromDoltLogRow(l: RawRow): DoltWriter {
   const { committer, email } = l;
   const result: DoltWriter = {
-    displayName: committer || "User",
+    displayName: committer ?? "User",
     emailAddress: email,
     username: committer,
     _id: email,

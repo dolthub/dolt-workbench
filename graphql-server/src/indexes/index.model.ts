@@ -21,7 +21,7 @@ export class Index {
   @Field()
   comment: string;
 
-  @Field(_type => [IndexColumn])
+  @Field(() => [IndexColumn])
   columns: IndexColumn[];
 }
 
