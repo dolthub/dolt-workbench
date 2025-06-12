@@ -114,6 +114,11 @@ export function startServerProcess(
       stdio: "pipe",
     });
 
+    doltServerProcess.on("error", err => {
+      console.error("SERVER PROCESS ERROR:", err);
+      reject(err);
+    });
+
     doltServerProcess.stdout?.on("data", async data => {
       const logMsg = data.toString();
       console.log("dolt server process log", logMsg);

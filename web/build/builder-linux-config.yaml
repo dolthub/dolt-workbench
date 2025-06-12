@@ -59,3 +59,4 @@ linux:
   maintainer: "DoltHub Team <support@dolthub.com>"
 
 npmRebuild: false
+electronVersion: 31.7.1

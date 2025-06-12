@@ -64,4 +64,4 @@ mac:
   provisioningProfile: build/mac/AppleDevelopment.provisionprofile
   entitlements: build/mac/entitlements.plist
   entitlementsInherit: build/mac/entitlements.inherit.plist
-electronVersion: 36.3.2
+electronVersion: 31.7.1
