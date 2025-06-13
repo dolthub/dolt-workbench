@@ -96,23 +96,28 @@ export function startServerProcess(
   mainWindow: BrowserWindow,
 ): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
-    const socketPath = getSocketPath();
-
-    // Ensure directory exists and clean up old socket
-    fs.mkdirSync(path.dirname(socketPath), { recursive: true });
-    try {
-      fs.unlinkSync(socketPath);
-    } catch {}
+    let argsArray = ["sql-server", "-P", port];
+    if (process.platform === "darwin") {
+      const socketPath = getSocketPath();
+      // Ensure directory exists and clean up old socket
+      fs.mkdirSync(path.dirname(socketPath), { recursive: true });
+      try {
+        fs.unlinkSync(socketPath);
+      } catch {}
+      argsArray = ["sql-server", "-P", port, "--socket", socketPath];
+    }
 
     console.log("Starting Dolt server...", dbFolderPath, port);
-    const doltServerProcess = spawn(
-      doltPath,
-      ["sql-server", "-P", port, "--socket", socketPath],
-      {
-        cwd: dbFolderPath,
-        stdio: "pipe",
-      },
-    );
+
+    const doltServerProcess = spawn(doltPath, argsArray, {
+      cwd: dbFolderPath,
+      stdio: "pipe",
+    });
+
+    doltServerProcess.on("error", err => {
+      console.error("SERVER PROCESS ERROR:", err);
+      reject(err);
+    });
 
     doltServerProcess.stdout?.on("data", async data => {
       const logMsg = data.toString();

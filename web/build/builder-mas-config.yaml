@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: DoltWorkbench
-buildVersion: 0.3.34
+buildVersion: 0.3.37
 copyright: Copyright © 2024 <DoltHub Inc>
 files:
   - filter:
@@ -68,3 +68,4 @@ mac:
   provisioningProfile: build/mac/MacAppStore.provisionprofile
   entitlements: build/mac/entitlements.mas.plist
   entitlementsInherit: build/mac/entitlements.mas.inherit.plist
+electronVersion: 31.7.1
