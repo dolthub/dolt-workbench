@@ -8,7 +8,7 @@ import { RowList } from "../rows/row.model";
 
 @ObjectType()
 export class SqlSelect {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()
@@ -20,19 +20,19 @@ export class SqlSelect {
   @Field()
   queryString: string;
 
-  @Field(() => [column.Column])
+  @Field(_type => [column.Column])
   columns: column.Column[];
 
-  @Field(() => RowList)
+  @Field(_type => RowList)
   rows: RowList;
 
-  @Field(() => QueryExecutionStatus)
+  @Field(_type => QueryExecutionStatus)
   queryExecutionStatus: QueryExecutionStatus;
 
   @Field()
   queryExecutionMessage: string;
 
-  @Field(() => [String], { nullable: true })
+  @Field(_type => [String], { nullable: true })
   warnings?: string[];
 }
 

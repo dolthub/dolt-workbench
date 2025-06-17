@@ -5,7 +5,7 @@ import { RawRow } from "../queryFactory/types";
 
 @ObjectType()
 export class Tag {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()
@@ -17,10 +17,10 @@ export class Tag {
   @Field()
   message: string;
 
-  @Field(() => GraphQLTimestamp)
+  @Field(_type => GraphQLTimestamp)
   taggedAt: Date;
 
-  @Field(() => doltWriter.DoltWriter)
+  @Field(_type => doltWriter.DoltWriter)
   tagger: doltWriter.DoltWriter;
 
   @Field()
@@ -29,7 +29,7 @@ export class Tag {
 
 @ObjectType()
 export class TagList {
-  @Field(() => [Tag])
+  @Field(_type => [Tag])
   list: Tag[];
 }
 

@@ -22,24 +22,24 @@ export interface FileUpload {
 
 @ArgsType()
 class TableImportArgs extends TableMaybeSchemaArgs {
-  @Field(() => ImportOperation)
+  @Field(_type => ImportOperation)
   importOp: ImportOperation;
 
-  @Field(() => FileType)
+  @Field(_type => FileType)
   fileType: FileType;
 
-  @Field(() => GraphQLUpload)
+  @Field(_type => GraphQLUpload)
   file: Promise<FileUpload>;
 
-  @Field(() => LoadDataModifier, { nullable: true })
+  @Field(_type => LoadDataModifier, { nullable: true })
   modifier?: LoadDataModifier;
 }
 
-@Resolver(() => Table)
+@Resolver(_of => Table)
 export class FileUploadResolver {
   constructor(private readonly connResolver: ConnectionProvider) {}
 
-  @Mutation(() => Boolean)
+  @Mutation(_returns => Boolean)
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
     const config = this.connResolver.getWorkbenchConfig();
     if (!config) throw new Error("Workbench config not found");

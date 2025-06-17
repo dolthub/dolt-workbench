@@ -9,7 +9,6 @@ import {
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
 import {
-  RemoteBranchDiffCounts,
   FetchRes,
   fromFetchRes,
   fromPullRes,
@@ -18,6 +17,7 @@ import {
   PullRes,
   PushRes,
   Remote,
+  RemoteBranchDiffCounts,
   RemoteList,
 } from "./remote.model";
 
@@ -51,11 +51,11 @@ export class RemoteBranchDiffCountsArgs extends DBArgs {
   toRefName: string;
 }
 
-@Resolver(() => Remote)
+@Resolver(_of => Remote)
 export class RemoteResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => RemoteList)
+  @Query(_returns => RemoteList)
   async remotes(@Args() args: DBArgsWithOffset): Promise<RemoteList> {
     const conn = this.conn.connection();
 
@@ -63,21 +63,21 @@ export class RemoteResolver {
     return getRemoteListRes(res, args);
   }
 
-  @Mutation(() => String)
+  @Mutation(_returns => String)
   async addRemote(@Args() args: AddRemoteArgs): Promise<string> {
     const conn = this.conn.connection();
     await conn.addRemote(args);
     return args.remoteName;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(_returns => Boolean)
   async deleteRemote(@Args() args: RemoteArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.callDeleteRemote(args);
     return true;
   }
 
-  @Mutation(() => PullRes)
+  @Mutation(_returns => PullRes)
   async pullFromRemote(@Args() args: PullOrPushRemoteArgs): Promise<PullRes> {
     const conn = this.conn.connection();
     const res = await conn.callPullRemote(args);
@@ -87,7 +87,7 @@ export class RemoteResolver {
     return fromPullRes(res[0]);
   }
 
-  @Mutation(() => PushRes)
+  @Mutation(_returns => PushRes)
   async pushToRemote(@Args() args: PullOrPushRemoteArgs): Promise<PushRes> {
     const conn = this.conn.connection();
     const res = await conn.callPushRemote(args);
@@ -97,7 +97,7 @@ export class RemoteResolver {
     return fromPushRes(res[0]);
   }
 
-  @Query(() => FetchRes)
+  @Query(_returns => FetchRes)
   async fetchRemote(@Args() args: RemoteArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
     const res = await conn.callFetchRemote(args);
@@ -111,7 +111,7 @@ export class RemoteResolver {
   // 1. Identify the merge base of the two branches.
   // 2. Calculate the 'ahead' count as the number of commits on the local branch that come after the merge base.
   // 3. Calculate the 'behind' count as the number of commits on the remote branch that come after the merge base.
-  @Query(() => RemoteBranchDiffCounts)
+  @Query(_returns => RemoteBranchDiffCounts)
   async remoteBranchDiffCounts(
     @Args() args: RemoteBranchDiffCountsArgs,
   ): Promise<RemoteBranchDiffCounts> {

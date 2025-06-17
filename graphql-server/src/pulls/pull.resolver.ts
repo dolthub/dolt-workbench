@@ -26,14 +26,14 @@ class MergePullArgs extends PullArgs {
   author?: AuthorInfo;
 }
 
-@Resolver(() => PullWithDetails)
+@Resolver(_of => PullWithDetails)
 export class PullResolver {
   constructor(
     private readonly conn: ConnectionProvider,
     private readonly commitResolver: CommitResolver,
   ) {}
 
-  @Query(() => PullWithDetails)
+  @Query(_returns => PullWithDetails)
   async pullWithDetails(@Args() args: PullArgs): Promise<PullWithDetails> {
     const name = `databases/${args.databaseName}/pulls/${args.fromBranchName}/${args.toBranchName}`;
     const commits = await this.commitResolver.commits({
@@ -46,7 +46,7 @@ export class PullResolver {
     return fromAPIModelPullWithDetails(name, commits.list);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(_returns => Boolean)
   async mergePull(@Args() args: MergePullArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.callMerge({

@@ -2,7 +2,7 @@ import { ArgsType, Field, InputType, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
 export class ListOffsetRes {
-  @Field(() => Int, { nullable: true })
+  @Field(_type => Int, { nullable: true })
   nextOffset?: number;
 }
 
@@ -65,7 +65,7 @@ export class TableMaybeSchemaArgs extends TableArgs {
 
 @ArgsType()
 export class DBArgsWithOffset extends DBArgs {
-  @Field(() => Int, { nullable: true })
+  @Field(_type => Int, { nullable: true })
   offset?: number;
 }
 

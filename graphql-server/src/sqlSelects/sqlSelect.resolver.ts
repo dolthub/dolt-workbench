@@ -10,15 +10,15 @@ export class SqlSelectArgs extends RefMaybeSchemaArgs {
   @Field()
   queryString: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field(_type => Int, { nullable: true })
   offset?: number;
 }
 
-@Resolver(() => SqlSelect)
+@Resolver(_of => SqlSelect)
 export class SqlSelectResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => SqlSelect)
+  @Query(_returns => SqlSelect)
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
     const conn = this.conn.connection();
     const offset = args.offset ?? 0;
@@ -34,7 +34,7 @@ export class SqlSelectResolver {
     );
   }
 
-  @Query(() => String)
+  @Query(_returns => String)
   async sqlSelectForCsvDownload(@Args() args: SqlSelectArgs): Promise<string> {
     const conn = this.conn.connection();
     const res = await conn.getSqlSelect(args);

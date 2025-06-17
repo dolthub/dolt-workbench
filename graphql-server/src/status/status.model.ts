@@ -3,7 +3,7 @@ import { RawRows } from "../queryFactory/types";
 
 @ObjectType()
 export class Status {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()
@@ -12,7 +12,7 @@ export class Status {
   @Field()
   tableName: string;
 
-  @Field(() => Boolean)
+  @Field(_type => Boolean)
   staged: boolean;
 
   @Field()

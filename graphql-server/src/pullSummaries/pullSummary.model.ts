@@ -3,10 +3,10 @@ import * as commit from "../commits/commit.model";
 
 @ObjectType()
 export class PullSummary {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
-  @Field(() => commit.CommitList)
+  @Field(_type => commit.CommitList)
   commits: commit.CommitList;
 }
 

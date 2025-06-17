@@ -10,16 +10,16 @@ import { PullState } from "./pull.enums";
 
 @ObjectType()
 export class PullWithDetails {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
-  @Field(() => PullState)
+  @Field(_type => PullState)
   state: PullState;
 
-  @Field(() => PullSummary, { nullable: true })
+  @Field(_type => PullSummary, { nullable: true })
   summary?: PullSummary;
 
-  @Field(() => [PullDetailUnion], { nullable: true })
+  @Field(_type => [PullDetailUnion], { nullable: true })
   details?: PullDetails;
 }
 

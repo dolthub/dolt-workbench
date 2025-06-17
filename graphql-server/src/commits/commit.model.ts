@@ -6,7 +6,7 @@ import * as doltWriter from "./doltWriter.model";
 
 @ObjectType()
 export class Commit {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()
@@ -18,19 +18,19 @@ export class Commit {
   @Field()
   message: string;
 
-  @Field(() => GraphQLTimestamp)
+  @Field(_type => GraphQLTimestamp)
   committedAt: Date;
 
-  @Field(() => doltWriter.DoltWriter)
+  @Field(_type => doltWriter.DoltWriter)
   committer: doltWriter.DoltWriter;
 
-  @Field(() => [String])
+  @Field(_type => [String])
   parents: string[];
 }
 
 @ObjectType()
 export class CommitList extends ListOffsetRes {
-  @Field(() => [Commit])
+  @Field(_type => [Commit])
   list: Commit[];
 }
 

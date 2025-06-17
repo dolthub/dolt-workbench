@@ -6,15 +6,15 @@ import { Doc, DocList, fromDoltDocsRow } from "./doc.model";
 
 @ArgsType()
 class GetDefaultDocArgs extends RefArgs {
-  @Field(() => DocType, { nullable: true })
+  @Field(_type => DocType, { nullable: true })
   docType?: DocType;
 }
 
-@Resolver(() => Doc)
+@Resolver(_of => Doc)
 export class DocsResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => DocList)
+  @Query(_returns => DocList)
   async docs(
     @Args()
     args: RefArgs,
@@ -30,7 +30,7 @@ export class DocsResolver {
     };
   }
 
-  @Query(() => Doc, { nullable: true })
+  @Query(_returns => Doc, { nullable: true })
   async docOrDefaultDoc(
     @Args() args: GetDefaultDocArgs,
   ): Promise<Doc | undefined> {

@@ -8,15 +8,15 @@ export class ListRowsArgs extends RefMaybeSchemaArgs {
   @Field()
   tableName: string;
 
-  @Field(() => Int, { nullable: true })
+  @Field(_type => Int, { nullable: true })
   offset?: number;
 }
 
-@Resolver(() => Row)
+@Resolver(_of => Row)
 export class RowResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => RowList)
+  @Query(_returns => RowList)
   async rows(@Args() args: ListRowsArgs): Promise<RowList> {
     const conn = this.conn.connection();
     const pkCols = await conn.getTablePKColumns(args);

@@ -15,18 +15,18 @@ export class DiffStatArgs extends DBArgs {
   @Field({ nullable: true })
   refName?: string;
 
-  @Field(() => CommitDiffType, { nullable: true })
+  @Field(_type => CommitDiffType, { nullable: true })
   type?: CommitDiffType;
 
   @Field({ nullable: true })
   tableName?: string;
 }
 
-@Resolver(() => DiffStat)
+@Resolver(_of => DiffStat)
 export class DiffStatResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => DiffStat)
+  @Query(_returns => DiffStat)
   async diffStat(@Args() args: DiffStatArgs): Promise<DiffStat> {
     const conn = this.conn.connection();
     const type = args.type ?? CommitDiffType.TwoDot;

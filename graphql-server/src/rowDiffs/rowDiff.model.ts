@@ -11,25 +11,25 @@ import { canShowDroppedOrAddedRows } from "./utils";
 
 @ObjectType()
 export class RowDiff {
-  @Field(() => row.Row, { nullable: true })
+  @Field(_type => row.Row, { nullable: true })
   added?: row.Row;
 
-  @Field(() => row.Row, { nullable: true })
+  @Field(_type => row.Row, { nullable: true })
   deleted?: row.Row;
 }
 
 @ObjectType()
 export class RowDiffList extends ListOffsetRes {
-  @Field(() => [RowDiff])
+  @Field(_type => [RowDiff])
   list: RowDiff[];
 
-  @Field(() => [Column])
+  @Field(_type => [Column])
   columns: Column[];
 }
 
 @ObjectType()
 export class RowListWithCols extends row.RowList {
-  @Field(() => [column.Column])
+  @Field(_type => [column.Column])
   columns: column.Column[];
 }
 

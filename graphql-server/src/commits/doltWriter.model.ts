@@ -3,7 +3,7 @@ import { RawRow } from "../queryFactory/types";
 
 @ObjectType()
 export class DoltWriter {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()

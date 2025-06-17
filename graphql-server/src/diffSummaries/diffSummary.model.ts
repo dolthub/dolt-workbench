@@ -4,7 +4,7 @@ import { TableDiffType, toTableDiffType } from "./diffSummary.enums";
 
 @ObjectType()
 export class DiffSummary {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()
@@ -16,7 +16,7 @@ export class DiffSummary {
   @Field()
   tableName: string;
 
-  @Field(() => TableDiffType)
+  @Field(_type => TableDiffType)
   tableType: TableDiffType;
 
   @Field()

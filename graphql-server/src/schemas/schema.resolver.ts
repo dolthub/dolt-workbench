@@ -4,11 +4,11 @@ import { RefArgs, RefMaybeSchemaArgs } from "../utils/commonTypes";
 import { SchemaType } from "./schema.enums";
 import { SchemaItem } from "./schema.model";
 
-@Resolver(() => SchemaItem)
+@Resolver(_of => SchemaItem)
 export class SchemaResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => [SchemaItem])
+  @Query(_returns => [SchemaItem])
   async doltSchemas(
     @Args() args: RefMaybeSchemaArgs,
     type?: SchemaType,
@@ -18,12 +18,12 @@ export class SchemaResolver {
     return res;
   }
 
-  @Query(() => [SchemaItem])
+  @Query(_returns => [SchemaItem])
   async views(@Args() args: RefMaybeSchemaArgs): Promise<SchemaItem[]> {
     return this.doltSchemas(args, SchemaType.View);
   }
 
-  @Query(() => [SchemaItem])
+  @Query(_returns => [SchemaItem])
   async doltProcedures(@Args() args: RefArgs): Promise<SchemaItem[]> {
     const conn = this.conn.connection();
     const res = await conn.getProcedures(args);

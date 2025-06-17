@@ -22,11 +22,11 @@ class CreateTagArgs extends TagArgs {
   author?: AuthorInfo;
 }
 
-@Resolver(() => Tag)
+@Resolver(_of => Tag)
 export class TagResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => TagList)
+  @Query(_returns => TagList)
   async tags(@Args() args: DBArgs): Promise<TagList> {
     const conn = this.conn.connection();
     const res = await conn.getTags(args);
@@ -35,7 +35,7 @@ export class TagResolver {
     };
   }
 
-  @Query(() => Tag, { nullable: true })
+  @Query(_returns => Tag, { nullable: true })
   async tag(@Args() args: TagArgs): Promise<Tag | undefined> {
     const conn = this.conn.connection();
     const res = await conn.getTag(args);
@@ -43,14 +43,14 @@ export class TagResolver {
     return fromDoltRowRes(args.databaseName, res);
   }
 
-  @Mutation(() => String)
+  @Mutation(_returns => String)
   async createTag(@Args() args: CreateTagArgs): Promise<string> {
     const conn = this.conn.connection();
     await conn.createNewTag(args);
     return args.tagName;
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(_returns => Boolean)
   async deleteTag(@Args() args: TagArgs): Promise<boolean> {
     const conn = this.conn.connection();
     await conn.callDeleteTag(args);

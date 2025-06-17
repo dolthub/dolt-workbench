@@ -8,19 +8,19 @@ export class TableDetails {
   @Field()
   tableName: string;
 
-  @Field(() => [column.Column])
+  @Field(_type => [column.Column])
   columns: column.Column[];
 
-  @Field(() => [foreignKey.ForeignKey])
+  @Field(_type => [foreignKey.ForeignKey])
   foreignKeys: foreignKey.ForeignKey[];
 
-  @Field(() => [index.Index])
+  @Field(_type => [index.Index])
   indexes: index.Index[];
 }
 
 @ObjectType()
 export class Table extends TableDetails {
-  @Field(() => ID)
+  @Field(_type => ID)
   _id: string;
 
   @Field()
@@ -32,7 +32,7 @@ export class Table extends TableDetails {
 
 @ObjectType()
 export class TableNames {
-  @Field(() => [String])
+  @Field(_type => [String])
   list: string[];
 }
 

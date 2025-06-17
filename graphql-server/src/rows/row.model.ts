@@ -16,13 +16,13 @@ export class ColumnValue {
 
 @ObjectType()
 export class Row {
-  @Field(() => [ColumnValue])
+  @Field(_type => [ColumnValue])
   columnValues: ColumnValue[];
 }
 
 @ObjectType()
 export class RowList extends ListOffsetRes {
-  @Field(() => [Row])
+  @Field(_type => [Row])
   list: Row[];
 }
 

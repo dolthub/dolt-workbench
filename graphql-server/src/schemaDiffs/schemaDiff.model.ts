@@ -12,13 +12,13 @@ export class TextDiff {
 
 @ObjectType()
 export class SchemaDiff {
-  @Field(() => TextDiff, { nullable: true })
+  @Field(_type => TextDiff, { nullable: true })
   schemaDiff?: TextDiff;
 
-  @Field(() => [String], { nullable: true })
+  @Field(_type => [String], { nullable: true })
   schemaPatch?: string[];
 
-  @Field(() => Int, { nullable: true })
+  @Field(_type => Int, { nullable: true })
   numChangedSchemas?: number;
 }
 

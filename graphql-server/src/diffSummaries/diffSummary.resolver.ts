@@ -17,18 +17,18 @@ class DiffSummaryArgs extends DBArgs {
   @Field({ nullable: true })
   refName?: string;
 
-  @Field(() => CommitDiffType, { nullable: true })
+  @Field(_type => CommitDiffType, { nullable: true })
   type?: CommitDiffType;
 
   @Field({ nullable: true })
   tableName?: string;
 }
 
-@Resolver(() => DiffSummary)
+@Resolver(_of => DiffSummary)
 export class DiffSummaryResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
-  @Query(() => [DiffSummary])
+  @Query(_returns => [DiffSummary])
   async diffSummaries(@Args() args: DiffSummaryArgs): Promise<DiffSummary[]> {
     const conn = this.conn.connection();
     return getDiffSummaries(conn, args);

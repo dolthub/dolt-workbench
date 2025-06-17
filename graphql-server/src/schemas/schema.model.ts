@@ -6,6 +6,6 @@ export class SchemaItem {
   @Field()
   name: string;
 
-  @Field(() => SchemaType)
+  @Field(_type => SchemaType)
   type: SchemaType;
 }
