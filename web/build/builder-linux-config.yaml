@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: Dolt-Workbench
-buildVersion: 0.3.20
+buildVersion: 0.3.24
 copyright: Copyright © 2024 DoltHub Inc
 icon: build/linux/icon.png
 files:
@@ -22,12 +22,15 @@ files:
       - node_modules/env-paths
       - node_modules/fast-deep-equal
       - node_modules/fast-uri
+      - node_modules/find-up
       - node_modules/is-obj
       - node_modules/json-schema-traverse
       - node_modules/json-schema-typed
       - node_modules/locate-path
       - node_modules/mimic-fn
       - node_modules/onetime
+      - node_modules/path-exists
+      - node_modules/p-limit
       - node_modules/p-locate
       - node_modules/p-try
       - node_modules/pkg-up
@@ -56,3 +59,4 @@ linux:
   maintainer: "DoltHub Team <support@dolthub.com>"
 
 npmRebuild: false
+electronVersion: 31.7.1

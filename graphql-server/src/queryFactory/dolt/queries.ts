@@ -5,9 +5,18 @@ import { RawRows } from "../types";
 
 export const columnsQuery = `DESCRIBE ??`;
 
-export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE 
-WHERE table_name=? AND table_schema=? 
-AND referenced_table_schema IS NOT NULL`;
+// Use ORDINAL_POSITION from INFORMATION_SCHEMA.COLUMNS to get the column's position within the table
+export const foreignKeysQuery = `SELECT 
+  kcu.*,
+  cols.ORDINAL_POSITION 
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS kcu
+JOIN INFORMATION_SCHEMA.COLUMNS AS cols
+  ON kcu.TABLE_SCHEMA = cols.TABLE_SCHEMA
+  AND kcu.TABLE_NAME = cols.TABLE_NAME
+  AND kcu.COLUMN_NAME = cols.COLUMN_NAME
+WHERE kcu.table_name = ? 
+  AND kcu.table_schema = ? 
+  AND kcu.referenced_table_schema IS NOT NULL`;
 
 export const indexQuery = `SELECT 
   table_name, 
@@ -16,7 +25,7 @@ export const indexQuery = `SELECT
   GROUP_CONCAT(non_unique) AS NON_UNIQUES, 
   GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS 
 FROM information_schema.statistics 
-WHERE table_name=? AND index_name!="PRIMARY" 
+WHERE table_name=? AND table_schema=? AND index_name!="PRIMARY" 
 GROUP BY index_name;`;
 
 export const tableColsQuery = `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`;

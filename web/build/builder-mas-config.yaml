@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: DoltWorkbench
-buildVersion: 0.3.26
+buildVersion: 0.3.37
 copyright: Copyright © 2024 <DoltHub Inc>
 files:
   - filter:
@@ -21,12 +21,15 @@ files:
       - node_modules/env-paths
       - node_modules/fast-deep-equal
       - node_modules/fast-uri
+      - node_modules/find-up
       - node_modules/is-obj
       - node_modules/json-schema-traverse
       - node_modules/json-schema-typed
       - node_modules/locate-path
       - node_modules/mimic-fn
       - node_modules/onetime
+      - node_modules/path-exists
+      - node_modules/p-limit
       - node_modules/p-locate
       - node_modules/p-try
       - node_modules/pkg-up
@@ -58,8 +61,7 @@ mac:
     - "**/*.node"
   artifactName: ${productName}-mac-${arch}-${buildVersion}.${ext}
   type: distribution
-  notarize:
-    teamId: FK9YU86WZ5
+  notarize: true
   x64ArchFiles: "*"
   hardenedRuntime: false
   gatekeeperAssess: false

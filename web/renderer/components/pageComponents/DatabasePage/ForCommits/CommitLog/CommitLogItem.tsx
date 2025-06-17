@@ -5,6 +5,7 @@ import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import { RefParams } from "@lib/params";
+import { useRouter } from "next/router";
 import cx from "classnames";
 import { DiffSection } from "commit-graph";
 import css from "./index.module.css";
@@ -24,6 +25,7 @@ export default function CommitLogItem(props: Props) {
   const { commit, activeHash, params } = props;
   const { state, setState, err, getDiff, loading, diffRef } =
     useCommitOverview(params);
+  const router = useRouter();
 
   return (
     <li
@@ -96,7 +98,7 @@ export default function CommitLogItem(props: Props) {
       {state.showOverview && (
         <div ref={diffRef}>
           <DiffSection
-            commit={getCommit(commit, params)}
+            commit={getCommit(commit, params, router)}
             diff={state.diffOverview}
             loading={loading}
             forDolt

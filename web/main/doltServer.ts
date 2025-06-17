@@ -1,10 +1,12 @@
 import path from "path";
 import { BrowserWindow } from "electron";
 import { ChildProcess, execFile, spawn } from "child_process";
+import fs from "fs";
 import {
   createFolder,
   getDatabasesPath,
   getDoltPaths,
+  getSocketPath,
 } from "./helpers/filePath";
 
 export async function startServer(
@@ -94,14 +96,32 @@ export function startServerProcess(
   mainWindow: BrowserWindow,
 ): Promise<ChildProcess | null> {
   return new Promise((resolve, reject) => {
+    let argsArray = ["sql-server", "-P", port];
+    if (process.platform === "darwin") {
+      const socketPath = getSocketPath();
+      // Ensure directory exists and clean up old socket
+      fs.mkdirSync(path.dirname(socketPath), { recursive: true });
+      try {
+        fs.unlinkSync(socketPath);
+      } catch {}
+      argsArray = ["sql-server", "-P", port, "--socket", socketPath];
+    }
+
     console.log("Starting Dolt server...", dbFolderPath, port);
-    const doltServerProcess = spawn(doltPath, ["sql-server", "-P", port], {
+
+    const doltServerProcess = spawn(doltPath, argsArray, {
       cwd: dbFolderPath,
       stdio: "pipe",
     });
 
+    doltServerProcess.on("error", err => {
+      console.error("SERVER PROCESS ERROR:", err);
+      reject(err);
+    });
+
     doltServerProcess.stdout?.on("data", async data => {
       const logMsg = data.toString();
+      console.log("dolt server process log", logMsg);
       if (
         logMsg.includes("level=error") ||
         logMsg.includes(`Port ${port} already in use`)
@@ -121,6 +141,7 @@ export function startServerProcess(
 
     doltServerProcess.stderr?.on("data", async data => {
       const errorMsg = data.toString();
+      console.log("dolt server process stderr", errorMsg);
       // Check if the message is a warning or an error
       if (errorMsg.includes("level=warning")) {
         // Treat warnings as non-fatal

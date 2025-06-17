@@ -1,8 +1,4 @@
-Prerequisite:
-Download Dolt binaries from the [latest release](https://github.com/dolthub/dolt/releases/latest).
-
-- For macOS, place the dolt binary in web/build/mac.
-- For Windows, place the dolt.exe binary in web/build/appx.
+# dolt-workbench Desktop Application
 
 ## Run the desktop app in dev mode:
 
@@ -20,18 +16,24 @@ yarn build
 yarn dev:app
 ```
 
-## Release and update for Mac:
+## Releasing the application
 
-### Prerequisite
+### Prerequisites for Mac
 
-- You need a developer account and contact tim for access.
-- Download the provision profiles and install the certificates from Apple connect, instructions in this blog: https://www.dolthub.com/blog/2024-10-02-how-to-submit-an-electron-app-to-mac-app-store/#generate-provisioning-profiles
+1. Create an Apple Developer account with your @dolthub.com email and contact Tim for access.
+2. [Register your device](https://www.dolthub.com/blog/2024-10-02-how-to-submit-an-electron-app-to-mac-app-store/#register-your-device)
+3. Download the [provision profiles](https://developer.apple.com/account/resources/profiles/list) `AppleDevelopment` and `MacAppStore` and put them in `web/build/mac`
+4. Download the [certificates](https://developer.apple.com/account/resources/certificates/list) named `Distribution`, `Mac Installer Distribution`, and `Developer ID Application`. Once they are added to your Keychain, you should also see them if you log into your Apple Developer account in Xcode in Account > Manage Certificates. You will need an additional certificate and password from Tim for the Developer ID Application. You may need to restart your computer for the certificates to be valid.
 
-### Build the package
+See this this blog for more details: https://www.dolthub.com/blog/2024-10-02-how-to-submit-an-electron-app-to-mac-app-store/#generate-provisioning-profiles
 
-1. Fetch the changes from [workbench repo](https://github.com/dolthub/dolt-workbench), merge the changes into your local [desktop repo](https://github.com/dolthub/dolt-workbench-desktop)
+### Prerequisites for Windows
 
-2. Install dependencies and build in the `graphql-server` directory:
+Ask Tim to invite you to our DoltHub organization in the [Microsoft Partner Center](https://partner.microsoft.com/en-us/dashboard/apps-and-games/overview). The Dolt Workbench is published in the Microsoft Store [here](https://apps.microsoft.com/detail/9nq8lqph9vvh?hl=en-us&gl=US).
+
+### Build the packages
+
+1. Install dependencies and build in the `graphql-server` directory:
 
 ```bash
 # in `graphql-server`
@@ -39,21 +41,21 @@ yarn
 yarn build
 ```
 
-3. Install dependencies in web:
+2. Install dependencies in web:
 
 ```bash
 # in web
 yarn
 ```
 
-4. download the latest dolt binaries:
+3. Download the latest dolt binaries:
 
 ```bash
 # in web
 yarn download:dolt
 ```
 
-5. Build the package
+4. Build the packages
 
 To build for MAC store:
 
@@ -62,95 +64,51 @@ To build for MAC store:
 yarn build:mas
 ```
 
-To build the package outside MAC store:
+To build the package outside MAC store (used to attach to the GitHub release) (note that the builds go in the same `dist` file as mas, so be careful not to overwrite it):
 
 ```bash
 # in web
 yarn build:dmg
 ```
 
-On a Windows computer, build the windows app:
+On a Windows computer, build the windows app (building it from a Mac machine will fail with “Cannot find suitable Parallels Desktop virtual machine (Windows 10 is required) and cannot access `pwsh` and `wine` locally” errors):
 
 ```bash
 # in web
 yarn build:win
 ```
 
+On any computer, build the Linux app:
+
+```bash
+# in web
+yarn build:linux
+```
+
 ### Submit to MAC store
 
-We will only use `mas-universal` folder for submitting to MAC store. There will be a `Dolt Workbench.app` application file and a `Dolt Workbench-mac-universal.pkg` installer file inside it. These files could not be used locally, they are for MAC store submission, when double clicking on them, it will show as "could not be opened", this is expected because they are packed in sandbox and need to be signed by Apple before distribution.
+We will only use `mas-universal` folder for submitting to MAC store. There will be a `Dolt Workbench.app` application file in `dist` and a `Dolt Workbench-mac-universal.pkg` installer file inside it. These files cannot be used locally, they are for MAC store submission. When double clicking on them, it will show "could not be opened". This is expected because they are packed in sandbox and need to be signed by Apple before distribution.
 
-The preferred tool to submit is the [Transporter app](https://apps.apple.com/us/app/transporter/id1450874784) which can be downloaded free from the Mac App Store.It will check for errors. Open the Transporter app > Drag and drop `Dolt Workbench-mac-universal.pkg` file into the Transporter app. If no errors found click the Deliver button to send the app to your developer account.
+The preferred tool to submit is the [Transporter app](https://apps.apple.com/us/app/transporter/id1450874784), which can be downloaded free from the Mac App Store. It will check for errors. Open the Transporter app > Drag and drop `Dolt Workbench-mac-universal.pkg` file into the Transporter app. If no errors found click the Deliver button to send the app to your developer account.
 
 Go to appstoreconnect.apple.com and click Apps > Dolt Workbench, Click the `+` sign in the left panel to add a new version. Enter the new version number that matches the version in the package.json file. Fill out: What's New in This Version. In the Build section select the build you just submitted (this will take a few minutes to be available after delivered through Transporter) and click Submit for Review.
 
 ### Code sign for distributing outside MAC store
 
-We can code sign the `Dolt Workbench-mac-arm64.dmg` file and allow people to download it from the release page on Github.
+We can code sign the `DoltWorkbench-mac-arm64.dmg` file in `dist` and allow people to download it from the release page on Github.
 
-Sign the DMG file using your Developer ID Application certificate:
-
-```bash
-cd dist
-codesign --force --verify --verbose --sign "Developer ID Application: Your Name (Team ID)" Dolt\ Workbench-mac-arm64.dmg
-```
-
-To ensure it’s properly signed, run:
-
-```bash
-codesign -vvv Dolt\ Workbench-mac-arm64.dmg
-```
-
-You should see after running the command:
-
-```bash
-Dolt Workbench-mac-arm64.dmg: valid on disk
-Dolt Workbench-mac-arm64.dmg: satisfies its Designated Requirement
-```
-
-You will need "App Specific Passwords" in this step. Go to [Apple ID](https://account.apple.com/account/manage), in Sign-in and Security section, find `App-Specific Password`. Create one app-specific password for your app.
+To code sign this file, we will set `SIGNING_CERTIFICATE`, `TEAM_ID`, `APPLE_ID` and `APPLE_ID_PASSWORD` in `web/build/mac/.env` file. To get "APPLE_ID_PASSWORD" in this step, go to your [Apple ID](https://account.apple.com/account/manage), look for the Sign-in and Security section, where you'll find `App-Specific Password`. Create one app-specific password for your app.
 
 ![App specific password](../images/app-specific-password.png)
 
-Submit the app to Apple’s notarization service.
-
-```bash
-xcrun notarytool submit Dolt\ Workbench-mac-arm64.dmg   --apple-id "your-apple-id" --password "your-app-specific-password" --team-id "your-team-id" --wait
-```
-
-This step will take some time, you will see `Accepted` if all goes well.
-
-```bash
-Conducting pre-submission checks for Dolt\ Workbench-mac-arm64.dmg   and initiating connection to the Apple notary service...
-Submission ID received
-  id: your-app-submission-id
-Upload progress: 100.00% (176 MB of 176 MB)
-Successfully uploaded file
-  id: your-app-submission-id
-  path: /path/to/Dolt Workbench-mac-arm64.dmg
-Waiting for processing to complete.
-Current status: Accepted...........................................
-Processing complete
-  id: your-app-submission-id
-  status: Accepted
-```
-
-Once the notarization process is successful, staple the notarization ticket to the app:
-
-```bash
-xcrun stapler staple Dolt\ Workbench-mac-arm64.dmg
-```
-
-The output should be:
-
-```bash
-Processing: /path/to/Dolt Workbench-mac-arm64.dmg
-Processing: /path/to/Dolt Workbench-mac-arm64.dmg
-The staple and validate action worked!
-```
-
-The app is now fully signed and notarized, ready for distribution.
+Then run `yarn sign-dmg` from `web`. After this step finished, the dmg file is now fully signed and notarized, ready for distribution.
 
 ### Release the Windows App
 
-Submit the `AppX` file to the store. Upload the `.exe` file to GitHub release for downloading outside the store.
+Submit the `AppX` file at `web/dist` to the store. To submit, choose DoltHub.Inc -> Apps and Games -> Dolt-Workbench to update.
+
+Upload the application `.exe` file to GitHub release for downloading outside the store.
+
+### Release the Linux App
+
+Binaries are located in `web/build/linux`. For ARM64, `dolt-arm64` and for x64, `dolt-x64`. The details for the virtual machine configuration are in [this blog](https://www.dolthub.com/blog/2025-05-29-building-a-linux-electron-app/).
