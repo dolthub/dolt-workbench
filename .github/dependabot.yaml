@@ -18,3 +18,12 @@ updates:
   open-pull-requests-limit: 4
   labels:
   - dependencies
+- package-ecosystem: npm
+  directory: "/workbench-cypress"
+  schedule:
+    interval: monthly
+    time: "06:30"
+    timezone: America/Los_Angeles
+  open-pull-requests-limit: 4
+  labels:
+  - dependencies
