@@ -79,7 +79,7 @@ export default function CloneDetails({
       router.push(href, as).catch(console.error);
       // Complete progress to 100%
       setProgress(100);
-    } catch (_) {
+    } catch {
       // handled by res.error
     } finally {
       if (interval) {

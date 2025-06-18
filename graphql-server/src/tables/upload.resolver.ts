@@ -1,6 +1,6 @@
 import { Args, ArgsType, Field, Mutation, Resolver } from "@nestjs/graphql";
 import { ReadStream } from "fs";
-// eslint-disable-next-line import/extensions, @typescript-eslint/naming-convention
+// eslint-disable-next-line @typescript-eslint/naming-convention
 import GraphQLUpload from "graphql-upload/GraphQLUpload.js";
 import { from as copyFrom } from "pg-copy-streams";
 import { pipeline } from "stream/promises";
@@ -28,7 +28,7 @@ class TableImportArgs extends TableMaybeSchemaArgs {
   @Field(_type => FileType)
   fileType: FileType;
 
-  @Field(() => GraphQLUpload)
+  @Field(_type => GraphQLUpload)
   file: Promise<FileUpload>;
 
   @Field(_type => LoadDataModifier, { nullable: true })
@@ -96,7 +96,7 @@ async function getIsDolt(conn: any): Promise<boolean> {
   try {
     const res = await conn.query("SELECT dolt_version()");
     return !!res;
-  } catch (err) {
+  } catch {
     // ignore
   }
   return false;

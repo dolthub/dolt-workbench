@@ -26,7 +26,7 @@ export default function useViewList(
     try {
       const newRes = await res.refetch(params);
       setViews(newRes.data.views);
-    } catch (_) {
+    } catch {
       // Do not want to error if the dolt_schemas system table does not exist
     }
   };

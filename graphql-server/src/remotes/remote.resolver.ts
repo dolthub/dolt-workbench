@@ -9,7 +9,6 @@ import {
 import { ConnectionProvider } from "../connections/connection.provider";
 import { DBArgs, DBArgsWithOffset, RemoteArgs } from "../utils/commonTypes";
 import {
-  RemoteBranchDiffCounts,
   FetchRes,
   fromFetchRes,
   fromPullRes,
@@ -18,6 +17,7 @@ import {
   PullRes,
   PushRes,
   Remote,
+  RemoteBranchDiffCounts,
   RemoteList,
 } from "./remote.model";
 

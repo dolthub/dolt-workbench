@@ -16,10 +16,10 @@ import {
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import {
+  CloneArgs,
   DBArgs,
   RefArgs,
   RefSchemaArgs,
-  CloneArgs,
 } from "../utils/commonTypes";
 import { DatabaseType } from "./database.enum";
 import { DatabaseConnection } from "./database.model";

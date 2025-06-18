@@ -142,7 +142,7 @@ export async function newQueryFactory(
       if (res) {
         return { qf: new DoltgresQueryFactory(ds), isDolt: true };
       }
-    } catch (_) {
+    } catch {
       // do nothing
     }
     return { qf: new PostgresQueryFactory(ds), isDolt: false };
@@ -153,7 +153,7 @@ export async function newQueryFactory(
     if (res) {
       return { qf: new DoltQueryFactory(ds), isDolt: true };
     }
-  } catch (_) {
+  } catch {
     // do nothing
   }
   return { qf: new MySQLQueryFactory(ds), isDolt: false };

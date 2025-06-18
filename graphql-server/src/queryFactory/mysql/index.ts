@@ -1,5 +1,3 @@
-/* eslint-disable class-methods-use-this */
-
 import { EntityManager, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
@@ -211,7 +209,7 @@ export class MySQLQueryFactory
     return this.getAllBranches(args);
   }
 
-  async getRemoteBranches(_args: t.ListBranchesArgs): t.PR {
+  async getRemoteBranches(_: t.ListBranchesArgs): t.PR {
     throw notDoltError("remote branches");
   }
 
@@ -228,75 +226,75 @@ export class MySQLQueryFactory
     throw notDoltError("delete branch");
   }
 
-  async getLogs(_args: t.RefArgs, _offset: number): t.PR {
+  async getLogs(_: t.RefArgs, _offset: number): t.PR {
     throw notDoltError("get logs");
   }
 
-  async getTwoDotLogs(_args: t.RefsArgs): t.PR {
+  async getTwoDotLogs(_: t.RefsArgs): t.PR {
     throw notDoltError("get two dot logs");
   }
 
-  async getDiffStat(_args: t.RefsArgs): t.PR {
+  async getDiffStat(_: t.RefsArgs): t.PR {
     throw notDoltError("get diff stat");
   }
 
-  async getThreeDotDiffStat(_args: t.RefsArgs): t.PR {
+  async getThreeDotDiffStat(_: t.RefsArgs): t.PR {
     throw notDoltError("get three dot diff stat");
   }
 
-  async getDiffSummary(_args: t.RefsArgs): t.PR {
+  async getDiffSummary(_: t.RefsArgs): t.PR {
     throw notDoltError("get diff summary");
   }
 
-  async getThreeDotDiffSummary(_args: t.RefsArgs): t.PR {
+  async getThreeDotDiffSummary(_: t.RefsArgs): t.PR {
     throw notDoltError("get three dot diff summary");
   }
 
-  async getSchemaPatch(_args: t.RefsTableArgs): t.PR {
+  async getSchemaPatch(_: t.RefsTableArgs): t.PR {
     throw notDoltError("get schema patch");
   }
 
-  async getThreeDotSchemaPatch(_args: t.RefsTableArgs): t.PR {
+  async getThreeDotSchemaPatch(_: t.RefsTableArgs): t.PR {
     throw notDoltError("get three dot schema patch");
   }
 
-  async getSchemaDiff(_args: t.RefsTableArgs): t.PR {
+  async getSchemaDiff(_: t.RefsTableArgs): t.PR {
     throw notDoltError("get schema diff");
   }
 
-  async getThreeDotSchemaDiff(_args: t.RefsTableArgs): t.PR {
+  async getThreeDotSchemaDiff(_: t.RefsTableArgs): t.PR {
     throw notDoltError("get three dot schema diff");
   }
 
-  async getDocs(_args: t.RefArgs): t.UPR {
+  async getDocs(_: t.RefArgs): t.UPR {
     throw notDoltError("get docs");
   }
 
-  async getStatus(_args: t.RefArgs): t.PR {
+  async getStatus(_: t.RefArgs): t.PR {
     throw notDoltError("get status");
   }
 
-  async getTag(_args: t.TagArgs): t.UPR {
+  async getTag(_: t.TagArgs): t.UPR {
     throw notDoltError("get tag");
   }
 
-  async getTags(_args: t.DBArgs): t.PR {
+  async getTags(_: t.DBArgs): t.PR {
     throw notDoltError("get tags");
   }
 
   async createNewTag(
-    _args: t.TagArgs & {
+    _: t.TagArgs & {
       fromRefName: string;
     },
   ): t.PR {
     throw notDoltError("create new tag");
   }
 
-  async callDeleteTag(_args: t.TagArgs): t.PR {
+  async callDeleteTag(_: t.TagArgs): t.PR {
     throw notDoltError("delete tag");
   }
 
-  async callMerge(_args: t.BranchesArgs): Promise<boolean> {
+  async callMerge(_: t.BranchesArgs): Promise<boolean> {
     throw notDoltError("merge branches");
   }
 
@@ -307,20 +305,20 @@ export class MySQLQueryFactory
   }
 
   async getOneSidedRowDiff(
-    _args: t.TableArgs & { offset: number },
+    _: t.TableArgs & { offset: number },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
     throw notDoltError("get one-sided diff");
   }
 
-  async getRowDiffs(_args: t.RowDiffArgs): t.DiffRes {
+  async getRowDiffs(_: t.RowDiffArgs): t.DiffRes {
     throw notDoltError("get row sided diffs");
   }
 
-  async restoreAllTables(_args: t.RefArgs): t.PR {
+  async restoreAllTables(_: t.RefArgs): t.PR {
     throw notDoltError("restore all tables");
   }
 
-  async getRemotes(_args: t.ListRemotesArgs): t.PR {
+  async getRemotes(_: t.ListRemotesArgs): t.PR {
     throw notDoltError("get remotes");
   }
 

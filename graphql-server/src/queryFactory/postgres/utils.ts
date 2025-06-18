@@ -26,7 +26,7 @@ export function tableWithSchema(args: {
   schemaName?: string;
 }): string {
   if (args.tableName.includes(".")) return args.tableName;
-  const schema = args.schemaName || "public";
+  const schema = args.schemaName ?? "public";
   return `${schema}.${args.tableName}`;
 }
 
