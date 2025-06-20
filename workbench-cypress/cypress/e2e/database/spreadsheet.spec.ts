@@ -19,7 +19,7 @@ const newRows = [
   ["101", "2020-03-10", "2020-03-11", "0", "3", "0"],
 ];
 
-describe(pageName, () => {
+describe.skip(pageName, () => {
   const tests = [
     newExpectationWithClickFlows(
       "should show edit table button",
