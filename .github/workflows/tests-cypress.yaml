@@ -1,8 +1,10 @@
-name: Workbench Tests
+name: Workbench Cypress Tests
 on:
   pull_request:
     paths:
       - "workbench-cypress/**"
+      - "web/**"
+      - "graphql-server/**"
   workflow_dispatch:
 
 env:
