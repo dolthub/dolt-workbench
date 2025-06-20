@@ -94,7 +94,7 @@ function getDiffRow(
   if (vals.every(v => v === null || v === undefined)) return undefined;
   return {
     columnValues: vals.map(v => {
-      return { displayValue: row.getCellValue(v, "") };
+      return { displayValue: row.getCellValue(v) };
     }),
   };
 }

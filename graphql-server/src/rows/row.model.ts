@@ -33,7 +33,7 @@ export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
   };
 }
 
-export function getCellValue(value: any, colName: string): string {
+export function getCellValue(value: any, colName?: string): string {
   if (value === null || value === undefined) {
     return NULL_VALUE;
   }

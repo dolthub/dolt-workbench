@@ -66,13 +66,13 @@ export function fromAPIModelRowConflictList(list: RawRow[]): RowConflictList {
         return; // Skip the diff_type columns
       }
       if (k.startsWith("base_")) {
-        base.push({ displayValue: row.getCellValue(v, "") });
+        base.push({ displayValue: row.getCellValue(v) });
         colsMap.set(k.replace("base_", ""), true);
       } else if (k.startsWith("our_")) {
-        ours.push({ displayValue: row.getCellValue(v, "") });
+        ours.push({ displayValue: row.getCellValue(v) });
         colsMap.set(k.replace("our_", ""), true);
       } else if (k.startsWith("their_")) {
-        theirs.push({ displayValue: row.getCellValue(v, "") });
+        theirs.push({ displayValue: row.getCellValue(v) });
         colsMap.set(k.replace("their_", ""), true);
       }
     });
