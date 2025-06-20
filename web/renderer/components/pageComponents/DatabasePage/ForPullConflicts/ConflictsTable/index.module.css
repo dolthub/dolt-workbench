@@ -1,0 +1,61 @@
+.container {
+  @apply relative overflow-x-auto lg:overflow-x-visible;
+}
+
+.table {
+  @apply border-separate text-sm font-mono leading-loose overflow-hidden;
+  border-spacing: 0;
+
+  tbody {
+    @apply whitespace-nowrap;
+  }
+
+  th,
+  td {
+    @apply pr-8 pl-4 py-1;
+  }
+
+  th {
+    @apply font-semibold max-w-full whitespace-nowrap text-left border-b-3 border-stone-100;
+  }
+
+  td {
+    @apply border-b border-stone-100 relative max-w-[400px] min-w-[130px];
+
+    &:first-child {
+      @apply font-semibold text-stone-600 bg-stone-50 sticky left-0 min-w-[80px] max-w-[80px] text-center;
+    }
+  }
+
+  .theirsRow td {
+    @apply border-b-3;
+  }
+
+  tr:hover {
+    @apply bg-stone-50;
+  }
+}
+
+.oursRow {
+  @apply bg-green-50;
+}
+
+.oursRow:hover {
+  @apply bg-green-100;
+}
+
+.theirsRow {
+  @apply bg-sky-50;
+}
+
+.theirsRow:hover {
+  @apply bg-sky-100;
+}
+
+.oursConflictedCell {
+  @apply text-green-500 font-semibold;
+}
+
+.theirsConflictedCell {
+  @apply text-sky-900 font-semibold;
+}

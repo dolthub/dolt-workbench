@@ -1,11 +1,11 @@
 import { ApolloError } from "@apollo/client";
+import { createCustomContext } from "@dolthub/react-contexts";
 import { useContextWithError } from "@dolthub/react-hooks";
 import {
   CommitDiffType,
   DiffSummaryFragment,
   useDiffSummariesQuery,
 } from "@gen/graphql-types";
-import { createCustomContext } from "@lib/createCustomContext";
 import { RequiredRefsParams } from "@lib/params";
 import { ReactNode, useEffect, useMemo, useState } from "react";
 

@@ -33,14 +33,14 @@ export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
   };
 }
 
-export function getCellValue(value: any, key: string): string {
+export function getCellValue(value: any, colName?: string): string {
   if (value === null || value === undefined) {
     return NULL_VALUE;
   }
   if (value === '""') {
     return "";
   }
-  if (Array.isArray(value) && key === "dolt_commit") {
+  if (Array.isArray(value) && colName === "dolt_commit") {
     if (value.length === 0) {
       return NULL_VALUE;
     }

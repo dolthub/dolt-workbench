@@ -378,6 +378,14 @@ export type MutationRestoreAllTablesArgs = {
   refName: Scalars['String']['input'];
 };
 
+export type PullConflictSummary = {
+  __typename?: 'PullConflictSummary';
+  _id: Scalars['ID']['output'];
+  numDataConflicts?: Maybe<Scalars['Int']['output']>;
+  numSchemaConflicts?: Maybe<Scalars['Int']['output']>;
+  tableName: Scalars['String']['output'];
+};
+
 export type PullDetailCommit = {
   __typename?: 'PullDetailCommit';
   _id: Scalars['ID']['output'];
@@ -452,6 +460,8 @@ export type Query = {
   doltSchemas: Array<SchemaItem>;
   doltServerStatus: DoltServerStatus;
   fetchRemote: FetchRes;
+  pullConflictsSummary?: Maybe<Array<PullConflictSummary>>;
+  pullRowConflicts: RowConflictList;
   pullWithDetails: PullWithDetails;
   remoteBranchDiffCounts: RemoteBranchDiffCounts;
   remoteBranches: BranchList;
@@ -585,6 +595,21 @@ export type QueryDoltServerStatusArgs = {
 export type QueryFetchRemoteArgs = {
   databaseName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
+};
+
+
+export type QueryPullConflictsSummaryArgs = {
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+};
+
+
+export type QueryPullRowConflictsArgs = {
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
 };
 
 
@@ -746,6 +771,20 @@ export type RemoteList = {
 export type Row = {
   __typename?: 'Row';
   columnValues: Array<ColumnValue>;
+};
+
+export type RowConflict = {
+  __typename?: 'RowConflict';
+  base?: Maybe<Row>;
+  ours?: Maybe<Row>;
+  theirs?: Maybe<Row>;
+};
+
+export type RowConflictList = {
+  __typename?: 'RowConflictList';
+  columns: Array<Scalars['String']['output']>;
+  list: Array<RowConflict>;
+  nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
 export type RowDiff = {
@@ -1264,6 +1303,18 @@ export type DocPageQueryNoBranchQueryVariables = Exact<{
 
 export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?: { __typename?: 'Branch', _id: string, branchName: string } | null };
 
+export type RowConflictFragment = { __typename?: 'RowConflict', base?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, ours?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, theirs?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type PullRowConflictsQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
+}>;
+
+
+export type PullRowConflictsQuery = { __typename?: 'Query', pullRowConflicts: { __typename?: 'RowConflictList', columns: Array<string>, list: Array<{ __typename?: 'RowConflict', base?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, ours?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, theirs?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+
 export type GetBranchForPullQueryVariables = Exact<{
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
@@ -1281,6 +1332,17 @@ export type MergePullMutationVariables = Exact<{
 
 
 export type MergePullMutation = { __typename?: 'Mutation', mergePull: boolean };
+
+export type PullConflictSummaryFragment = { __typename?: 'PullConflictSummary', _id: string, tableName: string, numDataConflicts?: number | null, numSchemaConflicts?: number | null };
+
+export type PullConflictsSummaryQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+}>;
+
+
+export type PullConflictsSummaryQuery = { __typename?: 'Query', pullConflictsSummary?: Array<{ __typename?: 'PullConflictSummary', _id: string, tableName: string, numDataConflicts?: number | null, numSchemaConflicts?: number | null }> | null };
 
 export type PullDetailCommitFragment = { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null };
 
@@ -1792,6 +1854,27 @@ export const DocColumnValuesForDocPageFragmentDoc = gql`
   columnValues {
     displayValue
   }
+}
+    `;
+export const RowConflictFragmentDoc = gql`
+    fragment RowConflict on RowConflict {
+  base {
+    ...RowForTableList
+  }
+  ours {
+    ...RowForTableList
+  }
+  theirs {
+    ...RowForTableList
+  }
+}
+    ${RowForTableListFragmentDoc}`;
+export const PullConflictSummaryFragmentDoc = gql`
+    fragment PullConflictSummary on PullConflictSummary {
+  _id
+  tableName
+  numDataConflicts
+  numSchemaConflicts
 }
     `;
 export const PullDetailCommitFragmentDoc = gql`
@@ -3618,6 +3701,57 @@ export type DocPageQueryNoBranchHookResult = ReturnType<typeof useDocPageQueryNo
 export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchLazyQuery>;
 export type DocPageQueryNoBranchSuspenseQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchSuspenseQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
+export const PullRowConflictsDocument = gql`
+    query PullRowConflicts($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $tableName: String!) {
+  pullRowConflicts(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+    tableName: $tableName
+  ) {
+    columns
+    list {
+      ...RowConflict
+    }
+  }
+}
+    ${RowConflictFragmentDoc}`;
+
+/**
+ * __usePullRowConflictsQuery__
+ *
+ * To run a query within a React component, call `usePullRowConflictsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePullRowConflictsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePullRowConflictsQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *      tableName: // value for 'tableName'
+ *   },
+ * });
+ */
+export function usePullRowConflictsQuery(baseOptions: Apollo.QueryHookOptions<PullRowConflictsQuery, PullRowConflictsQueryVariables> & ({ variables: PullRowConflictsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PullRowConflictsQuery, PullRowConflictsQueryVariables>(PullRowConflictsDocument, options);
+      }
+export function usePullRowConflictsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PullRowConflictsQuery, PullRowConflictsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PullRowConflictsQuery, PullRowConflictsQueryVariables>(PullRowConflictsDocument, options);
+        }
+export function usePullRowConflictsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PullRowConflictsQuery, PullRowConflictsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PullRowConflictsQuery, PullRowConflictsQueryVariables>(PullRowConflictsDocument, options);
+        }
+export type PullRowConflictsQueryHookResult = ReturnType<typeof usePullRowConflictsQuery>;
+export type PullRowConflictsLazyQueryHookResult = ReturnType<typeof usePullRowConflictsLazyQuery>;
+export type PullRowConflictsSuspenseQueryHookResult = ReturnType<typeof usePullRowConflictsSuspenseQuery>;
+export type PullRowConflictsQueryResult = Apollo.QueryResult<PullRowConflictsQuery, PullRowConflictsQueryVariables>;
 export const GetBranchForPullDocument = gql`
     query GetBranchForPull($branchName: String!, $databaseName: String!) {
   branch(branchName: $branchName, databaseName: $databaseName) {
@@ -3698,6 +3832,52 @@ export function useMergePullMutation(baseOptions?: Apollo.MutationHookOptions<Me
 export type MergePullMutationHookResult = ReturnType<typeof useMergePullMutation>;
 export type MergePullMutationResult = Apollo.MutationResult<MergePullMutation>;
 export type MergePullMutationOptions = Apollo.BaseMutationOptions<MergePullMutation, MergePullMutationVariables>;
+export const PullConflictsSummaryDocument = gql`
+    query PullConflictsSummary($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
+  pullConflictsSummary(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+  ) {
+    ...PullConflictSummary
+  }
+}
+    ${PullConflictSummaryFragmentDoc}`;
+
+/**
+ * __usePullConflictsSummaryQuery__
+ *
+ * To run a query within a React component, call `usePullConflictsSummaryQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePullConflictsSummaryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePullConflictsSummaryQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *   },
+ * });
+ */
+export function usePullConflictsSummaryQuery(baseOptions: Apollo.QueryHookOptions<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables> & ({ variables: PullConflictsSummaryQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables>(PullConflictsSummaryDocument, options);
+      }
+export function usePullConflictsSummaryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables>(PullConflictsSummaryDocument, options);
+        }
+export function usePullConflictsSummarySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables>(PullConflictsSummaryDocument, options);
+        }
+export type PullConflictsSummaryQueryHookResult = ReturnType<typeof usePullConflictsSummaryQuery>;
+export type PullConflictsSummaryLazyQueryHookResult = ReturnType<typeof usePullConflictsSummaryLazyQuery>;
+export type PullConflictsSummarySuspenseQueryHookResult = ReturnType<typeof usePullConflictsSummarySuspenseQuery>;
+export type PullConflictsSummaryQueryResult = Apollo.QueryResult<PullConflictsSummaryQuery, PullConflictsSummaryQueryVariables>;
 export const PullDetailsForPullDetailsDocument = gql`
     query PullDetailsForPullDetails($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
   pullWithDetails(

@@ -314,6 +314,14 @@ export class MySQLQueryFactory
     throw notDoltError("get row sided diffs");
   }
 
+  async getPullConflictsSummary(_: t.BranchesArgs): t.PR {
+    throw notDoltError("get pull conflicts summary");
+  }
+
+  async getPullRowConflicts(_: t.BranchesArgs & { tableName: string }): t.PR {
+    throw notDoltError("get pull conflicts summary");
+  }
+
   async restoreAllTables(_: t.RefArgs): t.PR {
     throw notDoltError("restore all tables");
   }

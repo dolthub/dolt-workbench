@@ -34,7 +34,7 @@ export default function ForPullDiff(props: Props) {
         wide
         hideDefaultTable
       >
-        <NotDoltWrapper showNotDoltMsg feature="Viewing pull requests" bigMsg>
+        <NotDoltWrapper showNotDoltMsg feature="Viewing pull diffs" bigMsg>
           <DiffTable {...props} />
         </NotDoltWrapper>
       </ForDefaultBranch>

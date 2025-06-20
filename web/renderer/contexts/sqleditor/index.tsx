@@ -1,3 +1,4 @@
+import { createCustomContext } from "@dolthub/react-contexts";
 import {
   useContextWithError,
   useReactiveWidth,
@@ -6,7 +7,6 @@ import {
 } from "@dolthub/react-hooks";
 import useApolloError from "@hooks/useApolloError";
 import useSqlParser from "@hooks/useSqlParser";
-import { createCustomContext } from "@lib/createCustomContext";
 import { ApolloErrorType } from "@lib/errors/types";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";

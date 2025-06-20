@@ -102,3 +102,7 @@ export type PullDiffParams = Required<PullParams>;
 export type PullDiffParamsOptionalTableName = PullDiffParams & {
   tableName?: string | null;
 };
+
+export type PullDiffParamsWithTableName = PullDiffParams & {
+  tableName: string;
+};

@@ -4,6 +4,7 @@ import ForCommits from "./ForCommits";
 import ForCreateTable from "./ForCreateTable";
 import ForDefaultBranch from "./ForDefaultBranch";
 import ForDocs from "./ForDocs";
+import ForPullConflicts from "./ForPullConflicts";
 import ForPullDiff from "./ForPullDiff";
 import ForPulls from "./ForPulls";
 import ForQuery from "./ForQuery";
@@ -23,6 +24,7 @@ export default Object.assign(DatabasePage, {
   ForDocs,
   ForQuery,
   ForPulls,
+  ForPullConflicts,
   ForPullDiff,
   ForRef,
   ForReleases,
