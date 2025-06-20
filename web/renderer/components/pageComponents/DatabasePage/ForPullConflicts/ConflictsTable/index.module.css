@@ -1,6 +1,14 @@
+.container {
+  @apply relative overflow-x-auto lg:overflow-x-visible;
+}
+
 .table {
-  @apply border-separate text-sm font-mono leading-loose;
+  @apply border-separate text-sm font-mono leading-loose overflow-hidden;
   border-spacing: 0;
+
+  tbody {
+    @apply whitespace-nowrap;
+  }
 
   th,
   td {

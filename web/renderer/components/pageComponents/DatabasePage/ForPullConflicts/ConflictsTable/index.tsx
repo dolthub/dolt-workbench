@@ -6,7 +6,6 @@ import css from "./index.module.css";
 type Props = {
   rows: RowConflictFragment[];
   columns: string[];
-  tableName: string;
 };
 
 export default function ConflictsTable(props: Props) {
@@ -21,18 +20,18 @@ export default function ConflictsTable(props: Props) {
   };
 
   return (
-    <table className={css.table}>
-      <thead>
-        <tr>
-          <th />
-          {props.columns.map(c => (
-            <th key={c}>{c}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {props.rows.map((r, rowIndex) => {
-          return (
+    <div className={css.container}>
+      <table className={css.table}>
+        <thead>
+          <tr>
+            <th />
+            {props.columns.map(c => (
+              <th key={c}>{c}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {props.rows.map((r, rowIndex) => (
             <React.Fragment key={rowIndex}>
               <tr>
                 <td>base</td>
@@ -67,9 +66,9 @@ export default function ConflictsTable(props: Props) {
                 ))}
               </tr>
             </React.Fragment>
-          );
-        })}
-      </tbody>
-    </table>
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }

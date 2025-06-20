@@ -27,6 +27,7 @@ export default function useMergeButton(params: PullDiffParams) {
 
   const hasConflicts =
     errorMatches(gqlPullHasConflicts, res.err) ||
+    errorMatches("conflicts found", res.err) ||
     !!conflictsRes.data?.pullConflictsSummary?.length;
   const disabled = hasConflicts;
 

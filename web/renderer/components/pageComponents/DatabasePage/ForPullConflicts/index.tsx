@@ -39,7 +39,11 @@ export default function ForPullConflicts(props: Props) {
   );
 }
 
-function Inner(props: Props) {
+type InnerProps = {
+  params: PullDiffParams;
+};
+
+function Inner(props: InnerProps) {
   const { activeTableName } = useConflictsContext();
   const res = usePullRowConflictsQuery({
     variables: {
@@ -57,7 +61,6 @@ function Inner(props: Props) {
         result={res}
         render={data => (
           <ConflictsTable
-            tableName={activeTableName}
             columns={data.pullRowConflicts.columns}
             rows={data.pullRowConflicts.list}
           />
