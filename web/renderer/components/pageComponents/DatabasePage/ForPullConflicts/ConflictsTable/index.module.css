@@ -1,22 +1,31 @@
 .table {
-  @apply border-separate text-sm font-mono leading-loose w-full;
+  @apply border-separate text-sm font-mono leading-loose;
   border-spacing: 0;
-}
 
-.table thead th {
-  @apply font-bold max-w-full whitespace-nowrap text-left bg-stone-50 border-b border-stone-100 pr-8 pl-2 py-3;
-}
+  th,
+  td {
+    @apply pr-8 pl-4 py-1;
+  }
 
-.table tbody td {
-  @apply border-b border-stone-100 relative pr-8 pl-2 py-2 max-w-[400px] min-w-[130px];
-}
+  th {
+    @apply font-semibold max-w-full whitespace-nowrap text-left border-b-3 border-stone-100;
+  }
 
-.table tbody tr:hover {
-  @apply bg-stone-50;
-}
+  td {
+    @apply border-b border-stone-100 relative max-w-[400px] min-w-[130px];
 
-.table tbody td:first-child {
-  @apply font-semibold text-stone-600 bg-stone-50 sticky left-0 min-w-[80px] max-w-[80px] text-center;
+    &:first-child {
+      @apply font-semibold text-stone-600 bg-stone-50 sticky left-0 min-w-[80px] max-w-[80px] text-center;
+    }
+  }
+
+  .theirsRow td {
+    @apply border-b-3;
+  }
+
+  tr:hover {
+    @apply bg-stone-50;
+  }
 }
 
 .oursRow {

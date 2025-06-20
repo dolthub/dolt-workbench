@@ -1,0 +1,7 @@
+.container {
+  @apply mx-10 my-6;
+
+  h3 {
+    @apply mb-6;
+  }
+}

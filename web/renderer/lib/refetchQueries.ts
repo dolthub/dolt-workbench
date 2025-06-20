@@ -141,6 +141,30 @@ export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
   },
 };
 
+export const refetchMergeQueriesCacheEvict: RefetchOptions = {
+  updateCache(cache: TCacheShape) {
+    [
+      "docs",
+      "pullWithDetails",
+      // We don't include `pull` here to avoid multiple pull logs on merge
+      "pulls",
+      "doc",
+      "rows",
+      "tableNames",
+      "table",
+      "branch",
+      "defaultBranch",
+      "branches",
+      "branchOrDefault",
+      "docOrDefaultDoc",
+      "pullConflictsSummary",
+    ].forEach(fieldName => {
+      cache.evict({ fieldName });
+    });
+    cache.gc();
+  },
+};
+
 export const refetchRemoteBranchesQueries = (
   variables: RequiredRefsParams,
 ): RefetchQueries => [

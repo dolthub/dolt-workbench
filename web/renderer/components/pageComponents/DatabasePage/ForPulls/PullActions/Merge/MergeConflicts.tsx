@@ -23,7 +23,14 @@ export default function MergeConflicts(props: Props) {
             <li key={conflict._id}>
               <span className={css.conflictsTable}>
                 <ImTable2 />
-                {conflict.tableName}
+                <Link
+                  {...pullConflicts({
+                    ...props.params,
+                    tableName: conflict.tableName,
+                  })}
+                >
+                  {conflict.tableName}
+                </Link>
               </span>
               <span>
                 {getNumConflictsMsg(conflict)}{" "}
@@ -37,9 +44,6 @@ export default function MergeConflicts(props: Props) {
           ))}
         </ul>
       )}
-      <p>
-        <Link {...pullConflicts(props.params)}>View data conflicts</Link>
-      </p>
     </span>
   );
 }

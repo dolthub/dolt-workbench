@@ -1,0 +1,48 @@
+.container {
+  @apply bg-stone-50 pt-3 flex flex-col;
+}
+
+.openContainer {
+  @apply transition-width w-96 min-w-[24rem] duration-75;
+  flex-basis: 24rem;
+}
+
+.closedContainer {
+  @apply transition-width w-16 duration-75 basis-12;
+
+  h4 {
+    @apply hidden;
+  }
+}
+
+.top {
+  @apply flex justify-between items-center w-full px-3;
+}
+
+.openItem {
+  @apply opacity-100 transition-opacity duration-75 overflow-y-auto px-4;
+}
+
+.closedItem {
+  @apply hidden;
+}
+
+.menuIcon {
+  @apply text-sky-300 cursor-pointer mt-2.5 ml-2 mr-2 pb-0 mb-5 hidden sm:block;
+}
+
+.table {
+  @apply mt-5;
+  td,
+  th {
+    @apply pr-7 py-1;
+  }
+
+  th {
+    @apply font-semibold;
+  }
+}
+
+.activeTableName {
+  @apply font-semibold;
+}

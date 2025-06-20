@@ -24,9 +24,6 @@ export class PullConflictsResolver {
   ): Promise<PullConflictSummary[]> {
     const conn = this.conn.connection();
     const res = await conn.getPullConflictsSummary(args);
-    res.forEach(async r => {
-      await this.pullRowConflicts({ ...args, tableName: r.table });
-    });
     return res.map(r =>
       fromAPIModelPullConflictSummary(
         r,
@@ -43,9 +40,6 @@ export class PullConflictsResolver {
   ): Promise<RowConflictList> {
     const conn = this.conn.connection();
     const res = await conn.getPullRowConflicts(args);
-    console.log("CONFLICTS RES", res);
-    const mapped = fromAPIModelRowConflictList(res);
-    console.log("MAPPED CONFLICTS", mapped);
-    return mapped;
+    return fromAPIModelRowConflictList(res);
   }
 }

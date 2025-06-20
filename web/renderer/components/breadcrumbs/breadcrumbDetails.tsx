@@ -280,3 +280,34 @@ export function pullDiffBreadcrumbDetails(
     },
   ];
 }
+
+export function pullConflictBreadcrumbDetails(
+  params: PullDiffParams,
+): BreadcrumbDetails[] {
+  const pullLink = <PullLink params={params}>pull request</PullLink>;
+  const pullConflictText = <span>conflicts</span>;
+  const commitDiffText = (
+    <span>
+      {params.refName}...{params.fromBranchName}
+    </span>
+  );
+
+  return [
+    ...databaseBreadcrumbs(params),
+    {
+      child: pullLink,
+      name: BreadcrumbName.DBPull,
+      type: BreadcrumbType.Link,
+    },
+    {
+      child: pullConflictText,
+      name: BreadcrumbName.DBPullConflicts,
+      type: BreadcrumbType.Text,
+    },
+    {
+      child: commitDiffText,
+      name: BreadcrumbName.DBPullDiffRange,
+      type: BreadcrumbType.Text,
+    },
+  ];
+}

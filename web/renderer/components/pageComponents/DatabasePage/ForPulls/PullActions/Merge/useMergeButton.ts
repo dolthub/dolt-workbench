@@ -1,6 +1,5 @@
 import { useSetState } from "@dolthub/react-hooks";
 import {
-  PullDetailsForPullDetailsDocument,
   useMergePullMutation,
   usePullConflictsSummaryQuery,
 } from "@gen/graphql-types";
@@ -9,6 +8,7 @@ import { useUserHeaders } from "@hooks/useUserHeaders";
 import { gqlPullHasConflicts } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { PullDiffParams } from "@lib/params";
+import { refetchMergeQueriesCacheEvict } from "@lib/refetchQueries";
 
 export default function useMergeButton(params: PullDiffParams) {
   const userHeaders = useUserHeaders();
@@ -20,7 +20,6 @@ export default function useMergeButton(params: PullDiffParams) {
   const variables = { ...params, toBranchName: params.refName };
   const { mutateFn: merge, ...res } = useMutation({
     hook: useMergePullMutation,
-    refetchQueries: [{ query: PullDetailsForPullDetailsDocument, variables }],
   });
   const conflictsRes = usePullConflictsSummaryQuery({
     variables,
@@ -41,6 +40,10 @@ export default function useMergeButton(params: PullDiffParams) {
             : undefined,
       },
     });
+
+    res.client
+      .refetchQueries(refetchMergeQueriesCacheEvict)
+      .catch(console.error);
   };
 
   return {

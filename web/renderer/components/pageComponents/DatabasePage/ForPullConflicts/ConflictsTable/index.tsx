@@ -1,17 +1,22 @@
-import React from "react";
 import { RowConflictFragment } from "@gen/graphql-types";
-import css from "./index.module.css";
 import cx from "classnames";
+import React from "react";
+import css from "./index.module.css";
 
 type Props = {
   rows: RowConflictFragment[];
   columns: string[];
+  tableName: string;
 };
 
 export default function ConflictsTable(props: Props) {
-  const isConflicted = (rowConflict: RowConflictFragment, columnIndex: number): boolean => {
+  const isConflicted = (
+    rowConflict: RowConflictFragment,
+    columnIndex: number,
+  ): boolean => {
     const oursValue = rowConflict.ours?.columnValues[columnIndex]?.displayValue;
-    const theirsValue = rowConflict.theirs?.columnValues[columnIndex]?.displayValue;
+    const theirsValue =
+      rowConflict.theirs?.columnValues[columnIndex]?.displayValue;
     return oursValue !== theirsValue;
   };
 
@@ -19,9 +24,9 @@ export default function ConflictsTable(props: Props) {
     <table className={css.table}>
       <thead>
         <tr>
-          <td />
+          <th />
           {props.columns.map(c => (
-            <td key={c}>{c}</td>
+            <th key={c}>{c}</th>
           ))}
         </tr>
       </thead>
@@ -38,10 +43,10 @@ export default function ConflictsTable(props: Props) {
               <tr className={css.oursRow}>
                 <td>ours</td>
                 {r.ours?.columnValues.map((cv, colIndex) => (
-                  <td 
+                  <td
                     key={colIndex}
                     className={cx({
-                      [css.oursConflictedCell]: isConflicted(r, colIndex)
+                      [css.oursConflictedCell]: isConflicted(r, colIndex),
                     })}
                   >
                     {cv.displayValue}
@@ -51,10 +56,10 @@ export default function ConflictsTable(props: Props) {
               <tr className={css.theirsRow}>
                 <td>theirs</td>
                 {r.theirs?.columnValues.map((cv, colIndex) => (
-                  <td 
+                  <td
                     key={colIndex}
                     className={cx({
-                      [css.theirsConflictedCell]: isConflicted(r, colIndex)
+                      [css.theirsConflictedCell]: isConflicted(r, colIndex),
                     })}
                   >
                     {cv.displayValue}
