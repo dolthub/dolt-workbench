@@ -59,7 +59,7 @@
     "lodash": "^4.17.21",
     "next": "^15.2.4",
     "next-useragent": "^2.8.0",
-    "node-sql-parser": "^4.17.0",
+    "node-sql-parser": "^5.3.10",
     "react": "^19.0.0",
     "react-ace": "^14.0.1",
     "react-copy-to-clipboard": "^5.1.0",
