@@ -90,6 +90,7 @@
     "testEnvironment": "node"
   },
   "resolutions": {
+    "brace-expansion": "2.0.2",
     "multer": "2.0.1"
   }
 }
