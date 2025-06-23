@@ -33,7 +33,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-cypress": "^4.3.0",
     "eslint-plugin-import": "^2.31.0",
-    "npm-run-all2": "^7.0.2",
+    "npm-run-all2": "^8.0.4",
     "prettier": "^3.5.3"
   },
   "resolutions": {
