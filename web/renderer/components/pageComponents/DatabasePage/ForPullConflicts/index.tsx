@@ -1,7 +1,6 @@
 import PullConflictBreadcrumbs from "@components/breadcrumbs/PullConflictBreadcrumbs";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
-import { QueryHandler } from "@dolthub/react-components";
-import { usePullRowConflictsQuery } from "@gen/graphql-types";
+import { Loader } from "@dolthub/react-components";
 import { PullDiffParams } from "@lib/params";
 import { pulls } from "@lib/urls";
 import ForDefaultBranch from "../ForDefaultBranch";
@@ -9,6 +8,7 @@ import ConflictsTable from "./ConflictsTable";
 import { ConflictsProvider, useConflictsContext } from "./contexts/conflicts";
 import css from "./index.module.css";
 import LeftNav from "./LeftNav";
+import useRowConflicts from "./useRowConflicts";
 
 type Props = {
   params: PullDiffParams;
@@ -45,27 +45,20 @@ type InnerProps = {
 
 function Inner(props: InnerProps) {
   const { activeTableName } = useConflictsContext();
-  const res = usePullRowConflictsQuery({
-    variables: {
-      ...props.params,
-      toBranchName: props.params.refName,
-      tableName: activeTableName,
-    },
-  });
+  const res = useRowConflicts({ ...props.params, tableName: activeTableName });
   return (
     <div className={css.container}>
       <h3>
         Conflicted rows in <code>{activeTableName}</code>
       </h3>
-      <QueryHandler
-        result={res}
-        render={data => (
-          <ConflictsTable
-            columns={data.pullRowConflicts.columns}
-            rows={data.pullRowConflicts.list}
-          />
-        )}
-      />
+      <Loader loaded={!res.loading}>
+        <ConflictsTable
+          state={res.state}
+          fetchMore={res.fetchMore}
+          hasMore={res.hasMore}
+          error={res.error}
+        />
+      </Loader>
     </div>
   );
 }

@@ -85,7 +85,7 @@ export const getCallMerge = (hasAuthor = false) =>
 
 export const mergeConflictsSummaryQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY(?, ?)`;
 
-export const mergeConflictsQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS(?, ?, ?)`;
+export const mergeConflictsQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS(?, ?, ?) LIMIT ? OFFSET ?`;
 
 // REMOTES
 

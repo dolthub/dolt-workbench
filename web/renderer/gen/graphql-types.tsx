@@ -608,6 +608,7 @@ export type QueryPullConflictsSummaryArgs = {
 export type QueryPullRowConflictsArgs = {
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   tableName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
 };
@@ -1305,15 +1306,18 @@ export type DocPageQueryNoBranchQuery = { __typename?: 'Query', branchOrDefault?
 
 export type RowConflictFragment = { __typename?: 'RowConflict', base?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, ours?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, theirs?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
 
+export type RowConflictListFragment = { __typename?: 'RowConflictList', columns: Array<string>, nextOffset?: number | null, list: Array<{ __typename?: 'RowConflict', base?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, ours?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, theirs?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> };
+
 export type PullRowConflictsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
   tableName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type PullRowConflictsQuery = { __typename?: 'Query', pullRowConflicts: { __typename?: 'RowConflictList', columns: Array<string>, list: Array<{ __typename?: 'RowConflict', base?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, ours?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, theirs?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+export type PullRowConflictsQuery = { __typename?: 'Query', pullRowConflicts: { __typename?: 'RowConflictList', columns: Array<string>, nextOffset?: number | null, list: Array<{ __typename?: 'RowConflict', base?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, ours?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null, theirs?: { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
 
 export type GetBranchForPullQueryVariables = Exact<{
   branchName: Scalars['String']['input'];
@@ -1869,6 +1873,15 @@ export const RowConflictFragmentDoc = gql`
   }
 }
     ${RowForTableListFragmentDoc}`;
+export const RowConflictListFragmentDoc = gql`
+    fragment RowConflictList on RowConflictList {
+  columns
+  nextOffset
+  list {
+    ...RowConflict
+  }
+}
+    ${RowConflictFragmentDoc}`;
 export const PullConflictSummaryFragmentDoc = gql`
     fragment PullConflictSummary on PullConflictSummary {
   _id
@@ -3702,20 +3715,18 @@ export type DocPageQueryNoBranchLazyQueryHookResult = ReturnType<typeof useDocPa
 export type DocPageQueryNoBranchSuspenseQueryHookResult = ReturnType<typeof useDocPageQueryNoBranchSuspenseQuery>;
 export type DocPageQueryNoBranchQueryResult = Apollo.QueryResult<DocPageQueryNoBranchQuery, DocPageQueryNoBranchQueryVariables>;
 export const PullRowConflictsDocument = gql`
-    query PullRowConflicts($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $tableName: String!) {
+    query PullRowConflicts($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $tableName: String!, $offset: Int) {
   pullRowConflicts(
     databaseName: $databaseName
     fromBranchName: $fromBranchName
     toBranchName: $toBranchName
     tableName: $tableName
+    offset: $offset
   ) {
-    columns
-    list {
-      ...RowConflict
-    }
+    ...RowConflictList
   }
 }
-    ${RowConflictFragmentDoc}`;
+    ${RowConflictListFragmentDoc}`;
 
 /**
  * __usePullRowConflictsQuery__
@@ -3733,6 +3744,7 @@ export const PullRowConflictsDocument = gql`
  *      fromBranchName: // value for 'fromBranchName'
  *      toBranchName: // value for 'toBranchName'
  *      tableName: // value for 'tableName'
+ *      offset: // value for 'offset'
  *   },
  * });
  */

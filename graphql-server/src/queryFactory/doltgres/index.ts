@@ -400,10 +400,10 @@ export class DoltgresQueryFactory
   }
 
   async getPullRowConflicts(
-    args: t.BranchesArgs & { tableName: string },
+    args: t.BranchesArgs & { tableName: string; offset: number },
   ): t.PR {
     return this.query(
-      qh.mergeConflictsQuery,
+      qh.getMergeConflictsQuery(args.offset),
       [args.fromBranchName, args.toBranchName, args.tableName],
       args.databaseName,
       args.refName,
