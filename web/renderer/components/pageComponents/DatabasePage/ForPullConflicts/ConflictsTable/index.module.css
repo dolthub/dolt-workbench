@@ -2,6 +2,10 @@
   @apply relative overflow-x-auto lg:overflow-x-visible;
 }
 
+.infiniteScrollContainer {
+  @apply overflow-auto lg:overflow-visible hidden lg:block;
+}
+
 .table {
   @apply border-separate text-sm font-mono leading-loose overflow-hidden;
   border-spacing: 0;

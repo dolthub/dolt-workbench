@@ -1,6 +1,7 @@
 import { Field, ID, Int, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
 import * as row from "../rows/row.model";
+import { getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 
 @ObjectType()
@@ -53,7 +54,10 @@ export function fromAPIModelPullConflictSummary(
   };
 }
 
-export function fromAPIModelRowConflictList(list: RawRow[]): RowConflictList {
+export function fromAPIModelRowConflictList(
+  list: RawRow[],
+  offset: number,
+): RowConflictList {
   const colsMap = new Map<string, boolean>();
 
   const rowConflictsList: RowConflict[] = list.map(l => {
@@ -85,7 +89,7 @@ export function fromAPIModelRowConflictList(list: RawRow[]): RowConflictList {
 
   return {
     list: rowConflictsList,
-    nextOffset: undefined,
+    nextOffset: getNextOffset(rowConflictsList.length, offset),
     columns: colsMap.size > 0 ? Array.from(colsMap.keys()) : [],
   };
 }

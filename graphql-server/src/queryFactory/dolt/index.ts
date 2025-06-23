@@ -407,11 +407,17 @@ export class DoltQueryFactory
   }
 
   async getPullRowConflicts(
-    args: t.BranchesArgs & { tableName: string },
+    args: t.BranchesArgs & { tableName: string; offset: number },
   ): t.PR {
     return this.query(
       qh.mergeConflictsQuery,
-      [args.fromBranchName, args.toBranchName, args.tableName],
+      [
+        args.fromBranchName,
+        args.toBranchName,
+        args.tableName,
+        ROW_LIMIT + 1,
+        args.offset,
+      ],
       args.databaseName,
       args.refName,
     );

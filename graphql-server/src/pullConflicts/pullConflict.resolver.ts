@@ -1,4 +1,4 @@
-import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { PullArgs } from "../utils/commonTypes";
 import {
@@ -12,6 +12,9 @@ import {
 class TableConflictArgs extends PullArgs {
   @Field()
   tableName: string;
+
+  @Field(_type => Int, { nullable: true })
+  offset?: number;
 }
 
 @Resolver(_of => PullConflictSummary)
@@ -39,7 +42,8 @@ export class PullConflictsResolver {
     @Args() args: TableConflictArgs,
   ): Promise<RowConflictList> {
     const conn = this.conn.connection();
-    const res = await conn.getPullRowConflicts(args);
-    return fromAPIModelRowConflictList(res);
+    const offset = args.offset ?? 0;
+    const res = await conn.getPullRowConflicts({ ...args, offset });
+    return fromAPIModelRowConflictList(res, offset);
   }
 }

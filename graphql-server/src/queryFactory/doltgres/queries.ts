@@ -96,7 +96,8 @@ export const getCallMerge = (hasAuthor = false) =>
 
 export const mergeConflictsSummaryQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY($1::text, $2::text)`;
 
-export const mergeConflictsQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS($1::text, $2::text. $3::text)`;
+export const getMergeConflictsQuery = (offset: number) =>
+  `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS($1::text, $2::text. $3::text) LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`;
 
 // TAGS
 

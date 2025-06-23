@@ -151,7 +151,9 @@ export declare class QueryFactory {
 
   getPullConflictsSummary(args: t.BranchesArgs): t.PR;
 
-  getPullRowConflicts(args: t.BranchesArgs & { tableName: string }): t.PR;
+  getPullRowConflicts(
+    args: t.BranchesArgs & { tableName: string; offset: number },
+  ): t.PR;
 
   restoreAllTables(args: t.RefArgs): t.PR;
 

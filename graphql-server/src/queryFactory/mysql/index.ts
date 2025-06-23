@@ -318,7 +318,9 @@ export class MySQLQueryFactory
     throw notDoltError("get pull conflicts summary");
   }
 
-  async getPullRowConflicts(_: t.BranchesArgs & { tableName: string }): t.PR {
+  async getPullRowConflicts(
+    _: t.BranchesArgs & { tableName: string; offset: number },
+  ): t.PR {
     throw notDoltError("get pull conflicts summary");
   }
 
