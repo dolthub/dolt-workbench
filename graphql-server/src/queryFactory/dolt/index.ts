@@ -400,7 +400,7 @@ export class DoltQueryFactory
   async getPullConflictsSummary(args: t.BranchesArgs): t.PR {
     return this.query(
       qh.mergeConflictsSummaryQuery,
-      [args.fromBranchName, args.toBranchName],
+      [args.toBranchName, args.fromBranchName],
       args.databaseName,
       args.refName,
     );
@@ -412,8 +412,8 @@ export class DoltQueryFactory
     return this.query(
       qh.mergeConflictsQuery,
       [
-        args.fromBranchName,
         args.toBranchName,
+        args.fromBranchName,
         args.tableName,
         ROW_LIMIT + 1,
         args.offset,
