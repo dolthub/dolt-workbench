@@ -22,6 +22,9 @@ export default [
       "build/**",
       "node_modules/**",
       "*.config.js",
+      "*.config.mjs",
+      "renderer/*.config.js",
+      "renderer/*.config.mjs",
     ],
   },
   {
