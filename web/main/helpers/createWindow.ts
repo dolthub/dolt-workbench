@@ -20,6 +20,7 @@ export const createWindow = (
     y: options.y ?? 0,
   };
   let state = {};
+  let win: BrowserWindow;
 
   const restore = () => store.get(key, defaultSize);
 
@@ -68,7 +69,7 @@ export const createWindow = (
   };
 
   state = ensureVisibleOnSomeDisplay(restore());
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     ...state,
     ...options,
     webPreferences: {

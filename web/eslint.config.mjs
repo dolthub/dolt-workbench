@@ -25,6 +25,9 @@ export default [
       "*.config.mjs",
       "renderer/*.config.js",
       "renderer/*.config.mjs",
+      "main/preload.d.ts",
+      ".next/**",
+      "build/**",
     ],
   },
   {
@@ -99,7 +102,7 @@ export default [
     rules: {
       // ESLint base rules
       ...js.configs.recommended.rules,
-      
+
       // TypeScript rules
       "@typescript-eslint/array-type": ["error", { default: "array-simple" }],
       "@typescript-eslint/await-thenable": "error",
