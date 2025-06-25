@@ -1,27 +1,27 @@
-import path from "path";
+import { ChildProcess } from "child_process";
 import {
   app,
   BrowserWindow,
+  crashReporter,
   ipcMain,
+  IpcMainEvent,
   Menu,
   shell,
+  systemPreferences,
   utilityProcess,
   UtilityProcess,
-  IpcMainEvent,
-  systemPreferences,
-  crashReporter,
 } from "electron";
 import serve from "electron-serve";
-import { initMenu } from "./helpers/menu";
-import { startServer } from "./doltServer";
-import { ChildProcess } from "child_process";
+import path from "path";
+import { cloneAndStartDatabase } from "./doltClone";
 import { doltLogin } from "./doltLogin";
+import { startServer } from "./doltServer";
+import { createWindow } from "./helpers/createWindow";
+import { initMenu } from "./helpers/menu";
 import {
   getErrorMessage,
   removeDoltServerFolder,
 } from "./helpers/removeDoltServerFolder";
-import { cloneAndStartDatabase } from "./doltClone";
-import { createWindow } from "./helpers/createWindow";
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
@@ -30,6 +30,8 @@ const schemaPath = isProd
   : "../graphql-server/schema.gql";
 process.env.SCHEMA_PATH = schemaPath;
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
+process.env.NEXT_PUBLIC_FOR_MAC_NAV =
+  process.platform === "darwin" ? "true" : "false";
 process.env.NEXT_PUBLIC_USER_DATA_PATH = userDataPath;
 
 const HEADER_HEIGHT = 48;
@@ -66,7 +68,7 @@ function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
 }
 
-function createGraphqlSeverProcess() {
+async function createGraphqlSeverProcess() {
   const serverPath =
     process.env.NODE_ENV === "production"
       ? path.join(
@@ -79,17 +81,17 @@ function createGraphqlSeverProcess() {
       : path.join("../graphql-server", "dist", "main.js");
   graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
-  graphqlServerProcess?.stdout?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess.stdout?.on("data", async (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
     // Send the Server console.log messages to the main browser window
-    mainWindow?.webContents.executeJavaScript(`
+    await mainWindow.webContents.executeJavaScript(`
         console.info('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
   });
 
-  graphqlServerProcess?.stderr?.on("data", (chunk: Buffer) => {
+  graphqlServerProcess.stderr?.on("data", async (chunk: Buffer) => {
     console.error("server error", chunk.toString("utf8"));
     // Send the Server console.error messages out to the main browser window
-    mainWindow?.webContents.executeJavaScript(`
+    await mainWindow.webContents.executeJavaScript(`
         console.error('Server Log:', ${JSON.stringify(chunk.toString("utf8"))})`);
   });
 }
@@ -168,7 +170,7 @@ app.on("ready", async () => {
 
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   setupTitleBarClickMac();
-  createGraphqlSeverProcess();
+  await createGraphqlSeverProcess();
 
   await waitForGraphQLServer("http://localhost:9002/graphql");
 
@@ -183,7 +185,9 @@ app.on("ready", async () => {
   // always deny, optionally redirect to browser
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     if (isExternalUrl(url)) {
-      shell.openExternal(url);
+      shell
+        .openExternal(url)
+        .catch(err => console.error("Failed to open URL:", err));
     }
 
     return { action: "deny" };
@@ -192,9 +196,9 @@ app.on("ready", async () => {
 
   // hit when clicking <a href/> with no target
   // optionally redirect to browser
-  mainWindow.webContents.on("will-navigate", (event, url) => {
+  mainWindow.webContents.on("will-navigate", async (event, url) => {
     if (isExternalUrl(url)) {
-      shell.openExternal(url);
+      await shell.openExternal(url);
       event.preventDefault();
     }
   });

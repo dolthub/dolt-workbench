@@ -1,17 +1,17 @@
+import Link from "@components/links/Link";
 import {
   Button,
   ErrorMsg,
   Popup,
   QueryHandler,
 } from "@dolthub/react-components";
+import { useDelay } from "@dolthub/react-hooks";
 import {
   DatabaseConnectionFragment,
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
-import { useState } from "react";
 import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
-import { useDelay } from "@dolthub/react-hooks";
-import Link from "@components/links/Link";
+import { useState } from "react";
 import css from "./index.module.css";
 
 type InnerProps = {
@@ -49,7 +49,7 @@ function Inner({ connection }: InnerProps) {
       });
 
       // Start login process
-      const loginPromise = window.ipc.doltLogin(connection.name);
+      const loginPromise = await window.ipc.doltLogin(connection.name);
 
       // Wait for either the ID or login completion
       requestId = await Promise.race([

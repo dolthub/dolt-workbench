@@ -39,7 +39,11 @@
   }
 
   th {
-    @apply font-semibold;
+    @apply font-semibold text-left;
+
+    &:not(:first-child) {
+      @apply max-w-full whitespace-nowrap;
+    }
   }
 }
 

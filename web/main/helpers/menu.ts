@@ -1,10 +1,10 @@
 import { workbenchGithubRepo } from "@lib/constants";
 import {
-  shell,
   BrowserWindow,
   Menu,
   MenuItemConstructorOptions,
   app,
+  shell,
 } from "electron";
 
 export function initMenu(
@@ -173,14 +173,14 @@ export function initMenu(
       submenu: [
         {
           label: "Documentation",
-          click() {
-            shell.openExternal("https://docs.dolthub.com/");
+          async click() {
+            await shell.openExternal("https://docs.dolthub.com/");
           },
         },
         {
           label: "View on GitHub",
-          click() {
-            shell.openExternal(workbenchGithubRepo);
+          async click() {
+            await shell.openExternal(workbenchGithubRepo);
           },
         },
       ],

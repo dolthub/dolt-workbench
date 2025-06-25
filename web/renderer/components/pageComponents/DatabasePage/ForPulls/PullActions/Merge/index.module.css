@@ -146,3 +146,7 @@
     @apply border-b border-t-0 left-[0.3rem] top-[1.2rem];
   }
 }
+
+.conflictsLoader {
+  @apply mb-2 ml-0;
+}

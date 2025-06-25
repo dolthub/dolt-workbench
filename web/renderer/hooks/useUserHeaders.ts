@@ -12,7 +12,7 @@ export function useUserHeaders(): UserHeaders | null {
   useEffectAsync(async () => {
     // For Electron, use IPC to fetch headers, otherwise use API, since api routes are not available in Electron
     if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
-      const headersData: any = window.ipc.invoke("get-headers", {});
+      const headersData: any = await window.ipc.invoke("get-headers", {});
       const user = headersData["x-forwarded-user"];
       const email = headersData["x-forwarded-email"];
       if (user || email) {

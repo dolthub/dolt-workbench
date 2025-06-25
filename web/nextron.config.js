@@ -5,5 +5,5 @@ process.env.NEXT_PUBLIC_FOR_MAC_NAV =
 module.exports = {
   mainSrcDir: "main",
   rendererSrcDir: "renderer",
-  webpack: (config, env) => config,
+  webpack: config => config,
 };
