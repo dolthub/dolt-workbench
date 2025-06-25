@@ -1,15 +1,15 @@
 import DeleteModal from "@components/DeleteModal";
+import DoltLink from "@components/links/DoltLink";
+import DoltgresLink from "@components/links/DoltgresLink";
 import { Button } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
   StoredConnectionsDocument,
   useRemoveConnectionMutation,
 } from "@gen/graphql-types";
-import { useRouter } from "next/router";
-import DoltLink from "@components/links/DoltLink";
-import DoltgresLink from "@components/links/DoltgresLink";
-import { useState } from "react";
 import { newConnection } from "@lib/urls";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import Item from "./Item";
 import css from "./index.module.css";
 
@@ -27,9 +27,9 @@ export default function ExistingConnections(props: Props) {
     setIsLocalDolt(local);
   };
 
-  const removeLocalDoltFolder = () => {
+  const removeLocalDoltFolder = async () => {
     try {
-      window.ipc.invoke("remove-dolt-connection", connectionNameToDelete);
+      await window.ipc.invoke("remove-dolt-connection", connectionNameToDelete);
     } catch (error) {
       console.error("Failed to remove local Dolt server:", error);
       return new Error(`Failed to remove local Dolt server: ${error}`);
@@ -102,7 +102,14 @@ export default function ExistingConnections(props: Props) {
           variables: { name: connectionNameToDelete },
           refetchQueries: [{ query: StoredConnectionsDocument }],
         }}
-        callback={isLocalDolt ? () => removeLocalDoltFolder() : undefined}
+        callback={
+          isLocalDolt
+            ? () => {
+                removeLocalDoltFolder().catch(err => console.error(err));
+                return undefined;
+              }
+            : undefined
+        }
         alertMessage={
           isLocalDolt
             ? "This action will permanently delete the local Dolt server and all associated data stored within it. This cannot be undone."

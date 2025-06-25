@@ -53,6 +53,7 @@ export default function useMergeButton(params: PullDiffParams) {
     hasConflicts,
     userHeaders,
     pullConflictsSummary: conflictsRes.data?.pullConflictsSummary,
+    conflictsLoading: conflictsRes.loading,
     state,
     setState,
     mergeState: {

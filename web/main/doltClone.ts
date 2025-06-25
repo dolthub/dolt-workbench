@@ -1,12 +1,12 @@
-import path from "path";
-import { BrowserWindow } from "electron";
 import { ChildProcess, execFile } from "child_process";
+import { BrowserWindow } from "electron";
+import path from "path";
+import { startServerProcess } from "./doltServer";
 import {
   createFolder,
   getDatabasesPath,
   getDoltPaths,
 } from "./helpers/filePath";
-import { startServerProcess } from "./doltServer";
 
 export async function cloneAndStartDatabase(
   owner: string,
@@ -41,7 +41,7 @@ export async function cloneAndStartDatabase(
   }
 }
 
-function cloneDatabase(
+async function cloneDatabase(
   owner: string,
   remoteDatabase: string,
   newDbName: string,

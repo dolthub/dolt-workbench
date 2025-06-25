@@ -1,7 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 const handler = {
-  invoke(channel: string, ...args: unknown[]) {
+  async invoke(channel: string, ...args: unknown[]) {
     return ipcRenderer.invoke(channel, ...args);
   },
   onMenuClicked: (callback: (value: string) => {}) =>
@@ -35,7 +35,7 @@ const handler = {
     ipcRenderer.send("remove-dolt-connection", connectionName),
   getDoltServerError: (callback: (value: string) => {}) =>
     ipcRenderer.on("server-error", (_event, value) => callback(value)),
-  doltLogin: (connectionName: string) =>
+  doltLogin: async (connectionName: string) =>
     ipcRenderer.invoke("dolt-login", connectionName),
   cancelDoltLogin: (requestId: string) =>
     ipcRenderer.send("cancel-dolt-login", requestId),

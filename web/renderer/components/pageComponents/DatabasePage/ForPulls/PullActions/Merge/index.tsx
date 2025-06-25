@@ -1,5 +1,5 @@
 import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
-import { Button } from "@dolthub/react-components";
+import { Button, SmallLoader } from "@dolthub/react-components";
 import { PullDetailsFragment } from "@gen/graphql-types";
 import { PullDiffParams } from "@lib/params";
 import { FiGitPullRequest } from "@react-icons/all-files/fi/FiGitPullRequest";
@@ -20,6 +20,7 @@ type Props = {
 export default function MergeButton(props: Props) {
   const {
     hasConflicts,
+    conflictsLoading,
     onClick,
     disabled,
     userHeaders,
@@ -65,6 +66,11 @@ export default function MergeButton(props: Props) {
             userHeaders={userHeaders}
             className={css.userCheckbox}
             kind="merge commit"
+          />
+          <SmallLoader.WithText
+            text="Checking for merge conflicts..."
+            loaded={!conflictsLoading}
+            outerClassName={css.conflictsLoader}
           />
           {hasConflicts && (
             <MergeConflicts

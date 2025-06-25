@@ -1,7 +1,7 @@
-import path from "path";
-import { BrowserWindow } from "electron";
 import { ChildProcess, execFile, spawn } from "child_process";
+import { BrowserWindow } from "electron";
 import fs from "fs";
+import path from "path";
 import {
   createFolder,
   getDatabasesPath,
@@ -43,7 +43,7 @@ export async function startServer(
 }
 
 //initialize the Dolt repository by running `dolt init` in dbFolderPath
-function initializeDoltRepository(
+async function initializeDoltRepository(
   doltPath: string,
   dbFolderPath: string,
   mainWindow: BrowserWindow,
@@ -56,7 +56,7 @@ function initializeDoltRepository(
       { cwd: dbFolderPath },
       async (error, stdout, stderr) => {
         if (error) {
-          const initErr = `Error initializing Dolt: ${error}`;
+          const initErr = `Error initializing Dolt: ${error.message}`;
           mainWindow.webContents.send("server-error", initErr);
 
           reject(new Error(initErr));
@@ -89,7 +89,7 @@ function initializeDoltRepository(
   });
 }
 
-export function startServerProcess(
+export async function startServerProcess(
   doltPath: string,
   dbFolderPath: string,
   port: string,
@@ -103,7 +103,9 @@ export function startServerProcess(
       fs.mkdirSync(path.dirname(socketPath), { recursive: true });
       try {
         fs.unlinkSync(socketPath);
-      } catch {}
+      } catch {
+        // Ignore error if the socket does not exist
+      }
       argsArray = ["sql-server", "-P", port, "--socket", socketPath];
     }
 
@@ -119,7 +121,7 @@ export function startServerProcess(
       reject(err);
     });
 
-    doltServerProcess.stdout?.on("data", async data => {
+    doltServerProcess.stdout.on("data", async data => {
       const logMsg = data.toString();
       console.log("dolt server process log", logMsg);
       if (
@@ -139,7 +141,7 @@ export function startServerProcess(
       }
     });
 
-    doltServerProcess.stderr?.on("data", async data => {
+    doltServerProcess.stderr.on("data", async data => {
       const errorMsg = data.toString();
       console.log("dolt server process stderr", errorMsg);
       // Check if the message is a warning or an error

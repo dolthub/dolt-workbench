@@ -20,12 +20,11 @@ export async function doltLogin(
 
     let timedOut = false;
     const timeoutDuration = 1 * 60 * 1000; // 1 minutes
+    let child: ChildProcess | undefined;
 
     let timeoutId = setTimeout(() => {
       timedOut = true;
-      if (child) {
-        child.kill(); // Terminate the process
-      }
+      child?.kill(); // Terminate the process
       activeProcesses.delete(requestId);
       mainWindow.webContents.send(
         "server-error",
@@ -34,7 +33,7 @@ export async function doltLogin(
       reject(new Error("Login timed out"));
     }, timeoutDuration);
 
-    const child = execFile(
+    child = execFile(
       doltPath,
       ["login"],
       { cwd: dbFolderPath, maxBuffer: 1024 * 1024 * 10 },
