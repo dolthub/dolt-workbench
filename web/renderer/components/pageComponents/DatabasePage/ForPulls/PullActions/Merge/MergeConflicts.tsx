@@ -1,5 +1,5 @@
 import Link from "@components/links/Link";
-import { pluralize } from "@dolthub/web-utils";
+import { formatNumber, pluralize } from "@dolthub/web-utils";
 import { PullConflictSummaryFragment } from "@gen/graphql-types";
 import { PullDiffParams } from "@lib/params";
 import { pullConflicts } from "@lib/urls";
@@ -50,10 +50,10 @@ export default function MergeConflicts(props: Props) {
 
 function getNumConflictsMsg(con: PullConflictSummaryFragment): string {
   const dataConflicts = con.numDataConflicts
-    ? `${con.numDataConflicts} data`
+    ? `${formatNumber(con.numDataConflicts)} data`
     : "";
   const schemaConflicts = con.numSchemaConflicts
-    ? `${con.numSchemaConflicts} schema`
+    ? `${formatNumber(con.numSchemaConflicts)} schema`
     : "";
   if (dataConflicts && schemaConflicts) {
     return `${dataConflicts} and ${schemaConflicts}`;

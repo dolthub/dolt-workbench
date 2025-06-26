@@ -1,5 +1,6 @@
 import Link from "@components/links/Link";
 import { QueryHandler } from "@dolthub/react-components";
+import { formatNumber } from "@dolthub/web-utils";
 import { PullDiffParams } from "@lib/params";
 import { pullConflicts } from "@lib/urls";
 import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
@@ -71,9 +72,12 @@ function Inner(props: Props) {
                   )}
                 </td>
                 <td>
-                  {s.numDataConflicts === null ? "-" : s.numDataConflicts}
+                  {s.numDataConflicts === null ||
+                  s.numDataConflicts === undefined
+                    ? "-"
+                    : formatNumber(s.numDataConflicts)}
                 </td>
-                <td>{s.numSchemaConflicts}</td>
+                <td>{formatNumber(s.numSchemaConflicts ?? 0)}</td>
               </tr>
             ))}
           </tbody>
