@@ -2,9 +2,9 @@ import {
   shouldBeVisible,
   shouldFindButton,
 } from "@sharedTests/sharedFunctionsAndVariables";
-import { testDBHeader } from "@utils/sharedTests/dbHeaders";
 import { runTests } from "@utils/index";
-import { testRemoteActions } from "@utils/sharedTests/remoteActions";
+import { testDBHeader } from "@utils/sharedTests/dbHeaders";
+import { testFetchFromRemote } from "@utils/sharedTests/remoteActions";
 
 const pageName = "Remotes page";
 const connectionName = "CypressTestConnection";
@@ -19,7 +19,7 @@ describe(pageName, () => {
     ...testDBHeader(connectionName, dbName, hasDocs),
     shouldFindButton("add-remote-button"),
     shouldBeVisible("remote-list"),
-    ...testRemoteActions(remoteName),
+    ...testFetchFromRemote(remoteName),
   ];
 
   runTests({ tests, currentPage, pageName });

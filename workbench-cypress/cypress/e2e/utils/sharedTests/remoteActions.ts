@@ -44,11 +44,11 @@ const openActionModal = (testParams: TestParams): Tests => [
   ),
 ];
 
-const testFetchFromRemote = (remoteName: string): Tests => {
+export const testFetchFromRemote = (remoteName: string): Tests => {
   const testParams = {
     remoteName,
     buttonDataCy: "fetch-button",
-    modalTitle: "Sync with remote",
+    modalTitle: "Manage remote branches",
   };
   return [
     ...openActionModal(testParams),
@@ -61,45 +61,3 @@ const testFetchFromRemote = (remoteName: string): Tests => {
     ),
   ];
 };
-
-const testPullFromRemote = (remoteName: string): Tests => {
-  const testParams = {
-    remoteName,
-    buttonDataCy: "pull-button",
-    modalTitle: "Pull from remote",
-  };
-  return [
-    ...openActionModal(testParams),
-    shouldBeVisible("remote-branch-name-input"),
-    newExpectationWithClickFlows(
-      "should close fetch from remote modal",
-      "[data-cy=close-modal]",
-      beVisible,
-      [newClickFlow("[data-cy=close-modal]", [shouldNotExist("modal-title")])],
-    ),
-  ];
-};
-
-const testPushToRemote = (remoteName: string): Tests => {
-  const testParams = {
-    remoteName,
-    buttonDataCy: "push-button",
-    modalTitle: "Push to remote",
-  };
-  return [
-    ...openActionModal(testParams),
-    shouldBeVisible("branch-name-input"),
-    newExpectationWithClickFlows(
-      "should close fetch from remote modal",
-      "[data-cy=close-modal]",
-      beVisible,
-      [newClickFlow("[data-cy=close-modal]", [shouldNotExist("modal-title")])],
-    ),
-  ];
-};
-
-export const testRemoteActions = (remoteName: string): Tests => [
-  ...testFetchFromRemote(remoteName),
-  ...testPullFromRemote(remoteName),
-  ...testPushToRemote(remoteName),
-];
