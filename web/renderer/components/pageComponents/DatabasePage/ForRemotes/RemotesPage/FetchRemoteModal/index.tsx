@@ -1,4 +1,3 @@
-import { RemoteFragment } from "@gen/graphql-types";
 import {
   Button,
   ErrorMsg,
@@ -7,11 +6,9 @@ import {
   ModalOuter,
   SuccessMsg,
 } from "@dolthub/react-components";
-import { OptionalRefParams } from "@lib/params";
-import useDefaultBranch from "@hooks/useDefaultBranch";
-import RefLink from "@components/links/RefLink";
-import Link from "@components/links/Link";
+import { RemoteFragment } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
+import { OptionalRefParams } from "@lib/params";
 import RemoteBranches from "./RemoteBranches";
 import css from "./index.module.css";
 
@@ -33,14 +30,12 @@ export default function FetchRemoteModal({
   const onClose = () => {
     setIsOpen(false);
   };
-  const { defaultBranchName } = useDefaultBranch(params);
-  const currentBranch = params.refName || defaultBranchName;
-
+  ``;
   return (
     <ModalOuter
       isOpen={isOpen}
       onRequestClose={onClose}
-      title="Sync with remote"
+      title={`Manage remote branches for ${remote.name}`}
       className={css.fetchModal}
     >
       <ModalInner>
@@ -50,24 +45,11 @@ export default function FetchRemoteModal({
           <SuccessMsg>Fetch completed successfully.</SuccessMsg>
         )}
         <p>
-          Synchronize the local branch{" "}
-          <RefLink params={{ ...params, refName: currentBranch }}>
-            {params.refName}
-          </RefLink>{" "}
-          with the remote <span className={css.bold}>{remote.name}</span> (
-          {remote.url}) branches. To learn more about fetching, see our{" "}
-          <Link href="https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#dolt_fetch">
-            documentation
-          </Link>
-          .
+          Synchronize your local branches with the remote{" "}
+          <span className={css.bold}>{remote.name}</span> ({remote.url})
+          branches.
         </p>
-        {!err && (
-          <RemoteBranches
-            params={params}
-            remote={remote}
-            currentBranch={currentBranch}
-          />
-        )}
+        {!err && <RemoteBranches params={params} remote={remote} />}
       </ModalInner>
       <ModalButtons onRequestClose={onClose}>
         <Button onClick={onClose}>Close</Button>

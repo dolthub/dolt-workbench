@@ -99,6 +99,8 @@ export const callPushRemote = `CALL DOLT_PUSH(?, ?)`;
 
 export const callFetchRemote = `CALL DOLT_FETCH(?)`;
 
+export const callCreateBranchFromRemote = `CALL DOLT_BRANCH(?, ?)`;
+
 // TAGS
 
 export const callDeleteTag = `CALL DOLT_TAG("-d", ?)`;

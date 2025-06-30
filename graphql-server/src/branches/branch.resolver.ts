@@ -53,6 +53,12 @@ class ListBranchesArgs extends DBArgsWithOffset {
   sortBy?: SortBranchesBy;
 }
 
+@ArgsType()
+class ListRemoteBranchesArgs extends DBArgsWithOffset {
+  @Field()
+  remoteName: string;
+}
+
 @Resolver(_of => Branch)
 export class BranchResolver {
   constructor(
@@ -88,7 +94,9 @@ export class BranchResolver {
   }
 
   @Query(_returns => BranchList)
-  async remoteBranches(@Args() args: ListBranchesArgs): Promise<BranchList> {
+  async remoteBranches(
+    @Args() args: ListRemoteBranchesArgs,
+  ): Promise<BranchList> {
     const conn = this.conn.connection();
     const res = await conn.getRemoteBranches({
       ...args,

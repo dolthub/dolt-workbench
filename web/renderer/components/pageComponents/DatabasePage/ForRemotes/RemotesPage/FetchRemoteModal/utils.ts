@@ -23,13 +23,13 @@ export function getBranchName(branchName: string): ReturnType {
 
 export function getTooltipContent(
   numbers: RemoteBranchDiffCountsFragment,
-  currentBranch: string,
+  branch: string,
 ): string {
   const ahead = numbers.ahead
-    ? `The local branch ${currentBranch} is ${numbers.ahead} commits ahead`
+    ? `The local branch ${branch} is ${numbers.ahead} commits ahead`
     : "";
   const behind = numbers.behind
-    ? `The local branch ${currentBranch} is ${numbers.behind} commits behind`
+    ? `The local branch ${branch} is ${numbers.behind} commits behind`
     : "";
   return behind ? `${behind}<br/>${ahead}` : ahead;
 }

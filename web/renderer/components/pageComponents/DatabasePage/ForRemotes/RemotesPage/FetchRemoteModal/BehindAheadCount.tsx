@@ -1,35 +1,42 @@
-import { RemoteBranchDiffCountsFragment } from "@gen/graphql-types";
 import { Tooltip } from "@dolthub/react-components";
-import { getTooltipContent } from "./utils";
+import { RemoteBranchDiffCountsFragment } from "@gen/graphql-types";
 import css from "./index.module.css";
+import { getTooltipContent } from "./utils";
 
 type Props = {
-  counts: RemoteBranchDiffCountsFragment;
-  currentBranch: string;
+  counts?: RemoteBranchDiffCountsFragment;
+  branch: string;
   remoteAndBranchName: string;
 };
 
 export default function BehindAheadCount({
   counts,
-  currentBranch,
+  branch,
   remoteAndBranchName,
 }: Props) {
-  const { ahead, behind } = counts;
   const tooltipId = `${remoteAndBranchName}-ahead-behind-commits`;
+
+  if (!counts)
+    return (
+      <td>
+        <div className={css.count}>-</div>
+      </td>
+    );
+
   return (
     <td>
       <div
-        data-tooltip-html={getTooltipContent(counts, currentBranch)}
+        data-tooltip-html={getTooltipContent(counts, branch)}
         data-tooltip-id={tooltipId}
         className={css.count}
       >
-        <div className={css.behind}>{behind}</div>
-        <div className={css.ahead}>{ahead}</div>
+        <div className={css.behind}>{counts.behind}</div>
+        <div className={css.ahead}>{counts.ahead}</div>
         <Tooltip
           id={tooltipId}
           noArrow
           place="bottom"
-          hidden={!ahead && !behind}
+          hidden={!counts.ahead && !counts.behind}
         />
       </div>
     </td>

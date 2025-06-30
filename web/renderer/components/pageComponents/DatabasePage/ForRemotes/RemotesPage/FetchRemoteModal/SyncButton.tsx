@@ -1,11 +1,11 @@
+import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import {
   RemoteBranchDiffCountsFragment,
   RemoteFragment,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
-import { Button, ErrorMsg, SmallLoader } from "@dolthub/react-components";
-import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
 import { GoCheck } from "@react-icons/all-files/go/GoCheck";
+import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
 import usePullFromRemote from "../usePullFromRemote";
 import usePushToRemote from "../usePushToRemote";
 import css from "./index.module.css";
@@ -15,7 +15,6 @@ type SyncButtonProps = {
   remote: RemoteFragment;
   params: OptionalRefParams;
   remoteBranchName: string;
-  currentBranch: string;
 };
 
 export default function SyncButton({
@@ -23,7 +22,6 @@ export default function SyncButton({
   params,
   remote,
   remoteBranchName,
-  currentBranch,
 }: SyncButtonProps) {
   const {
     onSubmit: onPull,
@@ -31,10 +29,10 @@ export default function SyncButton({
     loading: pullLoading,
     message,
   } = usePullFromRemote(
-    { ...params, refName: currentBranch },
+    { ...params, refName: remoteBranchName },
     remote,
     remoteBranchName,
-    currentBranch,
+    remoteBranchName,
   );
   const { onSubmit: onPush, state } = usePushToRemote(
     params,
