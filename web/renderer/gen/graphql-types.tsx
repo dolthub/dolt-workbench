@@ -640,7 +640,6 @@ export type QueryRemoteBranchesArgs = {
   databaseName: Scalars['String']['input'];
   offset?: InputMaybe<Scalars['Int']['input']>;
   remoteName: Scalars['String']['input'];
-  sortBy?: InputMaybe<SortBranchesBy>;
 };
 
 
@@ -1438,7 +1437,6 @@ export type RemoteBranchDiffCountsQuery = { __typename?: 'Query', remoteBranchDi
 export type RemoteBranchesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
-  sortBy?: InputMaybe<SortBranchesBy>;
   offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
@@ -4191,11 +4189,10 @@ export type RemoteBranchDiffCountsLazyQueryHookResult = ReturnType<typeof useRem
 export type RemoteBranchDiffCountsSuspenseQueryHookResult = ReturnType<typeof useRemoteBranchDiffCountsSuspenseQuery>;
 export type RemoteBranchDiffCountsQueryResult = Apollo.QueryResult<RemoteBranchDiffCountsQuery, RemoteBranchDiffCountsQueryVariables>;
 export const RemoteBranchesDocument = gql`
-    query RemoteBranches($databaseName: String!, $remoteName: String!, $sortBy: SortBranchesBy, $offset: Int) {
+    query RemoteBranches($databaseName: String!, $remoteName: String!, $offset: Int) {
   remoteBranches(
     databaseName: $databaseName
     remoteName: $remoteName
-    sortBy: $sortBy
     offset: $offset
   ) {
     list {
@@ -4220,7 +4217,6 @@ export const RemoteBranchesDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      remoteName: // value for 'remoteName'
- *      sortBy: // value for 'sortBy'
  *      offset: // value for 'offset'
  *   },
  * });

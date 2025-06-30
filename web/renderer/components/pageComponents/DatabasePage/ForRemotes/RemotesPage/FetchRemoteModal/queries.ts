@@ -48,13 +48,11 @@ export const REMOTE_BRANCHES = gql`
   query RemoteBranches(
     $databaseName: String!
     $remoteName: String!
-    $sortBy: SortBranchesBy
     $offset: Int
   ) {
     remoteBranches(
       databaseName: $databaseName
       remoteName: $remoteName
-      sortBy: $sortBy
       offset: $offset
     ) {
       list {
