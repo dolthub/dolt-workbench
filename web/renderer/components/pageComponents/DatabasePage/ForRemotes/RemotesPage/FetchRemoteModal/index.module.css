@@ -58,11 +58,11 @@
 }
 
 .count {
-  @apply flex items-center;
+  @apply flex items-center justify-center;
 }
 
 .behind {
-  @apply border-r border-stone-100 pr-2 ml-10;
+  @apply border-r border-stone-100 pr-2;
 }
 
 .ahead {

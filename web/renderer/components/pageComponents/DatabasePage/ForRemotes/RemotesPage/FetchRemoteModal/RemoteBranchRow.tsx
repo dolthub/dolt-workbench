@@ -1,4 +1,5 @@
-import { Button, QueryHandler } from "@dolthub/react-components";
+import Link from "@components/links/Link";
+import { Button, Loader } from "@dolthub/react-components";
 import {
   BranchFragment,
   RemoteFragment,
@@ -6,74 +7,72 @@ import {
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
 import { diff } from "@lib/urls";
-import Link from "@components/links/Link";
-import { getBranchName } from "./utils";
-import SyncButton from "./SyncButton";
 import BehindAheadCount from "./BehindAheadCount";
+import CreateBranchButton from "./CreateBranchButton";
 import css from "./index.module.css";
+import SyncButton from "./SyncButton";
+import { getBranchName } from "./utils";
 
 type Props = {
   branch: BranchFragment;
   remote: RemoteFragment;
-  currentBranch: string;
   params: OptionalRefParams;
 };
 
-export default function RemoteBranchRow({
-  branch,
-  remote,
-  params,
-  currentBranch,
-}: Props) {
+export default function RemoteBranchRow({ branch, remote, params }: Props) {
   const { branchNameWithRemoteName, remoteBranchName } = getBranchName(
     branch.branchName,
   );
   const res = useRemoteBranchDiffCountsQuery({
     variables: {
       databaseName: params.databaseName,
-      toRefName: currentBranch,
+      toRefName: remoteBranchName,
       fromRefName: branchNameWithRemoteName,
     },
   });
 
+  if (res.loading) return <Loader loaded={false} />;
+
   return (
-    <QueryHandler
-      result={res}
-      render={data => (
-        <tr>
-          <td>{branchNameWithRemoteName}</td>
-          <BehindAheadCount
-            counts={data.remoteBranchDiffCounts}
-            currentBranch={currentBranch}
-            remoteAndBranchName={branchNameWithRemoteName}
+    <tr>
+      <td>{branchNameWithRemoteName}</td>
+      <BehindAheadCount
+        counts={res.data?.remoteBranchDiffCounts}
+        branch={remoteBranchName}
+        remoteAndBranchName={branchNameWithRemoteName}
+      />
+      <td>
+        {res.data ? (
+          <SyncButton
+            counts={res.data.remoteBranchDiffCounts}
+            params={params}
+            remote={remote}
+            remoteBranchName={remoteBranchName}
           />
-          <td>
-            <SyncButton
-              counts={data.remoteBranchDiffCounts}
-              params={params}
-              remote={remote}
-              remoteBranchName={remoteBranchName}
-              currentBranch={currentBranch}
-            />
-          </td>
-          <td>
-            {(!!data.remoteBranchDiffCounts.ahead ||
-              !!data.remoteBranchDiffCounts.behind) && (
-              <Link
-                {...diff({
-                  ...params,
-                  refName: currentBranch,
-                  fromCommitId: branchNameWithRemoteName,
-                  toCommitId: currentBranch,
-                })}
-                className={css.viewDiffButton}
-              >
-                <Button.Link>View Diff</Button.Link>
-              </Link>
-            )}
-          </td>
-        </tr>
-      )}
-    />
+        ) : (
+          <CreateBranchButton
+            params={params}
+            remote={remote}
+            branchName={remoteBranchName}
+          />
+        )}
+      </td>
+      <td>
+        {(!!res.data?.remoteBranchDiffCounts.ahead ||
+          !!res.data?.remoteBranchDiffCounts.behind) && (
+          <Link
+            {...diff({
+              ...params,
+              refName: remoteBranchName,
+              fromCommitId: branchNameWithRemoteName,
+              toCommitId: remoteBranchName,
+            })}
+            className={css.viewDiffButton}
+          >
+            <Button.Link>View Diff</Button.Link>
+          </Link>
+        )}
+      </td>
+    </tr>
   );
 }

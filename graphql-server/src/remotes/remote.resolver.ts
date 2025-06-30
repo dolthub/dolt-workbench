@@ -43,6 +43,12 @@ export class RemoteMaybeBranchArgs extends RemoteArgs {
 }
 
 @ArgsType()
+export class RemoteBranchArgs extends RemoteArgs {
+  @Field()
+  branchName: string;
+}
+
+@ArgsType()
 export class RemoteBranchDiffCountsArgs extends DBArgs {
   @Field()
   fromRefName: string;
@@ -97,12 +103,24 @@ export class RemoteResolver {
     return fromPushRes(res[0]);
   }
 
-  @Query(_returns => FetchRes)
+  @Mutation(_returns => FetchRes)
   async fetchRemote(@Args() args: RemoteArgs): Promise<FetchRes> {
     const conn = this.conn.connection();
     const res = await conn.callFetchRemote(args);
     if (res.length === 0) {
       throw new Error("No response from fetch");
+    }
+    return fromFetchRes(res[0]);
+  }
+
+  @Mutation(_returns => FetchRes)
+  async createBranchFromRemote(
+    @Args() args: RemoteBranchArgs,
+  ): Promise<FetchRes> {
+    const conn = this.conn.connection();
+    const res = await conn.callCreateBranchFromRemote(args);
+    if (res.length === 0) {
+      throw new Error("No response from create branch");
     }
     return fromFetchRes(res[0]);
   }

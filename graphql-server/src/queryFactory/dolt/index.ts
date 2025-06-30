@@ -119,7 +119,7 @@ export class DoltQueryFactory
     );
   }
 
-  async getRemoteBranches(args: t.ListBranchesArgs): t.PR {
+  async getRemoteBranches(args: t.RemoteBranchesArgs): t.PR {
     return this.queryForBuilder(
       async em => dem.getDoltRemoteBranchesPaginated(em, args),
       args.databaseName,
@@ -511,6 +511,14 @@ export class DoltQueryFactory
 
   async callFetchRemote(args: t.RemoteArgs): t.PR {
     return this.query(qh.callFetchRemote, [args.remoteName], args.databaseName);
+  }
+
+  async callCreateBranchFromRemote(args: t.RemoteBranchArgs): t.PR {
+    return this.query(
+      qh.callCreateBranchFromRemote,
+      [args.branchName, `${args.remoteName}/${args.branchName}`],
+      args.databaseName,
+    );
   }
 
   async getMergeBase(args: t.RefsArgs): Promise<string> {

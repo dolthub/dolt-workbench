@@ -1,11 +1,11 @@
 import { ErrorMsg, Loader, QueryHandler } from "@dolthub/react-components";
+import { pluralize } from "@dolthub/web-utils";
 import {
   BranchFragment,
   RemoteFragment,
   useBranchesForSelectorQuery,
   useRemoteBranchesQuery,
 } from "@gen/graphql-types";
-import { pluralize } from "@dolthub/web-utils";
 import { OptionalRefParams } from "@lib/params";
 import RemoteBranchRow from "./RemoteBranchRow";
 import css from "./index.module.css";
@@ -13,7 +13,6 @@ import css from "./index.module.css";
 type Props = {
   params: OptionalRefParams;
   remote: RemoteFragment;
-  currentBranch: string;
 };
 
 type InnerProps = Props & {
@@ -40,14 +39,11 @@ function Inner(props: InnerProps) {
   );
 }
 
-export default function RemoteBranches({
-  params,
-  remote,
-  currentBranch,
-}: Props) {
+export default function RemoteBranches({ params, remote }: Props) {
   const res = useRemoteBranchesQuery({
     variables: {
       databaseName: params.databaseName,
+      remoteName: remote.name,
     },
   });
 
@@ -66,7 +62,6 @@ export default function RemoteBranches({
         <Inner
           remoteBranches={data.remoteBranches.list}
           params={params}
-          currentBranch={currentBranch}
           remote={remote}
         />
       )}

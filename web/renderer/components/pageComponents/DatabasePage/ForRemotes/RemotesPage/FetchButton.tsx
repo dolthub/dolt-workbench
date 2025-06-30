@@ -1,11 +1,11 @@
-import { fakeEscapePress } from "@dolthub/web-utils";
-import { HiRefresh } from "@react-icons/all-files/hi/HiRefresh";
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
-import { RemoteFragment, useFetchRemoteLazyQuery } from "@gen/graphql-types";
-import { OptionalRefParams } from "@lib/params";
 import { SmallLoader } from "@dolthub/react-components";
-import { useState } from "react";
+import { fakeEscapePress } from "@dolthub/web-utils";
+import { RemoteFragment, useFetchRemoteMutation } from "@gen/graphql-types";
+import useMutation from "@hooks/useMutation";
 import { SetApolloErrorType } from "@lib/errors/types";
+import { OptionalRefParams } from "@lib/params";
+import { HiRefresh } from "@react-icons/all-files/hi/HiRefresh";
 
 type Props = {
   setFetchModalOpen: (f: boolean) => void;
@@ -20,11 +20,13 @@ export default function FetchButton({
   params,
   remote,
 }: Props) {
-  const [fetch] = useFetchRemoteLazyQuery();
-  const [loading, setLoading] = useState(false);
+  const {
+    mutateFn: fetch,
+    err,
+    loading,
+  } = useMutation({ hook: useFetchRemoteMutation });
 
   const onClick = async () => {
-    setLoading(true);
     const fetchRes = await fetch({
       variables: {
         databaseName: params.databaseName,
@@ -32,9 +34,8 @@ export default function FetchButton({
       },
       fetchPolicy: "network-only",
     });
-    setLoading(false);
     if (!fetchRes.data?.fetchRemote.success) {
-      setErr(fetchRes.error || new Error("Fetch failed"));
+      setErr(err ?? new Error("Fetch failed"));
       setFetchModalOpen(true);
       return;
     }
@@ -47,7 +48,7 @@ export default function FetchButton({
     <DropdownItem onClick={onClick} icon={<HiRefresh />} data-cy="fetch-button">
       <div>
         <SmallLoader loaded={!loading} />
-        <span>Fetch from remote</span>
+        <span>Manage remote branches</span>
       </div>
     </DropdownItem>
   );

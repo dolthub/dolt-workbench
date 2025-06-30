@@ -209,7 +209,7 @@ export class MySQLQueryFactory
     return this.getAllBranches(args);
   }
 
-  async getRemoteBranches(_: t.ListBranchesArgs): t.PR {
+  async getRemoteBranches(_: t.RemoteArgs): t.PR {
     throw notDoltError("remote branches");
   }
 
@@ -358,5 +358,9 @@ export class MySQLQueryFactory
 
   async callDoltClone(_: t.CloneArgs): Promise<void> {
     throw notDoltError("dolt clone");
+  }
+
+  async callCreateBranchFromRemote(_: t.RemoteBranchArgs): t.PR {
+    throw notDoltError("create branch from remote");
   }
 }
