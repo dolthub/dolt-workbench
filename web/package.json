@@ -132,7 +132,7 @@
     "react-select-event": "^5.5.1",
     "rimraf": "^6.0.1",
     "stylelint": "^16.15.0",
-    "stylelint-config-recommended": "^14.0.0",
+    "stylelint-config-recommended": "^16.0.0",
     "tar": "^7.4.3",
     "ts-jest": "^29.1.1",
     "typescript": "^5.7.3",
