@@ -34,7 +34,7 @@
     "eslint-plugin-cypress": "^4.3.0",
     "eslint-plugin-import": "^2.31.0",
     "npm-run-all2": "^8.0.4",
-    "prettier": "^3.5.3"
+    "prettier": "^3.6.2"
   },
   "resolutions": {
     "brace-expansion": "2.0.2"
