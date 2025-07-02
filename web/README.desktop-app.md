@@ -99,13 +99,11 @@ We can code sign the `DoltWorkbench-mac-arm64.dmg` file in `dist` and allow peop
 
 To code sign this file, we will set `SIGNING_CERTIFICATE`, `TEAM_ID`, `APPLE_ID` and `APPLE_ID_PASSWORD` in `web/build/mac/.env` file. To get "APPLE_ID_PASSWORD" in this step, go to your [Apple ID](https://account.apple.com/account/manage), look for the Sign-in and Security section, where you'll find `App-Specific Password`. Create one app-specific password for your app.
 
-![App specific password](../images/app-specific-password.png)
-
 Then run `yarn sign-dmg` from `web`. After this step finished, the dmg file is now fully signed and notarized, ready for distribution.
 
 ### Release the Windows App
 
-Submit the `AppX` file at `web/dist` to the store. To submit, choose DoltHub.Inc -> Apps and Games -> Dolt-Workbench to update.
+Submit the `AppX` file at `web/dist` to the store. To submit, choose DoltHub.Inc -> Apps and Games -> Dolt-Workbench. In Product Release, choose Start Update.
 
 Upload the application `.exe` file to GitHub release for downloading outside the store.
 
