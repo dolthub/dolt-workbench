@@ -54,6 +54,7 @@ mac:
   extendInfo:
     CFBundleIconName: AppIcon
     CFBundleIconFile: AppIcon
+    ITSAppUsesNonExemptEncryption: false
   target:
     - target: mas
       arch: universal
