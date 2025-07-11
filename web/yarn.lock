@@ -9303,7 +9303,7 @@ __metadata:
     diff: "npm:^5.1.0"
     electron: "npm:^36.3.2"
     electron-builder: "npm:^26.0.12"
-    electron-serve: "npm:^2.1.1"
+    electron-serve: "npm:^1.3.0"
     electron-store: "npm:^8.2.0"
     eslint: "npm:^9.29.0"
     eslint-config-airbnb: "npm:^19.0.4"
@@ -9540,10 +9540,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-serve@npm:^2.1.1":
-  version: 2.1.1
-  resolution: "electron-serve@npm:2.1.1"
-  checksum: 10c0/e87d086bb916628dc0f1591783185c7012afc58daeeabd4e23b0836e19bc7347ce7740a707f81175a0ef657a4f0932e9449420359e10d3ebe266baa22cad584c
+"electron-serve@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "electron-serve@npm:1.3.0"
+  checksum: 10c0/b329a24cb67147c11e9fd8828114d93f8378ba9337adc0cd6fb5d3b8d0aa00c22f906963a5db170e33402aac9156e47efd6acf162cefd48a94ee0b964482e94b
   languageName: node
   linkType: hard
 
