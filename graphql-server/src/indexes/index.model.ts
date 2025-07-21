@@ -31,7 +31,7 @@ export function fromDoltRowsRes(rows: RawRow[]): Index[] {
     return {
       name: r.INDEX_NAME,
       type: getIndexType(cols, r.NON_UNIQUES === 1 || r.NON_UNIQUES === "1"),
-      comment: r.COMMENTS,
+      comment: r.COMMENTS ?? "",
       columns: cols.map(c => {
         return { name: c };
       }),
