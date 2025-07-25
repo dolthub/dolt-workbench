@@ -404,7 +404,11 @@ export class DoltgresQueryFactory
   ): t.PR {
     return this.query(
       qh.getMergeConflictsQuery(args.offset),
-      [args.fromBranchName, args.toBranchName, args.tableName],
+      [
+        args.fromBranchName,
+        args.toBranchName,
+        tableWithoutSchema(args.tableName),
+      ],
       args.databaseName,
       args.refName,
     );

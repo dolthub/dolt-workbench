@@ -1,4 +1,5 @@
 import { ErrorMsg } from "@dolthub/react-components";
+import { getDisplayValue } from "@dolthub/web-utils";
 import { RowConflictFragment } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
 import cx from "classnames";
@@ -53,7 +54,7 @@ export default function ConflictsTable(props: Props) {
                   <tr>
                     <td>base</td>
                     {r.base?.columnValues.map((cv, colIndex) => (
-                      <td key={colIndex}>{cv.displayValue}</td>
+                      <td key={colIndex}>{getDisplayValue(cv.displayValue)}</td>
                     ))}
                   </tr>
                   <tr className={css.oursRow}>
@@ -65,7 +66,7 @@ export default function ConflictsTable(props: Props) {
                           [css.oursConflictedCell]: isConflicted(r, colIndex),
                         })}
                       >
-                        {cv.displayValue}
+                        {getDisplayValue(cv.displayValue)}
                       </td>
                     ))}
                   </tr>
@@ -78,7 +79,7 @@ export default function ConflictsTable(props: Props) {
                           [css.theirsConflictedCell]: isConflicted(r, colIndex),
                         })}
                       >
-                        {cv.displayValue}
+                        {getDisplayValue(cv.displayValue)}
                       </td>
                     ))}
                   </tr>
