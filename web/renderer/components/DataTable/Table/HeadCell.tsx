@@ -55,14 +55,14 @@ export default function HeadCell({
         <SortButton
           dir="ASC"
           col={col}
-          dataCy={`${dataCyDropDownSortButton}`}
+          dataCy={dataCyDropDownSortButton}
         />
         <SortButton
           dir="DESC"
           col={col}
-          dataCy={`${dataCyDropDownSortButton}`}
+          dataCy={dataCyDropDownSortButton}
         />
-        <SortButton col={col} dataCy={`${dataCyDropDownSortButton}`} />
+        <SortButton col={col} dataCy={dataCyDropDownSortButton} />
         <HideColumnButton col={col} columns={columns} />
         {!col.isPrimaryKey && <DropColumnButton col={col} />}
         {showCollapseCellButton && (
