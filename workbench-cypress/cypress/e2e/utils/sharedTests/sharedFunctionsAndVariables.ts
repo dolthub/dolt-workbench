@@ -88,7 +88,7 @@ export const shouldFindButton = (
   newExpectation(
     `should find${disabled ? "disabled" : "enabled"} ${getDesc(dataCy)}`,
     `[data-cy=${dataCy}]`,
-    disabled ? beDisabled : beEnabled
+    disabled ? beDisabled : beEnabled,
   );
 
 export const shouldFindCheckbox = (

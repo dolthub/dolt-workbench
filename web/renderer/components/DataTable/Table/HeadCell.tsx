@@ -52,8 +52,16 @@ export default function HeadCell({
         buttonClassName={css.menu}
         data-cy={dataCyDropDown}
       >
-        <SortButton dir="ASC" col={col} dataCy={`${dataCyDropDownSortButton}`}/>
-        <SortButton dir="DESC" col={col} dataCy={`${dataCyDropDownSortButton}`}/>
+        <SortButton
+          dir="ASC"
+          col={col}
+          dataCy={`${dataCyDropDownSortButton}`}
+        />
+        <SortButton
+          dir="DESC"
+          col={col}
+          dataCy={`${dataCyDropDownSortButton}`}
+        />
         <SortButton col={col} dataCy={`${dataCyDropDownSortButton}`} />
         <HideColumnButton col={col} columns={columns} />
         {!col.isPrimaryKey && <DropColumnButton col={col} />}

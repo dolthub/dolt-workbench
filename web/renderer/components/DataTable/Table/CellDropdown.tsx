@@ -51,7 +51,11 @@ export default function CellDropdown(props: Props) {
         colType={props.currentCol.type}
         disabled={isNull}
       />
-      <EditCell setEditing={props.setEditing} queryCols={props.columns} dataCy={`${props.dataCy}-edit`}/>
+      <EditCell
+        setEditing={props.setEditing}
+        queryCols={props.columns}
+        dataCy={`${props.dataCy}-edit`}
+      />
       <MakeNullButton
         row={props.row}
         queryCols={props.columns}
@@ -61,7 +65,11 @@ export default function CellDropdown(props: Props) {
       <NotDoltWrapper>
         <HistoryButton {...props} />
       </NotDoltWrapper>
-      <FilterButton value={props.rawVal} col={props.currentCol} dataCy={`${props.dataCy}-filter`} />
+      <FilterButton
+        value={props.rawVal}
+        col={props.currentCol}
+        dataCy={`${props.dataCy}-filter`}
+      />
       <ForeignKeyButton {...props} colName={props.currentCol.name} />
       {showCollapseCellButton && (
         <ChangeCellStatusButton

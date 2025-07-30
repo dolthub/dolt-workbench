@@ -12,7 +12,8 @@ import {
 import { runTests } from "@utils/index";
 import {
   beVisible,
-  notExist, shouldFindAndContain,
+  notExist,
+  shouldFindAndContain,
   shouldNotExist,
   shouldTypeString,
 } from "@utils/sharedTests/sharedFunctionsAndVariables";
@@ -44,23 +45,23 @@ describe(pageName, () => {
           [
             shouldFindAndContain(
               "desktop-db-data-table-row-0-col-0-dropdown-edit",
-              "Edit Cell Value"
-            )
+              "Edit Cell Value",
+            ),
           ],
           undefined,
-          true
+          true,
         ),
         newClickFlow(
           "[data-cy=desktop-db-data-table-row-0-col-0-dropdown-edit]",
           [
             shouldTypeString(
               "desktop-db-data-table-row-0-col-0-edit-input-value",
-               "testEditCellValue"
-            )
+              "testEditCellValue",
+            ),
           ],
           "[data-cy=desktop-db-data-table-row-0-col-0-edit-input-cancel]",
-        )
-      ]
+        ),
+      ],
     ),
     shouldNotExist("db-doc-markdown"),
     ...testDBHeader(connectionName, dbName, hasDocs),

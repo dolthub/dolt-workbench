@@ -2,7 +2,8 @@ import { runTests } from "@utils/index";
 import {
   beDisabled,
   beVisible,
-  shouldFindAndContain, shouldFindButton,
+  shouldFindAndContain,
+  shouldFindButton,
 } from "@sharedTests/sharedFunctionsAndVariables";
 import {
   formatDataCy,
@@ -10,15 +11,13 @@ import {
   newExpectationWithClickFlows,
 } from "@utils/helpers";
 
-
-const pageName = "Upload file page"
+const pageName = "Upload file page";
 
 const dbName = "us-jails";
 const currentPage = `/database/${dbName}/upload`;
 const tableName = "incidents";
 
-const chooseBranchForFileUploadTest =
-  newExpectationWithClickFlows(
+const chooseBranchForFileUploadTest = newExpectationWithClickFlows(
   "should choose branch for file upload",
   formatDataCy("upload-choose-branch"),
   beVisible,
@@ -27,46 +26,35 @@ const chooseBranchForFileUploadTest =
       formatDataCy("single-value-main"),
       [shouldFindAndContain("select-option-main", "main")],
       undefined,
-      true
+      true,
     ),
-    newClickFlow(
-      formatDataCy("select-option-main"),
-      [shouldFindButton("upload-next-button", false)]
-    ),
-    newClickFlow(
-      formatDataCy("upload-next-button"),
-      [shouldFindAndContain("table-title", "Choose a table name")]
-    )
-  ]
-)
+    newClickFlow(formatDataCy("select-option-main"), [
+      shouldFindButton("upload-next-button", false),
+    ]),
+    newClickFlow(formatDataCy("upload-next-button"), [
+      shouldFindAndContain("table-title", "Choose a table name"),
+    ]),
+  ],
+);
 
-const chooseTableForFileUploadTest =
-  newExpectationWithClickFlows(
-    "should choose table name for file upload",
-    formatDataCy("upload-next-button"),
-    beDisabled,
-    [
-      newClickFlow(
-        formatDataCy("table-selector"),
-        [shouldFindAndContain(`select-option-${tableName}`, "incidents")]
-      ),
-      newClickFlow(
-        formatDataCy(`select-option-${tableName}`),
-        [shouldFindButton("upload-next-button", false)]
-      ),
-      newClickFlow(
-        formatDataCy("upload-next-button"),
-        [shouldFindAndContain("upload-title", "Upload file")]
-      ),
-    ]
-  )
-
+const chooseTableForFileUploadTest = newExpectationWithClickFlows(
+  "should choose table name for file upload",
+  formatDataCy("upload-next-button"),
+  beDisabled,
+  [
+    newClickFlow(formatDataCy("table-selector"), [
+      shouldFindAndContain(`select-option-${tableName}`, "incidents"),
+    ]),
+    newClickFlow(formatDataCy(`select-option-${tableName}`), [
+      shouldFindButton("upload-next-button", false),
+    ]),
+    newClickFlow(formatDataCy("upload-next-button"), [
+      shouldFindAndContain("upload-title", "Upload file"),
+    ]),
+  ],
+);
 
 describe(pageName, () => {
-  const tests = [
-    chooseBranchForFileUploadTest,
-    chooseTableForFileUploadTest
-
-  ];
-  runTests({ tests, currentPage, pageName })
+  const tests = [chooseBranchForFileUploadTest, chooseTableForFileUploadTest];
+  runTests({ tests, currentPage, pageName });
 });

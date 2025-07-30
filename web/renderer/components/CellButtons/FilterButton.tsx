@@ -37,7 +37,7 @@ export default function FilterButton({ col, value, dataCy }: Props) {
   };
 
   return (
-    <Button.Link onClick={onClick} className={css.button} data-cy={dataCy} >
+    <Button.Link onClick={onClick} className={css.button} data-cy={dataCy}>
       Filter By Cell
     </Button.Link>
   );

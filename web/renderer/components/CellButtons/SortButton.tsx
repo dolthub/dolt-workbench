@@ -31,7 +31,12 @@ export default function SortButton({ col, dir, dataCy }: Props) {
   };
 
   return (
-    <Button.Link onClick={onClick} className={css.button} disabled={checked} data-cy={`${dataCy}-${sortDirection}`}>
+    <Button.Link
+      onClick={onClick}
+      className={css.button}
+      disabled={checked}
+      data-cy={`${dataCy}-${sortDirection}`}
+    >
       Sort {sortDirection}
       {checked && <FiCheck className={css.check} />}
     </Button.Link>
