@@ -1,5 +1,5 @@
 import { runTests } from "@utils/index";
-import { testDBHeader } from "@utils/sharedTests/dbHeaders";
+import { testDBHeader } from "@sharedTests/dbHeaders";
 import { formatDataCy, newClickFlow, newExpectationWithClickFlows } from "@utils/helpers";
 import { beVisibleAndContain, shouldFindAndContain } from "@sharedTests/sharedFunctionsAndVariables";
 

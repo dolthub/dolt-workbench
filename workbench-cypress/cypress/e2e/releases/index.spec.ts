@@ -1,11 +1,11 @@
 import { newExpectation, newShouldArgs } from "@utils/helpers";
 import { runTests } from "@utils/index";
-import { testDBHeader } from "@utils/sharedTests/dbHeaders";
+import { testDBHeader } from "@sharedTests/dbHeaders";
 import {
   beVisible,
   shouldBeVisible,
   shouldNotExist,
-} from "@utils/sharedTests/sharedFunctionsAndVariables";
+} from "@sharedTests/sharedFunctionsAndVariables";
 
 const pageName = "Releases page";
 const dbName = "us-jails";
