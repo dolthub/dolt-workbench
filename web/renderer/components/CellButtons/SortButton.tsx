@@ -13,15 +13,17 @@ type Direction = "ASC" | "DESC" | undefined;
 type Props = {
   col: ColumnForDataTableFragment;
   dir?: Direction;
+  dataCy?: string;
 };
 
-export default function SortButton({ col, dir }: Props) {
+export default function SortButton({ col, dir, dataCy }: Props) {
   const { queryHasOrderBy } = useSqlParser();
   const { convertToSqlWithOrderBy, selectFromTable } = useSqlBuilder();
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const q = params.q ?? selectFromTable(params.tableName ?? "");
   const checked = queryHasOrderBy(q, col.name, dir);
+  const sortDirection = getDirection(dir, col.type);
 
   const onClick = async () => {
     const query = convertToSqlWithOrderBy(q, col.name, dir);
@@ -29,8 +31,8 @@ export default function SortButton({ col, dir }: Props) {
   };
 
   return (
-    <Button.Link onClick={onClick} className={css.button} disabled={checked}>
-      Sort {getDirection(dir, col.type)}
+    <Button.Link onClick={onClick} className={css.button} disabled={checked} data-cy={`${dataCy}-${sortDirection}`}>
+      Sort {sortDirection}
       {checked && <FiCheck className={css.check} />}
     </Button.Link>
   );

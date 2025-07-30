@@ -69,3 +69,7 @@ export function newExpectationWithClickFlows(
 ): Expectation {
   return { description, selector, shouldArgs, clickFlows, skip };
 }
+
+export function formatDataCy(dataCy: string) {
+  return `[data-cy=${dataCy}]`;
+}

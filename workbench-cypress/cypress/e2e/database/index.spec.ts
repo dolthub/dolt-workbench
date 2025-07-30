@@ -5,6 +5,7 @@ import {
   testViewsSection,
 } from "@utils/sharedTests/dbLeftNav";
 import {
+  formatDataCy,
   newClickFlow,
   newExpectation,
   newExpectationWithClickFlows,
@@ -12,7 +13,7 @@ import {
 import { runTests } from "@utils/index";
 import {
   beVisible,
-  notExist,
+  notExist, shouldFindAndContain,
   shouldNotExist,
   shouldTypeString,
 } from "@utils/sharedTests/sharedFunctionsAndVariables";
@@ -33,6 +34,34 @@ describe(pageName, () => {
       "should not find empty database",
       "[data-cy=db-data-table-empty]",
       notExist,
+    ),
+    newExpectationWithClickFlows(
+      "should show cell editor",
+      "[data-cy=desktop-db-data-table-row-0-col-0]",
+      beVisible,
+      [
+        newClickFlow(
+          "[data-cy=desktop-db-data-table-row-0-col-0-dropdown]",
+          [
+            shouldFindAndContain(
+              "desktop-db-data-table-row-0-col-0-dropdown-edit",
+              "Edit Cell Value"
+            )
+          ],
+          undefined,
+          true
+        ),
+        newClickFlow(
+          "[data-cy=desktop-db-data-table-row-0-col-0-dropdown-edit]",
+          [
+            shouldTypeString(
+              "desktop-db-data-table-row-0-col-0-edit-input-value",
+               "testEditCellValue"
+            )
+          ],
+          "[data-cy=desktop-db-data-table-row-0-col-0-edit-input-cancel]",
+        )
+      ]
     ),
     shouldNotExist("db-doc-markdown"),
     ...testDBHeader(connectionName, dbName, hasDocs),

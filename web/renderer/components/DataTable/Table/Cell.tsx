@@ -87,6 +87,7 @@ export default function Cell(props: Props): JSX.Element {
             setEditing(false);
             setShowDropdown(false);
           }}
+          dataCy={`${dataCy}-edit-input`}
         />
       ) : (
         <span onDoubleClick={() => setEditing(true)}>{displayCellVal}</span>
@@ -102,6 +103,7 @@ export default function Cell(props: Props): JSX.Element {
           setEditing={setEditing}
           cellStatus={cellStatus}
           setCellStatus={setCellStatus}
+          dataCy={`${dataCy}-dropdown`}
         />
       )}
     </td>

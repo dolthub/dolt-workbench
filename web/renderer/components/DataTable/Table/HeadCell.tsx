@@ -34,14 +34,14 @@ export default function HeadCell({
 }: Props) {
   const [showDropdown, setShowDropdown] = useState(false);
   const showCollapseCellButton = isLongContentType(col.type, col.name);
+  const dataCy = `${isMobile ? "mobile" : "desktop"}-db-data-table-column-${col.name}`;
+  const dataCyDropDown = `${dataCy}-dropdown`;
   return (
     <th
       className={cx(css.cell, {
         [css.active]: showDropdown,
       })}
-      data-cy={`${isMobile ? "mobile-" : "desktop-"}db-data-table-column-${
-        col.name
-      }`}
+      data-cy={dataCy}
     >
       {col.name}
       {col.isPrimaryKey && <FiKey className={css.key} />}
@@ -49,10 +49,11 @@ export default function HeadCell({
         showDropdown={showDropdown}
         setShowDropdown={setShowDropdown}
         buttonClassName={css.menu}
+        data-cy={dataCyDropDown}
       >
-        <SortButton dir="ASC" col={col} />
-        <SortButton dir="DESC" col={col} />
-        <SortButton col={col} />
+        <SortButton dir="ASC" col={col} dataCy={`${dataCyDropDown}-sort`}/>
+        <SortButton dir="DESC" col={col} dataCy={`${dataCyDropDown}-sort`}/>
+        <SortButton col={col} dataCy={`${dataCyDropDown}-sort`} />
         <HideColumnButton col={col} columns={columns} />
         {!col.isPrimaryKey && <DropColumnButton col={col} />}
         {showCollapseCellButton && (

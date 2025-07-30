@@ -30,6 +30,7 @@ type Props = {
   setEditing: (e: boolean) => void;
   cellStatus: CellStatusActionType;
   setCellStatus: SetCellStatusAction;
+  dataCy: string;
 };
 
 export default function CellDropdown(props: Props) {
@@ -43,13 +44,14 @@ export default function CellDropdown(props: Props) {
       showDropdown={props.showDropdown}
       setShowDropdown={props.setShowDropdown}
       buttonClassName={css.menu}
+      data-cy={props.dataCy}
     >
       <CopyButton
         value={props.value}
         colType={props.currentCol.type}
         disabled={isNull}
       />
-      <EditCell setEditing={props.setEditing} queryCols={props.columns} />
+      <EditCell setEditing={props.setEditing} queryCols={props.columns} dataCy={`${props.dataCy}-edit`}/>
       <MakeNullButton
         row={props.row}
         queryCols={props.columns}
@@ -59,7 +61,7 @@ export default function CellDropdown(props: Props) {
       <NotDoltWrapper>
         <HistoryButton {...props} />
       </NotDoltWrapper>
-      <FilterButton value={props.rawVal} col={props.currentCol} />
+      <FilterButton value={props.rawVal} col={props.currentCol} dataCy={`${props.dataCy}-filter`} />
       <ForeignKeyButton {...props} colName={props.currentCol.name} />
       {showCollapseCellButton && (
         <ChangeCellStatusButton

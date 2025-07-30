@@ -11,6 +11,7 @@ type Props = {
   showTextarea: boolean;
   inputType: string;
   largerMarginRight?: boolean;
+  dataCy?: string;
 };
 
 export default function Input(props: Props) {
@@ -29,6 +30,7 @@ export default function Input(props: Props) {
         onChange={e => props.setNewValue(e.target.value)}
         placeholder={placeholder}
         rows={5}
+        data-cy={props.dataCy}
       />
     );
   }
