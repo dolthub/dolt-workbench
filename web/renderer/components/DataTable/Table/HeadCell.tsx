@@ -36,6 +36,7 @@ export default function HeadCell({
   const showCollapseCellButton = isLongContentType(col.type, col.name);
   const dataCy = `${isMobile ? "mobile" : "desktop"}-db-data-table-column-${col.name}`;
   const dataCyDropDown = `${dataCy}-dropdown`;
+  const dataCyDropDownSortButton = `${dataCyDropDown}-sort`;
   return (
     <th
       className={cx(css.cell, {
@@ -51,9 +52,9 @@ export default function HeadCell({
         buttonClassName={css.menu}
         data-cy={dataCyDropDown}
       >
-        <SortButton dir="ASC" col={col} dataCy={`${dataCyDropDown}-sort`}/>
-        <SortButton dir="DESC" col={col} dataCy={`${dataCyDropDown}-sort`}/>
-        <SortButton col={col} dataCy={`${dataCyDropDown}-sort`} />
+        <SortButton dir="ASC" col={col} dataCy={`${dataCyDropDownSortButton}`}/>
+        <SortButton dir="DESC" col={col} dataCy={`${dataCyDropDownSortButton}`}/>
+        <SortButton col={col} dataCy={`${dataCyDropDownSortButton}`} />
         <HideColumnButton col={col} columns={columns} />
         {!col.isPrimaryKey && <DropColumnButton col={col} />}
         {showCollapseCellButton && (
