@@ -20,6 +20,8 @@ export const beExist = newShouldArgs("exist");
 export const notExist = newShouldArgs("not.exist");
 export const haveLengthAtLeast = (length: number) =>
   newShouldArgs("be.visible.and.have.length.of.at.least", length);
+export const beEnabled = newShouldArgs("be.enabled");
+export const beDisabled = newShouldArgs("be.disabled");
 
 export const shouldBeVisible = (dataCy: string, desc?: string): Expectation =>
   newExpectation(
@@ -86,7 +88,7 @@ export const shouldFindButton = (
   newExpectation(
     `should find${disabled ? "disabled" : "enabled"} ${getDesc(dataCy)}`,
     `[data-cy=${dataCy}]`,
-    newShouldArgs(disabled ? "be.disabled" : "be.enabled"),
+    disabled ? beDisabled : beEnabled
   );
 
 export const shouldFindCheckbox = (

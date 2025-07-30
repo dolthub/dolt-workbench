@@ -5,7 +5,6 @@ import {
   testViewsSection,
 } from "@utils/sharedTests/dbLeftNav";
 import {
-  formatDataCy,
   newClickFlow,
   newExpectation,
   newExpectationWithClickFlows,
