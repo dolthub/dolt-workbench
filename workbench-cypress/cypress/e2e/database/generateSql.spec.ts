@@ -21,7 +21,7 @@ const generateSqlForWhereClauseTest = (
   rowId: number,
   colId: number,
   expectedSql: string,
-) => {
+): Expectation => {
   const cellDataCy = `desktop-db-data-table-row-${rowId}-col-${colId}`;
   const cellSelector = formatDataCy(cellDataCy);
 

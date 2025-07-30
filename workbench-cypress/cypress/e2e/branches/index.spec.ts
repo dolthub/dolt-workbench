@@ -9,6 +9,7 @@ import {
   beVisible,
   shouldFindAndContain,
 } from "@sharedTests/sharedFunctionsAndVariables";
+import { Expectation } from "@utils/types";
 
 const pageName = "Branches page";
 const dbName = "us-jails";
@@ -16,7 +17,7 @@ const currentPage = `/database/${dbName}/branches`;
 const connectionName = "CypressTestConnection";
 const hasDocs = true;
 
-const showDeleteBranchPopUpTest = (branchToClick: string) =>
+const showDeleteBranchPopUpTest = (branchToClick: string): Expectation =>
   newExpectationWithClickFlows(
     "should show delete branch popup",
     formatDataCy("branch-list"),
