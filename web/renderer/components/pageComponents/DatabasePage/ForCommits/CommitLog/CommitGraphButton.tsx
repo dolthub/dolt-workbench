@@ -12,7 +12,7 @@ type Props = {
 export default function CommitGraphButton(props: Props) {
   return (
     <Link {...commitGraph(props.params)}>
-      <Button className={css.graphButton}>
+      <Button className={css.graphButton} data-cy="commit-graph-button">
         <VscGitCommit />
         Show Commit Graph
       </Button>
