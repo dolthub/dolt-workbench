@@ -52,6 +52,7 @@ export default function BranchRow({
               red
               className={css.icon}
               aria-label="delete"
+              data-cy={`${branch.branchName}-delete-button`}
             >
               <FaRegTrashAlt />
             </Button.Link>
