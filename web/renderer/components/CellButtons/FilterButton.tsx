@@ -9,9 +9,10 @@ import { convertTimestamp } from "./utils";
 type Props = {
   col?: ColumnForDataTableFragment;
   value: string;
+  dataCy: string;
 };
 
-export default function FilterButton({ col, value }: Props) {
+export default function FilterButton({ col, value, dataCy }: Props) {
   const { executeQuery } = useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName } = params;
@@ -36,7 +37,7 @@ export default function FilterButton({ col, value }: Props) {
   };
 
   return (
-    <Button.Link onClick={onClick} className={css.button}>
+    <Button.Link onClick={onClick} className={css.button} data-cy={dataCy}>
       Filter By Cell
     </Button.Link>
   );

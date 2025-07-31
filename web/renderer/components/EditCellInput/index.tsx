@@ -26,6 +26,7 @@ type Props = {
   cancelEditing: () => void;
   largerMarginRight?: boolean;
   refName?: string;
+  dataCy?: string;
 };
 
 export default function EditCellInput(props: Props) {
@@ -73,6 +74,7 @@ export default function EditCellInput(props: Props) {
         showTextarea={showTextarea}
         inputType={inputType}
         largerMarginRight={props.largerMarginRight}
+        dataCy={`${props.dataCy}-value`}
       />
       {loading ? (
         <div className={css.formLoader}>
@@ -99,7 +101,11 @@ export default function EditCellInput(props: Props) {
           <Btn type="submit" title="submit">
             <AiOutlineCheck />
           </Btn>
-          <Btn onClick={props.cancelEditing} title="cancel">
+          <Btn
+            onClick={props.cancelEditing}
+            title="cancel"
+            data-cy={`${props.dataCy}-cancel`}
+          >
             <AiOutlineClose />
           </Btn>
         </div>

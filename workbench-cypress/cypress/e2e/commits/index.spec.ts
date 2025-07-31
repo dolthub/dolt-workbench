@@ -1,10 +1,10 @@
 import { newExpectation, newShouldArgs } from "@utils/helpers";
 import { runTests } from "@utils/index";
-import { testDBHeader } from "@utils/sharedTests/dbHeaders";
+import { testDBHeader } from "@sharedTests/dbHeaders";
 import {
   beVisible,
   shouldNotExist,
-} from "@utils/sharedTests/sharedFunctionsAndVariables";
+} from "@sharedTests/sharedFunctionsAndVariables";
 
 const pageName = "Commit log page";
 const dbName = "us-jails";

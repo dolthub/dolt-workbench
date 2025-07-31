@@ -9,6 +9,7 @@ import { pksAreShowing } from "./utils";
 type Props = {
   setEditing: (e: boolean) => void;
   queryCols: ColumnForDataTableFragment[];
+  dataCy?: string;
 };
 
 export default function EditCell(props: Props) {
@@ -26,6 +27,7 @@ export default function EditCell(props: Props) {
       <Button.Link
         onClick={() => props.setEditing(true)}
         className={css.button}
+        data-cy={props.dataCy}
       >
         Edit Cell Value
       </Button.Link>
