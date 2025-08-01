@@ -227,9 +227,27 @@ In another shell, start the web server. This will automatically point at the run
 GraphQL server (localhost:9002).
 
 ```
-% cd packages/web
+% cd web
 web % yarn && yarn compile
 web % yarn dev
 ```
 
 Open your browser to [localhost:3002](http://localhost:3002).
+
+
+### Run the desktop app
+
+```
+% cd web
+web % yarn && yarn compile
+```
+In order to use local Dolt features, you'll need to install Dolt here as well.
+```
+web % yarn download:dolt
+```
+Start the Electron app. This will also point at the running GraphQL server (localhost:9002).
+```
+web % yarn dev:app
+```
+You should then see the Electron window open on your desktop.
+
