@@ -37,7 +37,7 @@
     "@nestjs/core": "^11.0.12",
     "@nestjs/graphql": "^13.0.4",
     "@nestjs/platform-express": "^11.1.2",
-    "@nestjs/schematics": "^11.0.5",
+    "@nestjs/schematics": "^11.0.7",
     "@nestjs/terminus": "^11.0.0",
     "@nestjs/typeorm": "^11.0.0",
     "cookie-parser": "^1.4.7",
