@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "@apollo/server": "^4.12.0",
-    "@dolthub/web-utils": "^0.1.2",
+    "@dolthub/web-utils": "^0.1.9",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/common": "^11.0.16",
