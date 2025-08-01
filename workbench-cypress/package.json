@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.26.4",
-    "@babel/core": "^7.27.7",
+    "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
     "@cypress/github-action": "^6.10.1",
