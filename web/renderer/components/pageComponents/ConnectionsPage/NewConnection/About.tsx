@@ -18,14 +18,16 @@ const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 enum ConnectionOption {
   Existing,
   New,
-  Clone
+  Clone,
 }
 
 export default function About() {
   const { state, setState, error, setErr, onCloneDoltHubDatabase } =
     useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
-  const [connectionOption, setConnectionOption] = useState(ConnectionOption.Existing);
+  const [connectionOption, setConnectionOption] = useState(
+    ConnectionOption.Existing,
+  );
 
   const onNext = (e: SyntheticEvent) => {
     e.preventDefault();
@@ -41,8 +43,8 @@ export default function About() {
             onChange={() => {
               setConnectionOption(ConnectionOption.Existing);
               setState({
-                isLocalDolt: false
-              })
+                isLocalDolt: false,
+              });
             }}
             name="existing-dolt-server"
             label="Connect to an existing Dolt server"
