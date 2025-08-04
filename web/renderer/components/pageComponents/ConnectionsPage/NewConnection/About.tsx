@@ -12,6 +12,7 @@ import CloneForm from "@components/CloneDatabaseForm/CloneForm";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 import StartDoltServerForm from "./StartDoltServerForm";
+import { getStartLocalDoltServerDisabled } from "@pageComponents/ConnectionsPage/NewConnection/context/utils";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
@@ -22,8 +23,14 @@ enum ConnectionOption {
 }
 
 export default function About() {
-  const { state, setState, error, setErr, onCloneDoltHubDatabase } =
-    useConfigContext();
+  const {
+    state,
+    setState,
+    error,
+    setErr,
+    storedConnections,
+    onCloneDoltHubDatabase,
+  } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
   const [connectionOption, setConnectionOption] = useState(
     ConnectionOption.Existing,
@@ -33,6 +40,11 @@ export default function About() {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
+
+  const { disabled, message } = getStartLocalDoltServerDisabled(
+    state,
+    storedConnections,
+  );
 
   return (
     <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
@@ -82,7 +94,9 @@ export default function About() {
           />
         </>
       )}
-      {connectionOption === ConnectionOption.New && <StartDoltServerForm />}
+      {connectionOption === ConnectionOption.New && (
+        <StartDoltServerForm disabled={disabled} message={message} />
+      )}
       {connectionOption === ConnectionOption.Clone && (
         <>
           <FormInput
@@ -114,6 +128,8 @@ export default function About() {
             error={error}
             progress={state.progress}
             loading={state.loading}
+            disabledForConnection={disabled}
+            disabledForConnectionMessage={message}
           />
         </>
       )}
