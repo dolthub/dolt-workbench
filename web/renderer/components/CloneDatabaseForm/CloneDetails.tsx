@@ -108,6 +108,7 @@ export default function CloneDetails({
           loading={loading}
           error={err}
           setErr={setErr}
+          disabledForConnection={false}
         />
       )}
     </div>

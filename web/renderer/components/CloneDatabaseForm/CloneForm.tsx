@@ -4,9 +4,10 @@ import {
   FormInput,
   Popup,
 } from "@dolthub/react-components";
-import { SyntheticEvent, useState } from "react";
+import { ReactNode, SyntheticEvent, useState } from "react";
 import { SetApolloErrorType } from "@lib/errors/types";
 import css from "./index.module.css";
+import { DisabledReturnType } from "@pageComponents/ConnectionsPage/NewConnection/context/utils";
 
 type Props = {
   onCloneDoltHubDatabase: (
@@ -19,6 +20,8 @@ type Props = {
   loading: boolean;
   error?: Error | undefined;
   setErr: SetApolloErrorType;
+  disabledForConnection: boolean;
+  disabledForConnectionMessage?: ReactNode;
 };
 
 export default function CloneForm({
@@ -27,11 +30,18 @@ export default function CloneForm({
   loading,
   error,
   setErr,
+  disabledForConnection,
+  disabledForConnectionMessage,
 }: Props) {
   const [owner, setOwner] = useState("");
   const [remoteDbName, setRemoteDbName] = useState("");
   const [newDbName, setNewDbName] = useState("");
-  const { disabled, message } = getDisabled(owner, remoteDbName);
+  const { disabled, message } = getDisabled(
+    disabledForConnection,
+    owner,
+    remoteDbName,
+    disabledForConnectionMessage,
+  );
 
   return (
     <>
@@ -113,21 +123,20 @@ export default function CloneForm({
   );
 }
 
-type DisabledReturnType = {
-  disabled: boolean;
-  message?: React.ReactNode;
-};
-
-export function getDisabled(
+function getDisabled(
+  disabledForConnection: boolean,
   owner: string,
   database?: string,
+  disabledForConnectionMessage?: ReactNode,
 ): DisabledReturnType {
+  if (disabledForConnection) {
+    return { disabled: true, message: disabledForConnectionMessage };
+  }
   if (!database) {
     return { disabled: true, message: <span>Database name is required.</span> };
   }
   if (!owner) {
     return { disabled: true, message: <span>Owner name is required.</span> };
   }
-
   return { disabled: false };
 }

@@ -5,27 +5,18 @@ import {
   Popup,
   SmallLoader,
 } from "@dolthub/react-components";
-import { connections as connectionsUrl } from "@lib/urls";
-import { DatabaseConnectionFragment } from "@gen/graphql-types";
-import Link from "@components/links/Link";
-import { ConfigState } from "./context/state";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
+import { ReactNode } from "react";
 
-export default function StartDoltServerForm() {
-  const {
-    state,
-    setState,
-    error,
-    setErr,
-    storedConnections,
-    onStartDoltServer,
-  } = useConfigContext();
+type Props = {
+  disabled: boolean;
+  message?: ReactNode;
+};
 
-  const { disabled, message } = getStartLocalDoltServerDisabled(
-    state,
-    storedConnections,
-  );
+export default function StartDoltServerForm({ disabled, message }: Props) {
+  const { state, setState, error, setErr, onStartDoltServer } =
+    useConfigContext();
 
   return (
     <>
@@ -83,51 +74,4 @@ export default function StartDoltServerForm() {
       </ButtonsWithError>
     </>
   );
-}
-
-type DisabledReturnType = {
-  disabled: boolean;
-  message?: React.ReactNode;
-};
-
-function getStartLocalDoltServerDisabled(
-  state: ConfigState,
-  connections?: DatabaseConnectionFragment[],
-): DisabledReturnType {
-  const disabled =
-    !state.name ||
-    !state.port ||
-    !!connections?.some(connection => connection.isLocalDolt) ||
-    !!connections?.some(c => c.name === state.name);
-
-  if (!disabled) {
-    return { disabled };
-  }
-  if (!state.name) {
-    return { disabled, message: <span>Connection name is required.</span> };
-  }
-  if (!state.port) {
-    return { disabled, message: <span>Port is required.</span> };
-  }
-  if (connections?.some(connection => connection.isLocalDolt)) {
-    return {
-      disabled,
-      message: (
-        <div>
-          <p>Already have one internal dolt server instance.</p>
-          <p>
-            Go to <Link {...connectionsUrl}>Connections</Link> and remove it
-            before adding a new one.
-          </p>
-        </div>
-      ),
-    };
-  }
-  if (connections?.some(c => c.name === state.name)) {
-    return {
-      disabled,
-      message: <span>Connection name already exists.</span>,
-    };
-  }
-  return { disabled };
 }
