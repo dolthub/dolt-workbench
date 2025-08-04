@@ -11,6 +11,7 @@ type Props = {
   params: OptionalRefParams;
   selectedValue: Maybe<string>;
   onChangeValue: (s: Maybe<string>) => void;
+  dataCy: string;
 };
 
 export default function BranchCommitAndTagSelector(props: Props) {
@@ -53,6 +54,7 @@ export default function BranchCommitAndTagSelector(props: Props) {
       className={css.branchAndCommitSelect}
       selectedOptionFirst
       light
+      data-cy={props.dataCy}
     />
   );
 }

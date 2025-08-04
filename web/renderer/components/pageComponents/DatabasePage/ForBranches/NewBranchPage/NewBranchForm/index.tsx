@@ -69,6 +69,7 @@ export default function NewBranchForm(props: Props): JSX.Element {
             label="New branch name"
             placeholder="i.e. feature-branch"
             className={css.input}
+            data-cy="new-branch-name-input"
           />
           <ButtonsWithError
             onCancel={goToBranchesPage}
@@ -76,7 +77,7 @@ export default function NewBranchForm(props: Props): JSX.Element {
             stackedButton={isMobile}
             error={err}
           >
-            <Button type="submit" disabled={!newBranchName || !fromRefName}>
+            <Button type="submit" disabled={!newBranchName || !fromRefName} data-cy="create-branch-button">
               Create branch
             </Button>
           </ButtonsWithError>

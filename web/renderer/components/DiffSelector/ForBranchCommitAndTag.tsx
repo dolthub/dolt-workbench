@@ -29,6 +29,7 @@ export default function ForBranchCommitAndTag({ params }: Props) {
               params={params}
               selectedValue={toRef}
               onChangeValue={s => setToRef(s || "")}
+              dataCy="to-ref-selector"
             />
           </div>
           <div className={css.arrow}>
@@ -39,6 +40,7 @@ export default function ForBranchCommitAndTag({ params }: Props) {
               params={params}
               selectedValue={fromRef}
               onChangeValue={s => setFromRef(s || "")}
+              dataCy="from-ref-selector"
             />
           </div>
         </div>
@@ -52,7 +54,7 @@ export default function ForBranchCommitAndTag({ params }: Props) {
           })}
           className={css.viewDiffButton}
         >
-          <Button disabled={fromRef === toRef} className={css.button}>
+          <Button disabled={fromRef === toRef} className={css.button} data-cy="view-diff-button">
             View Diff
           </Button>
         </Link>

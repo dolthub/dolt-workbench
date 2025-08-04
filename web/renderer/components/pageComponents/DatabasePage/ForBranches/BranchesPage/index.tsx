@@ -79,7 +79,7 @@ function Inner(props: InnerProps): JSX.Element {
           )}
           <HideForNoWritesWrapper params={props.params}>
             <Link {...createUrl} className={css.white}>
-              <Button>Create Branch</Button>
+              <Button data-cy="create-branch-page-button">Create Branch</Button>
             </Link>
           </HideForNoWritesWrapper>
         </div>
