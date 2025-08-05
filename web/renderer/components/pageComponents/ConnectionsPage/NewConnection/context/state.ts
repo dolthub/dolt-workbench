@@ -44,7 +44,7 @@ export type ConfigContextType = {
   setErr: SetApolloErrorType;
   clearState: () => void;
   storedConnections?: DatabaseConnectionFragment[];
-  onStartDoltServer: (e: SyntheticEvent) => Promise<void>;
+  onStartDoltServer: (e: SyntheticEvent, databaseName: string) => Promise<void>;
   onCloneDoltHubDatabase: (
     e: SyntheticEvent,
     owner: string,

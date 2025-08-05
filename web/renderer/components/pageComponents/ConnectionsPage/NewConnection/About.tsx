@@ -95,7 +95,10 @@ export default function About() {
         </>
       )}
       {connectionOption === ConnectionOption.New && (
-        <StartDoltServerForm disabled={disabled} message={message} />
+        <StartDoltServerForm
+          disabledForConnection={disabled}
+          disabledForConnectionMessage={message}
+        />
       )}
       {connectionOption === ConnectionOption.Clone && (
         <>

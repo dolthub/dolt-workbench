@@ -13,13 +13,17 @@ export async function startServer(
   mainWindow: BrowserWindow,
   connectionName: string,
   port: string,
+  databaseName: string,
   init?: boolean,
 ): Promise<ChildProcess | null> {
   // Set the path for the database folder
   // In production, it's in the userData directory
   // In development, it's in the build directory since the development userData directory clears its contents every time the app is rerun in dev mode
-  const dbFolderPath = path.join(getDatabasesPath(), connectionName);
-
+  const dbFolderPath = path.join(
+    getDatabasesPath(),
+    connectionName,
+    databaseName,
+  );
   const doltPath = getDoltPaths();
 
   try {

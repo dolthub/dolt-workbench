@@ -96,7 +96,7 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
-  const onStartDoltServer = async (e: SyntheticEvent) => {
+  const onStartDoltServer = async (e: SyntheticEvent, databaseName: string) => {
     e.preventDefault();
     setState({ loading: true });
     try {
@@ -104,6 +104,7 @@ export function ConfigProvider({ children }: Props) {
         "start-dolt-server",
         state.name.trim(),
         state.port,
+        databaseName,
         !state.cloneDolt,
       );
 
