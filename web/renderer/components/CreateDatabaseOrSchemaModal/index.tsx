@@ -79,13 +79,18 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
             label={`${initialUppercase(props.label)} name`}
             onChangeString={props.setName}
             placeholder={`Choose a name for your ${props.label}`}
+            data-cy="database-name-input"
             light
           />
         )}
       </ModalInner>
       <ModalButtons err={props.err} onRequestClose={props.onClose}>
         {!cloneDolt && (
-          <Button type="submit" disabled={!props.name.length}>
+          <Button
+            type="submit"
+            disabled={!props.name.length}
+            data-cy="create-database-modal-button"
+          >
             Create
           </Button>
         )}

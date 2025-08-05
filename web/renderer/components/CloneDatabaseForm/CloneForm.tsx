@@ -55,6 +55,7 @@ export default function CloneForm({
         label="Owner Name"
         labelClassName={css.label}
         placeholder="e.g. dolthub (required)"
+        data-cy="owner-name-input"
         light
       />
       <FormInput
@@ -67,6 +68,7 @@ export default function CloneForm({
         label="Remote Database Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
+        data-cy="remote-db-name-input"
         light
       />
       <FormInput
@@ -78,6 +80,7 @@ export default function CloneForm({
         label="New Database Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
+        data-cy="new-db-name-input"
         light
       />
       <ButtonsWithError error={error} className={css.buttons}>
@@ -109,6 +112,7 @@ export default function CloneForm({
                   onClick={async e =>
                     onCloneDoltHubDatabase(e, owner, remoteDbName, newDbName)
                   }
+                  data-cy="start-clone-button"
                 >
                   Start Clone
                 </Button>

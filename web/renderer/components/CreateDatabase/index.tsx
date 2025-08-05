@@ -55,6 +55,7 @@ export default function CreateDatabase(props: Props) {
       <Button.Link
         onClick={() => setIsOpen(true)}
         className={cx(css.createDB, props.buttonClassName)}
+        data-cy="add-database-button"
       >
         {props.showText ? (
           <span className={css.text}>Create Database</span>

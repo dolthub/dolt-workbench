@@ -1,4 +1,5 @@
 import {
+  formatDataCy,
   newClickFlow,
   newExpectation,
   newExpectationWithClickFlows,
@@ -9,7 +10,11 @@ import {
   shouldBeVisible,
   shouldClickAndFind,
   shouldFindAndContain,
+  shouldFindButton,
+  shouldFindCheckable,
+  shouldNotBeVisible,
   shouldNotExist,
+  shouldTypeString,
 } from "./sharedFunctionsAndVariables";
 import { Expectation, ShouldArgs } from "../types";
 import excerpt from "./excerpt";
@@ -86,6 +91,33 @@ const testDatabaseSelector = (connectionName: string, dbName: string) => {
   ];
 };
 
+const testAddDatabaseForm = newExpectationWithClickFlows(
+  "should show create database options",
+  formatDataCy("database-selector-button"),
+  beVisible,
+  [
+    newClickFlow(formatDataCy("database-selector-button"), [
+      shouldBeVisible("add-database-button"),
+    ]),
+    newClickFlow(formatDataCy("add-database-button"), [
+      ...shouldFindCheckable("create-database-radio", true),
+      ...shouldFindCheckable("clone-dolt-server-radio", false),
+      shouldFindButton("create-database-modal-button", true),
+      shouldTypeString("database-name-input", "test_new_database"),
+      shouldFindButton("create-database-modal-button", false),
+    ]),
+    newClickFlow(formatDataCy("clone-dolt-server-radio"), [
+      ...shouldFindCheckable("create-database-radio", false),
+      ...shouldFindCheckable("clone-dolt-server-radio", true),
+      shouldFindButton("start-clone-button", true),
+      shouldTypeString("owner-name-input", "test-owner-name"),
+      shouldTypeString("remote-db-name-input", "test-remote-db-name"),
+      shouldFindButton("start-clone-button", false),
+    ]),
+    newClickFlow(formatDataCy("close-modal"), [shouldNotExist("modal-title")]),
+  ],
+);
+
 export const conditionalReadMeTest = (hasDocs: boolean) => {
   const docsExpectation: Expectation = hasDocs
     ? newExpectation(
@@ -127,4 +159,5 @@ export const testDBHeader = (
     [databaseDropdownClickFlow(hasDocs)],
   ),
   ...testDatabaseSelector(connectionName, dbName),
+  testAddDatabaseForm,
 ];
