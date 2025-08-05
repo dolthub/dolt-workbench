@@ -10,7 +10,7 @@ describe("tests GoBack", () => {
     setup(<GoBack url={mockRoute} pageName="Test Page" />);
 
     expect(screen.getByRole("link")).toBeInTheDocument();
-    expect(screen.getByText("back to Test Page")).toBeInTheDocument();
+    expect(screen.getByText("Back to Test Page")).toBeInTheDocument();
   });
 
   it("renders with mobile styles when isMobile is true", () => {
@@ -58,7 +58,7 @@ describe("tests GoBack", () => {
   it("renders with different page names", () => {
     setup(<GoBack url={mockRoute} pageName="Dashboard" />);
 
-    expect(screen.getByText("back to Dashboard")).toBeInTheDocument();
+    expect(screen.getByText("Back to Dashboard")).toBeInTheDocument();
   });
 
   it("combines all props correctly", () => {
@@ -79,6 +79,6 @@ describe("tests GoBack", () => {
 
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("href", "/test");
-    expect(screen.getByText("back to Complex Page")).toBeInTheDocument();
+    expect(screen.getByText("Back to Complex Page")).toBeInTheDocument();
   });
 });
