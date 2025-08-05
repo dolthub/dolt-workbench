@@ -40,6 +40,7 @@ export default function CloneForm({
     disabledForConnection,
     owner,
     remoteDbName,
+    newDbName,
     disabledForConnectionMessage,
   );
 
@@ -53,7 +54,7 @@ export default function CloneForm({
         }}
         label="Owner Name"
         labelClassName={css.label}
-        placeholder="e.g. dolthub"
+        placeholder="e.g. dolthub (required)"
         light
       />
       <FormInput
@@ -126,14 +127,25 @@ export default function CloneForm({
 function getDisabled(
   disabledForConnection: boolean,
   owner: string,
-  database?: string,
+  remoteDatabaseName: string,
+  newDatabaseName: string,
   disabledForConnectionMessage?: ReactNode,
 ): DisabledReturnType {
   if (disabledForConnection) {
     return { disabled: true, message: disabledForConnectionMessage };
   }
-  if (!database) {
-    return { disabled: true, message: <span>Database name is required.</span> };
+  if (!remoteDatabaseName) {
+    return {
+      disabled: true,
+      message: <span>Remote database name is required.</span>,
+    };
+  }
+
+  if (!newDatabaseName) {
+    return {
+      disabled: true,
+      message: <span>New database name is required.</span>,
+    };
   }
   if (!owner) {
     return { disabled: true, message: <span>Owner name is required.</span> };
