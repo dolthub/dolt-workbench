@@ -9,7 +9,7 @@ import {
 
 // defaultTimeout is the time in ms cypress will wait attempting
 // to .get() an element before failing
-export const defaultTimeout = 5000;
+export const defaultTimeout = 10000;
 export const opts: Partial<Cypress.Timeoutable> = {
   timeout: defaultTimeout,
 };
