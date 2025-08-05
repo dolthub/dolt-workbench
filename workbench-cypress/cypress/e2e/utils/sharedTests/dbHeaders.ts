@@ -12,7 +12,6 @@ import {
   shouldFindAndContain,
   shouldFindButton,
   shouldFindCheckable,
-  shouldNotBeVisible,
   shouldNotExist,
   shouldTypeString,
 } from "./sharedFunctionsAndVariables";
