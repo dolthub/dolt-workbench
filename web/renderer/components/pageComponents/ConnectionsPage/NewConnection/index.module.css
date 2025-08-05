@@ -136,3 +136,7 @@
 .popup {
   @apply text-storm-600 py-2 px-4 text-center;
 }
+
+.goBack {
+  @apply mx-8;
+}
