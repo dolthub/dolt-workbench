@@ -15,7 +15,7 @@ export default function Header(props: Props) {
         pageName="docs"
         className={css.goBack}
       />
-      <div className={css.title}>Add a README or LICENSE</div>
+      <div className={css.title}>Add a doc</div>
     </div>
   );
 }

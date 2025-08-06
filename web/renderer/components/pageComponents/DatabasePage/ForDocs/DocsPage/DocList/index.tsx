@@ -17,7 +17,7 @@ type InnerProps = Props & {
 };
 
 function Inner({ docs, params }: InnerProps) {
-  const canCreateNewDoc = docs.list.length < 2;
+  const canCreateNewDoc = docs.list.length < 3;
   return (
     <div className={css.docsContainer}>
       {docs.list.length > 0 && (
