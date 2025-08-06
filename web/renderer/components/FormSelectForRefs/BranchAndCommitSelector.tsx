@@ -48,6 +48,7 @@ export default function BranchAndCommitSelector(props: Props) {
       placeholder="select a branch or commit..."
       className={css.branchAndCommitSelect}
       selectedOptionFirst
+      data-cy="branch-and-commit-selector"
     />
   );
 }
