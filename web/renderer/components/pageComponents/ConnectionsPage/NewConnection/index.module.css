@@ -105,7 +105,8 @@
   }
 }
 
-.checkbox {
+.checkbox,
+.radio {
   @apply mb-3 text-sm w-full;
 }
 

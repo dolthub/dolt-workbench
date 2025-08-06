@@ -7,7 +7,8 @@ import {
 } from "@dolthub/react-components";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
+import { DisabledReturnType } from "@pageComponents/ConnectionsPage/NewConnection/context/utils";
 
 type Props = {
   disabledForConnection: boolean;
@@ -21,10 +22,9 @@ export default function StartDoltServerForm({
   const { state, setState, error, setErr, onStartDoltServer } =
     useConfigContext();
 
-  const [databaseName, setDatabaseName] = useState("");
   const { disabled, message } = getDisabled(
     disabledForConnection,
-    databaseName,
+    state.database,
     disabledForConnectionMessage,
   );
 
@@ -53,9 +53,10 @@ export default function StartDoltServerForm({
         labelClassName={css.label}
       />
       <FormInput
-        value={databaseName}
+        value={state.database}
         onChangeString={db => {
-          setDatabaseName(db);
+          setState({ database: db });
+          setErr(undefined);
         }}
         label="Database Name"
         labelClassName={css.label}
@@ -77,7 +78,7 @@ export default function StartDoltServerForm({
                 type="submit"
                 disabled={disabled || state.loading}
                 className={css.button}
-                onClick={async e => onStartDoltServer(e, databaseName)}
+                onClick={onStartDoltServer}
               >
                 Start and Connect to Dolt Server
                 <SmallLoader
@@ -100,7 +101,7 @@ function getDisabled(
   disabledForConnection: boolean,
   databaseName: string,
   disabledForConnectionMessage?: ReactNode,
-) {
+): DisabledReturnType {
   if (disabledForConnection) {
     return { disabled: true, message: disabledForConnectionMessage };
   }

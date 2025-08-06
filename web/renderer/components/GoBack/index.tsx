@@ -22,7 +22,7 @@ export default function GoBack(props: Props) {
     >
       <Link {...props.url}>
         <IoIosArrowDropleftCircle />
-        <span>{props.pageName ? `Back to ${props.pageName}` : "Back"}</span>
+        <span>{props.pageName ? `back to ${props.pageName}` : "back"}</span>
       </Link>
     </div>
   );

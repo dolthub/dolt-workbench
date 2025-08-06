@@ -10,7 +10,7 @@ import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
 import CloneDatabaseForm from "@components/CloneDatabaseForm";
-import css from "@components/CloneDatabaseForm/index.module.css";
+import css from "./index.module.css";
 
 type InnerProps = {
   onClose: () => void;
@@ -52,24 +52,24 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
       <ModalInner>
         {props.isDolt && (
           <>
-            <Radio
-              checked={!cloneDolt}
-              onChange={() => {
-                setCloneDolt(false);
-              }}
-              name="create-database"
-              label="Create a new database"
-              className={css.checkbox}
-            />
-            <Radio
-              checked={cloneDolt}
-              onChange={() => {
-                setCloneDolt(true);
-              }}
-              name="clone-dolt-server"
-              label="Clone a remote Dolt database from DoltHub"
-              className={css.checkbox}
-            />
+            <div className={css.radios}>
+              <Radio
+                checked={!cloneDolt}
+                onChange={() => {
+                  setCloneDolt(false);
+                }}
+                name="create-database"
+                label="Create a new database"
+              />
+              <Radio
+                checked={cloneDolt}
+                onChange={() => {
+                  setCloneDolt(true);
+                }}
+                name="clone-dolt-server"
+                label="Clone a remote Dolt database from DoltHub"
+              />
+            </div>
             {cloneDolt && <CloneDatabaseForm />}
           </>
         )}
