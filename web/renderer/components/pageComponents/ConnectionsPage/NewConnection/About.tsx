@@ -1,7 +1,7 @@
 import {
   Button,
   ButtonsWithError,
-  Checkbox,
+  Radio,
   FormInput,
   FormSelect,
   useTabsContext,
@@ -12,61 +12,92 @@ import CloneForm from "@components/CloneDatabaseForm/CloneForm";
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 import StartDoltServerForm from "./StartDoltServerForm";
+import { getStartLocalDoltServerDisabled } from "@pageComponents/ConnectionsPage/NewConnection/context/utils";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
+enum ConnectionOption {
+  Existing,
+  New,
+  Clone,
+}
+
 export default function About() {
-  const { state, setState, error, setErr, onCloneDoltHubDatabase } =
-    useConfigContext();
+  const {
+    state,
+    setState,
+    error,
+    setErr,
+    storedConnections,
+    onCloneDoltHubDatabase,
+  } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
-  const [startDoltServer, setStartDoltServer] = useState(false);
-  const [cloneDolt, setCloneDolt] = useState(false);
+  const [connectionOption, setConnectionOption] = useState(
+    ConnectionOption.Existing,
+  );
 
   const onNext = (e: SyntheticEvent) => {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
   };
 
+  const { disabled, message } = getStartLocalDoltServerDisabled(
+    state,
+    storedConnections,
+  );
+
   return (
     <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
       {forElectron && (
         <>
-          <Checkbox
-            checked={startDoltServer}
-            onChange={e => {
+          <Radio
+            checked={connectionOption === ConnectionOption.Existing}
+            onChange={() => {
+              setConnectionOption(ConnectionOption.Existing);
               setState({
-                useSSL: startDoltServer,
-                port: e.target.checked ? "3658" : state.port,
-                isLocalDolt: !startDoltServer,
+                isLocalDolt: false,
               });
-              setStartDoltServer(!startDoltServer);
+            }}
+            name="existing-dolt-server"
+            label="Connect to an existing Dolt server"
+            className={css.checkbox}
+          />
+          <Radio
+            checked={connectionOption === ConnectionOption.New}
+            onChange={() => {
+              setState({
+                useSSL: false,
+                port: "3658",
+                isLocalDolt: true,
+              });
+              setConnectionOption(ConnectionOption.New);
             }}
             name="start-dolt-server"
             label="Start a fresh Dolt server"
             description="Run a Dolt SQL server hosted directly within the Workbench. The app supports only one internal server instance, but this restriction does not apply to external Dolt server connections."
             className={css.checkbox}
-            disabled={cloneDolt}
           />
-          <Checkbox
-            checked={cloneDolt}
-            onChange={e => {
+          <Radio
+            checked={connectionOption === ConnectionOption.Clone}
+            onChange={() => {
               setState({
-                useSSL: cloneDolt,
-                port: e.target.checked ? "3658" : state.port,
-                isLocalDolt: !cloneDolt,
-                cloneDolt: !cloneDolt,
+                useSSL: false,
+                port: "3658",
+                isLocalDolt: true,
+                cloneDolt: true,
               });
-              setCloneDolt(!cloneDolt);
+              setConnectionOption(ConnectionOption.Clone);
             }}
             name="clone-dolt-server"
             label="Clone a remote Dolt database from DoltHub"
             className={css.checkbox}
-            disabled={startDoltServer}
           />
         </>
       )}
-      {startDoltServer && <StartDoltServerForm />}
-      {cloneDolt && (
+      {connectionOption === ConnectionOption.New && (
+        <StartDoltServerForm disabled={disabled} message={message} />
+      )}
+      {connectionOption === ConnectionOption.Clone && (
         <>
           <FormInput
             value={state.name}
@@ -97,10 +128,12 @@ export default function About() {
             error={error}
             progress={state.progress}
             loading={state.loading}
+            disabledForConnection={disabled}
+            disabledForConnectionMessage={message}
           />
         </>
       )}
-      {!startDoltServer && !cloneDolt && (
+      {connectionOption === ConnectionOption.Existing && (
         <>
           <FormInput
             value={state.name}
@@ -108,7 +141,7 @@ export default function About() {
               setState({ name: n });
               setErr(undefined);
             }}
-            label="Name"
+            label="Connection Name"
             labelClassName={css.label}
             placeholder="my-database (required)"
             light

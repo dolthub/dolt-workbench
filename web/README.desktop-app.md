@@ -87,7 +87,7 @@ yarn build:linux
 
 ### Submit to MAC store
 
-We will only use `mas-universal` folder for submitting to MAC store. There will be a `Dolt Workbench.app` application file in `dist` and a `Dolt Workbench-mac-universal.pkg` installer file inside it. These files cannot be used locally, they are for MAC store submission. When double clicking on them, it will show "could not be opened". This is expected because they are packed in sandbox and need to be signed by Apple before distribution.
+We will only use `mas-universal` folder for submitting to MAC store. There will be a `Dolt Workbench.app` application file in `dist` and a `DoltWorkbench-mac-universal.pkg` installer file inside it. These files cannot be used locally, they are for MAC store submission. When double clicking on them, it will show "could not be opened". This is expected because they are packed in sandbox and need to be signed by Apple before distribution.
 
 The preferred tool to submit is the [Transporter app](https://apps.apple.com/us/app/transporter/id1450874784), which can be downloaded free from the Mac App Store. It will check for errors. Open the Transporter app > Drag and drop `DoltWorkbench-mac-universal.pkg` file into the Transporter app. If no errors found click the Deliver button to send the app to your developer account.
 
