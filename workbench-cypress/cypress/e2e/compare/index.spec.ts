@@ -9,7 +9,6 @@ import {
 import {
   beVisible,
   shouldFindAndContain,
-  shouldNotBeVisible,
   shouldNotExist,
 } from "@sharedTests/sharedFunctionsAndVariables";
 
