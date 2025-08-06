@@ -54,7 +54,11 @@ export default function ForBranchCommitAndTag({ params }: Props) {
           })}
           className={css.viewDiffButton}
         >
-          <Button disabled={fromRef === toRef} className={css.button} data-cy="view-diff-button">
+          <Button
+            disabled={fromRef === toRef}
+            className={css.button}
+            data-cy="view-diff-button"
+          >
             View Diff
           </Button>
         </Link>

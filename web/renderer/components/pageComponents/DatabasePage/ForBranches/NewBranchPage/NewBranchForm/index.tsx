@@ -77,7 +77,11 @@ export default function NewBranchForm(props: Props): JSX.Element {
             stackedButton={isMobile}
             error={err}
           >
-            <Button type="submit" disabled={!newBranchName || !fromRefName} data-cy="create-branch-button">
+            <Button
+              type="submit"
+              disabled={!newBranchName || !fromRefName}
+              data-cy="create-branch-button"
+            >
               Create branch
             </Button>
           </ButtonsWithError>
