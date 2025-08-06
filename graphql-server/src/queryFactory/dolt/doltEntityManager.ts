@@ -141,7 +141,8 @@ export async function getDoltDocs(em: EntityManager): t.UPR {
   const sel = em
     .createQueryBuilder()
     .select("*")
-    .from(DoltSystemTable.DOCS, "");
+    .from(DoltSystemTable.DOCS, "")
+    .orderBy("doc_name", "DESC");
   return handleTableNotFound(async () => sel.getRawMany());
 }
 

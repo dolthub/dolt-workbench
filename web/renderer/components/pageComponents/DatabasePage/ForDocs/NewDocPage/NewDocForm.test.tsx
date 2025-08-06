@@ -20,7 +20,7 @@ jest.mock("next/router", () => {
   };
 });
 
-const docTitle = "Add a README or LICENSE";
+const docTitle = "Add a doc";
 
 describe("test NewDocForm", () => {
   it("renders new doc form for no docs", async () => {
