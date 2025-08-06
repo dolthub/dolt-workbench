@@ -114,6 +114,7 @@ const testAddDatabaseForm = newExpectationWithClickFlows(
       shouldFindButton("start-clone-button", false),
     ]),
     newClickFlow(formatDataCy("close-modal"), [shouldNotExist("modal-title")]),
+    newClickFlow(formatDataCy("database-selector-button"), [shouldNotExist("connection-and-database-popup")])
   ],
 );
 
