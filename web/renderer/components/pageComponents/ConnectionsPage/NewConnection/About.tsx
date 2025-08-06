@@ -60,7 +60,7 @@ export default function About() {
             }}
             name="existing-dolt-server"
             label="Connect to an existing Dolt server"
-            className={css.checkbox}
+            className={css.radio}
           />
           <Radio
             checked={connectionOption === ConnectionOption.New}
@@ -75,7 +75,7 @@ export default function About() {
             name="start-dolt-server"
             label="Start a fresh Dolt server"
             description="Run a Dolt SQL server hosted directly within the Workbench. The app supports only one internal server instance, but this restriction does not apply to external Dolt server connections."
-            className={css.checkbox}
+            className={css.radio}
           />
           <Radio
             checked={connectionOption === ConnectionOption.Clone}
@@ -90,12 +90,15 @@ export default function About() {
             }}
             name="clone-dolt-server"
             label="Clone a remote Dolt database from DoltHub"
-            className={css.checkbox}
+            className={css.radio}
           />
         </>
       )}
       {connectionOption === ConnectionOption.New && (
-        <StartDoltServerForm disabled={disabled} message={message} />
+        <StartDoltServerForm
+          disabledForConnection={disabled}
+          disabledForConnectionMessage={message}
+        />
       )}
       {connectionOption === ConnectionOption.Clone && (
         <>
@@ -143,7 +146,7 @@ export default function About() {
             }}
             label="Connection Name"
             labelClassName={css.label}
-            placeholder="my-database (required)"
+            placeholder="my-connection (required)"
             light
             data-cy="connection-name-input"
           />

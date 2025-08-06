@@ -17,11 +17,6 @@ jest.mock("next/router", () => {
 });
 
 describe("tests CloneDatabaseForm", () => {
-  const defaultProps = {
-    cloneDolt: false,
-    setCloneDolt: jest.fn(),
-  };
-
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -29,7 +24,7 @@ describe("tests CloneDatabaseForm", () => {
   it("renders error when no current connection", async () => {
     setup(
       <MockedProvider mocks={[mocks.currentConnectionNullMock]}>
-        <CloneDatabaseForm {...defaultProps} />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -43,7 +38,7 @@ describe("tests CloneDatabaseForm", () => {
   it("renders nothing for postgres connections", async () => {
     const { container } = setup(
       <MockedProvider mocks={[mocks.postgresConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -52,64 +47,10 @@ describe("tests CloneDatabaseForm", () => {
     expect(container).toBeEmptyDOMElement();
   });
 
-  it("renders clone form when cloneDolt is false", async () => {
-    setup(
-      <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} />
-      </MockedProvider>,
-    );
-
-    await waitForQueryLoaders();
-
-    expect(
-      screen.getByText("Clone a remote Dolt database from DoltHub"),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("checkbox")).not.toBeChecked();
-    expect(screen.queryByText("Owner Name")).not.toBeInTheDocument();
-  });
-
-  it("renders form fields when cloneDolt is true", async () => {
-    setup(
-      <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
-      </MockedProvider>,
-    );
-
-    await waitForQueryLoaders();
-
-    expect(
-      screen.getByText("Clone a remote Dolt database from DoltHub"),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("checkbox")).toBeChecked();
-    expect(screen.getByText("Owner Name")).toBeInTheDocument();
-    expect(screen.getByText("Remote Database Name")).toBeInTheDocument();
-    expect(screen.getByText("New Database Name")).toBeInTheDocument();
-  });
-
-  it("toggles checkbox and calls setCloneDolt", async () => {
-    const mockSetCloneDolt = jest.fn();
-    const { user } = setup(
-      <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm
-          {...defaultProps}
-          setCloneDolt={mockSetCloneDolt}
-          cloneDolt={false}
-        />
-      </MockedProvider>,
-    );
-
-    await waitForQueryLoaders();
-
-    const checkbox = screen.getByRole("checkbox");
-    await user.click(checkbox);
-
-    expect(mockSetCloneDolt).toHaveBeenCalledWith(true);
-  });
-
   it("shows disabled submit button when fields are empty", async () => {
     setup(
       <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -122,7 +63,7 @@ describe("tests CloneDatabaseForm", () => {
   it("enables submit button when all fields are filled", async () => {
     const { user } = setup(
       <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -142,7 +83,7 @@ describe("tests CloneDatabaseForm", () => {
   it("auto-fills new database name when remote database name changes", async () => {
     const { user } = setup(
       <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -162,7 +103,7 @@ describe("tests CloneDatabaseForm", () => {
       <MockedProvider
         mocks={[mocks.currentConnectionMock, mocks.doltCloneMock]}
       >
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -194,7 +135,7 @@ describe("tests CloneDatabaseForm", () => {
   it("shows tooltip when button is disabled", async () => {
     const { user } = setup(
       <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 
@@ -207,7 +148,7 @@ describe("tests CloneDatabaseForm", () => {
 
     await waitFor(() => {
       expect(
-        screen.getByText("Database name is required."),
+        screen.getByText("Remote database name is required."),
       ).toBeInTheDocument();
     });
   });
@@ -215,7 +156,7 @@ describe("tests CloneDatabaseForm", () => {
   it("shows owner required tooltip when only database is filled", async () => {
     const { user } = setup(
       <MockedProvider mocks={[mocks.currentConnectionMock]}>
-        <CloneDatabaseForm {...defaultProps} cloneDolt />
+        <CloneDatabaseForm />
       </MockedProvider>,
     );
 

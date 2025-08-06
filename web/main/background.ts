@@ -252,13 +252,26 @@ ipcMain.handle("toggle-left-sidebar", () => {
 
 ipcMain.handle(
   "start-dolt-server",
-  async (_, connectionName: string, port: string, init?: boolean) => {
+  async (
+    _,
+    connectionName: string,
+    port: string,
+    databaseName: string,
+    init?: boolean,
+  ) => {
     try {
-      console.log("start-dolt-server", connectionName, port, init);
+      console.log(
+        "start-dolt-server",
+        connectionName,
+        port,
+        databaseName,
+        init,
+      );
       doltServerProcess = await startServer(
         mainWindow,
         connectionName,
         port,
+        databaseName,
         init,
       );
       if (!doltServerProcess) {

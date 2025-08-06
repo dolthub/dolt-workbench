@@ -10,6 +10,7 @@ const customJestConfig = {
   rootDir: "./renderer",
   setupFilesAfterEnv: ["../jest.setup.ts"],
   testRegex: TEST_REGEX,
+  testEnvironment: "jsdom",
   transform: {
     "^.+\\.tsx?$": "babel-jest",
   },

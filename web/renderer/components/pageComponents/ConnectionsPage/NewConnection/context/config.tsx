@@ -104,6 +104,7 @@ export function ConfigProvider({ children }: Props) {
         "start-dolt-server",
         state.name.trim(),
         state.port,
+        state.database,
         !state.cloneDolt,
       );
 

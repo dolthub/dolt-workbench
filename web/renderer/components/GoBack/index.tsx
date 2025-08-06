@@ -6,7 +6,7 @@ import css from "./index.module.css";
 
 type Props = {
   url: Route;
-  pageName: string;
+  pageName?: string;
   isMobile?: boolean;
   className?: string;
 };
@@ -22,7 +22,7 @@ export default function GoBack(props: Props) {
     >
       <Link {...props.url}>
         <IoIosArrowDropleftCircle />
-        <span>back to {props.pageName}</span>
+        <span>{props.pageName ? `back to ${props.pageName}` : "back"}</span>
       </Link>
     </div>
   );

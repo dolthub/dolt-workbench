@@ -8,15 +8,25 @@ import {
 import { useConfigContext } from "./context/config";
 import css from "./index.module.css";
 import { ReactNode } from "react";
+import { DisabledReturnType } from "@pageComponents/ConnectionsPage/NewConnection/context/utils";
 
 type Props = {
-  disabled: boolean;
-  message?: ReactNode;
+  disabledForConnection: boolean;
+  disabledForConnectionMessage?: ReactNode;
 };
 
-export default function StartDoltServerForm({ disabled, message }: Props) {
+export default function StartDoltServerForm({
+  disabledForConnection,
+  disabledForConnectionMessage,
+}: Props) {
   const { state, setState, error, setErr, onStartDoltServer } =
     useConfigContext();
+
+  const { disabled, message } = getDisabled(
+    disabledForConnection,
+    state.database,
+    disabledForConnectionMessage,
+  );
 
   return (
     <>
@@ -26,9 +36,9 @@ export default function StartDoltServerForm({ disabled, message }: Props) {
           setState({ name: n });
           setErr(undefined);
         }}
-        label="Database Name"
+        label="Connection Name"
         labelClassName={css.label}
-        placeholder="e.g. my-database (required)"
+        placeholder="e.g. my-connection (required)"
         light
       />
       <FormInput
@@ -41,6 +51,17 @@ export default function StartDoltServerForm({ disabled, message }: Props) {
         placeholder="e.g. 3658 (required)"
         light
         labelClassName={css.label}
+      />
+      <FormInput
+        value={state.database}
+        onChangeString={db => {
+          setState({ database: db });
+          setErr(undefined);
+        }}
+        label="Database Name"
+        labelClassName={css.label}
+        placeholder="e.g. my-database (required)"
+        light
       />
       <ButtonsWithError error={error} className={css.buttons}>
         <Popup
@@ -74,4 +95,18 @@ export default function StartDoltServerForm({ disabled, message }: Props) {
       </ButtonsWithError>
     </>
   );
+}
+
+function getDisabled(
+  disabledForConnection: boolean,
+  databaseName: string,
+  disabledForConnectionMessage?: ReactNode,
+): DisabledReturnType {
+  if (disabledForConnection) {
+    return { disabled: true, message: disabledForConnectionMessage };
+  }
+  if (!databaseName) {
+    return { disabled: true, message: <span>Database name is required.</span> };
+  }
+  return { disabled: false };
 }

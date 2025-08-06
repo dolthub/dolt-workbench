@@ -1,4 +1,3 @@
-import { Checkbox } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
   DatabaseType,
@@ -13,16 +12,10 @@ import css from "./index.module.css";
 import CloneForm from "./CloneForm";
 
 type Props = {
-  cloneDolt: boolean;
-  setCloneDolt: (c: boolean) => void;
   currentConnection: DatabaseConnectionFragment;
 };
 
-export default function CloneDetails({
-  cloneDolt,
-  setCloneDolt,
-  currentConnection,
-}: Props) {
+export default function CloneDetails({ currentConnection }: Props) {
   const { mutateFn: doltClone, ...res } = useMutation({
     hook: useDoltCloneMutation,
     refetchQueries: [
@@ -92,25 +85,14 @@ export default function CloneDetails({
 
   return (
     <div className={css.form}>
-      <Checkbox
-        checked={cloneDolt}
-        onChange={() => {
-          setCloneDolt(!cloneDolt);
-        }}
-        name="clone-dolt-server"
-        label="Clone a remote Dolt database from DoltHub"
-        className={css.checkbox}
+      <CloneForm
+        onCloneDoltHubDatabase={onCloneDoltHubDatabase}
+        progress={progress}
+        loading={loading}
+        error={err}
+        setErr={setErr}
+        disabledForConnection={false}
       />
-      {cloneDolt && (
-        <CloneForm
-          onCloneDoltHubDatabase={onCloneDoltHubDatabase}
-          progress={progress}
-          loading={loading}
-          error={err}
-          setErr={setErr}
-          disabledForConnection={false}
-        />
-      )}
     </div>
   );
 }

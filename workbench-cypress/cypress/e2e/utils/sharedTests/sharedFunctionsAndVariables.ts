@@ -91,7 +91,7 @@ export const shouldFindButton = (
     disabled ? beDisabled : beEnabled,
   );
 
-export const shouldFindCheckbox = (
+export const shouldFindCheckable = (
   dataCy: string,
   checked: boolean,
   disabled = false,

@@ -3,12 +3,14 @@ import {
   FormInput,
   ModalButtons,
   ModalInner,
+  Radio,
 } from "@dolthub/react-components";
 import { initialUppercase } from "@dolthub/web-utils";
 import useRole from "@hooks/useRole";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SyntheticEvent, useState } from "react";
 import CloneDatabaseForm from "@components/CloneDatabaseForm";
+import css from "./index.module.css";
 
 type InnerProps = {
   onClose: () => void;
@@ -49,10 +51,27 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
     <form onSubmit={props.onSubmit}>
       <ModalInner>
         {props.isDolt && (
-          <CloneDatabaseForm
-            cloneDolt={cloneDolt}
-            setCloneDolt={setCloneDolt}
-          />
+          <>
+            <div className={css.radios}>
+              <Radio
+                checked={!cloneDolt}
+                onChange={() => {
+                  setCloneDolt(false);
+                }}
+                name="create-database"
+                label="Create a new database"
+              />
+              <Radio
+                checked={cloneDolt}
+                onChange={() => {
+                  setCloneDolt(true);
+                }}
+                name="clone-dolt-server"
+                label="Clone a remote Dolt database from DoltHub"
+              />
+            </div>
+            {cloneDolt && <CloneDatabaseForm />}
+          </>
         )}
         {!cloneDolt && (
           <FormInput
@@ -60,13 +79,18 @@ export default function CreateDatabaseOrSchemaModal(props: InnerProps) {
             label={`${initialUppercase(props.label)} name`}
             onChangeString={props.setName}
             placeholder={`Choose a name for your ${props.label}`}
+            data-cy="database-name-input"
             light
           />
         )}
       </ModalInner>
       <ModalButtons err={props.err} onRequestClose={props.onClose}>
         {!cloneDolt && (
-          <Button type="submit" disabled={!props.name.length}>
+          <Button
+            type="submit"
+            disabled={!props.name.length}
+            data-cy="create-database-modal-button"
+          >
             Create
           </Button>
         )}

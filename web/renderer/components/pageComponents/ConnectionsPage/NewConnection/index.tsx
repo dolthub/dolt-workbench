@@ -5,6 +5,8 @@ import WelcomeMessage from "./WelcomeMessage";
 import ConnectionTabs from "./ConnectionTabs";
 import css from "./index.module.css";
 import { ConfigProvider } from "./context/config";
+import GoBack from "@components/GoBack";
+import { connections } from "@lib/urls";
 
 type Props = {
   noExistingConnection?: boolean;
@@ -19,6 +21,7 @@ function Inner({ showWelcomeMsg }: InnerProps) {
     <div className={css.databaseForm} data-cy="add-connection-form">
       {showWelcomeMsg && <WelcomeMessage />}
       <div className={css.whiteContainer}>
+        <GoBack url={connections} className={css.goBack} />
         <div className={css.top}>
           <h3>Set up a new connection</h3>
           <p className={css.instructions}>

@@ -40,6 +40,7 @@ export default function CloneForm({
     disabledForConnection,
     owner,
     remoteDbName,
+    newDbName,
     disabledForConnectionMessage,
   );
 
@@ -53,7 +54,8 @@ export default function CloneForm({
         }}
         label="Owner Name"
         labelClassName={css.label}
-        placeholder="e.g. dolthub"
+        placeholder="e.g. dolthub (required)"
+        data-cy="owner-name-input"
         light
       />
       <FormInput
@@ -66,6 +68,7 @@ export default function CloneForm({
         label="Remote Database Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
+        data-cy="remote-db-name-input"
         light
       />
       <FormInput
@@ -77,6 +80,7 @@ export default function CloneForm({
         label="New Database Name"
         labelClassName={css.label}
         placeholder="e.g. my-database (required)"
+        data-cy="new-db-name-input"
         light
       />
       <ButtonsWithError error={error} className={css.buttons}>
@@ -108,6 +112,7 @@ export default function CloneForm({
                   onClick={async e =>
                     onCloneDoltHubDatabase(e, owner, remoteDbName, newDbName)
                   }
+                  data-cy="start-clone-button"
                 >
                   Start Clone
                 </Button>
@@ -126,14 +131,25 @@ export default function CloneForm({
 function getDisabled(
   disabledForConnection: boolean,
   owner: string,
-  database?: string,
+  remoteDatabaseName: string,
+  newDatabaseName: string,
   disabledForConnectionMessage?: ReactNode,
 ): DisabledReturnType {
   if (disabledForConnection) {
     return { disabled: true, message: disabledForConnectionMessage };
   }
-  if (!database) {
-    return { disabled: true, message: <span>Database name is required.</span> };
+  if (!remoteDatabaseName) {
+    return {
+      disabled: true,
+      message: <span>Remote database name is required.</span>,
+    };
+  }
+
+  if (!newDatabaseName) {
+    return {
+      disabled: true,
+      message: <span>New database name is required.</span>,
+    };
   }
   if (!owner) {
     return { disabled: true, message: <span>Owner name is required.</span> };
