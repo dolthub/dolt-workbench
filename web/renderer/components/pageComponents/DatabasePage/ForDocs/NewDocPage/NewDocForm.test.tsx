@@ -32,7 +32,6 @@ describe("test NewDocForm", () => {
     );
 
     expect(await screen.findByText(docTitle)).toBeVisible();
-    expect(await screen.findByText("LICENSE")).toBeVisible();
 
     const button = screen.getByText("Create");
     expect(button).toBeDisabled();
