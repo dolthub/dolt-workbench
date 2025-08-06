@@ -1,4 +1,5 @@
 import { MockedProvider } from "@apollo/client/testing";
+import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
@@ -23,16 +24,19 @@ jest.mock("next/router", () => {
 const docTitle = "Add a doc";
 
 describe("test NewDocForm", () => {
+  beforeEach(() => {
+    actions.push.mockClear();
+  });
+
   it("renders new doc form for no docs", async () => {
     useMockRouter(jestRouter, {});
     const { user } = setup(
-      <MockedProvider mocks={[docsMock(params, [])]}>
+      <MockedProvider mocks={[docsMock(params, []), databaseDetailsMock(true, false)]}>
         <NewDocForm params={params} />
       </MockedProvider>,
     );
 
     expect(await screen.findByText(docTitle)).toBeVisible();
-    expect(await screen.findByText("LICENSE")).toBeVisible();
 
     const button = screen.getByText("Create");
     expect(button).toBeDisabled();
@@ -48,7 +52,7 @@ describe("test NewDocForm", () => {
 
     const { href, as } = sqlQuery({
       ...params,
-      q: `REPLACE INTO dolt_docs VALUES ("LICENSE.md", "${markdown}")`,
+      q: `REPLACE INTO dolt_docs VALUES ("AGENT.md", "${markdown}")`,
     });
     await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });
