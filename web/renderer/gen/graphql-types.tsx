@@ -161,6 +161,7 @@ export type DocList = {
 };
 
 export enum DocType {
+  Agent = 'Agent',
   License = 'License',
   Readme = 'Readme',
   Unspecified = 'Unspecified'

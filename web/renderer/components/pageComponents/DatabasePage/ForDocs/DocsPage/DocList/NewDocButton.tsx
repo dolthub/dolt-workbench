@@ -17,7 +17,7 @@ export default function NewDocButton(props: Props) {
         <Button data-cy="add-doc-button">
           <div>
             <FiPlus />
-            Add README/LICENSE
+            Add doc
           </div>
         </Button>
       </Link>

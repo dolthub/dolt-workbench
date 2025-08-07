@@ -23,7 +23,7 @@ function Inner(props: InnerProps) {
 
   const canCreateNewDoc =
     props.userHasWritePerms &&
-    (!res.data?.docs || res.data.docs.list.length < 2);
+    (!res.data?.docs || res.data.docs.list.length < 3);
 
   return <NewDocLink params={props.params} hide={!canCreateNewDoc} />;
 }
@@ -55,7 +55,7 @@ function NewDocLink(props: {
       doltDisabled={props.doltDisabled}
       hide={props.hide}
     >
-      New README/LICENSE
+      New doc
     </DropdownItem>
   );
 }

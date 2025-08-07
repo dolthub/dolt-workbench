@@ -22,11 +22,8 @@ export class DocsResolver {
     const conn = this.conn.connection();
     const docRows = await conn.getDocs(args);
     if (!docRows?.length) return { list: [] };
-    const sortedDocs = docRows.sort(d =>
-      d.doc_name === DocType.Readme ? -1 : 1,
-    );
     return {
-      list: sortedDocs.map(d => fromDoltDocsRow(args.refName, d)),
+      list: docRows.map(d => fromDoltDocsRow(args.refName, d)),
     };
   }
 
