@@ -16,12 +16,8 @@ export function useDB(dbName: string, refName?: string, isDolt = true): string {
 
 export const listTablesQuery = `SELECT table_schema, table_name FROM information_schema.tables WHERE table_type='BASE TABLE' AND table_schema = $1 AND table_catalog = $2`;
 
-export const columnsQuery = (schemaName: string, tableName: string) => {
-  const table = tableName.includes(".")
-    ? tableName
-    : `${schemaName || "public"}."${tableName}"`;
-  return `DESCRIBE ${table};`;
-};
+export const columnsQuery = (schemaName: string, tableName: string) =>
+  `DESCRIBE ${schemaName || "public"}."${tableWithoutSchema(tableName)}"`;
 
 export const foreignKeysQuery = `SELECT * FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE
 WHERE table_name=$1 AND table_schema=$2 AND table_catalog=$3
@@ -138,8 +134,12 @@ function getPKColsForRowsQuery(cs: t.RawRows): string[] {
   return cols;
 }
 
-export const tableColsQueryAsOf = (tableName: string, refName: string) =>
-  `DESCRIBE ${tableName} AS OF '${refName}'`;
+export const tableColsQueryAsOf = (
+  tableName: string,
+  refName: string,
+  schemaName?: string,
+) =>
+  `DESCRIBE ${schemaName || "public"}."${tableWithoutSchema(tableName)}" AS OF '${refName}'`;
 
 export function getTableCommitDiffQuery(
   args: t.RowDiffArgs,
