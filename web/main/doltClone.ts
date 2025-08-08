@@ -4,7 +4,7 @@ import path from "path";
 import { startServerProcess } from "./doltServer";
 import {
   createFolder,
-  getDatabasesPath,
+  getConnectionsPath,
   getDoltPaths,
 } from "./helpers/filePath";
 
@@ -16,11 +16,9 @@ export async function cloneAndStartDatabase(
   port: string,
   mainWindow: BrowserWindow,
 ): Promise<ChildProcess | null> {
-  const dbsFolderPath = getDatabasesPath();
+  const dbsFolderPath = getConnectionsPath();
   const doltPath = getDoltPaths();
   const connectionFolderPath = path.join(dbsFolderPath, connectionName);
-  const dbFolderPath = path.join(connectionFolderPath, newDbName);
-
   try {
     const { errorMsg } = createFolder(path.join(connectionFolderPath));
     if (errorMsg) {
@@ -34,7 +32,12 @@ export async function cloneAndStartDatabase(
       connectionFolderPath,
       mainWindow,
     );
-    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    return await startServerProcess(
+      doltPath,
+      connectionFolderPath,
+      port,
+      mainWindow,
+    );
   } catch (error) {
     console.error("Failed to clone database:", error);
     throw error;

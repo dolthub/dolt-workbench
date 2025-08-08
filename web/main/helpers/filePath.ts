@@ -4,7 +4,7 @@ import { app } from "electron";
 
 const isProd = process.env.NODE_ENV === "production";
 
-export function getDatabasesPath() {
+export function getConnectionsPath() {
   if (isProd) {
     // Use ~/.local/share for Linux (more persistent than user data folder, which is ~/.config)
     const linuxDbRoot =
@@ -12,9 +12,9 @@ export function getDatabasesPath() {
         ? path.join(app.getPath("home"), ".local", "share", app.getName())
         : app.getPath("userData");
 
-    return path.join(linuxDbRoot, "databases");
+    return path.join(linuxDbRoot, "connections");
   }
-  return path.join(__dirname, "..", "build", "databases");
+  return path.join(__dirname, "..", "build", "connections");
 }
 
 // Returns the path to the Dolt binary based on the platform and environment.

@@ -2,7 +2,7 @@ import path from "path";
 import { BrowserWindow, IpcMainInvokeEvent } from "electron";
 import { ChildProcess, execFile } from "child_process";
 import { v4 as randomUUID } from "uuid";
-import { getDatabasesPath, getDoltPaths } from "./helpers/filePath";
+import { getConnectionsPath, getDoltPaths } from "./helpers/filePath";
 
 export async function doltLogin(
   event: IpcMainInvokeEvent,
@@ -12,7 +12,7 @@ export async function doltLogin(
 ): Promise<{ email: string; username: string }> {
   const requestId = randomUUID();
   return new Promise((resolve, reject) => {
-    const dbFolderPath = path.join(getDatabasesPath(), connectionName);
+    const dbFolderPath = path.join(getConnectionsPath(), connectionName);
     const doltPath = getDoltPaths();
 
     // Return the cancellation ID immediately

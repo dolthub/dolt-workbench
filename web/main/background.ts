@@ -256,23 +256,17 @@ ipcMain.handle(
     _,
     connectionName: string,
     port: string,
-    databaseName: string,
     init?: boolean,
+    dbName?: string,
   ) => {
     try {
-      console.log(
-        "start-dolt-server",
-        connectionName,
-        port,
-        databaseName,
-        init,
-      );
+      console.log("start-dolt-server", connectionName, port, init, dbName);
       doltServerProcess = await startServer(
         mainWindow,
         connectionName,
         port,
-        databaseName,
         init,
+        dbName,
       );
       if (!doltServerProcess) {
         throw new Error("Failed to start Dolt server");
