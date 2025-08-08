@@ -51,7 +51,7 @@ yalc.lock
 /build/appx/dolt.exe
 /build/linux/dolt-x64
 /build/linux/dolt-arm64
-/build/databases
+/build/connections
 
 # electron app build
 /app

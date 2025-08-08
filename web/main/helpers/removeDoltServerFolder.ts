@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { BrowserWindow } from "electron";
 import { rimraf } from "rimraf";
-import { getDatabasesPath } from "./filePath";
+import { getConnectionsPath } from "./filePath";
 
 export function getErrorMessage(error: unknown): string {
   if (error instanceof Error) {
@@ -23,7 +23,7 @@ export async function removeDoltServerFolder(
   mainWindow: BrowserWindow,
   retries = 3,
 ): Promise<ErrorReturnType> {
-  const dbFolderPath = path.join(getDatabasesPath(), connectionName);
+  const dbFolderPath = path.join(getConnectionsPath(), connectionName);
   for (let i = 0; i < retries; i++) {
     try {
       if (process.platform === "darwin") {
