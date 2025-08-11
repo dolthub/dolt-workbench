@@ -4,7 +4,7 @@ import fs from "fs";
 import path from "path";
 import {
   createFolder,
-  getDatabasesPath,
+  getConnectionsPath,
   getDoltPaths,
   getSocketPath,
 } from "./helpers/filePath";
@@ -13,33 +13,33 @@ export async function startServer(
   mainWindow: BrowserWindow,
   connectionName: string,
   port: string,
-  databaseName: string,
   init?: boolean,
+  dbName?: string,
 ): Promise<ChildProcess | null> {
   // Set the path for the database folder
   // In production, it's in the userData directory
   // In development, it's in the build directory since the development userData directory clears its contents every time the app is rerun in dev mode
-  const dbFolderPath = path.join(
-    getDatabasesPath(),
-    connectionName,
-    databaseName,
-  );
+  const connectionPath = path.join(getConnectionsPath(), connectionName);
   const doltPath = getDoltPaths();
-
   try {
     if (init) {
       // Create the folder for the connection
-      const { errorMsg } = createFolder(path.join(dbFolderPath));
+      if (!dbName) {
+        const errorMsg =
+          "Cannot initialize dolt repository without database name";
+        mainWindow.webContents.send("server-error", errorMsg);
+        throw new Error(errorMsg);
+      }
+      const dbConnectionPath = path.join(connectionPath, dbName);
+      const { errorMsg } = createFolder(dbConnectionPath);
       if (errorMsg) {
         mainWindow.webContents.send("server-error", errorMsg);
         throw new Error(errorMsg);
       }
-
       // Initialize and start the server without checking if it's already running
-      await initializeDoltRepository(doltPath, dbFolderPath, mainWindow);
+      await initializeDoltRepository(doltPath, dbConnectionPath, mainWindow);
     }
-
-    return await startServerProcess(doltPath, dbFolderPath, port, mainWindow);
+    return await startServerProcess(doltPath, connectionPath, port, mainWindow);
   } catch (error) {
     console.error("Failed to set up Dolt server:", error);
     throw error;
