@@ -395,6 +395,7 @@ enum DocType {
   Unspecified
   Readme
   License
+  Agent
 }
 
 enum DiffRowType {

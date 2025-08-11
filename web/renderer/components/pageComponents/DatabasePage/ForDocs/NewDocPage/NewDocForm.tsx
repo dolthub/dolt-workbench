@@ -40,7 +40,7 @@ function Inner(props: InnerProps) {
       <div className={css.body}>
         <HideForNoWritesWrapper
           params={props.params}
-          noWritesAction="add LICENSE or README"
+          noWritesAction="add a doc"
         >
           <form onSubmit={onSubmit}>
             <div className={css.selectContainer}>
@@ -63,8 +63,8 @@ function Inner(props: InnerProps) {
               </div>
             ) : (
               <p className={css.marTop}>
-                Both README and LICENSE exist. Click on an individual document
-                in the About section to edit.
+                All docs exist. Click on an individual document in the About
+                section to edit.
               </p>
             )}
             <Button
@@ -94,6 +94,7 @@ function getOptions(docRows?: DocForDocPageFragment[]): Option[] {
   const options: Option[] = [
     { label: "README", value: DocType.Readme },
     { label: "LICENSE", value: DocType.License },
+    { label: "AGENT", value: DocType.Agent },
   ];
   return (
     options
