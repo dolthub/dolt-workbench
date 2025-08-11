@@ -91,6 +91,7 @@
   },
   "resolutions": {
     "brace-expansion": "2.0.2",
-    "multer": "2.0.2"
+    "multer": "2.0.2",
+    "tmp": "0.2.4"
   }
 }
