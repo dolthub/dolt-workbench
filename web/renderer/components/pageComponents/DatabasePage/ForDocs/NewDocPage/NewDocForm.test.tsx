@@ -31,7 +31,9 @@ describe("test NewDocForm", () => {
   it("renders new doc form for no docs", async () => {
     useMockRouter(jestRouter, {});
     const { user } = setup(
-      <MockedProvider mocks={[docsMock(params, []), databaseDetailsMock(true, false)]}>
+      <MockedProvider
+        mocks={[docsMock(params, []), databaseDetailsMock(true, false)]}
+      >
         <NewDocForm params={params} />
       </MockedProvider>,
     );
