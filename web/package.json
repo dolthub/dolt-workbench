@@ -145,6 +145,7 @@
     "@babel/runtime": "7.26.10",
     "@types/react": "18.3.5",
     "brace-expansion": "2.0.2",
+    "tmp": "0.2.4",
     "webpack": "5.94.0"
   }
 }
