@@ -62,5 +62,5 @@ jobs:
           destination_branch: "main"
           github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
           pr_title: "Update yarn"
-          pr_reviewer: tbantle22
+          pr_assignee: tbantle22
           pr_label: "dependencies"
