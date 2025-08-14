@@ -1,0 +1,66 @@
+name: Update Yarn
+
+on:
+  schedule:
+    - cron: '0 10 15 * *' # Runs every 15th of the month
+  workflow_dispatch:
+
+jobs:
+  open-update-pr:
+    name: "Open Update PR"
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'   
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Get short hash
+        id: short-sha
+        run: echo "short=$(openssl rand -hex 6)" >> $GITHUB_OUTPUT
+
+      - name: Update yarn in web
+        working-directory: ./web
+        run: yarn set version stable
+      - name: Install yarn in web
+        working-directory: ./web
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: Update yarn in graphql-server
+        working-directory: ./graphql-server
+        run: yarn set version stable
+      - name: Install yarn in graphql-server
+        working-directory: ./graphql-server
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: Update yarn in workbench-cypress
+        working-directory: ./workbench-cypress
+        run: yarn set version stable
+      - name: Install yarn in workbench-cypress
+        working-directory: ./workbench-cypress
+        run: YARN_ENABLE_IMMUTABLE_INSTALLS=false yarn install
+
+      - name: Create and Push new branch
+        run: |
+          git config --global --add user.name "tbantle22"
+          git config --global --add user.email "taylor@dolthub.com"
+          branchname=${{ format('update-yarn-{0}', steps.short-sha.outputs.short) }}
+          git checkout -b "$branchname"
+          git add .
+          git commit -m "Update yarn"
+          git push origin "$branchname"
+          
+      - name: Create pull request
+        uses: repo-sync/pull-request@v2
+        id: latest-pr
+        with:
+          source_branch: ${{ format('update-yarn-{0}', steps.short-sha.outputs.short) }}
+          destination_branch: "main"
+          github_token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          pr_title: "Update yarn"
+          pr_reviewer: tbantle22
+          pr_label: "dependencies"
