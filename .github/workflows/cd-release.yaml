@@ -6,7 +6,6 @@ on:
       version:
         description: 'SemVer format release tag, i.e. 0.24.5'
         required: true
-  pull_request:
 
 jobs:
   format-version:
