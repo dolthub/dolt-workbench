@@ -29,9 +29,20 @@ jobs:
     runs-on: ubuntu-22.04
     outputs:
       release_id: ${{ steps.create_release.outputs.id }}
+      release_version: ${{ needs.format-version.outputs.version }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Update web/package.json version
+        run: |
+          yq -i '.version = "${{ needs.format-version.outputs.version }}"' web/package.json
+
+      - name: Add and commit new version
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: "Update web/package.json version to ${{ needs.format-version.outputs.version }}"
+
       - name: Create Release
         id: create_release
         uses: dolthub/create-release@v1
@@ -44,7 +55,8 @@ jobs:
           prerelease: false
 
   create-release-notes:
-    needs: [format-version, create-release]
+    name: Create release notes
+    needs: create-release
     runs-on: ubuntu-22.04
     steps:
       - name: Trigger Release Notes
@@ -52,16 +64,33 @@ jobs:
         with:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
           event-type: release-notes
-          client-payload: '{"version": "${{ needs.format-version.outputs.version }}", "release_id": "${{ needs.create-release.outputs.release_id }}"}'
+          client-payload: '{"version": "${{ needs.create-release.outputs.release_version }}", "release_id": "${{ needs.create-release.outputs.release_id }}"}'
 
-  docker-image-push:
-    needs: [ format-version, create-release ]
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Trigger Push Docker Image
-        uses: peter-evans/repository-dispatch@v1
-        with:
-          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-          event-type: push-docker-image
-          client-payload: '{"version": "${{ needs.format-version.outputs.version }}"}'
-                    
+  build-mas:
+    needs: create-release
+    uses: ./.github/workflows/cd-release-mas.yaml
+    secrets: inherit
+    with:
+      release-version: ${{ needs.create-release.outputs.release_version }}
+
+  build-dmg:
+    needs: create-release
+    uses: ./.github/workflows/cd-release-dmg.yaml
+    secrets: inherit
+    with:
+      release-version: ${{ needs.create-release.outputs.release_version }}
+
+  build-windows:
+    needs: create-release
+    uses: ./.github/workflows/cd-release-windows.yaml
+    secrets: inherit
+    with:
+      release-version: ${{ needs.create-release.outputs.release_version }}
+
+  build-linux:
+    needs: create-release
+    uses: ./.github/workflows/cd-release-linux.yaml
+    secrets: inherit
+    with:
+      release-version: ${{ needs.create-release.outputs.release_version }}
+

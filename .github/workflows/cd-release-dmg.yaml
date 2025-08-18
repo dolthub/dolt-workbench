@@ -1,0 +1,125 @@
+name: Build dolt-workbench for Mac
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: GitHub Release Version Number
+        required: true
+        type: string
+
+  workflow_call:
+    inputs:
+      release-version:
+        description: Github Release Version Number
+        required: true
+        type: string
+
+jobs:
+  build-dmg:
+    name: Build Mac release version
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Bump build version
+        uses: ./.github/actions/bump-build-version
+        with:
+          build-config-file: web/build/builder-dmg-config.yaml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - name: Download provisioning profiles
+        id: download-provisioning-profiles
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: com.dolthub.dolt-workbench
+          profile-type: MAC_APP_DEVELOPMENT
+          issuer-id: ${{ vars.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: Move provision profile to build directory
+        run: |
+          JSON='${{ steps.download-provisioning-profiles.outputs.profiles }}'
+          UDID=$(echo $JSON | jq -r '.[0].udid')
+          mv "$HOME/Library/MobileDevice/Provisioning Profiles/$UDID.provisionprofile" "${{ github.workspace }}/web/build/mac/AppleDevelopment.provisionprofile"
+
+      - name: Import codesign certs
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.DEV_ID_CERT_BASE64 }}
+          p12-password: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            web/renderer/.next/cache
+            web/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('web/renderer/next.config.js', 'web/package.json', 'web/yarn.lock') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-
+
+      - name: Install graphql-server dependencies
+        working-directory: graphql-server
+        run: |
+          yarn 
+          yarn build
+
+      - name: Install web dependencies
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          yarn
+          yarn download:dolt
+
+      - name: Build dmg package
+        working-directory: web
+        env:
+          CSC_LINK: ${{ secrets.DEV_ID_CERT_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+        run: |
+          yarn build:dmg
+
+      - name: Create .env file for signing
+        working-directory: web/build/mac
+        run: |
+          cat > .env <<'EOF'
+          SIGNING_CERTIFICATE="Developer ID Application: DoltHub Inc (${{ vars.TEAM_ID }})"
+          TEAM_ID="${{ vars.TEAM_ID }}"
+          APPLE_ID="${{ vars.APPLE_ID }}"
+          APPLE_ID_PASSWORD="${{ secrets.APPLE_ID_PASSWORD }}"
+          EOF
+
+      - name: Sign and notarize
+        working-directory: web
+        run: |
+          yarn sign-dmg
+
+      - name: Upload package to Release ${{ inputs.release-version }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.release-version }}
+          files: ${{ github.workspace }}/web/dist/DoltWorkbench-mac-arm64.dmg
+
+  commit-build-version:
+    name: Commit new build version
+    needs: build-dmg
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: commit-build-version
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/bump-build-version
+        with:
+          build-config-file: web/build/builder-dmg-config.yaml
+          commit: true

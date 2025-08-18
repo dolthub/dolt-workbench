@@ -1,0 +1,111 @@
+name: Build dolt-workbench for Mac App Store
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: GitHub Release Version Number
+        required: true
+        type: string
+
+  workflow_call:
+    inputs:
+      release-version:
+        description: Github Release Version Number
+        required: true
+        type: string
+
+jobs:
+  build-mas:
+    name: Build Mac App Store release version
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Bump MAS build version
+        id: bump-mas-version
+        uses: ./.github/actions/bump-build-version
+        with:
+          build-config-file: web/build/builder-mas-config.yaml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - name: Download provisioning profiles
+        id: download-provisioning-profiles
+        uses: apple-actions/download-provisioning-profiles@v4
+        with:
+          bundle-id: com.dolthub.dolt-workbench
+          profile-type: MAC_APP_STORE
+          issuer-id: ${{ vars.APPSTORE_ISSUER_ID }}
+          api-key-id: ${{ vars.APPSTORE_API_KEY_ID }}
+          api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
+
+      - name: Move provision profile to build directory
+        run: |
+          JSON='${{ steps.download-provisioning-profiles.outputs.profiles }}'
+          UDID=$(echo $JSON | jq -r '.[0].udid')
+          mv "$HOME/Library/MobileDevice/Provisioning Profiles/$UDID.provisionprofile" "${{ github.workspace }}/web/build/mac/MacAppStore.provisionprofile"
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            web/renderer/.next/cache
+            web/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('web/renderer/next.config.js', 'web/package.json', 'web/yarn.lock') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-
+
+      - name: Install graphql-server dependencies
+        working-directory: graphql-server
+        run: |
+          yarn 
+          yarn build
+
+      - name: Install web dependencies
+        working-directory: web
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: |
+          yarn
+          yarn download:dolt
+
+      - name: Build MAS package
+        working-directory: web
+        env:
+          CSC_LINK: ${{ secrets.MAS_APP_CERT_BASE64 }}
+          CSC_KEY_PASSWORD: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+          CSC_INSTALLER_LINK: ${{ secrets.MAS_INSTALLER_CERT_BASE64 }}
+          CSC_INSTALLER_KEY_PASSWORD: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+        run: |
+          yarn build:mas
+          echo "DIST:"
+          ls dist
+          echo "mas-universal":
+          ls dist/mas-universal
+          
+      - name: Upload package to Release ${{ inputs.release-version }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.release-version }}
+          files: ${{ github.workspace }}/web/dist/mas-universal/DoltWorkbench-mac-universal-${{ steps.bump-mas-version.outputs.new-version }}.pkg
+
+  commit-build-version:
+    name: Commit new build version
+    needs: build-mas
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: commit-build-version
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/bump-build-version
+        with:
+          build-config-file: web/build/builder-mas-config.yaml
+          commit: true
