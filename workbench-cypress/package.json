@@ -4,7 +4,7 @@
   "description": "",
   "author": "DoltHub",
   "private": true,
-  "packageManager": "yarn@4.5.0",
+  "packageManager": "yarn@4.9.2",
   "scripts": {
     "cy-chrome": "cypress run --browser chrome",
     "cy-open-local": "CYPRESS_LOCAL=true cypress open --config baseUrl=http://localhost:3002,numTestsKeptInMemory=0",
@@ -16,7 +16,7 @@
     "prettier:fix": "prettier --write 'cypress/**/*.{ts,js}'"
   },
   "dependencies": {
-    "cypress": "^14.3.2",
+    "cypress": "^14.5.4",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
@@ -24,7 +24,7 @@
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
-    "@cypress/github-action": "^6.10.1",
+    "@cypress/github-action": "^6.10.2",
     "@typescript-eslint/eslint-plugin": "^7.14.1",
     "@typescript-eslint/parser": "^8.34.1",
     "eslint": "^8.57.0",
@@ -37,6 +37,8 @@
     "prettier": "^3.6.2"
   },
   "resolutions": {
-    "brace-expansion": "2.0.2"
+    "brace-expansion": "2.0.2",
+    "form-data": "4.0.4",
+    "tmp": "0.2.4"
   }
 }
