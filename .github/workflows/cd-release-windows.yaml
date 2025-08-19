@@ -68,6 +68,7 @@ jobs:
           path: ${{ github.workspace }}/web/dist/Dolt-Workbench-win-x64.appx
           retention-days: 90
           overwrite: true
+          compression-level: 0
 
   commit-build-version:
     name: Commit new build version
