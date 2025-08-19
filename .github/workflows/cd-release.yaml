@@ -66,16 +66,16 @@ jobs:
           event-type: release-notes
           client-payload: '{"version": "${{ needs.create-release.outputs.release_version }}", "release_id": "${{ needs.create-release.outputs.release_id }}"}'
 
-#  docker-image-push:
-#    needs: create-release
-#    runs-on: ubuntu-22.04
-#    steps:
-#      - name: Trigger Push Docker Image
-#        uses: peter-evans/repository-dispatch@v1
-#        with:
-#          token: ${{ secrets.REPO_ACCESS_TOKEN }}
-#          event-type: push-docker-image
-#          client-payload: '{"version": "${{ needs.create-release.outputs.release_version }}"}'
+  docker-image-push:
+    needs: create-release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger Push Docker Image
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: push-docker-image
+          client-payload: '{"version": "${{ needs.create-release.outputs.release_version }}"}'
 
   build-mas:
     needs: create-release
