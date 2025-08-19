@@ -1,6 +1,7 @@
 # Developer Guide
 
-## Releasing dolt-workbench
+## Releasing dolt-workbench (manual)
+NOTE: This method of releasing the workbench has now been automated. See "Releasing dolt-workbench (automated)" below.
 
 ### 1. Use the `Release dolt-workbench` GitHub Action
 
@@ -94,3 +95,20 @@ yarn build:linux
 ```
 
 3. Upload the `dolt-arm64` and `dolt-x64` binaries located in `web/build/linux` to the GitHub release that was generated in the first step
+
+## Releasing dolt-workbench (automated)
+
+### Use the `Release dolt-workbench` GitHub Action
+The input to this GitHub Action is a version number. You should use the version number that you would like to be associated with this release.
+The action will automatically create a new commit to update the version in web/package.json to the version number you pass here. It will also create a new GitHub release
+with the title being the new version number.
+
+This action will kick off a separate workflow for Windows, Linux, Mac App Store, and Mac (.dmg) builds. If the builds were successful, you should see
+1. A new commit bumping the `buildVersion` field by one for each builder config yaml file in `web/build`.
+2. The packages uploaded as assets to the new release that was just created.
+
+Note that you can also run each of the platform-specific actions by themselves. For example, if you
+run the `Release dolt-workbench` action and everything succeeds except for the Linux build, you can
+run the `Build dolt-workbench for Linux` action by itself (passing as input an existing release version number),
+and it will just build the Linux package and upload it to the release you specified.
+

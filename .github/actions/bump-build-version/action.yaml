@@ -1,0 +1,44 @@
+name: Bump build version
+description: Bumps SemVer buildVersion in the input builder-config file
+inputs:
+  build-config-file:
+    description: File path to the builder config yaml file
+    required: true
+  commit:
+    description: If true, will add and commit the new build version. Default false.
+    required: false
+    default: 'false'
+outputs:
+  new-version:
+    description: The bumped build version
+    value: ${{ steps.bump-version.outputs.new_version }}
+runs:
+  using: "composite"
+  steps:
+    - name: Get current build version
+      id: current-build-version
+      run: |
+        version="$(yq '.buildVersion' ${{ inputs.build-config-file }})"
+        echo "Current buildVersion in ${{ inputs.build-config-file }} is $version"
+        echo "version=$version" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Bump version
+      uses: "actions-ecosystem/action-bump-semver@v1"
+      id: bump-version
+      with:
+        current_version: ${{ steps.current-build-version.outputs.version }}
+        level: patch
+
+    - name: Update ${{ inputs.build-config-file }} buildVersion
+      run: |
+        yq -i '.buildVersion = "${{ steps.bump-version.outputs.new_version }}"' ${{ inputs.build-config-file }}
+        echo "New buildVersion in ${{ inputs.build-config-file }} is ${{ steps.bump-version.outputs.new_version }}"
+      shell: bash
+
+    - name: Add and commit new build version
+      if: ${{ inputs.commit == 'true' }}
+      uses: EndBug/add-and-commit@v9
+      with:
+        message: "Update ${{ inputs.build-config-file }} buildVersion to ${{ steps.bump-version.outputs.new_version }}"
+        pull: origin

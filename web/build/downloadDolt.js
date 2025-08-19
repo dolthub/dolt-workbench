@@ -13,7 +13,10 @@ async function getLatestVersion() {
       .get(
         "https://api.github.com/repos/dolthub/dolt/releases/latest",
         {
-          headers: { "User-Agent": "Node.js" },
+          headers: {
+            "User-Agent": "Node.js",
+            ...(process.env.GITHUB_TOKEN ? { "Authorization": `Bearer ${process.env.GITHUB_TOKEN}` } : {}),
+          },
         },
         response => {
           if (response.statusCode !== 200) {

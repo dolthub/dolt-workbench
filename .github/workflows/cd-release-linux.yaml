@@ -1,0 +1,75 @@
+name: Build dolt-workbench for Linux
+on:
+  workflow_dispatch:
+    inputs:
+      release-version:
+        description: GitHub Release Version Number
+        required: true
+        type: string
+
+  workflow_call:
+    inputs:
+      release-version:
+        description: Github Release Version Number
+        required: true
+        type: string
+
+jobs:
+  build-linux:
+    name: Build Linux release version
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Bump linux build version
+        uses: ./.github/actions/bump-build-version
+        with:
+          build-config-file: web/build/builder-linux-config.yaml
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "latest"
+
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
+      - name: Cache Next.js build
+        uses: actions/cache@v4
+        with:
+          path: |
+            web/renderer/.next/cache
+            web/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('web/renderer/next.config.js', 'web/package.json', 'web/yarn.lock') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-
+
+      - name: Build Linux package
+        working-directory: web
+        run: |
+          yarn build:linux
+          ls dist
+
+      - name: Upload package to Release ${{ inputs.release-version }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ inputs.release-version }}
+          files: | 
+            ${{ github.workspace }}/web/dist/Dolt-Workbench-linux-x86_64.AppImage
+            ${{ github.workspace }}/web/dist/Dolt-Workbench-linux-arm64.AppImage
+
+  commit-build-version:
+    name: Commit new build version
+    needs: build-linux
+    runs-on: ubuntu-22.04
+    concurrency:
+      group: commit-build-version
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: ./.github/actions/bump-build-version
+        with:
+          build-config-file: web/build/builder-linux-config.yaml
+          commit: true
+

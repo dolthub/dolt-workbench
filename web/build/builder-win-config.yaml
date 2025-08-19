@@ -43,6 +43,12 @@ extraFiles:
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
     to: graphql-server/node_modules
+    filter:
+      - "**/*"
+      - "!**/*.ts"
+      - "!**/*.d.ts"
+      - "!**/*.map"
+      - "!**/*.md"
   - from: build/appx/dolt.exe
     to: Resources/dolt.exe
 win:
