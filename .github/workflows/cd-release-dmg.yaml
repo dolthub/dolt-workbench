@@ -31,6 +31,9 @@ jobs:
         with:
           node-version: "latest"
 
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
       - name: Download provisioning profiles
         id: download-provisioning-profiles
         uses: apple-actions/download-provisioning-profiles@v4
@@ -53,9 +56,6 @@ jobs:
           p12-file-base64: ${{ secrets.DEV_ID_CERT_BASE64 }}
           p12-password: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Cache Next.js build
         uses: actions/cache@v4
         with:
@@ -65,20 +65,6 @@ jobs:
           key: nextjs-${{ runner.os }}-${{ hashFiles('web/renderer/next.config.js', 'web/package.json', 'web/yarn.lock') }}
           restore-keys: |
             nextjs-${{ runner.os }}-
-
-      - name: Install graphql-server dependencies
-        working-directory: graphql-server
-        run: |
-          yarn 
-          yarn build
-
-      - name: Install web dependencies
-        working-directory: web
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          yarn
-          yarn download:dolt
 
       - name: Build dmg package
         working-directory: web

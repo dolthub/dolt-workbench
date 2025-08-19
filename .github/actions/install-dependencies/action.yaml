@@ -1,0 +1,24 @@
+name: Install dependencies
+description: Install common dependencies across all builds for dolt-workbench
+runs:
+  using: "composite"
+  steps:
+    - name: Enable Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Install graphql-server dependencies
+      working-directory: graphql-server
+      run: |
+        yarn 
+        yarn build
+      shell: bash
+
+    - name: Install web dependencies
+      working-directory: web
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        yarn
+        yarn download:dolt
+      shell: bash

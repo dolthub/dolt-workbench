@@ -32,6 +32,9 @@ jobs:
         with:
           node-version: "latest"
 
+      - name: Install dependencies
+        uses: ./.github/actions/install-dependencies
+
       - name: Download provisioning profiles
         id: download-provisioning-profiles
         uses: apple-actions/download-provisioning-profiles@v4
@@ -48,9 +51,6 @@ jobs:
           UDID=$(echo $JSON | jq -r '.[0].udid')
           mv "$HOME/Library/MobileDevice/Provisioning Profiles/$UDID.provisionprofile" "${{ github.workspace }}/web/build/mac/MacAppStore.provisionprofile"
 
-      - name: Enable Corepack
-        run: corepack enable
-
       - name: Cache Next.js build
         uses: actions/cache@v4
         with:
@@ -60,20 +60,6 @@ jobs:
           key: nextjs-${{ runner.os }}-${{ hashFiles('web/renderer/next.config.js', 'web/package.json', 'web/yarn.lock') }}
           restore-keys: |
             nextjs-${{ runner.os }}-
-
-      - name: Install graphql-server dependencies
-        working-directory: graphql-server
-        run: |
-          yarn 
-          yarn build
-
-      - name: Install web dependencies
-        working-directory: web
-        env:
-          GITHUB_TOKEN: ${{ github.token }}
-        run: |
-          yarn
-          yarn download:dolt
 
       - name: Build MAS package
         working-directory: web
@@ -88,12 +74,14 @@ jobs:
           ls dist
           echo "mas-universal":
           ls dist/mas-universal
-          
-      - name: Upload package to Release ${{ inputs.release-version }}
-        uses: softprops/action-gh-release@v2
+
+      - name: Upload app store artifact
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: v${{ inputs.release-version }}
-          files: ${{ github.workspace }}/web/dist/mas-universal/DoltWorkbench-mac-universal-${{ steps.bump-mas-version.outputs.new-version }}.pkg
+          name: mac-${{ inputs.release-version }}
+          path: ${{ github.workspace }}/web/dist/mas-universal/DoltWorkbench-mac-universal-${{ steps.bump-mas-version.outputs.new-version }}.pkg
+          retention-days: 90
+          overwrite: true
 
   commit-build-version:
     name: Commit new build version

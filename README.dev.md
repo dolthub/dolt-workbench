@@ -1,7 +1,7 @@
 # Developer Guide
 
-## Releasing dolt-workbench (v1)
-NOTE: This method of releasing the workbench has now been automated. See "Releasing dolt-workbench (v2)" below.
+## Releasing dolt-workbench (manual)
+NOTE: This method of releasing the workbench has now been automated. See "Releasing dolt-workbench (automated)" below.
 
 ### 1. Use the `Release dolt-workbench` GitHub Action
 
@@ -96,7 +96,7 @@ yarn build:linux
 
 3. Upload the `dolt-arm64` and `dolt-x64` binaries located in `web/build/linux` to the GitHub release that was generated in the first step
 
-## Releasing dolt-workbench (v2)
+## Releasing dolt-workbench (automated)
 
 ### Use the `Release dolt-workbench` GitHub Action
 The input to this GitHub Action is a version number. You should use the version number that you would like to be associated with this release.
