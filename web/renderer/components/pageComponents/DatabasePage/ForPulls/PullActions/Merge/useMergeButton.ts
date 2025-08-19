@@ -1,5 +1,7 @@
 import { useSetState } from "@dolthub/react-hooks";
 import {
+  ConflictResolveType,
+  useMergeAndResolveConflictsMutation,
   useMergePullMutation,
   usePullConflictsSummaryQuery,
 } from "@gen/graphql-types";
@@ -20,6 +22,9 @@ export default function useMergeButton(params: PullDiffParams) {
   const variables = { ...params, toBranchName: params.refName };
   const { mutateFn: merge, ...res } = useMutation({
     hook: useMergePullMutation,
+  });
+  const { mutateFn: mergeWithResolve, ...resolveRes } = useMutation({
+    hook: useMergeAndResolveConflictsMutation,
   });
   const conflictsRes = usePullConflictsSummaryQuery({
     variables,
@@ -47,8 +52,26 @@ export default function useMergeButton(params: PullDiffParams) {
       .catch(console.error);
   };
 
+  const onClickWithResolve = async (resolveType: ConflictResolveType) => {
+    await mergeWithResolve({
+      variables: {
+        ...variables,
+        conflictResolveType: resolveType,
+        author:
+          state.addAuthor && userHeaders?.email && userHeaders.user
+            ? { name: userHeaders.user, email: userHeaders.email }
+            : undefined,
+      },
+    });
+
+    res.client
+      .refetchQueries(refetchMergeQueriesCacheEvict)
+      .catch(console.error);
+  };
+
   return {
     onClick,
+    onClickWithResolve,
     disabled,
     hasConflicts,
     userHeaders,
@@ -57,8 +80,8 @@ export default function useMergeButton(params: PullDiffParams) {
     state,
     setState,
     mergeState: {
-      loading: res.loading,
-      err: res.err,
+      loading: res.loading || resolveRes.loading,
+      err: res.err ?? resolveRes.err,
     },
   };
 }

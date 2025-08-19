@@ -9,12 +9,19 @@ import {
 import { CommitResolver } from "../commits/commit.resolver";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { AuthorInfo, PullArgs } from "../utils/commonTypes";
+import { ConflictResolveType } from "./pull.enums";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
 
 @ArgsType()
 class MergePullArgs extends PullArgs {
   @Field({ nullable: true })
   author?: AuthorInfo;
+}
+
+@ArgsType()
+class MergeAndResolveArgs extends MergePullArgs {
+  @Field(_type => ConflictResolveType)
+  conflictResolveType: ConflictResolveType;
 }
 
 @Resolver(_of => PullWithDetails)
@@ -45,6 +52,21 @@ export class PullResolver {
       fromBranchName: args.fromBranchName,
       toBranchName: args.toBranchName,
       author: args.author,
+    });
+    return true;
+  }
+
+  @Mutation(_returns => Boolean)
+  async mergeAndResolveConflicts(
+    @Args() args: MergeAndResolveArgs,
+  ): Promise<boolean> {
+    const conn = this.conn.connection();
+    await conn.callMergeWithResolveConflicts({
+      databaseName: args.databaseName,
+      fromBranchName: args.fromBranchName,
+      toBranchName: args.toBranchName,
+      author: args.author,
+      conflictResolveType: args.conflictResolveType,
     });
     return true;
   }

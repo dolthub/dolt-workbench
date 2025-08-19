@@ -97,6 +97,11 @@ export type CommitList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
+export enum ConflictResolveType {
+  Ours = 'Ours',
+  Theirs = 'Theirs'
+}
+
 export type CurrentDatabaseState = {
   __typename?: 'CurrentDatabaseState';
   currentDatabase?: Maybe<Scalars['String']['output']>;
@@ -250,6 +255,7 @@ export type Mutation = {
   doltClone: Scalars['Boolean']['output'];
   fetchRemote: FetchRes;
   loadDataFile: Scalars['Boolean']['output'];
+  mergeAndResolveConflicts: Scalars['Boolean']['output'];
   mergePull: Scalars['Boolean']['output'];
   pullFromRemote: PullRes;
   pushToRemote: PushRes;
@@ -352,6 +358,15 @@ export type MutationLoadDataFileArgs = {
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
+};
+
+
+export type MutationMergeAndResolveConflictsArgs = {
+  author?: InputMaybe<AuthorInfo>;
+  conflictResolveType: ConflictResolveType;
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
 };
 
 
@@ -1336,6 +1351,17 @@ export type MergePullMutationVariables = Exact<{
 
 
 export type MergePullMutation = { __typename?: 'Mutation', mergePull: boolean };
+
+export type MergeAndResolveConflictsMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  fromBranchName: Scalars['String']['input'];
+  toBranchName: Scalars['String']['input'];
+  conflictResolveType: ConflictResolveType;
+  author?: InputMaybe<AuthorInfo>;
+}>;
+
+
+export type MergeAndResolveConflictsMutation = { __typename?: 'Mutation', mergeAndResolveConflicts: boolean };
 
 export type PullConflictSummaryFragment = { __typename?: 'PullConflictSummary', _id: string, tableName: string, numDataConflicts?: number | null, numSchemaConflicts?: number | null };
 
@@ -3817,6 +3843,47 @@ export function useMergePullMutation(baseOptions?: Apollo.MutationHookOptions<Me
 export type MergePullMutationHookResult = ReturnType<typeof useMergePullMutation>;
 export type MergePullMutationResult = Apollo.MutationResult<MergePullMutation>;
 export type MergePullMutationOptions = Apollo.BaseMutationOptions<MergePullMutation, MergePullMutationVariables>;
+export const MergeAndResolveConflictsDocument = gql`
+    mutation MergeAndResolveConflicts($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $conflictResolveType: ConflictResolveType!, $author: AuthorInfo) {
+  mergeAndResolveConflicts(
+    databaseName: $databaseName
+    fromBranchName: $fromBranchName
+    toBranchName: $toBranchName
+    conflictResolveType: $conflictResolveType
+    author: $author
+  )
+}
+    `;
+export type MergeAndResolveConflictsMutationFn = Apollo.MutationFunction<MergeAndResolveConflictsMutation, MergeAndResolveConflictsMutationVariables>;
+
+/**
+ * __useMergeAndResolveConflictsMutation__
+ *
+ * To run a mutation, you first call `useMergeAndResolveConflictsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useMergeAndResolveConflictsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [mergeAndResolveConflictsMutation, { data, loading, error }] = useMergeAndResolveConflictsMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      fromBranchName: // value for 'fromBranchName'
+ *      toBranchName: // value for 'toBranchName'
+ *      conflictResolveType: // value for 'conflictResolveType'
+ *      author: // value for 'author'
+ *   },
+ * });
+ */
+export function useMergeAndResolveConflictsMutation(baseOptions?: Apollo.MutationHookOptions<MergeAndResolveConflictsMutation, MergeAndResolveConflictsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<MergeAndResolveConflictsMutation, MergeAndResolveConflictsMutationVariables>(MergeAndResolveConflictsDocument, options);
+      }
+export type MergeAndResolveConflictsMutationHookResult = ReturnType<typeof useMergeAndResolveConflictsMutation>;
+export type MergeAndResolveConflictsMutationResult = Apollo.MutationResult<MergeAndResolveConflictsMutation>;
+export type MergeAndResolveConflictsMutationOptions = Apollo.BaseMutationOptions<MergeAndResolveConflictsMutation, MergeAndResolveConflictsMutationVariables>;
 export const PullConflictsSummaryDocument = gql`
     query PullConflictsSummary($databaseName: String!, $fromBranchName: String!, $toBranchName: String!) {
   pullConflictsSummary(

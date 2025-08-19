@@ -139,6 +139,13 @@ export declare class QueryFactory {
     args: t.BranchesArgs & { author?: t.CommitAuthor },
   ): Promise<boolean>;
 
+  callMergeWithResolveConflicts(
+    args: t.BranchesArgs & {
+      author?: t.CommitAuthor;
+      conflictResolveType: string;
+    },
+  ): Promise<boolean>;
+
   resolveRefs(
     args: t.RefsArgs & { type?: CommitDiffType },
   ): Promise<{ fromCommitId: string; toCommitId: string }>;

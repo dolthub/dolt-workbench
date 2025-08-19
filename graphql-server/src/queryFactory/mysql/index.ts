@@ -298,6 +298,10 @@ export class MySQLQueryFactory
     throw notDoltError("merge branches");
   }
 
+  async callMergeWithResolveConflicts(_: t.BranchesArgs): Promise<boolean> {
+    throw notDoltError("merge branches with conflicts");
+  }
+
   async resolveRefs(
     args: t.RefsArgs,
   ): Promise<{ fromCommitId: string; toCommitId: string }> {
