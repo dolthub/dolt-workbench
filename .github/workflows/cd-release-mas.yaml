@@ -82,6 +82,7 @@ jobs:
           path: ${{ github.workspace }}/web/dist/mas-universal/DoltWorkbench-mac-universal-${{ steps.bump-mas-version.outputs.new-version }}.pkg
           retention-days: 90
           overwrite: true
+          compression-level: 0
 
   commit-build-version:
     name: Commit new build version
