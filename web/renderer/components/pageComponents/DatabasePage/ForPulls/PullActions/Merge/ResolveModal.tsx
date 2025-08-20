@@ -1,6 +1,13 @@
 import Link from "@components/links/Link";
-import { Button, ExternalLink, Modal, Radio } from "@dolthub/react-components";
+import {
+  Button,
+  ErrorMsg,
+  ExternalLink,
+  Modal,
+  Radio,
+} from "@dolthub/react-components";
 import { ConflictResolveType } from "@gen/graphql-types";
+import { ApolloErrorType } from "@lib/errors/types";
 import { ModalProps } from "@lib/modalProps";
 import { PullDiffParams } from "@lib/params";
 import { pullConflicts } from "@lib/urls";
@@ -10,6 +17,7 @@ import css from "./index.module.css";
 type Props = ModalProps & {
   onClickWithResolve: (resolveType: ConflictResolveType) => Promise<void>;
   params: PullDiffParams;
+  err?: ApolloErrorType;
 };
 
 export default function ResolveModal(props: Props) {
@@ -24,7 +32,10 @@ export default function ResolveModal(props: Props) {
       onRequestClose={() => props.setIsOpen(false)}
       className={css.modal}
       button={
-        <Button onClick={async () => await props.onClickWithResolve(resType)}>
+        <Button
+          onClick={async () => await props.onClickWithResolve(resType)}
+          disabled={!!props.err}
+        >
           Choose {resType.toLowerCase()} and merge
         </Button>
       }
@@ -56,6 +67,7 @@ export default function ResolveModal(props: Props) {
           </ExternalLink>
           .
         </p>
+        <ErrorMsg err={props.err} />
       </div>
     </Modal>
   );

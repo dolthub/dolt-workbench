@@ -37,7 +37,7 @@ export default function useMergeButton(params: PullDiffParams) {
   const disabled = hasConflicts;
 
   const onClick = async () => {
-    await merge({
+    const { success } = await merge({
       variables: {
         ...variables,
         author:
@@ -47,13 +47,14 @@ export default function useMergeButton(params: PullDiffParams) {
       },
     });
 
+    if (!success) return;
     res.client
       .refetchQueries(refetchMergeQueriesCacheEvict)
       .catch(console.error);
   };
 
   const onClickWithResolve = async (resolveType: ConflictResolveType) => {
-    await mergeWithResolve({
+    const { success } = await mergeWithResolve({
       variables: {
         ...variables,
         conflictResolveType: resolveType,
@@ -64,6 +65,7 @@ export default function useMergeButton(params: PullDiffParams) {
       },
     });
 
+    if (!success) return;
     res.client
       .refetchQueries(refetchMergeQueriesCacheEvict)
       .catch(console.error);
@@ -80,8 +82,12 @@ export default function useMergeButton(params: PullDiffParams) {
     state,
     setState,
     mergeState: {
-      loading: res.loading || resolveRes.loading,
-      err: res.err ?? resolveRes.err,
+      loading: res.loading,
+      err: res.err,
+    },
+    resolveState: {
+      loading: resolveRes.loading,
+      err: resolveRes.err,
     },
   };
 }

@@ -157,4 +157,8 @@
   p {
     @apply my-3;
   }
+
+  h3 {
+    @apply my-0;
+  }
 }

@@ -345,6 +345,7 @@ export class DoltgresQueryFactory
     return this.queryMultiple(
       async query => {
         await query("BEGIN");
+        await query("SET autocommit TO 0");
 
         const msg = `Merge branch ${args.fromBranchName}`;
         const params = [msg];
@@ -360,9 +361,11 @@ export class DoltgresQueryFactory
           await query(qh.resolveConflicts, [`--${args.conflictResolveType}`]);
           await query(qh.getCommitMerge(!!args.author), params);
         } else {
+          await query("ROLLBACK");
           throw new Error("expected conflicts but none found");
         }
 
+        await query("COMMIT");
         return true;
       },
       args.databaseName,

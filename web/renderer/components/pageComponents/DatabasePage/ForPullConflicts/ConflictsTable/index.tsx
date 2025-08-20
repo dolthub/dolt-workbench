@@ -89,7 +89,7 @@ export default function ConflictsTable(props: Props) {
           </table>
         </InfiniteScroll>
       ) : (
-        <p className={css.noChanges}>No conflicts for this table</p>
+        <p className={css.noChanges}>No data conflicts for this table</p>
       )}
     </div>
   );

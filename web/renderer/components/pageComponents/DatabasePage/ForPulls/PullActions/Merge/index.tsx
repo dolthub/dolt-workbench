@@ -1,6 +1,7 @@
 import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { Button, SmallLoader } from "@dolthub/react-components";
 import { ConflictResolveType, PullDetailsFragment } from "@gen/graphql-types";
+import { ApolloErrorType } from "@lib/errors/types";
 import { PullDiffParams } from "@lib/params";
 import { FiGitPullRequest } from "@react-icons/all-files/fi/FiGitPullRequest";
 import cx from "classnames";
@@ -31,6 +32,7 @@ export default function Merge(props: Props) {
     state,
     setState,
     mergeState,
+    resolveState,
   } = useMergeButton(props.params);
   const red = hasConflicts;
 
@@ -47,7 +49,8 @@ export default function Merge(props: Props) {
             disabled={disabled}
             onClick={onClick}
             onClickWithResolve={onClickWithResolve}
-            loading={mergeState.loading}
+            loading={resolveState.loading}
+            err={resolveState.err}
             params={props.params}
           />
           {mergeState.err && (
@@ -101,6 +104,7 @@ type MergeButtonProps = {
   onClickWithResolve: (resolveType: ConflictResolveType) => Promise<void>;
   loading: boolean;
   params: PullDiffParams;
+  err?: ApolloErrorType;
 };
 
 function MergeButton(props: MergeButtonProps) {
@@ -118,10 +122,9 @@ function MergeButton(props: MergeButtonProps) {
             {props.loading ? "Merging..." : "Resolve conflicts and merge"}
           </Button>
           <ResolveModal
+            {...props}
             isOpen={modalOpen}
             setIsOpen={setModalOpen}
-            onClickWithResolve={props.onClickWithResolve}
-            params={props.params}
           />
         </>
       ) : (

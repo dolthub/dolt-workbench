@@ -145,9 +145,6 @@ export const refetchMergeQueriesCacheEvict: RefetchOptions = {
   updateCache(cache: TCacheShape) {
     [
       "docs",
-      "pullWithDetails",
-      // We don't include `pull` here to avoid multiple pull logs on merge
-      "pulls",
       "doc",
       "rows",
       "tableNames",
@@ -158,6 +155,9 @@ export const refetchMergeQueriesCacheEvict: RefetchOptions = {
       "branchOrDefault",
       "docOrDefaultDoc",
       "pullConflictsSummary",
+      "pullWithDetails",
+      // We don't include `pull` here to avoid multiple pull logs on merge
+      "pulls",
     ].forEach(fieldName => {
       cache.evict({ fieldName });
     });
