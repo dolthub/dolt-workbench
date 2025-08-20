@@ -345,7 +345,7 @@ export class DoltgresQueryFactory
     return this.queryMultiple(
       async query => {
         await query("BEGIN");
-        await query("SET autocommit TO 0");
+        // await query("SET autocommit off");
 
         const msg = `Merge branch ${args.fromBranchName}`;
         const params = [msg];

@@ -1,6 +1,7 @@
 import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { Button, SmallLoader } from "@dolthub/react-components";
 import { ConflictResolveType, PullDetailsFragment } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { ApolloErrorType } from "@lib/errors/types";
 import { PullDiffParams } from "@lib/params";
 import { FiGitPullRequest } from "@react-icons/all-files/fi/FiGitPullRequest";
@@ -109,10 +110,11 @@ type MergeButtonProps = {
 
 function MergeButton(props: MergeButtonProps) {
   const [modalOpen, setModalOpen] = useState(false);
+  const { isPostgres } = useDatabaseDetails();
 
   return (
     <div aria-label="merge-button-container">
-      {props.disabled ? (
+      {props.disabled && !isPostgres ? (
         <>
           <Button
             className={css.merge}
@@ -132,6 +134,7 @@ function MergeButton(props: MergeButtonProps) {
           className={css.merge}
           onClick={props.onClick}
           data-cy="merge-button"
+          disabled={props.disabled}
           green
         >
           {props.loading ? "Merging..." : "Merge"}
