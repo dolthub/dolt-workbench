@@ -1,14 +1,18 @@
 import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { Button, SmallLoader } from "@dolthub/react-components";
-import { PullDetailsFragment } from "@gen/graphql-types";
+import { ConflictResolveType, PullDetailsFragment } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import { ApolloErrorType } from "@lib/errors/types";
 import { PullDiffParams } from "@lib/params";
 import { FiGitPullRequest } from "@react-icons/all-files/fi/FiGitPullRequest";
 import cx from "classnames";
+import { useState } from "react";
 import { Arrow } from "./Arrow";
 import ErrorsWithDirections from "./ErrorsWithDirections";
 import MergeConflictsDirections from "./ErrorsWithDirections/MergeConflictsDirections";
 import MergeConflicts from "./MergeConflicts";
 import MergeMessageTitle from "./MergeMessageTitle";
+import ResolveModal from "./ResolveModal";
 import css from "./index.module.css";
 import useMergeButton from "./useMergeButton";
 
@@ -17,17 +21,19 @@ type Props = {
   pullDetails: PullDetailsFragment;
 };
 
-export default function MergeButton(props: Props) {
+export default function Merge(props: Props) {
   const {
     hasConflicts,
     conflictsLoading,
     onClick,
+    onClickWithResolve,
     disabled,
     userHeaders,
     pullConflictsSummary,
     state,
     setState,
     mergeState,
+    resolveState,
   } = useMergeButton(props.params);
   const red = hasConflicts;
 
@@ -40,17 +46,14 @@ export default function MergeButton(props: Props) {
       <div className={css.container}>
         <div className={cx(css.top, { [css.red]: red })}>
           <MergeMessageTitle hasConflicts={hasConflicts} />
-          <div aria-label="merge-button-container">
-            <Button
-              className={css.merge}
-              onClick={onClick}
-              disabled={disabled}
-              data-cy="merge-button"
-              green
-            >
-              {mergeState.loading ? "Merging..." : "Merge"}
-            </Button>
-          </div>
+          <MergeButton
+            disabled={disabled}
+            onClick={onClick}
+            onClickWithResolve={onClickWithResolve}
+            loading={resolveState.loading}
+            err={resolveState.err}
+            params={props.params}
+          />
           {mergeState.err && (
             <ErrorsWithDirections
               mergeErr={mergeState.err}
@@ -92,6 +95,51 @@ export default function MergeButton(props: Props) {
           {state.showDirections && <MergeConflictsDirections {...props} />}
         </div>
       </div>
+    </div>
+  );
+}
+
+type MergeButtonProps = {
+  disabled: boolean;
+  onClick: () => Promise<void>;
+  onClickWithResolve: (resolveType: ConflictResolveType) => Promise<void>;
+  loading: boolean;
+  params: PullDiffParams;
+  err?: ApolloErrorType;
+};
+
+function MergeButton(props: MergeButtonProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const { isPostgres } = useDatabaseDetails();
+
+  return (
+    <div aria-label="merge-button-container">
+      {props.disabled && !isPostgres ? (
+        <>
+          <Button
+            className={css.merge}
+            onClick={() => setModalOpen(true)}
+            data-cy="merge-resolve-button"
+          >
+            {props.loading ? "Merging..." : "Resolve conflicts and merge"}
+          </Button>
+          <ResolveModal
+            {...props}
+            isOpen={modalOpen}
+            setIsOpen={setModalOpen}
+          />
+        </>
+      ) : (
+        <Button
+          className={css.merge}
+          onClick={props.onClick}
+          data-cy="merge-button"
+          disabled={props.disabled}
+          green
+        >
+          {props.loading ? "Merging..." : "Merge"}
+        </Button>
+      )}
     </div>
   );
 }

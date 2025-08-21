@@ -1,5 +1,7 @@
 import { useSetState } from "@dolthub/react-hooks";
 import {
+  ConflictResolveType,
+  useMergeAndResolveConflictsMutation,
   useMergePullMutation,
   usePullConflictsSummaryQuery,
 } from "@gen/graphql-types";
@@ -21,6 +23,9 @@ export default function useMergeButton(params: PullDiffParams) {
   const { mutateFn: merge, ...res } = useMutation({
     hook: useMergePullMutation,
   });
+  const { mutateFn: mergeWithResolve, ...resolveRes } = useMutation({
+    hook: useMergeAndResolveConflictsMutation,
+  });
   const conflictsRes = usePullConflictsSummaryQuery({
     variables,
   });
@@ -32,7 +37,7 @@ export default function useMergeButton(params: PullDiffParams) {
   const disabled = hasConflicts;
 
   const onClick = async () => {
-    await merge({
+    const { success } = await merge({
       variables: {
         ...variables,
         author:
@@ -42,6 +47,25 @@ export default function useMergeButton(params: PullDiffParams) {
       },
     });
 
+    if (!success) return;
+    res.client
+      .refetchQueries(refetchMergeQueriesCacheEvict)
+      .catch(console.error);
+  };
+
+  const onClickWithResolve = async (resolveType: ConflictResolveType) => {
+    const { success } = await mergeWithResolve({
+      variables: {
+        ...variables,
+        conflictResolveType: resolveType,
+        author:
+          state.addAuthor && userHeaders?.email && userHeaders.user
+            ? { name: userHeaders.user, email: userHeaders.email }
+            : undefined,
+      },
+    });
+
+    if (!success) return;
     res.client
       .refetchQueries(refetchMergeQueriesCacheEvict)
       .catch(console.error);
@@ -49,6 +73,7 @@ export default function useMergeButton(params: PullDiffParams) {
 
   return {
     onClick,
+    onClickWithResolve,
     disabled,
     hasConflicts,
     userHeaders,
@@ -59,6 +84,10 @@ export default function useMergeButton(params: PullDiffParams) {
     mergeState: {
       loading: res.loading,
       err: res.err,
+    },
+    resolveState: {
+      loading: resolveRes.loading,
+      err: resolveRes.err,
     },
   };
 }

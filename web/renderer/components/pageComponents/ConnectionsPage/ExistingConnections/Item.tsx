@@ -1,13 +1,13 @@
+import { DatabaseTypeLabel } from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
 import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
 import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import cx from "classnames";
 import Image from "next/legacy/image";
 import { SyntheticEvent, useState } from "react";
-import cx from "classnames";
-import { DatabaseTypeLabel } from "@components/ConnectionsAndDatabases/DatabaseTypeLabel";
-import useAddConnection from "./useAddConnection";
 import css from "./index.module.css";
+import useAddConnection from "./useAddConnection";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
@@ -84,7 +84,7 @@ export default function Item({
                 {conn.name}
               </Button.Link>
             </div>
-            <ErrorMsg err={err || startDoltServerError} className={css.err} />
+            <ErrorMsg err={err ?? startDoltServerError} className={css.err} />
           </div>
         </div>
       </li>

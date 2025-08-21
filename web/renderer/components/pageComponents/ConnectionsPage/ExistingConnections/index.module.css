@@ -115,7 +115,7 @@
 }
 
 .err {
-  @apply text-center;
+  @apply text-center pt-0;
 }
 
 .leftLine {

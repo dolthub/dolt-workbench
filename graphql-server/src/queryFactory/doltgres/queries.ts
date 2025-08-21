@@ -95,6 +95,11 @@ export const mergeConflictsSummaryQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONF
 export const getMergeConflictsQuery = (offset: number) =>
   `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS($1::text, $2::text, $3::text) LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`;
 
+export const resolveConflicts = `SELECT DOLT_CONFLICTS_RESOLVE($1::text, '.')`;
+
+export const getCommitMerge = (hasAuthor = false) =>
+  `CALL DOLT_COMMIT("-Am", $1::text${getAuthorNameString(hasAuthor, "$2::text")})`;
+
 // TAGS
 
 export const callDeleteTag = `SELECT DOLT_TAG('-d', $1::text)`;

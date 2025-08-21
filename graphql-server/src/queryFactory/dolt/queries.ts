@@ -87,6 +87,11 @@ export const mergeConflictsSummaryQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONF
 
 export const mergeConflictsQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS(?, ?, ?) LIMIT ? OFFSET ?`;
 
+export const resolveConflicts = `CALL DOLT_CONFLICTS_RESOLVE(?, '.')`;
+
+export const getCommitMerge = (hasAuthor = false) =>
+  `CALL DOLT_COMMIT("-Am", ?${getAuthorNameString(hasAuthor)})`;
+
 // REMOTES
 
 export const callAddRemote = `CALL DOLT_REMOTE("add", ?, ?)`;

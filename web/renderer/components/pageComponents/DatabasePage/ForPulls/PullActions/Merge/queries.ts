@@ -16,6 +16,24 @@ export const MERGE_PULL = gql`
   }
 `;
 
+export const MERGE_AND_RESOLVE = gql`
+  mutation MergeAndResolveConflicts(
+    $databaseName: String!
+    $fromBranchName: String!
+    $toBranchName: String!
+    $conflictResolveType: ConflictResolveType!
+    $author: AuthorInfo
+  ) {
+    mergeAndResolveConflicts(
+      databaseName: $databaseName
+      fromBranchName: $fromBranchName
+      toBranchName: $toBranchName
+      conflictResolveType: $conflictResolveType
+      author: $author
+    )
+  }
+`;
+
 export const PULL_CONFLICTS_SUMMARY = gql`
   fragment PullConflictSummary on PullConflictSummary {
     _id

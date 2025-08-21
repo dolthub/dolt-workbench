@@ -336,6 +336,43 @@ export class DoltgresQueryFactory
     );
   }
 
+  async callMergeWithResolveConflicts(
+    args: t.BranchesArgs & {
+      author?: t.CommitAuthor;
+      conflictResolveType: string;
+    },
+  ): Promise<boolean> {
+    return this.queryMultiple(
+      async query => {
+        await query("BEGIN");
+        // await query("SET autocommit off");
+
+        const msg = `Merge branch ${args.fromBranchName}`;
+        const params = [msg];
+        if (args.author) {
+          params.push(getAuthorString(args.author));
+        }
+        const res = await query(qh.getCallMerge(!!args.author), [
+          args.fromBranchName,
+          ...params,
+        ]);
+
+        if (res.length && res[0].conflicts !== "0") {
+          await query(qh.resolveConflicts, [`--${args.conflictResolveType}`]);
+          await query(qh.getCommitMerge(!!args.author), params);
+        } else {
+          await query("ROLLBACK");
+          throw new Error("expected conflicts but none found");
+        }
+
+        await query("COMMIT");
+        return true;
+      },
+      args.databaseName,
+      args.toBranchName,
+    );
+  }
+
   async resolveRefs(
     args: t.RefsArgs & { type?: CommitDiffType },
   ): t.CommitsRes {
