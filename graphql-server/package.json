@@ -92,6 +92,7 @@
   "resolutions": {
     "brace-expansion": "2.0.2",
     "multer": "2.0.2",
+    "sha.js": "2.4.12",
     "tmp": "0.2.4"
   }
 }

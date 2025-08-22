@@ -33,7 +33,7 @@ export default function ResolveModal(props: Props) {
       className={css.modal}
       button={
         <Button
-          onClick={async () => await props.onClickWithResolve(resType)}
+          onClick={async () => props.onClickWithResolve(resType)}
           disabled={!!props.err}
         >
           Choose {resType.toLowerCase()} and merge
