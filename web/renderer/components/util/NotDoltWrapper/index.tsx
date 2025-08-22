@@ -32,7 +32,7 @@ export default function NotDoltWrapper(props: Props) {
     );
   }
   if (res.disableDoltFeature) {
-    return React.cloneElement(props.children, { doltDisabled: true });
+    return React.cloneElement(props.children, { doltDisabled: true } as any);
   }
   return <div />;
 }

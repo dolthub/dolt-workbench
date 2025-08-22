@@ -1,11 +1,11 @@
 import { useFocus, useReactiveWidth } from "@dolthub/react-hooks";
-import { ReactHTML, ReactNode, createElement } from "react";
+import { ReactNode, createElement } from "react";
 
 type Props = {
   children: ReactNode;
   id?: string;
   className?: string;
-  tag?: keyof ReactHTML;
+  tag?: keyof JSX.IntrinsicElements;
   onScroll?: () => void;
   mobileBreakpoint?: number;
 };
@@ -29,7 +29,7 @@ const KeyNav = ({
       </DesktopNav>
     );
   }
-  return createElement(tag, { className, onScroll, id }, children);
+  return createElement(tag as string, { className, onScroll, id }, children);
 };
 
 export default KeyNav;
@@ -38,14 +38,14 @@ type DesktopProps = {
   children: ReactNode;
   id: string;
   className?: string;
-  tag: keyof ReactHTML;
+  tag: keyof JSX.IntrinsicElements;
   onScroll?: () => void;
 };
 
 function DesktopNav({ children, id, className, tag, onScroll }: DesktopProps) {
   useFocus(id);
   return createElement(
-    tag,
+    tag as string,
     { id, onScroll, className, tabIndex: -1 },
     children,
   );
