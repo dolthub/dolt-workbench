@@ -4,7 +4,7 @@ import React, { ReactElement } from "react";
 import NotDoltMsg from "./NotDoltMsg";
 
 type Props = {
-  children: ReactElement;
+  children: ReactElement<{ doltDisabled?: boolean }>;
   showNotDoltMsg?: boolean;
   feature?: string;
   className?: string;

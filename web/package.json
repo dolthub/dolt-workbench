@@ -59,12 +59,12 @@
     "next": "^15.2.4",
     "next-useragent": "^2.8.0",
     "node-sql-parser": "^4.17.0",
-    "react": "^19.0.0",
+    "react": "^19.1.1",
     "react-ace": "^14.0.1",
     "react-copy-to-clipboard": "^5.1.0",
     "react-data-grid": "7.0.0-beta.44",
     "react-diff-viewer": "^3.1.1",
-    "react-dom": "^19.0.0",
+    "react-dom": "^19.1.1",
     "react-infinite-scroller": "^1.2.6",
     "react-timeago": "^8.0.0",
     "reactflow": "^11.11.4",
@@ -95,7 +95,7 @@
     "@types/node": "^22.5.2",
     "@types/react": "^19.0.10",
     "@types/react-copy-to-clipboard": "^5.0.6",
-    "@types/react-dom": "^19.0.4",
+    "@types/react-dom": "^19.1.7",
     "@types/react-infinite-scroller": "^1.2.3",
     "@types/react-timeago": "^4.1.4",
     "@types/url-parse": "^1",
@@ -129,8 +129,8 @@
     "postcss": "^8.4.49",
     "postcss-preset-env": "^10.2.4",
     "prettier": "^3.5.3",
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
     "react-select-event": "^5.5.1",
     "rimraf": "^6.0.1",
     "stylelint": "^16.15.0",
@@ -142,10 +142,8 @@
     "yalc": "^1.0.0-pre.53"
   },
   "resolutions": {
-    "@babel/runtime": "7.26.10",
-    "@types/react": "18.3.5",
+    "@babel/runtime@npm:7.26.0": "7.26.10",
     "brace-expansion": "2.0.2",
-    "tmp": "0.2.4",
-    "webpack": "5.94.0"
+    "tmp": "0.2.4"
   }
 }
