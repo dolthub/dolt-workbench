@@ -334,8 +334,8 @@ export class DoltQueryFactory
   ): Promise<boolean> {
     return this.queryMultiple(
       async query => {
-        await query("BEGIN");
         await query("SET @autocommit = 0");
+        await query("BEGIN");
 
         const msg = `Merge branch ${args.fromBranchName}`;
         const params = [msg];
