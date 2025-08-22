@@ -21,14 +21,16 @@ export const MERGE_AND_RESOLVE = gql`
     $databaseName: String!
     $fromBranchName: String!
     $toBranchName: String!
-    $conflictResolveType: ConflictResolveType!
+    $resolveOursTables: [String!]!
+    $resolveTheirsTables: [String!]!
     $author: AuthorInfo
   ) {
     mergeAndResolveConflicts(
       databaseName: $databaseName
       fromBranchName: $fromBranchName
       toBranchName: $toBranchName
-      conflictResolveType: $conflictResolveType
+      resolveOursTables: $resolveOursTables
+      resolveTheirsTables: $resolveTheirsTables
       author: $author
     )
   }

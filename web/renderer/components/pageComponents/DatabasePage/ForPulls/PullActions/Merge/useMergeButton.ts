@@ -1,6 +1,5 @@
 import { useSetState } from "@dolthub/react-hooks";
 import {
-  ConflictResolveType,
   useMergeAndResolveConflictsMutation,
   useMergePullMutation,
   usePullConflictsSummaryQuery,
@@ -11,12 +10,26 @@ import { gqlPullHasConflicts } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
 import { PullDiffParams } from "@lib/params";
 import { refetchMergeQueriesCacheEvict } from "@lib/refetchQueries";
+import { useEffect } from "react";
+
+export enum ConflictResolveType {
+  Ours = "ours",
+  Theirs = "theirs",
+}
+
+const defaultState = {
+  addAuthor: false,
+  showDirections: false,
+  tablesToResolve: new Map<string, ConflictResolveType>(),
+};
+
+export type MergeButtonState = typeof defaultState;
 
 export default function useMergeButton(params: PullDiffParams) {
   const userHeaders = useUserHeaders();
   const [state, setState] = useSetState({
+    ...defaultState,
     addAuthor: !!(userHeaders?.email && userHeaders.user),
-    showDirections: false,
   });
 
   const variables = { ...params, toBranchName: params.refName };
@@ -36,6 +49,22 @@ export default function useMergeButton(params: PullDiffParams) {
     !!conflictsRes.data?.pullConflictsSummary?.length;
   const disabled = hasConflicts;
 
+  useEffect(() => {
+    if (conflictsRes.loading || !conflictsRes.data?.pullConflictsSummary) {
+      return;
+    }
+    const tablesToResolve = state.tablesToResolve;
+    conflictsRes.data.pullConflictsSummary.forEach(conflict => {
+      tablesToResolve.set(conflict.tableName, ConflictResolveType.Ours);
+    });
+    setState({ tablesToResolve });
+  }, [
+    conflictsRes.loading,
+    conflictsRes.data,
+    state.tablesToResolve,
+    setState,
+  ]);
+
   const onClick = async () => {
     const { success } = await merge({
       variables: {
@@ -53,11 +82,16 @@ export default function useMergeButton(params: PullDiffParams) {
       .catch(console.error);
   };
 
-  const onClickWithResolve = async (resolveType: ConflictResolveType) => {
+  const onClickWithResolve = async () => {
     const { success } = await mergeWithResolve({
       variables: {
         ...variables,
-        conflictResolveType: resolveType,
+        resolveOursTables: Array.from(state.tablesToResolve)
+          .filter(([, v]) => v === ConflictResolveType.Ours)
+          .map(([k]) => k),
+        resolveTheirsTables: Array.from(state.tablesToResolve)
+          .filter(([, v]) => v === ConflictResolveType.Theirs)
+          .map(([k]) => k),
         author:
           state.addAuthor && userHeaders?.email && userHeaders.user
             ? { name: userHeaders.user, email: userHeaders.email }

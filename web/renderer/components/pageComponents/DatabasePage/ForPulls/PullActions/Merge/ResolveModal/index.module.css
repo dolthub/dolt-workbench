@@ -1,0 +1,27 @@
+.modal {
+  @apply text-primary;
+
+  p {
+    @apply my-3;
+  }
+
+  h3 {
+    @apply my-0;
+  }
+}
+
+.tableResolve {
+  @apply flex;
+}
+
+.tableName {
+  @apply font-semibold w-36;
+}
+
+.radios {
+  @apply flex;
+}
+
+.radio {
+  @apply mr-8;
+}
