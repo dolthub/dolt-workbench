@@ -2,16 +2,20 @@
   @apply text-primary;
 
   p {
-    @apply my-3;
+    @apply mb-3;
   }
 
   h3 {
     @apply my-0;
   }
+
+  ul {
+    @apply border-b mb-6 pb-4;
+  }
 }
 
 .selectAllButtons {
-  @apply mb-3 mt-4;
+  @apply mb-4 mt-6;
 
   button {
     @apply px-0 mr-6 text-base;
@@ -35,5 +39,5 @@
 }
 
 .radio {
-  @apply mr-8;
+  @apply mr-8 mb-2;
 }
