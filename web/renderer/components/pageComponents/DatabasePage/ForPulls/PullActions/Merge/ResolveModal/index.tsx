@@ -46,7 +46,7 @@ export default function ResolveModal(props: Props) {
           onClick={async () => props.onClickWithResolve()}
           disabled={!!props.err}
         >
-          Resolve tables and merge
+          Resolve conflicts and merge
         </Button>
       }
     >

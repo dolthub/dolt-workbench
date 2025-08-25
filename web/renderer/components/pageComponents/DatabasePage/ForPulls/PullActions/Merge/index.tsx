@@ -90,7 +90,7 @@ export default function Merge(props: Props) {
                 setState({ showDirections: !state.showDirections })
               }
             >
-              merge instructions
+              manual merge instructions
             </Button.Link>
             .
           </span>

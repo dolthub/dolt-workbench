@@ -58,7 +58,7 @@ export default function useMergeButton(params: PullDiffParams) {
       return;
     }
 
-    const tablesToResolve = state.tablesToResolve;
+    const { tablesToResolve } = state;
     conflictsRes.data.pullConflictsSummary.forEach(conflict => {
       tablesToResolve.set(conflict.tableName, ConflictResolveType.Ours);
     });

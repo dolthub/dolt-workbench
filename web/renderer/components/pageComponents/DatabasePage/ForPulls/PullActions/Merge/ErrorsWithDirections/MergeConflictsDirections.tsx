@@ -26,8 +26,8 @@ export default function MergeConflictsDirections({ params }: Props) {
       <h3>Merge and Resolve Conflicts</h3>
       <div className={css.innerModal}>
         <p>
-          Conflicts cannot be resolved on the web and must be resolved in a SQL
-          shell.
+          If you&apos;d like to manually resolve conflicts before merging,
+          follow these steps using the SQL shell.
         </p>
         <p>
           <DocsLink path="/sql-reference/version-control/dolt-sql-procedures#dolt_merge">
