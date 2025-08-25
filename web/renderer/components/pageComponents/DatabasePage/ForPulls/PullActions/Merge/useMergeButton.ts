@@ -50,9 +50,14 @@ export default function useMergeButton(params: PullDiffParams) {
   const disabled = hasConflicts;
 
   useEffect(() => {
-    if (conflictsRes.loading || !conflictsRes.data?.pullConflictsSummary) {
+    if (
+      conflictsRes.loading ||
+      !conflictsRes.data?.pullConflictsSummary ||
+      state.tablesToResolve.size > 0
+    ) {
       return;
     }
+
     const tablesToResolve = state.tablesToResolve;
     conflictsRes.data.pullConflictsSummary.forEach(conflict => {
       tablesToResolve.set(conflict.tableName, ConflictResolveType.Ours);
@@ -86,12 +91,14 @@ export default function useMergeButton(params: PullDiffParams) {
     const { success } = await mergeWithResolve({
       variables: {
         ...variables,
-        resolveOursTables: Array.from(state.tablesToResolve)
-          .filter(([, v]) => v === ConflictResolveType.Ours)
-          .map(([k]) => k),
-        resolveTheirsTables: Array.from(state.tablesToResolve)
-          .filter(([, v]) => v === ConflictResolveType.Theirs)
-          .map(([k]) => k),
+        resolveOursTables: tableResolveMapToArray(
+          state.tablesToResolve,
+          ConflictResolveType.Ours,
+        ),
+        resolveTheirsTables: tableResolveMapToArray(
+          state.tablesToResolve,
+          ConflictResolveType.Theirs,
+        ),
         author:
           state.addAuthor && userHeaders?.email && userHeaders.user
             ? { name: userHeaders.user, email: userHeaders.email }
@@ -124,4 +131,13 @@ export default function useMergeButton(params: PullDiffParams) {
       err: resolveRes.err,
     },
   };
+}
+
+function tableResolveMapToArray(
+  resolveMap: Map<string, ConflictResolveType>,
+  resolveType: ConflictResolveType,
+): string[] {
+  return Array.from(resolveMap)
+    .filter(([, v]) => v === resolveType)
+    .map(([k]) => k);
 }

@@ -10,6 +10,18 @@
   }
 }
 
+.selectAllButtons {
+  @apply mb-3 mt-4;
+
+  button {
+    @apply px-0 mr-6 text-base;
+  }
+}
+
+.bold {
+  @apply font-bold;
+}
+
 .tableResolve {
   @apply flex;
 }

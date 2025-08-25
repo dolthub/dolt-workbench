@@ -22,6 +22,19 @@ type Props = ModalProps & {
 };
 
 export default function ResolveModal(props: Props) {
+  function setResolutionAllTables(resType: ConflictResolveType) {
+    const tablesToResolve = new Map(
+      [...props.state.tablesToResolve.keys()].map(t => [t, resType]),
+    );
+    props.setState({ tablesToResolve });
+  }
+
+  function setResolutionOneTable(table: string, resType: ConflictResolveType) {
+    const tablesToResolve = props.state.tablesToResolve;
+    tablesToResolve.set(table, resType);
+    props.setState({ tablesToResolve });
+  }
+
   return (
     <Modal
       title="Resolve Conflicts and Merge"
@@ -42,6 +55,24 @@ export default function ResolveModal(props: Props) {
           To merge this pull request, choose a conflict resolution strategy for
           all tables or each individual table:
         </p>
+        <div className={css.selectAllButtons}>
+          <Button.Link
+            onClick={() => {
+              setResolutionAllTables(ConflictResolveType.Ours);
+            }}
+            underlined
+          >
+            Select <span className={css.bold}>ours</span> for all
+          </Button.Link>
+          <Button.Link
+            onClick={() => {
+              setResolutionAllTables(ConflictResolveType.Theirs);
+            }}
+            underlined
+          >
+            Select <span className={css.bold}>theirs</span> for all
+          </Button.Link>
+        </div>
         <ul>
           {[...props.state.tablesToResolve.entries()].map(
             ([table, resType]) => (
@@ -53,9 +84,7 @@ export default function ResolveModal(props: Props) {
                     name={`ours-${table}`}
                     checked={resType === ConflictResolveType.Ours}
                     onChange={() => {
-                      const tablesToResolve = props.state.tablesToResolve;
-                      tablesToResolve.set(table, ConflictResolveType.Ours);
-                      props.setState({ tablesToResolve });
+                      setResolutionOneTable(table, ConflictResolveType.Ours);
                     }}
                     className={css.radio}
                   />
@@ -64,9 +93,7 @@ export default function ResolveModal(props: Props) {
                     name={`theirs-${table}`}
                     checked={resType === ConflictResolveType.Theirs}
                     onChange={() => {
-                      const tablesToResolve = props.state.tablesToResolve;
-                      tablesToResolve.set(table, ConflictResolveType.Theirs);
-                      props.setState({ tablesToResolve });
+                      setResolutionOneTable(table, ConflictResolveType.Theirs);
                     }}
                     className={css.radio}
                   />
