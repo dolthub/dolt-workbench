@@ -150,15 +150,3 @@
 .conflictsLoader {
   @apply mb-2 ml-0;
 }
-
-.modal {
-  @apply text-primary;
-
-  p {
-    @apply my-3;
-  }
-
-  h3 {
-    @apply my-0;
-  }
-}

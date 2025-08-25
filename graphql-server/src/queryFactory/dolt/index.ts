@@ -329,7 +329,8 @@ export class DoltQueryFactory
   async callMergeWithResolveConflicts(
     args: t.BranchesArgs & {
       author?: t.CommitAuthor;
-      conflictResolveType: string;
+      oursTables: string[];
+      theirsTables: string[];
     },
   ): Promise<boolean> {
     return this.queryMultiple(
@@ -348,7 +349,18 @@ export class DoltQueryFactory
         ]);
 
         if (res.length && res[0].conflicts !== "0") {
-          await query(qh.resolveConflicts, [`--${args.conflictResolveType}`]);
+          if (args.oursTables.length) {
+            await query(qh.getResolveConflicts(args.oursTables.length), [
+              "--ours",
+              ...args.oursTables,
+            ]);
+          }
+          if (args.theirsTables.length) {
+            await query(qh.getResolveConflicts(args.theirsTables.length), [
+              "--theirs",
+              ...args.theirsTables,
+            ]);
+          }
           await query(qh.getCommitMerge(!!args.author), params);
         } else {
           await query("ROLLBACK");

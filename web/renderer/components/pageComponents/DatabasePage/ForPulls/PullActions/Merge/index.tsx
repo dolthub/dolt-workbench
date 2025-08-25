@@ -1,6 +1,6 @@
 import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { Button, SmallLoader } from "@dolthub/react-components";
-import { ConflictResolveType, PullDetailsFragment } from "@gen/graphql-types";
+import { PullDetailsFragment } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { ApolloErrorType } from "@lib/errors/types";
 import { PullDiffParams } from "@lib/params";
@@ -14,7 +14,7 @@ import MergeConflicts from "./MergeConflicts";
 import MergeMessageTitle from "./MergeMessageTitle";
 import ResolveModal from "./ResolveModal";
 import css from "./index.module.css";
-import useMergeButton from "./useMergeButton";
+import useMergeButton, { MergeButtonState } from "./useMergeButton";
 
 type Props = {
   params: PullDiffParams;
@@ -53,6 +53,8 @@ export default function Merge(props: Props) {
             loading={resolveState.loading}
             err={resolveState.err}
             params={props.params}
+            state={state}
+            setState={setState}
           />
           {mergeState.err && (
             <ErrorsWithDirections
@@ -88,7 +90,7 @@ export default function Merge(props: Props) {
                 setState({ showDirections: !state.showDirections })
               }
             >
-              merge instructions
+              manual merge instructions
             </Button.Link>
             .
           </span>
@@ -102,10 +104,12 @@ export default function Merge(props: Props) {
 type MergeButtonProps = {
   disabled: boolean;
   onClick: () => Promise<void>;
-  onClickWithResolve: (resolveType: ConflictResolveType) => Promise<void>;
+  onClickWithResolve: () => Promise<void>;
   loading: boolean;
   params: PullDiffParams;
   err?: ApolloErrorType;
+  state: MergeButtonState;
+  setState: (s: Partial<MergeButtonState>) => void;
 };
 
 function MergeButton(props: MergeButtonProps) {

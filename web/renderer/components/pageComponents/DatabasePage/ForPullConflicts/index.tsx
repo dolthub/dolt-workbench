@@ -1,6 +1,8 @@
 import PullConflictBreadcrumbs from "@components/breadcrumbs/PullConflictBreadcrumbs";
+import DocsLink from "@components/links/DocsLink";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Loader } from "@dolthub/react-components";
+import { errorMatches } from "@lib/errors/helpers";
 import { PullDiffParams } from "@lib/params";
 import { pulls } from "@lib/urls";
 import ForDefaultBranch from "../ForDefaultBranch";
@@ -46,19 +48,33 @@ type InnerProps = {
 function Inner(props: InnerProps) {
   const { activeTableName } = useConflictsContext();
   const res = useRowConflicts({ ...props.params, tableName: activeTableName });
+  if (res.loading) return <Loader loaded={!res.loading} />;
+  if (res.error && errorMatches("schema conflicts found", res.error)) {
+    return (
+      <div className={css.container}>
+        <h3>Schema conflicts found for {activeTableName}</h3>
+        <p>
+          Cannot view data conflict rows until schema conflicts have been
+          resolved. View instructions{" "}
+          <DocsLink path="/sql-reference/version-control/merges#schema">
+            here
+          </DocsLink>
+          .
+        </p>
+      </div>
+    );
+  }
   return (
     <div className={css.container}>
       <h3>
         Conflicted rows in <code>{activeTableName}</code>
       </h3>
-      <Loader loaded={!res.loading}>
-        <ConflictsTable
-          state={res.state}
-          fetchMore={res.fetchMore}
-          hasMore={res.hasMore}
-          error={res.error}
-        />
-      </Loader>
+      <ConflictsTable
+        state={res.state}
+        fetchMore={res.fetchMore}
+        hasMore={res.hasMore}
+        error={res.error}
+      />
     </div>
   );
 }
