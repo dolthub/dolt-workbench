@@ -102,7 +102,7 @@ export const getResolveConflicts = (numTables: number) =>
   ).join(", ")})`;
 
 export const getCommitMerge = (hasAuthor = false) =>
-  `CALL DOLT_COMMIT("-Am", $1::text${getAuthorNameString(hasAuthor, "$2::text")})`;
+  `SELECT DOLT_COMMIT('-Am', $1::text${getAuthorNameString(hasAuthor, "$2::text")})`;
 
 // TAGS
 
