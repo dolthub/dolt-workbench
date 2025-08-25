@@ -1,0 +1,43 @@
+.modal {
+  @apply text-primary;
+
+  p {
+    @apply mb-3;
+  }
+
+  h3 {
+    @apply my-0;
+  }
+
+  ul {
+    @apply border-b mb-6 pb-4;
+  }
+}
+
+.selectAllButtons {
+  @apply mb-4 mt-6;
+
+  button {
+    @apply px-0 mr-6 text-base;
+  }
+}
+
+.bold {
+  @apply font-bold;
+}
+
+.tableResolve {
+  @apply flex;
+}
+
+.tableName {
+  @apply font-semibold w-36;
+}
+
+.radios {
+  @apply flex;
+}
+
+.radio {
+  @apply mr-8 mb-2;
+}

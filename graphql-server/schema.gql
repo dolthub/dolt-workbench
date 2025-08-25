@@ -416,7 +416,7 @@ type Mutation {
   doltClone(databaseName: String!, ownerName: String!, remoteDbName: String!): Boolean!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
-  mergeAndResolveConflicts(author: AuthorInfo, fromBranchName: String!, toBranchName: String!, databaseName: String!, conflictResolveType: ConflictResolveType!): Boolean!
+  mergeAndResolveConflicts(author: AuthorInfo, fromBranchName: String!, toBranchName: String!, databaseName: String!, resolveOursTables: [String!]!, resolveTheirsTables: [String!]!): Boolean!
   addRemote(remoteName: String!, databaseName: String!, remoteUrl: String!): String!
   deleteRemote(databaseName: String!, remoteName: String!): Boolean!
   pullFromRemote(remoteName: String!, databaseName: String!, refName: String!, branchName: String!): PullRes!
@@ -449,9 +449,4 @@ enum LoadDataModifier {
 input AuthorInfo {
   name: String!
   email: String!
-}
-
-enum ConflictResolveType {
-  Ours
-  Theirs
 }

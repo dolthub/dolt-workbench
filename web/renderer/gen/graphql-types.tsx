@@ -97,11 +97,6 @@ export type CommitList = {
   nextOffset?: Maybe<Scalars['Int']['output']>;
 };
 
-export enum ConflictResolveType {
-  Ours = 'Ours',
-  Theirs = 'Theirs'
-}
-
 export type CurrentDatabaseState = {
   __typename?: 'CurrentDatabaseState';
   currentDatabase?: Maybe<Scalars['String']['output']>;
@@ -363,9 +358,10 @@ export type MutationLoadDataFileArgs = {
 
 export type MutationMergeAndResolveConflictsArgs = {
   author?: InputMaybe<AuthorInfo>;
-  conflictResolveType: ConflictResolveType;
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
+  resolveOursTables: Array<Scalars['String']['input']>;
+  resolveTheirsTables: Array<Scalars['String']['input']>;
   toBranchName: Scalars['String']['input'];
 };
 
@@ -1356,7 +1352,8 @@ export type MergeAndResolveConflictsMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
   fromBranchName: Scalars['String']['input'];
   toBranchName: Scalars['String']['input'];
-  conflictResolveType: ConflictResolveType;
+  resolveOursTables: Array<Scalars['String']['input']> | Scalars['String']['input'];
+  resolveTheirsTables: Array<Scalars['String']['input']> | Scalars['String']['input'];
   author?: InputMaybe<AuthorInfo>;
 }>;
 
@@ -3844,12 +3841,13 @@ export type MergePullMutationHookResult = ReturnType<typeof useMergePullMutation
 export type MergePullMutationResult = Apollo.MutationResult<MergePullMutation>;
 export type MergePullMutationOptions = Apollo.BaseMutationOptions<MergePullMutation, MergePullMutationVariables>;
 export const MergeAndResolveConflictsDocument = gql`
-    mutation MergeAndResolveConflicts($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $conflictResolveType: ConflictResolveType!, $author: AuthorInfo) {
+    mutation MergeAndResolveConflicts($databaseName: String!, $fromBranchName: String!, $toBranchName: String!, $resolveOursTables: [String!]!, $resolveTheirsTables: [String!]!, $author: AuthorInfo) {
   mergeAndResolveConflicts(
     databaseName: $databaseName
     fromBranchName: $fromBranchName
     toBranchName: $toBranchName
-    conflictResolveType: $conflictResolveType
+    resolveOursTables: $resolveOursTables
+    resolveTheirsTables: $resolveTheirsTables
     author: $author
   )
 }
@@ -3872,7 +3870,8 @@ export type MergeAndResolveConflictsMutationFn = Apollo.MutationFunction<MergeAn
  *      databaseName: // value for 'databaseName'
  *      fromBranchName: // value for 'fromBranchName'
  *      toBranchName: // value for 'toBranchName'
- *      conflictResolveType: // value for 'conflictResolveType'
+ *      resolveOursTables: // value for 'resolveOursTables'
+ *      resolveTheirsTables: // value for 'resolveTheirsTables'
  *      author: // value for 'author'
  *   },
  * });

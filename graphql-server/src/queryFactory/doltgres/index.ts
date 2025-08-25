@@ -336,16 +336,18 @@ export class DoltgresQueryFactory
     );
   }
 
+  // TODO: The dolt_conflicts_resolve function does not work in doltgres yet
   async callMergeWithResolveConflicts(
     args: t.BranchesArgs & {
       author?: t.CommitAuthor;
-      conflictResolveType: string;
+      oursTables: string[];
+      theirsTables: string[];
     },
   ): Promise<boolean> {
     return this.queryMultiple(
       async query => {
-        await query("BEGIN");
         // await query("SET autocommit off");
+        await query("BEGIN");
 
         const msg = `Merge branch ${args.fromBranchName}`;
         const params = [msg];
@@ -358,7 +360,18 @@ export class DoltgresQueryFactory
         ]);
 
         if (res.length && res[0].conflicts !== "0") {
-          await query(qh.resolveConflicts, [`--${args.conflictResolveType}`]);
+          if (args.oursTables.length) {
+            await query(qh.getResolveConflicts(args.oursTables.length), [
+              "--ours",
+              ...args.oursTables.map(tableWithoutSchema),
+            ]);
+          }
+          if (args.theirsTables.length) {
+            await query(qh.getResolveConflicts(args.theirsTables.length), [
+              "--theirs",
+              ...args.theirsTables.map(tableWithoutSchema),
+            ]);
+          }
           await query(qh.getCommitMerge(!!args.author), params);
         } else {
           await query("ROLLBACK");

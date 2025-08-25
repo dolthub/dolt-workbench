@@ -142,7 +142,8 @@ export declare class QueryFactory {
   callMergeWithResolveConflicts(
     args: t.BranchesArgs & {
       author?: t.CommitAuthor;
-      conflictResolveType: string;
+      oursTables: string[];
+      theirsTables: string[];
     },
   ): Promise<boolean>;
 

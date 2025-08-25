@@ -9,7 +9,6 @@ import {
 import { CommitResolver } from "../commits/commit.resolver";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { AuthorInfo, PullArgs } from "../utils/commonTypes";
-import { ConflictResolveType } from "./pull.enums";
 import { PullWithDetails, fromAPIModelPullWithDetails } from "./pull.model";
 
 @ArgsType()
@@ -20,8 +19,11 @@ class MergePullArgs extends PullArgs {
 
 @ArgsType()
 class MergeAndResolveArgs extends MergePullArgs {
-  @Field(_type => ConflictResolveType)
-  conflictResolveType: ConflictResolveType;
+  @Field(_type => [String])
+  resolveOursTables: string[];
+
+  @Field(_type => [String])
+  resolveTheirsTables: string[];
 }
 
 @Resolver(_of => PullWithDetails)
@@ -66,7 +68,8 @@ export class PullResolver {
       fromBranchName: args.fromBranchName,
       toBranchName: args.toBranchName,
       author: args.author,
-      conflictResolveType: args.conflictResolveType,
+      theirsTables: args.resolveTheirsTables,
+      oursTables: args.resolveOursTables,
     });
     return true;
   }

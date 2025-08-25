@@ -7,10 +7,3 @@ export enum PullState {
 }
 
 registerEnumType(PullState, { name: "PullState" });
-
-export enum ConflictResolveType {
-  Ours = "ours",
-  Theirs = "theirs",
-}
-
-registerEnumType(ConflictResolveType, { name: "ConflictResolveType" });
