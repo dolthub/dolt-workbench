@@ -19,6 +19,12 @@ jobs:
     name: Build Mac release version
     runs-on: macos-14
     steps:
+      - name: Validate branch
+        if: ${{ github.ref_name != 'main' }}
+        run: |
+          echo "This workflow can only run from 'main' (got '${{ github.ref_name }}')." >&2
+          exit 1
+
       - name: Checkout code
         uses: actions/checkout@v3
 
