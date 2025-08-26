@@ -41,7 +41,15 @@ jobs:
       - name: Add and commit new version
         uses: EndBug/add-and-commit@v9
         with:
-          message: "Update web/package.json version to ${{ needs.format-version.outputs.version }}"
+          message: "Update web/package.json version to ${{ needs.format-version.outputs.version }} [skip ci]"
+          new_branch: release/${{ needs.format-version.outputs.version }}
+
+      - name: Raise PR and merge
+        run: |
+          gh pr create --base main --head release/${{ needs.format-version.outputs.version }} --title "Update web/package.json version to ${{ needs.format-version.outputs.version }}" --body "Increment version"
+          gh pr merge --merge --delete-branch release/${{ needs.format-version.outputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Release
         id: create_release

@@ -1,8 +1,11 @@
 name: Bump build version
 description: Bumps SemVer buildVersion in the input builder-config file
 inputs:
-  build-config-file:
-    description: File path to the builder config yaml file
+  platform:
+    description: Platform to update builder config yaml file
+    required: true
+  token:
+    description: GitHub token
     required: true
   commit:
     description: If true, will add and commit the new build version. Default false.
@@ -15,11 +18,17 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Get build config file
+      id: filepath
+      run: |
+        echo "build-config-file=web/build/builder-${{ inputs.platform }}-config.yaml" >> $GITHUB_OUTPUT
+      shell: bash
+
     - name: Get current build version
       id: current-build-version
       run: |
-        version="$(yq '.buildVersion' ${{ inputs.build-config-file }})"
-        echo "Current buildVersion in ${{ inputs.build-config-file }} is $version"
+        version="$(yq '.buildVersion' ${{ steps.filepath.outputs.build-config-file }})"
+        echo "Current buildVersion in ${{ steps.filepath.outputs.build-config-file }} is $version"
         echo "version=$version" >> $GITHUB_OUTPUT
       shell: bash
 
@@ -30,15 +39,24 @@ runs:
         current_version: ${{ steps.current-build-version.outputs.version }}
         level: patch
 
-    - name: Update ${{ inputs.build-config-file }} buildVersion
+    - name: Update ${{ steps.filepath.outputs.build-config-file }} buildVersion
       run: |
-        yq -i '.buildVersion = "${{ steps.bump-version.outputs.new_version }}"' ${{ inputs.build-config-file }}
-        echo "New buildVersion in ${{ inputs.build-config-file }} is ${{ steps.bump-version.outputs.new_version }}"
+        yq -i '.buildVersion = "${{ steps.bump-version.outputs.new_version }}"' ${{ steps.filepath.outputs.build-config-file }}
+        echo "New buildVersion in ${{ steps.filepath.outputs.build-config-file }} is ${{ steps.bump-version.outputs.new_version }}"
       shell: bash
 
     - name: Add and commit new build version
       if: ${{ inputs.commit == 'true' }}
       uses: EndBug/add-and-commit@v9
       with:
-        message: "Update ${{ inputs.build-config-file }} buildVersion to ${{ steps.bump-version.outputs.new_version }}"
-        pull: origin
+        message: "Update ${{ steps.filepath.outputs.build-config-file }} buildVersion to ${{ steps.bump-version.outputs.new_version }} [skip ci]"
+        new_branch: release/${{ inputs.platform }}-${{ steps.bump-version.outputs.new_version }}
+
+    - name: Raise PR and merge
+      if: ${{ inputs.commit == 'true' }}
+      run: |
+        gh pr create --base main --head release/${{ inputs.platform }}-${{ steps.bump-version.outputs.new_version }} --title "Update ${{ steps.filepath.outputs.build-config-file }} buildVersion to ${{ steps.bump-version.outputs.new_version }}" --body "Increment version"
+        gh pr merge --merge --delete-branch release/${{ inputs.platform }}-${{ steps.bump-version.outputs.new_version }}
+      env:
+        GITHUB_TOKEN: ${{ inputs.token }}
+      shell: bash

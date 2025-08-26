@@ -26,7 +26,8 @@ jobs:
         id: bump-mas-version
         uses: ./.github/actions/bump-build-version
         with:
-          build-config-file: web/build/builder-mas-config.yaml
+          platform: mas
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -97,5 +98,6 @@ jobs:
 
       - uses: ./.github/actions/bump-build-version
         with:
-          build-config-file: web/build/builder-mas-config.yaml
+          platform: mas
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit: true
