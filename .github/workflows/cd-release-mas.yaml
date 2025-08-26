@@ -51,6 +51,12 @@ jobs:
           UDID=$(echo $JSON | jq -r '.[0].udid')
           mv "$HOME/Library/MobileDevice/Provisioning Profiles/$UDID.provisionprofile" "${{ github.workspace }}/web/build/mac/MacAppStore.provisionprofile"
 
+      - name: Import codesign certs
+        uses: apple-actions/import-codesign-certs@v3
+        with:
+          p12-file-base64: ${{ secrets.APPSTORE_CERTIFICATES_FILE_BASE64 }}
+          p12-password: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
+
       - name: Cache Next.js build
         uses: actions/cache@v4
         with:
@@ -63,11 +69,6 @@ jobs:
 
       - name: Build MAS package
         working-directory: web
-        env:
-          CSC_LINK: ${{ secrets.MAS_APP_CERT_BASE64 }}
-          CSC_KEY_PASSWORD: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
-          CSC_INSTALLER_LINK: ${{ secrets.MAS_INSTALLER_CERT_BASE64 }}
-          CSC_INSTALLER_KEY_PASSWORD: ${{ secrets.APPSTORE_CERTIFICATES_PASSWORD }}
         run: |
           yarn build:mas
           echo "DIST:"
