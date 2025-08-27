@@ -45,18 +45,29 @@ runs:
         echo "New buildVersion in ${{ steps.filepath.outputs.build-config-file }} is ${{ steps.bump-version.outputs.new_version }}"
       shell: bash
 
+    - name: Get current branch
+      id: current-branch
+      run: |
+        echo "branch=$(git branch --show-current)" >> $GITHUB_OUTPUT
+      shell: bash
+
     - name: Add and commit new build version
       if: ${{ inputs.commit == 'true' }}
       uses: EndBug/add-and-commit@v9
       with:
         message: "Update ${{ steps.filepath.outputs.build-config-file }} buildVersion to ${{ steps.bump-version.outputs.new_version }} [skip ci]"
-        new_branch: release/${{ inputs.platform }}-${{ steps.bump-version.outputs.new_version }}
+        pull: ${{ steps.current-branch.outputs.branch != format('build/{0}', inputs.platform) && format('origin {0}', steps.current-branch.outputs.branch) || '' }}
+        push: --set-upstream origin ${{ steps.current-branch.outputs.branch }}
 
     - name: Raise PR and merge
       if: ${{ inputs.commit == 'true' }}
       run: |
-        gh pr create --base main --head release/${{ inputs.platform }}-${{ steps.bump-version.outputs.new_version }} --title "Update ${{ steps.filepath.outputs.build-config-file }} buildVersion to ${{ steps.bump-version.outputs.new_version }}" --body "Increment version"
-        gh pr merge --merge --delete-branch release/${{ inputs.platform }}-${{ steps.bump-version.outputs.new_version }}
+        CURRENT_BRANCH=${{ steps.current-branch.outputs.branch }}
+        if [[ $CURRENT_BRANCH == build/* ]]
+        then
+          gh pr create --base main --head $CURRENT_BRANCH --title "Update ${{ inputs.platform }} build version to ${{ steps.bump-version.outputs.new_version }}" --body "Increment version"
+          gh pr merge --merge --delete-branch $CURRENT_BRANCH
+        fi
       env:
         GITHUB_TOKEN: ${{ inputs.token }}
       shell: bash

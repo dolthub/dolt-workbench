@@ -50,13 +50,6 @@ jobs:
           message: "Update web/package.json version to ${{ needs.format-version.outputs.version }} [skip ci]"
           new_branch: release/${{ needs.format-version.outputs.version }}
 
-      - name: Raise PR and merge
-        run: |
-          gh pr create --base main --head release/${{ needs.format-version.outputs.version }} --title "Update web/package.json version to ${{ needs.format-version.outputs.version }}" --body "Increment version"
-          gh pr merge --merge --delete-branch release/${{ needs.format-version.outputs.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Release
         id: create_release
         uses: dolthub/create-release@v1
@@ -118,4 +111,21 @@ jobs:
     secrets: inherit
     with:
       release-version: ${{ needs.create-release.outputs.release_version }}
+
+  create-pr-and-merge:
+    name: Create PR and merge
+    needs: [create-release, build-mas, build-windows, build-dmg, build-linux]
+    if: ${{ always() && needs.create-release.result == 'success' && !cancelled() }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create PR and merge
+        run: |
+          gh pr create --base main --head release/${{ needs.create-release.outputs.release_version }} --title "Update versions for release ${{ needs.create-release.outputs.release_version }}" --body "Increment versions"
+          gh pr merge --merge --delete-branch release/${{ needs.create-release.outputs.release_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
