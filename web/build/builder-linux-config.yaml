@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: Dolt-Workbench
-buildVersion: 0.3.52
+buildVersion: 0.3.53
 copyright: Copyright © 2024 DoltHub Inc
 icon: build/linux/icon.png
 files:
@@ -51,18 +51,16 @@ extraFiles:
       - "!**/*.md"
   - from: "build/linux/dolt-${arch}"
     to: resources/dolt
-
 linux:
   icon: build/linux/icon.png
   category: "Development"
   target:
     - target: "AppImage"
-      arch: ["x64","arm64"]
+      arch: ["x64", "arm64"]
   artifactName: "${productName}-linux-${arch}.${ext}"
   executableName: "dolt-workbench"
   synopsis: "SQL workbench for MySQL and PostgreSQL"
   asar: false
   maintainer: "DoltHub Team <support@dolthub.com>"
-
 npmRebuild: false
 electronVersion: 31.7.1
