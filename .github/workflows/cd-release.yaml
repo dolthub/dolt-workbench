@@ -31,6 +31,12 @@ jobs:
       release_id: ${{ steps.create_release.outputs.id }}
       release_version: ${{ needs.format-version.outputs.version }}
     steps:
+      - name: Validate branch
+        if: ${{ github.ref_name != 'main' }}
+        run: |
+          echo "This workflow can only run from 'main' (got '${{ github.ref_name }}')." >&2
+          exit 1
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -41,7 +47,8 @@ jobs:
       - name: Add and commit new version
         uses: EndBug/add-and-commit@v9
         with:
-          message: "Update web/package.json version to ${{ needs.format-version.outputs.version }}"
+          message: "Update web/package.json version to ${{ needs.format-version.outputs.version }} [skip ci]"
+          new_branch: release/${{ needs.format-version.outputs.version }}
 
       - name: Create Release
         id: create_release
@@ -104,4 +111,21 @@ jobs:
     secrets: inherit
     with:
       release-version: ${{ needs.create-release.outputs.release_version }}
+
+  create-pr-and-merge:
+    name: Create PR and merge
+    needs: [create-release, build-mas, build-windows, build-dmg, build-linux]
+    if: ${{ always() && needs.create-release.result == 'success' && !cancelled() }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Create PR and merge
+        run: |
+          gh pr create --base main --head release/${{ needs.create-release.outputs.release_version }} --title "Update versions for release ${{ needs.create-release.outputs.release_version }}" --body "Increment versions"
+          gh pr merge --merge --delete-branch release/${{ needs.create-release.outputs.release_version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 

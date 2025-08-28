@@ -13,19 +13,34 @@ on:
         description: Github Release Version Number
         required: true
         type: string
+      via-call:
+        description: Determines if this workflow was called by another workflow
+        required: false
+        default: true
+        type: boolean
+
+env:
+  VIA_CALL: ${{ inputs.via-call || false }}
 
 jobs:
   build-linux:
     name: Build Linux release version
     runs-on: ubuntu-22.04
     steps:
+      - name: Validate branch
+        if: ${{ github.ref_name != 'main' }}
+        run: |
+          echo "This workflow can only run from 'main' (got '${{ github.ref_name }}')." >&2
+          exit 1
+
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Bump linux build version
         uses: ./.github/actions/bump-build-version
         with:
-          build-config-file: web/build/builder-linux-config.yaml
+          platform: linux
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -66,10 +81,27 @@ jobs:
       group: commit-build-version
       cancel-in-progress: false
     steps:
+      - name: Get branch to checkout
+        id: branch-to-update
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [[ ${{ env.VIA_CALL }} == 'true' ]]; then
+            echo "branch=release/${{ inputs.release-version }}" >> $GITHUB_OUTPUT
+          else
+            echo "branch=build/linux" >> $GITHUB_OUTPUT
+          fi
+
       - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Checkout correct branch
+        run: git switch -C ${{ steps.branch-to-update.outputs.branch }}
 
       - uses: ./.github/actions/bump-build-version
         with:
-          build-config-file: web/build/builder-linux-config.yaml
+          platform: linux
+          token: ${{ secrets.GITHUB_TOKEN }}
           commit: true
 
