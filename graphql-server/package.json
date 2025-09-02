@@ -43,7 +43,7 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "graphql": "^16.11.0",
-    "graphql-upload": "15.0.0",
+    "graphql-upload": "17.0.0",
     "mysql2": "^3.11.0",
     "pg": "^8.16.3",
     "pg-copy-streams": "^7.0.0",

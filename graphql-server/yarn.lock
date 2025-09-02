@@ -754,7 +754,7 @@ __metadata:
     eslint-plugin-import: "npm:^2.31.0"
     eslint-plugin-jest: "npm:^29.0.1"
     graphql: "npm:^16.11.0"
-    graphql-upload: "npm:15.0.0"
+    graphql-upload: "npm:17.0.0"
     jest: "npm:^29.7.0"
     mysql2: "npm:^3.11.0"
     pg: "npm:^8.16.3"
@@ -5652,10 +5652,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fs-capacitor@npm:^6.2.0":
-  version: 6.2.0
-  resolution: "fs-capacitor@npm:6.2.0"
-  checksum: 10c0/68443988ca28f734339f8346316a224b69af1b9bf8a3d8c7b649bc410d3d36dc145536f8e8ca5225fb5589f67a7502f4666a3a63670592c7d0c843bba4b3daca
+"fs-capacitor@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "fs-capacitor@npm:8.0.0"
+  checksum: 10c0/6638b61e25a815ae5ffb86426c961457bcd5a6dfd194e51a57cb7094f943d4a1a2d2e7323952dc9ff8fe1e6e017908951f342b939785af4feec58148eda5b805
   languageName: node
   linkType: hard
 
@@ -5983,19 +5983,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"graphql-upload@npm:15.0.0":
-  version: 15.0.0
-  resolution: "graphql-upload@npm:15.0.0"
+"graphql-upload@npm:17.0.0":
+  version: 17.0.0
+  resolution: "graphql-upload@npm:17.0.0"
   dependencies:
     "@types/busboy": "npm:^1.5.0"
     "@types/node": "npm:*"
     "@types/object-path": "npm:^0.11.1"
     busboy: "npm:^1.6.0"
-    fs-capacitor: "npm:^6.2.0"
+    fs-capacitor: "npm:^8.0.0"
     http-errors: "npm:^2.0.0"
     object-path: "npm:^0.11.8"
   peerDependencies:
-    "@types/express": ^4.0.29
+    "@types/express": 4.0.29 - 5
     "@types/koa": ^2.11.4
     graphql: ^16.3.0
   peerDependenciesMeta:
@@ -6003,7 +6003,7 @@ __metadata:
       optional: true
     "@types/koa":
       optional: true
-  checksum: 10c0/b9cc5a51b479a4d0914bb4285e7b586b857bc8bde010da57789ece3b8f0bef7582acc6e6599523e5175a430816d0173d0b5a57453583be5427d3e46b66206272
+  checksum: 10c0/f6318375645c917e64b5133762108b6a0000295c3689243b8c6e827bfee55efca3622a6b1e0db85d96aa5a1db13e025e4c670708e719092ba83041ddec9a9f29
   languageName: node
   linkType: hard
 
