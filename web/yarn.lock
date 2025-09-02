@@ -9621,7 +9621,7 @@ __metadata:
     react: "npm:^19.1.1"
     react-ace: "npm:^14.0.1"
     react-copy-to-clipboard: "npm:^5.1.0"
-    react-data-grid: "npm:7.0.0-beta.44"
+    react-data-grid: "npm:7.0.0-beta.57"
     react-diff-viewer: "npm:^3.1.1"
     react-dom: "npm:^19.1.1"
     react-infinite-scroller: "npm:^1.2.6"
@@ -17189,15 +17189,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-data-grid@npm:7.0.0-beta.44":
-  version: 7.0.0-beta.44
-  resolution: "react-data-grid@npm:7.0.0-beta.44"
+"react-data-grid@npm:7.0.0-beta.57":
+  version: 7.0.0-beta.57
+  resolution: "react-data-grid@npm:7.0.0-beta.57"
   dependencies:
     clsx: "npm:^2.0.0"
   peerDependencies:
-    react: ^18.0
-    react-dom: ^18.0
-  checksum: 10c0/7f300c1b865a6156791ed1c5ed2db7d461d160067c8818876ea9cfc5ce8c8c65ad5e0413e76ce1767f7625e1d12d6c83d55f93cd7a6b85193a667520ca1b61c2
+    react: ^19.0
+    react-dom: ^19.0
+  checksum: 10c0/7094f73f2f491bcca2cc069b81bb56aa774f20c869fd5b737598c93c539a07971477bd64ced0a12ba3e08dbdd9d50771ea4b60afa6b2c4ddacea5a1dac6eb9f6
   languageName: node
   linkType: hard
 
