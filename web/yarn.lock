@@ -9852,7 +9852,7 @@ __metadata:
     react-dom: "npm:^19.1.1"
     react-infinite-scroller: "npm:^1.2.6"
     react-select-event: "npm:^5.5.1"
-    react-timeago: "npm:^8.0.0"
+    react-timeago: "npm:^8.3.0"
     reactflow: "npm:^11.11.4"
     rimraf: "npm:^6.0.1"
     sharp: "npm:^0.34.3"
@@ -17625,12 +17625,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-timeago@npm:^8.0.0":
-  version: 8.0.0
-  resolution: "react-timeago@npm:8.0.0"
+"react-timeago@npm:^8.3.0":
+  version: 8.3.0
+  resolution: "react-timeago@npm:8.3.0"
   peerDependencies:
     react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/c6c249760b6d79646b6a1c4121480c9f2de84fa2a8955057ac94b6d01db80e45196b99190ebf6b0019c9b8ef25ec7962463064052c7923b6839fa7cf45913853
+  checksum: 10c0/50bf49cb21b748a1e69947b1183a0406e839b0768b2d84de056c286f35360894bb68d6532b56e564adad9f52526e8833195b689a46e3966a31cc505b013b92c4
   languageName: node
   linkType: hard
 
