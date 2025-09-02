@@ -66,7 +66,7 @@
     "react-diff-viewer": "^3.1.1",
     "react-dom": "^19.1.1",
     "react-infinite-scroller": "^1.2.6",
-    "react-timeago": "^8.0.0",
+    "react-timeago": "^8.3.0",
     "reactflow": "^11.11.4",
     "sharp": "^0.34.3",
     "swr": "^2.3.3",
