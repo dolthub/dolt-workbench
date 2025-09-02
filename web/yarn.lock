@@ -9841,7 +9841,7 @@ __metadata:
     rimraf: "npm:^6.0.1"
     sharp: "npm:^0.34.3"
     stylelint: "npm:^16.15.0"
-    stylelint-config-recommended: "npm:^14.0.0"
+    stylelint-config-recommended: "npm:^17.0.0"
     swr: "npm:^2.3.3"
     tailwindcss: "npm:^3.4.15"
     tar: "npm:^7.4.3"
@@ -19252,12 +19252,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"stylelint-config-recommended@npm:^14.0.0":
-  version: 14.0.1
-  resolution: "stylelint-config-recommended@npm:14.0.1"
+"stylelint-config-recommended@npm:^17.0.0":
+  version: 17.0.0
+  resolution: "stylelint-config-recommended@npm:17.0.0"
   peerDependencies:
-    stylelint: ^16.1.0
-  checksum: 10c0/a0a0ecd91f4d193bbe2cc3408228f8a2d8fcb2b2578d77233f86780c9247c796a04e16aad7a91d97cb918e2de34b6a8062bab66ee017c3835d855081d94f4828
+    stylelint: ^16.23.0
+  checksum: 10c0/49e5d1c0f58197b2c5585b85fad814fed9bdec44c9870368c46a762664c5ff158c1145b6337456ae194409d692992b5b87421d62880422f71d8a3360417f5ad1
   languageName: node
   linkType: hard
 
