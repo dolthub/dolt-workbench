@@ -29,7 +29,6 @@ export type ScrollTo = ScrollToPosition | ScrollToXY | ScrollIntoView;
 
 export type ClickFlow = {
   toClickBefore?: Selector;
-  // eslint-disable-next-line no-use-before-define
   expectations: Expectation[];
   toClickAfter?: Selector;
   force?: boolean;
