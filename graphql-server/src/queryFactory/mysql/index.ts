@@ -367,4 +367,8 @@ export class MySQLQueryFactory
   async callCreateBranchFromRemote(_: t.RemoteBranchArgs): t.PR {
     throw notDoltError("create branch from remote");
   }
+
+  async getTests(_: t.RefArgs): t.PR {
+    throw notDoltError("get tests");
+  }
 }

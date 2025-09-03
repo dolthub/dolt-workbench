@@ -339,6 +339,19 @@ type TagList {
   list: [Tag!]!
 }
 
+type Test {
+  testName: String!
+  testGroup: String!
+  testQuery: String!
+  assertionType: String!
+  assertionComparator: String!
+  assertionValue: String!
+}
+
+type TestList {
+  list: [Test!]!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -378,6 +391,7 @@ type Query {
   tables(schemaName: String, refName: String!, databaseName: String!, filterSystemTables: Boolean): [Table!]!
   tags(databaseName: String!): TagList!
   tag(databaseName: String!, tagName: String!): Tag
+  tests(databaseName: String!, refName: String!): TestList!
 }
 
 enum SortBranchesBy {

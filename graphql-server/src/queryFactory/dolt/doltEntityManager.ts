@@ -184,3 +184,13 @@ export async function getDoltRemotesPaginated(
     .limit(ROW_LIMIT + 1)
     .getRawMany();
 }
+
+export async function getDoltTests(
+  em: EntityManager,
+): t.PR {
+  return em
+    .createQueryBuilder()
+    .select("*")
+    .from("dolt_tests", "")
+    .getRawMany();
+}

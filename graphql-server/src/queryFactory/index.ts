@@ -180,4 +180,7 @@ export declare class QueryFactory {
   callCreateBranchFromRemote(args: t.RemoteArgs): t.PR;
 
   getMergeBase(args: t.RefsArgs): Promise<string>;
+
+  getTests(args: t.RefArgs): t.PR;
+
 }

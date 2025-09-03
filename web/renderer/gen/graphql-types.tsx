@@ -505,6 +505,7 @@ export type Query = {
   tables: Array<Table>;
   tag?: Maybe<Tag>;
   tags: TagList;
+  tests: TestList;
   views: Array<SchemaItem>;
 };
 
@@ -757,6 +758,12 @@ export type QueryTagsArgs = {
 };
 
 
+export type QueryTestsArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+};
+
+
 export type QueryViewsArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -912,6 +919,21 @@ export type Tag = {
 export type TagList = {
   __typename?: 'TagList';
   list: Array<Tag>;
+};
+
+export type Test = {
+  __typename?: 'Test';
+  assertionComparator: Scalars['String']['output'];
+  assertionType: Scalars['String']['output'];
+  assertionValue: Scalars['String']['output'];
+  testGroup: Scalars['String']['output'];
+  testName: Scalars['String']['output'];
+  testQuery: Scalars['String']['output'];
+};
+
+export type TestList = {
+  __typename?: 'TestList';
+  list: Array<Test>;
 };
 
 export type TextDiff = {
@@ -1508,6 +1530,14 @@ export type PushToRemoteMutationVariables = Exact<{
 
 
 export type PushToRemoteMutation = { __typename?: 'Mutation', pushToRemote: { __typename?: 'PushRes', success: boolean, message: string } };
+
+export type TestListQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+}>;
+
+
+export type TestListQuery = { __typename?: 'Query', tests: { __typename?: 'TestList', list: Array<{ __typename?: 'Test', testName: string, testQuery: string, testGroup: string, assertionType: string, assertionComparator: string, assertionValue: string }> } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -4462,6 +4492,54 @@ export function usePushToRemoteMutation(baseOptions?: Apollo.MutationHookOptions
 export type PushToRemoteMutationHookResult = ReturnType<typeof usePushToRemoteMutation>;
 export type PushToRemoteMutationResult = Apollo.MutationResult<PushToRemoteMutation>;
 export type PushToRemoteMutationOptions = Apollo.BaseMutationOptions<PushToRemoteMutation, PushToRemoteMutationVariables>;
+export const TestListDocument = gql`
+    query TestList($databaseName: String!, $refName: String!) {
+  tests(databaseName: $databaseName, refName: $refName) {
+    list {
+      testName
+      testQuery
+      testGroup
+      assertionType
+      assertionComparator
+      assertionValue
+    }
+  }
+}
+    `;
+
+/**
+ * __useTestListQuery__
+ *
+ * To run a query within a React component, call `useTestListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTestListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTestListQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *   },
+ * });
+ */
+export function useTestListQuery(baseOptions: Apollo.QueryHookOptions<TestListQuery, TestListQueryVariables> & ({ variables: TestListQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<TestListQuery, TestListQueryVariables>(TestListDocument, options);
+      }
+export function useTestListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TestListQuery, TestListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<TestListQuery, TestListQueryVariables>(TestListDocument, options);
+        }
+export function useTestListSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<TestListQuery, TestListQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<TestListQuery, TestListQueryVariables>(TestListDocument, options);
+        }
+export type TestListQueryHookResult = ReturnType<typeof useTestListQuery>;
+export type TestListLazyQueryHookResult = ReturnType<typeof useTestListLazyQuery>;
+export type TestListSuspenseQueryHookResult = ReturnType<typeof useTestListSuspenseQuery>;
+export type TestListQueryResult = Apollo.QueryResult<TestListQuery, TestListQueryVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(

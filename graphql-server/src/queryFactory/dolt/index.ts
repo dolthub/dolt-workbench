@@ -584,6 +584,14 @@ export class DoltQueryFactory
       qr.query(qh.callDoltClone, [args.remoteDbPath, args.databaseName]),
     );
   }
+
+  async getTests(args: t.RefArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltTests(em),
+      args.databaseName,
+      args.refName,
+    );
+}
 }
 
 async function getTableInfoWithQR(
@@ -605,4 +613,5 @@ async function getTableInfoWithQR(
     foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
     indexes: index.fromDoltRowsRes(idxRows),
   };
+
 }

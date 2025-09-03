@@ -559,6 +559,14 @@ export class DoltgresQueryFactory
       args.databaseName,
     );
   }
+
+  async getTests(args: t.RefArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltTests(em),
+      args.databaseName,
+      args.refName,
+    );
+  }
 }
 
 async function getTableInfoWithQR(
@@ -583,3 +591,4 @@ async function getTableInfoWithQR(
     indexes: [],
   };
 }
+
