@@ -24,6 +24,8 @@ export default function TestList({ params }: Props) {
     tests,
     groupedTests,
     sortedGroupEntries,
+    testResults,
+    getGroupResult,
     toggleExpanded,
     toggleGroupExpanded,
     updateTest,
@@ -46,7 +48,6 @@ export default function TestList({ params }: Props) {
     }
   };
 
-  console.log(tests);
   const uniqueGroups = sortedGroupEntries.map(entry => entry[0]).filter(group => group !== "")
 
   return (
@@ -98,6 +99,7 @@ export default function TestList({ params }: Props) {
                         onToggle={() => toggleGroupExpanded(groupName)}
                         testCount={groupTests.length}
                         groupColor={groupColor}
+                        groupResult={getGroupResult(groupName)}
                         onRunGroup={() => handleRunGroup(groupName)}
                         onDeleteGroup={() => handleDeleteGroup(groupName)}
                         onRenameGroup={handleRenameGroup}
@@ -111,6 +113,7 @@ export default function TestList({ params }: Props) {
                             groupOptions={uniqueGroups}
                             isExpanded={expandedItems.has(test.testName)}
                             editingName={editingTestNames[test.testName]}
+                            testResult={testResults[test.testName]}
                             onToggleExpanded={() => toggleExpanded(test.testName)}
                             onUpdateTest={(field, value) => updateTest(test.testName, field, value)}
                             onNameEdit={(name) => handleTestNameEdit(test.testName, name)}
@@ -136,6 +139,7 @@ export default function TestList({ params }: Props) {
                         groupOptions={uniqueGroups}
                         isExpanded={expandedItems.has(test.testName)}
                         editingName={editingTestNames[test.testName]}
+                        testResult={testResults[test.testName]}
                         onToggleExpanded={() => toggleExpanded(test.testName)}
                         onUpdateTest={(field, value) => updateTest(test.testName, field, value)}
                         onNameEdit={(name) => handleTestNameEdit(test.testName, name)}

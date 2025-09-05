@@ -352,6 +352,18 @@ type TestList {
   list: [Test!]!
 }
 
+type TestResult {
+  testName: String!
+  testGroupName: String!
+  query: String!
+  status: String!
+  message: String!
+}
+
+type TestResultList {
+  list: [TestResult!]!
+}
+
 type Query {
   branch(databaseName: String!, branchName: String!): Branch
   branchOrDefault(databaseName: String!, branchName: String): Branch
@@ -392,6 +404,7 @@ type Query {
   tags(databaseName: String!): TagList!
   tag(databaseName: String!, tagName: String!): Tag
   tests(databaseName: String!, refName: String!): TestList!
+  runTests(refName: String!, databaseName: String!, identifiers: TestIdentifierArgs): TestResultList!
 }
 
 enum SortBranchesBy {
@@ -419,6 +432,10 @@ enum DiffRowType {
   All
 }
 
+input TestIdentifierArgs {
+  values: [String!]!
+}
+
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
@@ -440,6 +457,7 @@ type Mutation {
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!
+  saveTests(refName: String!, databaseName: String!, tests: TestListArgs!): TestList!
 }
 
 enum ImportOperation {
@@ -463,4 +481,17 @@ enum LoadDataModifier {
 input AuthorInfo {
   name: String!
   email: String!
+}
+
+input TestListArgs {
+  list: [TestArgs!]!
+}
+
+input TestArgs {
+  testName: String!
+  testGroup: String!
+  testQuery: String!
+  assertionType: String!
+  assertionComparator: String!
+  assertionValue: String!
 }

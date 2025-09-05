@@ -98,3 +98,4 @@ export class AuthorInfo {
   @Field()
   email: string;
 }
+

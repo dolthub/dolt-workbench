@@ -1,4 +1,4 @@
-import { DataSource, EntityManager, QueryRunner } from "typeorm";
+import { DataSource, EntityManager, InsertResult, QueryRunner } from "typeorm";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { SchemaType } from "../schemas/schema.enums";
 import { SchemaItem } from "../schemas/schema.model";
@@ -182,5 +182,9 @@ export declare class QueryFactory {
   getMergeBase(args: t.RefsArgs): Promise<string>;
 
   getTests(args: t.RefArgs): t.PR;
+
+  runTests(args: t.RunTestsArgs): t.PR;
+
+  saveTests(args: t.SaveTestsArgs): Promise<InsertResult>;
 
 }

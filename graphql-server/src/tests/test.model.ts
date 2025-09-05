@@ -1,5 +1,6 @@
 import { Field, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
+import { ObjectLiteral } from "typeorm";
 
 @ObjectType()
 export class Test {
@@ -28,7 +29,31 @@ export class TestList {
   list: Test[];
 }
 
-export function fromDoltRowRes(test: RawRow): Test {
+@ObjectType()
+export class TestResult {
+  @Field()
+  testName: string;
+
+  @Field()
+  testGroupName: string;
+
+  @Field()
+  query: string;
+
+  @Field()
+  status: string;
+
+  @Field()
+  message: string;
+}
+
+@ObjectType()
+export class TestResultList {
+  @Field(_type => [TestResult])
+  list: TestResult[];
+}
+
+export function fromDoltRowRes(test: RawRow | ObjectLiteral): Test {
   return {
     testName: test.test_name,
     testGroup: test.test_group,

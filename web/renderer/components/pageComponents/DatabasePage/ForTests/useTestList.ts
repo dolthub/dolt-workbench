@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { Test, useTestListQuery } from "@gen/graphql-types";
+import { Test, useRunTestsLazyQuery, useSaveTestsMutation, useTestListQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 
 // type Test = {
@@ -76,8 +76,7 @@ export function useTestList(params: RefParams) {
       refName: params.refName,
     },
   });
-  const initialTests = data?.tests.list;
-
+  const [runTests] = useRunTestsLazyQuery();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
   const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
     new Set()
@@ -86,15 +85,25 @@ export function useTestList(params: RefParams) {
     Record<string, string>
   >({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
-  const [tests, setTests] = useState(initialTests || []);
+  const [tests, setTests] = useState<Test[]>([]);
+  const [emptyGroups, setEmptyGroups] = useState<Set<string>>(new Set());
+  const [testResults, setTestResults] = useState<Record<string, {status: 'passed' | 'failed', error?: string}>>({});
   
   // Update tests when GraphQL data loads
   useEffect(() => {
-    if (initialTests) {
+    if (data?.tests.list) {
+      const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
       setTests(initialTests);
     }
-  }, [initialTests]);
+  }, [data?.tests.list]);
 
+  const [saveTestsMutation] = useSaveTestsMutation({
+    variables: {
+      databaseName: params.databaseName,
+      refName: params.refName,
+      tests: { list: tests }
+    },
+  });
 
   const toggleExpanded = (id: string) => {
     const newExpanded = new Set(expandedItems);
@@ -125,26 +134,77 @@ export function useTestList(params: RefParams) {
     setHasUnsavedChanges(true);
   };
 
-  const handleSaveAll = () => {
+  const handleSaveAll = async () => {
     console.log("Saving all changes:", tests);
+    await saveTestsMutation();
     setHasUnsavedChanges(false);
     window.alert("All changes saved successfully!");
   };
 
-  const handleRunTest = (testId: string) => {
+  const handleRunTest = async (testName: string) => {
     if (hasUnsavedChanges) {
-      handleSaveAll();
+      await handleSaveAll();
     }
-    console.log(`Running test: ${testId}`);
-    window.alert(`Running test ${testId}...`);
+    const result = await runTests({
+      variables: {
+        databaseName: params.databaseName,
+        refName: params.refName,
+        identifiers: {
+          values: [testName]
+        }
+      }
+    })
+
+    console.log(result)
+    //
+    // // Mock test execution - randomly pass/fail for demo
+    // const willPass = Math.random() > 0.3;
+    //
+    // if (willPass) {
+    //   setTestResults(prev => ({
+    //     ...prev,
+    //     [testId]: { status: 'passed' }
+    //   }));
+    // } else {
+    //   setTestResults(prev => ({
+    //     ...prev,
+    //     [testId]: {
+    //       status: 'failed',
+    //       error: `Assertion failed: expected '${Math.floor(Math.random() * 100)}' but got '${Math.floor(Math.random() * 100)}'`
+    //     }
+    //   }));
+    // }
   };
 
-  const handleRunGroup = (groupName: string) => {
+  const handleRunGroup = async (groupName: string) => {
     if (hasUnsavedChanges) {
-      handleSaveAll();
+      await handleSaveAll();
     }
-    console.log(`Running all tests in group: ${groupName}`);
-    window.alert(`Running all tests in ${groupName}...`);
+    
+    // Get all tests in the group
+    const groupTests = tests.filter(test => test.testGroup === groupName);
+    
+    // Run each test in the group
+    const newResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
+    
+    for (const test of groupTests) {
+      const willPass = Math.random() > 0.3;
+      
+      if (willPass) {
+        newResults[test.testName] = { status: 'passed' };
+      } else {
+        newResults[test.testName] = { 
+          status: 'failed', 
+          error: `Assertion failed: expected '${Math.floor(Math.random() * 100)}' but got '${Math.floor(Math.random() * 100)}'`
+        };
+      }
+    }
+    
+    // Update test results
+    setTestResults(prev => ({
+      ...prev,
+      ...newResults
+    }));
   };
 
   const handleDeleteTest = (testName: string) => {
@@ -171,6 +231,11 @@ export function useTestList(params: RefParams) {
         newSet.delete(groupName);
         return newSet;
       });
+      setEmptyGroups(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(groupName);
+        return newSet;
+      });
       setHasUnsavedChanges(true);
     }
   };
@@ -181,8 +246,10 @@ export function useTestList(params: RefParams) {
   ) => {
     if (
       groupName.trim() &&
-      !Object.keys(groupedTests).includes(groupName.trim())
+      !Object.keys(groupedTests).includes(groupName.trim()) &&
+      !emptyGroups.has(groupName.trim())
     ) {
+      setEmptyGroups(prev => new Set([...prev, groupName.trim()]));
       setExpandedGroups(prev => new Set([...prev, groupName.trim()]));
       setHasUnsavedChanges(true);
       return true;
@@ -195,7 +262,7 @@ export function useTestList(params: RefParams) {
       testName: "New Test",
       testQuery: "",
       assertionType: "expected_single_value",
-      assertionComparator: "=",
+      assertionComparator: "==",
       assertionValue: "",
       testGroup: groupName ?? "",
     };
@@ -207,9 +274,24 @@ export function useTestList(params: RefParams) {
     });
     setHasUnsavedChanges(true);
 
+    // Remove from empty groups if test is added to it
+    if (groupName && emptyGroups.has(groupName)) {
+      setEmptyGroups(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(groupName);
+        return newSet;
+      });
+    }
+
     if (groupName && !expandedGroups.has(groupName)) {
       setExpandedGroups(prev => new Set([...prev, groupName]));
     }
+    
+    // Scroll to new test
+    setTimeout(() => {
+      const testElement = document.querySelector(`[data-test-name="${newTest.testName}"]`);
+      testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 100);
   };
 
   const handleRenameGroup = (oldName: string, newName: string) => {
@@ -263,8 +345,14 @@ export function useTestList(params: RefParams) {
       groups[groupName] ??= [];
       groups[groupName].push(test);
     });
+    
+    // Add empty groups
+    emptyGroups.forEach(groupName => {
+      groups[groupName] ??= [];
+    });
+    
     return groups;
-  }, [tests]);
+  }, [tests, emptyGroups]);
 
   const sortedGroupEntries = useMemo(() => {
     const entries = Object.entries(groupedTests);
@@ -290,6 +378,17 @@ export function useTestList(params: RefParams) {
     return entries;
   }, [groupedTests]);
 
+  const getGroupResult = (groupName: string) => {
+    const groupTests = groupedTests[groupName] || [];
+    if (groupTests.length === 0) return undefined;
+    
+    const results = groupTests.map(test => testResults[test.testName]).filter(Boolean);
+    if (results.length === 0) return undefined;
+    
+    const allPassed = results.every(result => result.status === 'passed');
+    return allPassed ? 'passed' : 'failed';
+  };
+
   return {
     expandedItems,
     expandedGroups,
@@ -298,6 +397,8 @@ export function useTestList(params: RefParams) {
     tests,
     groupedTests,
     sortedGroupEntries,
+    testResults,
+    getGroupResult,
     toggleExpanded,
     toggleGroupExpanded,
     updateTest,

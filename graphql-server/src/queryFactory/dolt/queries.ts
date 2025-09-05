@@ -181,3 +181,8 @@ export const callResetHard = `CALL DOLT_RESET("--hard")`;
 export const callCheckoutTable = `CALL DOLT_CHECKOUT(?)`;
 
 export const callDoltClone = `CALL DOLT_CLONE(?,?)`;
+
+export const doltTestRun = (argCount: number) => {
+  const placeholders = Array.from({ length: argCount }, () => `?`).join(', ');
+  return `SELECT * FROM DOLT_TEST_RUN(${placeholders})`;
+};

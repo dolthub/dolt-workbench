@@ -257,6 +257,7 @@ export type Mutation = {
   removeDatabaseConnection: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
   restoreAllTables: Scalars['Boolean']['output'];
+  saveTests: TestList;
 };
 
 
@@ -405,6 +406,13 @@ export type MutationRestoreAllTablesArgs = {
   refName: Scalars['String']['input'];
 };
 
+
+export type MutationSaveTestsArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  tests: TestListArgs;
+};
+
 export type PullConflictSummary = {
   __typename?: 'PullConflictSummary';
   _id: Scalars['ID']['output'];
@@ -494,6 +502,7 @@ export type Query = {
   remotes: RemoteList;
   rowDiffs: RowDiffList;
   rows: RowList;
+  runTests: TestResultList;
   schemaDiff?: Maybe<SchemaDiff>;
   schemas: Array<Scalars['String']['output']>;
   sqlSelect: SqlSelect;
@@ -680,6 +689,13 @@ export type QueryRowsArgs = {
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
+};
+
+
+export type QueryRunTestsArgs = {
+  databaseName: Scalars['String']['input'];
+  identifiers?: InputMaybe<TestIdentifierArgs>;
+  refName: Scalars['String']['input'];
 };
 
 
@@ -931,9 +947,40 @@ export type Test = {
   testQuery: Scalars['String']['output'];
 };
 
+export type TestArgs = {
+  assertionComparator: Scalars['String']['input'];
+  assertionType: Scalars['String']['input'];
+  assertionValue: Scalars['String']['input'];
+  testGroup: Scalars['String']['input'];
+  testName: Scalars['String']['input'];
+  testQuery: Scalars['String']['input'];
+};
+
+export type TestIdentifierArgs = {
+  values: Array<Scalars['String']['input']>;
+};
+
 export type TestList = {
   __typename?: 'TestList';
   list: Array<Test>;
+};
+
+export type TestListArgs = {
+  list: Array<TestArgs>;
+};
+
+export type TestResult = {
+  __typename?: 'TestResult';
+  message: Scalars['String']['output'];
+  query: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  testGroupName: Scalars['String']['output'];
+  testName: Scalars['String']['output'];
+};
+
+export type TestResultList = {
+  __typename?: 'TestResultList';
+  list: Array<TestResult>;
 };
 
 export type TextDiff = {
@@ -1538,6 +1585,24 @@ export type TestListQueryVariables = Exact<{
 
 
 export type TestListQuery = { __typename?: 'Query', tests: { __typename?: 'TestList', list: Array<{ __typename?: 'Test', testName: string, testQuery: string, testGroup: string, assertionType: string, assertionComparator: string, assertionValue: string }> } };
+
+export type SaveTestsMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  tests: TestListArgs;
+}>;
+
+
+export type SaveTestsMutation = { __typename?: 'Mutation', saveTests: { __typename?: 'TestList', list: Array<{ __typename?: 'Test', testName: string, testGroup: string, testQuery: string, assertionType: string, assertionComparator: string, assertionValue: string }> } };
+
+export type RunTestsQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  identifiers?: InputMaybe<TestIdentifierArgs>;
+}>;
+
+
+export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', testName: string, testGroupName: string, status: string, message: string }> } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -4540,6 +4605,99 @@ export type TestListQueryHookResult = ReturnType<typeof useTestListQuery>;
 export type TestListLazyQueryHookResult = ReturnType<typeof useTestListLazyQuery>;
 export type TestListSuspenseQueryHookResult = ReturnType<typeof useTestListSuspenseQuery>;
 export type TestListQueryResult = Apollo.QueryResult<TestListQuery, TestListQueryVariables>;
+export const SaveTestsDocument = gql`
+    mutation SaveTests($databaseName: String!, $refName: String!, $tests: TestListArgs!) {
+  saveTests(databaseName: $databaseName, refName: $refName, tests: $tests) {
+    list {
+      testName
+      testGroup
+      testQuery
+      assertionType
+      assertionComparator
+      assertionValue
+    }
+  }
+}
+    `;
+export type SaveTestsMutationFn = Apollo.MutationFunction<SaveTestsMutation, SaveTestsMutationVariables>;
+
+/**
+ * __useSaveTestsMutation__
+ *
+ * To run a mutation, you first call `useSaveTestsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveTestsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveTestsMutation, { data, loading, error }] = useSaveTestsMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      tests: // value for 'tests'
+ *   },
+ * });
+ */
+export function useSaveTestsMutation(baseOptions?: Apollo.MutationHookOptions<SaveTestsMutation, SaveTestsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveTestsMutation, SaveTestsMutationVariables>(SaveTestsDocument, options);
+      }
+export type SaveTestsMutationHookResult = ReturnType<typeof useSaveTestsMutation>;
+export type SaveTestsMutationResult = Apollo.MutationResult<SaveTestsMutation>;
+export type SaveTestsMutationOptions = Apollo.BaseMutationOptions<SaveTestsMutation, SaveTestsMutationVariables>;
+export const RunTestsDocument = gql`
+    query RunTests($databaseName: String!, $refName: String!, $identifiers: TestIdentifierArgs) {
+  runTests(
+    databaseName: $databaseName
+    refName: $refName
+    identifiers: $identifiers
+  ) {
+    list {
+      testName
+      testGroupName
+      status
+      message
+    }
+  }
+}
+    `;
+
+/**
+ * __useRunTestsQuery__
+ *
+ * To run a query within a React component, call `useRunTestsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useRunTestsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useRunTestsQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      identifiers: // value for 'identifiers'
+ *   },
+ * });
+ */
+export function useRunTestsQuery(baseOptions: Apollo.QueryHookOptions<RunTestsQuery, RunTestsQueryVariables> & ({ variables: RunTestsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<RunTestsQuery, RunTestsQueryVariables>(RunTestsDocument, options);
+      }
+export function useRunTestsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<RunTestsQuery, RunTestsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<RunTestsQuery, RunTestsQueryVariables>(RunTestsDocument, options);
+        }
+export function useRunTestsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<RunTestsQuery, RunTestsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<RunTestsQuery, RunTestsQueryVariables>(RunTestsDocument, options);
+        }
+export type RunTestsQueryHookResult = ReturnType<typeof useRunTestsQuery>;
+export type RunTestsLazyQueryHookResult = ReturnType<typeof useRunTestsLazyQuery>;
+export type RunTestsSuspenseQueryHookResult = ReturnType<typeof useRunTestsSuspenseQuery>;
+export type RunTestsQueryResult = Apollo.QueryResult<RunTestsQuery, RunTestsQueryVariables>;
 export const LoadDataDocument = gql`
     mutation LoadData($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $importOp: ImportOperation!, $fileType: FileType!, $file: Upload!, $modifier: LoadDataModifier) {
   loadDataFile(

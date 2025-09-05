@@ -2,6 +2,8 @@ import { Button } from "@dolthub/react-components";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
+import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
+import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import css from "./index.module.css";
 import QueryEditor from "./QueryEditor";
 import { MouseEvent } from "react";
@@ -12,6 +14,7 @@ type Props = {
   groupOptions: string[],
   isExpanded: boolean;
   editingName: string | undefined;
+  testResult?: {status: 'passed' | 'failed', error?: string};
   onToggleExpanded: () => void;
   onUpdateTest: (field: keyof Test, value: string) => void;
   onNameEdit: (name: string) => void;
@@ -25,6 +28,7 @@ export default function TestItem({
   groupOptions,
   isExpanded,
   editingName,
+  testResult,
   onToggleExpanded,
   onUpdateTest,
   onNameEdit,
@@ -32,9 +36,8 @@ export default function TestItem({
   onRunTest,
   onDeleteTest
 }: Props) {
-  console.log(groupOptions);
   return (
-    <li className={`${css.item} ${css.groupedItem} ${isExpanded ? css.expanded : ''}`}>
+    <li className={`${css.item} ${css.groupedItem} ${isExpanded ? css.expanded : ''}`} data-test-name={test.testName}>
       <div className={css.itemTop} onClick={onToggleExpanded}>
         <div className={css.testName}>
           <FaChevronRight className={css.expandIcon} />
@@ -48,6 +51,25 @@ export default function TestItem({
             placeholder="Test name"
           />
         </div>
+        {testResult && (
+          <div className={`flex items-center gap-1 px-2 py-1 rounded text-sm ${
+            testResult.status === 'passed' 
+              ? 'bg-green-100 text-green-800' 
+              : 'bg-red-100 text-red-800'
+          }`}>
+            {testResult.status === 'passed' ? (
+              <>
+                <FaCheck className="w-3 h-3" />
+                <span>Passed</span>
+              </>
+            ) : (
+              <>
+                <FaTimes className="w-3 h-3" />
+                <span>Failed</span>
+              </>
+            )}
+          </div>
+        )}
         <div className={css.testActions}>
           <Button.Link
             onClick={(e: MouseEvent) => {
@@ -74,6 +96,11 @@ export default function TestItem({
       </div>
       {isExpanded && (
         <div className={css.expandedContent}>
+          {testResult?.status === 'failed' && testResult.error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+              <strong>Error:</strong> {testResult.error}
+            </div>
+          )}
           <div className={css.fieldGroup}>
             <label className={css.fieldLabel}>Test Group</label>
             <select

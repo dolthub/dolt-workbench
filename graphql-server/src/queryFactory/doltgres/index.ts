@@ -1,4 +1,4 @@
-import { QueryRunner } from "typeorm";
+import { InsertResult, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import * as column from "../../columns/column.model";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
@@ -567,7 +567,25 @@ export class DoltgresQueryFactory
       args.refName,
     );
   }
+
+  async runTests(args: t.RunTestsArgs): t.PR {
+    return this.query(
+      qh.doltTestRun(args.identifiers?.values.length ?? 0),
+      args.identifiers?.values,
+      args.databaseName,
+      args.refName,
+    )
+  }
+
+  async saveTests(args: t.SaveTestsArgs): Promise<InsertResult> {
+    return this.queryForBuilder(
+      async em => dem.saveDoltTests(em, args.tests.list),
+      args.databaseName,
+      args.refName,
+    )
+  }
 }
+
 
 async function getTableInfoWithQR(
   qr: QueryRunner,
