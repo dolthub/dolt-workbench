@@ -12,6 +12,9 @@ type Props = {
 };
 
 export default function ForTable(props: Props) {
+  if (!props.params.tableName) {
+    return null;
+  }
   const { schemaName, tableName } = getSchemaAndTableName(props.params);
   const params = { ...props.params, schemaName, tableName };
   return (

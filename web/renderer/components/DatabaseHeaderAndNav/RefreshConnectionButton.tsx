@@ -10,16 +10,19 @@ import useMutation from "@hooks/useMutation";
 import { IoReloadSharp } from "@react-icons/all-files/io5/IoReloadSharp";
 import { useState } from "react";
 import css from "./index.module.css";
+import { useRouter } from "next/router";
 
 export default function ResetConnectionButton() {
   const { mutateFn, loading, err, setErr, client } = useMutation({
     hook: useResetDatabaseMutation,
   });
+  const router = useRouter();
   const [errorModalOpen, setErrorModalOpen] = useState(false);
 
   const onClick = async () => {
     await mutateFn();
     await client.resetStore();
+    router.reload();
   };
 
   const onClose = () => {
