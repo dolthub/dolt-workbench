@@ -34,6 +34,11 @@ export function createApolloClient(
       uri,
       headers,
     }),
+    defaultOptions: {
+      watchQuery: {
+        fetchPolicy: "cache-and-network",
+      },
+    },
   });
 }
 
