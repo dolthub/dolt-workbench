@@ -2,75 +2,8 @@ import { useState, useMemo, useEffect } from "react";
 import { Test, useRunTestsLazyQuery, useSaveTestsMutation, useTestListQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 
-// type Test = {
-//   id: string;
-//   name: string;
-//   query: string;
-//   type: string;
-//   operator: string;
-//   expected: string;
-//   testGroup: string;
-// };
-
-// const initialTests: Test[] = [
-//   {
-//     id: "1",
-//     name: "User Count Check",
-//     query: "SELECT COUNT(*) FROM users",
-//     type: "Expected Single Value",
-//     operator: "=",
-//     expected: "100",
-//     testGroup: "User Validation"
-//   },
-//   {
-//     id: "2",
-//     name: "Active Users Check",
-//     query: "SELECT COUNT(*) FROM users WHERE active = 1",
-//     type: "Expected Single Value",
-//     operator: ">=",
-//     expected: "50",
-//     testGroup: "User Validation"
-//   },
-//   {
-//     id: "3",
-//     name: "Order Total Check",
-//     query: "SELECT SUM(total) FROM orders",
-//     type: "Expected Single Value",
-//     operator: ">",
-//     expected: "1000",
-//     testGroup: "Financial Tests"
-//   },
-//   {
-//     id: "4",
-//     name: "Product Inventory",
-//     query: "SELECT COUNT(*) FROM products WHERE stock > 0",
-//     type: "Expected Single Value",
-//     operator: ">",
-//     expected: "10",
-//     testGroup: "Inventory Tests"
-//   },
-//   {
-//     id: "5",
-//     name: "Revenue by Month",
-//     query: "SELECT MONTH(created_at), SUM(total) FROM orders GROUP BY MONTH(created_at)",
-//     type: "Expected Rows",
-//     operator: ">=",
-//     expected: "12",
-//     testGroup: "Financial Tests"
-//   },
-//   {
-//     id: "6",
-//     name: "Sample Ungrouped Test",
-//     query: "SELECT 1",
-//     type: "Expected Single Value",
-//     operator: "=",
-//     expected: "1",
-//     testGroup: ""
-//   }
-// ];
-
 export function useTestList(params: RefParams) {
-  const { data, loading, error } = useTestListQuery({
+  const { data } = useTestListQuery({
     variables: {
       databaseName: params.databaseName,
       refName: params.refName,
@@ -138,7 +71,6 @@ export function useTestList(params: RefParams) {
     console.log("Saving all changes:", tests);
     await saveTestsMutation();
     setHasUnsavedChanges(false);
-    window.alert("All changes saved successfully!");
   };
 
   const handleRunTest = async (testName: string) => {
@@ -183,15 +115,13 @@ export function useTestList(params: RefParams) {
         }
       },
     })
-    result.data?.runTests.list.map(test => {
-      return test.status === 'PASS' ? {
+    result.data?.runTests.list.map(test => test.status === 'PASS' ? {
         status: 'passed'
       } :
         {
           status: 'failed',
           error: test.message
-        }
-    })
+        })
 
     const testResults = result.data && result.data.runTests.list.length > 0 ? result.data.runTests.list : [];
     const groupResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
@@ -215,9 +145,43 @@ export function useTestList(params: RefParams) {
       ...groupResults
     }});
   };
+    const handleRunAll = async () => {
+    if (hasUnsavedChanges) {
+      await handleSaveAll();
+    }
+
+
+    const result = await runTests({
+      variables: {
+        databaseName: params.databaseName,
+        refName: params.refName,
+      },
+    })
+
+    const testResults = result.data && result.data.runTests.list.length > 0 ? result.data.runTests.list : [];
+    const allResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
+
+    for (const testResult of testResults) {
+      if (testResult.status === 'PASS') {
+        allResults[testResult.testName] = {
+          status: 'passed'
+        }
+      } else {
+        allResults[testResult.testName] = {
+          status: 'failed',
+          error: testResult.message
+        }
+      }
+    }
+
+    setTestResults(prev => {
+      return {
+      ...prev,
+      ...allResults
+    }});
+  };
 
   const handleDeleteTest = (testName: string) => {
-    if (window.confirm("Are you sure you want to delete this test?")) {
       setTests(tests.filter(test => test.testName !== testName));
       setExpandedItems(prev => {
         const newSet = new Set(prev);
@@ -225,15 +189,9 @@ export function useTestList(params: RefParams) {
         return newSet;
       });
       setHasUnsavedChanges(true);
-    }
   };
 
   const handleDeleteGroup = (groupName: string) => {
-    if (
-      window.confirm(
-        `Are you sure you want to delete the entire "${groupName}" group and all its tests?`,
-      )
-    ) {
       setTests(tests.filter(test => test.testGroup !== groupName));
       setExpandedGroups(prev => {
         const newSet = new Set(prev);
@@ -247,7 +205,6 @@ export function useTestList(params: RefParams) {
       });
       setHasUnsavedChanges(true);
     }
-  };
 
   const handleCreateGroup = (
     groupName: string,
@@ -267,8 +224,19 @@ export function useTestList(params: RefParams) {
   };
 
   const handleCreateTest = (groupName?: string) => {
+    // Generate a unique test name
+    const baseTestName = "New Test";
+    const existingNames = tests.map(t => t.testName);
+    let uniqueTestName = baseTestName;
+    let counter = 1;
+    
+    while (existingNames.includes(uniqueTestName)) {
+      uniqueTestName = `${baseTestName} ${counter}`;
+      counter++;
+    }
+
     const newTest: Test = {
-      testName: "New Test",
+      testName: uniqueTestName,
       testQuery: "",
       assertionType: "expected_single_value",
       assertionComparator: "==",
@@ -391,10 +359,13 @@ export function useTestList(params: RefParams) {
     const groupTests = groupedTests[groupName] || [];
     if (groupTests.length === 0) return undefined;
     
-    const results = groupTests.map(test => testResults[test.testName]).filter(Boolean);
-    if (results.length === 0) return undefined;
+    const results = groupTests.map(test => testResults[test.testName]);
     
-    const allPassed = results.every(result => result.status === 'passed');
+    // If any test doesn't have a result, the group hasn't been fully tested
+    if (results.some(result => !result)) return undefined;
+    
+    // Only show 'passed' if ALL tests have passed
+    const allPassed = results.every(result => result && result.status === 'passed');
     return allPassed ? 'passed' : 'failed';
   };
 
@@ -413,6 +384,7 @@ export function useTestList(params: RefParams) {
     updateTest,
     handleRunTest,
     handleRunGroup,
+    handleRunAll,
     handleDeleteTest,
     handleDeleteGroup,
     handleCreateGroup,

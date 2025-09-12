@@ -102,6 +102,7 @@ export default function TestGroup({ group, isExpanded, onToggle, testCount, grou
             onClick={handleRunGroup}
             className={`${css.groupActionBtn} ${css.runBtn}`}
             data-tooltip-content={`Run all tests in ${groupName}`}
+            disabled={testCount === 0}
           >
             <FaPlay />
           </Button.Link>

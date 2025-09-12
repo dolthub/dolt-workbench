@@ -31,6 +31,7 @@ export default function TestList({ params }: Props) {
     updateTest,
     handleRunTest,
     handleRunGroup,
+    handleRunAll,
     handleDeleteTest,
     handleDeleteGroup,
     handleCreateGroup,
@@ -72,6 +73,14 @@ export default function TestList({ params }: Props) {
               </Button>
             </>
           </HideForNoWritesWrapper>
+          {tests.length > 0 && (
+            <Button
+              onClick={handleRunAll}
+              className="bg-green-600 text-white"
+            >
+              Run All Tests
+            </Button>
+          )}
         </div>
       </div>
       
