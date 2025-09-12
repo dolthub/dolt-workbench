@@ -5,7 +5,6 @@ function truncate(str: string, len: number): string {
   let truncated = "";
   let width = 0;
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const char of str) {
     width += fullWidthRegex.test(char) ? 2 : 1;
 
