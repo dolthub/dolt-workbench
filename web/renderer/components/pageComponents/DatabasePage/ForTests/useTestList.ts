@@ -152,59 +152,68 @@ export function useTestList(params: RefParams) {
         identifiers: {
           values: [testName]
         }
-      }
+      },
     })
 
-    console.log(result)
-    //
-    // // Mock test execution - randomly pass/fail for demo
-    // const willPass = Math.random() > 0.3;
-    //
-    // if (willPass) {
-    //   setTestResults(prev => ({
-    //     ...prev,
-    //     [testId]: { status: 'passed' }
-    //   }));
-    // } else {
-    //   setTestResults(prev => ({
-    //     ...prev,
-    //     [testId]: {
-    //       status: 'failed',
-    //       error: `Assertion failed: expected '${Math.floor(Math.random() * 100)}' but got '${Math.floor(Math.random() * 100)}'`
-    //     }
-    //   }));
-    // }
+    const testPassed = result.data && result.data.runTests.list.length > 0 && result.data.runTests.list[0].status === 'PASS';
+
+    setTestResults(prev => {
+      return {
+        ...prev,
+        [testName]: {
+          status: testPassed ? 'passed' : 'failed',
+          error: testPassed ? undefined : result.data?.runTests.list[0].message
+        }
+      }
+    });
   };
 
   const handleRunGroup = async (groupName: string) => {
     if (hasUnsavedChanges) {
       await handleSaveAll();
     }
-    
-    // Get all tests in the group
-    const groupTests = tests.filter(test => test.testGroup === groupName);
-    
-    // Run each test in the group
-    const newResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
-    
-    for (const test of groupTests) {
-      const willPass = Math.random() > 0.3;
-      
-      if (willPass) {
-        newResults[test.testName] = { status: 'passed' };
+
+
+    const result = await runTests({
+      variables: {
+        databaseName: params.databaseName,
+        refName: params.refName,
+        identifiers: {
+          values: [groupName]
+        }
+      },
+    })
+    result.data?.runTests.list.map(test => {
+      return test.status === 'PASS' ? {
+        status: 'passed'
+      } :
+        {
+          status: 'failed',
+          error: test.message
+        }
+    })
+
+    const testResults = result.data && result.data.runTests.list.length > 0 ? result.data.runTests.list : [];
+    const groupResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
+
+    for (const testResult of testResults) {
+      if (testResult.status === 'PASS') {
+        groupResults[testResult.testName] = {
+          status: 'passed'
+        }
       } else {
-        newResults[test.testName] = { 
-          status: 'failed', 
-          error: `Assertion failed: expected '${Math.floor(Math.random() * 100)}' but got '${Math.floor(Math.random() * 100)}'`
-        };
+        groupResults[testResult.testName] = {
+          status: 'failed',
+          error: testResult.message
+        }
       }
     }
-    
-    // Update test results
-    setTestResults(prev => ({
+
+    setTestResults(prev => {
+      return {
       ...prev,
-      ...newResults
-    }));
+      ...groupResults
+    }});
   };
 
   const handleDeleteTest = (testName: string) => {

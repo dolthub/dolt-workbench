@@ -974,7 +974,7 @@ export type TestResult = {
   message: Scalars['String']['output'];
   query: Scalars['String']['output'];
   status: Scalars['String']['output'];
-  testGroupName: Scalars['String']['output'];
+  testGroupName?: Maybe<Scalars['String']['output']>;
   testName: Scalars['String']['output'];
 };
 
@@ -1602,7 +1602,7 @@ export type RunTestsQueryVariables = Exact<{
 }>;
 
 
-export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', testName: string, testGroupName: string, status: string, message: string }> } };
+export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', testName: string, testGroupName?: string | null, status: string, message: string }> } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];

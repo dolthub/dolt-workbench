@@ -354,7 +354,7 @@ type TestList {
 
 type TestResult {
   testName: String!
-  testGroupName: String!
+  testGroupName: String
   query: String!
   status: String!
   message: String!

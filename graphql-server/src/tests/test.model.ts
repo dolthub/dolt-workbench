@@ -34,7 +34,7 @@ export class TestResult {
   @Field()
   testName: string;
 
-  @Field()
+  @Field({ nullable: true })
   testGroupName: string;
 
   @Field()
@@ -53,7 +53,7 @@ export class TestResultList {
   list: TestResult[];
 }
 
-export function fromDoltRowRes(test: RawRow | ObjectLiteral): Test {
+export function fromDoltTestRowRes(test: RawRow | ObjectLiteral): Test {
   return {
     testName: test.test_name,
     testGroup: test.test_group,
@@ -62,4 +62,14 @@ export function fromDoltRowRes(test: RawRow | ObjectLiteral): Test {
     assertionComparator: test.assertion_comparator,
     assertionValue: test.assertion_value,
   };
+}
+
+export function fromDoltTestResultRowRes(testResult: RawRow): TestResult {
+  return {
+    testName: testResult.test_name,
+    testGroupName: testResult.test_group_name,
+    query: testResult.query,
+    status: testResult.status,
+    message: testResult.message,
+  }
 }

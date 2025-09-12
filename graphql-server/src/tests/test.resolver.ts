@@ -5,7 +5,7 @@ import {
 } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import {  RefArgs  } from "../utils/commonTypes";
-import { Test, TestList, fromDoltRowRes, TestResultList } from "./test.model";
+import { Test, TestList, fromDoltTestRowRes, TestResultList, fromDoltTestResultRowRes } from "./test.model";
 
 
 @InputType()
@@ -62,7 +62,7 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.getTests(args);
     return {
-      list: res.map(t => fromDoltRowRes(t)),
+      list: res.map(t => fromDoltTestRowRes(t)),
     };
   }
 
@@ -71,7 +71,7 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.runTests(args);
     return {
-      list: res.map(t => fromDoltRowRes(t)),
+      list: res.map(t => fromDoltTestResultRowRes(t)),
     };
   }
 
@@ -81,7 +81,7 @@ export class TestResolver {
     const res = await conn.saveTests(args);
     console.dir(res, { depth: null });
     return {
-      list: res.generatedMaps.map(t => fromDoltRowRes(t)),
+      list: res.generatedMaps.map(t => fromDoltTestRowRes(t)),
     };
   }
 }

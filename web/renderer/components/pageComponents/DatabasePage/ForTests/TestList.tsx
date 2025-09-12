@@ -100,7 +100,7 @@ export default function TestList({ params }: Props) {
                         testCount={groupTests.length}
                         groupColor={groupColor}
                         groupResult={getGroupResult(groupName)}
-                        onRunGroup={() => handleRunGroup(groupName)}
+                        onRunGroup={async () => await handleRunGroup(groupName)}
                         onDeleteGroup={() => handleDeleteGroup(groupName)}
                         onRenameGroup={handleRenameGroup}
                       />
@@ -118,7 +118,7 @@ export default function TestList({ params }: Props) {
                             onUpdateTest={(field, value) => updateTest(test.testName, field, value)}
                             onNameEdit={(name) => handleTestNameEdit(test.testName, name)}
                             onNameBlur={() => handleTestNameBlur(test.testName)}
-                            onRunTest={() => handleRunTest(test.testName)}
+                            onRunTest={async () => await handleRunTest(test.testName)}
                             onDeleteTest={() => handleDeleteTest(test.testName)}
                           />
                         ))}
@@ -144,7 +144,7 @@ export default function TestList({ params }: Props) {
                         onUpdateTest={(field, value) => updateTest(test.testName, field, value)}
                         onNameEdit={(name) => handleTestNameEdit(test.testName, name)}
                         onNameBlur={() => handleTestNameBlur(test.testName)}
-                        onRunTest={() => handleRunTest(test.testName)}
+                        onRunTest={async () => await handleRunTest(test.testName)}
                         onDeleteTest={() => handleDeleteTest(test.testName)}
                       />
                     ))}
