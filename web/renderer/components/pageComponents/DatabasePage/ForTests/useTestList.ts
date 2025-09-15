@@ -1,8 +1,10 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { Test, useRunTestsLazyQuery, useSaveTestsMutation, useTestListQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
+import { useRouter } from "next/router";
 
 export function useTestList(params: RefParams) {
+  const router = useRouter();
   const { data } = useTestListQuery({
     variables: {
       databaseName: params.databaseName,
@@ -20,15 +22,129 @@ export function useTestList(params: RefParams) {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [tests, setTests] = useState<Test[]>([]);
   const [emptyGroups, setEmptyGroups] = useState<Set<string>>(new Set());
-  const [testResults, setTestResults] = useState<Record<string, {status: 'passed' | 'failed', error?: string}>>({});
-  
+  const [testResults, setTestResults] = useState<Record<string, {status: 'passed' | 'failed', error?: string} | undefined>>({});
+  const [showUnsavedModal, setShowUnsavedModal] = useState(false);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const autoRunExecutedRef = useRef(false);
+
   // Update tests when GraphQL data loads
   useEffect(() => {
     if (data?.tests.list) {
       const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
       setTests(initialTests);
+  }}, [data?.tests.list]);
+
+  const handleConfirmNavigation = () => {
+    if (pendingNavigation) {
+      setShowUnsavedModal(false);
+      
+      const url = pendingNavigation;
+      setPendingNavigation(null);
+      setHasUnsavedChanges(false); // Clear unsaved changes to allow navigation
+      
+      // Use setTimeout to ensure state updates are processed
+      setTimeout(async () => {
+        await router.push(url);
+      });
     }
-  }, [data?.tests.list]);
+  };
+
+  const handleCancelNavigation = () => {
+    setShowUnsavedModal(false);
+    setPendingNavigation(null);
+  };
+
+  // Warn about unsaved changes when navigating away
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (hasUnsavedChanges) {
+        e.preventDefault();
+        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+        return 'You have unsaved changes. Are you sure you want to leave?';
+      }
+    };
+
+    const handleRouteChangeStart = (url: string) => {
+      if (hasUnsavedChanges && router.asPath !== url) {
+        setPendingNavigation(url);
+        setShowUnsavedModal(true);
+        router.events.emit('routeChangeError');
+        throw 'Route change aborted by user';
+      }
+    };
+
+    // Handle browser navigation (refresh, close tab, etc.)
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    
+    // Handle Next.js client-side navigation
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+    };
+  }, [hasUnsavedChanges, router]);
+
+  // Auto-run tests if runTests query parameter is present
+  useEffect(() => {
+    const shouldRunTests = router.query.runTests === 'true';
+    console.log('DEBUG: Auto-run check:', { 
+      shouldRunTests, 
+      testsLength: tests.length, 
+      autoRunExecuted: autoRunExecutedRef.current,
+      routerQuery: router.query,
+      pathname: router.pathname
+    });
+    
+    // Reset the flag when runTests param is present to allow re-running
+    if (shouldRunTests) {
+      autoRunExecutedRef.current = false;
+    }
+    
+    if (shouldRunTests && tests.length > 0 && !autoRunExecutedRef.current) {
+      console.log('DEBUG: Starting auto-run of tests');
+      // Run all tests automatically
+      const runAllTests = async () => {
+        autoRunExecutedRef.current = true; // Prevent re-running
+        console.log('DEBUG: Executing runTests GraphQL mutation');
+        try {
+          const result = await runTests({
+            variables: {
+              databaseName: params.databaseName,
+              refName: params.refName,
+            },
+          });
+
+          console.log('DEBUG: runTests result:', result);
+          const testResultsList = result.data?.runTests.list || [];
+          const allResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
+
+          for (const testResult of testResultsList) {
+            if (testResult.status === 'PASS') {
+              allResults[testResult.testName] = {
+                status: 'passed'
+              }
+            } else {
+              allResults[testResult.testName] = {
+                status: 'failed',
+                error: testResult.message
+              }
+            }
+          }
+
+          console.log('DEBUG: Setting test results:', allResults);
+          setTestResults(allResults);
+
+        } catch (error) {
+          console.error('Error auto-running tests:', error);
+        }
+      };
+
+      void runAllTests();
+    }
+    
+    // Keep the runTests query parameter to preserve the auto-run behavior
+  }, [router.query.runTests, tests.length, router, runTests, params.databaseName, params.refName, data?.tests.list]);
 
   const [saveTestsMutation] = useSaveTestsMutation({
     variables: {
@@ -181,17 +297,17 @@ export function useTestList(params: RefParams) {
     }});
   };
 
-  const handleDeleteTest = (testName: string) => {
+  const handleDeleteTest = async (testName: string) => {
       setTests(tests.filter(test => test.testName !== testName));
       setExpandedItems(prev => {
         const newSet = new Set(prev);
         newSet.delete(testName);
         return newSet;
       });
-      setHasUnsavedChanges(true);
+      await handleSaveAll();
   };
 
-  const handleDeleteGroup = (groupName: string) => {
+  const handleDeleteGroup = async (groupName: string) => {
       setTests(tests.filter(test => test.testGroup !== groupName));
       setExpandedGroups(prev => {
         const newSet = new Set(prev);
@@ -203,7 +319,7 @@ export function useTestList(params: RefParams) {
         newSet.delete(groupName);
         return newSet;
       });
-      setHasUnsavedChanges(true);
+      await handleSaveAll();
     }
 
   const handleCreateGroup = (
@@ -232,7 +348,7 @@ export function useTestList(params: RefParams) {
     
     while (existingNames.includes(uniqueTestName)) {
       uniqueTestName = `${baseTestName} ${counter}`;
-      counter++;
+      counter += 1;
     }
 
     const newTest: Test = {
@@ -356,7 +472,7 @@ export function useTestList(params: RefParams) {
   }, [groupedTests]);
 
   const getGroupResult = (groupName: string) => {
-    const groupTests = groupedTests[groupName] || [];
+    const groupTests = groupedTests[groupName];
     if (groupTests.length === 0) return undefined;
     
     const results = groupTests.map(test => testResults[test.testName]);
@@ -364,8 +480,8 @@ export function useTestList(params: RefParams) {
     // If any test doesn't have a result, the group hasn't been fully tested
     if (results.some(result => !result)) return undefined;
     
-    // Only show 'passed' if ALL tests have passed
-    const allPassed = results.every(result => result && result.status === 'passed');
+    // Only show 'passed' if ALL tests have pass
+    const allPassed = results.every(result => result?.status === 'passed');
     return allPassed ? 'passed' : 'failed';
   };
 
@@ -378,6 +494,8 @@ export function useTestList(params: RefParams) {
     groupedTests,
     sortedGroupEntries,
     testResults,
+    showUnsavedModal,
+    pendingNavigation,
     getGroupResult,
     toggleExpanded,
     toggleGroupExpanded,
@@ -393,5 +511,7 @@ export function useTestList(params: RefParams) {
     handleRenameGroup,
     handleTestNameEdit,
     handleTestNameBlur,
+    handleConfirmNavigation,
+    handleCancelNavigation,
   };
 }

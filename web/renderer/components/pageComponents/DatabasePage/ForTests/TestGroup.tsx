@@ -6,6 +6,7 @@ import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import { Button } from "@dolthub/react-components";
 import { useState, KeyboardEvent, ChangeEvent, MouseEvent } from "react";
 import css from "./index.module.css";
+import ConfirmationModal from "./ConfirmationModal";
 
 type Props = {
   group: string;
@@ -23,15 +24,25 @@ export default function TestGroup({ group, isExpanded, onToggle, testCount, grou
   const groupName = group || "No Group";
   const [localGroupName, setLocalGroupName] = useState(groupName);
   const [isEditing, setIsEditing] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const handleRunGroup = (e: MouseEvent) => {
     e.stopPropagation();
     onRunGroup();
   };
 
-  const handleDeleteGroup = (e: MouseEvent) => {
+  const handleDeleteClick = (e: MouseEvent) => {
     e.stopPropagation();
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirm(false);
     onDeleteGroup();
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
   };
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -107,15 +118,26 @@ export default function TestGroup({ group, isExpanded, onToggle, testCount, grou
             <FaPlay />
           </Button.Link>
           <Button.Link
-            onClick={handleDeleteGroup}
+            onClick={handleDeleteClick}
             red
-            className={css.groupActionBtn}
+            className={`${css.groupActionBtn} ${css.deleteBtn}`}
             data-tooltip-content={`Delete ${groupName} group`}
           >
             <FaTrash />
           </Button.Link>
         </div>
       </div>
+      
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        title="Delete Test Group"
+        message={`Are you sure you want to delete the "${groupName}" test group? This will delete ${testCount} test${testCount !== 1 ? 's' : ''} in this group. This action cannot be undone.`}
+        confirmText="Delete Group"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        destructive={true}
+      />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { Button } from "@dolthub/react-components";
+import { Button, FormSelect, FormInput } from "@dolthub/react-components";
 import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
 import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
@@ -6,8 +6,9 @@ import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import css from "./index.module.css";
 import QueryEditor from "./QueryEditor";
-import { MouseEvent } from "react";
+import { MouseEvent, useState } from "react";
 import { Test } from "@gen/graphql-types";
+import ConfirmationModal from "./ConfirmationModal";
 
 type Props = {
   test: Test;
@@ -36,6 +37,22 @@ export default function TestItem({
   onRunTest,
   onDeleteTest
 }: Props) {
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  const handleDeleteClick = (e: MouseEvent) => {
+    e.stopPropagation();
+    setShowDeleteConfirm(true);
+  };
+
+  const handleConfirmDelete = () => {
+    setShowDeleteConfirm(false);
+    onDeleteTest();
+  };
+
+  const handleCancelDelete = () => {
+    setShowDeleteConfirm(false);
+  };
+
   return (
     <li className={`${css.item} ${css.groupedItem} ${isExpanded ? css.expanded : ''}`} data-test-name={test.testName}>
       <div className={css.itemTop} onClick={onToggleExpanded}>
@@ -82,10 +99,7 @@ export default function TestItem({
             <FaPlay />
           </Button.Link>
           <Button.Link
-            onClick={(e: MouseEvent) => {
-              e.stopPropagation();
-              onDeleteTest();
-            }}
+            onClick={handleDeleteClick}
             red
             className={css.testActionBtn}
             data-tooltip-content="Delete test"
@@ -97,22 +111,23 @@ export default function TestItem({
       {isExpanded && (
         <div className={css.expandedContent}>
           {testResult?.status === 'failed' && testResult.error && (
-            <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded text-red-700 text-sm">
+            <div className="mb-4 p-3 bg-red-50 border border-red-400 rounded text-red-600 text-sm">
               <strong>Error:</strong> {testResult.error}
             </div>
           )}
           <div className={css.fieldGroup}>
-            <label className={css.fieldLabel}>Test Group</label>
-            <select
-              className={css.fieldSelect}
-              value={test.testGroup || ""}
-              onChange={(e) => onUpdateTest('testGroup', e.target.value)}
-            >
-              <option key="None" value="">None</option>
-              {groupOptions.filter(option => option !== "").map((option) => (
-                <option key={option} value={option}>{option}</option>
-              ))}
-            </select>
+            <FormSelect
+              label="Test Group"
+              options={[
+                { value: "", label: "None" },
+                ...groupOptions.filter(option => option !== "").map(option => {return {
+                  value: option,
+                  label: option
+                }})
+              ]}
+              val={test.testGroup || ""}
+              onChangeValue={(value) => onUpdateTest('testGroup', value || "")}
+            />
           </div>
           <div className={css.fieldGroup}>
             <label className={css.fieldLabel}>Query</label>
@@ -123,43 +138,55 @@ export default function TestItem({
             />
           </div>
           <div className={css.fieldGroup}>
-            <label className={css.fieldLabel}>Assertion Type</label>
-            <select
-              className={css.fieldSelect}
-              value={test.assertionType}
-              onChange={(e) => onUpdateTest('assertionType', e.target.value)}
-            >
-              <option value="expected_rows">Expected Rows</option>
-              <option value="expected_columns">Expected Columns</option>
-              <option value="expected_single_value">Expected Single Value</option>
-            </select>
+            <FormSelect
+              label="Assertion Type"
+              options={[
+                { value: "expected_rows", label: "Expected Rows" },
+                { value: "expected_columns", label: "Expected Columns" },
+                { value: "expected_single_value", label: "Expected Single Value" }
+              ]}
+              val={test.assertionType}
+              onChangeValue={(value) => onUpdateTest('assertionType', value || "")}
+            />
           </div>
           <div className={css.fieldGroup}>
-            <label className={css.fieldLabel}>Assertion Comparator</label>
-            <select
-              className={css.fieldSelect}
-              value={test.assertionComparator}
-              onChange={(e) => onUpdateTest('assertionComparator', e.target.value)}
-            >
-              <option value="==">==</option>
-              <option value="!=">!=</option>
-              <option value=">">&gt;</option>
-              <option value="<">&lt;</option>
-              <option value=">=">&gt;=</option>
-              <option value="<=">&lt;=</option>
-            </select>
+            <FormSelect
+              label="Assertion Comparator"
+              options={[
+                { value: "==", label: "==" },
+                { value: "!=", label: "!=" },
+                { value: ">", label: ">" },
+                { value: "<", label: "<" },
+                { value: ">=", label: ">=" },
+                { value: "<=", label: "<=" }
+              ]}
+              val={test.assertionComparator}
+              onChangeValue={(value) => onUpdateTest('assertionComparator', value || "")}
+            />
           </div>
           <div className={css.fieldGroup}>
-            <label className={css.fieldLabel}>Assertion Value</label>
-            <input
-              className={css.fieldInput}
+            <FormInput
+              label="Assertion Value"
               value={test.assertionValue}
-              onChange={(e) => onUpdateTest('assertionValue', e.target.value)}
+              onChangeString={(value) => onUpdateTest('assertionValue', value)}
               placeholder="Expected result"
+              className={css.fullWidthFormInput}
+              style={{ width: '100%' }}
             />
           </div>
         </div>
       )}
+      
+      <ConfirmationModal
+        isOpen={showDeleteConfirm}
+        title="Delete Test"
+        message={`Are you sure you want to delete the test "${test.testName}"? This action cannot be undone.`}
+        confirmText="Delete Test"
+        cancelText="Cancel"
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        destructive={true}
+      />
     </li>
   );
 }

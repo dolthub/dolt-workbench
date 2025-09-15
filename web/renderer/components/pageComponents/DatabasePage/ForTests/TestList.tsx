@@ -5,6 +5,7 @@ import css from "./index.module.css";
 import NewGroupModal from "./NewGroupModal";
 import TestGroup from "./TestGroup";
 import TestItem from "./TestItem";
+import ConfirmationModal from "./ConfirmationModal";
 import { useTestList } from "./useTestList";
 import { RefParams } from "@lib/params";
 
@@ -25,6 +26,8 @@ export default function TestList({ params }: Props) {
     groupedTests,
     sortedGroupEntries,
     testResults,
+    showUnsavedModal,
+    pendingNavigation,
     getGroupResult,
     toggleExpanded,
     toggleGroupExpanded,
@@ -40,7 +43,12 @@ export default function TestList({ params }: Props) {
     handleRenameGroup,
     handleTestNameEdit,
     handleTestNameBlur,
+    handleConfirmNavigation,
+    handleCancelNavigation,
   } = useTestList(params);
+
+  // Debug: Log testResults to see if they're being received in the UI
+  console.log('DEBUG TestList: testResults state:', testResults);
 
   const onCreateGroup = () => {
     if (handleCreateGroup(newGroupName, groupedTests)) {
@@ -168,6 +176,17 @@ export default function TestList({ params }: Props) {
           No tests found
         </p>
       )}
+      
+      <ConfirmationModal
+        isOpen={showUnsavedModal}
+        title="Unsaved Changes"
+        message="You have unsaved changes that will be lost if you leave this page. Are you sure you want to continue?"
+        confirmText="Leave Page"
+        cancelText="Stay Here"
+        onConfirm={handleConfirmNavigation}
+        onCancel={handleCancelNavigation}
+        destructive={true}
+      />
     </div>
   );
 }

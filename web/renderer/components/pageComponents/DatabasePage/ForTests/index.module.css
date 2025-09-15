@@ -111,6 +111,13 @@
     @apply w-full p-2 border border-stone-100 rounded text-sm bg-white;
 }
 
+.fullWidthFormInput {
+    @apply w-full !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+}
+
 .testName {
     @apply pb-2 text-base flex items-center;
     flex: 1 1 auto;
@@ -149,6 +156,22 @@
 
 .groupHeaderRight {
     @apply flex items-center gap-2;
+}
+
+.groupActionBtn {
+    @apply p-2 text-sm rounded opacity-75 transition-opacity duration-200;
+}
+
+.groupActionBtn.deleteBtn {
+    @apply opacity-0 transition-opacity duration-200;
+}
+
+.groupHeader:hover .groupActionBtn.deleteBtn {
+    @apply opacity-75;
+}
+
+.groupActionBtn.deleteBtn:hover {
+    @apply opacity-100;
 }
 
 .groupExpandIcon {
@@ -211,13 +234,6 @@
 }
 
 /* Action Button Styles */
-.groupActionBtn {
-    @apply p-2 text-sm rounded opacity-75 transition-opacity duration-200;
-}
-
-.groupActionBtn:hover {
-    @apply opacity-100;
-}
 
 .testActionBtn {
     @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200 ml-1;

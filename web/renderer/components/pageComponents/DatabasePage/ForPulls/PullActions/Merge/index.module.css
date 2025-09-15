@@ -150,3 +150,59 @@
 .conflictsLoader {
   @apply mb-2 ml-0;
 }
+
+.testRow {
+  @apply bg-indigo-50 border-x border-indigo-500 px-6 py-3 text-sm;
+}
+
+.testRowPassed {
+  @apply bg-green-50 border-green-500 text-green-600;
+}
+
+.testRowFailed {
+  @apply bg-red-50 border-red-500 text-red-600;
+}
+
+.testContent {
+  @apply flex justify-between items-start flex-wrap w-full;
+  
+  @screen lg {
+    @apply items-center;
+  }
+}
+
+.testInfo {
+  @apply flex-1 mr-4;
+}
+
+.testActions {
+  @apply flex flex-col gap-1 items-center justify-center;
+}
+
+.testButton {
+  @apply px-3 py-1.5 flex items-center justify-center rounded-md border border-stone-300 bg-white hover:bg-stone-50 transition-colors text-sm font-medium;
+  
+  &:disabled {
+    @apply opacity-50 cursor-not-allowed;
+  }
+  
+  &:hover:not(:disabled) {
+    @apply border-stone-400;
+  }
+}
+
+.buttonContent {
+  @apply flex items-center gap-1.5;
+}
+
+.buttonIcon {
+  @apply w-3 h-3 text-green-600;
+}
+
+.testErrors {
+  @apply mt-2 ml-4;
+  
+  li {
+    @apply mb-1 text-xs;
+  }
+}
