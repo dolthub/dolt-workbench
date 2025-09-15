@@ -66,6 +66,7 @@ export default function Input(props: Props) {
                 ...styles,
                 width: "max-content",
                 minWidth: "100%",
+                maxWidth: "300px",
               };
             },
             singleValue: styles => {
@@ -80,7 +81,8 @@ export default function Input(props: Props) {
             option: styles => {
               return {
                 ...styles,
-                whiteSpace: "nowrap",
+                whiteSpace: "normal",
+                wordWrap: "break-word",
               };
             },
           };
