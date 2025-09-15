@@ -49,11 +49,41 @@ export default function Input(props: Props) {
         outerClassName={css.editSelect}
         mono
         small
+        isSearchable
+        menuPortalTarget={document.body}
         customStyles={s => {
           return {
             ...s,
+            control: styles => {
+              return {
+                ...styles,
+                minWidth: "100px",
+                width: "100%",
+              };
+            },
+            menu: styles => {
+              return {
+                ...styles,
+                width: "max-content",
+                minWidth: "100%",
+                maxWidth: "300px",
+              };
+            },
             singleValue: styles => {
-              return { ...styles, marginBottom: "6px" };
+              return {
+                ...styles,
+                marginBottom: "6px",
+                overflow: "visible",
+                textOverflow: "clip",
+                whiteSpace: "nowrap",
+              };
+            },
+            option: styles => {
+              return {
+                ...styles,
+                whiteSpace: "normal",
+                wordWrap: "break-word",
+              };
             },
           };
         }}
