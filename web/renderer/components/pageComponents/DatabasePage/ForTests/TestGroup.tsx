@@ -5,6 +5,7 @@ import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import { Button } from "@dolthub/react-components";
 import { useState, KeyboardEvent, ChangeEvent, MouseEvent } from "react";
+import cx from "classnames";
 import css from "./index.module.css";
 import ConfirmationModal from "./ConfirmationModal";
 
@@ -13,14 +14,14 @@ type Props = {
   isExpanded: boolean;
   onToggle: () => void;
   testCount: number;
-  groupColor: string;
+  className?: string;
   groupResult?: 'passed' | 'failed';
   onRunGroup: () => void;
   onDeleteGroup: () => void;
   onRenameGroup?: (oldName: string, newName: string) => void;
 };
 
-export default function TestGroup({ group, isExpanded, onToggle, testCount, groupColor, groupResult, onRunGroup, onDeleteGroup, onRenameGroup }: Props) {
+export default function TestGroup({ group, isExpanded, onToggle, testCount, className, groupResult, onRunGroup, onDeleteGroup, onRenameGroup }: Props) {
   const groupName = group || "No Group";
   const [localGroupName, setLocalGroupName] = useState(groupName);
   const [isEditing, setIsEditing] = useState(false);
@@ -74,7 +75,7 @@ export default function TestGroup({ group, isExpanded, onToggle, testCount, grou
   };
 
   return (
-    <div className={`${css.groupHeader} ${isExpanded ? css.groupExpanded : ''}`} style={{ borderLeftColor: groupColor }} onClick={handleHeaderClick}>
+    <div className={cx(css.groupHeader, { [css.groupExpanded]: isExpanded }, className)} onClick={handleHeaderClick}>
       <div className={css.groupHeaderContent}>
         <div className={css.groupHeaderLeft}>
           <FaChevronRight className={css.groupExpandIcon} />

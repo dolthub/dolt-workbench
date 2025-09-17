@@ -1602,7 +1602,7 @@ export type RunTestsQueryVariables = Exact<{
 }>;
 
 
-export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', testName: string, testGroupName?: string | null, status: string, message: string }> } };
+export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', testName: string, testGroupName?: string | null, query: string, status: string, message: string }> } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -4657,6 +4657,7 @@ export const RunTestsDocument = gql`
     list {
       testName
       testGroupName
+      query
       status
       message
     }

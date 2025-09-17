@@ -4,6 +4,7 @@ import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
+import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "./QueryEditor";
 import { MouseEvent, useState } from "react";
@@ -16,6 +17,7 @@ type Props = {
   isExpanded: boolean;
   editingName: string | undefined;
   testResult?: {status: 'passed' | 'failed', error?: string};
+  className?: string;
   onToggleExpanded: () => void;
   onUpdateTest: (field: keyof Test, value: string) => void;
   onNameEdit: (name: string) => void;
@@ -30,6 +32,7 @@ export default function TestItem({
   isExpanded,
   editingName,
   testResult,
+  className,
   onToggleExpanded,
   onUpdateTest,
   onNameEdit,
@@ -54,7 +57,7 @@ export default function TestItem({
   };
 
   return (
-    <li className={`${css.item} ${css.groupedItem} ${isExpanded ? css.expanded : ''}`} data-test-name={test.testName}>
+    <li className={cx(css.item, css.groupedItem, { [css.expanded]: isExpanded }, className)} data-test-name={test.testName}>
       <div className={css.itemTop} onClick={onToggleExpanded}>
         <div className={css.testName}>
           <FaChevronRight className={css.expandIcon} />

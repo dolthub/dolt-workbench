@@ -1,3 +1,15 @@
+.wrapper {
+    @apply flex justify-between mt-4 flex-col-reverse;
+    @screen md {
+        @apply flex-row;
+    }
+}
+
+.mergeDetails {
+    @screen md {
+        @apply w-9/12 mx-auto;
+    }
+}
 .outer {
   @apply mx-auto max-w-3xl flex flex-col;
 
@@ -6,14 +18,14 @@
   }
 
   @screen lg {
-    @apply mt-6 flex-row;
+    @apply flex-row;
   }
 }
 
 .container {
   @apply w-full mb-4 rounded-xl min-w-[15rem];
   @screen lg {
-    @apply mx-3 mb-0;
+    @apply w-[calc(100%-4rem)] mx-3 mb-0;
   }
 }
 
@@ -140,6 +152,10 @@
   @apply bg-green-50 border-green-500;
 }
 
+.arrowOrange {
+    @apply bg-orange-50 border-orange-500;
+}
+
 .arrowLeft {
   @apply w-4 h-4 absolute rounded-sm rotate-45 border-l border-t -top-2 left-3;
   @screen lg {
@@ -176,7 +192,7 @@
 }
 
 .testActions {
-  @apply flex flex-col gap-1 items-center justify-center;
+  @apply flex flex-row gap-2 items-center justify-end;
 }
 
 .testButton {
@@ -204,5 +220,54 @@
   
   li {
     @apply mb-1 text-xs;
+  }
+}
+
+.dropdown {
+  @apply relative;
+}
+
+.dropdownButton {
+  @apply flex items-center gap-1.5;
+}
+
+.chevron {
+  @apply w-4 h-4 transition-transform duration-200;
+}
+
+.chevronOpen {
+  @apply rotate-180;
+}
+
+.dropdownMenu {
+  @apply absolute right-0 top-full mt-2 bg-white border border-stone-300 rounded-lg shadow-xl z-50 min-w-[160px] py-1;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.dropdownItem {
+  @apply w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-stone-700 border-none bg-transparent cursor-pointer transition-colors duration-150 font-medium;
+  
+  &:first-child {
+    @apply rounded-t-lg;
+  }
+  
+  &:last-child {
+    @apply rounded-b-lg;
+  }
+  
+  &:hover {
+    @apply bg-indigo-50 text-indigo-700;
+  }
+}
+
+.dropdownLink {
+  @apply block w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-indigo-50 hover:text-indigo-700 no-underline transition-colors duration-150 font-medium;
+  
+  &:first-child {
+    @apply rounded-t-lg;
+  }
+  
+  &:last-child {
+    @apply rounded-b-lg;
   }
 }

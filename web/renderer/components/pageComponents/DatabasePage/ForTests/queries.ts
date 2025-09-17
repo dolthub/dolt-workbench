@@ -36,6 +36,7 @@ export const RUN_TESTS = gql`
       list {
         testName
         testGroupName
+        query
         status
         message
       }

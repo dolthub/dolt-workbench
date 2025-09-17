@@ -27,7 +27,6 @@ export function useTestList(params: RefParams) {
   const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
   const autoRunExecutedRef = useRef(false);
 
-  // Update tests when GraphQL data loads
   useEffect(() => {
     if (data?.tests.list) {
       const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
@@ -42,7 +41,6 @@ export function useTestList(params: RefParams) {
       setPendingNavigation(null);
       setHasUnsavedChanges(false); // Clear unsaved changes to allow navigation
       
-      // Use setTimeout to ensure state updates are processed
       setTimeout(async () => {
         await router.push(url);
       });
@@ -54,7 +52,6 @@ export function useTestList(params: RefParams) {
     setPendingNavigation(null);
   };
 
-  // Warn about unsaved changes when navigating away
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
@@ -73,10 +70,8 @@ export function useTestList(params: RefParams) {
       }
     };
 
-    // Handle browser navigation (refresh, close tab, etc.)
     window.addEventListener('beforeunload', handleBeforeUnload);
     
-    // Handle Next.js client-side navigation
     router.events.on('routeChangeStart', handleRouteChangeStart);
 
     return () => {
@@ -85,7 +80,6 @@ export function useTestList(params: RefParams) {
     };
   }, [hasUnsavedChanges, router]);
 
-  // Auto-run tests if runTests query parameter is present
   useEffect(() => {
     const shouldRunTests = router.query.runTests === 'true';
     console.log('DEBUG: Auto-run check:', { 
@@ -96,14 +90,12 @@ export function useTestList(params: RefParams) {
       pathname: router.pathname
     });
     
-    // Reset the flag when runTests param is present to allow re-running
     if (shouldRunTests) {
       autoRunExecutedRef.current = false;
     }
     
     if (shouldRunTests && tests.length > 0 && !autoRunExecutedRef.current) {
       console.log('DEBUG: Starting auto-run of tests');
-      // Run all tests automatically
       const runAllTests = async () => {
         autoRunExecutedRef.current = true; // Prevent re-running
         console.log('DEBUG: Executing runTests GraphQL mutation');
@@ -143,7 +135,6 @@ export function useTestList(params: RefParams) {
       void runAllTests();
     }
     
-    // Keep the runTests query parameter to preserve the auto-run behavior
   }, [router.query.runTests, tests.length, router, runTests, params.databaseName, params.refName, data?.tests.list]);
 
   const [saveTestsMutation] = useSaveTestsMutation({
@@ -340,7 +331,6 @@ export function useTestList(params: RefParams) {
   };
 
   const handleCreateTest = (groupName?: string) => {
-    // Generate a unique test name
     const baseTestName = "New Test";
     const existingNames = tests.map(t => t.testName);
     let uniqueTestName = baseTestName;
@@ -367,7 +357,6 @@ export function useTestList(params: RefParams) {
     });
     setHasUnsavedChanges(true);
 
-    // Remove from empty groups if test is added to it
     if (groupName && emptyGroups.has(groupName)) {
       setEmptyGroups(prev => {
         const newSet = new Set(prev);
@@ -380,7 +369,6 @@ export function useTestList(params: RefParams) {
       setExpandedGroups(prev => new Set([...prev, groupName]));
     }
     
-    // Scroll to new test
     setTimeout(() => {
       const testElement = document.querySelector(`[data-test-name="${newTest.testName}"]`);
       testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -439,7 +427,6 @@ export function useTestList(params: RefParams) {
       groups[groupName].push(test);
     });
     
-    // Add empty groups
     emptyGroups.forEach(groupName => {
       groups[groupName] ??= [];
     });
@@ -477,10 +464,8 @@ export function useTestList(params: RefParams) {
     
     const results = groupTests.map(test => testResults[test.testName]);
     
-    // If any test doesn't have a result, the group hasn't been fully tested
     if (results.some(result => !result)) return undefined;
     
-    // Only show 'passed' if ALL tests have pass
     const allPassed = results.every(result => result?.status === 'passed');
     return allPassed ? 'passed' : 'failed';
   };

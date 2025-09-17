@@ -23,7 +23,7 @@
 }
 
 .item {
-    @apply border border-stone-50 rounded-lg my-3 py-4 px-6 text-sm relative;
+    @apply border-2 border-stone-50 rounded-lg my-3 py-4 px-6 text-sm relative;
 }
 
 .header {
@@ -87,7 +87,7 @@
 }
 
 .expandedContent {
-    @apply mt-4 p-4 bg-stone-50 rounded border-l-4 border-sky-400;
+    @apply mt-4 p-4 bg-stone-50 rounded;
 }
 
 .fieldGroup {
@@ -251,12 +251,60 @@
     @apply opacity-100;
 }
 
-.createButtons {
-    @apply flex gap-2 mb-6;
+.actionArea {
+    @apply flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6;
 }
 
-.createButtons button {
+.createActions {
+    @apply flex gap-2;
+}
+
+.createActions button {
     @apply px-3 py-1.5 text-sm;
+}
+
+.primaryActions {
+    @apply flex gap-3;
+}
+
+.primaryActions button {
+    @apply px-4 py-2 text-sm font-medium;
+    height: 38px;
+    min-width: 120px;
+}
+
+/* Create Dropdown Styles */
+.createButton {
+    @apply flex items-center justify-center px-4 py-2 text-sm font-medium bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
+    height: 38px;
+    min-width: 120px;
+}
+
+.createButton:focus {
+    @apply outline-none ring-2 ring-sky-500 ring-offset-2;
+}
+
+.plus {
+    @apply mr-1.5;
+}
+
+.caret {
+    @apply ml-1.5;
+}
+
+.createPopup {
+    @apply bg-white border border-stone-300 rounded-md shadow-lg py-1 min-w-[140px];
+}
+
+.createPopupItem {
+    @apply m-0 p-0;
+}
+
+.createPopupItem button {
+    @apply w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 focus:bg-stone-50 transition-colors duration-150;
+    border: none;
+    background: transparent;
+    outline: none;
 }
 
 .saveActions {
@@ -335,3 +383,28 @@
 .ungroupedTests {
     @apply mb-6;
 }
+
+/* Dynamic test status colors */
+.greenGroup {
+    @apply border-l-green-400 text-green-400;
+}
+
+.redGroup {
+    @apply border-l-red-400 text-red-400;
+}
+
+.orangeGroup {
+    @apply text-orange-500;
+}
+
+/*.greenTest {*/
+/*    @apply bg-green-50;*/
+/*}*/
+
+/*.redTest {*/
+/*    @apply bg-red-50;*/
+/*}*/
+
+/*.orangeTest {*/
+/*    @apply bg-orange-50;*/
+/*}*/
