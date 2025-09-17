@@ -1,0 +1,104 @@
+/* TestItem Component Styles */
+.item {
+    @apply border-2 border-stone-50 rounded-lg my-3 py-4 px-6 text-sm relative;
+}
+
+.groupedItem {
+    @apply ml-8;
+}
+
+.expanded .expandIcon {
+    @apply rotate-90;
+}
+
+.itemTop {
+    @apply flex justify-between items-center cursor-pointer;
+}
+
+.testName {
+    @apply pb-2 text-base flex items-center;
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.expandIcon {
+    @apply mr-2 transition-transform duration-200 text-storm-200;
+}
+
+.editableTestName {
+    @apply bg-transparent border border-transparent text-base px-1 py-0.5 m-0 outline-none rounded transition-all flex-1;
+    min-width: 150px;
+    cursor: text;
+}
+
+.editableTestName:hover {
+    @apply text-sky-600 bg-stone-50 border-stone-300;
+}
+
+.editableTestName:focus {
+    @apply bg-white border-sky-400 shadow-sm;
+}
+
+.testActions {
+    @apply flex items-center gap-1 ml-auto opacity-0 transition-opacity duration-200;
+}
+
+.item:hover .testActions {
+    @apply opacity-100;
+}
+
+.testActionBtn {
+    @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200 ml-1;
+}
+
+.testActionBtn:hover {
+    @apply opacity-100;
+}
+
+.runBtn {
+    @apply text-green-600;
+}
+
+.runBtn:hover {
+    @apply text-green-400;
+}
+
+.expandedContent {
+    @apply mt-4 p-4 bg-stone-50 rounded;
+}
+
+.fieldGroup {
+    @apply mb-4;
+}
+
+.fieldLabel {
+    @apply block text-sm font-semibold mb-2 text-storm-200;
+}
+
+.fullWidthFormInput {
+    @apply w-full !important;
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* Test result status styles */
+.testResult {
+    @apply flex items-center gap-1 px-2 py-1 rounded text-sm;
+}
+
+.testResultPassed {
+    @apply bg-green-100;
+}
+
+.testResultFailed {
+    @apply bg-red-100;
+}
+
+.testResultIcon {
+    @apply w-3 h-3;
+}
+
+.errorMessage {
+    @apply mb-4 p-3 bg-red-50 border border-red-400 rounded text-red-600 text-sm;
+}

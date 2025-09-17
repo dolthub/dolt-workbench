@@ -1,14 +1,14 @@
 .wrapper {
-    @apply flex justify-between mt-4 flex-col-reverse;
-    @screen md {
-        @apply flex-row;
-    }
+  @apply flex justify-between mt-4 flex-col-reverse;
+  @screen md {
+    @apply flex-row;
+  }
 }
 
 .mergeDetails {
-    @screen md {
-        @apply w-9/12 mx-auto;
-    }
+  @screen md {
+    @apply w-9/12 mx-auto;
+  }
 }
 .outer {
   @apply mx-auto max-w-3xl flex flex-col;
@@ -153,7 +153,7 @@
 }
 
 .arrowOrange {
-    @apply bg-orange-50 border-orange-500;
+  @apply bg-orange-50 border-orange-500;
 }
 
 .arrowLeft {
@@ -181,7 +181,7 @@
 
 .testContent {
   @apply flex justify-between items-start flex-wrap w-full;
-  
+
   @screen lg {
     @apply items-center;
   }
@@ -197,11 +197,11 @@
 
 .testButton {
   @apply px-3 py-1.5 flex items-center justify-center rounded-md border border-stone-300 bg-white hover:bg-stone-50 transition-colors text-sm font-medium;
-  
+
   &:disabled {
     @apply opacity-50 cursor-not-allowed;
   }
-  
+
   &:hover:not(:disabled) {
     @apply border-stone-400;
   }
@@ -217,7 +217,7 @@
 
 .testErrors {
   @apply mt-2 ml-4;
-  
+
   li {
     @apply mb-1 text-xs;
   }
@@ -241,20 +241,22 @@
 
 .dropdownMenu {
   @apply absolute right-0 top-full mt-2 bg-white border border-stone-300 rounded-lg shadow-xl z-50 min-w-[160px] py-1;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 .dropdownItem {
   @apply w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-stone-50 hover:text-stone-700 border-none bg-transparent cursor-pointer transition-colors duration-150 font-medium;
-  
+
   &:first-child {
     @apply rounded-t-lg;
   }
-  
+
   &:last-child {
     @apply rounded-b-lg;
   }
-  
+
   &:hover {
     @apply bg-indigo-50 text-indigo-700;
   }
@@ -262,11 +264,11 @@
 
 .dropdownLink {
   @apply block w-full text-left px-4 py-2.5 text-sm text-stone-700 hover:bg-indigo-50 hover:text-indigo-700 no-underline transition-colors duration-150 font-medium;
-  
+
   &:first-child {
     @apply rounded-t-lg;
   }
-  
+
   &:last-child {
     @apply rounded-b-lg;
   }

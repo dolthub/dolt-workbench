@@ -1,4 +1,5 @@
 import dynamic from "next/dynamic";
+import css from "./index.module.css";
 
 const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
@@ -12,7 +13,7 @@ type Props = {
 
 export default function QueryEditor({ value, onChange, placeholder }: Props) {
   return (
-    <div className="bg-storm-600 rounded-sm border border-storm-500 overflow-hidden p-2">
+    <div className={css.container}>
       <AceEditor
         value={value}
         name="TestQueryEditor"

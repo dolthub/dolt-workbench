@@ -1,0 +1,248 @@
+.container {
+  @apply mx-6;
+}
+
+.top {
+  @apply flex justify-between pt-6;
+}
+
+.tagContainer {
+  @apply mr-4 pb-4 text-primary border-stone-100 border-l-[1.5px];
+
+  @screen lg {
+    @apply ml-16;
+  }
+}
+
+.list {
+  @apply mt-10 pl-6 pr-2;
+
+  @screen lg {
+    @apply px-10;
+  }
+}
+
+
+.header {
+  @apply relative font-semibold pb-2;
+}
+
+.bullet {
+  @apply border-stone-100 h-3 w-3 absolute bg-white rounded-full border-[1.5px] -left-[1.9rem] top-[0.4rem];
+
+  @screen lg {
+    @apply -left-[2.9rem];
+  }
+}
+
+.latest {
+  @apply inline-block px-4 mx-4 rounded-full bg-white border-2 border-green-400 text-green-400 text-sm font-semibold py-[0.05rem];
+}
+
+
+.timeago {
+  @apply text-storm-200;
+}
+
+.commitId {
+  @apply font-semibold text-storm-200 mb-1.5;
+
+  &:hover {
+    @apply text-stone-100;
+  }
+
+  @screen lg {
+    @apply mx-4 mb-0;
+  }
+}
+
+.commitIcon {
+  @apply hidden;
+
+  @screen lg {
+    @apply inline;
+  }
+}
+
+.releaseName {
+  @apply pb-2 max-w-4xl text-base;
+}
+
+.releaseNotes > p {
+  @apply py-4;
+}
+
+.loading {
+  @apply mx-12 my-4;
+}
+
+.noTests {
+  @apply text-center text-lg m-6;
+}
+
+
+.fieldInput {
+  @apply w-full p-2 border border-stone-100 rounded text-sm;
+}
+
+.fieldTextarea {
+  @apply w-full p-2 border border-stone-100 rounded text-sm min-h-[80px];
+  resize: vertical;
+}
+
+.fieldSelect {
+  @apply w-full p-2 border border-stone-100 rounded text-sm bg-white;
+}
+
+
+
+
+.groupedTests {
+  @apply mb-6;
+}
+
+.groupedList {
+  @apply list-none p-0 m-0;
+}
+
+.itemBottom {
+  @apply text-storm-200 font-normal flex flex-col-reverse;
+  a {
+    @apply font-normal;
+  }
+
+  @screen lg {
+    @apply block;
+  }
+}
+
+.bold {
+  @apply font-semibold;
+}
+
+.delete {
+  @apply hidden;
+
+  @screen lg {
+    @apply block ml-2;
+  }
+}
+
+.button {
+  @apply mr-4;
+}
+
+
+.actionArea {
+  @apply flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6;
+}
+
+.createActions {
+  @apply flex gap-2;
+}
+
+.createActions button {
+  @apply px-3 py-1.5 text-sm;
+}
+
+.primaryActions {
+  @apply flex gap-3;
+}
+
+.primaryActions button {
+  @apply px-4 py-2 text-sm font-medium;
+  height: 38px;
+  min-width: 120px;
+}
+
+/* Create Dropdown Styles */
+.createButton {
+  @apply flex items-center justify-center px-4 py-2 text-sm font-medium bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
+  height: 38px;
+  min-width: 120px;
+}
+
+.createButton:focus {
+  @apply outline-none ring-2 ring-sky-500 ring-offset-2;
+}
+
+.plus {
+  @apply mr-1.5;
+}
+
+.caret {
+  @apply ml-1.5;
+}
+
+.createPopup {
+  @apply bg-white border border-stone-300 rounded-md shadow-lg py-1 min-w-[140px];
+}
+
+.createPopupItem {
+  @apply m-0 p-0;
+}
+
+.createPopupItem button {
+  @apply w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 focus:bg-stone-50 transition-colors duration-150;
+  border: none;
+  background: transparent;
+  outline: none;
+}
+
+.saveActions {
+  @apply flex gap-2 mt-4 pt-4 border-t border-stone-300;
+}
+
+.saveActions button {
+  @apply px-2 py-1 text-xs;
+}
+
+
+
+
+.inlineGroupSelect {
+  @apply bg-transparent border border-stone-300 rounded text-sm px-2 py-1 ml-2 mr-2;
+  font-size: 13px;
+  width: auto;
+  min-width: 120px;
+}
+
+.inlineGroupSelect:focus {
+  @apply border-sky-400 outline-none;
+}
+
+/* Ungrouped Tests Styles */
+.ungroupedDivider {
+  @apply font-semibold text-center w-full my-8 text-base text-storm-500;
+}
+
+.ungroupedDivider::before,
+.ungroupedDivider::after {
+  content: "";
+  @apply w-[46%] border-t border-stone-300 inline-block align-middle relative;
+}
+
+.ungroupedDivider::after {
+  @apply right-0 -ml-[55%];
+}
+
+.ungroupedDivider::before {
+  @apply left-0 -mr-[55%];
+}
+
+.ungroupedTests {
+  @apply mb-6;
+}
+
+/* Dynamic test status colors */
+.greenGroup {
+  @apply border-l-green-400 text-green-400;
+}
+
+.redGroup {
+  @apply border-l-red-400 text-red-400;
+}
+
+.orangeGroup {
+  @apply text-orange-500;
+}

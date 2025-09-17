@@ -1,5 +1,10 @@
 import { useState, useMemo, useEffect, useRef } from "react";
-import { Test, useRunTestsLazyQuery, useSaveTestsMutation, useTestListQuery } from "@gen/graphql-types";
+import {
+  Test, TestResult,
+  useRunTestsLazyQuery,
+  useSaveTestsMutation,
+  useTestListQuery,
+} from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
 
@@ -13,34 +18,56 @@ export function useTestList(params: RefParams) {
   });
   const [runTests] = useRunTestsLazyQuery();
   const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set());
-  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(
-    new Set()
-  );
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set());
   const [editingTestNames, setEditingTestNames] = useState<
     Record<string, string>
   >({});
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [tests, setTests] = useState<Test[]>([]);
   const [emptyGroups, setEmptyGroups] = useState<Set<string>>(new Set());
-  const [testResults, setTestResults] = useState<Record<string, {status: 'passed' | 'failed', error?: string} | undefined>>({});
+  const [testResults, setTestResults] = useState<
+    Record<string, { status: "passed" | "failed"; error?: string } | undefined>
+  >({});
   const [showUnsavedModal, setShowUnsavedModal] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<string | null>(null);
+  const [pendingNavigation, setPendingNavigation] = useState<string | null>(
+    null,
+  );
   const autoRunExecutedRef = useRef(false);
+
+  const getResults = (testResults: TestResult[]): Record<string, { status: "passed" | "failed"; error?: string }> => {
+    const results: Record<string, { status: "passed" | "failed"; error?: string }> = {};
+    for (const testResult of testResults) {
+      if (testResult.status === "PASS") {
+        results[testResult.testName] = {
+          status: "passed",
+        };
+      } else {
+        results[testResult.testName] = {
+          status: "failed",
+          error: testResult.message,
+        };
+      }
+    }
+    return results;
+  }
 
   useEffect(() => {
     if (data?.tests.list) {
-      const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
+      const initialTests = data.tests.list.map(
+        ({ __typename, ...test }) => test,
+      );
       setTests(initialTests);
-  }}, [data?.tests.list]);
+    }
+  }, [data?.tests.list]);
 
   const handleConfirmNavigation = () => {
     if (pendingNavigation) {
       setShowUnsavedModal(false);
-      
+
       const url = pendingNavigation;
       setPendingNavigation(null);
       setHasUnsavedChanges(false); // Clear unsaved changes to allow navigation
-      
+
       setTimeout(async () => {
         await router.push(url);
       });
@@ -56,8 +83,7 @@ export function useTestList(params: RefParams) {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       if (hasUnsavedChanges) {
         e.preventDefault();
-        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
-        return 'You have unsaved changes. Are you sure you want to leave?';
+        return "You have unsaved changes. Are you sure you want to leave?";
       }
     };
 
@@ -65,40 +91,31 @@ export function useTestList(params: RefParams) {
       if (hasUnsavedChanges && router.asPath !== url) {
         setPendingNavigation(url);
         setShowUnsavedModal(true);
-        router.events.emit('routeChangeError');
-        throw 'Route change aborted by user';
+        router.events.emit("routeChangeError");
+        throw "Route change aborted by user";
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    
-    router.events.on('routeChangeStart', handleRouteChangeStart);
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    router.events.on("routeChangeStart", handleRouteChangeStart);
 
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-      router.events.off('routeChangeStart', handleRouteChangeStart);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      router.events.off("routeChangeStart", handleRouteChangeStart);
     };
   }, [hasUnsavedChanges, router]);
 
   useEffect(() => {
-    const shouldRunTests = router.query.runTests === 'true';
-    console.log('DEBUG: Auto-run check:', { 
-      shouldRunTests, 
-      testsLength: tests.length, 
-      autoRunExecuted: autoRunExecutedRef.current,
-      routerQuery: router.query,
-      pathname: router.pathname
-    });
-    
+    const shouldRunTests = router.query.runTests === "true";
+
     if (shouldRunTests) {
       autoRunExecutedRef.current = false;
     }
-    
+
     if (shouldRunTests && tests.length > 0 && !autoRunExecutedRef.current) {
-      console.log('DEBUG: Starting auto-run of tests');
       const runAllTests = async () => {
-        autoRunExecutedRef.current = true; // Prevent re-running
-        console.log('DEBUG: Executing runTests GraphQL mutation');
+        autoRunExecutedRef.current = true;
         try {
           const result = await runTests({
             variables: {
@@ -107,41 +124,32 @@ export function useTestList(params: RefParams) {
             },
           });
 
-          console.log('DEBUG: runTests result:', result);
           const testResultsList = result.data?.runTests.list || [];
-          const allResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
+          const allResults = getResults(testResultsList);
 
-          for (const testResult of testResultsList) {
-            if (testResult.status === 'PASS') {
-              allResults[testResult.testName] = {
-                status: 'passed'
-              }
-            } else {
-              allResults[testResult.testName] = {
-                status: 'failed',
-                error: testResult.message
-              }
-            }
-          }
-
-          console.log('DEBUG: Setting test results:', allResults);
           setTestResults(allResults);
-
         } catch (error) {
-          console.error('Error auto-running tests:', error);
+          console.error("Error auto-running tests:", error);
         }
       };
 
       void runAllTests();
     }
-    
-  }, [router.query.runTests, tests.length, router, runTests, params.databaseName, params.refName, data?.tests.list]);
+  }, [
+    router.query.runTests,
+    tests.length,
+    router,
+    runTests,
+    params.databaseName,
+    params.refName,
+    data?.tests.list,
+  ]);
 
   const [saveTestsMutation] = useSaveTestsMutation({
     variables: {
       databaseName: params.databaseName,
       refName: params.refName,
-      tests: { list: tests }
+      tests: { list: tests },
     },
   });
 
@@ -189,21 +197,24 @@ export function useTestList(params: RefParams) {
         databaseName: params.databaseName,
         refName: params.refName,
         identifiers: {
-          values: [testName]
-        }
+          values: [testName],
+        },
       },
-    })
+    });
 
-    const testPassed = result.data && result.data.runTests.list.length > 0 && result.data.runTests.list[0].status === 'PASS';
+    const testPassed =
+      result.data &&
+      result.data.runTests.list.length > 0 &&
+      result.data.runTests.list[0].status === "PASS";
 
     setTestResults(prev => {
       return {
         ...prev,
         [testName]: {
-          status: testPassed ? 'passed' : 'failed',
-          error: testPassed ? undefined : result.data?.runTests.list[0].message
-        }
-      }
+          status: testPassed ? "passed" : "failed",
+          error: testPassed ? undefined : result.data?.runTests.list[0].message,
+        },
+      };
     });
   };
 
@@ -212,106 +223,89 @@ export function useTestList(params: RefParams) {
       await handleSaveAll();
     }
 
-
     const result = await runTests({
       variables: {
         databaseName: params.databaseName,
         refName: params.refName,
         identifiers: {
-          values: [groupName]
-        }
+          values: [groupName],
+        },
       },
-    })
-    result.data?.runTests.list.map(test => test.status === 'PASS' ? {
-        status: 'passed'
-      } :
-        {
-          status: 'failed',
-          error: test.message
-        })
+    });
+    result.data?.runTests.list.map(test =>
+      test.status === "PASS"
+        ? {
+            status: "passed",
+          }
+        : {
+            status: "failed",
+            error: test.message,
+          },
+    );
 
-    const testResults = result.data && result.data.runTests.list.length > 0 ? result.data.runTests.list : [];
-    const groupResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
-
-    for (const testResult of testResults) {
-      if (testResult.status === 'PASS') {
-        groupResults[testResult.testName] = {
-          status: 'passed'
-        }
-      } else {
-        groupResults[testResult.testName] = {
-          status: 'failed',
-          error: testResult.message
-        }
-      }
-    }
+    const testResults =
+      result.data && result.data.runTests.list.length > 0
+        ? result.data.runTests.list
+        : [];
+    const groupResults = getResults(testResults);
 
     setTestResults(prev => {
       return {
-      ...prev,
-      ...groupResults
-    }});
+        ...prev,
+        ...groupResults,
+      };
+    });
   };
-    const handleRunAll = async () => {
+  const handleRunAll = async () => {
     if (hasUnsavedChanges) {
       await handleSaveAll();
     }
-
 
     const result = await runTests({
       variables: {
         databaseName: params.databaseName,
         refName: params.refName,
       },
-    })
+    });
 
-    const testResults = result.data && result.data.runTests.list.length > 0 ? result.data.runTests.list : [];
-    const allResults: Record<string, {status: 'passed' | 'failed', error?: string}> = {};
-
-    for (const testResult of testResults) {
-      if (testResult.status === 'PASS') {
-        allResults[testResult.testName] = {
-          status: 'passed'
-        }
-      } else {
-        allResults[testResult.testName] = {
-          status: 'failed',
-          error: testResult.message
-        }
-      }
-    }
+    const testResults =
+      result.data && result.data.runTests.list.length > 0
+        ? result.data.runTests.list
+        : [];
+    const allResults = getResults(testResults);
 
     setTestResults(prev => {
       return {
-      ...prev,
-      ...allResults
-    }});
+        ...prev,
+        ...allResults,
+      };
+    });
   };
 
   const handleDeleteTest = async (testName: string) => {
-      setTests(tests.filter(test => test.testName !== testName));
-      setExpandedItems(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(testName);
-        return newSet;
-      });
-      await handleSaveAll();
+    setTests(tests.filter(test => test.testName !== testName));
+    setExpandedItems(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(testName);
+      return newSet;
+    });
+    await handleSaveAll();
   };
 
   const handleDeleteGroup = async (groupName: string) => {
-      setTests(tests.filter(test => test.testGroup !== groupName));
-      setExpandedGroups(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(groupName);
-        return newSet;
-      });
-      setEmptyGroups(prev => {
-        const newSet = new Set(prev);
-        newSet.delete(groupName);
-        return newSet;
-      });
-      await handleSaveAll();
-    }
+    setTests(tests.filter(test => test.testGroup !== groupName));
+    setExpandedGroups(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(groupName);
+      return newSet;
+    });
+    setEmptyGroups(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(groupName);
+      return newSet;
+    });
+    await handleSaveAll();
+  };
 
   const handleCreateGroup = (
     groupName: string,
@@ -335,7 +329,7 @@ export function useTestList(params: RefParams) {
     const existingNames = tests.map(t => t.testName);
     let uniqueTestName = baseTestName;
     let counter = 1;
-    
+
     while (existingNames.includes(uniqueTestName)) {
       uniqueTestName = `${baseTestName} ${counter}`;
       counter += 1;
@@ -368,9 +362,11 @@ export function useTestList(params: RefParams) {
     if (groupName && !expandedGroups.has(groupName)) {
       setExpandedGroups(prev => new Set([...prev, groupName]));
     }
-    
+
     setTimeout(() => {
-      const testElement = document.querySelector(`[data-test-name="${newTest.testName}"]`);
+      const testElement = document.querySelector(
+        `[data-test-name="${newTest.testName}"]`,
+      );
       testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
     }, 100);
   };
@@ -426,11 +422,11 @@ export function useTestList(params: RefParams) {
       groups[groupName] ??= [];
       groups[groupName].push(test);
     });
-    
+
     emptyGroups.forEach(groupName => {
       groups[groupName] ??= [];
     });
-    
+
     return groups;
   }, [tests, emptyGroups]);
 
@@ -461,13 +457,13 @@ export function useTestList(params: RefParams) {
   const getGroupResult = (groupName: string) => {
     const groupTests = groupedTests[groupName];
     if (groupTests.length === 0) return undefined;
-    
+
     const results = groupTests.map(test => testResults[test.testName]);
-    
+
     if (results.some(result => !result)) return undefined;
-    
-    const allPassed = results.every(result => result?.status === 'passed');
-    return allPassed ? 'passed' : 'failed';
+
+    const allPassed = results.every(result => result?.status === "passed");
+    return allPassed ? "passed" : "failed";
   };
 
   return {

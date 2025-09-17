@@ -1,0 +1,4 @@
+/* QueryEditor Component Styles */
+.container {
+    @apply bg-storm-600 rounded-sm border border-storm-500 overflow-hidden p-2;
+}

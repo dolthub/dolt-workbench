@@ -16,7 +16,11 @@ export const LIST_TESTS = gql`
 `;
 
 export const SAVE_TESTS = gql`
-  mutation SaveTests($databaseName: String!, $refName: String!, $tests: TestListArgs!) {
+  mutation SaveTests(
+    $databaseName: String!
+    $refName: String!
+    $tests: TestListArgs!
+  ) {
     saveTests(databaseName: $databaseName, refName: $refName, tests: $tests) {
       list {
         testName
@@ -28,11 +32,19 @@ export const SAVE_TESTS = gql`
       }
     }
   }
-`
+`;
 
 export const RUN_TESTS = gql`
-  query RunTests($databaseName: String!, $refName: String!, $identifiers: TestIdentifierArgs) {
-    runTests(databaseName: $databaseName, refName: $refName, identifiers: $identifiers) {
+  query RunTests(
+    $databaseName: String!
+    $refName: String!
+    $identifiers: TestIdentifierArgs
+  ) {
+    runTests(
+      databaseName: $databaseName
+      refName: $refName
+      identifiers: $identifiers
+    ) {
       list {
         testName
         testGroupName
@@ -42,5 +54,4 @@ export const RUN_TESTS = gql`
       }
     }
   }
-`
-
+`;

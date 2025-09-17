@@ -1,0 +1,97 @@
+.groupHeader {
+    @apply border-l-4 bg-stone-50 border-stone-300 rounded-r mb-4 cursor-pointer;
+    transition: all 0.2s ease;
+}
+
+.groupHeader:hover {
+    @apply bg-stone-50;
+}
+
+.groupExpanded {
+    @apply mb-2;
+}
+
+.groupHeaderContent {
+    @apply flex justify-between items-center p-4;
+}
+
+.groupHeaderLeft {
+    @apply flex items-center cursor-pointer;
+}
+
+.groupHeaderRight {
+    @apply flex items-center gap-2;
+}
+
+.groupExpandIcon {
+    @apply mr-3 transition-transform duration-200 text-storm-200;
+}
+
+.groupExpanded .groupExpandIcon {
+    @apply rotate-90;
+}
+
+.groupName {
+    @apply text-lg font-semibold text-storm-500 mr-3;
+}
+
+.testCount {
+    @apply text-sm text-storm-200 font-medium;
+}
+
+.inlineEditInput {
+    @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 m-0 outline-none rounded transition-all;
+    min-width: 100px;
+}
+
+.inlineEditInput:hover {
+    @apply bg-stone-50 border-stone-300;
+}
+
+.inlineEditInput:focus {
+    @apply bg-stone-50 border-sky-400 shadow-sm;
+}
+
+.groupActionBtn {
+    @apply p-2 text-sm rounded opacity-75 transition-opacity duration-200;
+}
+
+.groupActionBtn:hover {
+    @apply opacity-100;
+}
+
+.groupActionBtn.deleteBtn {
+    @apply opacity-0 transition-opacity duration-200;
+}
+
+.groupHeader:hover .groupActionBtn.deleteBtn {
+    @apply opacity-75;
+}
+
+.groupActionBtn.deleteBtn:hover {
+    @apply opacity-100;
+}
+
+.runBtn {
+    @apply text-green-600;
+}
+
+.runBtn:hover {
+    @apply text-green-400;
+}
+
+.groupResult {
+    @apply flex items-center gap-1 px-2 py-1 rounded text-sm;
+}
+
+.groupResultPassed {
+    @apply bg-green-100;
+}
+
+.groupResultFailed {
+    @apply bg-red-100;
+}
+
+.groupResultIcon {
+    @apply w-3 h-3;
+}

@@ -14,7 +14,7 @@ export default function NewGroupModal({
   groupName,
   onGroupNameChange,
   onCreateGroup,
-  onClose
+  onClose,
 }: Props) {
   if (!isOpen) return null;
 
@@ -24,24 +24,22 @@ export default function NewGroupModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-stone-700 bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-96 border border-stone-300 shadow-lg">
-        <h3 className="text-lg font-semibold mb-4">Create New Test Group</h3>
+    <div className={css.overlay}>
+      <div className={css.modal}>
+        <h3 className={css.title}>Create New Test Group</h3>
         <input
           type="text"
           className={css.fieldInput}
           value={groupName}
-          onChange={(e) => onGroupNameChange(e.target.value)}
+          onChange={e => onGroupNameChange(e.target.value)}
           placeholder="Enter group name..."
-          onKeyDown={(e) => e.key === 'Enter' && onCreateGroup()}
+          onKeyDown={e => e.key === "Enter" && onCreateGroup()}
         />
-        <div className="flex gap-2 mt-4">
+        <div className={css.buttonGroup}>
           <Button onClick={onCreateGroup} disabled={!groupName.trim()}>
             Create
           </Button>
-          <Button onClick={handleClose}>
-            Cancel
-          </Button>
+          <Button onClick={handleClose}>Cancel</Button>
         </div>
       </div>
     </div>

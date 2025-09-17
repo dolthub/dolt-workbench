@@ -20,8 +20,8 @@ const DatabaseTestsPage: NextPage<Props> = ({ params }) => (
 
 // #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({
-                                                                      params,
-                                                                    }) => {
+  params,
+}) => {
   return {
     props: { params: params as RefParams },
   };

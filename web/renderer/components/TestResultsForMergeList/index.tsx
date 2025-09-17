@@ -1,15 +1,11 @@
-import {
-  TestResult, useRunTestsLazyQuery,
-} from "@gen/graphql-types";
+import { TestResult, useRunTestsLazyQuery, useTestListQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { Button } from "@dolthub/react-components";
 import cx from "classnames";
 import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
 import { FiX } from "@react-icons/all-files/fi/FiX";
 import { FiCircle } from "@react-icons/all-files/fi/FiCircle";
-import TestResultsListItem, {
-  TestStatusColors,
-} from "./TestResultsListItem";
+import TestResultsListItem, { TestStatusColors } from "./TestResultsListItem";
 import css from "./index.module.css";
 import { useCallback, useState } from "react";
 import { Arrow } from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/Arrow";
@@ -18,7 +14,12 @@ type Props = {
   params: RefParams;
 };
 
-function TestResultsTitle({ red, green, orange, onRunTests }: TestStatusColors & { onRunTests: () => void }) {
+function TestResultsTitle({
+  red,
+  green,
+  orange,
+  onRunTests,
+}: TestStatusColors & { onRunTests: () => void }) {
   return (
     <>
       <div className={css.titleSection}>
@@ -34,7 +35,7 @@ function TestResultsTitle({ red, green, orange, onRunTests }: TestStatusColors &
         className={cx(css.runButton, {
           [css.greenButton]: green,
           [css.redButton]: red,
-          [css.orangeButton]: orange
+          [css.orangeButton]: orange,
         })}
         onClick={onRunTests}
       >
@@ -58,8 +59,13 @@ function IconSwitch({
 
 export default function TestResultsForMergeList({ params }: Props) {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
-  const [runTests]  = useRunTestsLazyQuery();
-
+  const [runTests] = useRunTestsLazyQuery();
+  const { data } = useTestListQuery({
+    variables: {
+      databaseName: params.databaseName,
+      refName: params.refName,
+    },
+  });
   const handleRunTests = useCallback(async () => {
     try {
       const result = await runTests({
@@ -70,11 +76,14 @@ export default function TestResultsForMergeList({ params }: Props) {
       });
 
       setTestResults(result.data?.runTests.list ?? []);
-
     } catch {
       setTestResults([]);
     }
   }, [runTests, params.databaseName, params.refName]);
+
+  if (!data?.tests.list || data.tests.list.length === 0) {
+    return null;
+  }
 
   const { red, orange, green } = getTestStatusColors(testResults);
 
@@ -98,7 +107,12 @@ export default function TestResultsForMergeList({ params }: Props) {
             [css.orange]: orange,
           })}
         >
-          <TestResultsTitle red={red} green={green} orange={orange} onRunTests={handleRunTests} />
+          <TestResultsTitle
+            red={red}
+            green={green}
+            orange={orange}
+            onRunTests={handleRunTests}
+          />
         </div>
         <div
           className={cx(css.tests, {
@@ -118,7 +132,9 @@ export default function TestResultsForMergeList({ params }: Props) {
               ))
             ) : (
               <li className={css.noTests}>
-                <span>No test results available. Run tests to see results here.</span>
+                <span>
+                  No test results available. Run tests to see results here.
+                </span>
               </li>
             )}
           </ul>
@@ -136,9 +152,9 @@ function getTestStatusColors(tests: TestResult[]): TestStatusColors {
       orange: true,
     };
   }
-  
-  const failedTests = tests.filter(t => t.status !== 'PASS');
-  
+
+  const failedTests = tests.filter(t => t.status !== "PASS");
+
   if (failedTests.length > 0) {
     return {
       red: true,
@@ -146,7 +162,7 @@ function getTestStatusColors(tests: TestResult[]): TestStatusColors {
       orange: false,
     };
   }
-  
+
   return {
     red: false,
     green: true,

@@ -1,7 +1,11 @@
 import cx from "classnames";
 import css from "./index.module.css";
 
-export function Arrow(props: { red?: boolean; green?: boolean, orange?: boolean }) {
+export function Arrow(props: {
+  red?: boolean;
+  green?: boolean;
+  orange?: boolean;
+}) {
   return (
     <div className={css.arrow}>
       <div
