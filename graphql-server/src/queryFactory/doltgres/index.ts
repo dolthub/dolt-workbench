@@ -574,7 +574,7 @@ export class DoltgresQueryFactory
       args.identifiers?.values,
       args.databaseName,
       args.refName,
-    )
+    );
   }
 
   async saveTests(args: t.SaveTestsArgs): Promise<InsertResult> {
@@ -582,10 +582,9 @@ export class DoltgresQueryFactory
       async em => dem.saveDoltTests(em, args.tests.list),
       args.databaseName,
       args.refName,
-    )
+    );
   }
 }
-
 
 async function getTableInfoWithQR(
   qr: QueryRunner,
@@ -609,4 +608,3 @@ async function getTableInfoWithQR(
     indexes: [],
   };
 }
-

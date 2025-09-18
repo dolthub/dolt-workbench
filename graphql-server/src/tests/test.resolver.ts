@@ -1,12 +1,21 @@
 import {
-  Args, ArgsType, Field, InputType, Mutation,
+  Args,
+  ArgsType,
+  Field,
+  InputType,
+  Mutation,
   Query,
   Resolver,
 } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
-import {  RefArgs  } from "../utils/commonTypes";
-import { Test, TestList, fromDoltTestRowRes, TestResultList, fromDoltTestResultRowRes } from "./test.model";
-
+import { RefArgs } from "../utils/commonTypes";
+import {
+  Test,
+  TestList,
+  fromDoltTestRowRes,
+  TestResultList,
+  fromDoltTestResultRowRes,
+} from "./test.model";
 
 @InputType()
 class TestArgs {

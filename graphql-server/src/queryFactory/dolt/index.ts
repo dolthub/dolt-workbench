@@ -600,7 +600,7 @@ export class DoltQueryFactory
       args.identifiers?.values,
       args.databaseName,
       args.refName,
-    )
+    );
   }
 
   async saveTests(args: t.SaveTestsArgs): Promise<InsertResult> {
@@ -608,7 +608,7 @@ export class DoltQueryFactory
       async em => dem.saveDoltTests(em, args.tests.list),
       args.databaseName,
       args.refName,
-    )
+    );
   }
 }
 
@@ -631,5 +631,4 @@ async function getTableInfoWithQR(
     foreignKeys: foreignKey.fromDoltRowsRes(fkRows),
     indexes: index.fromDoltRowsRes(idxRows),
   };
-
 }

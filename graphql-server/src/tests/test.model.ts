@@ -71,5 +71,5 @@ export function fromDoltTestResultRowRes(testResult: RawRow): TestResult {
     query: testResult.query,
     status: testResult.status,
     message: testResult.message,
-  }
+  };
 }

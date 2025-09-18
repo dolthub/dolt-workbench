@@ -194,6 +194,9 @@ export const callFetchRemote = `SELECT DOLT_FETCH($1::text)`;
 export const callCreateBranchFromRemote = `CALL DOLT_BRANCH($1::text, $2::text)`;
 
 export const doltTestRun = (argCount: number) => {
-  const placeholders = Array.from({ length: argCount }, (_, i) => `$${i + 1}::text`).join(', ');
+  const placeholders = Array.from(
+    { length: argCount },
+    (_, i) => `$${i + 1}::text`,
+  ).join(", ");
   return `SELECT * FROM DOLT_TEST_RUN(${placeholders})`;
-}
+};

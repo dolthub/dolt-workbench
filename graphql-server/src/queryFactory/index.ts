@@ -186,5 +186,4 @@ export declare class QueryFactory {
   runTests(args: t.RunTestsArgs): t.PR;
 
   saveTests(args: t.SaveTestsArgs): Promise<InsertResult>;
-
 }

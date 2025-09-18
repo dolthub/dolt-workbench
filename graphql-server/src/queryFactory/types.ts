@@ -78,19 +78,19 @@ export type TestArgs = {
   assertionType: string;
   assertionComparator: string;
   assertionValue: string;
-}
+};
 
 export type TestListArgs = {
   list: TestArgs[];
-}
+};
 export type SaveTestsArgs = RefArgs & {
   tests: TestListArgs;
-}
+};
 
 export type TestIdentifierArgs = {
   values: string[];
-}
+};
 
 export type RunTestsArgs = RefArgs & {
   identifiers?: TestIdentifierArgs;
-}
+};

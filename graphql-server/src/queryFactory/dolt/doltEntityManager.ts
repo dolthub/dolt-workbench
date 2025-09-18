@@ -186,9 +186,7 @@ export async function getDoltRemotesPaginated(
     .getRawMany();
 }
 
-export async function getDoltTests(
-  em: EntityManager,
-): t.PR {
+export async function getDoltTests(em: EntityManager): t.PR {
   return em
     .createQueryBuilder()
     .select("*")
@@ -198,9 +196,9 @@ export async function getDoltTests(
 
 export async function saveDoltTests(
   em: EntityManager,
-  tests: TestArgs[]
+  tests: TestArgs[],
 ): Promise<InsertResult> {
-  return em.transaction(async (transactionalEntityManager) => {
+  return em.transaction(async transactionalEntityManager => {
     await transactionalEntityManager
       .createQueryBuilder()
       .delete()
@@ -213,16 +211,15 @@ export async function saveDoltTests(
       .into("dolt_tests")
       .values(
         tests.map(t => {
-            return {
-              test_name: t.testName,
-              test_group: t.testGroup,
-              test_query: t.testQuery,
-              assertion_type: t.assertionType,
-              assertion_comparator: t.assertionComparator,
-              assertion_value: t.assertionValue
-            }
-          }
-        )
+          return {
+            test_name: t.testName,
+            test_group: t.testGroup,
+            test_query: t.testQuery,
+            assertion_type: t.assertionType,
+            assertion_comparator: t.assertionComparator,
+            assertion_value: t.assertionValue,
+          };
+        }),
       )
       .execute();
   });
