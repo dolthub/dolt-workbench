@@ -203,7 +203,6 @@
   @apply mb-4;
 }
 
-
 .runAllButton {
   @apply bg-green-600 text-white;
 }

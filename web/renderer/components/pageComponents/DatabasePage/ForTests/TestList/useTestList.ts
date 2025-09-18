@@ -125,25 +125,31 @@ export function useTestList(params: RefParams) {
     data?.tests.list,
   ]);
 
-  const toggleExpanded = useCallback((testName: string) => {
-    const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(testName)) {
-      newExpanded.delete(testName);
-    } else {
-      newExpanded.add(testName);
-    }
-    setExpandedItems(newExpanded);
-  }, [expandedItems]);
+  const toggleExpanded = useCallback(
+    (testName: string) => {
+      const newExpanded = new Set(expandedItems);
+      if (newExpanded.has(testName)) {
+        newExpanded.delete(testName);
+      } else {
+        newExpanded.add(testName);
+      }
+      setExpandedItems(newExpanded);
+    },
+    [expandedItems],
+  );
 
-  const toggleGroupExpanded = useCallback((groupName: string) => {
-    const newExpandedGroups = new Set(expandedGroups);
-    if (newExpandedGroups.has(groupName)) {
-      newExpandedGroups.delete(groupName);
-    } else {
-      newExpandedGroups.add(groupName);
-    }
-    setExpandedGroups(newExpandedGroups);
-  }, [expandedGroups]);
+  const toggleGroupExpanded = useCallback(
+    (groupName: string) => {
+      const newExpandedGroups = new Set(expandedGroups);
+      if (newExpandedGroups.has(groupName)) {
+        newExpandedGroups.delete(groupName);
+      } else {
+        newExpandedGroups.add(groupName);
+      }
+      setExpandedGroups(newExpandedGroups);
+    },
+    [expandedGroups],
+  );
 
   const updateTest = (name: string, field: keyof Test, value: string) => {
     setTests(
