@@ -140,7 +140,6 @@
   min-width: 100px;
 }
 
-/* Create Dropdown Styles */
 .createButton {
   @apply flex items-center justify-center px-3 py-1.5 text-sm font-semibold bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
   min-width: 100px;
@@ -196,7 +195,6 @@
   @apply border-sky-400 outline-none;
 }
 
-/* Ungrouped Tests Styles */
 .ungroupedDivider {
   @apply font-semibold text-center w-full my-8 text-base text-storm-500;
 }
@@ -215,4 +213,8 @@
 
 .orangeGroup {
   @apply text-orange-500;
+}
+
+.runAllButton {
+  @apply bg-green-600 text-white;
 }

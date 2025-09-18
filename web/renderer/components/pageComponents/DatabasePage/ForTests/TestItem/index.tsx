@@ -129,7 +129,7 @@ export default function TestItem({
               e.stopPropagation();
               onRunTest();
             }}
-            className={`${css.testActionBtn} ${css.runBtn}`}
+            className={cx(css.testActionBtn, css.runBtn)}
             data-tooltip-content="Run test"
           >
             <FaPlay />
@@ -219,7 +219,6 @@ export default function TestItem({
               onChangeString={value => onUpdateTest("assertionValue", value)}
               placeholder="Expected result"
               className={css.fullWidthFormInput}
-              style={{ width: "100%" }}
             />
           </div>
         </div>

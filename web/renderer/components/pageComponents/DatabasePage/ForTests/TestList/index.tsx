@@ -79,10 +79,7 @@ export default function TestList({ params }: Props) {
 
           <div className={css.primaryActions}>
             {tests.length > 0 && (
-              <Button
-                onClick={handleRunAll}
-                className="bg-green-600 text-white"
-              >
+              <Button onClick={handleRunAll} className={css.runAllButton}>
                 Run All
               </Button>
             )}

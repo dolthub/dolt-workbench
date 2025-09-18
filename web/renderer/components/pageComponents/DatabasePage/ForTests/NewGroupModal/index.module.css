@@ -1,4 +1,3 @@
-/* NewGroupModal Component Styles */
 .overlay {
   @apply fixed inset-0 bg-stone-700 bg-opacity-50 flex items-center justify-center z-50;
 }

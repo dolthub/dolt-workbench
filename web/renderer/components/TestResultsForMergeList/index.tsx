@@ -136,9 +136,7 @@ export default function TestResultsForMergeList({ params }: Props) {
               ))
             ) : (
               <li className={css.noTests}>
-                <span>
-                  No test results available. Run tests to see results here.
-                </span>
+                <span>Run tests to see results here.</span>
               </li>
             )}
           </ul>
