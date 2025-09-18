@@ -41,6 +41,7 @@ export default function TestItem({
   onDeleteTest,
 }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [localAssertionValue, setLocalAssertionValue] = useState(test.assertionValue);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const debouncedOnUpdateTest = useCallback(
@@ -64,6 +65,10 @@ export default function TestItem({
     [],
   );
 
+  useEffect(() => {
+    setLocalAssertionValue(test.assertionValue);
+  }, [test.assertionValue]);
+
   const handleDeleteClick = (e: MouseEvent) => {
     e.stopPropagation();
     setShowDeleteConfirm(true);
@@ -76,6 +81,12 @@ export default function TestItem({
 
   const handleCancelDelete = () => {
     setShowDeleteConfirm(false);
+  };
+
+  const handleAssertionValueBlur = () => {
+    if (localAssertionValue !== test.assertionValue) {
+      onUpdateTest("assertionValue", localAssertionValue);
+    }
   };
 
   return (
@@ -215,8 +226,9 @@ export default function TestItem({
           <div className={css.fieldGroup}>
             <FormInput
               label="Assertion Value"
-              value={test.assertionValue}
-              onChangeString={value => onUpdateTest("assertionValue", value)}
+              value={localAssertionValue}
+              onChangeString={setLocalAssertionValue}
+              onBlur={handleAssertionValueBlur}
               placeholder="Expected result"
               className={css.fullWidthFormInput}
             />
