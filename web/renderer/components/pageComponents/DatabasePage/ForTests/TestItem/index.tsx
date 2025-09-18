@@ -7,9 +7,9 @@ import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "../QueryEditor";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, useState, useCallback, useRef, useEffect } from "react";
 import { Test } from "@gen/graphql-types";
-import ConfirmationModal from "../ConfirmationModal";
+import ConfirmationModal from "@pageComponents/DatabasePage/ForTests/ConfirmationModal";
 
 type Props = {
   test: Test;
@@ -41,6 +41,22 @@ export default function TestItem({
   onDeleteTest,
 }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const debouncedOnUpdateTest = useCallback((field: keyof Test, value: string) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    debounceRef.current = setTimeout(() => {
+      onUpdateTest(field, value);
+    }, 500); // 500ms debounce
+  }, [onUpdateTest]);
+
+  useEffect(() => () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    }, []);
 
   const handleDeleteClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -129,6 +145,7 @@ export default function TestItem({
               <strong>Error:</strong> {testResult.error}
             </div>
           )}
+          <div className={css.separator}></div>
           <div className={css.fieldGroup}>
             <FormSelect
               label="Test Group"
@@ -151,7 +168,7 @@ export default function TestItem({
             <label className={css.fieldLabel}>Query</label>
             <QueryEditor
               value={test.testQuery}
-              onChange={value => onUpdateTest("testQuery", value)}
+              onChange={value => debouncedOnUpdateTest("testQuery", value)}
               placeholder="Enter SQL query"
             />
           </div>

@@ -1,5 +1,5 @@
-import { Button } from "@dolthub/react-components";
-import css from "./index.module.css";
+import { Button, FormInput, ModalButtons, ModalInner, ModalOuter } from "@dolthub/react-components";
+import { SyntheticEvent } from "react";
 
 type Props = {
   isOpen: boolean;
@@ -16,32 +16,43 @@ export default function NewGroupModal({
   onCreateGroup,
   onClose,
 }: Props) {
-  if (!isOpen) return null;
-
   const handleClose = () => {
     onGroupNameChange("");
     onClose();
   };
 
+  const handleSubmit = (e: SyntheticEvent) => {
+    e.preventDefault();
+    if (groupName.trim()) {
+      onCreateGroup();
+    }
+  };
+
   return (
-    <div className={css.overlay}>
-      <div className={css.modal}>
-        <h3 className={css.title}>Create New Test Group</h3>
-        <input
-          type="text"
-          className={css.fieldInput}
-          value={groupName}
-          onChange={e => onGroupNameChange(e.target.value)}
-          placeholder="Enter group name..."
-          onKeyDown={e => e.key === "Enter" && onCreateGroup()}
-        />
-        <div className={css.buttonGroup}>
-          <Button onClick={onCreateGroup} disabled={!groupName.trim()}>
+    <ModalOuter
+      isOpen={isOpen}
+      onRequestClose={handleClose}
+      title="Create New Test Group"
+    >
+      <form onSubmit={handleSubmit}>
+        <ModalInner>
+          <FormInput
+            value={groupName}
+            label="Group Name"
+            onChangeString={onGroupNameChange}
+            placeholder="Choose a name for your test group"
+            light
+          />
+        </ModalInner>
+        <ModalButtons onRequestClose={handleClose}>
+          <Button
+            type="submit"
+            disabled={!groupName.trim()}
+          >
             Create
           </Button>
-          <Button onClick={handleClose}>Cancel</Button>
-        </div>
-      </div>
-    </div>
+        </ModalButtons>
+      </form>
+    </ModalOuter>
   );
 }

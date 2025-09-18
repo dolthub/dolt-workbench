@@ -1,10 +1,10 @@
 /* TestItem Component Styles */
 .item {
-    @apply border-2 border-stone-50 rounded-lg my-3 py-4 px-6 text-sm relative;
+    @apply border-2 border-stone-50 rounded-lg my-2 py-3 px-4 text-sm relative;
 }
 
 .groupedItem {
-    @apply ml-8;
+    @apply mx-4;
 }
 
 .expanded .expandIcon {
@@ -12,21 +12,21 @@
 }
 
 .itemTop {
-    @apply flex justify-between items-center cursor-pointer;
+    @apply flex items-center cursor-pointer gap-1;
 }
 
 .testName {
-    @apply pb-2 text-base flex items-center;
+    @apply text-sm flex items-center;
     flex: 1 1 auto;
     min-width: 0;
 }
 
 .expandIcon {
-    @apply mr-2 transition-transform duration-200 text-storm-200;
+    @apply mr-3 transition-transform duration-200 text-storm-200;
 }
 
 .editableTestName {
-    @apply bg-transparent border border-transparent text-base px-1 py-0.5 m-0 outline-none rounded transition-all flex-1;
+    @apply bg-transparent border border-transparent text-sm px-1 py-0.5 m-0 outline-none rounded transition-all flex-1;
     min-width: 150px;
     cursor: text;
 }
@@ -40,7 +40,7 @@
 }
 
 .testActions {
-    @apply flex items-center gap-1 ml-auto opacity-0 transition-opacity duration-200;
+    @apply flex items-center gap-1 opacity-0 transition-opacity duration-200;
 }
 
 .item:hover .testActions {
@@ -48,7 +48,7 @@
 }
 
 .testActionBtn {
-    @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200 ml-1;
+    @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200;
 }
 
 .testActionBtn:hover {
@@ -56,7 +56,7 @@
 }
 
 .runBtn {
-    @apply text-green-600;
+    @apply text-green-600 mr-10;
 }
 
 .runBtn:hover {
@@ -64,7 +64,11 @@
 }
 
 .expandedContent {
-    @apply mt-4 p-4 bg-stone-50 rounded;
+    @apply mt-4 px-4 pb-4 bg-white rounded;
+}
+
+.separator {
+    @apply border-t border-stone-300 mb-4 -mx-4;
 }
 
 .fieldGroup {
@@ -72,7 +76,7 @@
 }
 
 .fieldLabel {
-    @apply block text-sm font-semibold mb-2 text-storm-200;
+    @apply block text-sm font-semibold mb-2 text-storm-500;
 }
 
 .fullWidthFormInput {
@@ -84,7 +88,9 @@
 
 /* Test result status styles */
 .testResult {
-    @apply flex items-center gap-1 px-2 py-1 rounded text-sm;
+    @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700;
+    min-width: 80px;
+    justify-content: center;
 }
 
 .testResultPassed {
@@ -101,4 +107,8 @@
 
 .errorMessage {
     @apply mb-4 p-3 bg-red-50 border border-red-400 rounded text-red-600 text-sm;
+}
+
+.expandedContent :global(select) {
+    @apply relative z-10 bg-white
 }

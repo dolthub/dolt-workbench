@@ -15,25 +15,23 @@ type Props = {
 };
 
 export default function ConfirmationModal({
-  isOpen,
-  title,
-  message,
-  confirmText = "Confirm",
-  cancelText = "Cancel",
-  onConfirm,
-  onCancel,
-  destructive = false,
-}: Props) {
+                                            isOpen,
+                                            title,
+                                            message,
+                                            confirmText = "Confirm",
+                                            cancelText = "Cancel",
+                                            onConfirm,
+                                            onCancel,
+                                            destructive = false,
+                                          }: Props) {
   if (!isOpen) return null;
 
   return (
     <div className={css.overlay} onClick={onCancel}>
-      <div className={css.modal} onClick={e => e.stopPropagation()}>
+      <div className={css.modal} onClick={(e) => e.stopPropagation()}>
         <div className={css.header}>
           <div className={css.headerLeft}>
-            {destructive && (
-              <FaExclamationTriangle className={css.warningIcon} />
-            )}
+            {destructive && <FaExclamationTriangle className={css.warningIcon} />}
             <h3 className={css.title}>{title}</h3>
           </div>
           <button className={css.closeButton} onClick={onCancel}>

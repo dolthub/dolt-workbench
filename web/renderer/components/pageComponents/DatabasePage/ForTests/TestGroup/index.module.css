@@ -1,5 +1,5 @@
 .groupHeader {
-    @apply border-l-4 bg-stone-50 border-stone-300 rounded-r mb-4 cursor-pointer;
+    @apply bg-stone-50 rounded mb-2 cursor-pointer;
     transition: all 0.2s ease;
 }
 
@@ -12,7 +12,7 @@
 }
 
 .groupHeaderContent {
-    @apply flex justify-between items-center p-4;
+    @apply flex justify-between items-center py-3 pl-3 pr-9;
 }
 
 .groupHeaderLeft {
@@ -20,7 +20,7 @@
 }
 
 .groupHeaderRight {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-1;
 }
 
 .groupExpandIcon {
@@ -32,7 +32,7 @@
 }
 
 .groupName {
-    @apply text-lg font-semibold text-storm-500 mr-3;
+    @apply text-base font-semibold text-storm-500 mr-3;
 }
 
 .testCount {
@@ -53,7 +53,7 @@
 }
 
 .groupActionBtn {
-    @apply p-2 text-sm rounded opacity-75 transition-opacity duration-200;
+    @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200;
 }
 
 .groupActionBtn:hover {
@@ -73,15 +73,29 @@
 }
 
 .runBtn {
-    @apply text-green-600;
+    @apply text-green-600 mr-3;
 }
 
 .runBtn:hover {
     @apply text-green-400;
 }
 
+.groupActionBtn.createBtn {
+    @apply text-sky-600 opacity-0 transition-opacity duration-200;
+}
+
+.groupHeader:hover .groupActionBtn.createBtn {
+    @apply opacity-75;
+}
+
+.groupActionBtn.createBtn:hover {
+    @apply text-sky-400 opacity-100;
+}
+
 .groupResult {
-    @apply flex items-center gap-1 px-2 py-1 rounded text-sm;
+    @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700;
+    min-width: 80px;
+    justify-content: center;
 }
 
 .groupResultPassed {

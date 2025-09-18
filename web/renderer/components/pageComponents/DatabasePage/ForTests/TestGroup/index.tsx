@@ -3,6 +3,7 @@ import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
 import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
 import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
+import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
 import { Button } from "@dolthub/react-components";
 import { useState, KeyboardEvent, ChangeEvent, MouseEvent } from "react";
 import cx from "classnames";
@@ -19,6 +20,7 @@ type Props = {
   onRunGroup: () => void;
   onDeleteGroup: () => void;
   onRenameGroup?: (oldName: string, newName: string) => void;
+  onCreateTest: (groupName: string) => void;
 };
 
 export default function TestGroup({
@@ -31,6 +33,7 @@ export default function TestGroup({
   onRunGroup,
   onDeleteGroup,
   onRenameGroup,
+  onCreateTest,
 }: Props) {
   const groupName = group || "No Group";
   const [localGroupName, setLocalGroupName] = useState(groupName);
@@ -45,6 +48,11 @@ export default function TestGroup({
   const handleDeleteClick = (e: MouseEvent) => {
     e.stopPropagation();
     setShowDeleteConfirm(true);
+  };
+
+  const handleCreateTest = (e: MouseEvent) => {
+    e.stopPropagation();
+    onCreateTest(groupName);
   };
 
   const handleConfirmDelete = () => {
@@ -137,6 +145,13 @@ export default function TestGroup({
             disabled={testCount === 0}
           >
             <FaPlay />
+          </Button.Link>
+          <Button.Link
+            onClick={handleCreateTest}
+            className={cx(css.groupActionBtn, css.createBtn)}
+            data-tooltip-content={`Add test to ${groupName}`}
+          >
+            <FaPlus />
           </Button.Link>
           <Button.Link
             onClick={handleDeleteClick}

@@ -1,5 +1,5 @@
 .container {
-  @apply mx-6;
+  @apply mx-auto px-6;
 }
 
 .top {
@@ -7,15 +7,11 @@
 }
 
 .tagContainer {
-  @apply mr-4 pb-4 text-primary border-stone-100 border-l-[1.5px];
-
-  @screen lg {
-    @apply ml-16;
-  }
+  @apply pb-4 text-primary;
 }
 
 .list {
-  @apply mt-10 pl-6 pr-2;
+  @apply mt-10 px-6;
 
   @screen lg {
     @apply px-10;
@@ -98,7 +94,7 @@
 
 
 .groupedTests {
-  @apply mb-6;
+  @apply mb-4;
 }
 
 .groupedList {
@@ -128,11 +124,6 @@
   }
 }
 
-.button {
-  @apply mr-4;
-}
-
-
 .actionArea {
   @apply flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6;
 }
@@ -150,14 +141,14 @@
 }
 
 .primaryActions button {
-  @apply px-4 py-2 text-sm font-medium;
+  @apply px-4 py-2 text-sm font-semibold;
   height: 38px;
   min-width: 120px;
 }
 
 /* Create Dropdown Styles */
 .createButton {
-  @apply flex items-center justify-center px-4 py-2 text-sm font-medium bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
+  @apply flex items-center justify-center px-4 py-2 text-sm font-semibold bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
   height: 38px;
   min-width: 120px;
 }
@@ -175,18 +166,22 @@
 }
 
 .createPopup {
-  @apply bg-white border border-stone-300 rounded-md shadow-lg py-1 min-w-[140px];
+  @apply text-primary;
 }
 
 .createPopupItem {
-  @apply m-0 p-0;
+  @apply mx-2 my-3 text-sm;
 }
 
 .createPopupItem button {
-  @apply w-full text-left px-4 py-2 text-sm text-stone-700 hover:bg-stone-50 focus:bg-stone-50 transition-colors duration-150;
+  @apply w-full text-left text-sky-600 hover:text-sky-700 font-semibold;
   border: none;
   background: transparent;
   outline: none;
+}
+
+.createPopupItem button svg {
+  @apply inline-block mr-2.5 mb-0.5 text-lg;
 }
 
 .saveActions {
@@ -216,22 +211,8 @@
   @apply font-semibold text-center w-full my-8 text-base text-storm-500;
 }
 
-.ungroupedDivider::before,
-.ungroupedDivider::after {
-  content: "";
-  @apply w-[46%] border-t border-stone-300 inline-block align-middle relative;
-}
-
-.ungroupedDivider::after {
-  @apply right-0 -ml-[55%];
-}
-
-.ungroupedDivider::before {
-  @apply left-0 -mr-[55%];
-}
-
 .ungroupedTests {
-  @apply mb-6;
+  @apply mb-4;
 }
 
 /* Dynamic test status colors */

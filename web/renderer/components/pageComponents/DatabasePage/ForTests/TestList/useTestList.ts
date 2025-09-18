@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import {
   Test, TestResult,
   useRunTestsLazyQuery,
@@ -28,11 +28,21 @@ export function useTestList(params: RefParams) {
   const [testResults, setTestResults] = useState<
     Record<string, { status: "passed" | "failed"; error?: string } | undefined>
   >({});
-  const [showUnsavedModal, setShowUnsavedModal] = useState(false);
-  const [pendingNavigation, setPendingNavigation] = useState<string | null>(
-    null,
-  );
   const autoRunExecutedRef = useRef(false);
+  const [hasHandledHash, setHasHandledHash] = useState(false);
+
+  const [saveTestsMutation] = useSaveTestsMutation({
+    variables: {
+      databaseName: params.databaseName,
+      refName: params.refName,
+      tests: { list: tests },
+    },
+  });
+
+  const handleSaveAll = useCallback(async () => {
+    console.log("Saving all changes:", tests);
+    await saveTestsMutation();
+  }, [saveTestsMutation, tests]);
 
   const getResults = (testResults: TestResult[]): Record<string, { status: "passed" | "failed"; error?: string }> => {
     const results: Record<string, { status: "passed" | "failed"; error?: string }> = {};
@@ -51,60 +61,22 @@ export function useTestList(params: RefParams) {
     return results;
   }
 
+  // Initialize tests from query data
   useEffect(() => {
     if (data?.tests.list) {
-      const initialTests = data.tests.list.map(
-        ({ __typename, ...test }) => test,
-      );
+      const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
       setTests(initialTests);
-    }
-  }, [data?.tests.list]);
-
-  const handleConfirmNavigation = () => {
-    if (pendingNavigation) {
-      setShowUnsavedModal(false);
-
-      const url = pendingNavigation;
-      setPendingNavigation(null);
-      setHasUnsavedChanges(false); // Clear unsaved changes to allow navigation
-
-      setTimeout(async () => {
-        await router.push(url);
-      });
-    }
-  };
-
-  const handleCancelNavigation = () => {
-    setShowUnsavedModal(false);
-    setPendingNavigation(null);
-  };
+    }}, [data?.tests.list]);
 
   useEffect(() => {
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (hasUnsavedChanges) {
-        e.preventDefault();
-        return "You have unsaved changes. Are you sure you want to leave?";
-      }
-    };
+    if (!hasUnsavedChanges) return;
+    const save = async () => {
+      await handleSaveAll();
+      setHasUnsavedChanges(false);
+    }
+    void save();
+  }, [hasUnsavedChanges, handleSaveAll]);
 
-    const handleRouteChangeStart = (url: string) => {
-      if (hasUnsavedChanges && router.asPath !== url) {
-        setPendingNavigation(url);
-        setShowUnsavedModal(true);
-        router.events.emit("routeChangeError");
-        throw "Route change aborted by user";
-      }
-    };
-
-    window.addEventListener("beforeunload", handleBeforeUnload);
-
-    router.events.on("routeChangeStart", handleRouteChangeStart);
-
-    return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      router.events.off("routeChangeStart", handleRouteChangeStart);
-    };
-  }, [hasUnsavedChanges, router]);
 
   useEffect(() => {
     const shouldRunTests = router.query.runTests === "true";
@@ -145,13 +117,6 @@ export function useTestList(params: RefParams) {
     data?.tests.list,
   ]);
 
-  const [saveTestsMutation] = useSaveTestsMutation({
-    variables: {
-      databaseName: params.databaseName,
-      refName: params.refName,
-      tests: { list: tests },
-    },
-  });
 
   const toggleExpanded = (id: string) => {
     const newExpanded = new Set(expandedItems);
@@ -182,16 +147,9 @@ export function useTestList(params: RefParams) {
     setHasUnsavedChanges(true);
   };
 
-  const handleSaveAll = async () => {
-    console.log("Saving all changes:", tests);
-    await saveTestsMutation();
-    setHasUnsavedChanges(false);
-  };
+
 
   const handleRunTest = async (testName: string) => {
-    if (hasUnsavedChanges) {
-      await handleSaveAll();
-    }
     const result = await runTests({
       variables: {
         databaseName: params.databaseName,
@@ -219,10 +177,6 @@ export function useTestList(params: RefParams) {
   };
 
   const handleRunGroup = async (groupName: string) => {
-    if (hasUnsavedChanges) {
-      await handleSaveAll();
-    }
-
     const result = await runTests({
       variables: {
         databaseName: params.databaseName,
@@ -257,10 +211,6 @@ export function useTestList(params: RefParams) {
     });
   };
   const handleRunAll = async () => {
-    if (hasUnsavedChanges) {
-      await handleSaveAll();
-    }
-
     const result = await runTests({
       variables: {
         databaseName: params.databaseName,
@@ -289,7 +239,7 @@ export function useTestList(params: RefParams) {
       newSet.delete(testName);
       return newSet;
     });
-    await handleSaveAll();
+    setHasUnsavedChanges(true);
   };
 
   const handleDeleteGroup = async (groupName: string) => {
@@ -304,7 +254,7 @@ export function useTestList(params: RefParams) {
       newSet.delete(groupName);
       return newSet;
     });
-    await handleSaveAll();
+    setHasUnsavedChanges(true);
   };
 
   const handleCreateGroup = (
@@ -318,7 +268,6 @@ export function useTestList(params: RefParams) {
     ) {
       setEmptyGroups(prev => new Set([...prev, groupName.trim()]));
       setExpandedGroups(prev => new Set([...prev, groupName.trim()]));
-      setHasUnsavedChanges(true);
       return true;
     }
     return false;
@@ -337,8 +286,8 @@ export function useTestList(params: RefParams) {
 
     const newTest: Test = {
       testName: uniqueTestName,
-      testQuery: "",
-      assertionType: "expected_single_value",
+      testQuery: "SELECT * FROM tablename",
+      assertionType: "expected_rows",
       assertionComparator: "==",
       assertionValue: "",
       testGroup: groupName ?? "",
@@ -466,6 +415,54 @@ export function useTestList(params: RefParams) {
     return allPassed ? "passed" : "failed";
   };
 
+  const handleHashNavigation = useCallback(() => {
+    const hash = window.location.hash.slice(1);
+    if (!hash || tests.length === 0 || hasHandledHash) return;
+
+    const decodedHash = decodeURIComponent(hash);
+    const targetTest = tests.find(test => test.testName === decodedHash);
+    if (!targetTest) return;
+
+    const containingGroup = Object.entries(groupedTests).find(
+      ([, groupTests]) =>
+        groupTests.some(test => test.testName === decodedHash),
+    )?.[0];
+
+    if (
+      containingGroup &&
+      containingGroup !== "" &&
+      !expandedGroups.has(containingGroup)
+    ) {
+      toggleGroupExpanded(containingGroup);
+    }
+
+    if (!expandedItems.has(decodedHash)) {
+      toggleExpanded(decodedHash);
+    }
+
+    setHasHandledHash(true);
+
+    setTimeout(() => {
+      const testElement = document.querySelector(
+        `[data-test-name="${decodedHash}"]`,
+      );
+      if (testElement) {
+        testElement.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
+    }, 100);
+  }, [
+    tests,
+    groupedTests,
+    expandedGroups,
+    expandedItems,
+    toggleGroupExpanded,
+    toggleExpanded,
+    hasHandledHash,
+  ]);
+
   return {
     expandedItems,
     expandedGroups,
@@ -475,8 +472,6 @@ export function useTestList(params: RefParams) {
     groupedTests,
     sortedGroupEntries,
     testResults,
-    showUnsavedModal,
-    pendingNavigation,
     getGroupResult,
     toggleExpanded,
     toggleGroupExpanded,
@@ -492,7 +487,6 @@ export function useTestList(params: RefParams) {
     handleRenameGroup,
     handleTestNameEdit,
     handleTestNameBlur,
-    handleConfirmNavigation,
-    handleCancelNavigation,
+    handleHashNavigation,
   };
 }
