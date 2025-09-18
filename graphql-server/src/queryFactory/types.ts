@@ -1,7 +1,5 @@
 import { SortBranchesBy } from "../branches/branch.enum";
 import { DiffRowType } from "../rowDiffs/rowDiff.enums";
-import { Field } from "@nestjs/graphql";
-import { TestList } from "../tests/test.model";
 
 export type DBArgs = { databaseName: string };
 export type CloneArgs = DBArgs & { remoteDbPath: string };
