@@ -109,3 +109,7 @@
 .groupResultIcon {
   @apply w-3 h-3;
 }
+
+.confirmDeleteModal {
+  @apply text-stone-700;
+}

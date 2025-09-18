@@ -205,7 +205,6 @@
   @apply mb-4;
 }
 
-/* Dynamic test status colors */
 .greenGroup {
   @apply border-l-green-400 text-green-400;
 }

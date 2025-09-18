@@ -228,9 +228,8 @@ export default function TestItem({
       <ConfirmationModal
         isOpen={showDeleteConfirm}
         title="Delete Test"
-        message={`Are you sure you want to delete the test "${test.testName}"? This action cannot be undone.`}
+        message={`Are you sure you want to delete the test "${test.testName}"?`}
         confirmText="Delete Test"
-        cancelText="Cancel"
         onConfirm={handleConfirmDelete}
         onCancel={handleCancelDelete}
         destructive={true}

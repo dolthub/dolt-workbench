@@ -164,16 +164,17 @@ export default function TestGroup({
         </div>
       </div>
 
-      <ConfirmationModal
-        isOpen={showDeleteConfirm}
-        title="Delete Test Group"
-        message={`Are you sure you want to delete the "${groupName}" test group? This will delete ${testCount} test${testCount !== 1 ? "s" : ""} in this group. This action cannot be undone.`}
-        confirmText="Delete Group"
-        cancelText="Cancel"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
-        destructive={true}
-      />
+      <div className={css.confirmDeleteModal}>
+        <ConfirmationModal
+          isOpen={showDeleteConfirm}
+          title="Delete Test Group"
+          message={`Are you sure you want to delete the "${groupName}" test group? This will delete ${testCount} test${testCount !== 1 ? "s" : ""} in this group.`}
+          confirmText="Delete Group"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+          destructive={true}
+        />
+      </div>
     </div>
   );
 }

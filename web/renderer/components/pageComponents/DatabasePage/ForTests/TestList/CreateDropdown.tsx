@@ -1,4 +1,5 @@
 import { Popup } from "@dolthub/react-components";
+import { fakeEscapePress } from "@dolthub/web-utils";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
 import { FaFile } from "@react-icons/all-files/fa/FaFile";
@@ -18,6 +19,7 @@ export default function CreateDropdown({ onCreateTest, onCreateGroup }: Props) {
       on={["click"]}
       offsetX={0}
       closeOnDocumentClick
+      closeOnEscape
       trigger={(isOpen: boolean) => (
         <button className={css.createButton} type="button">
           <span className={css.plus}>
@@ -33,13 +35,25 @@ export default function CreateDropdown({ onCreateTest, onCreateGroup }: Props) {
       <div className={css.createPopup}>
         <ul>
           <li className={css.createPopupItem}>
-            <button onClick={onCreateTest} type="button">
+            <button
+              onClick={() => {
+                onCreateTest();
+                fakeEscapePress();
+              }}
+              type="button"
+            >
               <FaFile />
               Create Test
             </button>
           </li>
           <li className={css.createPopupItem}>
-            <button onClick={onCreateGroup} type="button">
+            <button
+              onClick={() => {
+                onCreateGroup();
+                fakeEscapePress();
+              }}
+              type="button"
+            >
               <FaFolder />
               Create Group
             </button>
