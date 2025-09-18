@@ -40,8 +40,8 @@
 }
 
 .inlineEditInput {
-  @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 m-0 outline-none rounded transition-all;
-  min-width: 100px;
+  @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 mt-0 mb-0 ml-0 mr-3 outline-none rounded transition-all;
+  min-width: 200px;
 }
 
 .inlineEditInput:hover {

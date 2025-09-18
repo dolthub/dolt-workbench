@@ -113,7 +113,7 @@ export default function TestGroup({
             onFocus={() => setIsEditing(true)}
             onClick={e => e.stopPropagation()}
           />
-          <span className={css.testCount}>({testCount} tests)</span>
+          <span className={css.testCount}>{`(${testCount} ${testCount === 1 ? 'test' : 'tests'})`}</span>
         </div>
         <div className={css.groupHeaderRight}>
           {groupResult && (

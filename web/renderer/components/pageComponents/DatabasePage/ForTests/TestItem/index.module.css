@@ -1,4 +1,3 @@
-/* TestItem Component Styles */
 .item {
   @apply border-2 border-stone-50 rounded-lg my-2 py-3 px-4 text-sm relative;
 }
@@ -68,7 +67,7 @@
 }
 
 .separator {
-  @apply border-t border-stone-300 mb-4 -mx-4;
+  @apply border-t-2 border-stone-50 mb-4 -mx-4;
 }
 
 .fieldGroup {
