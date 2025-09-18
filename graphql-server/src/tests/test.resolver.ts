@@ -88,7 +88,6 @@ export class TestResolver {
   async saveTests(@Args() args: SaveTestsArgs): Promise<TestList> {
     const conn = this.conn.connection();
     const res = await conn.saveTests(args);
-    console.dir(res, { depth: null });
     return {
       list: res.generatedMaps.map(t => fromDoltTestRowRes(t)),
     };
