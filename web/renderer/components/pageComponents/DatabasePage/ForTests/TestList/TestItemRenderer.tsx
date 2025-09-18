@@ -1,5 +1,4 @@
 import TestItem from "@pageComponents/DatabasePage/ForTests/TestItem";
-import { getTestStatusColors, getStatusClassName } from "./statusUtils";
 import css from "./index.module.css";
 import { Test } from "@gen/graphql-types";
 
@@ -17,7 +16,7 @@ type Props = {
   onNameEdit: (testName: string, name: string) => void;
   onNameBlur: (testName: string) => void;
   onRunTest: (testName: string) => Promise<void>;
-  onDeleteTest: (testName: string) => Promise<void>;
+  onDeleteTest: (testName: string) => void;
 };
 
 export default function TestItemRenderer({
@@ -36,15 +35,6 @@ export default function TestItemRenderer({
   return (
     <>
       {tests.map(test => {
-        const testStatusColors = getTestStatusColors(
-          testResults[test.testName],
-        );
-        const statusClassName = getStatusClassName(testStatusColors, {
-          green: css.greenTest,
-          red: css.redTest,
-          orange: css.orangeTest,
-        });
-
         return (
           <TestItem
             key={test.testName}
@@ -53,7 +43,6 @@ export default function TestItemRenderer({
             isExpanded={expandedItems.has(test.testName)}
             editingName={editingTestNames[test.testName]}
             testResult={testResults[test.testName]}
-            className={statusClassName}
             onToggleExpanded={() => onToggleExpanded(test.testName)}
             onUpdateTest={(field, value) =>
               onUpdateTest(test.testName, field, value)
@@ -61,7 +50,7 @@ export default function TestItemRenderer({
             onNameEdit={name => onNameEdit(test.testName, name)}
             onNameBlur={() => onNameBlur(test.testName)}
             onRunTest={async () => await onRunTest(test.testName)}
-            onDeleteTest={async () => await onDeleteTest(test.testName)}
+            onDeleteTest={() => onDeleteTest(test.testName)}
           />
         );
       })}

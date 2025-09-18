@@ -104,7 +104,7 @@ export function useTestList(params: RefParams) {
             },
           });
 
-          const testResultsList = result.data?.runTests.list || [];
+          const testResultsList = result.data?.runTests.list ?? [];
           const allResults = getResults(testResultsList);
 
           setTestResults(allResults);
@@ -125,17 +125,17 @@ export function useTestList(params: RefParams) {
     data?.tests.list,
   ]);
 
-  const toggleExpanded = (id: string) => {
+  const toggleExpanded = useCallback((testName: string) => {
     const newExpanded = new Set(expandedItems);
-    if (newExpanded.has(id)) {
-      newExpanded.delete(id);
+    if (newExpanded.has(testName)) {
+      newExpanded.delete(testName);
     } else {
-      newExpanded.add(id);
+      newExpanded.add(testName);
     }
     setExpandedItems(newExpanded);
-  };
+  }, [expandedItems]);
 
-  const toggleGroupExpanded = (groupName: string) => {
+  const toggleGroupExpanded = useCallback((groupName: string) => {
     const newExpandedGroups = new Set(expandedGroups);
     if (newExpandedGroups.has(groupName)) {
       newExpandedGroups.delete(groupName);
@@ -143,7 +143,7 @@ export function useTestList(params: RefParams) {
       newExpandedGroups.add(groupName);
     }
     setExpandedGroups(newExpandedGroups);
-  };
+  }, [expandedGroups]);
 
   const updateTest = (name: string, field: keyof Test, value: string) => {
     setTests(
@@ -237,7 +237,7 @@ export function useTestList(params: RefParams) {
     });
   };
 
-  const handleDeleteTest = async (testName: string) => {
+  const handleDeleteTest = (testName: string) => {
     setTests(tests.filter(test => test.testName !== testName));
     setExpandedItems(prev => {
       const newSet = new Set(prev);
@@ -247,7 +247,7 @@ export function useTestList(params: RefParams) {
     setHasUnsavedChanges(true);
   };
 
-  const handleDeleteGroup = async (groupName: string) => {
+  const handleDeleteGroup = (groupName: string) => {
     setTests(tests.filter(test => test.testGroup !== groupName));
     setExpandedGroups(prev => {
       const newSet = new Set(prev);
@@ -472,7 +472,6 @@ export function useTestList(params: RefParams) {
     expandedItems,
     expandedGroups,
     editingTestNames,
-    hasUnsavedChanges,
     tests,
     groupedTests,
     sortedGroupEntries,
@@ -488,7 +487,6 @@ export function useTestList(params: RefParams) {
     handleDeleteGroup,
     handleCreateGroup,
     handleCreateTest,
-    handleSaveAll,
     handleRenameGroup,
     handleTestNameEdit,
     handleTestNameBlur,

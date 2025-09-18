@@ -8,7 +8,6 @@ import { useTestList } from "./useTestList";
 import { RefParams } from "@lib/params";
 import CreateDropdown from "./CreateDropdown";
 import TestItemRenderer from "./TestItemRenderer";
-import { getGroupStatusColors, getStatusClassName } from "./statusUtils";
 import Link from "@components/links/Link";
 import { workingDiff } from "@lib/urls";
 
@@ -101,11 +100,6 @@ export default function TestList({ params }: Props) {
               .filter(([groupName]) => groupName !== "")
               .map(([groupName, groupTests]) => {
                 const isGroupExpanded = expandedGroups.has(groupName);
-                const groupStatusColors = getGroupStatusColors(
-                  groupTests,
-                  testResults,
-                );
-
                 return (
                   <div key={groupName} className={css.groupedTests}>
                     <TestGroup
@@ -113,11 +107,6 @@ export default function TestList({ params }: Props) {
                       isExpanded={isGroupExpanded}
                       onToggle={() => toggleGroupExpanded(groupName)}
                       testCount={groupTests.length}
-                      className={getStatusClassName(groupStatusColors, {
-                        green: css.greenGroup,
-                        red: css.redGroup,
-                        orange: css.orangeGroup,
-                      })}
                       groupResult={getGroupResult(groupName)}
                       onRunGroup={async () => await handleRunGroup(groupName)}
                       onDeleteGroup={async () => handleDeleteGroup(groupName)}

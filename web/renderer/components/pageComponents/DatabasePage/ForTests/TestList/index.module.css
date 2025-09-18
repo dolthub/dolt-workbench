@@ -203,17 +203,6 @@
   @apply mb-4;
 }
 
-.greenGroup {
-  @apply border-l-green-400 text-green-400;
-}
-
-.redGroup {
-  @apply border-l-red-400 text-red-400;
-}
-
-.orangeGroup {
-  @apply text-orange-500;
-}
 
 .runAllButton {
   @apply bg-green-600 text-white;
