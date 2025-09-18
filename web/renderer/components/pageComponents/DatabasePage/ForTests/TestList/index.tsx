@@ -9,6 +9,8 @@ import { RefParams } from "@lib/params";
 import CreateDropdown from "./CreateDropdown";
 import TestItemRenderer from "./TestItemRenderer";
 import { getGroupStatusColors, getStatusClassName } from "./statusUtils";
+import Link from "@components/links/Link";
+import { workingDiff } from "@lib/urls";
 
 type Props = {
   params: RefParams;
@@ -73,6 +75,13 @@ export default function TestList({ params }: Props) {
                 onCreateGroup={() => setShowNewGroupModal(true)}
               />
             </HideForNoWritesWrapper>
+            <Link
+              {...workingDiff(params)}
+            >
+              <Button>
+                Commit
+              </Button>
+            </Link>
           </div>
 
           <div className={css.primaryActions}>

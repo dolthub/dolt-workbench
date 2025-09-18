@@ -18,7 +18,7 @@ li:last-child .itemContainer {
 }
 
 .failureIcon {
-  @apply text-red-500;
+  @apply text-red-400;
 }
 
 .pendingIcon {
@@ -42,7 +42,7 @@ li:last-child .itemContainer {
 }
 
 .red {
-  @apply bg-red-50 border-red-300;
+  @apply bg-coral-50 border-red-300;
 }
 
 .green {

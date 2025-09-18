@@ -160,3 +160,9 @@ export const uploadStage = (
     .addDynamic("stage", p.stage)
     .withQuery(q);
 };
+
+export const workingDiff = (p: ps.RefParams): Route =>
+  database(p)
+    .addStatic("compare")
+    .addDynamic("refName", p.refName, ENCODE)
+    .addStatic("STAGED..WORKING");

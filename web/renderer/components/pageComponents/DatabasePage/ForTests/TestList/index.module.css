@@ -125,7 +125,7 @@
 }
 
 .actionArea {
-  @apply flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6;
+  @apply flex flex-col sm:flex-row sm:justify-between sm:items-center gap-8 mb-6;
 }
 
 .createActions {
@@ -133,7 +133,8 @@
 }
 
 .createActions button {
-  @apply px-3 py-1.5 text-sm;
+  @apply px-3 py-1.5 text-sm font-semibold;
+  min-width: 100px;
 }
 
 .primaryActions {
@@ -141,16 +142,14 @@
 }
 
 .primaryActions button {
-  @apply px-4 py-2 text-sm font-semibold;
-  height: 38px;
-  min-width: 120px;
+  @apply px-3 py-1.5 text-sm;
+  min-width: 100px;
 }
 
 /* Create Dropdown Styles */
 .createButton {
-  @apply flex items-center justify-center px-4 py-2 text-sm font-semibold bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
-  height: 38px;
-  min-width: 120px;
+  @apply flex items-center justify-center px-3 py-1.5 text-sm font-semibold bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
+  min-width: 100px;
 }
 
 .createButton:focus {
