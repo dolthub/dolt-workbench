@@ -45,7 +45,6 @@ export default function TestList({ params }: Props) {
     handleHashNavigation,
   } = useTestList(params);
 
-
   useEffect(() => {
     handleHashNavigation();
   }, [handleHashNavigation]);
@@ -61,8 +60,6 @@ export default function TestList({ params }: Props) {
     .map(entry => entry[0])
     .filter(group => group !== "");
 
-
-
   return (
     <div className={css.container}>
       <div className={css.top}>
@@ -75,12 +72,8 @@ export default function TestList({ params }: Props) {
                 onCreateGroup={() => setShowNewGroupModal(true)}
               />
             </HideForNoWritesWrapper>
-            <Link
-              {...workingDiff(params)}
-            >
-              <Button>
-                Commit
-              </Button>
+            <Link {...workingDiff(params)}>
+              <Button>Commit</Button>
             </Link>
           </div>
 
@@ -111,7 +104,10 @@ export default function TestList({ params }: Props) {
               .filter(([groupName]) => groupName !== "")
               .map(([groupName, groupTests]) => {
                 const isGroupExpanded = expandedGroups.has(groupName);
-                const groupStatusColors = getGroupStatusColors(groupTests, testResults);
+                const groupStatusColors = getGroupStatusColors(
+                  groupTests,
+                  testResults,
+                );
 
                 return (
                   <div key={groupName} className={css.groupedTests}>
@@ -129,7 +125,7 @@ export default function TestList({ params }: Props) {
                       onRunGroup={async () => await handleRunGroup(groupName)}
                       onDeleteGroup={async () => handleDeleteGroup(groupName)}
                       onRenameGroup={handleRenameGroup}
-                      onCreateTest={(group) => handleCreateTest(group)}
+                      onCreateTest={group => handleCreateTest(group)}
                     />
                     {isGroupExpanded && (
                       <ol className={css.groupedList}>

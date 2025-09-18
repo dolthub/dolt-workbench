@@ -122,7 +122,7 @@ export default function TestGroup({
                 css.groupResult,
                 groupResult === "passed"
                   ? css.groupResultPassed
-                  : css.groupResultFailed
+                  : css.groupResultFailed,
               )}
             >
               {groupResult === "passed" ? (

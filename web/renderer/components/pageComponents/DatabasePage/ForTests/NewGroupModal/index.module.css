@@ -1,20 +1,20 @@
 /* NewGroupModal Component Styles */
 .overlay {
-    @apply fixed inset-0 bg-stone-700 bg-opacity-50 flex items-center justify-center z-50;
+  @apply fixed inset-0 bg-stone-700 bg-opacity-50 flex items-center justify-center z-50;
 }
 
 .modal {
-    @apply bg-white rounded-lg p-6 w-96 border border-stone-300 shadow-lg;
+  @apply bg-white rounded-lg p-6 w-96 border border-stone-300 shadow-lg;
 }
 
 .title {
-    @apply text-lg font-semibold mb-4;
+  @apply text-lg font-semibold mb-4;
 }
 
 .fieldInput {
-    @apply w-full p-2 border border-stone-100 rounded text-sm;
+  @apply w-full p-2 border border-stone-100 rounded text-sm;
 }
 
 .buttonGroup {
-    @apply flex gap-2 mt-4;
+  @apply flex gap-2 mt-4;
 }

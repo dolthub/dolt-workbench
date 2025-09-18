@@ -43,20 +43,26 @@ export default function TestItem({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const debouncedOnUpdateTest = useCallback((field: keyof Test, value: string) => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = setTimeout(() => {
-      onUpdateTest(field, value);
-    }, 500); // 500ms debounce
-  }, [onUpdateTest]);
-
-  useEffect(() => () => {
+  const debouncedOnUpdateTest = useCallback(
+    (field: keyof Test, value: string) => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
-    }, []);
+      debounceRef.current = setTimeout(() => {
+        onUpdateTest(field, value);
+      }, 500); // 500ms debounce
+    },
+    [onUpdateTest],
+  );
+
+  useEffect(
+    () => () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    },
+    [],
+  );
 
   const handleDeleteClick = (e: MouseEvent) => {
     e.stopPropagation();
@@ -101,7 +107,7 @@ export default function TestItem({
               css.testResult,
               testResult.status === "passed"
                 ? css.testResultPassed
-                : css.testResultFailed
+                : css.testResultFailed,
             )}
           >
             {testResult.status === "passed" ? (

@@ -1,4 +1,8 @@
-import { TestResult, useRunTestsLazyQuery, useTestListQuery } from "@gen/graphql-types";
+import {
+  TestResult,
+  useRunTestsLazyQuery,
+  useTestListQuery,
+} from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { Button } from "@dolthub/react-components";
 import cx from "classnames";

@@ -1,111 +1,111 @@
 .groupHeader {
-    @apply bg-stone-50 rounded mb-2 cursor-pointer;
-    transition: all 0.2s ease;
+  @apply bg-stone-50 rounded mb-2 cursor-pointer;
+  transition: all 0.2s ease;
 }
 
 .groupHeader:hover {
-    @apply bg-stone-50;
+  @apply bg-stone-50;
 }
 
 .groupExpanded {
-    @apply mb-2;
+  @apply mb-2;
 }
 
 .groupHeaderContent {
-    @apply flex justify-between items-center py-3 pl-3 pr-9;
+  @apply flex justify-between items-center py-3 pl-3 pr-9;
 }
 
 .groupHeaderLeft {
-    @apply flex items-center cursor-pointer;
+  @apply flex items-center cursor-pointer;
 }
 
 .groupHeaderRight {
-    @apply flex items-center gap-1;
+  @apply flex items-center gap-1;
 }
 
 .groupExpandIcon {
-    @apply mr-3 transition-transform duration-200 text-storm-200;
+  @apply mr-3 transition-transform duration-200 text-storm-200;
 }
 
 .groupExpanded .groupExpandIcon {
-    @apply rotate-90;
+  @apply rotate-90;
 }
 
 .groupName {
-    @apply text-base font-semibold text-storm-500 mr-3;
+  @apply text-base font-semibold text-storm-500 mr-3;
 }
 
 .testCount {
-    @apply text-sm text-storm-200 font-medium;
+  @apply text-sm text-storm-200 font-medium;
 }
 
 .inlineEditInput {
-    @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 m-0 outline-none rounded transition-all;
-    min-width: 100px;
+  @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 m-0 outline-none rounded transition-all;
+  min-width: 100px;
 }
 
 .inlineEditInput:hover {
-    @apply bg-stone-50 border-stone-300;
+  @apply bg-stone-50 border-stone-300;
 }
 
 .inlineEditInput:focus {
-    @apply bg-stone-50 border-sky-400 shadow-sm;
+  @apply bg-stone-50 border-sky-400 shadow-sm;
 }
 
 .groupActionBtn {
-    @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200;
+  @apply p-1.5 text-xs rounded opacity-75 transition-opacity duration-200;
 }
 
 .groupActionBtn:hover {
-    @apply opacity-100;
+  @apply opacity-100;
 }
 
 .groupActionBtn.deleteBtn {
-    @apply opacity-0 transition-opacity duration-200;
+  @apply opacity-0 transition-opacity duration-200;
 }
 
 .groupHeader:hover .groupActionBtn.deleteBtn {
-    @apply opacity-75;
+  @apply opacity-75;
 }
 
 .groupActionBtn.deleteBtn:hover {
-    @apply opacity-100;
+  @apply opacity-100;
 }
 
 .runBtn {
-    @apply text-green-600 mr-3;
+  @apply text-green-600 mr-3;
 }
 
 .runBtn:hover {
-    @apply text-green-400;
+  @apply text-green-400;
 }
 
 .groupActionBtn.createBtn {
-    @apply text-sky-600 opacity-0 transition-opacity duration-200;
+  @apply text-sky-600 opacity-0 transition-opacity duration-200;
 }
 
 .groupHeader:hover .groupActionBtn.createBtn {
-    @apply opacity-75;
+  @apply opacity-75;
 }
 
 .groupActionBtn.createBtn:hover {
-    @apply text-sky-400 opacity-100;
+  @apply text-sky-400 opacity-100;
 }
 
 .groupResult {
-    @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700;
-    min-width: 80px;
-    justify-content: center;
+  @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700;
+  min-width: 80px;
+  justify-content: center;
 }
 
 .groupResultPassed {
-    @apply bg-green-100;
+  @apply bg-green-100;
 }
 
 .groupResultFailed {
-    @apply bg-red-100;
+  @apply bg-red-100;
 }
 
 .groupResultIcon {
-    @apply w-3 h-3;
+  @apply w-3 h-3;
 }

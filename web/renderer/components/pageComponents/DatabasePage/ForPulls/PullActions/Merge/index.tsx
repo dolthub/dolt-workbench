@@ -1,8 +1,6 @@
 import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
 import { Button, SmallLoader } from "@dolthub/react-components";
-import {
-  PullDetailsFragment,
-} from "@gen/graphql-types";
+import { PullDetailsFragment } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { ApolloErrorType } from "@lib/errors/types";
 import { PullDiffParams } from "@lib/params";

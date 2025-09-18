@@ -1,4 +1,10 @@
-import { Button, FormInput, ModalButtons, ModalInner, ModalOuter } from "@dolthub/react-components";
+import {
+  Button,
+  FormInput,
+  ModalButtons,
+  ModalInner,
+  ModalOuter,
+} from "@dolthub/react-components";
 import { SyntheticEvent } from "react";
 
 type Props = {
@@ -45,10 +51,7 @@ export default function NewGroupModal({
           />
         </ModalInner>
         <ModalButtons onRequestClose={handleClose}>
-          <Button
-            type="submit"
-            disabled={!groupName.trim()}
-          >
+          <Button type="submit" disabled={!groupName.trim()}>
             Create
           </Button>
         </ModalButtons>

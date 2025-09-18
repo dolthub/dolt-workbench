@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import {
-  Test, TestResult,
+  Test,
+  TestResult,
   useRunTestsLazyQuery,
   useSaveTestsMutation,
   useTestListQuery,
@@ -44,8 +45,13 @@ export function useTestList(params: RefParams) {
     await saveTestsMutation();
   }, [saveTestsMutation, tests]);
 
-  const getResults = (testResults: TestResult[]): Record<string, { status: "passed" | "failed"; error?: string }> => {
-    const results: Record<string, { status: "passed" | "failed"; error?: string }> = {};
+  const getResults = (
+    testResults: TestResult[],
+  ): Record<string, { status: "passed" | "failed"; error?: string }> => {
+    const results: Record<
+      string,
+      { status: "passed" | "failed"; error?: string }
+    > = {};
     for (const testResult of testResults) {
       if (testResult.status === "PASS") {
         results[testResult.testName] = {
@@ -59,24 +65,26 @@ export function useTestList(params: RefParams) {
       }
     }
     return results;
-  }
+  };
 
   // Initialize tests from query data
   useEffect(() => {
     if (data?.tests.list) {
-      const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
+      const initialTests = data.tests.list.map(
+        ({ __typename, ...test }) => test,
+      );
       setTests(initialTests);
-    }}, [data?.tests.list]);
+    }
+  }, [data?.tests.list]);
 
   useEffect(() => {
     if (!hasUnsavedChanges) return;
     const save = async () => {
       await handleSaveAll();
       setHasUnsavedChanges(false);
-    }
+    };
     void save();
   }, [hasUnsavedChanges, handleSaveAll]);
-
 
   useEffect(() => {
     const shouldRunTests = router.query.runTests === "true";
@@ -117,7 +125,6 @@ export function useTestList(params: RefParams) {
     data?.tests.list,
   ]);
 
-
   const toggleExpanded = (id: string) => {
     const newExpanded = new Set(expandedItems);
     if (newExpanded.has(id)) {
@@ -146,8 +153,6 @@ export function useTestList(params: RefParams) {
     );
     setHasUnsavedChanges(true);
   };
-
-
 
   const handleRunTest = async (testName: string) => {
     const result = await runTests({

@@ -1,47 +1,47 @@
 .overlay {
-    @apply fixed inset-0 bg-stone-700 bg-opacity-50 flex items-center justify-center z-50;
+  @apply fixed inset-0 bg-stone-700 bg-opacity-50 flex items-center justify-center z-50;
 }
 
 .modal {
-    @apply bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-hidden;
+  @apply bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] overflow-hidden;
 }
 
 .header {
-    @apply flex justify-between items-center p-4 border-b border-stone-300;
+  @apply flex justify-between items-center p-4 border-b border-stone-300;
 }
 
 .headerLeft {
-    @apply flex items-center gap-3;
+  @apply flex items-center gap-3;
 }
 
 .title {
-    @apply text-lg font-semibold text-stone-700 m-0;
+  @apply text-lg font-semibold text-stone-700 m-0;
 }
 
 .warningIcon {
-    @apply text-red-500 text-xl;
+  @apply text-red-500 text-xl;
 }
 
 .closeButton {
-    @apply p-1 text-stone-400 hover:text-stone-600 transition-colors bg-transparent border-none cursor-pointer rounded;
+  @apply p-1 text-stone-400 hover:text-stone-600 transition-colors bg-transparent border-none cursor-pointer rounded;
 }
 
 .body {
-    @apply p-4;
+  @apply p-4;
 }
 
 .message {
-    @apply text-stone-600 m-0 leading-relaxed;
+  @apply text-stone-600 m-0 leading-relaxed;
 }
 
 .footer {
-    @apply flex justify-end gap-3 p-4 border-t border-stone-300 bg-stone-50;
+  @apply flex justify-end gap-3 p-4 border-t border-stone-300 bg-stone-50;
 }
 
 .cancelButton {
-    @apply px-4 py-2 text-sm;
+  @apply px-4 py-2 text-sm;
 }
 
 .confirmButton {
-    @apply px-4 py-2 text-sm;
+  @apply px-4 py-2 text-sm;
 }

@@ -8,7 +8,10 @@ type Props = {
   uniqueGroups: string[];
   expandedItems: Set<string>;
   editingTestNames: Record<string, string>;
-  testResults: Record<string, { status: "passed" | "failed"; error?: string } | undefined>;
+  testResults: Record<
+    string,
+    { status: "passed" | "failed"; error?: string } | undefined
+  >;
   onToggleExpanded: (testName: string) => void;
   onUpdateTest: (testName: string, field: keyof Test, value: string) => void;
   onNameEdit: (testName: string, name: string) => void;
@@ -33,7 +36,9 @@ export default function TestItemRenderer({
   return (
     <>
       {tests.map(test => {
-        const testStatusColors = getTestStatusColors(testResults[test.testName]);
+        const testStatusColors = getTestStatusColors(
+          testResults[test.testName],
+        );
         const statusClassName = getStatusClassName(testStatusColors, {
           green: css.greenTest,
           red: css.redTest,
@@ -50,7 +55,9 @@ export default function TestItemRenderer({
             testResult={testResults[test.testName]}
             className={statusClassName}
             onToggleExpanded={() => onToggleExpanded(test.testName)}
-            onUpdateTest={(field, value) => onUpdateTest(test.testName, field, value)}
+            onUpdateTest={(field, value) =>
+              onUpdateTest(test.testName, field, value)
+            }
             onNameEdit={name => onNameEdit(test.testName, name)}
             onNameBlur={() => onNameBlur(test.testName)}
             onRunTest={async () => await onRunTest(test.testName)}
