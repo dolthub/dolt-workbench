@@ -1,5 +1,4 @@
 import TestItem from "@pageComponents/DatabasePage/ForTests/TestItem";
-import css from "./index.module.css";
 import { Test } from "@gen/graphql-types";
 
 type Props = {
@@ -34,26 +33,24 @@ export default function TestItemRenderer({
 }: Props) {
   return (
     <>
-      {tests.map(test => {
-        return (
-          <TestItem
-            key={test.testName}
-            test={test}
-            groupOptions={uniqueGroups}
-            isExpanded={expandedItems.has(test.testName)}
-            editingName={editingTestNames[test.testName]}
-            testResult={testResults[test.testName]}
-            onToggleExpanded={() => onToggleExpanded(test.testName)}
-            onUpdateTest={(field, value) =>
-              onUpdateTest(test.testName, field, value)
-            }
-            onNameEdit={name => onNameEdit(test.testName, name)}
-            onNameBlur={() => onNameBlur(test.testName)}
-            onRunTest={async () => await onRunTest(test.testName)}
-            onDeleteTest={() => onDeleteTest(test.testName)}
-          />
-        );
-      })}
+      {tests.map(test => (
+        <TestItem
+          key={test.testName}
+          test={test}
+          groupOptions={uniqueGroups}
+          isExpanded={expandedItems.has(test.testName)}
+          editingName={editingTestNames[test.testName]}
+          testResult={testResults[test.testName]}
+          onToggleExpanded={() => onToggleExpanded(test.testName)}
+          onUpdateTest={(field, value) =>
+            onUpdateTest(test.testName, field, value)
+          }
+          onNameEdit={name => onNameEdit(test.testName, name)}
+          onNameBlur={() => onNameBlur(test.testName)}
+          onRunTest={async () => await onRunTest(test.testName)}
+          onDeleteTest={() => onDeleteTest(test.testName)}
+        />
+      ))}
     </>
   );
 }
