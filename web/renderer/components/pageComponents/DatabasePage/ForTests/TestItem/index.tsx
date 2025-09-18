@@ -41,7 +41,9 @@ export default function TestItem({
   onDeleteTest,
 }: Props) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [localAssertionValue, setLocalAssertionValue] = useState(test.assertionValue);
+  const [localAssertionValue, setLocalAssertionValue] = useState(
+    test.assertionValue,
+  );
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const debouncedOnUpdateTest = useCallback(
