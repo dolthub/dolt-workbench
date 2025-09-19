@@ -5,4 +5,5 @@ export const tabs = [
   "Releases",
   "Pull Requests",
   "Remotes",
+  "Tests",
 ];

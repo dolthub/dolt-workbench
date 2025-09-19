@@ -15,6 +15,7 @@ import MergeMessageTitle from "./MergeMessageTitle";
 import ResolveModal from "./ResolveModal";
 import css from "./index.module.css";
 import useMergeButton, { MergeButtonState } from "./useMergeButton";
+import TestResultsForMergeList from "@components/TestResultsForMergeList";
 
 type Props = {
   params: PullDiffParams;
@@ -38,63 +39,68 @@ export default function Merge(props: Props) {
   const red = hasConflicts;
 
   return (
-    <div className={css.outer}>
-      <span className={cx(css.picContainer, { [css.redIcon]: red })}>
-        <FiGitPullRequest />
-      </span>
-      <Arrow red={red} green={!red} />
-      <div className={css.container}>
-        <div className={cx(css.top, { [css.red]: red })}>
-          <MergeMessageTitle hasConflicts={hasConflicts} />
-          <MergeButton
-            disabled={disabled}
-            onClick={onClick}
-            onClickWithResolve={onClickWithResolve}
-            loading={resolveState.loading}
-            err={resolveState.err}
-            params={props.params}
-            state={state}
-            setState={setState}
-          />
-          {mergeState.err && (
-            <ErrorsWithDirections
-              mergeErr={mergeState.err}
-              setShowDirections={s => setState({ showDirections: s })}
-            />
-          )}
-        </div>
-
-        <div className={cx(css.msg, { [css.msgRed]: red })}>
-          <HeaderUserCheckbox
-            shouldAddAuthor={state.addAuthor}
-            setShouldAddAuthor={a => setState({ addAuthor: a })}
-            userHeaders={userHeaders}
-            className={css.userCheckbox}
-            kind="merge commit"
-          />
-          <SmallLoader.WithText
-            text="Checking for merge conflicts..."
-            loaded={!conflictsLoading}
-            outerClassName={css.conflictsLoader}
-          />
-          {hasConflicts && (
-            <MergeConflicts
-              params={props.params}
-              conflictsSummary={pullConflictsSummary ?? undefined}
-            />
-          )}
-          <span className={css.toggle}>
-            View{" "}
-            <Button.Link
-              onClick={() =>
-                setState({ showDirections: !state.showDirections })
-              }
-            >
-              manual merge instructions
-            </Button.Link>
-            .
+    <div className={css.wrapper}>
+      <div className={css.mergeDetails}>
+        <TestResultsForMergeList params={props.params} />
+        <div className={css.outer}>
+          <span className={cx(css.picContainer, { [css.redIcon]: red })}>
+            <FiGitPullRequest />
           </span>
-          {state.showDirections && <MergeConflictsDirections {...props} />}
+          <Arrow red={red} green={!red} />
+          <div className={css.container}>
+            <div className={cx(css.top, { [css.red]: red })}>
+              <MergeMessageTitle hasConflicts={hasConflicts} />
+              <MergeButton
+                disabled={disabled}
+                onClick={onClick}
+                onClickWithResolve={onClickWithResolve}
+                loading={resolveState.loading}
+                err={resolveState.err}
+                params={props.params}
+                state={state}
+                setState={setState}
+              />
+              {mergeState.err && (
+                <ErrorsWithDirections
+                  mergeErr={mergeState.err}
+                  setShowDirections={s => setState({ showDirections: s })}
+                />
+              )}
+            </div>
+
+            <div className={cx(css.msg, { [css.msgRed]: red })}>
+              <HeaderUserCheckbox
+                shouldAddAuthor={state.addAuthor}
+                setShouldAddAuthor={a => setState({ addAuthor: a })}
+                userHeaders={userHeaders}
+                className={css.userCheckbox}
+                kind="merge commit"
+              />
+              <SmallLoader.WithText
+                text="Checking for merge conflicts..."
+                loaded={!conflictsLoading}
+                outerClassName={css.conflictsLoader}
+              />
+              {hasConflicts && (
+                <MergeConflicts
+                  params={props.params}
+                  conflictsSummary={pullConflictsSummary ?? undefined}
+                />
+              )}
+              <span className={css.toggle}>
+                View{" "}
+                <Button.Link
+                  onClick={() =>
+                    setState({ showDirections: !state.showDirections })
+                  }
+                >
+                  manual merge instructions
+                </Button.Link>
+                .
+              </span>
+              {state.showDirections && <MergeConflictsDirections {...props} />}
+            </div>
+          </div>
         </div>
       </div>
     </div>

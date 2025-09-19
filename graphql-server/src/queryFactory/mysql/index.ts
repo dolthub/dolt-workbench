@@ -1,4 +1,4 @@
-import { EntityManager, QueryRunner } from "typeorm";
+import { EntityManager, InsertResult, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
@@ -366,5 +366,17 @@ export class MySQLQueryFactory
 
   async callCreateBranchFromRemote(_: t.RemoteBranchArgs): t.PR {
     throw notDoltError("create branch from remote");
+  }
+
+  async getTests(_: t.RefArgs): t.PR {
+    throw notDoltError("get tests");
+  }
+
+  async runTests(_: t.RefArgs): t.PR {
+    throw notDoltError("run tests");
+  }
+
+  async saveTests(_: t.SaveTestsArgs): Promise<InsertResult> {
+    throw notDoltError("save tests");
   }
 }

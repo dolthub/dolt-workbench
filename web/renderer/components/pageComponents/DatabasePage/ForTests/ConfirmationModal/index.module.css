@@ -1,0 +1,7 @@
+.modalInner {
+  @apply pb-2;
+}
+
+.message {
+  @apply text-stone-600 m-0 leading-relaxed;
+}

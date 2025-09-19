@@ -68,3 +68,27 @@ export type TableRowPagination = { pkCols: string[]; offset: number };
 export type DiffRes = Promise<{ colsUnion: RawRows; diff: RawRows }>;
 export type CommitsRes = Promise<{ fromCommitId: string; toCommitId: string }>;
 export type CommitAuthor = { name: string; email: string };
+
+export type TestArgs = {
+  testName: string;
+  testGroup: string;
+  testQuery: string;
+  assertionType: string;
+  assertionComparator: string;
+  assertionValue: string;
+};
+
+export type TestListArgs = {
+  list: TestArgs[];
+};
+export type SaveTestsArgs = RefArgs & {
+  tests: TestListArgs;
+};
+
+export type TestIdentifierArgs = {
+  values: string[];
+};
+
+export type RunTestsArgs = RefArgs & {
+  identifiers?: TestIdentifierArgs;
+};
