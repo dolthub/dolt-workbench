@@ -6,7 +6,7 @@
   "version": "0.3.54",
   "main": "app/background.js",
   "author": "DoltHub",
-  "packageManager": "yarn@4.9.2",
+  "packageManager": "yarn@4.9.4",
   "scripts": {
     "build:graphql": "yarn --cwd ../graphql-server build",
     "download:dolt": "node build/downloadDolt.js",
