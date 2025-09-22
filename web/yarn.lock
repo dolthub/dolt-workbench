@@ -9614,7 +9614,7 @@ __metadata:
     commit-graph: "npm:^2.3.12"
     cssnano: "npm:^7.0.7"
     diff: "npm:^5.1.0"
-    electron: "npm:^36.3.2"
+    electron: "npm:^36.8.1"
     electron-builder: "npm:^26.0.12"
     electron-serve: "npm:^1.3.0"
     electron-store: "npm:^8.2.0"
@@ -9891,16 +9891,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^36.3.2":
-  version: 36.3.2
-  resolution: "electron@npm:36.3.2"
+"electron@npm:^36.8.1":
+  version: 36.9.1
+  resolution: "electron@npm:36.9.1"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^22.7.7"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/e3146340f1668915c1fc8857c9876e2efd63df28e4022374942f5e84a6268b39a129faf115cb84509d0ff988535b90eda9b4e0ed70657f25ad0ba3f70c0f8f76
+  checksum: 10c0/3363799641a781ddc2b622049197d90b0a5635ee5d26d5d691070dbdf494ce32b3b2ddef8f515bb0460a2c6522444e97aa8c1b61e4a3a0d60f3c0606fb5358a1
   languageName: node
   linkType: hard
 
