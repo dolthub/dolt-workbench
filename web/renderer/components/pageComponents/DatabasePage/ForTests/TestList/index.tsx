@@ -109,7 +109,7 @@ export default function TestList({ params }: Props) {
                       testCount={groupTests.length}
                       groupResult={getGroupResult(groupName)}
                       onRunGroup={async () => await handleRunGroup(groupName)}
-                      onDeleteGroup={async () => handleDeleteGroup(groupName)}
+                      onDeleteGroup={() => handleDeleteGroup(groupName)}
                       onRenameGroup={handleRenameGroup}
                       onCreateTest={group => handleCreateTest(group)}
                     />

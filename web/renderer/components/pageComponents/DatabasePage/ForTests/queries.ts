@@ -4,6 +4,9 @@ export const LIST_TESTS = gql`
   query TestList($databaseName: String!, $refName: String!) {
     tests(databaseName: $databaseName, refName: $refName) {
       list {
+        _id
+        databaseName
+        refName
         testName
         testQuery
         testGroup
@@ -16,6 +19,14 @@ export const LIST_TESTS = gql`
 `;
 
 export const SAVE_TESTS = gql`
+  fragment TestFragment on Test {
+    testName
+    testGroup
+    testQuery
+    assertionType
+    assertionComparator
+    assertionValue
+  }
   mutation SaveTests(
     $databaseName: String!
     $refName: String!
@@ -38,14 +49,17 @@ export const RUN_TESTS = gql`
   query RunTests(
     $databaseName: String!
     $refName: String!
-    $identifiers: TestIdentifierArgs
+    $testIdentifier: TestIdentifierArgs
   ) {
     runTests(
       databaseName: $databaseName
       refName: $refName
-      identifiers: $identifiers
+      testIdentifier: $testIdentifier
     ) {
       list {
+        _id
+        databaseName
+        refName
         testName
         testGroupName
         query

@@ -19,6 +19,8 @@ import {
 
 @InputType()
 class TestArgs {
+
+  @Field()
   @Field()
   testName: string;
 
@@ -52,14 +54,17 @@ class SaveTestsArgs extends RefArgs {
 
 @InputType()
 class TestIdentifierArgs {
-  @Field(_type => [String])
-  values: string[];
+  @Field({ nullable: true })
+  testName?: string;
+
+  @Field({ nullable: true })
+  groupName?: string;
 }
 
 @ArgsType()
 class RunTestsArgs extends RefArgs {
   @Field({ nullable: true })
-  identifiers?: TestIdentifierArgs;
+  testIdentifier?: TestIdentifierArgs;
 }
 
 @Resolver(_of => Test)
@@ -71,16 +76,16 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.getTests(args);
     return {
-      list: res.map(t => fromDoltTestRowRes(t)),
+      list: res.map(t => fromDoltTestRowRes(args.databaseName, args.refName, t)),
     };
   }
 
   @Query(_returns => TestResultList)
-  async runTests(@Args() args: RunTestsArgs) {
+  async runTests(@Args() args: RunTestsArgs): Promise<TestResultList> {
     const conn = this.conn.connection();
     const res = await conn.runTests(args);
     return {
-      list: res.map(t => fromDoltTestResultRowRes(t)),
+      list: res.map(t => fromDoltTestResultRowRes(args.databaseName, args.refName, t)),
     };
   }
 
@@ -89,7 +94,7 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.saveTests(args);
     return {
-      list: res.generatedMaps.map(t => fromDoltTestRowRes(t)),
+      list: res.generatedMaps.map(t => fromDoltTestRowRes(args.databaseName, args.refName, t)),
     };
   }
 }

@@ -340,6 +340,9 @@ type TagList {
 }
 
 type Test {
+  _id: ID!
+  databaseName: String!
+  refName: String!
   testName: String!
   testGroup: String!
   testQuery: String!
@@ -353,6 +356,9 @@ type TestList {
 }
 
 type TestResult {
+  _id: ID!
+  databaseName: String!
+  refName: String!
   testName: String!
   testGroupName: String
   query: String!
@@ -404,7 +410,7 @@ type Query {
   tags(databaseName: String!): TagList!
   tag(databaseName: String!, tagName: String!): Tag
   tests(databaseName: String!, refName: String!): TestList!
-  runTests(refName: String!, databaseName: String!, identifiers: TestIdentifierArgs): TestResultList!
+  runTests(refName: String!, databaseName: String!, testIdentifier: TestIdentifierArgs): TestResultList!
 }
 
 enum SortBranchesBy {
@@ -433,7 +439,8 @@ enum DiffRowType {
 }
 
 input TestIdentifierArgs {
-  values: [String!]!
+  testName: String
+  groupName: String
 }
 
 type Mutation {

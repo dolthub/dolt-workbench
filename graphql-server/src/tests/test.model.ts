@@ -1,9 +1,18 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
 import { ObjectLiteral } from "typeorm";
 
 @ObjectType()
 export class Test {
+  @Field(_type => ID)
+  _id: string;
+
+  @Field()
+  databaseName: string;
+
+  @Field()
+  refName: string;
+
   @Field()
   testName: string;
 
@@ -31,11 +40,20 @@ export class TestList {
 
 @ObjectType()
 export class TestResult {
+  @Field(_type => ID)
+  _id: string;
+
+  @Field()
+  databaseName: string;
+
+  @Field()
+  refName: string;
+
   @Field()
   testName: string;
 
   @Field({ nullable: true })
-  testGroupName: string;
+  testGroupName?: string;
 
   @Field()
   query: string;
@@ -53,8 +71,11 @@ export class TestResultList {
   list: TestResult[];
 }
 
-export function fromDoltTestRowRes(test: RawRow | ObjectLiteral): Test {
+export function fromDoltTestRowRes(databaseName: string, refName: string, test: RawRow | ObjectLiteral): Test {
   return {
+    _id: `databases/${databaseName}/refs/${refName}/tests/${test.test_name}`,
+    databaseName: databaseName,
+    refName: refName,
     testName: test.test_name,
     testGroup: test.test_group,
     testQuery: test.test_query,
@@ -64,8 +85,11 @@ export function fromDoltTestRowRes(test: RawRow | ObjectLiteral): Test {
   };
 }
 
-export function fromDoltTestResultRowRes(testResult: RawRow): TestResult {
+export function fromDoltTestResultRowRes(databaseName: string, refName: string, testResult: RawRow): TestResult {
   return {
+    _id: `databases/${databaseName}/refs/${refName}/testResults/${testResult.test_name}`,
+    databaseName: databaseName,
+    refName: refName,
     testName: testResult.test_name,
     testGroupName: testResult.test_group_name,
     query: testResult.query,

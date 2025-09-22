@@ -36,7 +36,7 @@ export function useTestList(params: RefParams) {
     variables: {
       databaseName: params.databaseName,
       refName: params.refName,
-      tests: { list: tests },
+      tests: { list: tests.map(({ _id, databaseName: _databaseName, refName: _refName, ...test }) => test) },
     },
   });
 
@@ -165,9 +165,9 @@ export function useTestList(params: RefParams) {
       variables: {
         databaseName: params.databaseName,
         refName: params.refName,
-        identifiers: {
-          values: [testName],
-        },
+        testIdentifier: {
+          testName,
+        }
       },
     });
 
@@ -192,9 +192,9 @@ export function useTestList(params: RefParams) {
       variables: {
         databaseName: params.databaseName,
         refName: params.refName,
-        identifiers: {
-          values: [groupName],
-        },
+        testIdentifier: {
+          groupName,
+        }
       },
     });
     result.data?.runTests.list.map(test =>
@@ -302,6 +302,9 @@ export function useTestList(params: RefParams) {
       assertionComparator: "==",
       assertionValue: "",
       testGroup: groupName ?? "",
+      _id: "",
+      databaseName: params.databaseName,
+      refName: params.refName,
     };
 
     setTests([...tests, newTest]);

@@ -694,8 +694,8 @@ export type QueryRowsArgs = {
 
 export type QueryRunTestsArgs = {
   databaseName: Scalars['String']['input'];
-  identifiers?: InputMaybe<TestIdentifierArgs>;
   refName: Scalars['String']['input'];
+  testIdentifier?: InputMaybe<TestIdentifierArgs>;
 };
 
 
@@ -939,9 +939,12 @@ export type TagList = {
 
 export type Test = {
   __typename?: 'Test';
+  _id: Scalars['ID']['output'];
   assertionComparator: Scalars['String']['output'];
   assertionType: Scalars['String']['output'];
   assertionValue: Scalars['String']['output'];
+  databaseName: Scalars['String']['output'];
+  refName: Scalars['String']['output'];
   testGroup: Scalars['String']['output'];
   testName: Scalars['String']['output'];
   testQuery: Scalars['String']['output'];
@@ -957,7 +960,8 @@ export type TestArgs = {
 };
 
 export type TestIdentifierArgs = {
-  values: Array<Scalars['String']['input']>;
+  groupName?: InputMaybe<Scalars['String']['input']>;
+  testName?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type TestList = {
@@ -971,8 +975,11 @@ export type TestListArgs = {
 
 export type TestResult = {
   __typename?: 'TestResult';
+  _id: Scalars['ID']['output'];
+  databaseName: Scalars['String']['output'];
   message: Scalars['String']['output'];
   query: Scalars['String']['output'];
+  refName: Scalars['String']['output'];
   status: Scalars['String']['output'];
   testGroupName?: Maybe<Scalars['String']['output']>;
   testName: Scalars['String']['output'];
@@ -1584,7 +1591,7 @@ export type TestListQueryVariables = Exact<{
 }>;
 
 
-export type TestListQuery = { __typename?: 'Query', tests: { __typename?: 'TestList', list: Array<{ __typename?: 'Test', testName: string, testQuery: string, testGroup: string, assertionType: string, assertionComparator: string, assertionValue: string }> } };
+export type TestListQuery = { __typename?: 'Query', tests: { __typename?: 'TestList', list: Array<{ __typename?: 'Test', _id: string, databaseName: string, refName: string, testName: string, testQuery: string, testGroup: string, assertionType: string, assertionComparator: string, assertionValue: string }> } };
 
 export type SaveTestsMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1598,11 +1605,11 @@ export type SaveTestsMutation = { __typename?: 'Mutation', saveTests: { __typena
 export type RunTestsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
-  identifiers?: InputMaybe<TestIdentifierArgs>;
+  testIdentifier?: InputMaybe<TestIdentifierArgs>;
 }>;
 
 
-export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', testName: string, testGroupName?: string | null, query: string, status: string, message: string }> } };
+export type RunTestsQuery = { __typename?: 'Query', runTests: { __typename?: 'TestResultList', list: Array<{ __typename?: 'TestResult', _id: string, databaseName: string, refName: string, testName: string, testGroupName?: string | null, query: string, status: string, message: string }> } };
 
 export type LoadDataMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -4561,6 +4568,9 @@ export const TestListDocument = gql`
     query TestList($databaseName: String!, $refName: String!) {
   tests(databaseName: $databaseName, refName: $refName) {
     list {
+      _id
+      databaseName
+      refName
       testName
       testQuery
       testGroup
@@ -4648,13 +4658,16 @@ export type SaveTestsMutationHookResult = ReturnType<typeof useSaveTestsMutation
 export type SaveTestsMutationResult = Apollo.MutationResult<SaveTestsMutation>;
 export type SaveTestsMutationOptions = Apollo.BaseMutationOptions<SaveTestsMutation, SaveTestsMutationVariables>;
 export const RunTestsDocument = gql`
-    query RunTests($databaseName: String!, $refName: String!, $identifiers: TestIdentifierArgs) {
+    query RunTests($databaseName: String!, $refName: String!, $testIdentifier: TestIdentifierArgs) {
   runTests(
     databaseName: $databaseName
     refName: $refName
-    identifiers: $identifiers
+    testIdentifier: $testIdentifier
   ) {
     list {
+      _id
+      databaseName
+      refName
       testName
       testGroupName
       query
@@ -4679,7 +4692,7 @@ export const RunTestsDocument = gql`
  *   variables: {
  *      databaseName: // value for 'databaseName'
  *      refName: // value for 'refName'
- *      identifiers: // value for 'identifiers'
+ *      testIdentifier: // value for 'testIdentifier'
  *   },
  * });
  */

@@ -86,9 +86,10 @@ export type SaveTestsArgs = RefArgs & {
 };
 
 export type TestIdentifierArgs = {
-  values: string[];
+  testName?: string;
+  groupName?: string;
 };
 
 export type RunTestsArgs = RefArgs & {
-  identifiers?: TestIdentifierArgs;
+  testIdentifier?: TestIdentifierArgs;
 };

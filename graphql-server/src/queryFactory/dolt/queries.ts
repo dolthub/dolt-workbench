@@ -1,5 +1,5 @@
 import { SortBranchesBy } from "../../branches/branch.enum";
-import { RawRows } from "../types";
+import { RawRows, TestIdentifierArgs } from "../types";
 
 // TABLE
 
@@ -182,7 +182,5 @@ export const callCheckoutTable = `CALL DOLT_CHECKOUT(?)`;
 
 export const callDoltClone = `CALL DOLT_CLONE(?,?)`;
 
-export const doltTestRun = (argCount: number) => {
-  const placeholders = Array.from({ length: argCount }, () => `?`).join(", ");
-  return `SELECT * FROM DOLT_TEST_RUN(${placeholders})`;
-};
+export const doltTestRun = (withArg?: boolean): string =>
+  `SELECT * FROM DOLT_TEST_RUN(${withArg ? "?" : ""})`;
