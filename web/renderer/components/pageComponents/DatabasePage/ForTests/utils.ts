@@ -42,7 +42,7 @@ export function groupTests(
 
 export function sortGroupEntries(
   groupedTests: Record<string, Test[]>,
-): [string, Test[]][] {
+): Array<[string, Test[]]> {
   const entries = Object.entries(groupedTests);
   const groupOrder = entries.map(entry => entry[0]);
 

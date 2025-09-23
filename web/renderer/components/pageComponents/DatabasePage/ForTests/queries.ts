@@ -19,14 +19,6 @@ export const LIST_TESTS = gql`
 `;
 
 export const SAVE_TESTS = gql`
-  fragment TestFragment on Test {
-    testName
-    testGroup
-    testQuery
-    assertionType
-    assertionComparator
-    assertionValue
-  }
   mutation SaveTests(
     $databaseName: String!
     $refName: String!

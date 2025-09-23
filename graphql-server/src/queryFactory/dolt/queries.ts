@@ -1,5 +1,5 @@
 import { SortBranchesBy } from "../../branches/branch.enum";
-import { RawRows, TestIdentifierArgs } from "../types";
+import { RawRows } from "../types";
 
 // TABLE
 
