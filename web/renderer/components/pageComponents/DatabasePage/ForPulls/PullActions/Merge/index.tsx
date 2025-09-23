@@ -46,12 +46,13 @@ export default function Merge(props: Props) {
     mergeState,
     resolveState,
   } = useMergeButton(props.params);
+  const { isPostgres } = useDatabaseDetails();
   const red = hasConflicts;
 
   return (
     <div className={css.wrapper}>
       <div className={css.mergeDetails}>
-        <TestResults params={props.params} />
+        {!isPostgres && <TestResults params={props.params} />}
         <div className={css.outer}>
           <span className={cx(css.picContainer, { [css.redIcon]: red })}>
             <FiGitPullRequest />
