@@ -141,9 +141,9 @@ export default function TestGroup({ group, className }: Props) {
             onFocus={() => setIsEditing(true)}
             onClick={e => e.stopPropagation()}
           />
-          <span
-            className={css.testCount}
-          >{testCount} {pluralize(testCount, "test")}</span>
+          <span className={css.testCount}>
+            {testCount} {pluralize(testCount, "test")}
+          </span>
         </div>
         <div className={css.groupHeaderRight}>
           {groupResult && (

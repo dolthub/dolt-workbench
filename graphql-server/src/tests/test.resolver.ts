@@ -20,7 +20,6 @@ import {
 @InputType()
 class TestArgs {
   @Field()
-  @Field()
   testName: string;
 
   @Field()

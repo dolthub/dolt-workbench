@@ -75,9 +75,7 @@ export function TestProvider({ children, params }: Props) {
 
   useEffect(() => {
     if (!data?.tests.list) return;
-    const initialTests = data.tests.list.map(
-      ({ __typename, ...test }) => test,
-    );
+    const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
     setState({ tests: initialTests });
   }, [data?.tests.list, setState]);
 
