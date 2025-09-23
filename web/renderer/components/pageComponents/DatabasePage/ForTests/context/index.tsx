@@ -256,17 +256,6 @@ export function TestProvider({ children, params }: Props) {
           return;
         }
 
-        result.data?.runTests.list.map(test =>
-          test.status === "PASS"
-            ? {
-                status: "passed",
-              }
-            : {
-                status: "failed",
-                error: test.message,
-              },
-        );
-
         const testResultsList =
           result.data && result.data.runTests.list.length > 0
             ? result.data.runTests.list
