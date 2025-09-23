@@ -74,12 +74,11 @@ export function TestProvider({ children, params }: Props) {
   }, [testsError]);
 
   useEffect(() => {
-    if (data?.tests.list) {
-      const initialTests = data.tests.list.map(
-        ({ __typename, ...test }) => test,
-      );
-      setState({ tests: initialTests });
-    }
+    if (!data?.tests.list) return;
+    const initialTests = data.tests.list.map(
+      ({ __typename, ...test }) => test,
+    );
+    setState({ tests: initialTests });
   }, [data?.tests.list, setState]);
 
   useEffect(() => {
