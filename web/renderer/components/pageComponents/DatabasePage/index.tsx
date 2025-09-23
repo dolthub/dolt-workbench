@@ -14,7 +14,7 @@ import ForRemotes from "./ForRemotes";
 import ForSchema from "./ForSchema";
 import ForTable from "./ForTable";
 import DatabasePage from "./component";
-import ForTests from "@pageComponents/DatabasePage/ForTests";
+import ForTests from "./ForTests";
 
 export default Object.assign(DatabasePage, {
   ForBranches,
