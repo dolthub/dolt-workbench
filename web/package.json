@@ -3,7 +3,7 @@
   "name": "dolt-workbench",
   "description": "SQL workbench for MySQL and PostgreSQL databases",
   "homepage": "https://github.com/dolthub/dolt-workbench",
-  "version": "0.3.54",
+  "version": "0.3.55",
   "main": "app/background.js",
   "author": "DoltHub",
   "packageManager": "yarn@4.9.4",
