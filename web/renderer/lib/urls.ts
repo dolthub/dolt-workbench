@@ -103,6 +103,9 @@ function getDiffRange(p: ps.DiffParams): string {
 export const releases = (p: ps.OptionalRefParams): Route =>
   database(p).addStatic("releases").withQuery({ refName: p.refName });
 
+export const tests = (p: ps.RefParams): Route =>
+  database(p).addStatic("tests").addDynamic("refName", p.refName, ENCODE);
+
 export const remotes = (p: ps.OptionalRefParams): Route =>
   database(p).addStatic("remotes").withQuery({ refName: p.refName });
 
@@ -157,3 +160,9 @@ export const uploadStage = (
     .addDynamic("stage", p.stage)
     .withQuery(q);
 };
+
+export const workingDiff = (p: ps.RefParams): Route =>
+  database(p)
+    .addStatic("compare")
+    .addDynamic("refName", p.refName, ENCODE)
+    .addStatic("STAGED..WORKING");

@@ -9,6 +9,7 @@ const editableSystemTables = [
   "dolt_query_catalog",
   "dolt_branches",
   "dolt_docs",
+  "dolt_tests",
 ];
 
 export function isUneditableDoltSystemTable(t: Maybe<string>): boolean {

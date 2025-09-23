@@ -16,6 +16,7 @@ import * as t from "../types";
 import * as dem from "./doltEntityManager";
 import * as qh from "./queries";
 import { getAuthorString, handleRefNotFound, unionCols } from "./utils";
+import { InsertResult } from "typeorm";
 
 export class DoltQueryFactory
   extends MySQLQueryFactory
@@ -582,6 +583,38 @@ export class DoltQueryFactory
   async callDoltClone(args: t.CloneArgs): Promise<void> {
     return this.handleAsyncQuery(async qr =>
       qr.query(qh.callDoltClone, [args.remoteDbPath, args.databaseName]),
+    );
+  }
+
+  async getTests(args: t.RefArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltTests(em),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async runTests(args: t.RunTestsArgs): t.PR {
+    const withTestIdentifierArg =
+      args.testIdentifier &&
+      (args.testIdentifier.testName !== undefined ||
+        args.testIdentifier.groupName !== undefined);
+
+    return this.query(
+      qh.doltTestRun(withTestIdentifierArg),
+      withTestIdentifierArg
+        ? [args.testIdentifier?.testName ?? args.testIdentifier?.groupName]
+        : undefined,
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async saveTests(args: t.SaveTestsArgs): Promise<InsertResult> {
+    return this.queryForBuilder(
+      async em => dem.saveDoltTests(em, args.tests.list),
+      args.databaseName,
+      args.refName,
     );
   }
 }

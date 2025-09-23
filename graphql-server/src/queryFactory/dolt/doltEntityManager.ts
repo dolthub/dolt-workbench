@@ -1,4 +1,4 @@
-import { EntityManager } from "typeorm";
+import { EntityManager, InsertResult } from "typeorm";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { DoltSystemTable } from "../../systemTables/systemTable.enums";
@@ -6,6 +6,7 @@ import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import { getOrderByColForBranches } from "./queries";
+import { TestArgs } from "../types";
 
 export async function getDoltSchemas(
   em: EntityManager,
@@ -183,4 +184,43 @@ export async function getDoltRemotesPaginated(
     .offset(args.offset)
     .limit(ROW_LIMIT + 1)
     .getRawMany();
+}
+
+export async function getDoltTests(em: EntityManager): t.PR {
+  return em
+    .createQueryBuilder()
+    .select("*")
+    .from("dolt_tests", "")
+    .getRawMany();
+}
+
+export async function saveDoltTests(
+  em: EntityManager,
+  tests: TestArgs[],
+): Promise<InsertResult> {
+  return em.transaction(async transactionalEntityManager => {
+    await transactionalEntityManager
+      .createQueryBuilder()
+      .delete()
+      .from("dolt_tests")
+      .execute();
+
+    return transactionalEntityManager
+      .createQueryBuilder()
+      .insert()
+      .into("dolt_tests")
+      .values(
+        tests.map(t => {
+          return {
+            test_name: t.testName,
+            test_group: t.testGroup,
+            test_query: t.testQuery,
+            assertion_type: t.assertionType,
+            assertion_comparator: t.assertionComparator,
+            assertion_value: t.assertionValue,
+          };
+        }),
+      )
+      .execute();
+  });
 }

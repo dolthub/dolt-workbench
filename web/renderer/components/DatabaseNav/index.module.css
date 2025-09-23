@@ -17,7 +17,7 @@
   }
 
   li {
-    @apply min-w-[150px];
+    @apply min-w-[130px];
   }
 
   @screen lg {

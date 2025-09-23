@@ -1,4 +1,4 @@
-import { QueryRunner } from "typeorm";
+import { InsertResult, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import * as column from "../../columns/column.model";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
@@ -557,6 +557,38 @@ export class DoltgresQueryFactory
       qh.callCreateBranchFromRemote,
       [args.branchName, `${args.remoteName}/${args.branchName}`],
       args.databaseName,
+    );
+  }
+
+  async getTests(args: t.RefArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltTests(em),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async runTests(args: t.RunTestsArgs): t.PR {
+    const withTestIdentifierArg =
+      args.testIdentifier &&
+      (args.testIdentifier.testName !== undefined ||
+        args.testIdentifier.groupName !== undefined);
+
+    return this.query(
+      qh.doltTestRun(withTestIdentifierArg),
+      withTestIdentifierArg
+        ? [args.testIdentifier?.testName ?? args.testIdentifier?.groupName]
+        : undefined,
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async saveTests(args: t.SaveTestsArgs): Promise<InsertResult> {
+    return this.queryForBuilder(
+      async em => dem.saveDoltTests(em, args.tests.list),
+      args.databaseName,
+      args.refName,
     );
   }
 }

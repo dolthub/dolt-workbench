@@ -192,3 +192,6 @@ export const callPushRemote = `SELECT DOLT_PUSH($1::text, $2::text)`;
 export const callFetchRemote = `SELECT DOLT_FETCH($1::text)`;
 
 export const callCreateBranchFromRemote = `CALL DOLT_BRANCH($1::text, $2::text)`;
+
+export const doltTestRun = (withArg?: boolean): string =>
+  `SELECT * FROM DOLT_TEST_RUN(${withArg ? "$1::text" : ""})`;

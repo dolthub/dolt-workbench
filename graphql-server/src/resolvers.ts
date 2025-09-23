@@ -16,6 +16,7 @@ import { StatusResolver } from "./status/status.resolver";
 import { TableResolver } from "./tables/table.resolver";
 import { FileUploadResolver } from "./tables/upload.resolver";
 import { TagResolver } from "./tags/tag.resolver";
+import { TestResolver } from "./tests/test.resolver";
 
 const resolvers = [
   BranchResolver,
@@ -36,6 +37,7 @@ const resolvers = [
   StatusResolver,
   TableResolver,
   TagResolver,
+  TestResolver,
 ];
 
 export default resolvers;
