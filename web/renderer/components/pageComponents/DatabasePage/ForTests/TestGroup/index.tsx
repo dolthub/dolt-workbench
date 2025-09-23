@@ -143,7 +143,7 @@ export default function TestGroup({ group, className }: Props) {
           />
           <span
             className={css.testCount}
-          >{`${testCount} ${pluralize(testCount, "test")}`}</span>
+          >{testCount} {pluralize(testCount, "test")}</span>
         </div>
         <div className={css.groupHeaderRight}>
           {groupResult && (
