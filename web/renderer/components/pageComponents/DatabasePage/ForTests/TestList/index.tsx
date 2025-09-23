@@ -60,12 +60,8 @@ export default function TestList({ params }: Props) {
     }
   };
 
-  const getTestItems = (testItems: Test[]) => testItems.map(test => (
-    <TestItem
-      key={test.testName}
-      test={test}
-    />
-  ))
+  const getTestItems = (testItems: Test[]) =>
+    testItems.map(test => <TestItem key={test.testName} test={test} />);
   return (
     <div className={css.container}>
       <div className={css.top}>
@@ -108,9 +104,7 @@ export default function TestList({ params }: Props) {
                 const isGroupExpanded = expandedGroups.has(groupName);
                 return (
                   <div key={groupName} className={css.groupedTests}>
-                    <TestGroup
-                      group={groupName}
-                    />
+                    <TestGroup group={groupName} />
                     {isGroupExpanded && (
                       <ol className={css.groupedList}>
                         {getTestItems(groupTests)}

@@ -71,7 +71,11 @@ export class TestResultList {
   list: TestResult[];
 }
 
-export function fromDoltTestRowRes(databaseName: string, refName: string, test: RawRow | ObjectLiteral): Test {
+export function fromDoltTestRowRes(
+  databaseName: string,
+  refName: string,
+  test: RawRow | ObjectLiteral,
+): Test {
   return {
     _id: `databases/${databaseName}/refs/${refName}/tests/${test.test_name}`,
     databaseName: databaseName,
@@ -85,7 +89,11 @@ export function fromDoltTestRowRes(databaseName: string, refName: string, test: 
   };
 }
 
-export function fromDoltTestResultRowRes(databaseName: string, refName: string, testResult: RawRow): TestResult {
+export function fromDoltTestResultRowRes(
+  databaseName: string,
+  refName: string,
+  testResult: RawRow,
+): TestResult {
   return {
     _id: `databases/${databaseName}/refs/${refName}/testResults/${testResult.test_name}`,
     databaseName: databaseName,

@@ -595,11 +595,16 @@ export class DoltQueryFactory
   }
 
   async runTests(args: t.RunTestsArgs): t.PR {
-    const withTestIdentifierArg = args.testIdentifier && (args.testIdentifier.testName !== undefined || args.testIdentifier.groupName !== undefined);
+    const withTestIdentifierArg =
+      args.testIdentifier &&
+      (args.testIdentifier.testName !== undefined ||
+        args.testIdentifier.groupName !== undefined);
 
     return this.query(
       qh.doltTestRun(withTestIdentifierArg),
-      withTestIdentifierArg ? [args.testIdentifier?.testName ?? args.testIdentifier?.groupName] : undefined,
+      withTestIdentifierArg
+        ? [args.testIdentifier?.testName ?? args.testIdentifier?.groupName]
+        : undefined,
       args.databaseName,
       args.refName,
     );

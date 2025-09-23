@@ -22,7 +22,10 @@ export function getResults(
   return results;
 }
 
-export function groupTests(tests: Test[], emptyGroups: Set<string>): Record<string, Test[]> {
+export function groupTests(
+  tests: Test[],
+  emptyGroups: Set<string>,
+): Record<string, Test[]> {
   const groups: Record<string, Test[]> = {};
   tests.forEach(test => {
     const groupName = test.testGroup || "";
@@ -37,7 +40,9 @@ export function groupTests(tests: Test[], emptyGroups: Set<string>): Record<stri
   return groups;
 }
 
-export function sortGroupEntries(groupedTests: Record<string, Test[]>): [string, Test[]][] {
+export function sortGroupEntries(
+  groupedTests: Record<string, Test[]>,
+): [string, Test[]][] {
   const entries = Object.entries(groupedTests);
   const groupOrder = entries.map(entry => entry[0]);
 
@@ -64,7 +69,10 @@ export function sortGroupEntries(groupedTests: Record<string, Test[]>): [string,
 export function getGroupResult(
   groupName: string,
   groupedTests: Record<string, Test[]>,
-  testResults: Record<string, { status: "passed" | "failed"; error?: string } | undefined>
+  testResults: Record<
+    string,
+    { status: "passed" | "failed"; error?: string } | undefined
+  >,
 ): "passed" | "failed" | undefined {
   const groupTests = groupedTests[groupName];
   if (groupTests.length === 0) return undefined;

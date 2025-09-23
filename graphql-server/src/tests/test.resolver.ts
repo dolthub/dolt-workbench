@@ -19,7 +19,6 @@ import {
 
 @InputType()
 class TestArgs {
-
   @Field()
   @Field()
   testName: string;
@@ -76,7 +75,9 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.getTests(args);
     return {
-      list: res.map(t => fromDoltTestRowRes(args.databaseName, args.refName, t)),
+      list: res.map(t =>
+        fromDoltTestRowRes(args.databaseName, args.refName, t),
+      ),
     };
   }
 
@@ -85,7 +86,9 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.runTests(args);
     return {
-      list: res.map(t => fromDoltTestResultRowRes(args.databaseName, args.refName, t)),
+      list: res.map(t =>
+        fromDoltTestResultRowRes(args.databaseName, args.refName, t),
+      ),
     };
   }
 
@@ -94,7 +97,9 @@ export class TestResolver {
     const conn = this.conn.connection();
     const res = await conn.saveTests(args);
     return {
-      list: res.generatedMaps.map(t => fromDoltTestRowRes(args.databaseName, args.refName, t)),
+      list: res.generatedMaps.map(t =>
+        fromDoltTestRowRes(args.databaseName, args.refName, t),
+      ),
     };
   }
 }

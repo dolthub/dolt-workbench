@@ -17,10 +17,7 @@ type Props = {
   className?: string;
 };
 
-export default function TestItem({
-  test,
-  className,
-}: Props) {
+export default function TestItem({ test, className }: Props) {
   const {
     expandedItems,
     editingTestNames,
@@ -38,14 +35,17 @@ export default function TestItem({
   );
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const updateTest = useCallback((name: string, field: keyof Test, value: string) => {
-    setState({
-      tests: tests.map((test: Test) =>
-        test.testName === name ? { ...test, [field]: value } : test,
-      ),
-      hasUnsavedChanges: true,
-    });
-  }, [tests, setState]);
+  const updateTest = useCallback(
+    (name: string, field: keyof Test, value: string) => {
+      setState({
+        tests: tests.map((test: Test) =>
+          test.testName === name ? { ...test, [field]: value } : test,
+        ),
+        hasUnsavedChanges: true,
+      });
+    },
+    [tests, setState],
+  );
 
   const handleDeleteTest = (testName: string) => {
     const newExpandedItems = new Set(expandedItems);
@@ -75,7 +75,7 @@ export default function TestItem({
     const newEditingTestNames = { ...editingTestNames };
     delete newEditingTestNames[testName];
     setState({ editingTestNames: newEditingTestNames });
-  }
+  };
 
   const groupOptions = sortedGroupEntries
     .map(entry => entry[0])
@@ -84,16 +84,14 @@ export default function TestItem({
   const editingName = editingTestNames[test.testName];
   const testResult = testResults[test.testName];
 
-  const debouncedOnUpdateTest = (
-    (field: keyof Test, value: string) => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-      debounceRef.current = setTimeout(() => {
-        updateTest(test.testName, field, value);
-      }, 500); // 500ms debounce
+  const debouncedOnUpdateTest = (field: keyof Test, value: string) => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
     }
-  );
+    debounceRef.current = setTimeout(() => {
+      updateTest(test.testName, field, value);
+    }, 500); // 500ms debounce
+  };
 
   useEffect(
     () => () => {
@@ -138,7 +136,10 @@ export default function TestItem({
       )}
       data-test-name={test.testName}
     >
-      <div className={css.itemTop} onClick={() => toggleExpanded(test.testName)}>
+      <div
+        className={css.itemTop}
+        onClick={() => toggleExpanded(test.testName)}
+      >
         <div className={css.testName}>
           <FaChevronRight className={css.expandIcon} />
           <input
@@ -217,7 +218,9 @@ export default function TestItem({
                   }),
               ]}
               val={test.testGroup || ""}
-              onChangeValue={value => updateTest(test.testName, "testGroup", value || "")}
+              onChangeValue={value =>
+                updateTest(test.testName, "testGroup", value || "")
+              }
             />
           </div>
           <div className={css.fieldGroup}>

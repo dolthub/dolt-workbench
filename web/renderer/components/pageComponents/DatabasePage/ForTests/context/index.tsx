@@ -10,7 +10,7 @@ import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode, useMemo, useEffect, useRef, useCallback } from "react";
 import { TestContextType, defaultState } from "./state";
-import { getResults, groupTests, sortGroupEntries  } from "../utils";
+import { getResults, groupTests, sortGroupEntries } from "../utils";
 
 export const TestContext = createCustomContext<TestContextType>("TestContext");
 
@@ -28,16 +28,19 @@ export function TestProvider({ children, params }: Props) {
     },
   });
 
-  const [{
-    expandedItems,
-    expandedGroups,
-    editingTestNames,
-    hasUnsavedChanges,
-    tests,
-    emptyGroups,
-    testResults,
-    hasHandledHash,
-  }, setState] = useSetState(defaultState);
+  const [
+    {
+      expandedItems,
+      expandedGroups,
+      editingTestNames,
+      hasUnsavedChanges,
+      tests,
+      emptyGroups,
+      testResults,
+      hasHandledHash,
+    },
+    setState,
+  ] = useSetState(defaultState);
 
   const [runTests] = useRunTestsLazyQuery();
   const autoRunExecutedRef = useRef(false);
@@ -46,7 +49,12 @@ export function TestProvider({ children, params }: Props) {
     variables: {
       databaseName: params.databaseName,
       refName: params.refName,
-      tests: { list: tests.map(({ _id, databaseName: _databaseName, refName: _refName, ...test }) => test) },
+      tests: {
+        list: tests.map(
+          ({ _id, databaseName: _databaseName, refName: _refName, ...test }) =>
+            test,
+        ),
+      },
     },
   });
 
@@ -54,7 +62,6 @@ export function TestProvider({ children, params }: Props) {
     console.log("Saving all changes:", tests);
     await saveTestsMutation();
   }, [saveTestsMutation, tests]);
-
 
   // Initialize tests from query data
   useEffect(() => {
@@ -141,68 +148,75 @@ export function TestProvider({ children, params }: Props) {
     [expandedGroups, setState],
   );
 
-
-  const handleRunTest = useCallback(async (testName: string) => {
-    const result = await runTests({
-      variables: {
-        databaseName: params.databaseName,
-        refName: params.refName,
-        testIdentifier: {
-          testName,
-        }
-      },
-    });
-
-    const testPassed =
-      result.data &&
-      result.data.runTests.list.length > 0 &&
-      result.data.runTests.list[0].status === "PASS";
-
-    setState({
-      testResults: {
-        ...testResults,
-        [testName]: {
-          status: testPassed ? "passed" : "failed",
-          error: testPassed ? undefined : result.data?.runTests.list[0].message,
-        },
-      },
-    });
-  }, [runTests, params.databaseName, params.refName, testResults, setState]);
-
-  const handleRunGroup = useCallback(async (groupName: string) => {
-    const result = await runTests({
-      variables: {
-        databaseName: params.databaseName,
-        refName: params.refName,
-        testIdentifier: {
-          groupName,
-        }
-      },
-    });
-    result.data?.runTests.list.map(test =>
-      test.status === "PASS"
-        ? {
-            status: "passed",
-          }
-        : {
-            status: "failed",
-            error: test.message,
+  const handleRunTest = useCallback(
+    async (testName: string) => {
+      const result = await runTests({
+        variables: {
+          databaseName: params.databaseName,
+          refName: params.refName,
+          testIdentifier: {
+            testName,
           },
-    );
+        },
+      });
 
-    const testResultsList =
-      result.data && result.data.runTests.list.length > 0
-        ? result.data.runTests.list
-        : [];
-    const groupResults = getResults(testResultsList);
+      const testPassed =
+        result.data &&
+        result.data.runTests.list.length > 0 &&
+        result.data.runTests.list[0].status === "PASS";
 
-    setState({
-      testResults: {
-        ...testResults,
-        ...groupResults,
-      },
-    });
-  }, [runTests, params.databaseName, params.refName, testResults, setState]);
+      setState({
+        testResults: {
+          ...testResults,
+          [testName]: {
+            status: testPassed ? "passed" : "failed",
+            error: testPassed
+              ? undefined
+              : result.data?.runTests.list[0].message,
+          },
+        },
+      });
+    },
+    [runTests, params.databaseName, params.refName, testResults, setState],
+  );
+
+  const handleRunGroup = useCallback(
+    async (groupName: string) => {
+      const result = await runTests({
+        variables: {
+          databaseName: params.databaseName,
+          refName: params.refName,
+          testIdentifier: {
+            groupName,
+          },
+        },
+      });
+      result.data?.runTests.list.map(test =>
+        test.status === "PASS"
+          ? {
+              status: "passed",
+            }
+          : {
+              status: "failed",
+              error: test.message,
+            },
+      );
+
+      const testResultsList =
+        result.data && result.data.runTests.list.length > 0
+          ? result.data.runTests.list
+          : [];
+      const groupResults = getResults(testResultsList);
+
+      setState({
+        testResults: {
+          ...testResults,
+          ...groupResults,
+        },
+      });
+    },
+    [runTests, params.databaseName, params.refName, testResults, setState],
+  );
 
   const handleRunAll = useCallback(async () => {
     const result = await runTests({
@@ -226,57 +240,78 @@ export function TestProvider({ children, params }: Props) {
     });
   }, [runTests, params.databaseName, params.refName, testResults, setState]);
 
-  const handleCreateTest = useCallback((groupName?: string) => {
-    const baseTestName = "New Test";
-    const existingNames = tests.map(t => t.testName);
-    let uniqueTestName = baseTestName;
-    let counter = 1;
+  const handleCreateTest = useCallback(
+    (groupName?: string) => {
+      const baseTestName = "New Test";
+      const existingNames = tests.map(t => t.testName);
+      let uniqueTestName = baseTestName;
+      let counter = 1;
 
-    while (existingNames.includes(uniqueTestName)) {
-      uniqueTestName = `${baseTestName} ${counter}`;
-      counter += 1;
-    }
+      while (existingNames.includes(uniqueTestName)) {
+        uniqueTestName = `${baseTestName} ${counter}`;
+        counter += 1;
+      }
 
-    const newTest: Test = {
-      testName: uniqueTestName,
-      testQuery: "SELECT * FROM tablename",
-      assertionType: "expected_rows",
-      assertionComparator: "==",
-      assertionValue: "",
-      testGroup: groupName ?? "",
-      _id: "",
-      databaseName: params.databaseName,
-      refName: params.refName,
-    };
+      const newTest: Test = {
+        testName: uniqueTestName,
+        testQuery: "SELECT * FROM tablename",
+        assertionType: "expected_rows",
+        assertionComparator: "==",
+        assertionValue: "",
+        testGroup: groupName ?? "",
+        _id: "",
+        databaseName: params.databaseName,
+        refName: params.refName,
+      };
 
-    setState({
-      tests: [...tests, newTest],
-      expandedItems: new Set([...expandedItems, newTest.testName]),
-      editingTestNames: { ...editingTestNames, [newTest.testName]: newTest.testName },
-      hasUnsavedChanges: true,
-    });
+      setState({
+        tests: [...tests, newTest],
+        expandedItems: new Set([...expandedItems, newTest.testName]),
+        editingTestNames: {
+          ...editingTestNames,
+          [newTest.testName]: newTest.testName,
+        },
+        hasUnsavedChanges: true,
+      });
 
-    if (groupName && emptyGroups.has(groupName)) {
-      const newEmptyGroups = new Set(emptyGroups);
-      newEmptyGroups.delete(groupName);
-      setState({ emptyGroups: newEmptyGroups });
-    }
+      if (groupName && emptyGroups.has(groupName)) {
+        const newEmptyGroups = new Set(emptyGroups);
+        newEmptyGroups.delete(groupName);
+        setState({ emptyGroups: newEmptyGroups });
+      }
 
-    if (groupName && !expandedGroups.has(groupName)) {
-      setState({ expandedGroups: new Set([...expandedGroups, groupName]) });
-    }
+      if (groupName && !expandedGroups.has(groupName)) {
+        setState({ expandedGroups: new Set([...expandedGroups, groupName]) });
+      }
 
-    setTimeout(() => {
-      const testElement = document.querySelector(
-        `[data-test-name="${newTest.testName}"]`,
-      );
-      testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
-    }, 100);
-  }, [tests, expandedItems, editingTestNames, emptyGroups, expandedGroups, params.databaseName, params.refName, setState]);
+      setTimeout(() => {
+        const testElement = document.querySelector(
+          `[data-test-name="${newTest.testName}"]`,
+        );
+        testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+    },
+    [
+      tests,
+      expandedItems,
+      editingTestNames,
+      emptyGroups,
+      expandedGroups,
+      params.databaseName,
+      params.refName,
+      setState,
+    ],
+  );
 
-  const groupedTests = useMemo(() => groupTests(tests, emptyGroups), [tests, emptyGroups]);
+  const groupedTests = useMemo(
+    () => groupTests(tests, emptyGroups),
+    [tests, emptyGroups],
+  );
 
-  const sortedGroupEntries = useMemo(() => sortGroupEntries(groupedTests), [groupedTests]);
+  const sortedGroupEntries = useMemo(
+    () => sortGroupEntries(groupedTests),
+    [groupedTests],
+  );
 
   const handleHashNavigation = useCallback(() => {
     const hash = window.location.hash.slice(1);
@@ -365,9 +400,7 @@ export function TestProvider({ children, params }: Props) {
     setState,
   ]);
 
-  return (
-    <TestContext.Provider value={value}>{children}</TestContext.Provider>
-  );
+  return <TestContext.Provider value={value}>{children}</TestContext.Provider>;
 }
 
 export function useTestContext(): TestContextType {

@@ -27,7 +27,6 @@ import ResolveModal from "./ResolveModal";
 import css from "./index.module.css";
 import useMergeButton, { MergeButtonState } from "./useMergeButton";
 
-
 type Props = {
   params: PullDiffParams;
   pullDetails: PullDetailsFragment;
@@ -172,11 +171,11 @@ type TestStatusColors = {
 };
 
 function TestResultsTitle({
-                            red,
-                            green,
-                            orange,
-                            onRunTests,
-                          }: TestStatusColors & { onRunTests: () => void }) {
+  red,
+  green,
+  orange,
+  onRunTests,
+}: TestStatusColors & { onRunTests: () => void }) {
   return (
     <>
       <div className={css.testResultsTitleSection}>
@@ -203,11 +202,11 @@ function TestResultsTitle({
 }
 
 function TestResultsIconSwitch({
-                                 red,
-                                 green,
-                                 orange,
-                                 className,
-                               }: TestStatusColors & { className?: string }) {
+  red,
+  green,
+  orange,
+  className,
+}: TestStatusColors & { className?: string }) {
   if (red) return <FiX className={className} />;
   if (orange) return <FiCircle className={className} />;
   if (green) return <FiCheck className={className} />;
@@ -217,9 +216,13 @@ function TestResultsIconSwitch({
 function TestTitle({ test }: { test: TestResult }) {
   return (
     <div className={css.testResultsTestTitle}>
-      <span className={css.testResultsTestName}>{excerpt(test.testName, 50)}</span>
+      <span className={css.testResultsTestName}>
+        {excerpt(test.testName, 50)}
+      </span>
       {test.message && (
-        <span className={css.testResultsTestMessage}>{excerpt(test.message, 100)}</span>
+        <span className={css.testResultsTestMessage}>
+          {excerpt(test.message, 100)}
+        </span>
       )}
     </div>
   );
@@ -232,7 +235,13 @@ function TestResultsListItemIconSwitch({ test }: { test: TestResult }) {
   return <FiX className={css.testResultsFailureIcon} />;
 }
 
-function TestResultsListItem({ test, params }: { test: TestResult; params: RefParams }) {
+function TestResultsListItem({
+  test,
+  params,
+}: {
+  test: TestResult;
+  params: RefParams;
+}) {
   const isSuccess = test.status === "PASS";
   const isFailure = !isSuccess;
 
@@ -242,10 +251,14 @@ function TestResultsListItem({ test, params }: { test: TestResult; params: RefPa
         {...testsUrl(params)
           .withQuery({ runTests: "true" })
           .withHash(encodeURIComponent(test.testName))}
-        className={cx(css.testResultsItemContainer, css.testResultsLinkContent, {
-          [css.testResultsRed]: isFailure,
-          [css.testResultsGreen]: isSuccess,
-        })}
+        className={cx(
+          css.testResultsItemContainer,
+          css.testResultsLinkContent,
+          {
+            [css.testResultsRed]: isFailure,
+            [css.testResultsGreen]: isSuccess,
+          },
+        )}
         data-test-name={test.testName}
       >
         <div className={css.testResultsIcon}>

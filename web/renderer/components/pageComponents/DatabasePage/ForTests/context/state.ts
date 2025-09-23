@@ -7,7 +7,10 @@ export const defaultState = {
   hasUnsavedChanges: false,
   tests: [] as Test[],
   emptyGroups: new Set<string>(),
-  testResults: {} as Record<string, { status: "passed" | "failed"; error?: string } | undefined>,
+  testResults: {} as Record<
+    string,
+    { status: "passed" | "failed"; error?: string } | undefined
+  >,
   hasHandledHash: false,
 };
 
@@ -21,7 +24,10 @@ export type TestContextType = {
   tests: Test[];
   groupedTests: Record<string, Test[]>;
   sortedGroupEntries: Array<[string, Test[]]>;
-  testResults: Record<string, { status: "passed" | "failed"; error?: string } | undefined>;
+  testResults: Record<
+    string,
+    { status: "passed" | "failed"; error?: string } | undefined
+  >;
   toggleExpanded: (testName: string) => void;
   toggleGroupExpanded: (groupName: string) => void;
   handleRunTest: (testName: string) => Promise<void>;

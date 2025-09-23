@@ -18,10 +18,7 @@ type Props = {
   className?: string;
 };
 
-export default function TestGroup({
-  group,
-  className,
-}: Props) {
+export default function TestGroup({ group, className }: Props) {
   const {
     tests,
     expandedGroups,
@@ -60,7 +57,7 @@ export default function TestGroup({
       hasUnsavedChanges: true,
     });
     setShowDeleteConfirm(false);
-  }
+  };
 
   const handleRenameGroup = (oldName: string, newName: string) => {
     if (newName.trim() && oldName !== newName.trim()) {
