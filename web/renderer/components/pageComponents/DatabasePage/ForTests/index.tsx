@@ -22,9 +22,13 @@ export default function ForTests(props: Props): JSX.Element {
       routeRefChangeTo={testsUrl}
     >
       <NotDoltWrapper showNotDoltMsg feature="Viewing Tests" bigMsg>
-        {!isPostgres ? <TestProvider params={props.params}>
-          <TestList params={props.params} />
-        </TestProvider> : <div/>}
+        {!isPostgres ? (
+          <TestProvider params={props.params}>
+            <TestList params={props.params} />
+          </TestProvider>
+        ) : (
+          <div />
+        )}
       </NotDoltWrapper>
     </ForDefaultBranch>
   );

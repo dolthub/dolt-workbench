@@ -26,7 +26,7 @@ export default function DatabaseNav(props: Props) {
 
 function Inner(props: Props) {
   const { isDolt, isPostgres } = useDatabaseDetails();
-  
+
   return (
     <div data-cy="db-page-header-nav" className={css.headerNav}>
       <Tooltip id="disabled-database-nav-item" />
@@ -36,7 +36,7 @@ function Inner(props: Props) {
           if (tab === "Tests" && isDolt && isPostgres) {
             return null;
           }
-          
+
           const item = <NavItem {...props} key={tab} name={tab} i={i} />;
           if (tab === "Database") {
             return item;

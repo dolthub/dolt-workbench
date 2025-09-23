@@ -28,6 +28,8 @@ export type TestContextType = {
     string,
     { status: "passed" | "failed"; error?: string } | undefined
   >;
+  testsLoading: boolean;
+  testsError?: string;
   toggleExpanded: (testName: string) => void;
   toggleGroupExpanded: (groupName: string) => void;
   handleRunTest: (testName: string) => Promise<void>;

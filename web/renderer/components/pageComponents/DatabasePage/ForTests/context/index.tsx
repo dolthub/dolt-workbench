@@ -21,7 +21,11 @@ type Props = {
 
 export function TestProvider({ children, params }: Props) {
   const router = useRouter();
-  const { data } = useTestListQuery({
+  const {
+    data,
+    loading: testsLoading,
+    error: testsError,
+  } = useTestListQuery({
     variables: {
       databaseName: params.databaseName,
       refName: params.refName,
@@ -63,7 +67,12 @@ export function TestProvider({ children, params }: Props) {
     await saveTestsMutation();
   }, [saveTestsMutation, tests]);
 
-  // Initialize tests from query data
+  useEffect(() => {
+    if (testsError) {
+      console.error("Error loading tests:", testsError);
+    }
+  }, [testsError]);
+
   useEffect(() => {
     if (data?.tests.list) {
       const initialTests = data.tests.list.map(
@@ -148,97 +157,192 @@ export function TestProvider({ children, params }: Props) {
     [expandedGroups, setState],
   );
 
-  const handleRunTest = useCallback(
-    async (testName: string) => {
-      const result = await runTests({
-        variables: {
-          databaseName: params.databaseName,
-          refName: params.refName,
-          testIdentifier: {
-            testName,
-          },
+  const handleTestError = useCallback(
+    (error: string, targetTests: Test[]) => {
+      const errorResults = targetTests.reduce(
+        (acc, test) => {
+          acc[test.testName] = {
+            status: "failed",
+            error,
+          };
+          return acc;
         },
-      });
-
-      const testPassed =
-        result.data &&
-        result.data.runTests.list.length > 0 &&
-        result.data.runTests.list[0].status === "PASS";
+        {} as Record<string, { status: "passed" | "failed"; error?: string }>,
+      );
 
       setState({
         testResults: {
           ...testResults,
-          [testName]: {
-            status: testPassed ? "passed" : "failed",
-            error: testPassed
-              ? undefined
-              : result.data?.runTests.list[0].message,
-          },
+          ...errorResults,
         },
       });
     },
-    [runTests, params.databaseName, params.refName, testResults, setState],
+    [testResults, setState],
+  );
+
+  const handleRunTest = useCallback(
+    async (testName: string) => {
+      try {
+        const result = await runTests({
+          variables: {
+            databaseName: params.databaseName,
+            refName: params.refName,
+            testIdentifier: {
+              testName,
+            },
+          },
+        });
+
+        if (result.error) {
+          console.error("Error running test:", result.error);
+          const targetTest = tests.find(t => t.testName === testName);
+          if (targetTest) {
+            handleTestError(result.error.message, [targetTest]);
+          }
+          return;
+        }
+
+        const testPassed =
+          result.data &&
+          result.data.runTests.list.length > 0 &&
+          result.data.runTests.list[0].status === "PASS";
+
+        setState({
+          testResults: {
+            ...testResults,
+            [testName]: {
+              status: testPassed ? "passed" : "failed",
+              error: testPassed
+                ? undefined
+                : result.data?.runTests.list[0].message,
+            },
+          },
+        });
+      } catch (err) {
+        console.error("Error running test:", err);
+        const targetTest = tests.find(t => t.testName === testName);
+        if (targetTest) {
+          const errorMessage =
+            err instanceof Error ? err.message : "Failed to run test";
+          handleTestError(errorMessage, [targetTest]);
+        }
+      }
+    },
+    [
+      runTests,
+      params.databaseName,
+      params.refName,
+      testResults,
+      setState,
+      tests,
+      handleTestError,
+    ],
   );
 
   const handleRunGroup = useCallback(
     async (groupName: string) => {
+      try {
+        const result = await runTests({
+          variables: {
+            databaseName: params.databaseName,
+            refName: params.refName,
+            testIdentifier: {
+              groupName,
+            },
+          },
+        });
+
+        if (result.error) {
+          console.error("Error running group tests:", result.error);
+          const groupTests = tests.filter(test => test.testGroup === groupName);
+          handleTestError(result.error.message, groupTests);
+          return;
+        }
+
+        result.data?.runTests.list.map(test =>
+          test.status === "PASS"
+            ? {
+                status: "passed",
+              }
+            : {
+                status: "failed",
+                error: test.message,
+              },
+        );
+
+        const testResultsList =
+          result.data && result.data.runTests.list.length > 0
+            ? result.data.runTests.list
+            : [];
+        const groupResults = getResults(testResultsList);
+
+        setState({
+          testResults: {
+            ...testResults,
+            ...groupResults,
+          },
+        });
+      } catch (err) {
+        console.error("Error running group tests:", err);
+        const groupTests = tests.filter(test => test.testGroup === groupName);
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to run group tests";
+        handleTestError(errorMessage, groupTests);
+      }
+    },
+    [
+      runTests,
+      params.databaseName,
+      params.refName,
+      testResults,
+      setState,
+      tests,
+      handleTestError,
+    ],
+  );
+
+  const handleRunAll = useCallback(async () => {
+    try {
       const result = await runTests({
         variables: {
           databaseName: params.databaseName,
           refName: params.refName,
-          testIdentifier: {
-            groupName,
-          },
         },
       });
-      result.data?.runTests.list.map(test =>
-        test.status === "PASS"
-          ? {
-              status: "passed",
-            }
-          : {
-              status: "failed",
-              error: test.message,
-            },
-      );
+
+      if (result.error) {
+        console.error("Error running all tests:", result.error);
+        handleTestError(result.error.message, tests);
+        return;
+      }
 
       const testResultsList =
         result.data && result.data.runTests.list.length > 0
           ? result.data.runTests.list
           : [];
-      const groupResults = getResults(testResultsList);
+      const allResults = getResults(testResultsList);
 
       setState({
         testResults: {
           ...testResults,
-          ...groupResults,
+          ...allResults,
         },
       });
-    },
-    [runTests, params.databaseName, params.refName, testResults, setState],
-  );
-
-  const handleRunAll = useCallback(async () => {
-    const result = await runTests({
-      variables: {
-        databaseName: params.databaseName,
-        refName: params.refName,
-      },
-    });
-
-    const testResultsList =
-      result.data && result.data.runTests.list.length > 0
-        ? result.data.runTests.list
-        : [];
-    const allResults = getResults(testResultsList);
-
-    setState({
-      testResults: {
-        ...testResults,
-        ...allResults,
-      },
-    });
-  }, [runTests, params.databaseName, params.refName, testResults, setState]);
+    } catch (err) {
+      console.error("Error running all tests:", err);
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to run all tests";
+      handleTestError(errorMessage, tests);
+    }
+  }, [
+    runTests,
+    params.databaseName,
+    params.refName,
+    testResults,
+    setState,
+    tests,
+    handleTestError,
+  ]);
 
   const handleCreateTest = useCallback(
     (groupName?: string) => {
@@ -372,6 +476,8 @@ export function TestProvider({ children, params }: Props) {
       groupedTests,
       sortedGroupEntries,
       testResults,
+      testsLoading,
+      testsError: testsError?.message,
       toggleExpanded,
       toggleGroupExpanded,
       handleRunTest,
@@ -390,6 +496,8 @@ export function TestProvider({ children, params }: Props) {
     groupedTests,
     sortedGroupEntries,
     testResults,
+    testsLoading,
+    testsError,
     toggleExpanded,
     toggleGroupExpanded,
     handleRunTest,

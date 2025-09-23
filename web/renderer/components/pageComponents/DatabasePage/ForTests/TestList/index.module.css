@@ -74,6 +74,14 @@
   @apply text-center text-lg m-6;
 }
 
+.errorContainer {
+  @apply text-center m-6;
+}
+
+.errorText {
+  @apply text-red-600 text-lg;
+}
+
 .fieldInput {
   @apply w-full p-2 border border-stone-100 rounded text-sm;
 }

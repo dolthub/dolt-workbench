@@ -26,6 +26,8 @@ export default function TestList({ params }: Props) {
     groupedTests,
     sortedGroupEntries,
     emptyGroups,
+    testsLoading,
+    testsError,
     setState,
     handleRunAll,
     handleHashNavigation,
@@ -66,26 +68,28 @@ export default function TestList({ params }: Props) {
     <div className={css.container}>
       <div className={css.top}>
         <h1>Tests</h1>
-        <div className={css.actionArea}>
-          <div className={css.createActions}>
-            <HideForNoWritesWrapper params={params}>
-              <CreateDropdown
-                onCreateGroup={() => setShowNewGroupModal(true)}
-              />
-            </HideForNoWritesWrapper>
-            <Link {...workingDiff(params)}>
-              <Button>Commit</Button>
-            </Link>
-          </div>
+        {!testsLoading && !testsError && (
+          <div className={css.actionArea}>
+            <div className={css.createActions}>
+              <HideForNoWritesWrapper params={params}>
+                <CreateDropdown
+                  onCreateGroup={() => setShowNewGroupModal(true)}
+                />
+              </HideForNoWritesWrapper>
+              <Link {...workingDiff(params)}>
+                <Button>Commit</Button>
+              </Link>
+            </div>
 
-          <div className={css.primaryActions}>
-            {tests.length > 0 && (
-              <Button onClick={handleRunAll} className={css.runAllButton}>
-                Run All
-              </Button>
-            )}
+            <div className={css.primaryActions}>
+              {tests.length > 0 && (
+                <Button onClick={handleRunAll} className={css.runAllButton}>
+                  Run All
+                </Button>
+              )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       <NewGroupModal
@@ -125,6 +129,12 @@ export default function TestList({ params }: Props) {
             )}
           </div>
         </div>
+      ) : testsError ? (
+        <div className={css.errorContainer}>
+          <p className={css.errorText}>Failed to load tests: {testsError}</p>
+        </div>
+      ) : testsLoading ? (
+        <p className={css.loading}>Loading tests...</p>
       ) : (
         <p className={css.noTests}>No tests found</p>
       )}

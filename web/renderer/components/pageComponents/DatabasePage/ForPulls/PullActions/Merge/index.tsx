@@ -275,8 +275,9 @@ function TestResultsListItem({
 
 function TestResults({ params }: { params: RefParams }) {
   const [testResults, setTestResults] = useState<TestResult[]>([]);
-  const [runTests] = useRunTestsLazyQuery();
-  const { data } = useTestListQuery({
+  const [runTestError, setRunTestError] = useState<string | null>(null);
+  const [runTests, { error: runTestsError }] = useRunTestsLazyQuery();
+  const { data, loading, error } = useTestListQuery({
     variables: {
       databaseName: params.databaseName,
       refName: params.refName,
@@ -284,6 +285,7 @@ function TestResults({ params }: { params: RefParams }) {
   });
 
   const handleRunTests = useCallback(async () => {
+    setRunTestError(null);
     try {
       const result = await runTests({
         variables: {
@@ -292,11 +294,49 @@ function TestResults({ params }: { params: RefParams }) {
         },
       });
 
+      if (result.error) {
+        console.error("Error running tests:", result.error);
+        setRunTestError(result.error.message);
+        setTestResults([]);
+        return;
+      }
+
       setTestResults(result.data?.runTests.list ?? []);
-    } catch {
+    } catch (err) {
+      console.error("Error running tests:", err);
+      setRunTestError(
+        err instanceof Error ? err.message : "Failed to run tests",
+      );
       setTestResults([]);
     }
   }, [runTests, params.databaseName, params.refName]);
+
+  if (loading) {
+    return (
+      <div className={css.testResultsOuter}>
+        <SmallLoader.WithText text="Loading tests..." loaded={false} />
+      </div>
+    );
+  }
+
+  if (error) {
+    console.error("Error loading test list:", error);
+    return (
+      <div className={css.testResultsOuter}>
+        <div className={css.testResultsContainer}>
+          <div className={css.testResultsTop}>
+            <span style={{ color: "red" }}>
+              Failed to load tests: {error.message}
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (runTestsError) {
+    console.error("Run Tests query error:", runTestsError);
+  }
 
   if (!data?.tests.list || data.tests.list.length === 0) {
     return null;
@@ -338,6 +378,11 @@ function TestResults({ params }: { params: RefParams }) {
             [css.testResultsTestsOrange]: orange,
           })}
         >
+          {(runTestError || runTestsError) && (
+            <div style={{ color: "red", padding: "8px" }}>
+              Error running tests: {runTestError || runTestsError?.message}
+            </div>
+          )}
           <ul>
             {testResults.length > 0 ? (
               testResults.map(test => (
