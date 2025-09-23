@@ -6,13 +6,14 @@ import { FaFile } from "@react-icons/all-files/fa/FaFile";
 import { FaFolder } from "@react-icons/all-files/fa/FaFolder";
 import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
 import css from "./index.module.css";
+import { useTestContext } from "../context";
 
 type Props = {
-  onCreateTest: () => void;
   onCreateGroup: () => void;
 };
 
-export default function CreateDropdown({ onCreateTest, onCreateGroup }: Props) {
+export default function CreateDropdown({ onCreateGroup }: Props) {
+  const { handleCreateTest } = useTestContext();
   return (
     <Popup
       position="bottom left"
@@ -37,7 +38,7 @@ export default function CreateDropdown({ onCreateTest, onCreateGroup }: Props) {
           <li className={css.createPopupItem}>
             <button
               onClick={() => {
-                onCreateTest();
+                handleCreateTest();
                 fakeEscapePress();
               }}
               type="button"

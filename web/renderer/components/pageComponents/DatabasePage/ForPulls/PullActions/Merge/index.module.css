@@ -273,3 +273,158 @@
     @apply rounded-b-lg;
   }
 }
+
+.testResultsOuter {
+  @apply mx-auto max-w-3xl flex flex-col mb-4 mt-4;
+
+  h3 {
+    @apply text-center mt-4 mb-4;
+  }
+
+  @screen lg {
+    @apply flex-row;
+  }
+}
+
+.testResultsContainer {
+  @apply w-full mb-0 rounded-xl min-w-[15rem];
+  @screen lg {
+    @apply w-[calc(100%-4rem)] mx-3 mb-0;
+  }
+}
+
+.testResultsTop {
+  @apply bg-green-50 pl-4 pr-4 py-2 border border-green-500 flex justify-between items-start rounded-t-xl flex-wrap w-full;
+
+  @screen lg {
+    @apply items-center pl-6;
+  }
+}
+
+.testResultsPicContainer {
+  @apply w-7 h-7 mb-4 mr-1 text-white relative rounded-full bg-green-400 flex-shrink-0;
+
+  @screen lg {
+    @apply mb-0 mt-3 ml-2;
+  }
+  svg {
+    @apply text-white mt-1 ml-1 w-5 h-5;
+  }
+}
+
+.testResultsRedIcon {
+  @apply bg-red-300;
+}
+
+.testResultsOrangeIcon {
+  @apply bg-orange-300;
+}
+
+.testResultsTests {
+  @apply border-x border-b rounded-b-xl bg-white border-green-500;
+  li:last-child {
+    @apply rounded-b-xl overflow-hidden;
+  }
+}
+
+.testResultsGreen {
+  @apply text-green-500;
+}
+
+.testResultsTestsStatusIcon {
+  @apply inline-block mr-2 text-2xl;
+}
+
+.testResultsRed {
+  @apply text-red-400 flex border-red-400 bg-coral-50;
+}
+
+.testResultsTestsRed {
+  @apply border-red-400;
+}
+
+.testResultsOrange {
+  @apply text-orange-500 flex border-orange-300 bg-orange-50;
+}
+
+.testResultsTestsOrange {
+  @apply border-orange-300;
+}
+
+.testResultsTestsGreen {
+  @apply border-green-500;
+}
+
+.testResultsNoTests {
+  @apply py-4 px-6 text-center text-stone-500 text-sm;
+}
+
+.testResultsRunButton {
+  @apply mx-2;
+  @screen lg {
+    @apply mx-0;
+  }
+}
+
+.testResultsTitleSection {
+  @apply flex items-center;
+}
+
+.testResultsGreenButton {
+  @apply bg-green-500 text-white border-green-500;
+}
+
+.testResultsRedButton {
+  @apply bg-red-500 text-white border-red-500;
+}
+
+.testResultsOrangeButton {
+  @apply bg-orange-500 text-white border-orange-500;
+}
+
+.testResultsItemContainer {
+  @apply border-b border-stone-300 py-3 px-4 flex items-start gap-3 hover:bg-stone-50 transition-colors;
+}
+
+li:last-child .testResultsItemContainer {
+  @apply border-b-0;
+}
+
+.testResultsIcon {
+  @apply flex-shrink-0 mt-0.5;
+  svg {
+    @apply w-4 h-4;
+  }
+}
+
+.testResultsSuccessIcon {
+  @apply text-green-500;
+}
+
+.testResultsFailureIcon {
+  @apply text-red-400;
+}
+
+.testResultsPendingIcon {
+  @apply text-orange-500;
+}
+
+.testResultsContent {
+  @apply flex-1 min-w-0;
+}
+
+.testResultsTestTitle {
+  @apply flex flex-col gap-1;
+}
+
+.testResultsTestName {
+  @apply font-medium text-stone-700 text-sm;
+}
+
+.testResultsTestMessage {
+  @apply text-xs text-stone-600 break-words;
+}
+
+.testResultsLinkContent {
+  @apply flex items-start gap-3 w-full no-underline;
+}

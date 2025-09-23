@@ -9,40 +9,76 @@ import { useState, KeyboardEvent, ChangeEvent, MouseEvent } from "react";
 import cx from "classnames";
 import css from "./index.module.css";
 import ConfirmationModal from "../ConfirmationModal";
+import { pluralize } from "@dolthub/web-utils";
+import { useTestContext } from "../context";
+import { getGroupResult } from "@pageComponents/DatabasePage/ForTests/utils";
 
 type Props = {
   group: string;
-  isExpanded: boolean;
-  onToggle: () => void;
-  testCount: number;
   className?: string;
-  groupResult?: "passed" | "failed";
-  onRunGroup: () => void;
-  onDeleteGroup: () => void;
-  onRenameGroup?: (oldName: string, newName: string) => void;
-  onCreateTest: (groupName: string) => void;
 };
 
 export default function TestGroup({
   group,
-  isExpanded,
-  onToggle,
-  testCount,
   className,
-  groupResult,
-  onRunGroup,
-  onDeleteGroup,
-  onRenameGroup,
-  onCreateTest,
 }: Props) {
+  const {
+    tests,
+    expandedGroups,
+    groupedTests,
+    testResults,
+    emptyGroups,
+    toggleGroupExpanded,
+    handleRunGroup,
+    setState,
+    handleCreateTest,
+  } = useTestContext();
+
   const groupName = group || "No Group";
   const [localGroupName, setLocalGroupName] = useState(groupName);
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
-  const handleRunGroup = (e: MouseEvent) => {
+  const isExpanded = expandedGroups.has(group);
+  const testCount = groupedTests[group].length || 0;
+  const groupResult = getGroupResult(group, groupedTests, testResults);
+
+  const handleRunGroupClick = async (e: MouseEvent) => {
     e.stopPropagation();
-    onRunGroup();
+    await handleRunGroup(group);
+  };
+
+  const handleDeleteGroup = (groupName: string) => {
+    const newExpandedGroups = new Set(expandedGroups);
+    newExpandedGroups.delete(groupName);
+    const newEmptyGroups = new Set(emptyGroups);
+    newEmptyGroups.delete(groupName);
+    setState({
+      tests: tests.filter(test => test.testGroup !== groupName),
+      expandedGroups: newExpandedGroups,
+      emptyGroups: newEmptyGroups,
+      hasUnsavedChanges: true,
+    });
+    setShowDeleteConfirm(false);
+  }
+
+  const handleRenameGroup = (oldName: string, newName: string) => {
+    if (newName.trim() && oldName !== newName.trim()) {
+      const newExpandedGroups = new Set(expandedGroups);
+      if (newExpandedGroups.has(oldName)) {
+        newExpandedGroups.delete(oldName);
+        newExpandedGroups.add(newName.trim());
+      }
+      setState({
+        tests: tests.map(test =>
+          test.testGroup === oldName
+            ? { ...test, testGroup: newName.trim() }
+            : test,
+        ),
+        expandedGroups: newExpandedGroups,
+        hasUnsavedChanges: true,
+      });
+    }
   };
 
   const handleDeleteClick = (e: MouseEvent) => {
@@ -50,14 +86,9 @@ export default function TestGroup({
     setShowDeleteConfirm(true);
   };
 
-  const handleCreateTest = (e: MouseEvent) => {
+  const handleCreateTestClick = (e: MouseEvent) => {
     e.stopPropagation();
-    onCreateTest(groupName);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteConfirm(false);
-    onDeleteGroup();
+    handleCreateTest(group);
   };
 
   const handleCancelDelete = () => {
@@ -70,7 +101,7 @@ export default function TestGroup({
 
   const handleInputBlur = () => {
     if (localGroupName.trim() && localGroupName !== groupName) {
-      onRenameGroup?.(groupName, localGroupName.trim());
+      handleRenameGroup(groupName, localGroupName.trim());
     } else {
       setLocalGroupName(groupName);
     }
@@ -88,7 +119,7 @@ export default function TestGroup({
 
   const handleHeaderClick = () => {
     if (!isEditing) {
-      onToggle();
+      toggleGroupExpanded(group);
     }
   };
 
@@ -115,7 +146,7 @@ export default function TestGroup({
           />
           <span
             className={css.testCount}
-          >{`(${testCount} ${testCount === 1 ? "test" : "tests"})`}</span>
+          >{`${testCount} ${pluralize(testCount, "test")}`}</span>
         </div>
         <div className={css.groupHeaderRight}>
           {groupResult && (
@@ -141,7 +172,7 @@ export default function TestGroup({
             </div>
           )}
           <Button.Link
-            onClick={handleRunGroup}
+            onClick={handleRunGroupClick}
             className={cx(css.groupActionBtn, css.runBtn)}
             data-tooltip-content={`Run all tests in ${groupName}`}
             disabled={testCount === 0}
@@ -149,7 +180,7 @@ export default function TestGroup({
             <FaPlay />
           </Button.Link>
           <Button.Link
-            onClick={handleCreateTest}
+            onClick={handleCreateTestClick}
             className={cx(css.groupActionBtn, css.createBtn)}
             data-tooltip-content={`Add test to ${groupName}`}
           >
@@ -172,7 +203,7 @@ export default function TestGroup({
           title="Delete Test Group"
           message={`Are you sure you want to delete the "${groupName}" test group? This will delete ${testCount} test${testCount !== 1 ? "s" : ""} in this group.`}
           confirmText="Delete Group"
-          onConfirm={handleConfirmDelete}
+          onConfirm={() => handleDeleteGroup(groupName)}
           onCancel={handleCancelDelete}
           destructive={true}
         />

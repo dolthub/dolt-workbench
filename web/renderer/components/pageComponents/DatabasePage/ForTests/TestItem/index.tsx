@@ -7,55 +7,92 @@ import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "../QueryEditor";
-import { MouseEvent, useState, useCallback, useRef, useEffect } from "react";
-import { Test } from "@gen/graphql-types";
+import { MouseEvent, useState, useRef, useEffect, useCallback } from "react";
 import ConfirmationModal from "@pageComponents/DatabasePage/ForTests/ConfirmationModal";
+import { useTestContext } from "../context";
+import { Test } from "@gen/graphql-types";
 
 type Props = {
   test: Test;
-  groupOptions: string[];
-  isExpanded: boolean;
-  editingName: string | undefined;
-  testResult?: { status: "passed" | "failed"; error?: string };
   className?: string;
-  onToggleExpanded: () => void;
-  onUpdateTest: (field: keyof Test, value: string) => void;
-  onNameEdit: (name: string) => void;
-  onNameBlur: () => void;
-  onRunTest: () => void;
-  onDeleteTest: () => void;
 };
 
 export default function TestItem({
   test,
-  groupOptions,
-  isExpanded,
-  editingName,
-  testResult,
   className,
-  onToggleExpanded,
-  onUpdateTest,
-  onNameEdit,
-  onNameBlur,
-  onRunTest,
-  onDeleteTest,
 }: Props) {
+  const {
+    expandedItems,
+    editingTestNames,
+    testResults,
+    sortedGroupEntries,
+    tests,
+    toggleExpanded,
+    handleRunTest,
+    setState,
+  } = useTestContext();
+
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [localAssertionValue, setLocalAssertionValue] = useState(
     test.assertionValue,
   );
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const debouncedOnUpdateTest = useCallback(
+  const updateTest = useCallback((name: string, field: keyof Test, value: string) => {
+    setState({
+      tests: tests.map((test: Test) =>
+        test.testName === name ? { ...test, [field]: value } : test,
+      ),
+      hasUnsavedChanges: true,
+    });
+  }, [tests, setState]);
+
+  const handleDeleteTest = (testName: string) => {
+    const newExpandedItems = new Set(expandedItems);
+    newExpandedItems.delete(testName);
+    setState({
+      tests: tests.filter(test => test.testName !== testName),
+      expandedItems: newExpandedItems,
+      hasUnsavedChanges: true,
+    });
+  };
+
+  const handleTestNameEdit = (testId: string, name: string) => {
+    setState({
+      editingTestNames: {
+        ...editingTestNames,
+        [testId]: name,
+      },
+    });
+  };
+
+  const handleTestNameBlur = (testName: string) => {
+    const newName = editingTestNames[testName];
+    const test = tests.find(t => t.testName === testName);
+    if (newName.trim() && newName !== test?.testName) {
+      updateTest(testName, "testName", newName.trim());
+    }
+    const newEditingTestNames = { ...editingTestNames };
+    delete newEditingTestNames[testName];
+    setState({ editingTestNames: newEditingTestNames });
+  }
+
+  const groupOptions = sortedGroupEntries
+    .map(entry => entry[0])
+    .filter(group => group !== "");
+  const isExpanded = expandedItems.has(test.testName);
+  const editingName = editingTestNames[test.testName];
+  const testResult = testResults[test.testName];
+
+  const debouncedOnUpdateTest = (
     (field: keyof Test, value: string) => {
       if (debounceRef.current) {
         clearTimeout(debounceRef.current);
       }
       debounceRef.current = setTimeout(() => {
-        onUpdateTest(field, value);
+        updateTest(test.testName, field, value);
       }, 500); // 500ms debounce
-    },
-    [onUpdateTest],
+    }
   );
 
   useEffect(
@@ -78,7 +115,7 @@ export default function TestItem({
 
   const handleConfirmDelete = () => {
     setShowDeleteConfirm(false);
-    onDeleteTest();
+    handleDeleteTest(test.testName);
   };
 
   const handleCancelDelete = () => {
@@ -87,7 +124,7 @@ export default function TestItem({
 
   const handleAssertionValueBlur = () => {
     if (localAssertionValue !== test.assertionValue) {
-      onUpdateTest("assertionValue", localAssertionValue);
+      updateTest(test.testName, "assertionValue", localAssertionValue);
     }
   };
 
@@ -101,15 +138,15 @@ export default function TestItem({
       )}
       data-test-name={test.testName}
     >
-      <div className={css.itemTop} onClick={onToggleExpanded}>
+      <div className={css.itemTop} onClick={() => toggleExpanded(test.testName)}>
         <div className={css.testName}>
           <FaChevronRight className={css.expandIcon} />
           <input
             className={css.editableTestName}
-            value={editingName ?? test.testName}
-            onChange={e => onNameEdit(e.target.value)}
-            onFocus={() => onNameEdit(test.testName)}
-            onBlur={onNameBlur}
+            value={editingName || test.testName}
+            onChange={e => handleTestNameEdit(test.testName, e.target.value)}
+            onFocus={() => handleTestNameEdit(test.testName, test.testName)}
+            onBlur={() => handleTestNameBlur(test.testName)}
             onClick={e => e.stopPropagation()}
             placeholder="Test name"
           />
@@ -138,9 +175,9 @@ export default function TestItem({
         )}
         <div className={css.testActions}>
           <Button.Link
-            onClick={(e: MouseEvent) => {
+            onClick={async (e: MouseEvent) => {
               e.stopPropagation();
-              onRunTest();
+              await handleRunTest(test.testName);
             }}
             className={cx(css.testActionBtn, css.runBtn)}
             data-tooltip-content="Run test"
@@ -180,7 +217,7 @@ export default function TestItem({
                   }),
               ]}
               val={test.testGroup || ""}
-              onChangeValue={value => onUpdateTest("testGroup", value || "")}
+              onChangeValue={value => updateTest(test.testName, "testGroup", value || "")}
             />
           </div>
           <div className={css.fieldGroup}>
@@ -204,7 +241,7 @@ export default function TestItem({
               ]}
               val={test.assertionType}
               onChangeValue={value =>
-                onUpdateTest("assertionType", value || "")
+                updateTest(test.testName, "assertionType", value || "")
               }
             />
           </div>
@@ -221,7 +258,7 @@ export default function TestItem({
               ]}
               val={test.assertionComparator}
               onChangeValue={value =>
-                onUpdateTest("assertionComparator", value || "")
+                updateTest(test.testName, "assertionComparator", value || "")
               }
             />
           </div>
