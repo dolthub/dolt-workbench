@@ -9,7 +9,12 @@ import { systemTableValues } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
 import { handleTableNotFound } from "../../utils";
 import * as dem from "../dolt/doltEntityManager";
-import { getAuthorString, handleRefNotFound, unionCols } from "../dolt/utils";
+import {
+  getAuthorString,
+  getTestIdentifierArg,
+  handleRefNotFound,
+  unionCols,
+} from "../dolt/utils";
 import { PostgresQueryFactory } from "../postgres";
 import { getSchema, tableWithoutSchema } from "../postgres/utils";
 import * as t from "../types";
@@ -569,16 +574,11 @@ export class DoltgresQueryFactory
   }
 
   async runTests(args: t.RunTestsArgs): t.PR {
-    const withTestIdentifierArg =
-      args.testIdentifier &&
-      (args.testIdentifier.testName !== undefined ||
-        args.testIdentifier.groupName !== undefined);
+    const testIdentifier = getTestIdentifierArg(args.testIdentifier);
 
     return this.query(
-      qh.doltTestRun(withTestIdentifierArg),
-      withTestIdentifierArg
-        ? [args.testIdentifier?.testName ?? args.testIdentifier?.groupName]
-        : undefined,
+      qh.doltTestRun(!!testIdentifier),
+      testIdentifier ? [testIdentifier] : undefined,
       args.databaseName,
       args.refName,
     );

@@ -1,4 +1,5 @@
 import * as t from "../types";
+import { TestIdentifierArgs } from "../types";
 
 export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   try {
@@ -27,4 +28,16 @@ export function unionCols(a: t.RawRows, b: t.RawRows): t.RawRows {
 
 export function getAuthorString(commitAuthor: t.CommitAuthor): string {
   return `${commitAuthor.name} <${commitAuthor.email}>`;
+}
+
+export function getTestIdentifierArg(
+  testIdentifier: TestIdentifierArgs | undefined,
+): string | undefined {
+  if (testIdentifier?.testName) {
+    return testIdentifier.testName;
+  } else if (testIdentifier?.groupName) {
+    return testIdentifier.groupName;
+  } else {
+    return undefined;
+  }
 }

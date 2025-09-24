@@ -15,7 +15,12 @@ import { mapTablesRes } from "../mysql/utils";
 import * as t from "../types";
 import * as dem from "./doltEntityManager";
 import * as qh from "./queries";
-import { getAuthorString, handleRefNotFound, unionCols } from "./utils";
+import {
+  getAuthorString,
+  getTestIdentifierArg,
+  handleRefNotFound,
+  unionCols,
+} from "./utils";
 import { InsertResult } from "typeorm";
 
 export class DoltQueryFactory
@@ -595,16 +600,11 @@ export class DoltQueryFactory
   }
 
   async runTests(args: t.RunTestsArgs): t.PR {
-    const withTestIdentifierArg =
-      args.testIdentifier &&
-      (args.testIdentifier.testName !== undefined ||
-        args.testIdentifier.groupName !== undefined);
+    const testIdentifier = getTestIdentifierArg(args.testIdentifier);
 
     return this.query(
-      qh.doltTestRun(withTestIdentifierArg),
-      withTestIdentifierArg
-        ? [args.testIdentifier?.testName ?? args.testIdentifier?.groupName]
-        : undefined,
+      qh.doltTestRun(!!testIdentifier),
+      testIdentifier ? [testIdentifier] : undefined,
       args.databaseName,
       args.refName,
     );
