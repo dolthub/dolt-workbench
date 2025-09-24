@@ -1,17 +1,18 @@
 import { RefParams } from "@lib/params";
 import { useCallback, useState } from "react";
-import { TestResult, useRunTestsLazyQuery, useTestListQuery } from "@gen/graphql-types";
+import {
+  TestResult,
+  useRunTestsLazyQuery,
+  useTestListQuery,
+} from "@gen/graphql-types";
 import css from "./index.module.css";
 import { Button, SmallLoader } from "@dolthub/react-components";
 import cx from "classnames";
 import { Arrow } from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/Arrow";
-import {
-  TestResultsListItem
-} from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/TestResults/TestResultsListItem";
+import { TestResultsListItem } from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/TestResults/TestResultsListItem";
 import { FiX } from "@react-icons/all-files/fi/FiX";
 import { FiCircle } from "@react-icons/all-files/fi/FiCircle";
 import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-
 
 type TestStatusColors = {
   red: boolean;
@@ -151,11 +152,11 @@ export function TestResults({ params }: { params: RefParams }) {
 }
 
 function TestResultsTitle({
-                            red,
-                            green,
-                            orange,
-                            onRunTests,
-                          }: TestStatusColors & { onRunTests: () => void }) {
+  red,
+  green,
+  orange,
+  onRunTests,
+}: TestStatusColors & { onRunTests: () => void }) {
   return (
     <>
       <div className={css.testResultsTitleSection}>
@@ -182,11 +183,11 @@ function TestResultsTitle({
 }
 
 function TestResultsIconSwitch({
-                                 red,
-                                 green,
-                                 orange,
-                                 className,
-                               }: TestStatusColors & { className?: string }) {
+  red,
+  green,
+  orange,
+  className,
+}: TestStatusColors & { className?: string }) {
   if (red) return <FiX className={className} />;
   if (orange) return <FiCircle className={className} />;
   if (green) return <FiCheck className={className} />;

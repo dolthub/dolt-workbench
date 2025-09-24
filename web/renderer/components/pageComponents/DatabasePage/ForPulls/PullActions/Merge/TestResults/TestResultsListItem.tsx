@@ -9,9 +9,9 @@ import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
 import { FiX } from "@react-icons/all-files/fi/FiX";
 
 export function TestResultsListItem({
-                               test,
-                               params,
-                             }: {
+  test,
+  params,
+}: {
   test: TestResult;
   params: RefParams;
 }) {
@@ -66,4 +66,3 @@ function TestResultsListItemIconSwitch({ test }: { test: TestResult }) {
   }
   return <FiX className={css.testResultsFailureIcon} />;
 }
-
