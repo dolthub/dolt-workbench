@@ -19,20 +19,15 @@ type Props = {
 export default function TestGroup({ group, className }: Props) {
   const {
     groupName,
-    localGroupName,
-    isEditing,
-    showDeleteConfirm,
     isExpanded,
     testCount,
     groupResult,
-    setIsEditing,
+    testGroupState,
+    setTestGroupState,
     toggleGroupExpanded,
-    handleRunGroupClick,
+    handleCreateTest,
+    handleRunGroup,
     handleDeleteGroup,
-    handleDeleteClick,
-    handleCreateTestClick,
-    handleCancelDelete,
-    handleInputChange,
     handleInputBlur,
     handleInputKeyDown,
   } = useEditTestGroup(group);
@@ -45,7 +40,7 @@ export default function TestGroup({ group, className }: Props) {
         className,
       )}
       onClick={() => {
-        if (!isEditing) {
+        if (!testGroupState.isEditing) {
           toggleGroupExpanded(group);
         }
       }}
@@ -55,11 +50,15 @@ export default function TestGroup({ group, className }: Props) {
           <FaChevronRight className={css.groupExpandIcon} />
           <input
             className={css.inlineEditInput}
-            value={localGroupName}
-            onChange={handleInputChange}
+            value={testGroupState.localGroupName}
+            onChange={e => {
+              setTestGroupState({
+                localGroupName: e.target.value,
+              });
+            }}
             onBlur={handleInputBlur}
             onKeyDown={handleInputKeyDown}
-            onFocus={() => setIsEditing(true)}
+            onFocus={() => setTestGroupState({ isEditing: true })}
             onClick={e => e.stopPropagation()}
           />
           <span className={css.testCount}>
@@ -90,7 +89,10 @@ export default function TestGroup({ group, className }: Props) {
             </div>
           )}
           <Button.Link
-            onClick={handleRunGroupClick}
+            onClick={async e => {
+              e.stopPropagation();
+              await handleRunGroup(group);
+            }}
             className={cx(css.groupActionBtn, css.runBtn)}
             data-tooltip-content={`Run all tests in ${groupName}`}
             disabled={testCount === 0}
@@ -98,14 +100,22 @@ export default function TestGroup({ group, className }: Props) {
             <FaPlay />
           </Button.Link>
           <Button.Link
-            onClick={handleCreateTestClick}
+            onClick={e => {
+              e.stopPropagation();
+              handleCreateTest(group);
+            }}
             className={cx(css.groupActionBtn, css.createBtn)}
             data-tooltip-content={`Add test to ${groupName}`}
           >
             <FaPlus />
           </Button.Link>
           <Button.Link
-            onClick={handleDeleteClick}
+            onClick={e => {
+              e.stopPropagation();
+              setTestGroupState({
+                showDeleteConfirm: true,
+              });
+            }}
             red
             className={cx(css.groupActionBtn, css.deleteBtn)}
             data-tooltip-content={`Delete ${groupName} group`}
@@ -117,12 +127,16 @@ export default function TestGroup({ group, className }: Props) {
 
       <div className={css.confirmDeleteModal}>
         <ConfirmationModal
-          isOpen={showDeleteConfirm}
+          isOpen={testGroupState.showDeleteConfirm}
           title="Delete Test Group"
           message={`Are you sure you want to delete the "${groupName}" test group? This will delete ${testCount} test${testCount !== 1 ? "s" : ""} in this group.`}
           confirmText="Delete Group"
           onConfirm={() => handleDeleteGroup(groupName)}
-          onCancel={handleCancelDelete}
+          onCancel={() => {
+            setTestGroupState({
+              showDeleteConfirm: false,
+            });
+          }}
           destructive={true}
         />
       </div>

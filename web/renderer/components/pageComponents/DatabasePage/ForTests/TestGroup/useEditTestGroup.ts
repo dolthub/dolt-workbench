@@ -1,6 +1,7 @@
-import { useState, KeyboardEvent, ChangeEvent, MouseEvent } from "react";
+import { KeyboardEvent } from "react";
 import { useTestContext } from "../context";
 import { getGroupResult } from "@pageComponents/DatabasePage/ForTests/utils";
+import { useSetState } from "@dolthub/react-hooks";
 
 export function useEditTestGroup(group: string) {
   const {
@@ -16,14 +17,11 @@ export function useEditTestGroup(group: string) {
   } = useTestContext();
 
   const groupName = group || "No Group";
-  const [localGroupName, setLocalGroupName] = useState(groupName);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  const handleRunGroupClick = async (e: MouseEvent) => {
-    e.stopPropagation();
-    await handleRunGroup(group);
-  };
+  const [testGroupState, setTestGroupState] = useSetState({
+    localGroupName: groupName,
+    isEditing: false,
+    showDeleteConfirm: false,
+  });
 
   const handleDeleteGroup = (groupName: string) => {
     const newExpandedGroups = new Set(expandedGroups);
@@ -36,7 +34,9 @@ export function useEditTestGroup(group: string) {
       emptyGroups: newEmptyGroups,
       hasUnsavedChanges: true,
     });
-    setShowDeleteConfirm(false);
+    setTestGroupState({
+      showDeleteConfirm: false,
+    });
   };
 
   const handleRenameGroup = (oldName: string, newName: string) => {
@@ -58,39 +58,32 @@ export function useEditTestGroup(group: string) {
     }
   };
 
-  const handleDeleteClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteConfirm(true);
-  };
-
-  const handleCreateTestClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    handleCreateTest(group);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocalGroupName(e.target.value);
-  };
-
   const handleInputBlur = () => {
-    if (localGroupName.trim() && localGroupName !== groupName) {
-      handleRenameGroup(groupName, localGroupName.trim());
+    if (
+      testGroupState.localGroupName.trim() &&
+      testGroupState.localGroupName !== groupName
+    ) {
+      handleRenameGroup(groupName, testGroupState.localGroupName.trim());
     } else {
-      setLocalGroupName(groupName);
+      setTestGroupState({
+        localGroupName: groupName,
+      });
     }
-    setIsEditing(false);
+    setTestGroupState({
+      isEditing: false,
+    });
   };
 
   const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleInputBlur();
     } else if (e.key === "Escape") {
-      setLocalGroupName(groupName);
-      setIsEditing(false);
+      setTestGroupState({
+        localGroupName: groupName,
+      });
+      setTestGroupState({
+        isEditing: false,
+      });
     }
   };
 
@@ -100,20 +93,15 @@ export function useEditTestGroup(group: string) {
 
   return {
     groupName,
-    localGroupName,
-    isEditing,
-    showDeleteConfirm,
     isExpanded,
     testCount,
     groupResult,
-    setIsEditing,
+    testGroupState,
+    setTestGroupState,
     toggleGroupExpanded,
-    handleRunGroupClick,
+    handleRunGroup,
     handleDeleteGroup,
-    handleDeleteClick,
-    handleCreateTestClick,
-    handleCancelDelete,
-    handleInputChange,
+    handleCreateTest,
     handleInputBlur,
     handleInputKeyDown,
   };

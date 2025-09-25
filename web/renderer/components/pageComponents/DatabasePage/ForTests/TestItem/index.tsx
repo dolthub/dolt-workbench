@@ -18,18 +18,14 @@ type Props = {
 
 export default function TestItem({ test, className }: Props) {
   const {
-    showDeleteConfirm,
-    localAssertionValue,
-    setLocalAssertionValue,
+    testItemState,
+    setTestItemState,
     updateTest,
     handleTestNameEdit,
     handleTestNameBlur,
     debouncedOnUpdateTest,
-    handleDeleteClick,
-    handleConfirmDelete,
-    handleCancelDelete,
-    handleAssertionValueBlur,
-    handleRunTestClick,
+    handleDeleteTest,
+    handleRunTest,
     groupOptions,
     isExpanded,
     editingName,
@@ -87,14 +83,22 @@ export default function TestItem({ test, className }: Props) {
         )}
         <div className={css.testActions}>
           <Button.Link
-            onClick={handleRunTestClick}
+            onClick={async e => {
+              e.stopPropagation();
+              await handleRunTest(test.testName);
+            }}
             className={cx(css.testActionBtn, css.runBtn)}
             data-tooltip-content="Run test"
           >
             <FaPlay />
           </Button.Link>
           <Button.Link
-            onClick={handleDeleteClick}
+            onClick={e => {
+              e.stopPropagation();
+              setTestItemState({
+                showDeleteConfirm: true,
+              });
+            }}
             red
             className={css.testActionBtn}
             data-tooltip-content="Delete test"
@@ -176,9 +180,21 @@ export default function TestItem({ test, className }: Props) {
           <div className={css.fieldGroup}>
             <FormInput
               label="Assertion Value"
-              value={localAssertionValue}
-              onChangeString={setLocalAssertionValue}
-              onBlur={handleAssertionValueBlur}
+              value={testItemState.localAssertionValue}
+              onChangeString={s => {
+                setTestItemState({
+                  localAssertionValue: s,
+                });
+              }}
+              onBlur={() => {
+                if (testItemState.localAssertionValue !== test.assertionValue) {
+                  updateTest(
+                    test.testName,
+                    "assertionValue",
+                    testItemState.localAssertionValue,
+                  );
+                }
+              }}
               placeholder="Expected result"
               className={css.fullWidthFormInput}
             />
@@ -187,12 +203,21 @@ export default function TestItem({ test, className }: Props) {
       )}
 
       <ConfirmationModal
-        isOpen={showDeleteConfirm}
+        isOpen={testItemState.showDeleteConfirm}
         title="Delete Test"
         message={`Are you sure you want to delete the test "${test.testName}"?`}
         confirmText="Delete Test"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
+        onConfirm={() => {
+          setTestItemState({
+            showDeleteConfirm: false,
+          });
+          handleDeleteTest(test.testName);
+        }}
+        onCancel={() => {
+          setTestItemState({
+            showDeleteConfirm: false,
+          });
+        }}
         destructive={true}
       />
     </li>

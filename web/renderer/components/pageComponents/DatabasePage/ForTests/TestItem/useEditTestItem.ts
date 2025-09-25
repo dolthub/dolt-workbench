@@ -1,6 +1,7 @@
-import { MouseEvent, useState, useRef, useEffect, useCallback } from "react";
+import { useRef, useEffect, useCallback } from "react";
 import { useTestContext } from "../context";
 import { Test } from "@gen/graphql-types";
+import { useSetState } from "@dolthub/react-hooks";
 
 export function useEditTestItem(test: Test) {
   const {
@@ -14,10 +15,11 @@ export function useEditTestItem(test: Test) {
     setState,
   } = useTestContext();
 
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [localAssertionValue, setLocalAssertionValue] = useState(
-    test.assertionValue,
-  );
+  const [testItemState, setTestItemState] = useSetState({
+    showDeleteConfirm: false,
+    localAssertionValue: test.assertionValue,
+  });
+
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const updateTest = useCallback(
@@ -71,31 +73,6 @@ export function useEditTestItem(test: Test) {
     }, 500); // 500ms debounce
   };
 
-  const handleDeleteClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteConfirm(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteConfirm(false);
-    handleDeleteTest(test.testName);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-  };
-
-  const handleAssertionValueBlur = () => {
-    if (localAssertionValue !== test.assertionValue) {
-      updateTest(test.testName, "assertionValue", localAssertionValue);
-    }
-  };
-
-  const handleRunTestClick = async (e: MouseEvent) => {
-    e.stopPropagation();
-    await handleRunTest(test.testName);
-  };
-
   useEffect(
     () => () => {
       if (debounceRef.current) {
@@ -106,8 +83,10 @@ export function useEditTestItem(test: Test) {
   );
 
   useEffect(() => {
-    setLocalAssertionValue(test.assertionValue);
-  }, [test.assertionValue]);
+    setTestItemState({
+      localAssertionValue: test.assertionValue,
+    });
+  }, [setTestItemState, test.assertionValue]);
 
   const groupOptions = sortedGroupEntries
     .map(entry => entry[0])
@@ -117,19 +96,14 @@ export function useEditTestItem(test: Test) {
   const testResult = testResults[test.testName];
 
   return {
-    showDeleteConfirm,
-    localAssertionValue,
-    setLocalAssertionValue,
+    testItemState,
+    setTestItemState,
     updateTest,
     handleDeleteTest,
     handleTestNameEdit,
     handleTestNameBlur,
     debouncedOnUpdateTest,
-    handleDeleteClick,
-    handleConfirmDelete,
-    handleCancelDelete,
-    handleAssertionValueBlur,
-    handleRunTestClick,
+    handleRunTest,
     groupOptions,
     isExpanded,
     editingName,
