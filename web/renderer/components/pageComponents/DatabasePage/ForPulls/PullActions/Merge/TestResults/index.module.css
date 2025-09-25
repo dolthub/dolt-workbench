@@ -108,11 +108,10 @@
 
 .itemContainer {
   @apply border-b border-stone-300 py-3 px-4 flex items-start gap-3 hover:bg-stone-50 transition-colors;
-    li:last-child {
-        @apply border-b-0;
-    }
+  li:last-child {
+    @apply border-b-0;
+  }
 }
-
 
 .icon {
   @apply flex-shrink-0 mt-0.5;

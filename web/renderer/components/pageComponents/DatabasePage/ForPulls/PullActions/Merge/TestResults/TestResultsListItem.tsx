@@ -24,14 +24,10 @@ export function TestResultsListItem({
         {...testsUrl(params)
           .withQuery({ runTests: "true" })
           .withHash(encodeURIComponent(test.testName))}
-        className={cx(
-          css.itemContainer,
-          css.linkContent,
-          {
-            [css.red]: isFailure,
-            [css.green]: isSuccess,
-          },
-        )}
+        className={cx(css.itemContainer, css.linkContent, {
+          [css.red]: isFailure,
+          [css.green]: isSuccess,
+        })}
         data-test-name={test.testName}
       >
         <div className={css.icon}>
@@ -48,13 +44,9 @@ export function TestResultsListItem({
 function TestTitle({ test }: { test: TestResult }) {
   return (
     <div className={css.testTitle}>
-      <span className={css.testName}>
-        {excerpt(test.testName, 50)}
-      </span>
+      <span className={css.testName}>{excerpt(test.testName, 50)}</span>
       {test.message && (
-        <span className={css.testMessage}>
-          {excerpt(test.message, 100)}
-        </span>
+        <span className={css.testMessage}>{excerpt(test.message, 100)}</span>
       )}
     </div>
   );
