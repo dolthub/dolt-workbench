@@ -7,7 +7,6 @@ import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "../QueryEditor";
-import { MouseEvent } from "react";
 import ConfirmationModal from "@pageComponents/DatabasePage/ForTests/ConfirmationModal";
 import { Test } from "@gen/graphql-types";
 import { useEditTestItem } from "./useEditTestItem";
