@@ -7,10 +7,9 @@ import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "../QueryEditor";
-import { MouseEvent, useState, useRef, useEffect, useCallback } from "react";
 import ConfirmationModal from "@pageComponents/DatabasePage/ForTests/ConfirmationModal";
-import { useTestContext } from "../context";
 import { Test } from "@gen/graphql-types";
+import { useEditTestItem } from "./useEditTestItem";
 
 type Props = {
   test: Test;
@@ -19,112 +18,20 @@ type Props = {
 
 export default function TestItem({ test, className }: Props) {
   const {
-    expandedItems,
-    editingTestNames,
-    testResults,
-    sortedGroupEntries,
-    tests,
-    toggleExpanded,
+    testItemState,
+    setTestItemState,
+    updateTest,
+    handleTestNameEdit,
+    handleTestNameBlur,
+    debouncedOnUpdateTest,
+    handleDeleteTest,
     handleRunTest,
-    setState,
-  } = useTestContext();
-
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [localAssertionValue, setLocalAssertionValue] = useState(
-    test.assertionValue,
-  );
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const updateTest = useCallback(
-    (name: string, field: keyof Test, value: string) => {
-      setState({
-        tests: tests.map((test: Test) =>
-          test.testName === name ? { ...test, [field]: value } : test,
-        ),
-        hasUnsavedChanges: true,
-      });
-    },
-    [tests, setState],
-  );
-
-  const handleDeleteTest = (testName: string) => {
-    const newExpandedItems = new Set(expandedItems);
-    newExpandedItems.delete(testName);
-    setState({
-      tests: tests.filter(test => test.testName !== testName),
-      expandedItems: newExpandedItems,
-      hasUnsavedChanges: true,
-    });
-  };
-
-  const handleTestNameEdit = (testId: string, name: string) => {
-    setState({
-      editingTestNames: {
-        ...editingTestNames,
-        [testId]: name,
-      },
-    });
-  };
-
-  const handleTestNameBlur = (testName: string) => {
-    const newName = editingTestNames[testName];
-    const test = tests.find(t => t.testName === testName);
-    if (newName.trim() && newName !== test?.testName) {
-      updateTest(testName, "testName", newName.trim());
-    }
-    const newEditingTestNames = { ...editingTestNames };
-    delete newEditingTestNames[testName];
-    setState({ editingTestNames: newEditingTestNames });
-  };
-
-  const groupOptions = sortedGroupEntries
-    .map(entry => entry[0])
-    .filter(group => group !== "");
-  const isExpanded = expandedItems.has(test.testName);
-  const editingName = editingTestNames[test.testName];
-  const testResult = testResults[test.testName];
-
-  const debouncedOnUpdateTest = (field: keyof Test, value: string) => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = setTimeout(() => {
-      updateTest(test.testName, field, value);
-    }, 500); // 500ms debounce
-  };
-
-  useEffect(
-    () => () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    setLocalAssertionValue(test.assertionValue);
-  }, [test.assertionValue]);
-
-  const handleDeleteClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteConfirm(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteConfirm(false);
-    handleDeleteTest(test.testName);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-  };
-
-  const handleAssertionValueBlur = () => {
-    if (localAssertionValue !== test.assertionValue) {
-      updateTest(test.testName, "assertionValue", localAssertionValue);
-    }
-  };
+    groupOptions,
+    isExpanded,
+    editingName,
+    testResult,
+    toggleExpanded,
+  } = useEditTestItem(test);
 
   return (
     <li
@@ -176,7 +83,7 @@ export default function TestItem({ test, className }: Props) {
         )}
         <div className={css.testActions}>
           <Button.Link
-            onClick={async (e: MouseEvent) => {
+            onClick={async e => {
               e.stopPropagation();
               await handleRunTest(test.testName);
             }}
@@ -186,7 +93,12 @@ export default function TestItem({ test, className }: Props) {
             <FaPlay />
           </Button.Link>
           <Button.Link
-            onClick={handleDeleteClick}
+            onClick={e => {
+              e.stopPropagation();
+              setTestItemState({
+                showDeleteConfirm: true,
+              });
+            }}
             red
             className={css.testActionBtn}
             data-tooltip-content="Delete test"
@@ -268,9 +180,21 @@ export default function TestItem({ test, className }: Props) {
           <div className={css.fieldGroup}>
             <FormInput
               label="Assertion Value"
-              value={localAssertionValue}
-              onChangeString={setLocalAssertionValue}
-              onBlur={handleAssertionValueBlur}
+              value={testItemState.localAssertionValue}
+              onChangeString={s => {
+                setTestItemState({
+                  localAssertionValue: s,
+                });
+              }}
+              onBlur={() => {
+                if (testItemState.localAssertionValue !== test.assertionValue) {
+                  updateTest(
+                    test.testName,
+                    "assertionValue",
+                    testItemState.localAssertionValue,
+                  );
+                }
+              }}
               placeholder="Expected result"
               className={css.fullWidthFormInput}
             />
@@ -279,12 +203,21 @@ export default function TestItem({ test, className }: Props) {
       )}
 
       <ConfirmationModal
-        isOpen={showDeleteConfirm}
+        isOpen={testItemState.showDeleteConfirm}
         title="Delete Test"
         message={`Are you sure you want to delete the test "${test.testName}"?`}
         confirmText="Delete Test"
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
+        onConfirm={() => {
+          setTestItemState({
+            showDeleteConfirm: false,
+          });
+          handleDeleteTest(test.testName);
+        }}
+        onCancel={() => {
+          setTestItemState({
+            showDeleteConfirm: false,
+          });
+        }}
         destructive={true}
       />
     </li>
