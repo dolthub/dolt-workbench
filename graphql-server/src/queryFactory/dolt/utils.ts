@@ -28,3 +28,15 @@ export function unionCols(a: t.RawRows, b: t.RawRows): t.RawRows {
 export function getAuthorString(commitAuthor: t.CommitAuthor): string {
   return `${commitAuthor.name} <${commitAuthor.email}>`;
 }
+
+export function getTestIdentifierArg(
+  testIdentifier: t.TestIdentifierArgs | undefined,
+): string | undefined {
+  if (testIdentifier?.testName) {
+    return testIdentifier.testName;
+  } else if (testIdentifier?.groupName) {
+    return testIdentifier.groupName;
+  } else {
+    return undefined;
+  }
+}

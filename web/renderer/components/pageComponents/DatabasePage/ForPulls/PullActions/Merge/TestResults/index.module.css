@@ -1,0 +1,153 @@
+.outer {
+  @apply mx-auto max-w-3xl flex flex-col mb-4 mt-4;
+
+  h3 {
+    @apply text-center mt-4 mb-4;
+  }
+
+  @screen lg {
+    @apply flex-row;
+  }
+}
+
+.container {
+  @apply w-full mb-0 rounded-xl min-w-[15rem];
+  @screen lg {
+    @apply w-[calc(100%-4rem)] mx-3 mb-0;
+  }
+}
+
+.top {
+  @apply bg-green-50 pl-4 pr-4 py-2 border border-green-500 flex justify-between items-start rounded-t-xl flex-wrap w-full;
+
+  @screen lg {
+    @apply items-center pl-6;
+  }
+}
+
+.picContainer {
+  @apply w-7 h-7 mb-4 mr-1 text-white relative rounded-full bg-green-400 flex-shrink-0;
+
+  @screen lg {
+    @apply mb-0 mt-3 ml-2;
+  }
+  svg {
+    @apply text-white mt-1 ml-1 w-5 h-5;
+  }
+}
+
+.redIcon {
+  @apply bg-red-300;
+}
+
+.orangeIcon {
+  @apply bg-orange-300;
+}
+
+.tests {
+  @apply border-x border-b rounded-b-xl bg-white border-green-500;
+  li:last-child {
+    @apply rounded-b-xl overflow-hidden;
+  }
+}
+
+.green {
+  @apply text-green-500;
+}
+
+.testsStatusIcon {
+  @apply inline-block mr-2 text-2xl;
+}
+
+.red {
+  @apply text-red-400 flex border-red-400 bg-coral-50;
+}
+
+.testsRed {
+  @apply border-red-400;
+}
+
+.orange {
+  @apply text-orange-500 flex border-orange-300 bg-orange-50;
+}
+
+.testsOrange {
+  @apply border-orange-300;
+}
+
+.testsGreen {
+  @apply border-green-500;
+}
+
+.noTests {
+  @apply py-4 px-6 text-center text-stone-500 text-sm;
+}
+
+.runButton {
+  @apply mx-2;
+  @screen lg {
+    @apply mx-0;
+  }
+}
+
+.titleSection {
+  @apply flex items-center;
+}
+
+.greenButton {
+  @apply bg-green-500 text-white border-green-500;
+}
+
+.redButton {
+  @apply bg-red-500 text-white border-red-500;
+}
+
+.orangeButton {
+  @apply bg-orange-500 text-white border-orange-500;
+}
+
+.itemContainer {
+  @apply border-b border-stone-300 py-3 px-4 flex items-start gap-3 hover:bg-stone-50 transition-colors;
+  li:last-child {
+    @apply border-b-0;
+  }
+}
+
+.icon {
+  @apply flex-shrink-0 mt-0.5;
+  svg {
+    @apply w-4 h-4;
+  }
+}
+
+.successIcon {
+  @apply text-green-500;
+}
+
+.failureIcon {
+  @apply text-red-400;
+}
+
+.pendingIcon {
+  @apply text-orange-500;
+}
+
+.content {
+  @apply flex-1 min-w-0;
+}
+
+.testTitle {
+  @apply flex flex-col gap-1;
+}
+
+.testName {
+  @apply font-medium text-stone-700 text-sm;
+}
+
+.testMessage {
+  @apply text-xs text-stone-600 break-words;
+}
+
+.linkContent {
+  @apply flex items-start gap-3 w-full no-underline;
+}
