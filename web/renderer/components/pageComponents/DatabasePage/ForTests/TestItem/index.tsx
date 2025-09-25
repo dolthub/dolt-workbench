@@ -7,10 +7,10 @@ import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "../QueryEditor";
-import { MouseEvent, useState, useRef, useEffect, useCallback } from "react";
+import { MouseEvent } from "react";
 import ConfirmationModal from "@pageComponents/DatabasePage/ForTests/ConfirmationModal";
-import { useTestContext } from "../context";
 import { Test } from "@gen/graphql-types";
+import { useEditTestItem } from "./useEditTestItem";
 
 type Props = {
   test: Test;
@@ -19,112 +19,24 @@ type Props = {
 
 export default function TestItem({ test, className }: Props) {
   const {
-    expandedItems,
-    editingTestNames,
-    testResults,
-    sortedGroupEntries,
-    tests,
+    showDeleteConfirm,
+    localAssertionValue,
+    setLocalAssertionValue,
+    updateTest,
+    handleTestNameEdit,
+    handleTestNameBlur,
+    debouncedOnUpdateTest,
+    handleDeleteClick,
+    handleConfirmDelete,
+    handleCancelDelete,
+    handleAssertionValueBlur,
+    handleRunTestClick,
+    groupOptions,
+    isExpanded,
+    editingName,
+    testResult,
     toggleExpanded,
-    handleRunTest,
-    setState,
-  } = useTestContext();
-
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-  const [localAssertionValue, setLocalAssertionValue] = useState(
-    test.assertionValue,
-  );
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const updateTest = useCallback(
-    (name: string, field: keyof Test, value: string) => {
-      setState({
-        tests: tests.map((test: Test) =>
-          test.testName === name ? { ...test, [field]: value } : test,
-        ),
-        hasUnsavedChanges: true,
-      });
-    },
-    [tests, setState],
-  );
-
-  const handleDeleteTest = (testName: string) => {
-    const newExpandedItems = new Set(expandedItems);
-    newExpandedItems.delete(testName);
-    setState({
-      tests: tests.filter(test => test.testName !== testName),
-      expandedItems: newExpandedItems,
-      hasUnsavedChanges: true,
-    });
-  };
-
-  const handleTestNameEdit = (testId: string, name: string) => {
-    setState({
-      editingTestNames: {
-        ...editingTestNames,
-        [testId]: name,
-      },
-    });
-  };
-
-  const handleTestNameBlur = (testName: string) => {
-    const newName = editingTestNames[testName];
-    const test = tests.find(t => t.testName === testName);
-    if (newName.trim() && newName !== test?.testName) {
-      updateTest(testName, "testName", newName.trim());
-    }
-    const newEditingTestNames = { ...editingTestNames };
-    delete newEditingTestNames[testName];
-    setState({ editingTestNames: newEditingTestNames });
-  };
-
-  const groupOptions = sortedGroupEntries
-    .map(entry => entry[0])
-    .filter(group => group !== "");
-  const isExpanded = expandedItems.has(test.testName);
-  const editingName = editingTestNames[test.testName];
-  const testResult = testResults[test.testName];
-
-  const debouncedOnUpdateTest = (field: keyof Test, value: string) => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
-    }
-    debounceRef.current = setTimeout(() => {
-      updateTest(test.testName, field, value);
-    }, 500); // 500ms debounce
-  };
-
-  useEffect(
-    () => () => {
-      if (debounceRef.current) {
-        clearTimeout(debounceRef.current);
-      }
-    },
-    [],
-  );
-
-  useEffect(() => {
-    setLocalAssertionValue(test.assertionValue);
-  }, [test.assertionValue]);
-
-  const handleDeleteClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteConfirm(true);
-  };
-
-  const handleConfirmDelete = () => {
-    setShowDeleteConfirm(false);
-    handleDeleteTest(test.testName);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-  };
-
-  const handleAssertionValueBlur = () => {
-    if (localAssertionValue !== test.assertionValue) {
-      updateTest(test.testName, "assertionValue", localAssertionValue);
-    }
-  };
+  } = useEditTestItem(test);
 
   return (
     <li
@@ -176,10 +88,7 @@ export default function TestItem({ test, className }: Props) {
         )}
         <div className={css.testActions}>
           <Button.Link
-            onClick={async (e: MouseEvent) => {
-              e.stopPropagation();
-              await handleRunTest(test.testName);
-            }}
+            onClick={handleRunTestClick}
             className={cx(css.testActionBtn, css.runBtn)}
             data-tooltip-content="Run test"
           >

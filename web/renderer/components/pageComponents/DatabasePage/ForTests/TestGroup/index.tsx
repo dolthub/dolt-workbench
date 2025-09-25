@@ -5,13 +5,11 @@ import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
 import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
 import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
 import { Button } from "@dolthub/react-components";
-import { useState, KeyboardEvent, ChangeEvent, MouseEvent } from "react";
 import cx from "classnames";
 import css from "./index.module.css";
 import ConfirmationModal from "../ConfirmationModal";
 import { pluralize } from "@dolthub/web-utils";
-import { useTestContext } from "../context";
-import { getGroupResult } from "@pageComponents/DatabasePage/ForTests/utils";
+import { useEditTestGroup } from "./useEditTestGroup";
 
 type Props = {
   group: string;
@@ -20,105 +18,24 @@ type Props = {
 
 export default function TestGroup({ group, className }: Props) {
   const {
-    tests,
-    expandedGroups,
-    groupedTests,
-    testResults,
-    emptyGroups,
+    groupName,
+    localGroupName,
+    isEditing,
+    showDeleteConfirm,
+    isExpanded,
+    testCount,
+    groupResult,
+    setIsEditing,
     toggleGroupExpanded,
-    handleRunGroup,
-    setState,
-    handleCreateTest,
-  } = useTestContext();
-
-  const groupName = group || "No Group";
-  const [localGroupName, setLocalGroupName] = useState(groupName);
-  const [isEditing, setIsEditing] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
-
-  const isExpanded = expandedGroups.has(group);
-  const testCount = groupedTests[group].length || 0;
-  const groupResult = getGroupResult(group, groupedTests, testResults);
-
-  const handleRunGroupClick = async (e: MouseEvent) => {
-    e.stopPropagation();
-    await handleRunGroup(group);
-  };
-
-  const handleDeleteGroup = (groupName: string) => {
-    const newExpandedGroups = new Set(expandedGroups);
-    newExpandedGroups.delete(groupName);
-    const newEmptyGroups = new Set(emptyGroups);
-    newEmptyGroups.delete(groupName);
-    setState({
-      tests: tests.filter(test => test.testGroup !== groupName),
-      expandedGroups: newExpandedGroups,
-      emptyGroups: newEmptyGroups,
-      hasUnsavedChanges: true,
-    });
-    setShowDeleteConfirm(false);
-  };
-
-  const handleRenameGroup = (oldName: string, newName: string) => {
-    if (newName.trim() && oldName !== newName.trim()) {
-      const newExpandedGroups = new Set(expandedGroups);
-      if (newExpandedGroups.has(oldName)) {
-        newExpandedGroups.delete(oldName);
-        newExpandedGroups.add(newName.trim());
-      }
-      setState({
-        tests: tests.map(test =>
-          test.testGroup === oldName
-            ? { ...test, testGroup: newName.trim() }
-            : test,
-        ),
-        expandedGroups: newExpandedGroups,
-        hasUnsavedChanges: true,
-      });
-    }
-  };
-
-  const handleDeleteClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    setShowDeleteConfirm(true);
-  };
-
-  const handleCreateTestClick = (e: MouseEvent) => {
-    e.stopPropagation();
-    handleCreateTest(group);
-  };
-
-  const handleCancelDelete = () => {
-    setShowDeleteConfirm(false);
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setLocalGroupName(e.target.value);
-  };
-
-  const handleInputBlur = () => {
-    if (localGroupName.trim() && localGroupName !== groupName) {
-      handleRenameGroup(groupName, localGroupName.trim());
-    } else {
-      setLocalGroupName(groupName);
-    }
-    setIsEditing(false);
-  };
-
-  const handleInputKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      handleInputBlur();
-    } else if (e.key === "Escape") {
-      setLocalGroupName(groupName);
-      setIsEditing(false);
-    }
-  };
-
-  const handleHeaderClick = () => {
-    if (!isEditing) {
-      toggleGroupExpanded(group);
-    }
-  };
+    handleRunGroupClick,
+    handleDeleteGroup,
+    handleDeleteClick,
+    handleCreateTestClick,
+    handleCancelDelete,
+    handleInputChange,
+    handleInputBlur,
+    handleInputKeyDown,
+  } = useEditTestGroup(group);
 
   return (
     <div
@@ -127,7 +44,11 @@ export default function TestGroup({ group, className }: Props) {
         { [css.groupExpanded]: isExpanded },
         className,
       )}
-      onClick={handleHeaderClick}
+      onClick={() => {
+        if (!isEditing) {
+          toggleGroupExpanded(group);
+        }
+      }}
     >
       <div className={css.groupHeaderContent}>
         <div className={css.groupHeaderLeft}>
