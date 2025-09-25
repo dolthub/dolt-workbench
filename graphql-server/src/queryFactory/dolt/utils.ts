@@ -1,5 +1,4 @@
 import * as t from "../types";
-import { TestIdentifierArgs } from "../types";
 
 export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   try {
@@ -31,7 +30,7 @@ export function getAuthorString(commitAuthor: t.CommitAuthor): string {
 }
 
 export function getTestIdentifierArg(
-  testIdentifier: TestIdentifierArgs | undefined,
+  testIdentifier: t.TestIdentifierArgs | undefined,
 ): string | undefined {
   if (testIdentifier?.testName) {
     return testIdentifier.testName;

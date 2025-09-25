@@ -3,7 +3,7 @@ import { RefParams } from "@lib/params";
 import Link from "@components/links/Link";
 import { tests as testsUrl } from "@lib/urls";
 import cx from "classnames";
-import css from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/index.module.css";
+import css from "./index.module.css";
 import { excerpt } from "@dolthub/web-utils";
 import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
 import { FiX } from "@react-icons/all-files/fi/FiX";
@@ -25,19 +25,19 @@ export function TestResultsListItem({
           .withQuery({ runTests: "true" })
           .withHash(encodeURIComponent(test.testName))}
         className={cx(
-          css.testResultsItemContainer,
-          css.testResultsLinkContent,
+          css.itemContainer,
+          css.linkContent,
           {
-            [css.testResultsRed]: isFailure,
-            [css.testResultsGreen]: isSuccess,
+            [css.red]: isFailure,
+            [css.green]: isSuccess,
           },
         )}
         data-test-name={test.testName}
       >
-        <div className={css.testResultsIcon}>
+        <div className={css.icon}>
           <TestResultsListItemIconSwitch test={test} />
         </div>
-        <div className={css.testResultsContent}>
+        <div className={css.content}>
           <TestTitle test={test} />
         </div>
       </Link>
@@ -47,12 +47,12 @@ export function TestResultsListItem({
 
 function TestTitle({ test }: { test: TestResult }) {
   return (
-    <div className={css.testResultsTestTitle}>
-      <span className={css.testResultsTestName}>
+    <div className={css.testTitle}>
+      <span className={css.testName}>
         {excerpt(test.testName, 50)}
       </span>
       {test.message && (
-        <span className={css.testResultsTestMessage}>
+        <span className={css.testMessage}>
           {excerpt(test.message, 100)}
         </span>
       )}
@@ -62,7 +62,7 @@ function TestTitle({ test }: { test: TestResult }) {
 
 function TestResultsListItemIconSwitch({ test }: { test: TestResult }) {
   if (test.status === "PASS") {
-    return <FiCheck className={css.testResultsSuccessIcon} />;
+    return <FiCheck className={css.successIcon} />;
   }
-  return <FiX className={css.testResultsFailureIcon} />;
+  return <FiX className={css.failureIcon} />;
 }

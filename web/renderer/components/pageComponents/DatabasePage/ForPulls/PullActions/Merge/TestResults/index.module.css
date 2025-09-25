@@ -1,4 +1,4 @@
-.testResultsOuter {
+.outer {
   @apply mx-auto max-w-3xl flex flex-col mb-4 mt-4;
 
   h3 {
@@ -10,14 +10,14 @@
   }
 }
 
-.testResultsContainer {
+.container {
   @apply w-full mb-0 rounded-xl min-w-[15rem];
   @screen lg {
     @apply w-[calc(100%-4rem)] mx-3 mb-0;
   }
 }
 
-.testResultsTop {
+.top {
   @apply bg-green-50 pl-4 pr-4 py-2 border border-green-500 flex justify-between items-start rounded-t-xl flex-wrap w-full;
 
   @screen lg {
@@ -25,7 +25,7 @@
   }
 }
 
-.testResultsPicContainer {
+.picContainer {
   @apply w-7 h-7 mb-4 mr-1 text-white relative rounded-full bg-green-400 flex-shrink-0;
 
   @screen lg {
@@ -36,119 +36,119 @@
   }
 }
 
-.testResultsRedIcon {
+.redIcon {
   @apply bg-red-300;
 }
 
-.testResultsOrangeIcon {
+.orangeIcon {
   @apply bg-orange-300;
 }
 
-.testResultsTests {
+.tests {
   @apply border-x border-b rounded-b-xl bg-white border-green-500;
   li:last-child {
     @apply rounded-b-xl overflow-hidden;
   }
 }
 
-.testResultsGreen {
+.green {
   @apply text-green-500;
 }
 
-.testResultsTestsStatusIcon {
+.testsStatusIcon {
   @apply inline-block mr-2 text-2xl;
 }
 
-.testResultsRed {
+.red {
   @apply text-red-400 flex border-red-400 bg-coral-50;
 }
 
-.testResultsTestsRed {
+.testsRed {
   @apply border-red-400;
 }
 
-.testResultsOrange {
+.orange {
   @apply text-orange-500 flex border-orange-300 bg-orange-50;
 }
 
-.testResultsTestsOrange {
+.testsOrange {
   @apply border-orange-300;
 }
 
-.testResultsTestsGreen {
+.testsGreen {
   @apply border-green-500;
 }
 
-.testResultsNoTests {
+.noTests {
   @apply py-4 px-6 text-center text-stone-500 text-sm;
 }
 
-.testResultsRunButton {
+.runButton {
   @apply mx-2;
   @screen lg {
     @apply mx-0;
   }
 }
 
-.testResultsTitleSection {
+.titleSection {
   @apply flex items-center;
 }
 
-.testResultsGreenButton {
+.greenButton {
   @apply bg-green-500 text-white border-green-500;
 }
 
-.testResultsRedButton {
+.redButton {
   @apply bg-red-500 text-white border-red-500;
 }
 
-.testResultsOrangeButton {
+.orangeButton {
   @apply bg-orange-500 text-white border-orange-500;
 }
 
-.testResultsItemContainer {
+.itemContainer {
   @apply border-b border-stone-300 py-3 px-4 flex items-start gap-3 hover:bg-stone-50 transition-colors;
+    li:last-child {
+        @apply border-b-0;
+    }
 }
 
-li:last-child .testResultsItemContainer {
-  @apply border-b-0;
-}
 
-.testResultsIcon {
+.icon {
   @apply flex-shrink-0 mt-0.5;
   svg {
     @apply w-4 h-4;
   }
 }
 
-.testResultsSuccessIcon {
+.successIcon {
   @apply text-green-500;
 }
 
-.testResultsFailureIcon {
+.failureIcon {
   @apply text-red-400;
 }
 
-.testResultsPendingIcon {
+.pendingIcon {
   @apply text-orange-500;
 }
 
-.testResultsContent {
+.content {
   @apply flex-1 min-w-0;
 }
 
-.testResultsTestTitle {
+.testTitle {
   @apply flex flex-col gap-1;
 }
 
-.testResultsTestName {
+.testName {
   @apply font-medium text-stone-700 text-sm;
 }
 
-.testResultsTestMessage {
+.testMessage {
   @apply text-xs text-stone-600 break-words;
 }
 
-.testResultsLinkContent {
+.linkContent {
   @apply flex items-start gap-3 w-full no-underline;
 }

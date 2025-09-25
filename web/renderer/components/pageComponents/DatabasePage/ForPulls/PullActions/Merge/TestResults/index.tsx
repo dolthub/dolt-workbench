@@ -60,7 +60,7 @@ export function TestResults({ params }: { params: RefParams }) {
 
   if (loading) {
     return (
-      <div className={css.testResultsOuter}>
+      <div className={css.outer}>
         <SmallLoader.WithText text="Loading tests..." loaded={false} />
       </div>
     );
@@ -69,9 +69,9 @@ export function TestResults({ params }: { params: RefParams }) {
   if (error) {
     console.error("Error loading test list:", error);
     return (
-      <div className={css.testResultsOuter}>
-        <div className={css.testResultsContainer}>
-          <div className={css.testResultsTop}>
+      <div className={css.outer}>
+        <div className={css.container}>
+          <div className={css.top}>
             <span style={{ color: "red" }}>
               Failed to load tests: {error.message}
             </span>
@@ -92,23 +92,23 @@ export function TestResults({ params }: { params: RefParams }) {
   const { red, orange, green } = getTestStatusColors(testResults);
 
   return (
-    <div className={css.testResultsOuter}>
+    <div className={css.outer}>
       <span
-        className={cx(css.testResultsPicContainer, {
-          [css.testResultsOrangeIcon]: orange,
-          [css.testResultsRedIcon]: red,
-          [css.testResultsGreenIcon]: green,
+        className={cx(css.picContainer, {
+          [css.orangeIcon]: orange,
+          [css.redIcon]: red,
+          [css.greenIcon]: green,
         })}
       >
         <TestResultsIconSwitch red={red} green={green} orange={orange} />
       </span>
       <Arrow red={red} green={green} orange={orange} />
-      <div className={css.testResultsContainer}>
+      <div className={css.container}>
         <div
-          className={cx(css.testResultsTop, {
-            [css.testResultsRed]: red,
-            [css.testResultsGreen]: green,
-            [css.testResultsOrange]: orange,
+          className={cx(css.top, {
+            [css.red]: red,
+            [css.green]: green,
+            [css.orange]: orange,
           })}
         >
           <TestResultsTitle
@@ -119,10 +119,10 @@ export function TestResults({ params }: { params: RefParams }) {
           />
         </div>
         <div
-          className={cx(css.testResultsTests, {
-            [css.testResultsTestsRed]: red,
-            [css.testResultsTestsGreen]: green,
-            [css.testResultsTestsOrange]: orange,
+          className={cx(css.tests, {
+            [css.testsRed]: red,
+            [css.testsGreen]: green,
+            [css.testsOrange]: orange,
           })}
         >
           {(runTestError || runTestsError) && (
@@ -140,7 +140,7 @@ export function TestResults({ params }: { params: RefParams }) {
                 />
               ))
             ) : (
-              <li className={css.testResultsNoTests}>
+              <li className={css.noTests}>
                 <span>Run tests to see results here.</span>
               </li>
             )}
@@ -159,9 +159,9 @@ function TestResultsTitle({
 }: TestStatusColors & { onRunTests: () => void }) {
   return (
     <>
-      <div className={css.testResultsTitleSection}>
+      <div className={css.titleSection}>
         <TestResultsIconSwitch
-          className={css.testResultsTestsStatusIcon}
+          className={css.testsStatusIcon}
           red={red}
           green={green}
           orange={orange}
@@ -169,10 +169,10 @@ function TestResultsTitle({
         Tests
       </div>
       <Button
-        className={cx(css.testResultsRunButton, {
-          [css.testResultsGreenButton]: green,
-          [css.testResultsRedButton]: red,
-          [css.testResultsOrangeButton]: orange,
+        className={cx(css.runButton, {
+          [css.greenButton]: green,
+          [css.redButton]: red,
+          [css.orangeButton]: orange,
         })}
         onClick={onRunTests}
       >
