@@ -101,10 +101,10 @@ your table directly from the web interface.
 
 ![File upload](./images/file-importer.png)
 
-## Version control features with [Dolt](https://doltdb.com)
+## Version control features with [Dolt](https://doltdb.com) and [Doltgres](https://github.com/dolthub/doltgresql)
 
 [Dolt](https://doltdb.com) is a SQL database you can fork, clone, branch, merge, push and
-pull just like a Git repository. When connecting the workbench to a Dolt database, you
+pull just like a Git repository. When connecting the workbench to a Dolt or Doltgres database, you
 gain access to these powerful version control features.
 
 ### Commit log visualizations
