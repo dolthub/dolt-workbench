@@ -14,38 +14,51 @@ export type TableNameWithStatus = {
 type TableNameWithStatusReturnType = {
   tables?: TableNameWithStatus[];
   loading: boolean;
-  error?: ApolloErrorType,
+  error?: ApolloErrorType;
   refetch: () => Promise<void>;
-}
+};
 
 export function useTableNamesWithStatus(
   params: RefOptionalSchemaParams,
 ): TableNameWithStatusReturnType {
-
   const tableNamesResponse = useTableNames(params);
   const statusResponse = useGetStatusQuery({ variables: { ...params } });
 
   const [err, setErr] = useApolloError(statusResponse.error);
-  const [tables, setTables] = useState(getTables(tableNamesResponse.tables, statusResponse.data?.status ?? []));
+  const [tables, setTables] = useState(
+    getTables(tableNamesResponse.tables, statusResponse.data?.status ?? []),
+  );
 
   const refetch = async () => {
     try {
       await tableNamesResponse.refetch();
       const newStatusResponse = await statusResponse.refetch({ ...params });
-      setTables(getTables(tableNamesResponse.tables, newStatusResponse.data.status));
+      setTables(
+        getTables(tableNamesResponse.tables, newStatusResponse.data.status),
+      );
     } catch (e) {
       handleCaughtApolloError(e, setErr);
     }
   };
 
   useEffect(() => {
-    setTables(getTables(tableNamesResponse.tables, statusResponse.data?.status ?? []));
+    setTables(
+      getTables(tableNamesResponse.tables, statusResponse.data?.status ?? []),
+    );
   }, [tableNamesResponse.tables, statusResponse.data, setTables]);
 
-  return { tables, loading: tableNamesResponse.loading || statusResponse.loading, error: err, refetch };
+  return {
+    tables,
+    loading: tableNamesResponse.loading || statusResponse.loading,
+    error: err,
+    refetch,
+  };
 }
 
-function getTables(tableNames: string[] | undefined, statusList: Status[]): TableNameWithStatus[] {
+function getTables(
+  tableNames: string[] | undefined,
+  statusList: Status[],
+): TableNameWithStatus[] {
   if (!tableNames) {
     return [];
   }

@@ -38,10 +38,8 @@
   @apply flex items-center text-sm;
   &:hover {
     @apply bg-storm-200;
-
   }
 }
-
 
 .tableName {
   @apply hidden;
@@ -64,11 +62,11 @@
 }
 
 .tableModified {
-    @apply text-orange-200;
+  @apply text-orange-200;
 }
 
 .tableCreated {
-    @apply text-green-300;
+  @apply text-green-300;
 }
 
 .mobileTableLink {
@@ -88,5 +86,5 @@
 }
 
 .statusIndicator {
-    @apply flex items-end mr-6;
+  @apply flex items-end mr-6;
 }

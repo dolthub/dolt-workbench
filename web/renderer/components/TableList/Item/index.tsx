@@ -34,10 +34,13 @@ export default function Item({ tableName, status, params }: Props) {
     >
       <div className={css.table}>
         <span>
-          <Btn onClick={() => setExpanded(!expanded)} className={cx(css.tableName, {
+          <Btn
+            onClick={() => setExpanded(!expanded)}
+            className={cx(css.tableName, {
               [css.tableModified]: status === "modified",
               [css.tableCreated]: status === "new table",
-          })}>
+            })}
+          >
             {expanded ? <FaChevronUp /> : <FaChevronDown />}
             {excerpt(tableName, 33)}
           </Btn>
@@ -49,7 +52,7 @@ export default function Item({ tableName, status, params }: Props) {
           </Link>
         </span>
         <Right params={{ ...params, tableName }} active={active} />
-        {status && <StatusIndicator status={status}/>}
+        {status && <StatusIndicator status={status} />}
       </div>
       {expanded && <ColumnList params={{ ...params, tableName }} />}
     </li>
@@ -61,7 +64,7 @@ function StatusIndicator({ status }: { status: string }) {
 
   return (
     <>
-      <div 
+      <div
         className={cx(css.statusIndicator, {
           [css.tableModified]: status === "modified",
           [css.tableCreated]: status === "new table",
@@ -75,5 +78,5 @@ function StatusIndicator({ status }: { status: string }) {
       </div>
       <Tooltip id={tooltipId} />
     </>
-  )
+  );
 }

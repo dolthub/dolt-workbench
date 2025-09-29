@@ -10,7 +10,10 @@ import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCirc
 import { useEffect } from "react";
 import Item from "./Item";
 import css from "./index.module.css";
-import { TableNameWithStatus, useTableNamesWithStatus } from "@components/TableList/useTableNamesWithStatus";
+import {
+  TableNameWithStatus,
+  useTableNamesWithStatus,
+} from "@components/TableList/useTableNamesWithStatus";
 
 type Props = {
   params: RefOptionalSchemaParams & {
@@ -35,7 +38,12 @@ function Inner(props: InnerProps) {
       {props.tables.length ? (
         <ol className={css.tableList}>
           {props.tables.map(t => (
-            <Item key={t.name} tableName={t.name} status={t.status} params={props.params} />
+            <Item
+              key={t.name}
+              tableName={t.name}
+              status={t.status}
+              params={props.params}
+            />
           ))}
         </ol>
       ) : (
