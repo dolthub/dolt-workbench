@@ -5,7 +5,6 @@ import {
 } from "@gen/graphql-types";
 import { tableNamesMock } from "@hooks/useTableNames/mocks";
 import { RefParams } from "@lib/params";
-import { GET_STATUS } from "@components/StatusWithOptions/queries";
 
 const databaseName = "test";
 
