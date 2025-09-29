@@ -4,13 +4,13 @@ import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { QueryHandler, Tooltip } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
-import useTableNames from "@hooks/useTableNames";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { createTable } from "@lib/urls";
 import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
 import { useEffect } from "react";
 import Item from "./Item";
 import css from "./index.module.css";
+import { TableNameWithStatus, useTableNamesWithStatus } from "@components/TableList/useTableNamesWithStatus";
 
 type Props = {
   params: RefOptionalSchemaParams & {
@@ -19,7 +19,7 @@ type Props = {
 };
 
 type InnerProps = Props & {
-  tables: string[];
+  tables: TableNameWithStatus[];
 };
 
 function Inner(props: InnerProps) {
@@ -35,7 +35,7 @@ function Inner(props: InnerProps) {
       {props.tables.length ? (
         <ol className={css.tableList}>
           {props.tables.map(t => (
-            <Item key={t} tableName={t} params={props.params} />
+            <Item key={t.name} tableName={t.name} status={t.status} params={props.params} />
           ))}
         </ol>
       ) : (
@@ -57,7 +57,7 @@ function Inner(props: InnerProps) {
 }
 
 export default function TableList(props: Props) {
-  const res = useTableNames(props.params);
+  const res = useTableNamesWithStatus(props.params);
   return (
     <Section tab={0} refetch={res.refetch}>
       <QueryHandler
