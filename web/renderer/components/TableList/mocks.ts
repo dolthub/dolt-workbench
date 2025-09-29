@@ -1,5 +1,8 @@
 import { MockedResponse } from "@apollo/client/testing";
-import { GetStatusDocument, TableWithColumnsFragment } from "@gen/graphql-types";
+import {
+  GetStatusDocument,
+  TableWithColumnsFragment,
+} from "@gen/graphql-types";
 import { tableNamesMock } from "@hooks/useTableNames/mocks";
 import { RefParams } from "@lib/params";
 import { GET_STATUS } from "@components/StatusWithOptions/queries";
@@ -53,27 +56,31 @@ export const tableTwo: TableWithColumnsFragment = {
 const getStatusMock = (
   params: RefParams,
   tables: TableWithColumnsFragment[] = [],
-): MockedResponse => {return {
-  request: {
-    query: GetStatusDocument,
-    variables: {
-      databaseName: params.databaseName,
-      refName: params.refName,
-    },
-  },
-  result: {
-    data: {
-      status: tables.map((table, index) => {return {
-        _id: `status-${table.tableName}`,
-        __typename: "Status",
+): MockedResponse => {
+  return {
+    request: {
+      query: GetStatusDocument,
+      variables: {
+        databaseName: params.databaseName,
         refName: params.refName,
-        tableName: table.tableName,
-        staged: 0,
-        status: index === 0 ? "modified" : "new table",
-      }}),
+      },
     },
-  },
-}};
+    result: {
+      data: {
+        status: tables.map((table, index) => {
+          return {
+            _id: `status-${table.tableName}`,
+            __typename: "Status",
+            refName: params.refName,
+            tableName: table.tableName,
+            staged: 0,
+            status: index === 0 ? "modified" : "new table",
+          };
+        }),
+      },
+    },
+  };
+};
 
 export const mocks = (
   params: RefParams,

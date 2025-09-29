@@ -35,7 +35,7 @@ describe("test TableList", () => {
       });
 
       const { user } = setup(
-        <MockedProvider mocks={mocks.mocks(params, tables)} >
+        <MockedProvider mocks={mocks.mocks(params, tables)}>
           <TableList params={params} />
         </MockedProvider>,
       );
