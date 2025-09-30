@@ -62,7 +62,7 @@
 }
 
 .tableModified {
-  @apply text-orange-200;
+  @apply text-yellow-200;
 }
 
 .tableCreated {
@@ -74,7 +74,7 @@
 }
 
 .right {
-  @apply flex items-center ml-auto;
+  @apply flex items-center ml-auto mr-6;
 
   a {
     @apply hidden lg:block;
@@ -86,5 +86,5 @@
 }
 
 .statusIndicator {
-  @apply flex items-end mr-6;
+  @apply flex items-end absolute right-4;
 }

@@ -21,7 +21,6 @@ type Props = {
 export default function Item({ tableName, status, params }: Props) {
   const active = tableName === params.tableName;
   const [expanded, setExpanded] = useState(active);
-  console.log(tableName, status);
 
   return (
     <li
