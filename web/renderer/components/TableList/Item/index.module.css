@@ -12,7 +12,7 @@
 
 .active,
 .item:hover {
-  @apply bg-storm-50 text-storm-600;
+  @apply bg-storm-200;
 }
 
 .item:hover .buttonIcon {
@@ -27,20 +27,17 @@
 }
 
 .isExpanded .tableName {
-  @apply text-storm-600 font-normal;
+  @apply font-normal;
 }
 
 .isExpanded .table {
-  @apply text-storm-600 font-normal bg-storm-50;
+  @apply font-normal bg-storm-200;
 }
 
 .table {
-  @apply flex justify-between items-center text-sm;
+  @apply flex items-center text-sm;
   &:hover {
-    @apply bg-storm-50;
-    .tableName {
-      @apply text-storm-600;
-    }
+    @apply bg-storm-200;
   }
 }
 
@@ -64,12 +61,20 @@
   }
 }
 
+.tableModified {
+  @apply text-yellow-200;
+}
+
+.tableCreated {
+  @apply text-green-300;
+}
+
 .mobileTableLink {
   @apply flex justify-between mx-2 p-3 text-link-1 font-normal w-full text-sm lg:hidden;
 }
 
 .right {
-  @apply flex items-center;
+  @apply flex items-center ml-auto mr-6;
 
   a {
     @apply hidden lg:block;
@@ -78,4 +83,8 @@
 
 .tableStatus {
   @apply text-coral-400 bg-white rounded-full px-2 mr-3 font-normal;
+}
+
+.statusIndicator {
+  @apply flex items-end absolute right-4;
 }
