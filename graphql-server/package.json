@@ -72,7 +72,7 @@
     "ts-node": "^10.5.0",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.2",
-    "webpack": "^5.99.9",
+    "webpack": "^5.102.0",
     "yalc": "^1.0.0-pre.53"
   },
   "jest": {
