@@ -9632,7 +9632,7 @@ __metadata:
     eslint-plugin-react: "npm:^7.37.5"
     eslint-plugin-react-hooks: "npm:^5.2.0"
     eslint-plugin-testing-library: "npm:^6.2.2"
-    github-markdown-css: "npm:^5.3.0"
+    github-markdown-css: "npm:^5.8.1"
     graphql: "npm:^16.8.1"
     isomorphic-unfetch: "npm:^4.0.2"
     jest: "npm:^29.7.0"
@@ -11616,7 +11616,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"github-markdown-css@npm:^5.3.0, github-markdown-css@npm:^5.6.1":
+"github-markdown-css@npm:^5.6.1":
   version: 5.7.0
   resolution: "github-markdown-css@npm:5.7.0"
   checksum: 10c0/93e6050081dc52a4905830cbd520635ea7795ea7b7da2946b43140e10137ffd57c6bf25cce5b7f7fb9a37d15fe8b8fc25781a9e5e59178aefbc6026e40799ec5
