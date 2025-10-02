@@ -7,11 +7,10 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { ColumnStatus } from "@lib/tableTypes";
-import cx from "classnames";
 import { useState } from "react";
 import Cell from "./Cell";
 import css from "./index.module.css";
-import { getDiffTypeClassnameForRow } from "./utils";
+import { getDiffTypeClassNameForRow } from "./utils";
 
 type Props = {
   row: RowForDataTableFragment;
@@ -20,17 +19,19 @@ type Props = {
   showRowDropdown: boolean;
   isMobile?: boolean;
   columnStatus: ColumnStatus;
+  workingDiffType?: string | undefined;
 };
 
 export default function Row(props: Props) {
   const [showDropdown, setShowDropdown] = useState(false);
-  const diffTypeClassname = getDiffTypeClassnameForRow(
+  const diffTypeClassName = getDiffTypeClassNameForRow(
     props.row,
     props.columns,
+    props.workingDiffType,
   );
 
   return (
-    <tr className={cx(css.row, diffTypeClassname)}>
+    <tr className={diffTypeClassName}>
       <td>
         {props.showRowDropdown && (
           <CellDropdown

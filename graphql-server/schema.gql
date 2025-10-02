@@ -167,6 +167,17 @@ type RowList {
   list: [Row!]!
 }
 
+type RowWithDiff {
+  index: Int!
+  diffType: String!
+}
+
+type RowWithDiffList {
+  nextOffset: Int
+  list: [Row!]!
+  diffs: [RowWithDiff!]
+}
+
 type Doc {
   docType: String!
   docRow: Row
@@ -397,6 +408,7 @@ type Query {
   remoteBranchDiffCounts(databaseName: String!, fromRefName: String!, toRefName: String!): RemoteBranchDiffCounts!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  rowsWithWorkingDiff(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowWithDiffList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
   doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!

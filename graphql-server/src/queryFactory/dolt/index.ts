@@ -87,7 +87,7 @@ export class DoltQueryFactory
 
   async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
     const res: t.RawRows = await this.query(
-      qh.tableColsQuery,
+      qh.columnsQuery,
       [args.tableName],
       args.databaseName,
       args.refName,
@@ -109,6 +109,15 @@ export class DoltQueryFactory
       args.databaseName,
       args.refName,
     );
+  }
+
+  async getTableRowsWithDiff(args: t.TableMaybeSchemaArgs, page: t.TableRowPagination): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getTableRowsWithDiff(em, args.tableName, page),
+      args.databaseName,
+      args.refName,
+    )
+
   }
 
   async getBranch(args: t.BranchArgs): t.USPR {

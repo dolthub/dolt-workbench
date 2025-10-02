@@ -1,5 +1,5 @@
 import { getUTCDateAndTimeString } from "@dolthub/web-utils";
-import { Field, ObjectType } from "@nestjs/graphql";
+import {Field, Int, ObjectType} from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
@@ -26,11 +26,35 @@ export class RowList extends ListOffsetRes {
   list: Row[];
 }
 
+@ObjectType()
+export class RowWithDiff {
+    @Field(_type => Int)
+    index: number;
+
+    @Field()
+    diffType: string;
+}
+
+@ObjectType()
+export class RowWithDiffList extends RowList {
+    @Field(_type => [RowWithDiff], { nullable: true })
+    diffs: RowWithDiff[] | undefined;
+}
+
 export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
   return {
     list: rows.slice(0, ROW_LIMIT).map(fromDoltRowRes),
     nextOffset: getNextOffset(rows.length, offset),
   };
+}
+
+export function fromDoltListRowWithDiffRes(rows: RawRow[], offset: number): RowWithDiffList {
+
+    return {
+        list: rows.slice(0, ROW_LIMIT).map(fromDoltRowWithDiffRes),
+        diffs: fromDoltDiffRes(rows.slice(0, ROW_LIMIT)),
+        nextOffset: getNextOffset(rows.length, offset),
+    };
 }
 
 export function getCellValue(value: any, colName?: string): string {
@@ -65,4 +89,26 @@ export function fromDoltRowRes(row: RawRow): Row {
       return { displayValue: getCellValue(cell, key) };
     }),
   };
+}
+
+export function fromDoltRowWithDiffRes(row: RawRow): Row {
+    const columnValues = Object.entries(row);
+    return {
+        columnValues: columnValues.slice(0, columnValues.length - 1).map(([key, cell]) => {
+            return { displayValue: getCellValue(cell, key) };
+        })
+    }
+}
+
+export function fromDoltDiffRes(rows: RawRow[]) {
+    let diffs: RowWithDiff[] = [];
+    for (let i = 0; i < rows.length; i++) {
+        if (rows[i].diff_type && (rows[i].diff_type === "modified" || rows[i].diff_type === "added")) {
+            diffs.push({
+                index: i,
+                diffType: rows[i].diff_type,
+            })
+        }
+    }
+    return diffs;
 }

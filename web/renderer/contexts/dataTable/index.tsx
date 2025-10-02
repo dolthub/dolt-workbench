@@ -6,11 +6,11 @@ import {
   ColumnForDataTableFragment,
   ForeignKeysForDataTableFragment,
   RowForDataTableFragment,
-  RowsForDataTableQuery,
-  RowsForDataTableQueryDocument,
-  RowsForDataTableQueryVariables,
+  RowsWithDiffForDataTableQuery,
+  RowsWithDiffForDataTableQueryDocument,
+  RowsWithDiffForDataTableQueryVariables, RowWithDiff,
   useDataTableQuery,
-  useRowsForDataTableQuery,
+  useRowsWithDiffForDataTableQuery,
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
 import {
@@ -21,7 +21,7 @@ import {
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { generateEmptyRow } from "./utils";
 
-type DataTableParams = TableParams & { offset?: number; schemaName?: string };
+type DataTableParams = TableParams & { offset?: number; schemaName?: string, withDiff?: boolean };
 
 // This context handles data tables on the database page (for tables and queries)
 type DataTableContextType = {
@@ -29,6 +29,7 @@ type DataTableContextType = {
   loading: boolean;
   loadMore: () => Promise<void>;
   rows?: RowForDataTableFragment[];
+  diffs?: RowWithDiff[];
   hasMore: boolean;
   columns?: ColumnForDataTableFragment[];
   foreignKeys?: ForeignKeysForDataTableFragment[];
@@ -60,20 +61,23 @@ function ProviderForTableName(props: TableProps) {
     variables: props.params,
   });
 
-  const rowRes = useRowsForDataTableQuery({
-    variables: props.params,
+  const rowRes = useRowsWithDiffForDataTableQuery({
+    variables: {...props.params },
   });
 
-  const [rows, setRows] = useState(rowRes.data?.rows.list);
+
+  const [rows, setRows] = useState(rowRes.data?.rowsWithWorkingDiff.list);
+  const [diffs, setDiffs] = useState(rowRes.data?.rowsWithWorkingDiff.diffs ?? []);
   const [pendingRow, setPendingRow] = useState<
     RowForDataTableFragment | undefined
   >(undefined);
-  const [offset, setOffset] = useState(rowRes.data?.rows.nextOffset);
+  const [offset, setOffset] = useState(rowRes.data?.rowsWithWorkingDiff.nextOffset);
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
 
   useEffect(() => {
-    setRows(rowRes.data?.rows.list);
-    setOffset(rowRes.data?.rows.nextOffset);
+    setRows(rowRes.data?.rowsWithWorkingDiff.list);
+    setDiffs(rowRes.data?.rowsWithWorkingDiff.diffs ?? []);
+    setOffset(rowRes.data?.rowsWithWorkingDiff.nextOffset);
   }, [rowRes.data]);
 
   const loadMore = useCallback(async () => {
@@ -82,20 +86,24 @@ function ProviderForTableName(props: TableProps) {
     }
     setLastOffset(offset);
     const res = await rowRes.client.query<
-      RowsForDataTableQuery,
-      RowsForDataTableQueryVariables
+      RowsWithDiffForDataTableQuery,
+      RowsWithDiffForDataTableQueryVariables
     >({
-      query: RowsForDataTableQueryDocument,
+      query: RowsWithDiffForDataTableQueryDocument,
       variables: {
         ...props.params,
         offset,
       },
     });
-    const newRows = res.data.rows.list;
-    const newOffset = res.data.rows.nextOffset;
+    const newRows = res.data.rowsWithWorkingDiff.list;
+    const newDiffs = res.data.rowsWithWorkingDiff.diffs;
+    console.log("NEW ROWS: ", newRows);
+    console.log("NEW DIFFS: ", newDiffs);
+    const newOffset = res.data.rowsWithWorkingDiff.nextOffset;
     setRows((rows ?? []).concat(newRows));
+    setDiffs(diffs.concat(newDiffs ?? []));
     setOffset(newOffset);
-  }, [offset, props.params, rowRes.client, rows]);
+  }, [offset, props.params, rowRes.client, rows, diffs]);
 
   const onAddEmptyRow = () => {
     const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
@@ -108,6 +116,7 @@ function ProviderForTableName(props: TableProps) {
       loading: tableRes.loading || rowRes.loading,
       loadMore,
       rows,
+      diffs,
       hasMore: offset !== undefined && offset !== null && offset !== lastOffset,
       columns: tableRes.data?.table.columns,
       foreignKeys: tableRes.data?.table.foreignKeys,
@@ -126,6 +135,7 @@ function ProviderForTableName(props: TableProps) {
     rowRes.error,
     rowRes.loading,
     rows,
+    diffs,
     tableRes.data?.table.columns,
     tableRes.data?.table.foreignKeys,
     tableRes.error,

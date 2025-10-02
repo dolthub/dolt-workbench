@@ -20,7 +20,7 @@ type Props = {
 };
 
 export default function Body(props: Props) {
-  const { columns, pendingRow } = useDataTableContext();
+  const { columns, pendingRow, diffs } = useDataTableContext();
   const showRowDropdown =
     !isKeyless(columns) && queryShowingPKs(props.columns, columns);
   const cols = getTableColsFromQueryCols(props.columns, columns);
@@ -40,6 +40,7 @@ export default function Body(props: Props) {
           row={r}
           ridx={ridx}
           showRowDropdown={showRowDropdown}
+          workingDiffType={diffs?.find(diff => diff.index === ridx)?.diffType}
         />
       ))}
     </tbody>

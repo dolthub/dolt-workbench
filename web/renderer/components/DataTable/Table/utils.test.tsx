@@ -7,7 +7,7 @@ import cx from "classnames";
 import css from "./index.module.css";
 import {
   getDiffTypeClassnameForCell,
-  getDiffTypeClassnameForRow,
+  getDiffTypeClassNameForDiffTableRow,
   getDiffTypeColumnIndex,
 } from "./utils";
 
@@ -74,7 +74,7 @@ describe("tests getDiffTypeClassnameForRow", () => {
 
   tests.forEach(test => {
     it(`tests getDiffTypeClassnameForRow for ${test.desc}`, () => {
-      expect(getDiffTypeClassnameForRow(test.row, test.cols)).toEqual(
+      expect(getDiffTypeClassNameForDiffTableRow(test.row, test.cols)).toEqual(
         test.expectedClassName,
       );
     });
