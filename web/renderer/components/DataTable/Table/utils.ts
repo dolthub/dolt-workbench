@@ -28,8 +28,10 @@ export function getDiffTypeClassNameForRow(
   const classNameForDiffTable = getDiffTypeClassNameForDiffTableRow(row, cols);
   return cx(css.row, {
     [classNameForDiffTable]: !!classNameForDiffTable,
-    [css.workingDiffRowAdded]: !classNameForDiffTable && row.diffType === "added",
-    [css.workingDiffRowModified]: !classNameForDiffTable && row.diffType === "modified",
+    [css.workingDiffRowAdded]:
+      !classNameForDiffTable && row.diffType === "added",
+    [css.workingDiffRowModified]:
+      !classNameForDiffTable && row.diffType === "modified",
   });
 }
 
