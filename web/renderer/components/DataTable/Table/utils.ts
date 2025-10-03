@@ -7,7 +7,7 @@ import cx from "classnames";
 import css from "./index.module.css";
 
 // Returns removed or added className for row in dolt_(commit_)diff_$TABLENAME
-export function getDiffTypeClassnameForRow(
+export function getDiffTypeClassNameForDiffTableRow(
   row: RowForDataTableFragment,
   cols: ColumnForDataTableFragment[],
 ): string {
@@ -19,6 +19,20 @@ export function getDiffTypeClassnameForRow(
   if (colVal === "modified") return "";
 
   return cx([css[colVal]], [css[`${colVal}Row`]]);
+}
+
+export function getDiffTypeClassNameForRow(
+  row: RowForDataTableFragment,
+  cols: ColumnForDataTableFragment[],
+): string {
+  const classNameForDiffTable = getDiffTypeClassNameForDiffTableRow(row, cols);
+  return cx(css.row, {
+    [classNameForDiffTable]: !!classNameForDiffTable,
+    [css.workingDiffRowAdded]:
+      !classNameForDiffTable && row.diffType === "added",
+    [css.workingDiffRowModified]:
+      !classNameForDiffTable && row.diffType === "modified",
+  });
 }
 
 const diffTableMetaColumns = [

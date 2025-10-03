@@ -6,7 +6,7 @@ import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import { getOrderByColForBranches } from "./queries";
-import { TestArgs } from "../types";
+import { TableRowPagination, TestArgs } from "../types";
 
 export async function getDoltSchemas(
   em: EntityManager,
@@ -52,6 +52,35 @@ export async function getDoltProcedures(
       type: SchemaType.Procedure,
     };
   });
+}
+
+export async function getTableRowsWithDiff(
+  em: EntityManager,
+  tableName: string,
+  page: TableRowPagination,
+): t.PR {
+  const joinOnPks = page.pkCols.map(pk => `t.${pk} = d.to_${pk}`).join(" AND ");
+
+  const joinOnCommit = "d.to_commit = :commit";
+  const onClause = joinOnPks
+    ? `${joinOnPks} AND ${joinOnCommit}`
+    : joinOnCommit;
+
+  const sel = em
+    .createQueryBuilder()
+    .select(`t.*`)
+    .addSelect("d.diff_type")
+    .from(tableName, "t")
+    .leftJoin(`dolt_diff_${tableName}`, "d", onClause, { commit: "WORKING" });
+
+  page.pkCols.forEach(pk => {
+    sel.addOrderBy(`t.${pk}`, "ASC");
+  });
+
+  return sel
+    .limit(ROW_LIMIT + 1)
+    .offset(page.offset)
+    .getRawMany();
 }
 
 export async function getDoltBranch(

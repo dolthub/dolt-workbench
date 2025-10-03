@@ -18,6 +18,9 @@ export class ColumnValue {
 export class Row {
   @Field(_type => [ColumnValue])
   columnValues: ColumnValue[];
+
+  @Field({ nullable: true })
+  diffType?: string;
 }
 
 @ObjectType()
@@ -29,6 +32,16 @@ export class RowList extends ListOffsetRes {
 export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
   return {
     list: rows.slice(0, ROW_LIMIT).map(fromDoltRowRes),
+    nextOffset: getNextOffset(rows.length, offset),
+  };
+}
+
+export function fromDoltListRowWithDiffRes(
+  rows: RawRow[],
+  offset: number,
+): RowList {
+  return {
+    list: rows.slice(0, ROW_LIMIT).map(fromDoltRowWithDiffRes),
     nextOffset: getNextOffset(rows.length, offset),
   };
 }
@@ -64,5 +77,17 @@ export function fromDoltRowRes(row: RawRow): Row {
     columnValues: Object.entries(row).map(([key, cell]) => {
       return { displayValue: getCellValue(cell, key) };
     }),
+  };
+}
+
+export function fromDoltRowWithDiffRes(row: RawRow): Row {
+  const columnValues = Object.entries(row);
+  return {
+    columnValues: columnValues
+      .slice(0, columnValues.length - 1)
+      .map(([key, cell]) => {
+        return { displayValue: getCellValue(cell, key) };
+      }),
+    diffType: row.diff_type,
   };
 }

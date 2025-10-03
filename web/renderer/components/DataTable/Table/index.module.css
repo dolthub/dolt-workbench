@@ -74,6 +74,12 @@
   .pendingRow:hover {
     @apply bg-white;
   }
+  tr.workingDiffRowAdded:hover {
+    @apply bg-green-100;
+  }
+  tr.workingDiffRowModified:hover {
+    @apply bg-yellow-100;
+  }
 }
 
 .tableWithDiff {
@@ -162,6 +168,14 @@
 
 .row:hover .rowDropdown {
   @apply visible;
+}
+
+.workingDiffRowAdded {
+  @apply bg-green-100;
+}
+
+.workingDiffRowModified {
+  @apply bg-yellow-100;
 }
 
 .tableDropdown {

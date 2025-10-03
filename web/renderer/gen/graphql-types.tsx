@@ -689,6 +689,7 @@ export type QueryRowsArgs = {
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
+  withDiff?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 
@@ -815,6 +816,7 @@ export type RemoteList = {
 export type Row = {
   __typename?: 'Row';
   columnValues: Array<ColumnValue>;
+  diffType?: Maybe<Scalars['String']['output']>;
 };
 
 export type RowConflict = {
@@ -1655,9 +1657,9 @@ export type DataTableQueryVariables = Exact<{
 
 export type DataTableQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }> } };
 
-export type RowForDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+export type RowForDataTableFragment = { __typename?: 'Row', diffType?: string | null, columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
-export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> };
+export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', diffType?: string | null, columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> };
 
 export type RowsForDataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1665,10 +1667,11 @@ export type RowsForDataTableQueryVariables = Exact<{
   tableName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   offset?: InputMaybe<Scalars['Int']['input']>;
+  withDiff?: InputMaybe<Scalars['Boolean']['input']>;
 }>;
 
 
-export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', diffType?: string | null, columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean };
 
@@ -2123,6 +2126,7 @@ export const RowForDataTableFragmentDoc = gql`
   columnValues {
     displayValue
   }
+  diffType
 }
     `;
 export const RowListRowsFragmentDoc = gql`
@@ -4865,13 +4869,14 @@ export type DataTableQueryLazyQueryHookResult = ReturnType<typeof useDataTableQu
 export type DataTableQuerySuspenseQueryHookResult = ReturnType<typeof useDataTableQuerySuspenseQuery>;
 export type DataTableQueryQueryResult = Apollo.QueryResult<DataTableQuery, DataTableQueryVariables>;
 export const RowsForDataTableQueryDocument = gql`
-    query RowsForDataTableQuery($databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String, $offset: Int) {
+    query RowsForDataTableQuery($databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String, $offset: Int, $withDiff: Boolean) {
   rows(
     databaseName: $databaseName
     refName: $refName
     tableName: $tableName
     schemaName: $schemaName
     offset: $offset
+    withDiff: $withDiff
   ) {
     ...RowListRows
   }
@@ -4895,6 +4900,7 @@ export const RowsForDataTableQueryDocument = gql`
  *      tableName: // value for 'tableName'
  *      schemaName: // value for 'schemaName'
  *      offset: // value for 'offset'
+ *      withDiff: // value for 'withDiff'
  *   },
  * });
  */

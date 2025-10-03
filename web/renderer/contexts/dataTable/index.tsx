@@ -21,7 +21,10 @@ import {
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { generateEmptyRow } from "./utils";
 
-type DataTableParams = TableParams & { offset?: number; schemaName?: string };
+type DataTableParams = TableParams & {
+  offset?: number;
+  schemaName?: string;
+};
 
 // This context handles data tables on the database page (for tables and queries)
 type DataTableContextType = {
@@ -61,7 +64,7 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const rowRes = useRowsForDataTableQuery({
-    variables: props.params,
+    variables: { ...props.params, withDiff: true },
   });
 
   const [rows, setRows] = useState(rowRes.data?.rows.list);
@@ -89,6 +92,7 @@ function ProviderForTableName(props: TableProps) {
       variables: {
         ...props.params,
         offset,
+        withDiff: true,
       },
     });
     const newRows = res.data.rows.list;

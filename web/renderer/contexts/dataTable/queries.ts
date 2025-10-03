@@ -50,6 +50,7 @@ export const ROWS_FOR_DATA_TABLE = gql`
     columnValues {
       displayValue
     }
+    diffType
   }
   fragment RowListRows on RowList {
     nextOffset
@@ -63,6 +64,7 @@ export const ROWS_FOR_DATA_TABLE = gql`
     $tableName: String!
     $schemaName: String
     $offset: Int
+    $withDiff: Boolean
   ) {
     rows(
       databaseName: $databaseName
@@ -70,6 +72,7 @@ export const ROWS_FOR_DATA_TABLE = gql`
       tableName: $tableName
       schemaName: $schemaName
       offset: $offset
+      withDiff: $withDiff
     ) {
       ...RowListRows
     }
