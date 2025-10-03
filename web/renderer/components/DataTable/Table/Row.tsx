@@ -27,7 +27,6 @@ export default function Row(props: Props) {
   const diffTypeClassName = getDiffTypeClassNameForRow(
     props.row,
     props.columns,
-    props.workingDiffType,
   );
 
   return (
@@ -48,7 +47,11 @@ export default function Row(props: Props) {
       </td>
       {props.row.columnValues.map((c, cidx) => (
         // eslint-disable-next-line react/jsx-key
-        <Cell {...props} cell={c} cidx={cidx} />
+        <Cell
+          {...props}
+          cell={c}
+          cidx={cidx}
+        />
       ))}
     </tr>
   );

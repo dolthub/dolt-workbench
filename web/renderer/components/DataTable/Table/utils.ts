@@ -22,16 +22,15 @@ export function getDiffTypeClassNameForDiffTableRow(
 }
 
 export function getDiffTypeClassNameForRow(
-    row: RowForDataTableFragment,
-    cols: ColumnForDataTableFragment[],
-    workingDiffType?: string | undefined,
+  row: RowForDataTableFragment,
+  cols: ColumnForDataTableFragment[],
 ): string {
-    const classNameForDiffTable = getDiffTypeClassNameForDiffTableRow(row, cols);
-    return cx(css.row, {
-        [classNameForDiffTable]: !!classNameForDiffTable,
-        [css.rowAdded]: !classNameForDiffTable && workingDiffType === "added",
-        [css.rowModified]: !classNameForDiffTable && workingDiffType === "modified",
-    })
+  const classNameForDiffTable = getDiffTypeClassNameForDiffTableRow(row, cols);
+  return cx(css.row, {
+    [classNameForDiffTable]: !!classNameForDiffTable,
+    [css.rowAdded]: !classNameForDiffTable && row.diffType === "added",
+    [css.rowModified]: !classNameForDiffTable && row.diffType === "modified",
+  });
 }
 
 const diffTableMetaColumns = [
@@ -41,7 +40,6 @@ const diffTableMetaColumns = [
   "to_commit_date",
   "diff_type",
 ];
-
 
 // Returns deleted or added className for cell in modified row in
 // dolt_(commit_)diff_$TABLENAME

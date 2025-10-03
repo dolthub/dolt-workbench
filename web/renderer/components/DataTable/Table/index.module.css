@@ -97,7 +97,7 @@
 }
 
 .modifiedRow {
-    @apply bg-yellow-100;
+  @apply bg-yellow-100;
 }
 
 .removedRow {
@@ -169,13 +169,12 @@
 }
 
 .rowAdded {
-    @apply bg-green-100;
+  @apply bg-green-100;
 }
 
 .rowModified {
-    @apply bg-yellow-100;
+  @apply bg-yellow-100;
 }
-
 
 .tableDropdown {
   @apply relative;

@@ -111,13 +111,15 @@ export class DoltQueryFactory
     );
   }
 
-  async getTableRowsWithDiff(args: t.TableMaybeSchemaArgs, page: t.TableRowPagination): t.PR {
+  async getTableRowsWithDiff(
+    args: t.TableMaybeSchemaArgs,
+    page: t.TableRowPagination,
+  ): t.PR {
     return this.queryForBuilder(
       async em => dem.getTableRowsWithDiff(em, args.tableName, page),
       args.databaseName,
       args.refName,
-    )
-
+    );
   }
 
   async getBranch(args: t.BranchArgs): t.USPR {

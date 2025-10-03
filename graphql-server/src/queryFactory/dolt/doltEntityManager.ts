@@ -6,7 +6,7 @@ import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import { getOrderByColForBranches } from "./queries";
-import { PR, TableRowPagination, TestArgs } from "../types";
+import { TableRowPagination, TestArgs } from "../types";
 
 export async function getDoltSchemas(
   em: EntityManager,
@@ -59,24 +59,23 @@ export async function getTableRowsWithDiff(
   tableName: string,
   page: TableRowPagination,
 ): t.PR {
+  const joinOnPks = page.pkCols.map(pk => `t.${pk} = d.to_${pk}`).join(" AND ");
 
-  const joinOnPks = page.pkCols
-    .map(pk => `t.${pk} = d.to_${pk}`)
-    .join(" AND ");
-
-  const onClause = `${joinOnPks} AND d.to_commit = :commit`;
+  const joinOnCommit = "d.to_commit = :commit";
+  const onClause = joinOnPks
+    ? `${joinOnPks} AND ${joinOnCommit}`
+    : joinOnCommit;
 
   const sel = em
     .createQueryBuilder()
     .select(`t.*`)
     .addSelect("d.diff_type")
     .from(tableName, "t")
-    .leftJoin(`dolt_diff_${tableName}`, "d", onClause, { commit: "WORKING" })
+    .leftJoin(`dolt_diff_${tableName}`, "d", onClause, { commit: "WORKING" });
 
   page.pkCols.forEach(pk => {
-    sel.addOrderBy(`t.${pk}`, "ASC")
+    sel.addOrderBy(`t.${pk}`, "ASC");
   });
-  console.log(sel.getSql());
 
   return sel
     .limit(ROW_LIMIT + 1)

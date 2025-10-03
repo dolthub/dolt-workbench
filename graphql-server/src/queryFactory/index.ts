@@ -70,7 +70,6 @@ export declare class QueryFactory {
 
   getTableRows(args: t.TableMaybeSchemaArgs, page: t.TableRowPagination): t.PR;
 
-
   getSqlSelect(
     args: t.RefMaybeSchemaArgs & { queryString: string },
   ): Promise<{ rows: t.RawRows; warnings?: string[] }>;
@@ -83,7 +82,10 @@ export declare class QueryFactory {
   getProcedures(args: t.RefArgs): Promise<SchemaItem[]>;
 
   // DOLT-SPECIFIC QUERIES
-  getTableRowsWithDiff(args: t.TableMaybeSchemaArgs, page: t.TableRowPagination): t.PR;
+  getTableRowsWithDiff(
+    args: t.TableMaybeSchemaArgs,
+    page: t.TableRowPagination,
+  ): t.PR;
 
   getBranch(args: t.BranchArgs): t.USPR;
 
