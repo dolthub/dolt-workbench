@@ -74,7 +74,7 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const rowRes = useRowsForDataTableQuery({
-    variables: { ...props.params },
+    variables: props.params,
   });
 
   const rowWithDiffRes = useRowsForDataTableQuery({
@@ -156,7 +156,6 @@ function ProviderForTableName(props: TableProps) {
         return diffRes.data.rows.list;
       }
     });
-
   }, [offset, props.params, rowRes.client, rowWithDiffRes.client, rows]);
 
   const loadMoreWorkingDiff = useCallback(async () => {
