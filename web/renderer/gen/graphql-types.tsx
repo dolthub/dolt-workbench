@@ -1474,9 +1474,15 @@ type PullDetailsForPullDetails_PullDetailCommit_Fragment = { __typename?: 'PullD
 
 type PullDetailsForPullDetails_PullDetailSummary_Fragment = { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number };
 
-export type PullDetailsForPullDetailsFragment = PullDetailsForPullDetails_PullDetailCommit_Fragment | PullDetailsForPullDetails_PullDetailSummary_Fragment;
+export type PullDetailsForPullDetailsFragment =
+  | PullDetailsForPullDetails_PullDetailCommit_Fragment
+  | PullDetailsForPullDetails_PullDetailSummary_Fragment
+;
 
-export type PullDetailsFragment = { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null };
+export type PullDetailsFragment = { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<
+    | { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null }
+    | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }
+  > | null };
 
 export type PullDetailsForPullDetailsQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1485,7 +1491,10 @@ export type PullDetailsForPullDetailsQueryVariables = Exact<{
 }>;
 
 
-export type PullDetailsForPullDetailsQuery = { __typename?: 'Query', pullWithDetails: { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<{ __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null } | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }> | null } };
+export type PullDetailsForPullDetailsQuery = { __typename?: 'Query', pullWithDetails: { __typename?: 'PullWithDetails', _id: string, state: PullState, details?: Array<
+      | { __typename?: 'PullDetailCommit', _id: string, username: string, message: string, createdAt: any, commitId: string, parentCommitId?: string | null }
+      | { __typename?: 'PullDetailSummary', _id: string, username: string, createdAt: any, numCommits: number }
+    > | null } };
 
 export type RefPageQueryVariables = Exact<{
   refName: Scalars['String']['input'];
