@@ -1,4 +1,4 @@
-import { EntityManager, InsertResult } from "typeorm";
+import { Brackets, EntityManager, InsertResult } from "typeorm";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { DoltSystemTable } from "../../systemTables/systemTable.enums";
@@ -6,7 +6,7 @@ import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { tableWithSchema } from "../postgres/utils";
 import * as t from "../types";
 import { getOrderByColForBranches } from "./queries";
-import { TableRowPagination, TestArgs } from "../types";
+import { RawRows, TableRowPagination, TestArgs } from "../types";
 
 export async function getDoltSchemas(
   em: EntityManager,
@@ -57,30 +57,39 @@ export async function getDoltProcedures(
 export async function getTableRowsWithDiff(
   em: EntityManager,
   tableName: string,
+  rows: RawRows,
   page: TableRowPagination,
 ): t.PR {
-  const joinOnPks = page.pkCols.map(pk => `t.${pk} = d.to_${pk}`).join(" AND ");
-
-  const joinOnCommit = "d.to_commit = :commit";
-  const onClause = joinOnPks
-    ? `${joinOnPks} AND ${joinOnCommit}`
-    : joinOnCommit;
+  const pkVals = rows.map(row => page.pkCols.map(pkCol => row[pkCol]));
 
   const sel = em
     .createQueryBuilder()
-    .select(`t.*`)
-    .addSelect("d.diff_type")
-    .from(tableName, "t")
-    .leftJoin(`dolt_diff_${tableName}`, "d", onClause, { commit: "WORKING" });
+    .select(`*`)
+    .from(`dolt_diff_${tableName}`, "")
+    .where("to_commit = :commit", { commit: "WORKING" });
 
-  page.pkCols.forEach(pk => {
-    sel.addOrderBy(`t.${pk}`, "ASC");
-  });
-
-  return sel
-    .limit(ROW_LIMIT + 1)
-    .offset(page.offset)
-    .getRawMany();
+  if (page.pkCols.length === 1) {
+    const pkCol = page.pkCols[0];
+    const pkValues = pkVals.map(vals => vals[0]);
+    sel.andWhere(`to_${pkCol} IN (:...pkValues)`, { pkValues });
+  } else {
+    sel.andWhere(
+      new Brackets(qbOuter => {
+        pkVals.forEach((rowPkVals, rowIdx) => {
+          qbOuter.orWhere(
+            new Brackets(qb => {
+              page.pkCols.forEach((pkCol, colIdx) => {
+                qb.andWhere(`to_${pkCol} = :pkVal${rowIdx}${colIdx}`, {
+                  [`pkVal${rowIdx}${colIdx}`]: rowPkVals[colIdx],
+                });
+              });
+            }),
+          );
+        });
+      }),
+    );
+  }
+  return sel.getRawMany();
 }
 
 export async function getDoltBranch(

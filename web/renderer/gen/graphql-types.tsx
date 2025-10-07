@@ -816,7 +816,7 @@ export type RemoteList = {
 export type Row = {
   __typename?: 'Row';
   columnValues: Array<ColumnValue>;
-  diffType?: Maybe<Scalars['String']['output']>;
+  diff?: Maybe<WorkingDiff>;
 };
 
 export type RowConflict = {
@@ -996,6 +996,12 @@ export type TextDiff = {
   __typename?: 'TextDiff';
   leftLines: Scalars['String']['output'];
   rightLines: Scalars['String']['output'];
+};
+
+export type WorkingDiff = {
+  __typename?: 'WorkingDiff';
+  diffColumnNames: Array<Scalars['String']['output']>;
+  diffColumnValues: Array<ColumnValue>;
 };
 
 export type CreateDatabaseMutationVariables = Exact<{
@@ -1648,9 +1654,9 @@ export type DataTableQueryVariables = Exact<{
 
 export type DataTableQuery = { __typename?: 'Query', table: { __typename?: 'Table', _id: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, foreignKeys: Array<{ __typename?: 'ForeignKey', tableName: string, columnName: string, referencedTableName: string, foreignKeyColumn: Array<{ __typename?: 'ForeignKeyColumn', referencedColumnName: string, referrerColumnIndex: number }> }> } };
 
-export type RowForDataTableFragment = { __typename?: 'Row', diffType?: string | null, columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+export type RowForDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
 
-export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', diffType?: string | null, columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> };
+export type RowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> };
 
 export type RowsForDataTableQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1662,7 +1668,7 @@ export type RowsForDataTableQueryVariables = Exact<{
 }>;
 
 
-export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', diffType?: string | null, columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
 
 export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean };
 
@@ -2117,7 +2123,12 @@ export const RowForDataTableFragmentDoc = gql`
   columnValues {
     displayValue
   }
-  diffType
+  diff {
+    diffColumnNames
+    diffColumnValues {
+      displayValue
+    }
+  }
 }
     `;
 export const RowListRowsFragmentDoc = gql`

@@ -1,6 +1,6 @@
 import { getUTCDateAndTimeString } from "@dolthub/web-utils";
 import { Field, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../queryFactory/types";
+import { RawRow, RawRowsWithDiff, RawRowWithDiff } from "../queryFactory/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 
@@ -15,12 +15,27 @@ export class ColumnValue {
 }
 
 @ObjectType()
+export class ColumnName {
+  @Field()
+  name: string;
+}
+
+@ObjectType()
+export class WorkingDiff {
+  @Field(_type => [String])
+  diffColumnNames: string[];
+
+  @Field(_type => [ColumnValue])
+  diffColumnValues: ColumnValue[];
+}
+
+@ObjectType()
 export class Row {
   @Field(_type => [ColumnValue])
   columnValues: ColumnValue[];
 
-  @Field({ nullable: true })
-  diffType?: string;
+  @Field(_type => WorkingDiff, { nullable: true })
+  diff?: WorkingDiff;
 }
 
 @ObjectType()
@@ -37,7 +52,7 @@ export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
 }
 
 export function fromDoltListRowWithDiffRes(
-  rows: RawRow[],
+  rows: RawRowsWithDiff,
   offset: number,
 ): RowList {
   return {
@@ -80,14 +95,25 @@ export function fromDoltRowRes(row: RawRow): Row {
   };
 }
 
-export function fromDoltRowWithDiffRes(row: RawRow): Row {
-  const columnValues = Object.entries(row);
-  return {
-    columnValues: columnValues
-      .slice(0, columnValues.length - 1)
-      .map(([key, cell]) => {
-        return { displayValue: getCellValue(cell, key) };
-      }),
-    diffType: row.diff_type,
-  };
+export function fromDoltRowWithDiffRes(rowWithDiff: RawRowWithDiff): Row {
+  const rowEntries = Object.entries(rowWithDiff.row);
+  const diffEntries = Object.entries(rowWithDiff.diff ?? []);
+
+  const columnValues = rowEntries.map(([key, cell]) => {
+    return { displayValue: getCellValue(cell, key) };
+  });
+
+  return diffEntries.length > 0
+    ? {
+        columnValues,
+        diff: {
+          diffColumnNames: diffEntries.map(([key, _]) => key),
+          diffColumnValues: diffEntries.map(([key, value]) => {
+            return { displayValue: getCellValue(value, key) };
+          }),
+        },
+      }
+    : {
+        columnValues,
+      };
 }

@@ -7,6 +7,7 @@ import {
   fromDoltListRowRes,
   fromDoltListRowWithDiffRes,
 } from "./row.model";
+import { mergeRowsAndDiffs } from "../queryFactory/dolt/utils";
 
 @ArgsType()
 export class ListRowsArgs extends RefMaybeSchemaArgs {
@@ -29,14 +30,15 @@ export class RowResolver {
     const conn = this.conn.connection();
     const pkCols = await conn.getTablePKColumns(args);
     const offset = args.offset ?? 0;
+    const rows = await conn.getTableRows(args, { pkCols, offset });
     if (args.withDiff) {
-      const rowsWithDiff = await conn.getTableRowsWithDiff(args, {
+      const rowsWithDiff = await conn.getTableRowsWithDiff(args, rows, {
         pkCols,
         offset,
       });
-      return fromDoltListRowWithDiffRes(rowsWithDiff, offset);
+      const mergedRows = mergeRowsAndDiffs(rows, rowsWithDiff, pkCols);
+      return fromDoltListRowWithDiffRes(mergedRows, offset);
     }
-    const rows = await conn.getTableRows(args, { pkCols, offset });
     return fromDoltListRowRes(rows, offset);
   }
 }

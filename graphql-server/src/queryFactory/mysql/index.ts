@@ -197,6 +197,7 @@ export class MySQLQueryFactory
 
   async getTableRowsWithDiff(
     _args: t.TableArgs,
+    _rows: t.RawRows,
     _page: t.TableRowPagination,
   ): t.PR {
     throw notDoltError("get table rows with diff");

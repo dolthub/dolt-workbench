@@ -130,10 +130,11 @@ export class DoltgresQueryFactory
 
   async getTableRowsWithDiff(
     args: t.TableMaybeSchemaArgs,
+    rows: t.RawRows,
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getTableRowsWithDiff(em, args.tableName, page),
+      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
       args.databaseName,
       args.refName,
     );

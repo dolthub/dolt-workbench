@@ -22,6 +22,7 @@ import {
   unionCols,
 } from "./utils";
 import { InsertResult } from "typeorm";
+import { RawRows } from "../types";
 
 export class DoltQueryFactory
   extends MySQLQueryFactory
@@ -113,10 +114,11 @@ export class DoltQueryFactory
 
   async getTableRowsWithDiff(
     args: t.TableMaybeSchemaArgs,
+    rows: RawRows,
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getTableRowsWithDiff(em, args.tableName, page),
+      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
       args.databaseName,
       args.refName,
     );

@@ -50,7 +50,12 @@ export const ROWS_FOR_DATA_TABLE = gql`
     columnValues {
       displayValue
     }
-    diffType
+    diff {
+      diffColumnNames
+      diffColumnValues {
+        displayValue
+      }
+    }
   }
   fragment RowListRows on RowList {
     nextOffset

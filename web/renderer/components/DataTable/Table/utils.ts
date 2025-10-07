@@ -26,12 +26,18 @@ export function getDiffTypeClassNameForRow(
   cols: ColumnForDataTableFragment[],
 ): string {
   const classNameForDiffTable = getDiffTypeClassNameForDiffTableRow(row, cols);
+  const diffTypeIndex = getDiffColumnIndex(
+    "diff_type",
+    row.diff?.diffColumnNames ?? [],
+  );
   return cx(css.row, {
     [classNameForDiffTable]: !!classNameForDiffTable,
     [css.workingDiffRowAdded]:
-      !classNameForDiffTable && row.diffType === "added",
+      !classNameForDiffTable &&
+      row.diff?.diffColumnValues[diffTypeIndex].displayValue === "added",
     [css.workingDiffRowModified]:
-      !classNameForDiffTable && row.diffType === "modified",
+      !classNameForDiffTable &&
+      row.diff?.diffColumnValues[diffTypeIndex].displayValue === "modified",
   });
 }
 
@@ -133,4 +139,8 @@ function matchSchemaQuery(q: string): boolean {
     !!q.match(/SELECT pg_get_triggerdef/gi) ||
     !!q.match(/SELECT pg_get_functiondef/gi)
   );
+}
+
+export function getDiffColumnIndex(colName: string, diffColumnNames: string[]) {
+  return diffColumnNames.indexOf(colName);
 }
