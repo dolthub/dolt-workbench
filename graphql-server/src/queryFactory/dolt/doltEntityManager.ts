@@ -92,6 +92,27 @@ export async function getTableRowsWithDiff(
   return sel.getRawMany();
 }
 
+export async function getWorkingDiffRows(
+  em: EntityManager,
+  tableName: string,
+  page: TableRowPagination,
+): t.PR {
+  const sel = em
+    .createQueryBuilder()
+    .select("*")
+    .from(`dolt_diff_${tableName}`, "")
+    .where("to_commit = :commit", { commit: "WORKING" });
+
+  page.pkCols.forEach(col => {
+    sel.addOrderBy(`to_${col}`, "ASC");
+  });
+
+  return sel
+    .limit(ROW_LIMIT + 1)
+    .offset(page.offset)
+    .getRawMany();
+}
+
 export async function getDoltBranch(
   em: EntityManager,
   args: t.BranchArgs,

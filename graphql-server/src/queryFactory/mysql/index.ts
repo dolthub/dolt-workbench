@@ -196,11 +196,18 @@ export class MySQLQueryFactory
   // DOLT QUERIES NOT IMPLEMENTED FOR MYSQL
 
   async getTableRowsWithDiff(
-    _args: t.TableArgs,
+    _args: t.TableMaybeSchemaArgs,
     _rows: t.RawRows,
     _page: t.TableRowPagination,
   ): t.PR {
     throw notDoltError("get table rows with diff");
+  }
+
+  async getWorkingDiffRows(
+    _args: t.TableMaybeSchemaArgs,
+    _page: t.TableRowPagination,
+  ): t.PR {
+    throw notDoltError("get working diff rows");
   }
 
   // Returns static branch

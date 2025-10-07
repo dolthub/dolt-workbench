@@ -5,7 +5,7 @@ import {
   Row,
   RowList,
   fromDoltListRowRes,
-  fromDoltListRowWithDiffRes,
+  fromDoltListRowWithDiffRes, fromDoltListWorkingDiffRowRes,
 } from "./row.model";
 import { mergeRowsAndDiffs } from "../queryFactory/dolt/utils";
 
@@ -40,5 +40,15 @@ export class RowResolver {
       return fromDoltListRowWithDiffRes(mergedRows, offset);
     }
     return fromDoltListRowRes(rows, offset);
+  }
+
+  @Query(_returns => Row)
+  async workingDiffRows(@Args() args: ListRowsArgs): Promise<RowList> {
+    const conn = this.conn.connection();
+    const pkCols = await conn.getTablePKColumns(args);
+    const offset = args.offset ?? 0;
+    const workingDiffRows = await conn.getWorkingDiffRows(args, { pkCols, offset });
+    return fromDoltListWorkingDiffRowRes(workingDiffRows, offset);
+
   }
 }
