@@ -516,6 +516,7 @@ export type Query = {
   tags: TagList;
   tests: TestList;
   views: Array<SchemaItem>;
+  workingDiffRows: RowList;
 };
 
 
@@ -785,6 +786,16 @@ export type QueryViewsArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
+};
+
+
+export type QueryWorkingDiffRowsArgs = {
+  databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  withDiff?: InputMaybe<Scalars['Boolean']['input']>;
 };
 
 export enum QueryExecutionStatus {
@@ -1670,6 +1681,21 @@ export type RowsForDataTableQueryVariables = Exact<{
 
 export type RowsForDataTableQuery = { __typename?: 'Query', rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
 
+export type WorkingDiffRowForDataTableFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type WorkingDiffRowListRowsFragment = { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> };
+
+export type WorkingDiffRowsForDataTableQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  tableName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
+}>;
+
+
+export type WorkingDiffRowsForDataTableQuery = { __typename?: 'Query', workingDiffRows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+
 export type DiffSummaryFragment = { __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean };
 
 export type DiffSummariesQueryVariables = Exact<{
@@ -2139,6 +2165,27 @@ export const RowListRowsFragmentDoc = gql`
   }
 }
     ${RowForDataTableFragmentDoc}`;
+export const WorkingDiffRowForDataTableFragmentDoc = gql`
+    fragment WorkingDiffRowForDataTable on Row {
+  columnValues {
+    displayValue
+  }
+  diff {
+    diffColumnNames
+    diffColumnValues {
+      displayValue
+    }
+  }
+}
+    `;
+export const WorkingDiffRowListRowsFragmentDoc = gql`
+    fragment WorkingDiffRowListRows on RowList {
+  nextOffset
+  list {
+    ...WorkingDiffRowForDataTable
+  }
+}
+    ${WorkingDiffRowForDataTableFragmentDoc}`;
 export const DiffSummaryFragmentDoc = gql`
     fragment DiffSummary on DiffSummary {
   _id
@@ -4922,6 +4969,56 @@ export type RowsForDataTableQueryHookResult = ReturnType<typeof useRowsForDataTa
 export type RowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useRowsForDataTableQueryLazyQuery>;
 export type RowsForDataTableQuerySuspenseQueryHookResult = ReturnType<typeof useRowsForDataTableQuerySuspenseQuery>;
 export type RowsForDataTableQueryQueryResult = Apollo.QueryResult<RowsForDataTableQuery, RowsForDataTableQueryVariables>;
+export const WorkingDiffRowsForDataTableQueryDocument = gql`
+    query WorkingDiffRowsForDataTableQuery($databaseName: String!, $refName: String!, $tableName: String!, $schemaName: String, $offset: Int) {
+  workingDiffRows(
+    databaseName: $databaseName
+    refName: $refName
+    tableName: $tableName
+    schemaName: $schemaName
+    offset: $offset
+  ) {
+    ...WorkingDiffRowListRows
+  }
+}
+    ${WorkingDiffRowListRowsFragmentDoc}`;
+
+/**
+ * __useWorkingDiffRowsForDataTableQuery__
+ *
+ * To run a query within a React component, call `useWorkingDiffRowsForDataTableQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWorkingDiffRowsForDataTableQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWorkingDiffRowsForDataTableQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      tableName: // value for 'tableName'
+ *      schemaName: // value for 'schemaName'
+ *      offset: // value for 'offset'
+ *   },
+ * });
+ */
+export function useWorkingDiffRowsForDataTableQuery(baseOptions: Apollo.QueryHookOptions<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables> & ({ variables: WorkingDiffRowsForDataTableQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables>(WorkingDiffRowsForDataTableQueryDocument, options);
+      }
+export function useWorkingDiffRowsForDataTableQueryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables>(WorkingDiffRowsForDataTableQueryDocument, options);
+        }
+export function useWorkingDiffRowsForDataTableQuerySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables>(WorkingDiffRowsForDataTableQueryDocument, options);
+        }
+export type WorkingDiffRowsForDataTableQueryHookResult = ReturnType<typeof useWorkingDiffRowsForDataTableQuery>;
+export type WorkingDiffRowsForDataTableQueryLazyQueryHookResult = ReturnType<typeof useWorkingDiffRowsForDataTableQueryLazyQuery>;
+export type WorkingDiffRowsForDataTableQuerySuspenseQueryHookResult = ReturnType<typeof useWorkingDiffRowsForDataTableQuerySuspenseQuery>;
+export type WorkingDiffRowsForDataTableQueryQueryResult = Apollo.QueryResult<WorkingDiffRowsForDataTableQuery, WorkingDiffRowsForDataTableQueryVariables>;
 export const DiffSummariesDocument = gql`
     query DiffSummaries($databaseName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $type: CommitDiffType) {
   diffSummaries(

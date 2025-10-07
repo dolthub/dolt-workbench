@@ -403,7 +403,7 @@ type Query {
   remoteBranchDiffCounts(databaseName: String!, fromRefName: String!, toRefName: String!): RemoteBranchDiffCounts!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
   rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int, withDiff: Boolean): RowList!
-  workingDiffRows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int, withDiff: Boolean): Row!
+  workingDiffRows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int, withDiff: Boolean): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
   doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!

@@ -42,7 +42,7 @@ export class RowResolver {
     return fromDoltListRowRes(rows, offset);
   }
 
-  @Query(_returns => Row)
+  @Query(_returns => RowList)
   async workingDiffRows(@Args() args: ListRowsArgs): Promise<RowList> {
     const conn = this.conn.connection();
     const pkCols = await conn.getTablePKColumns(args);
