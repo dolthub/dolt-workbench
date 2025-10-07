@@ -64,7 +64,7 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const rowRes = useRowsForDataTableQuery({
-    variables: { ...props.params },
+    variables: props.params,
   });
 
   const rowWithDiffRes = useRowsForDataTableQuery({
@@ -108,7 +108,7 @@ function ProviderForTableName(props: TableProps) {
     setRows(prevRows => (prevRows ?? []).concat(newRows));
     setOffset(newOffset);
 
-    const diffRes = rowWithDiffRes.client.query<
+    const diffRes = await rowWithDiffRes.client.query<
       RowsForDataTableQuery,
       RowsForDataTableQueryVariables
     >({
@@ -120,20 +120,16 @@ function ProviderForTableName(props: TableProps) {
       },
     });
 
-    diffRes
-      .then(diffResult => {
-        setRows(currentRows => {
-          if (currentRows) {
-            return [
-              ...currentRows.slice(0, prevRowsLength),
-              ...diffResult.data.rows.list,
-            ];
-          } else {
-            return diffResult.data.rows.list;
-          }
-        });
-      })
-      .catch(console.error);
+    setRows(currentRows => {
+      if (currentRows) {
+        return [
+          ...currentRows.slice(0, prevRowsLength),
+          ...diffRes.data.rows.list,
+        ];
+      } else {
+        return diffRes.data.rows.list;
+      }
+    });
   }, [offset, props.params, rowRes.client, rowWithDiffRes.client, rows]);
 
   const onAddEmptyRow = () => {

@@ -15,12 +15,6 @@ export class ColumnValue {
 }
 
 @ObjectType()
-export class ColumnName {
-  @Field()
-  name: string;
-}
-
-@ObjectType()
 export class WorkingDiff {
   @Field(_type => [String])
   diffColumnNames: string[];

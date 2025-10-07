@@ -53,21 +53,15 @@ export function mergeRowsAndDiffs(
     diffMap.set(key, diff);
   }
 
-  const mergedRows: t.RawRowsWithDiff = [];
-  for (const row of rows) {
+  return rows.map(row => {
     const key = JSON.stringify(pkCols.map(col => row[col]));
     const matchingDiff = diffMap.get(key);
-
     if (matchingDiff) {
-      mergedRows.push({
+      return {
         row,
         diff: matchingDiff,
-      });
-    } else {
-      mergedRows.push({
-        row,
-      });
+      };
     }
-  }
-  return mergedRows;
+    return { row };
+  });
 }
