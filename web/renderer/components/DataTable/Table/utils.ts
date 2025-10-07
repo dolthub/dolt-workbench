@@ -7,7 +7,7 @@ import cx from "classnames";
 import css from "./index.module.css";
 
 // Returns removed or added className for row in dolt_(commit_)diff_$TABLENAME
-export function getDiffTypeClassnameForRow(
+export function getDiffTypeClassNameForDiffTableRow(
   row: RowForDataTableFragment,
   cols: ColumnForDataTableFragment[],
 ): string {
@@ -19,6 +19,26 @@ export function getDiffTypeClassnameForRow(
   if (colVal === "modified") return "";
 
   return cx([css[colVal]], [css[`${colVal}Row`]]);
+}
+
+export function getDiffTypeClassNameForRow(
+  row: RowForDataTableFragment,
+  cols: ColumnForDataTableFragment[],
+): string {
+  const classNameForDiffTable = getDiffTypeClassNameForDiffTableRow(row, cols);
+  const diffTypeIndex = getDiffColumnIndex(
+    "diff_type",
+    row.diff?.diffColumnNames ?? [],
+  );
+  return cx(css.row, {
+    [classNameForDiffTable]: !!classNameForDiffTable,
+    [css.workingDiffRowAdded]:
+      !classNameForDiffTable &&
+      row.diff?.diffColumnValues[diffTypeIndex].displayValue === "added",
+    [css.workingDiffRowModified]:
+      !classNameForDiffTable &&
+      row.diff?.diffColumnValues[diffTypeIndex].displayValue === "modified",
+  });
 }
 
 const diffTableMetaColumns = [
@@ -119,4 +139,8 @@ function matchSchemaQuery(q: string): boolean {
     !!q.match(/SELECT pg_get_triggerdef/gi) ||
     !!q.match(/SELECT pg_get_functiondef/gi)
   );
+}
+
+export function getDiffColumnIndex(colName: string, diffColumnNames: string[]) {
+  return diffColumnNames.indexOf(colName);
 }

@@ -40,3 +40,28 @@ export function getTestIdentifierArg(
     return undefined;
   }
 }
+
+export function mergeRowsAndDiffs(
+  rows: t.RawRows,
+  diffs: t.RawRows,
+  pkCols: string[],
+): t.RawRowsWithDiff {
+  const diffMap = new Map<string, t.RawRow>();
+
+  for (const diff of diffs) {
+    const key = JSON.stringify(pkCols.map(col => diff[`to_${col}`]));
+    diffMap.set(key, diff);
+  }
+
+  return rows.map(row => {
+    const key = JSON.stringify(pkCols.map(col => row[col]));
+    const matchingDiff = diffMap.get(key);
+    if (matchingDiff) {
+      return {
+        row,
+        diff: matchingDiff,
+      };
+    }
+    return { row };
+  });
+}

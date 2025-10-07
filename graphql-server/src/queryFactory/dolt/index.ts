@@ -22,6 +22,7 @@ import {
   unionCols,
 } from "./utils";
 import { InsertResult } from "typeorm";
+import { RawRows } from "../types";
 
 export class DoltQueryFactory
   extends MySQLQueryFactory
@@ -87,7 +88,7 @@ export class DoltQueryFactory
 
   async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
     const res: t.RawRows = await this.query(
-      qh.tableColsQuery,
+      qh.columnsQuery,
       [args.tableName],
       args.databaseName,
       args.refName,
@@ -106,6 +107,18 @@ export class DoltQueryFactory
   async getProcedures(args: t.RefArgs): Promise<SchemaItem[]> {
     return this.queryForBuilder(
       async em => dem.getDoltProcedures(em),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTableRowsWithDiff(
+    args: t.TableMaybeSchemaArgs,
+    rows: RawRows,
+    page: t.TableRowPagination,
+  ): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
       args.databaseName,
       args.refName,
     );

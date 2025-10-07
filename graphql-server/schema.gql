@@ -158,8 +158,14 @@ type ColumnValue {
   displayValue: String!
 }
 
+type WorkingDiff {
+  diffColumnNames: [String!]!
+  diffColumnValues: [ColumnValue!]!
+}
+
 type Row {
   columnValues: [ColumnValue!]!
+  diff: WorkingDiff
 }
 
 type RowList {
@@ -396,7 +402,7 @@ type Query {
   remotes(databaseName: String!, offset: Int): RemoteList!
   remoteBranchDiffCounts(databaseName: String!, fromRefName: String!, toRefName: String!): RemoteBranchDiffCounts!
   rowDiffs(offset: Int, databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, filterByRowType: DiffRowType, type: CommitDiffType): RowDiffList!
-  rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int): RowList!
+  rows(schemaName: String, refName: String!, databaseName: String!, tableName: String!, offset: Int, withDiff: Boolean): RowList!
   schemaDiff(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, tableName: String!, type: CommitDiffType): SchemaDiff
   doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!

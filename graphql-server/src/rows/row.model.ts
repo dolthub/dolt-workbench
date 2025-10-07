@@ -1,6 +1,6 @@
 import { getUTCDateAndTimeString } from "@dolthub/web-utils";
 import { Field, ObjectType } from "@nestjs/graphql";
-import { RawRow } from "../queryFactory/types";
+import { RawRow, RawRowsWithDiff, RawRowWithDiff } from "../queryFactory/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 
@@ -15,9 +15,21 @@ export class ColumnValue {
 }
 
 @ObjectType()
+export class WorkingDiff {
+  @Field(_type => [String])
+  diffColumnNames: string[];
+
+  @Field(_type => [ColumnValue])
+  diffColumnValues: ColumnValue[];
+}
+
+@ObjectType()
 export class Row {
   @Field(_type => [ColumnValue])
   columnValues: ColumnValue[];
+
+  @Field(_type => WorkingDiff, { nullable: true })
+  diff?: WorkingDiff;
 }
 
 @ObjectType()
@@ -29,6 +41,16 @@ export class RowList extends ListOffsetRes {
 export function fromDoltListRowRes(rows: RawRow[], offset: number): RowList {
   return {
     list: rows.slice(0, ROW_LIMIT).map(fromDoltRowRes),
+    nextOffset: getNextOffset(rows.length, offset),
+  };
+}
+
+export function fromDoltListRowWithDiffRes(
+  rows: RawRowsWithDiff,
+  offset: number,
+): RowList {
+  return {
+    list: rows.slice(0, ROW_LIMIT).map(fromDoltRowWithDiffRes),
     nextOffset: getNextOffset(rows.length, offset),
   };
 }
@@ -65,4 +87,27 @@ export function fromDoltRowRes(row: RawRow): Row {
       return { displayValue: getCellValue(cell, key) };
     }),
   };
+}
+
+export function fromDoltRowWithDiffRes(rowWithDiff: RawRowWithDiff): Row {
+  const rowEntries = Object.entries(rowWithDiff.row);
+  const diffEntries = Object.entries(rowWithDiff.diff ?? []);
+
+  const columnValues = rowEntries.map(([key, cell]) => {
+    return { displayValue: getCellValue(cell, key) };
+  });
+
+  return diffEntries.length > 0
+    ? {
+        columnValues,
+        diff: {
+          diffColumnNames: diffEntries.map(([key, _]) => key),
+          diffColumnValues: diffEntries.map(([key, value]) => {
+            return { displayValue: getCellValue(value, key) };
+          }),
+        },
+      }
+    : {
+        columnValues,
+      };
 }

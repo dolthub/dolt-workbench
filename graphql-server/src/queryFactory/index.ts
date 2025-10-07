@@ -4,6 +4,7 @@ import { SchemaType } from "../schemas/schema.enums";
 import { SchemaItem } from "../schemas/schema.model";
 import { TableDetails } from "../tables/table.model";
 import * as t from "./types";
+import { RawRows } from "./types";
 
 export declare class QueryFactory {
   ds: DataSource | undefined;
@@ -82,6 +83,11 @@ export declare class QueryFactory {
   getProcedures(args: t.RefArgs): Promise<SchemaItem[]>;
 
   // DOLT-SPECIFIC QUERIES
+  getTableRowsWithDiff(
+    args: t.TableMaybeSchemaArgs,
+    rows: RawRows,
+    page: t.TableRowPagination,
+  ): t.PR;
 
   getBranch(args: t.BranchArgs): t.USPR;
 

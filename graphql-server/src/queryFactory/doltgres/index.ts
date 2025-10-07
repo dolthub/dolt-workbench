@@ -128,6 +128,18 @@ export class DoltgresQueryFactory
     );
   }
 
+  async getTableRowsWithDiff(
+    args: t.TableMaybeSchemaArgs,
+    rows: t.RawRows,
+    page: t.TableRowPagination,
+  ): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
   async getBranch(args: t.BranchArgs): t.USPR {
     return this.queryForBuilder(
       async em => dem.getDoltBranch(em, args),

@@ -56,7 +56,12 @@ export type ListRemotesArgs = DBArgs & {
 };
 
 export type RawRow = Record<string, any>;
+export type RawRowWithDiff = {
+  row: RawRow;
+  diff?: RawRow;
+};
 export type RawRows = RawRow[];
+export type RawRowsWithDiff = RawRowWithDiff[];
 export type PR = Promise<RawRows>;
 export type SPR = Promise<RawRow>;
 export type UPR = Promise<RawRows | undefined>;
