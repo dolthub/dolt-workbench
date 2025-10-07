@@ -65,10 +65,16 @@ function ProviderForTableName(props: TableProps) {
   });
 
   const rowRes = useRowsForDataTableQuery({
+    variables: { ...props.params },
+  });
+
+  const rowWithDiffRes = useRowsForDataTableQuery({
     variables: { ...props.params, withDiff: true },
   });
 
-  const [rows, setRows] = useState(rowRes.data?.rows.list);
+  const [rows, setRows] = useState(
+    rowWithDiffRes.data?.rows.list ?? rowRes.data?.rows.list,
+  );
   const [pendingRow, setPendingRow] = useState<
     RowForDataTableFragment | undefined
   >(undefined);
@@ -76,9 +82,9 @@ function ProviderForTableName(props: TableProps) {
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
 
   useEffect(() => {
-    setRows(rowRes.data?.rows.list);
+    setRows(rowWithDiffRes.data?.rows.list ?? rowRes.data?.rows.list);
     setOffset(rowRes.data?.rows.nextOffset);
-  }, [rowRes.data]);
+  }, [rowRes.data, rowWithDiffRes.data]);
 
   const loadMore = useCallback(async () => {
     if (offset === undefined) {
@@ -93,14 +99,43 @@ function ProviderForTableName(props: TableProps) {
       variables: {
         ...props.params,
         offset,
+      },
+    });
+
+    const prevRowsLength = rows?.length ?? 0;
+    const newRows = res.data.rows.list;
+    const newOffset = res.data.rows.nextOffset;
+
+    setRows(prevRows => (prevRows ?? []).concat(newRows));
+    setOffset(newOffset);
+
+    const diffRes = rowWithDiffRes.client.query<
+      RowsForDataTableQuery,
+      RowsForDataTableQueryVariables
+    >({
+      query: RowsForDataTableQueryDocument,
+      variables: {
+        ...props.params,
+        offset,
         withDiff: true,
       },
     });
-    const newRows = res.data.rows.list;
-    const newOffset = res.data.rows.nextOffset;
-    setRows((rows ?? []).concat(newRows));
-    setOffset(newOffset);
-  }, [offset, props.params, rowRes.client, rows]);
+
+    diffRes
+      .then(diffResult => {
+        setRows(currentRows => {
+          if (currentRows) {
+            return [
+              ...currentRows.slice(0, prevRowsLength),
+              ...diffResult.data.rows.list,
+            ];
+          } else {
+            return diffResult.data.rows.list;
+          }
+        });
+      })
+      .catch(console.error);
+  }, [offset, props.params, rowRes.client, rowWithDiffRes.client, rows]);
 
   const onAddEmptyRow = () => {
     const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
