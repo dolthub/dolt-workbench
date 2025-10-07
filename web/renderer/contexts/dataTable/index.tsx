@@ -32,7 +32,6 @@ type DataTableContextType = {
   loading: boolean;
   loadMore: () => Promise<void>;
   rows?: RowForDataTableFragment[];
-  setRows?: (rows: RowForDataTableFragment[]) => void;
   hasMore: boolean;
   columns?: ColumnForDataTableFragment[];
   foreignKeys?: ForeignKeysForDataTableFragment[];
@@ -148,7 +147,6 @@ function ProviderForTableName(props: TableProps) {
       loading: tableRes.loading || rowRes.loading,
       loadMore,
       rows,
-      setRows,
       hasMore: offset !== undefined && offset !== null && offset !== lastOffset,
       columns: tableRes.data?.table.columns,
       foreignKeys: tableRes.data?.table.foreignKeys,
@@ -167,7 +165,6 @@ function ProviderForTableName(props: TableProps) {
     rowRes.error,
     rowRes.loading,
     rows,
-    setRows,
     tableRes.data?.table.columns,
     tableRes.data?.table.foreignKeys,
     tableRes.error,
