@@ -30,3 +30,15 @@
     @apply pr-6 text-left pb-1;
   }
 }
+
+.checkboxContainer {
+  @apply flex items-start text-sm;
+}
+
+.checkboxLabel {
+  @apply mr-2 whitespace-nowrap text-link-1 font-semibold;
+}
+
+.checkbox {
+  @apply shrink-0 -translate-y-0.5;
+}

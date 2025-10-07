@@ -132,7 +132,7 @@ export class DoltQueryFactory
       async em => dem.getWorkingDiffRows(em, args.tableName, page),
       args.databaseName,
       args.refName,
-    )
+    );
   }
 
   async getBranch(args: t.BranchArgs): t.USPR {

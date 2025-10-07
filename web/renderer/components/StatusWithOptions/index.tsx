@@ -1,6 +1,6 @@
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, Loader, Tooltip } from "@dolthub/react-components";
+import { Button, Checkbox, Loader, Tooltip } from "@dolthub/react-components";
 import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
 import useRole from "@hooks/useRole";
 import { RefParams } from "@lib/params";
@@ -16,6 +16,9 @@ type Props = {
   params: RefParams;
   forDiffPage?: boolean;
   className?: string;
+  diffExists?: boolean;
+  workingDiffRowsToggled?: boolean;
+  setWorkingDiffRowsToggled?: (toggled: boolean) => void;
 };
 
 type InnerProps = Props & {
@@ -38,6 +41,21 @@ function Inner(props: InnerProps) {
       )}
       data-cy="uncommitted-changes"
     >
+      {props.diffExists && (
+        <div className={css.checkboxContainer}>
+          <span className={css.checkboxLabel}>Show Changed Rows Only</span>
+          <Checkbox
+            checked={props.workingDiffRowsToggled ?? false}
+            onChange={() => {
+              if (props.setWorkingDiffRowsToggled) {
+                props.setWorkingDiffRowsToggled(!props.workingDiffRowsToggled);
+              }
+            }}
+            name="show-changed-rows-only"
+            className={css.checkbox}
+          />
+        </div>
+      )}
       {!props.forDiffPage && (
         <Link
           {...diff({

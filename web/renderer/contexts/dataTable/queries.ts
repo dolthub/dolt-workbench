@@ -119,5 +119,4 @@ export const WORKING_DIFF_ROWS_FOR_DATA_TABLE = gql`
       ...WorkingDiffRowListRows
     }
   }
-`
-
+`;
