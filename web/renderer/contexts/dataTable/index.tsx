@@ -218,7 +218,10 @@ function ProviderForTableName(props: TableProps) {
       onAddEmptyRow,
       pendingRow,
       setPendingRow,
-      diffExists: !!workingDiffRows && workingDiffRows.length > 0,
+      diffExists:
+        !("q" in props.params) &&
+        !!workingDiffRows &&
+        workingDiffRows.length > 0,
     };
   }, [
     loadMore,
