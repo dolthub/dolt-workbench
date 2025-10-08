@@ -165,4 +165,4 @@ export const workingDiff = (p: ps.RefParams): Route =>
   database(p)
     .addStatic("compare")
     .addDynamic("refName", p.refName, ENCODE)
-    .addStatic("STAGED..WORKING");
+    .addDynamic("diffRange", "STAGED..WORKING", ENCODE);
