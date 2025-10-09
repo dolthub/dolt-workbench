@@ -22,7 +22,7 @@ export default function ResetConnectionButton() {
   const onClick = async () => {
     await mutateFn();
     await client.resetStore();
-    router.reload();
+    await router.push(router.asPath);
   };
 
   const onClose = () => {
