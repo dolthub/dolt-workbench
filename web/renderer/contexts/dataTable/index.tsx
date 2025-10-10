@@ -11,6 +11,10 @@ import {
   RowsForDataTableQueryVariables,
   useDataTableQuery,
   useRowsForDataTableQuery,
+  useWorkingDiffRowsForDataTableQuery,
+  WorkingDiffRowsForDataTableQuery,
+  WorkingDiffRowsForDataTableQueryDocument,
+  WorkingDiffRowsForDataTableQueryVariables,
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
 import {
@@ -30,17 +34,25 @@ type DataTableParams = TableParams & {
 type DataTableContextType = {
   params: RefOptionalSchemaParams & { tableName?: string; q?: string };
   loading: boolean;
+  loadingWorkingDiff: boolean;
   loadMore: () => Promise<void>;
+  loadMoreWorkingDiff: () => Promise<void>;
   rows?: RowForDataTableFragment[];
+  workingDiffRows?: RowForDataTableFragment[];
   hasMore: boolean;
+  hasMoreWorkingDiff: boolean;
   columns?: ColumnForDataTableFragment[];
   foreignKeys?: ForeignKeysForDataTableFragment[];
   error?: ApolloError;
+  errorWorkingDiff?: ApolloError;
   showingWorkingDiff: boolean;
   tableNames: string[];
   onAddEmptyRow: () => void;
   pendingRow?: RowForDataTableFragment;
   setPendingRow: (r: RowForDataTableFragment | undefined) => void;
+  workingDiffRowsToggled?: boolean;
+  setWorkingDiffRowsToggled: (toggled: boolean) => void;
+  diffExists: boolean;
 };
 
 export const DataTableContext =
@@ -71,9 +83,23 @@ function ProviderForTableName(props: TableProps) {
     variables: { ...props.params, withDiff: true },
   });
 
+  const diffOnlyRes = useWorkingDiffRowsForDataTableQuery({
+    variables: props.params,
+  });
+
   const [rows, setRows] = useState(
     rowWithDiffRes.data?.rows.list ?? rowRes.data?.rows.list,
   );
+  const [workingDiffRows, setWorkingDiffRows] = useState(
+    diffOnlyRes.data?.workingDiffRows.list,
+  );
+  const [diffQueryOffset, setDiffQueryOffset] = useState(
+    diffOnlyRes.data?.workingDiffRows.nextOffset,
+  );
+  const [lastDiffQueryOffset, setLastDiffQueryOffset] =
+    useState<Maybe<number>>(undefined);
+  const [workingDiffRowsToggled, setWorkingDiffRowsToggled] = useState(false);
+
   const [pendingRow, setPendingRow] = useState<
     RowForDataTableFragment | undefined
   >(undefined);
@@ -84,6 +110,11 @@ function ProviderForTableName(props: TableProps) {
     setRows(rowWithDiffRes.data?.rows.list ?? rowRes.data?.rows.list);
     setOffset(rowRes.data?.rows.nextOffset);
   }, [rowRes.data, rowWithDiffRes.data]);
+
+  useEffect(() => {
+    setWorkingDiffRows(diffOnlyRes.data?.workingDiffRows.list);
+    setDiffQueryOffset(diffOnlyRes.data?.workingDiffRows.nextOffset);
+  }, [diffOnlyRes.data]);
 
   const loadMore = useCallback(async () => {
     if (offset === undefined) {
@@ -132,6 +163,31 @@ function ProviderForTableName(props: TableProps) {
     });
   }, [offset, props.params, rowRes.client, rowWithDiffRes.client, rows]);
 
+  const loadMoreWorkingDiff = useCallback(async () => {
+    if (diffQueryOffset === undefined) {
+      return;
+    }
+    setLastDiffQueryOffset(diffQueryOffset);
+    const res = await diffOnlyRes.client.query<
+      WorkingDiffRowsForDataTableQuery,
+      WorkingDiffRowsForDataTableQueryVariables
+    >({
+      query: WorkingDiffRowsForDataTableQueryDocument,
+      variables: {
+        ...props.params,
+        offset: diffQueryOffset,
+      },
+    });
+
+    const newWorkingDiffRows = res.data.workingDiffRows.list;
+    const newDiffQueryOffset = res.data.workingDiffRows.nextOffset;
+
+    setWorkingDiffRows(prevWorkingDiffRows =>
+      (prevWorkingDiffRows ?? []).concat(newWorkingDiffRows),
+    );
+    setDiffQueryOffset(newDiffQueryOffset);
+  }, [diffQueryOffset, props.params, diffOnlyRes.client]);
+
   const onAddEmptyRow = () => {
     const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
     setPendingRow(emptyRow);
@@ -141,26 +197,48 @@ function ProviderForTableName(props: TableProps) {
     return {
       params: props.params,
       loading: tableRes.loading || rowRes.loading,
+      loadingWorkingDiff: tableRes.loading || diffOnlyRes.loading,
       loadMore,
+      loadMoreWorkingDiff,
       rows,
+      workingDiffRows,
+      workingDiffRowsToggled,
+      setWorkingDiffRowsToggled,
       hasMore: offset !== undefined && offset !== null && offset !== lastOffset,
+      hasMoreWorkingDiff:
+        diffQueryOffset !== undefined &&
+        diffQueryOffset !== null &&
+        diffQueryOffset !== lastDiffQueryOffset,
       columns: tableRes.data?.table.columns,
       foreignKeys: tableRes.data?.table.foreignKeys,
       error: tableRes.error ?? rowRes.error,
+      errorWorkingDiff: tableRes.error ?? diffOnlyRes.error,
       showingWorkingDiff: !!props.showingWorkingDiff,
       tableNames: props.tableNames,
       onAddEmptyRow,
       pendingRow,
       setPendingRow,
+      diffExists:
+        !("q" in props.params) &&
+        !!workingDiffRows &&
+        workingDiffRows.length > 0,
     };
   }, [
     loadMore,
+    loadMoreWorkingDiff,
     offset,
     lastOffset,
+    diffQueryOffset,
+    lastDiffQueryOffset,
     props.params,
     rowRes.error,
     rowRes.loading,
+    diffOnlyRes.error,
+    diffOnlyRes.loading,
+    workingDiffRowsToggled,
+    setWorkingDiffRowsToggled,
     rows,
+    workingDiffRows,
     tableRes.data?.table.columns,
     tableRes.data?.table.foreignKeys,
     tableRes.error,
@@ -198,15 +276,20 @@ export function DataTableProvider({
     return {
       params,
       loading,
+      loadingWorkingDiff: false,
       loadMore: async () => {},
+      loadMoreWorkingDiff: async () => {},
       hasMore: false,
+      hasMoreWorkingDiff: false,
       showingWorkingDiff: !!showingWorkingDiff,
       tableNames,
       onAddEmptyRow: () => {},
       pendingRow: undefined,
       setPendingRow: () => {},
+      setWorkingDiffRowsToggled: () => {},
+      diffExists: false,
     };
-  }, [params, showingWorkingDiff, tableNames]);
+  }, [loading, params, showingWorkingDiff, tableNames]);
 
   const isMut = "q" in params && isMutation(params.q);
   if (isMut || !tableNames.length) {

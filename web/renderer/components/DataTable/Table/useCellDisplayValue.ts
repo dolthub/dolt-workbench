@@ -30,12 +30,12 @@ export default function useCellDisplayValue(
 
   useEffect(() => {
     setCellStatus(columnStatus[cidx]);
-  }, [columnStatus]);
+  }, [cidx, columnStatus]);
 
   useEffect(() => {
     const val = getCellValue(value, currCol, cellStatus);
     setDisplayCellVal(val);
-  }, [cellStatus]);
+  }, [cellStatus, currCol, value]);
 
   return { displayCellVal, setDisplayCellVal, cellStatus, setCellStatus };
 }

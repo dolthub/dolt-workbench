@@ -1,5 +1,5 @@
 .uncommitted {
-  @apply hidden lg:flex items-center sticky right-6 mt-2 z-10 min-w-[20rem];
+  @apply hidden lg:flex items-center whitespace-nowrap sticky right-6 mt-2 z-10 min-w-[20rem];
 
   a {
     @apply mr-3 text-sm;
@@ -29,4 +29,16 @@
   th {
     @apply pr-6 text-left pb-1;
   }
+}
+
+.checkboxContainer {
+  @apply flex items-start text-sm;
+}
+
+.checkboxLabel {
+  @apply mr-2 text-link-1 font-semibold;
+}
+
+.checkbox {
+  @apply shrink-0 -translate-y-0.5;
 }

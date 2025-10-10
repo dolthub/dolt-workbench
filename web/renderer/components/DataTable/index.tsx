@@ -59,19 +59,36 @@ type TableProps = {
 };
 
 function WithContext(props: TableProps) {
-  const { loading, hasMore, loadMore, rows, columns, error } =
-    useDataTableContext();
+  const {
+    loading,
+    loadingWorkingDiff,
+    hasMore,
+    hasMoreWorkingDiff,
+    loadMore,
+    loadMoreWorkingDiff,
+    rows,
+    workingDiffRows,
+    columns,
+    error,
+    errorWorkingDiff,
+    workingDiffRowsToggled,
+  } = useDataTableContext();
 
-  if (loading) return <Loader loaded={false} />;
+  if (
+    (!workingDiffRowsToggled && loading) ||
+    (workingDiffRowsToggled && loadingWorkingDiff)
+  ) {
+    return <Loader loaded={false} />;
+  }
 
   return (
     <Inner
       params={props.params}
-      loadMore={loadMore}
-      rows={rows}
+      loadMore={workingDiffRowsToggled ? loadMoreWorkingDiff : loadMore}
+      rows={workingDiffRowsToggled ? workingDiffRows : rows}
       columns={columns}
-      hasMore={hasMore}
-      error={error}
+      hasMore={workingDiffRowsToggled ? hasMoreWorkingDiff : hasMore}
+      error={workingDiffRowsToggled ? errorWorkingDiff : error}
     />
   );
 }

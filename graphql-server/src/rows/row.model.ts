@@ -1,6 +1,11 @@
 import { getUTCDateAndTimeString } from "@dolthub/web-utils";
 import { Field, ObjectType } from "@nestjs/graphql";
-import { RawRow, RawRowsWithDiff, RawRowWithDiff } from "../queryFactory/types";
+import {
+  RawRow,
+  RawRows,
+  RawRowsWithDiff,
+  RawRowWithDiff,
+} from "../queryFactory/types";
 import { ROW_LIMIT, getNextOffset } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 
@@ -55,6 +60,19 @@ export function fromDoltListRowWithDiffRes(
   };
 }
 
+export function fromDoltListWorkingDiffRowRes(
+  rows: RawRows,
+  offset: number,
+): RowList {
+  return {
+    list: rows
+      .slice(0, ROW_LIMIT)
+      .filter(row => row.diff_type === "modified" || row.diff_type === "added")
+      .map(fromDoltWorkingDiffRowRes),
+    nextOffset: getNextOffset(rows.length, offset),
+  };
+}
+
 export function getCellValue(value: any, colName?: string): string {
   if (value === null || value === undefined) {
     return NULL_VALUE;
@@ -89,6 +107,22 @@ export function fromDoltRowRes(row: RawRow): Row {
   };
 }
 
+export function fromDoltWorkingDiffRowRes(row: RawRow): Row {
+  return {
+    columnValues: Object.entries(row)
+      .filter(
+        ([key, _]) =>
+          key.startsWith("to_") &&
+          key !== "to_commit" &&
+          key !== "to_commit_date",
+      )
+      .map(([key, value]) => {
+        return { displayValue: getCellValue(value, key) };
+      }),
+    diff: getDiffFromRawRow(row),
+  };
+}
+
 export function fromDoltRowWithDiffRes(rowWithDiff: RawRowWithDiff): Row {
   const rowEntries = Object.entries(rowWithDiff.row);
   const diffEntries = Object.entries(rowWithDiff.diff ?? []);
@@ -100,14 +134,19 @@ export function fromDoltRowWithDiffRes(rowWithDiff: RawRowWithDiff): Row {
   return diffEntries.length > 0
     ? {
         columnValues,
-        diff: {
-          diffColumnNames: diffEntries.map(([key, _]) => key),
-          diffColumnValues: diffEntries.map(([key, value]) => {
-            return { displayValue: getCellValue(value, key) };
-          }),
-        },
+        diff: getDiffFromRawRow(rowWithDiff.diff),
       }
     : {
         columnValues,
       };
+}
+
+function getDiffFromRawRow(diff: RawRow | undefined) {
+  const diffEntries = Object.entries(diff ?? []);
+  return {
+    diffColumnNames: diffEntries.map(([key, _]) => key),
+    diffColumnValues: diffEntries.map(([key, value]) => {
+      return { displayValue: getCellValue(value, key) };
+    }),
+  };
 }

@@ -89,6 +89,11 @@ export declare class QueryFactory {
     page: t.TableRowPagination,
   ): t.PR;
 
+  getWorkingDiffRows(
+    args: t.TableMaybeSchemaArgs,
+    page: t.TableRowPagination,
+  ): t.PR;
+
   getBranch(args: t.BranchArgs): t.USPR;
 
   getBranches(args: t.ListBranchesArgs): t.PR;

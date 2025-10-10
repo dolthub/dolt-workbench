@@ -83,3 +83,40 @@ export const ROWS_FOR_DATA_TABLE = gql`
     }
   }
 `;
+
+export const WORKING_DIFF_ROWS_FOR_DATA_TABLE = gql`
+  fragment WorkingDiffRowForDataTable on Row {
+    columnValues {
+      displayValue
+    }
+    diff {
+      diffColumnNames
+      diffColumnValues {
+        displayValue
+      }
+    }
+  }
+  fragment WorkingDiffRowListRows on RowList {
+    nextOffset
+    list {
+      ...WorkingDiffRowForDataTable
+    }
+  }
+  query WorkingDiffRowsForDataTableQuery(
+    $databaseName: String!
+    $refName: String!
+    $tableName: String!
+    $schemaName: String
+    $offset: Int
+  ) {
+    workingDiffRows(
+      databaseName: $databaseName
+      refName: $refName
+      tableName: $tableName
+      schemaName: $schemaName
+      offset: $offset
+    ) {
+      ...WorkingDiffRowListRows
+    }
+  }
+`;
