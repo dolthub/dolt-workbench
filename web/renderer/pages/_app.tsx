@@ -10,7 +10,9 @@ import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
 import { SWRConfig } from "swr";
 import "../styles/global.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import useTauri from "@hooks/useTauri";
+import { useEffectAsync } from "@dolthub/react-hooks";
 
 // configure fetch for use with SWR
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
@@ -24,6 +26,8 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
 function Inner(props: { pageProps: any; Component: any }) {
   const { graphqlApiUrl } = useServerConfig();
   const { params } = props.pageProps;
+  const { startGraphQlServer } = useTauri();
+  const [serverReady, setServerReady] = useState(process.env.NEXT_PUBLIC_FOR_TAURI !== "true");
 
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
@@ -31,6 +35,17 @@ function Inner(props: { pageProps: any; Component: any }) {
       window.ipc.updateAppMenu(params?.databaseName);
     }
   }, [props.pageProps]);
+
+  useEffectAsync(async () => {
+    if (process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
+      await startGraphQlServer();
+      setServerReady(true);
+    }
+  })
+
+  if (!serverReady) {
+    return <div>Starting GraphQL server...</div>;
+  }
 
   const WrappedPage = withApollo(graphqlApiUrl)(props.Component);
   return <WrappedPage {...props.pageProps} />;

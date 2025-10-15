@@ -12,7 +12,7 @@ import resolvers from "./resolvers";
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       autoSchemaFile:
-        process.env.NEXT_PUBLIC_FOR_ELECTRON === "true"
+        process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true"
           ? process.env.SCHEMA_PATH
           : "schema.gql",
       context: ctx => ctx,

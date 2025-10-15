@@ -1,0 +1,43 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "DoltWorkbench",
+  "version": "0.3.56",
+  "identifier": "com.dolthub.dolt-workbench",
+  "build": {
+    "frontendDist": "../app",
+    "devUrl": "http://127.0.0.1:3002",
+    "beforeDevCommand": "yarn package:graphql && NEXT_PUBLIC_FOR_TAURI=true yarn run dev",
+    "beforeBuildCommand": "yarn package:graphql && NEXT_PUBLIC_FOR_TAURI=true yarn run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "Dolt Workbench",
+        "width": 1400,
+        "height": 900,
+        "minWidth": 1080,
+        "minHeight": 780,
+        "resizable": true,
+        "fullscreen": false,
+        "additionalBrowserArgs": "--disable-web-security"
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "resources": ["../../graphql-server/schema.gql"],
+    "externalBin": ["binaries/graphql-server"]
+  }
+}
+

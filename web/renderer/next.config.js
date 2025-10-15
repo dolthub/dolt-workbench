@@ -2,18 +2,18 @@
 
 const nextConfig = {
   distDir:
-    process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" &&
+    (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true") &&
     process.env.NODE_ENV === "production"
       ? "../app"
       : "../.next",
   output:
-    process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" &&
+    (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true") &&
     process.env.NODE_ENV === "production"
       ? "export"
       : "standalone", // Use standalone output for a server-based Next.js app
   images: {
     unoptimized:
-      process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ? true : undefined,
+      process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true" ? true : undefined,
   },
   webpack: config => {
     // Add the webpack-preprocessor-loader so we can use getServerSideProps conditionally
@@ -24,7 +24,7 @@ const nextConfig = {
           loader: "webpack-preprocessor-loader",
           options: {
             params: {
-              isElectron: process.env.NEXT_PUBLIC_FOR_ELECTRON === "true",
+              isElectron: process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true",
             },
           },
         },
