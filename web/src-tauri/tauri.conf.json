@@ -6,8 +6,8 @@
   "build": {
     "frontendDist": "../app",
     "devUrl": "http://127.0.0.1:3002",
-    "beforeDevCommand": "yarn package:graphql && NEXT_PUBLIC_FOR_TAURI=true yarn run dev",
-    "beforeBuildCommand": "yarn package:graphql && NEXT_PUBLIC_FOR_TAURI=true yarn run build"
+    "beforeDevCommand": "yarn package:tauri && NEXT_PUBLIC_FOR_TAURI=true yarn run dev",
+    "beforeBuildCommand": "yarn package:tauri && NEXT_PUBLIC_FOR_TAURI=true yarn run build"
   },
   "app": {
     "windows": [
@@ -37,7 +37,7 @@
       "icons/icon.ico"
     ],
     "resources": ["../../graphql-server/schema.gql"],
-    "externalBin": ["binaries/graphql-server"]
+    "externalBin": ["binaries/graphql-server", "binaries/dolt"]
   }
 }
 

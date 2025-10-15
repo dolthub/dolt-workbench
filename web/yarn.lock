@@ -5613,6 +5613,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@tauri-apps/plugin-fs@npm:~2":
+  version: 2.4.2
+  resolution: "@tauri-apps/plugin-fs@npm:2.4.2"
+  dependencies:
+    "@tauri-apps/api": "npm:^2.8.0"
+  checksum: 10c0/ae640f23cfd089552e0958245a10c701baf57581e898628f1cb8bf961e7f26365190d5fb0cee021d3604596d3b6a7dfd934ccdc46d3d699f9c0e9ec49a3bacd8
+  languageName: node
+  linkType: hard
+
 "@tauri-apps/plugin-shell@npm:^2.3.1":
   version: 2.3.1
   resolution: "@tauri-apps/plugin-shell@npm:2.3.1"
@@ -10259,6 +10268,7 @@ __metadata:
     "@react-icons/all-files": "npm:^4.1.0"
     "@tauri-apps/api": "npm:^2.8.0"
     "@tauri-apps/cli": "npm:^2.8.4"
+    "@tauri-apps/plugin-fs": "npm:~2"
     "@tauri-apps/plugin-shell": "npm:^2.3.1"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.6.3"

@@ -93,6 +93,7 @@ dependencies = [
  "serde_json",
  "tauri",
  "tauri-build",
+ "tauri-plugin-fs",
  "tauri-plugin-log",
  "tauri-plugin-shell",
 ]
@@ -3720,6 +3721,28 @@ dependencies = [
  "tauri-utils",
  "toml 0.9.8",
  "walkdir",
+]
+
+[[package]]
+name = "tauri-plugin-fs"
+version = "2.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "315784ec4be45e90a987687bae7235e6be3d6e9e350d2b75c16b8a4bf22c1db7"
+dependencies = [
+ "anyhow",
+ "dunce",
+ "glob",
+ "percent-encoding",
+ "schemars 0.8.22",
+ "serde",
+ "serde_json",
+ "serde_repr",
+ "tauri",
+ "tauri-plugin",
+ "tauri-utils",
+ "thiserror 2.0.17",
+ "toml 0.9.8",
+ "url",
 ]
 
 [[package]]

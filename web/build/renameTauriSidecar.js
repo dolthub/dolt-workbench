@@ -10,6 +10,6 @@ if (!targetTriple) {
   console.error('Failed to determine platform target triple');
 }
 fs.renameSync(
-  `src-tauri/binaries/graphql-server${extension}`,
-  `src-tauri/binaries/graphql-server-${targetTriple}${extension}`
+  `src-tauri/binaries/${process.argv[2]}${extension}`,
+  `src-tauri/binaries/${process.argv[2]}-${targetTriple}${extension}`
 );
