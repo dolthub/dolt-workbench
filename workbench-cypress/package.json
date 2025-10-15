@@ -4,7 +4,7 @@
   "description": "",
   "author": "DoltHub",
   "private": true,
-  "packageManager": "yarn@4.9.4",
+  "packageManager": "yarn@4.10.3",
   "scripts": {
     "cy-chrome": "cypress run --browser chrome",
     "cy-open-local": "CYPRESS_LOCAL=true cypress open --config baseUrl=http://localhost:3002,numTestsKeptInMemory=0",
