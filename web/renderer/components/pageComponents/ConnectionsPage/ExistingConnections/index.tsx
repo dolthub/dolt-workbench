@@ -12,6 +12,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import Item from "./Item";
 import css from "./index.module.css";
+import useTauri from "@hooks/useTauri";
 
 type Props = {
   connections: DatabaseConnectionFragment[];
@@ -21,6 +22,7 @@ export default function ExistingConnections(props: Props) {
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [connectionNameToDelete, setConnectionNameToDelete] = useState("");
   const [isLocalDolt, setIsLocalDolt] = useState(false);
+  const { removeDoltServer } = useTauri();
   const onDeleteClicked = (name: string, local: boolean) => {
     setConnectionNameToDelete(name);
     setDeleteModalOpen(true);
@@ -29,7 +31,12 @@ export default function ExistingConnections(props: Props) {
 
   const removeLocalDoltFolder = async () => {
     try {
-      await window.ipc.invoke("remove-dolt-connection", connectionNameToDelete);
+      if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+        await window.ipc.invoke("remove-dolt-connection", connectionNameToDelete);
+      } else if (process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
+        await removeDoltServer(connectionNameToDelete);
+      }
+
     } catch (error) {
       console.error("Failed to remove local Dolt server:", error);
       return new Error(`Failed to remove local Dolt server: ${error}`);

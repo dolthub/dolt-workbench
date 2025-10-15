@@ -9,7 +9,15 @@
     "core:default",
     "fs:default",
     {
-      "identifier":"fs:allow-mkdir",
+      "identifier": "fs:allow-mkdir",
+      "allow": ["$APPDATA/**"]
+    },
+    {
+      "identifier": "fs:allow-remove",
+      "allow": ["$APPDATA/**"]
+    },
+    {
+      "identifier": "fs:allow-exists",
       "allow": ["$APPDATA/**"]
     },
     {
@@ -35,6 +43,7 @@
           "args": true
         }
       ]
-    }
+    },
+    "shell:allow-kill"
   ]
 }

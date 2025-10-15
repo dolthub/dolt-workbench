@@ -46,10 +46,11 @@ export default function About() {
     state,
     storedConnections,
   );
+  const localDoltOptionsEnabled = forElectron || forTauri;
 
   return (
     <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
-      {forElectron || forTauri && (
+      {localDoltOptionsEnabled && (
         <>
           <Radio
             checked={connectionOption === ConnectionOption.Existing}

@@ -1,18 +1,24 @@
 import { Child, Command } from "@tauri-apps/plugin-shell";
 import { join } from "@tauri-apps/api/path";
-import { getConnectionsPath, createFolder, getSocketPath } from "@hooks/useTauri/utils";
-import { useState } from "react";
+import {
+  getConnectionsPath,
+  createFolder,
+  getSocketPath,
+  removeDoltServerFolder,
+  getErrorMessage,
+} from "@hooks/useTauri/utils";
+import { useTauriContext } from "@contexts/TauriContext";
 
 
 export default function useDoltServer() {
-  const [doltServerProcess, setDoltServerProcess] = useState<Child>();
+  const { doltServerProcess } = useTauriContext();
 
   async function startDoltServer(
     connectionName: string,
     port: string,
     init?: boolean,
     dbName?: string,
-  ): Promise<Child | null> {
+  ) {
     const connectionPath = await join(await getConnectionsPath(), connectionName);
     try {
       if (init) {
@@ -27,8 +33,25 @@ export default function useDoltServer() {
         await initializeDoltRepository(dbConnectionPath);
       }
 
-      return await startServerProcess(connectionPath, port);
+      const serverProcess = await startServerProcess(connectionPath, port);
+      if (!serverProcess) {
+        throw new Error("Failed to start Dolt server");
+      }
     } catch (error) {
+      if (doltServerProcess.current) {
+        await doltServerProcess.current.kill();
+        doltServerProcess.current = undefined;
+      }
+      if (init) {
+        try {
+          const { errorMsg } = await removeDoltServerFolder(connectionName);
+          if (errorMsg) {
+            console.error("Cleanup failed: ", errorMsg);
+          }
+        } catch (cleanupError) {
+          console.error("Folder deletion error: ", cleanupError);
+        }
+      }
       console.error("Failed to set up Dolt server:", error);
       throw error;
     }
@@ -130,7 +153,7 @@ export default function useDoltServer() {
       });
 
       command.spawn().then((child) => {
-        setDoltServerProcess(child);
+        doltServerProcess.current = child;
 
         // Check if server is already ready, otherwise wait for it
         const checkReady = () => {
@@ -143,8 +166,10 @@ export default function useDoltServer() {
 
         setTimeout(checkReady, 500);
 
-        setTimeout(() => {
+        setTimeout(async () => {
           if (!serverReady) {
+            await doltServerProcess.current?.kill();
+            doltServerProcess.current = undefined;
             reject(new Error("Timed out waiting for Dolt server to be ready"));
           }
         }, 30000);
@@ -152,5 +177,24 @@ export default function useDoltServer() {
     });
   }
 
-  return { startDoltServer, doltServerProcess };
+  async function removeDoltServer(connectionName: string) {
+    try {
+      if (doltServerProcess.current) {
+        await doltServerProcess.current.kill();
+        doltServerProcess.current = undefined;
+      }
+
+      const { errorMsg } = await removeDoltServerFolder(connectionName);
+      if (errorMsg) {
+        throw new Error(errorMsg);
+      }
+    } catch (error) {
+      console.error("removeDoltServer failed:", error);
+      throw new Error(getErrorMessage(error));
+    }
+  }
+
+
+
+  return { startDoltServer, removeDoltServer, doltServerProcess };
 }
