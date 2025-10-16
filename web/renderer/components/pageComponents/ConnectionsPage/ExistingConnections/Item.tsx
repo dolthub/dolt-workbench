@@ -45,11 +45,15 @@ export default function Item({
 
     try {
       if (forElectron) {
-        await window.ipc.invoke("start-dolt-server", conn.name, conn.port, false);
+        await window.ipc.invoke(
+          "start-dolt-server",
+          conn.name,
+          conn.port,
+          false,
+        );
       }
       if (forTauri) {
         await startDoltServer(conn.name, conn.port ?? "", false);
-
       }
     } catch (error) {
       setStartDoltServerError(new Error(`${error}`));

@@ -17,17 +17,22 @@ export default function useDesktopMenu(params: DatabasePageParams) {
   const router = useRouter();
   const { defaultBranchName } = useDefaultBranch(params);
 
-
   useEffect(() => {
     if (process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
-      const unlistenMenuEvent = listen<{page: string}>("menu-clicked", event => {
-        handleMenuNavigation(params, defaultBranchName, event.payload.page, router);
-      })
+      const unlistenMenuEvent = listen<{ page: string }>(
+        "menu-clicked",
+        event => {
+          handleMenuNavigation(
+            params,
+            defaultBranchName,
+            event.payload.page,
+            router,
+          );
+        },
+      );
       return () => {
-        unlistenMenuEvent
-          .then(unlisten => unlisten())
-          .catch(console.error);
-      }
+        unlistenMenuEvent.then(unlisten => unlisten()).catch(console.error);
+      };
     }
   }, [params, defaultBranchName, router]);
 
@@ -42,9 +47,8 @@ function handleMenuNavigation(
   params: DatabasePageParams,
   defaultBranchName: string,
   value: string,
-  router: NextRouter
+  router: NextRouter,
 ) {
-
   const paramsWithRef = {
     ...params,
     refName: params.refName || defaultBranchName,
@@ -88,5 +92,4 @@ function handleMenuNavigation(
     default:
       break;
   }
-
 }

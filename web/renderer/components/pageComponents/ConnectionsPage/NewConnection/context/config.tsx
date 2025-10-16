@@ -117,7 +117,12 @@ export function ConfigProvider({ children }: Props) {
           return;
         }
       } else if (forTauri) {
-        await startDoltServer(state.name.trim(), state.port, !state.cloneDolt, state.database);
+        await startDoltServer(
+          state.name.trim(),
+          state.port,
+          !state.cloneDolt,
+          state.database,
+        );
       }
       await onSubmit(e);
     } catch (error) {

@@ -32,11 +32,13 @@ export default function ExistingConnections(props: Props) {
   const removeLocalDoltFolder = async () => {
     try {
       if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
-        await window.ipc.invoke("remove-dolt-connection", connectionNameToDelete);
+        await window.ipc.invoke(
+          "remove-dolt-connection",
+          connectionNameToDelete,
+        );
       } else if (process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
         await removeDoltServer(connectionNameToDelete);
       }
-
     } catch (error) {
       console.error("Failed to remove local Dolt server:", error);
       return new Error(`Failed to remove local Dolt server: ${error}`);

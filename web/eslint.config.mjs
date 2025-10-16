@@ -28,6 +28,7 @@ export default [
       "main/preload.d.ts",
       ".next/**",
       "build/**",
+      "src-tauri/**",
     ],
   },
   {

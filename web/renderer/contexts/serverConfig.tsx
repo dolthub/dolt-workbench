@@ -44,8 +44,7 @@ function useServerConfigIPC(): ServerConfigReturnType {
       if (process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
         const config = apiConfig();
         setData(config);
-      }
-      else {
+      } else {
         try {
           const config = await window.ipc.invoke("api-config");
           setData(config);
@@ -82,7 +81,8 @@ function IPCConfigProvider({ children }: Props): JSX.Element {
 // ServerConfigProvider needs to wrap every page, and is only used in _app
 export function ServerConfigProvider({ children }: Props): JSX.Element {
   // For Electron, use IPC to fetch config, otherwise use API, since api routes are not available in Electron
-  return process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true" ? (
+  return process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ||
+    process.env.NEXT_PUBLIC_FOR_TAURI === "true" ? (
     <IPCConfigProvider>{children}</IPCConfigProvider>
   ) : (
     <APIConfigProvider>{children}</APIConfigProvider>

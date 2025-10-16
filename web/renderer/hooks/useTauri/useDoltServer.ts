@@ -9,7 +9,6 @@ import {
 } from "@hooks/useTauri/utils";
 import { useTauriContext } from "@contexts/TauriContext";
 
-
 export default function useDoltServer() {
   const { doltServerProcess } = useTauriContext();
 
@@ -19,11 +18,15 @@ export default function useDoltServer() {
     init?: boolean,
     dbName?: string,
   ) {
-    const connectionPath = await join(await getConnectionsPath(), connectionName);
+    const connectionPath = await join(
+      await getConnectionsPath(),
+      connectionName,
+    );
     try {
       if (init) {
         if (!dbName) {
-          const errorMsg = "Cannot initialize dolt repository without database name";
+          const errorMsg =
+            "Cannot initialize dolt repository without database name";
           console.error(errorMsg);
           throw new Error(errorMsg);
         }
@@ -57,19 +60,19 @@ export default function useDoltServer() {
     }
   }
 
-  async function initializeDoltRepository(
-    dbFolderPath: string,
-  ): Promise<void> {
-    const command = Command.sidecar('binaries/dolt', [
-      "init",
-      "--name",
-      "local_user",
-      "--email",
-      "user@local.com"
-    ], { cwd: dbFolderPath });
+  async function initializeDoltRepository(dbFolderPath: string): Promise<void> {
+    const command = Command.sidecar(
+      "binaries/dolt",
+      ["init", "--name", "local_user", "--email", "user@local.com"],
+      { cwd: dbFolderPath },
+    );
 
     const output = await command.execute();
-    console.log("Dolt init output:", { code: output.code, stdout: output.stdout, stderr: output.stderr });
+    console.log("Dolt init output:", {
+      code: output.code,
+      stdout: output.stdout,
+      stderr: output.stderr,
+    });
 
     if (output.code !== 0) {
       const errorDetails = output.stderr || output.stdout || "Unknown error";
@@ -106,18 +109,21 @@ export default function useDoltServer() {
     console.log("Starting Dolt server...", dbFolderPath, port);
     console.log("Dolt server args:", argsArray);
 
-    const command = Command.sidecar('binaries/dolt', argsArray, {
+    const command = Command.sidecar("binaries/dolt", argsArray, {
       cwd: dbFolderPath,
     });
 
     return new Promise((resolve, reject) => {
       let serverReady = false;
 
-      command.stdout.on('data', (data) => {
+      command.stdout.on("data", data => {
         const logMsg = data;
         console.log("dolt server process log", logMsg);
 
-        if (logMsg.includes("level=error") || logMsg.includes(`Port ${port} already in use`)) {
+        if (
+          logMsg.includes("level=error") ||
+          logMsg.includes(`Port ${port} already in use`)
+        ) {
           console.error("Server error:", logMsg);
           reject(new Error(logMsg));
           return;
@@ -128,13 +134,16 @@ export default function useDoltServer() {
         }
       });
 
-      command.stderr.on('data', (data) => {
+      command.stderr.on("data", data => {
         const errorMsg = data;
         console.log("dolt server process stderr", errorMsg);
 
         if (errorMsg.includes("level=warning")) {
           console.warn("Server warning:", errorMsg);
-        } else if (errorMsg.includes("level=error") || errorMsg.includes(`Port ${port} already in use`)) {
+        } else if (
+          errorMsg.includes("level=error") ||
+          errorMsg.includes(`Port ${port} already in use`)
+        ) {
           console.error("Server error:", errorMsg);
           reject(new Error(errorMsg));
           return;
@@ -145,35 +154,40 @@ export default function useDoltServer() {
         }
       });
 
-      command.on('close', (data) => {
-        console.log('Dolt server closed with code', data.code);
+      command.on("close", data => {
+        console.log("Dolt server closed with code", data.code);
         if (data.code !== 0) {
           reject(new Error(`Dolt server exited with code ${data.code}`));
         }
       });
 
-      command.spawn().then((child) => {
-        doltServerProcess.current = child;
+      command
+        .spawn()
+        .then(child => {
+          doltServerProcess.current = child;
 
-        // Check if server is already ready, otherwise wait for it
-        const checkReady = () => {
-          if (serverReady) {
-            resolve(child);
-          } else {
-            setTimeout(checkReady, 100);
-          }
-        };
+          // Check if server is already ready, otherwise wait for it
+          const checkReady = () => {
+            if (serverReady) {
+              resolve(child);
+            } else {
+              setTimeout(checkReady, 100);
+            }
+          };
 
-        setTimeout(checkReady, 500);
+          setTimeout(checkReady, 500);
 
-        setTimeout(async () => {
-          if (!serverReady) {
-            await doltServerProcess.current?.kill();
-            doltServerProcess.current = undefined;
-            reject(new Error("Timed out waiting for Dolt server to be ready"));
-          }
-        }, 30000);
-      }).catch(reject);
+          setTimeout(async () => {
+            if (!serverReady) {
+              await doltServerProcess.current?.kill();
+              doltServerProcess.current = undefined;
+              reject(
+                new Error("Timed out waiting for Dolt server to be ready"),
+              );
+            }
+          }, 30000);
+        })
+        .catch(reject);
     });
   }
 
@@ -210,7 +224,7 @@ export default function useDoltServer() {
         remoteDatabase,
         newDbName,
         connectionName,
-        port
+        port,
       );
 
       return "success";
@@ -228,7 +242,9 @@ export default function useDoltServer() {
       } catch (cleanupError) {
         console.error("Folder deletion error: ", cleanupError);
       }
-      console.error(`Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`);
+      console.error(
+        `Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`,
+      );
       return new Error(getErrorMessage(cloneError));
     }
   }
@@ -238,9 +254,8 @@ export default function useDoltServer() {
     remoteDatabase: string,
     newDbName: string,
     connectionName: string,
-    port: string
+    port: string,
   ): Promise<Child | undefined> {
-
     const dbFolderPath = await getConnectionsPath();
     const connectionFolderPath = await join(dbFolderPath, connectionName);
 
@@ -251,9 +266,8 @@ export default function useDoltServer() {
         remoteDatabase,
         newDbName,
         connectionFolderPath,
-      )
+      );
       return await startServerProcess(connectionFolderPath, port);
-
     } catch (error) {
       console.error("Failed to clone database: ", error);
       throw error;
@@ -264,13 +278,13 @@ export default function useDoltServer() {
     owner: string,
     remoteDatabase: string,
     newDbName: string,
-    connectionFolderPath: string
+    connectionFolderPath: string,
   ): Promise<void> {
-    const command = Command.sidecar('binaries/dolt', [
-      "clone",
-      `${owner}/${remoteDatabase}`,
-      `${newDbName}`,
-    ], { cwd: connectionFolderPath });
+    const command = Command.sidecar(
+      "binaries/dolt",
+      ["clone", `${owner}/${remoteDatabase}`, `${newDbName}`],
+      { cwd: connectionFolderPath },
+    );
 
     const output = await command.execute();
     if (output.code !== 0) {
@@ -287,6 +301,10 @@ export default function useDoltServer() {
     console.log(output.stdout);
   }
 
-  return { startDoltServer, removeDoltServer, cloneDoltDatabase, doltServerProcess };
-
+  return {
+    startDoltServer,
+    removeDoltServer,
+    cloneDoltDatabase,
+    doltServerProcess,
+  };
 }

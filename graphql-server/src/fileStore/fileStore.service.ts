@@ -4,7 +4,8 @@ import path, { resolve } from "path";
 import { DatabaseConnection } from "../databases/database.model";
 
 const storePath =
-  process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true"
+  process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ||
+  process.env.NEXT_PUBLIC_FOR_TAURI === "true"
     ? path.join(process.env.NEXT_PUBLIC_USER_DATA_PATH ?? "", "store.json")
     : resolve(__dirname, "../../store/store.json");
 
@@ -41,7 +42,10 @@ export class FileStoreService {
     }
 
     store.push(item);
-    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" || process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
+    if (
+      process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ||
+      process.env.NEXT_PUBLIC_FOR_TAURI === "true"
+    ) {
       if (!fs.existsSync(process.env.NEXT_PUBLIC_USER_DATA_PATH ?? "")) {
         fs.mkdirSync(process.env.NEXT_PUBLIC_USER_DATA_PATH ?? "");
       }
