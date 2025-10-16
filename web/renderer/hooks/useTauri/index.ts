@@ -2,7 +2,7 @@ import useDoltServer from "@hooks/useTauri/useDoltServer";
 
 
 export default function useTauri() {
-  const { startDoltServer, removeDoltServer } = useDoltServer();
+  const { startDoltServer, cloneDoltDatabase, removeDoltServer } = useDoltServer();
 
   function apiConfig() {
     return {
@@ -10,5 +10,5 @@ export default function useTauri() {
     }
   }
 
-  return { startDoltServer, removeDoltServer, apiConfig };
+  return { startDoltServer, cloneDoltDatabase, removeDoltServer, apiConfig };
 }

@@ -40,7 +40,7 @@ export function ConfigProvider({ children }: Props) {
   const [err, setErr] = useState<Error | undefined>(
     res.err || connectionsRes.error,
   );
-  const { startDoltServer } = useTauri();
+  const { startDoltServer, cloneDoltDatabase } = useTauri();
 
   useEffectOnMount(() => {
     const isDocker = window.location.origin === "http://localhost:3000";
@@ -145,14 +145,25 @@ export function ConfigProvider({ children }: Props) {
         });
       }, 10);
 
-      const result = await window.ipc.invoke(
-        "clone-dolthub-db",
-        owner.trim(),
-        remoteDbName.trim(),
-        newDbName.trim(),
-        state.name,
-        state.port,
-      );
+      let result;
+      if (forElectron) {
+        result = await window.ipc.invoke(
+          "clone-dolthub-db",
+          owner.trim(),
+          remoteDbName.trim(),
+          newDbName.trim(),
+          state.name,
+          state.port,
+        );
+      } else if (forTauri) {
+        result = await cloneDoltDatabase(
+          owner.trim(),
+          remoteDbName.trim(),
+          newDbName.trim(),
+          state.name,
+          state.port,
+        );
+      }
 
       if (result !== "success") {
         setErr(Error(result));

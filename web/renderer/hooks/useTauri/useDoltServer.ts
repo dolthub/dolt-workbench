@@ -95,7 +95,7 @@ export default function useDoltServer() {
   async function startServerProcess(
     dbFolderPath: string,
     port: string,
-  ): Promise<Child | null> {
+  ): Promise<Child | undefined> {
     let argsArray = ["sql-server", "-P", port];
 
     if (process.platform === "darwin") {
@@ -194,7 +194,99 @@ export default function useDoltServer() {
     }
   }
 
+  async function cloneDoltDatabase(
+    owner: string,
+    remoteDatabase: string,
+    newDbName: string,
+    connectionName: string,
+    port: string,
+  ) {
+    try {
+      if (doltServerProcess.current) {
+        await doltServerProcess.current.kill();
+      }
+      await cloneAndStartDatabase(
+        owner,
+        remoteDatabase,
+        newDbName,
+        connectionName,
+        port
+      );
 
+      return "success";
+    } catch (cloneError) {
+      if (doltServerProcess.current) {
+        await doltServerProcess.current.kill();
+        doltServerProcess.current = undefined;
+      }
 
-  return { startDoltServer, removeDoltServer, doltServerProcess };
+      try {
+        const { errorMsg } = await removeDoltServerFolder(connectionName);
+        if (errorMsg) {
+          console.error("Cleanup failed: ", errorMsg);
+        }
+      } catch (cleanupError) {
+        console.error("Folder deletion error: ", cleanupError);
+      }
+      console.error(`Failed to clone database ${owner}/${remoteDatabase}: ${getErrorMessage(cloneError)}`);
+      return new Error(getErrorMessage(cloneError));
+    }
+  }
+
+  async function cloneAndStartDatabase(
+    owner: string,
+    remoteDatabase: string,
+    newDbName: string,
+    connectionName: string,
+    port: string
+  ): Promise<Child | undefined> {
+
+    const dbFolderPath = await getConnectionsPath();
+    const connectionFolderPath = await join(dbFolderPath, connectionName);
+
+    try {
+      await createFolder(connectionFolderPath);
+      await cloneDatabase(
+        owner,
+        remoteDatabase,
+        newDbName,
+        connectionFolderPath,
+      )
+      return await startServerProcess(connectionFolderPath, port);
+
+    } catch (error) {
+      console.error("Failed to clone database: ", error);
+      throw error;
+    }
+  }
+
+  async function cloneDatabase(
+    owner: string,
+    remoteDatabase: string,
+    newDbName: string,
+    connectionFolderPath: string
+  ): Promise<void> {
+    const command = Command.sidecar('binaries/dolt', [
+      "clone",
+      `${owner}/${remoteDatabase}`,
+      `${newDbName}`,
+    ], { cwd: connectionFolderPath });
+
+    const output = await command.execute();
+    if (output.code !== 0) {
+      const errorDetails = output.stderr || output.stdout || "Unknown error";
+      const cloneErr = `Clone failed: ${errorDetails}`;
+      console.error(cloneErr);
+      throw new Error(cloneErr);
+    }
+
+    if (output.stderr) {
+      console.log(output.stderr);
+    }
+
+    console.log(output.stdout);
+  }
+
+  return { startDoltServer, removeDoltServer, cloneDoltDatabase, doltServerProcess };
+
 }
