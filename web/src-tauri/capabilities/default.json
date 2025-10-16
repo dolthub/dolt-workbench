@@ -7,18 +7,26 @@
   ],
   "permissions": [
     "core:default",
+    "core:app:allow-default-window-icon",
+    "core:webview:allow-set-webview-zoom",
     "fs:default",
     {
       "identifier": "fs:allow-mkdir",
-      "allow": ["$APPDATA/**"]
+      "allow": [
+        "$APPDATA/**"
+      ]
     },
     {
       "identifier": "fs:allow-remove",
-      "allow": ["$APPDATA/**"]
+      "allow": [
+        "$APPDATA/**"
+      ]
     },
     {
       "identifier": "fs:allow-exists",
-      "allow": ["$APPDATA/**"]
+      "allow": [
+        "$APPDATA/**"
+      ]
     },
     {
       "identifier": "shell:allow-spawn",
@@ -44,6 +52,8 @@
         }
       ]
     },
-    "shell:allow-kill"
+    "shell:allow-kill",
+    "shell:allow-open",
+    "opener:default"
   ]
 }

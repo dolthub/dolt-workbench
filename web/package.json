@@ -45,6 +45,7 @@
     "@react-icons/all-files": "^4.1.0",
     "@tauri-apps/api": "^2.8.0",
     "@tauri-apps/plugin-fs": "~2",
+    "@tauri-apps/plugin-opener": "~2",
     "@tauri-apps/plugin-shell": "^2.3.1",
     "ace-builds": "^1.37.5",
     "apollo-upload-client": "^17.0.0",

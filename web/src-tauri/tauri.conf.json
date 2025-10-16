@@ -19,6 +19,7 @@
         "minHeight": 780,
         "resizable": true,
         "fullscreen": false,
+        "zoomHotkeysEnabled": true,
         "additionalBrowserArgs": "--disable-web-security"
       }
     ],
