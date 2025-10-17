@@ -15,6 +15,7 @@ import StartDoltServerForm from "./StartDoltServerForm";
 import { getStartLocalDoltServerDisabled } from "@pageComponents/ConnectionsPage/NewConnection/context/utils";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+const forTauri = process.env.NEXT_PUBLIC_FOR_TAURI === "true";
 
 enum ConnectionOption {
   Existing,
@@ -45,10 +46,11 @@ export default function About() {
     state,
     storedConnections,
   );
+  const localDoltOptionsEnabled = forElectron || forTauri;
 
   return (
     <form onSubmit={onNext} className={css.form} data-cy="connection-tab-form">
-      {forElectron && (
+      {localDoltOptionsEnabled && (
         <>
           <Radio
             checked={connectionOption === ConnectionOption.Existing}
