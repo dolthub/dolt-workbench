@@ -34,7 +34,7 @@
     "yalc:clean": "yalc remove --all",
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
     "clean": "tsc -b --clean && yarn yalc:clean",
-    "package:tauri": "yarn --cwd ../graphql-server build && ncc build ../graphql-server/dist/main.js -o ../graphql-server/gql_dist && pkg ../graphql-server/gql_dist/index.js --output ./src-tauri/binaries/graphql-server && rm -rf ../graphql-server/gql_dist && node build/renameTauriSidecar.js graphql-server"
+    "package:tauri": "yarn --cwd ../graphql-server build && ncc build ../graphql-server/dist/main.js -o ../graphql-server/gql_dist && pkg ../graphql-server/gql_dist/index.js --output ./src-tauri/binaries/graphql-server && rm -rf ../graphql-server/gql_dist && cp build/mac/dolt src-tauri/binaries && node build/renameTauriSidecar.js dolt && node build/renameTauriSidecar.js graphql-server"
   },
   "dependencies": {
     "@apollo/client": "^3.9.9",
