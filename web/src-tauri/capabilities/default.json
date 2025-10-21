@@ -1,0 +1,59 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "enables the default permissions",
+  "windows": [
+    "main"
+  ],
+  "permissions": [
+    "core:default",
+    "core:app:allow-default-window-icon",
+    "core:webview:allow-set-webview-zoom",
+    "fs:default",
+    {
+      "identifier": "fs:allow-mkdir",
+      "allow": [
+        "$APPDATA/**"
+      ]
+    },
+    {
+      "identifier": "fs:allow-remove",
+      "allow": [
+        "$APPDATA/**"
+      ]
+    },
+    {
+      "identifier": "fs:allow-exists",
+      "allow": [
+        "$APPDATA/**"
+      ]
+    },
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "binaries/graphql-server",
+          "sidecar": true
+        },
+        {
+          "name": "binaries/dolt",
+          "sidecar": true,
+          "args": true
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "binaries/dolt",
+          "sidecar": true,
+          "args": true
+        }
+      ]
+    },
+    "shell:allow-kill",
+    "shell:allow-open",
+    "opener:default"
+  ]
+}
