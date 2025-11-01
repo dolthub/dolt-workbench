@@ -97,7 +97,7 @@
     "@types/react-copy-to-clipboard": "^5.0.6",
     "@types/react-dom": "^19.1.9",
     "@types/react-infinite-scroller": "^1.2.3",
-    "@types/react-timeago": "^4.1.4",
+    "@types/react-timeago": "^8.0.0",
     "@types/url-parse": "^1",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.38.0",
