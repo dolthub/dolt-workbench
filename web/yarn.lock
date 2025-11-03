@@ -5620,10 +5620,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/chance@npm:^1.1.5":
-  version: 1.1.6
-  resolution: "@types/chance@npm:1.1.6"
-  checksum: 10c0/9059986f58e7d0a5f591fcaecb74bfb3c678161eb947972bb1f6473183f74516fa6a2176e0bae83aa2825637cdf9f3a5515127e34c0763ef27bb812e8208cb12
+"@types/chance@npm:^1.1.7":
+  version: 1.1.7
+  resolution: "@types/chance@npm:1.1.7"
+  checksum: 10c0/896288f0a0f87a738c873dfd8cb0893154225bfda11b1fac36842f4722bc4d73c3933bb986217a59873ad5bc97861ca8939dad370a09ecc32723a928534938bd
   languageName: node
   linkType: hard
 
@@ -8452,10 +8452,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"chance@npm:^1.1.11":
-  version: 1.1.12
-  resolution: "chance@npm:1.1.12"
-  checksum: 10c0/96686a72df9077852993476dc4a16ec7afb797bb26d74caf4a5c6f6786d73fcd3c821ededb88b23a5c7b8762718b5cc43ce07fdd1ea3f508826ba88b57c36329
+"chance@npm:^1.1.13":
+  version: 1.1.13
+  resolution: "chance@npm:1.1.13"
+  checksum: 10c0/0e1523b0ef75061df5771c052e8bf8d5fb7d92e56a58e98e170e4be5f2166cceac2f70dd209e49e0605ea2e376ba99fb5e391987e8610c7037cd2fce19c35e3e
   languageName: node
   linkType: hard
 
@@ -9921,7 +9921,7 @@ __metadata:
     "@types/adm-zip": "npm:^0"
     "@types/apollo-upload-client": "npm:^17"
     "@types/babel__core": "npm:^7"
-    "@types/chance": "npm:^1.1.5"
+    "@types/chance": "npm:^1.1.7"
     "@types/diff": "npm:^5.2.1"
     "@types/jest": "npm:^29.5.6"
     "@types/lodash": "npm:^4.17.20"
@@ -9939,7 +9939,7 @@ __metadata:
     apollo-upload-client: "npm:^17.0.0"
     autoprefixer: "npm:^10.4.21"
     babel-jest: "npm:^29.7.0"
-    chance: "npm:^1.1.11"
+    chance: "npm:^1.1.13"
     classnames: "npm:^2.3.2"
     commit-graph: "npm:^2.3.12"
     cssnano: "npm:^7.0.7"
