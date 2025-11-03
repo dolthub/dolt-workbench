@@ -948,7 +948,7 @@ __metadata:
     ts-loader: "npm:^9.5.1"
     ts-node: "npm:^10.5.0"
     tsconfig-paths: "npm:^4.2.0"
-    typeorm: "npm:^0.3.24"
+    typeorm: "npm:^0.3.26"
     typescript: "npm:^5.9.2"
     webpack: "npm:^5.102.0"
     yalc: "npm:^1.0.0-pre.53"
@@ -10942,9 +10942,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typeorm@npm:^0.3.24":
-  version: 0.3.24
-  resolution: "typeorm@npm:0.3.24"
+"typeorm@npm:^0.3.26":
+  version: 0.3.27
+  resolution: "typeorm@npm:0.3.27"
   dependencies:
     "@sqltools/formatter": "npm:^1.2.5"
     ansis: "npm:^3.17.0"
@@ -10955,16 +10955,15 @@ __metadata:
     dedent: "npm:^1.6.0"
     dotenv: "npm:^16.4.7"
     glob: "npm:^10.4.5"
-    sha.js: "npm:^2.4.11"
+    sha.js: "npm:^2.4.12"
     sql-highlight: "npm:^6.0.0"
     tslib: "npm:^2.8.1"
     uuid: "npm:^11.1.0"
     yargs: "npm:^17.7.2"
   peerDependencies:
     "@google-cloud/spanner": ^5.18.0 || ^6.0.0 || ^7.0.0
-    "@sap/hana-client": ^2.12.25
-    better-sqlite3: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
-    hdb-pool: ^0.1.6
+    "@sap/hana-client": ^2.14.22
+    better-sqlite3: ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
     ioredis: ^5.0.4
     mongodb: ^5.8.0 || ^6.0.0
     mssql: ^9.1.1 || ^10.0.1 || ^11.0.1
@@ -10973,7 +10972,7 @@ __metadata:
     pg: ^8.5.1
     pg-native: ^3.0.0
     pg-query-stream: ^4.0.0
-    redis: ^3.1.1 || ^4.0.0
+    redis: ^3.1.1 || ^4.0.0 || ^5.0.14
     reflect-metadata: ^0.1.14 || ^0.2.0
     sql.js: ^1.4.0
     sqlite3: ^5.0.3
@@ -10985,8 +10984,6 @@ __metadata:
     "@sap/hana-client":
       optional: true
     better-sqlite3:
-      optional: true
-    hdb-pool:
       optional: true
     ioredis:
       optional: true
@@ -11018,7 +11015,7 @@ __metadata:
     typeorm: cli.js
     typeorm-ts-node-commonjs: cli-ts-node-commonjs.js
     typeorm-ts-node-esm: cli-ts-node-esm.js
-  checksum: 10c0/f78fe361c5eba065dfd0e05a7e2ee1bcb5b27a6a24fb6f1b57b03f7df74078364ac13b1ab2915676c50e9fb9c0a41a480834aaadae80fcc6c962c8844adabf03
+  checksum: 10c0/e0136e1d277496de1d1b327912d55af4855c83d9147896547d6da78ed485c6fc5a84a8469938afe006860c237415028391b47717743e6d4a7b60a52bc6d349aa
   languageName: node
   linkType: hard
 
