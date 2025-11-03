@@ -9992,7 +9992,7 @@ __metadata:
     sharp: "npm:^0.34.3"
     stylelint: "npm:^16.15.0"
     stylelint-config-recommended: "npm:^14.0.0"
-    swr: "npm:^2.3.3"
+    swr: "npm:^2.3.6"
     tailwindcss: "npm:^3.4.15"
     tar: "npm:^7.4.3"
     ts-jest: "npm:^29.4.5"
@@ -19578,15 +19578,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"swr@npm:^2.3.3":
-  version: 2.3.3
-  resolution: "swr@npm:2.3.3"
+"swr@npm:^2.3.6":
+  version: 2.3.6
+  resolution: "swr@npm:2.3.6"
   dependencies:
     dequal: "npm:^2.0.3"
     use-sync-external-store: "npm:^1.4.0"
   peerDependencies:
     react: ^16.11.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
-  checksum: 10c0/882fc8291912860e0c50eae3470ebf0cd58b0144cb12adcc4b14c5cef913ea06479043830508d8b0b3d4061d99ad8dd52485c9c879fbd4e9b893484e6d8da9e3
+  checksum: 10c0/9534f350982e36a3ae0a13da8c0f7da7011fc979e77f306e60c4e5db0f9b84f17172c44f973441ba56bb684b69b0d9838ab40011a6b6b3e32d0cd7f3d5405f99
   languageName: node
   linkType: hard
 
