@@ -1,5 +1,5 @@
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, ErrorMsg } from "@dolthub/react-components";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { useState, useEffect } from "react";
 import css from "./index.module.css";
 import NewGroupModal from "../NewGroupModal";
@@ -16,7 +16,7 @@ type Props = {
   params: RefParams;
 };
 
-export default function TestList({ params }: Props) {
+function TestListInner({ params }: Props) {
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
 
@@ -25,8 +25,6 @@ export default function TestList({ params }: Props) {
     setState,
     groupedTests,
     sortedGroupEntries,
-    testsLoading,
-    testsError,
     handleRunAll,
     handleHashNavigation,
   } = useTestContext();
@@ -62,32 +60,31 @@ export default function TestList({ params }: Props) {
 
   const getTestItems = (testItems: Test[]) =>
     testItems.map(test => <TestItem key={test.testName} test={test} />);
+
   return (
     <div className={css.container}>
       <div className={css.top}>
         <h1>Tests</h1>
-        {!testsLoading && !testsError && (
-          <div className={css.actionArea}>
-            <div className={css.createActions}>
-              <HideForNoWritesWrapper params={params}>
-                <CreateDropdown
-                  onCreateGroup={() => setShowNewGroupModal(true)}
-                />
-              </HideForNoWritesWrapper>
-              <Link {...workingDiff(params)}>
-                <Button>Commit</Button>
-              </Link>
-            </div>
-
-            <div className={css.primaryActions}>
-              {state.tests.length > 0 && (
-                <Button onClick={handleRunAll} className={css.runAllButton}>
-                  Run All
-                </Button>
-              )}
-            </div>
+        <div className={css.actionArea}>
+          <div className={css.createActions}>
+            <HideForNoWritesWrapper params={params}>
+              <CreateDropdown
+                onCreateGroup={() => setShowNewGroupModal(true)}
+              />
+            </HideForNoWritesWrapper>
+            <Link {...workingDiff(params)}>
+              <Button>Commit</Button>
+            </Link>
           </div>
-        )}
+
+          <div className={css.primaryActions}>
+            {state.tests.length > 0 && (
+              <Button onClick={handleRunAll} className={css.runAllButton}>
+                Run All
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
 
       <NewGroupModal
@@ -97,6 +94,7 @@ export default function TestList({ params }: Props) {
         onCreateGroup={onCreateGroup}
         onClose={() => setShowNewGroupModal(false)}
       />
+      
       {state.tests.length ? (
         <div className={css.tagContainer}>
           <div className={css.list}>
@@ -127,13 +125,18 @@ export default function TestList({ params }: Props) {
             )}
           </div>
         </div>
-      ) : testsError ? (
-        <ErrorMsg err={new Error(testsError)} />
-      ) : testsLoading ? (
-        <p className={css.loading}>Loading tests...</p>
       ) : (
         <p className={css.noTests}>No tests found</p>
       )}
     </div>
   );
+}
+
+export default function TestList({ params }: Props) {
+  const { testsLoading, testsError } = useTestContext();
+
+  if (testsLoading) return <Loader loaded={false} />;
+  if (testsError) return <ErrorMsg err={new Error(testsError)} />;
+  
+  return <TestListInner params={params} />;
 }
