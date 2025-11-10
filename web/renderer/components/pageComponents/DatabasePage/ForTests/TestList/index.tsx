@@ -1,5 +1,5 @@
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button } from "@dolthub/react-components";
+import { Button, ErrorMsg } from "@dolthub/react-components";
 import { useState, useEffect } from "react";
 import css from "./index.module.css";
 import NewGroupModal from "../NewGroupModal";
@@ -128,9 +128,7 @@ export default function TestList({ params }: Props) {
           </div>
         </div>
       ) : testsError ? (
-        <div className={css.errorContainer}>
-          <p className={css.errorText}>Failed to load tests: {testsError}</p>
-        </div>
+        <ErrorMsg err={new Error(testsError)} />
       ) : testsLoading ? (
         <p className={css.loading}>Loading tests...</p>
       ) : (

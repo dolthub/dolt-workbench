@@ -1,6 +1,5 @@
 .groupHeader {
-  @apply bg-stone-50 rounded mb-2 cursor-pointer;
-  transition: all 0.2s ease;
+  @apply bg-stone-50 rounded mb-2 cursor-pointer transition-all duration-200 ease-linear;
 }
 
 .groupHeader:hover {
@@ -40,8 +39,7 @@
 }
 
 .inlineEditInput {
-  @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 mt-0 mb-0 ml-0 mr-3 outline-none rounded transition-all;
-  min-width: 200px;
+  @apply bg-transparent border border-transparent text-base font-semibold text-storm-500 px-1 py-0.5 mt-0 mb-0 ml-0 mr-3 outline-none rounded transition-all min-w-[200px];
 }
 
 .inlineEditInput:hover {
@@ -93,9 +91,7 @@
 }
 
 .groupResult {
-  @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700;
-  min-width: 80px;
-  justify-content: center;
+  @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700 min-w-[80px] justify-center;
 }
 
 .groupResultPassed {

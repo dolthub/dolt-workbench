@@ -111,7 +111,7 @@ export default function TestItem({ test, className }: Props) {
         <div className={css.expandedContent}>
           {testResult?.status === "failed" && testResult.error && (
             <div className={css.errorMessage}>
-              <strong>Error:</strong> {testResult.error}
+              <span className={css.errorLabel}>Error:</span> {testResult.error}
             </div>
           )}
           <div className={css.separator}></div>

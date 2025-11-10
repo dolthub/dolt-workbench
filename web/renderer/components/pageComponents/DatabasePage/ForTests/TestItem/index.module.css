@@ -15,9 +15,7 @@
 }
 
 .testName {
-  @apply text-sm flex items-center;
-  flex: 1 1 auto;
-  min-width: 0;
+  @apply text-sm flex items-center flex-1 min-w-0;
 }
 
 .expandIcon {
@@ -25,9 +23,7 @@
 }
 
 .editableTestName {
-  @apply bg-transparent border border-transparent text-sm px-1 py-0.5 m-0 outline-none rounded transition-all flex-1;
-  min-width: 150px;
-  cursor: text;
+  @apply bg-transparent border border-transparent text-sm px-1 py-0.5 m-0 outline-none rounded transition-all flex-1 min-w-[150px] cursor-text;
 }
 
 .editableTestName:hover {
@@ -79,16 +75,11 @@
 }
 
 .fullWidthFormInput {
-  @apply w-full !important;
-  width: 100% !important;
-  min-width: 100% !important;
-  max-width: 100% !important;
+  @apply w-full min-w-full max-w-full;
 }
 
 .testResult {
-  @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700;
-  min-width: 80px;
-  justify-content: center;
+  @apply flex items-center gap-1 px-2 py-1 rounded text-sm text-stone-700 min-w-[80px] justify-center;
 }
 
 .testResultPassed {
@@ -105,6 +96,10 @@
 
 .errorMessage {
   @apply mb-4 p-3 bg-red-50 border border-red-400 rounded text-red-600 text-sm;
+}
+
+.errorLabel {
+  @apply font-bold;
 }
 
 .expandedContent :global(select) {
