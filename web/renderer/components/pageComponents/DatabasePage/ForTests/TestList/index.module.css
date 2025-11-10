@@ -74,21 +74,12 @@
   @apply text-center text-lg m-6;
 }
 
-.errorContainer {
-  @apply text-center m-6;
-}
-
-.errorText {
-  @apply text-red-600 text-lg;
-}
-
 .fieldInput {
   @apply w-full p-2 border border-stone-100 rounded text-sm;
 }
 
 .fieldTextarea {
-  @apply w-full p-2 border border-stone-100 rounded text-sm min-h-[80px];
-  resize: vertical;
+  @apply w-full p-2 border border-stone-100 rounded text-sm min-h-[80px] resize-y;
 }
 
 .fieldSelect {
@@ -135,8 +126,7 @@
 }
 
 .createActions button {
-  @apply px-3 py-1.5 text-sm font-semibold;
-  min-width: 100px;
+  @apply px-3 py-1.5 text-sm font-semibold min-w-[100px];
 }
 
 .primaryActions {
@@ -144,13 +134,11 @@
 }
 
 .primaryActions button {
-  @apply px-3 py-1.5 text-sm;
-  min-width: 100px;
+  @apply px-3 py-1.5 text-sm min-w-[100px];
 }
 
 .createButton {
-  @apply flex items-center justify-center px-3 py-1.5 text-sm font-semibold bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200;
-  min-width: 100px;
+  @apply flex items-center justify-center px-3 py-1.5 text-sm font-semibold bg-sky-600 text-white rounded hover:bg-sky-700 transition-colors duration-200 min-w-[100px];
 }
 
 .createButton:focus {
@@ -174,10 +162,7 @@
 }
 
 .createPopupItem button {
-  @apply w-full text-left text-sky-600 hover:text-sky-700 font-semibold;
-  border: none;
-  background: transparent;
-  outline: none;
+  @apply w-full text-left text-sky-600 hover:text-sky-700 font-semibold border-none bg-transparent outline-none;
 }
 
 .createPopupItem button svg {
@@ -193,10 +178,7 @@
 }
 
 .inlineGroupSelect {
-  @apply bg-transparent border border-stone-300 rounded text-sm px-2 py-1 ml-2 mr-2;
-  font-size: 13px;
-  width: auto;
-  min-width: 120px;
+  @apply bg-transparent border border-stone-300 rounded text-sm px-2 py-1 ml-2 mr-2 text-xs w-auto min-w-[120px];
 }
 
 .inlineGroupSelect:focus {

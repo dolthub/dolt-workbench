@@ -42,7 +42,6 @@ export function TestResults({ params }: { params: RefParams }) {
       });
 
       if (result.error) {
-        console.error("Error running tests:", result.error);
         setRunTestError(result.error.message);
         setTestResults([]);
         return;
@@ -50,7 +49,6 @@ export function TestResults({ params }: { params: RefParams }) {
 
       setTestResults(result.data?.runTests.list ?? []);
     } catch (err) {
-      console.error("Error running tests:", err);
       setRunTestError(
         err instanceof Error ? err.message : "Failed to run tests",
       );
@@ -67,7 +65,6 @@ export function TestResults({ params }: { params: RefParams }) {
   }
 
   if (error) {
-    console.error("Error loading test list:", error);
     return (
       <div className={css.outer}>
         <div className={css.container}>
@@ -79,10 +76,6 @@ export function TestResults({ params }: { params: RefParams }) {
         </div>
       </div>
     );
-  }
-
-  if (runTestsError) {
-    console.error("Run Tests query error:", runTestsError);
   }
 
   if (!data?.tests.list || data.tests.list.length === 0) {

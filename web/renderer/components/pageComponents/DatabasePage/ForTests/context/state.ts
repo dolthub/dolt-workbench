@@ -1,5 +1,14 @@
 import { Test } from "@gen/graphql-types";
 
+export type TestResults = Record<
+  string,
+  | {
+      status: "passed" | "failed";
+      error?: string;
+    }
+  | undefined
+>;
+
 export const defaultState = {
   expandedItems: new Set<string>(),
   expandedGroups: new Set<string>(),
@@ -7,27 +16,16 @@ export const defaultState = {
   hasUnsavedChanges: false,
   tests: [] as Test[],
   emptyGroups: new Set<string>(),
-  testResults: {} as Record<
-    string,
-    { status: "passed" | "failed"; error?: string } | undefined
-  >,
+  testResults: {} as TestResults,
   hasHandledHash: false,
 };
 
 export type TestState = typeof defaultState;
 
 export type TestContextType = {
-  expandedItems: Set<string>;
-  expandedGroups: Set<string>;
-  emptyGroups: Set<string>;
-  editingTestNames: Record<string, string>;
-  tests: Test[];
+  state: TestState;
   groupedTests: Record<string, Test[]>;
   sortedGroupEntries: Array<[string, Test[]]>;
-  testResults: Record<
-    string,
-    { status: "passed" | "failed"; error?: string } | undefined
-  >;
   testsLoading: boolean;
   testsError?: string;
   toggleExpanded: (testName: string) => void;

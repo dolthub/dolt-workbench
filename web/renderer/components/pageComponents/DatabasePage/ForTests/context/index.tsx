@@ -1,5 +1,9 @@
 import { createCustomContext } from "@dolthub/react-contexts";
-import { useContextWithError, useSetState } from "@dolthub/react-hooks";
+import {
+  useContextWithError,
+  useEffectAsync,
+  useSetState,
+} from "@dolthub/react-hooks";
 import {
   Test,
   useRunTestsLazyQuery,
@@ -9,7 +13,7 @@ import {
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode, useMemo, useEffect, useRef, useCallback } from "react";
-import { TestContextType, defaultState } from "./state";
+import { TestContextType, defaultState, TestResults } from "./state";
 import { getResults, groupTests, sortGroupEntries } from "../utils";
 
 export const TestContext = createCustomContext<TestContextType>("TestContext");
@@ -68,24 +72,15 @@ export function TestProvider({ children, params }: Props) {
   }, [saveTestsMutation, tests]);
 
   useEffect(() => {
-    if (testsError) {
-      console.error("Error loading tests:", testsError);
-    }
-  }, [testsError]);
-
-  useEffect(() => {
     if (!data?.tests.list) return;
     const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
     setState({ tests: initialTests });
   }, [data?.tests.list, setState]);
 
-  useEffect(() => {
+  useEffectAsync(async () => {
     if (!hasUnsavedChanges) return;
-    const save = async () => {
-      await handleSaveAll();
-      setState({ hasUnsavedChanges: false });
-    };
-    void save();
+    await handleSaveAll();
+    setState({ hasUnsavedChanges: false });
   }, [hasUnsavedChanges, handleSaveAll, setState]);
 
   useEffect(() => {
@@ -156,16 +151,13 @@ export function TestProvider({ children, params }: Props) {
 
   const handleTestError = useCallback(
     (error: string, targetTests: Test[]) => {
-      const errorResults = targetTests.reduce(
-        (acc, test) => {
-          acc[test.testName] = {
-            status: "failed",
-            error,
-          };
-          return acc;
-        },
-        {} as Record<string, { status: "passed" | "failed"; error?: string }>,
-      );
+      const errorResults = targetTests.reduce((acc, test) => {
+        acc[test.testName] = {
+          status: "failed",
+          error,
+        };
+        return acc;
+      }, {} as TestResults);
 
       setState({
         testResults: {
@@ -191,7 +183,6 @@ export function TestProvider({ children, params }: Props) {
         });
 
         if (result.error) {
-          console.error("Error running test:", result.error);
           const targetTest = tests.find(t => t.testName === testName);
           if (targetTest) {
             handleTestError(result.error.message, [targetTest]);
@@ -216,7 +207,6 @@ export function TestProvider({ children, params }: Props) {
           },
         });
       } catch (err) {
-        console.error("Error running test:", err);
         const targetTest = tests.find(t => t.testName === testName);
         if (targetTest) {
           const errorMessage =
@@ -375,9 +365,7 @@ export function TestProvider({ children, params }: Props) {
       }
 
       setTimeout(() => {
-        const testElement = document.querySelector(
-          `[data-test-name="${newTest.testName}"]`,
-        );
+        const testElement = document.getElementById(newTest.testName);
         testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);
     },
@@ -431,9 +419,7 @@ export function TestProvider({ children, params }: Props) {
     setState({ hasHandledHash: true });
 
     setTimeout(() => {
-      const testElement = document.querySelector(
-        `[data-test-name="${decodedHash}"]`,
-      );
+      const testElement = document.getElementById(decodedHash);
       if (testElement) {
         testElement.scrollIntoView({
           behavior: "smooth",
@@ -454,14 +440,19 @@ export function TestProvider({ children, params }: Props) {
 
   const value = useMemo(() => {
     return {
-      expandedItems,
-      expandedGroups,
-      emptyGroups,
-      editingTestNames,
-      tests,
+      state: {
+        expandedItems,
+        expandedGroups,
+        editingTestNames,
+        hasUnsavedChanges,
+        tests,
+        emptyGroups,
+        testResults,
+        hasHandledHash,
+      },
+      setState,
       groupedTests,
       sortedGroupEntries,
-      testResults,
       testsLoading,
       testsError: testsError?.message,
       toggleExpanded,
@@ -471,7 +462,6 @@ export function TestProvider({ children, params }: Props) {
       handleRunAll,
       handleCreateTest,
       handleHashNavigation,
-      setState,
     };
   }, [
     expandedItems,
@@ -491,6 +481,8 @@ export function TestProvider({ children, params }: Props) {
     handleRunAll,
     handleCreateTest,
     handleHashNavigation,
+    hasHandledHash,
+    hasUnsavedChanges,
     setState,
   ]);
 

@@ -1,5 +1,5 @@
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button } from "@dolthub/react-components";
+import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { useState, useEffect } from "react";
 import css from "./index.module.css";
 import NewGroupModal from "../NewGroupModal";
@@ -16,19 +16,15 @@ type Props = {
   params: RefParams;
 };
 
-export default function TestList({ params }: Props) {
+function TestListInner({ params }: Props) {
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
 
   const {
-    expandedGroups,
-    tests,
+    state,
+    setState,
     groupedTests,
     sortedGroupEntries,
-    emptyGroups,
-    testsLoading,
-    testsError,
-    setState,
     handleRunAll,
     handleHashNavigation,
   } = useTestContext();
@@ -44,11 +40,11 @@ export default function TestList({ params }: Props) {
     if (
       groupName.trim() &&
       !Object.keys(groupedTests).includes(groupName.trim()) &&
-      !emptyGroups.has(groupName.trim())
+      !state.emptyGroups.has(groupName.trim())
     ) {
       setState({
-        emptyGroups: new Set([...emptyGroups, groupName.trim()]),
-        expandedGroups: new Set([...expandedGroups, groupName.trim()]),
+        emptyGroups: new Set([...state.emptyGroups, groupName.trim()]),
+        expandedGroups: new Set([...state.expandedGroups, groupName.trim()]),
       });
       return true;
     }
@@ -64,32 +60,31 @@ export default function TestList({ params }: Props) {
 
   const getTestItems = (testItems: Test[]) =>
     testItems.map(test => <TestItem key={test.testName} test={test} />);
+
   return (
     <div className={css.container}>
       <div className={css.top}>
         <h1>Tests</h1>
-        {!testsLoading && !testsError && (
-          <div className={css.actionArea}>
-            <div className={css.createActions}>
-              <HideForNoWritesWrapper params={params}>
-                <CreateDropdown
-                  onCreateGroup={() => setShowNewGroupModal(true)}
-                />
-              </HideForNoWritesWrapper>
-              <Link {...workingDiff(params)}>
-                <Button>Commit</Button>
-              </Link>
-            </div>
-
-            <div className={css.primaryActions}>
-              {tests.length > 0 && (
-                <Button onClick={handleRunAll} className={css.runAllButton}>
-                  Run All
-                </Button>
-              )}
-            </div>
+        <div className={css.actionArea}>
+          <div className={css.createActions}>
+            <HideForNoWritesWrapper params={params}>
+              <CreateDropdown
+                onCreateGroup={() => setShowNewGroupModal(true)}
+              />
+            </HideForNoWritesWrapper>
+            <Link {...workingDiff(params)}>
+              <Button>Commit</Button>
+            </Link>
           </div>
-        )}
+
+          <div className={css.primaryActions}>
+            {state.tests.length > 0 && (
+              <Button onClick={handleRunAll} className={css.runAllButton}>
+                Run All
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
 
       <NewGroupModal
@@ -99,13 +94,14 @@ export default function TestList({ params }: Props) {
         onCreateGroup={onCreateGroup}
         onClose={() => setShowNewGroupModal(false)}
       />
-      {tests.length ? (
+
+      {state.tests.length ? (
         <div className={css.tagContainer}>
           <div className={css.list}>
             {sortedGroupEntries
               .filter(([groupName]) => groupName !== "")
               .map(([groupName, groupTests]) => {
-                const isGroupExpanded = expandedGroups.has(groupName);
+                const isGroupExpanded = state.expandedGroups.has(groupName);
                 return (
                   <div key={groupName} className={css.groupedTests}>
                     <TestGroup group={groupName} />
@@ -129,15 +125,18 @@ export default function TestList({ params }: Props) {
             )}
           </div>
         </div>
-      ) : testsError ? (
-        <div className={css.errorContainer}>
-          <p className={css.errorText}>Failed to load tests: {testsError}</p>
-        </div>
-      ) : testsLoading ? (
-        <p className={css.loading}>Loading tests...</p>
       ) : (
         <p className={css.noTests}>No tests found</p>
       )}
     </div>
   );
+}
+
+export default function TestList({ params }: Props) {
+  const { testsLoading, testsError } = useTestContext();
+
+  if (testsLoading) return <Loader loaded={false} />;
+  if (testsError) return <ErrorMsg errString={testsError} />;
+
+  return <TestListInner params={params} />;
 }
