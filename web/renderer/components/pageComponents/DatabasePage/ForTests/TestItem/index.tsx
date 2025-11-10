@@ -41,7 +41,7 @@ export default function TestItem({ test, className }: Props) {
         { [css.expanded]: isExpanded },
         className,
       )}
-      data-test-name={test.testName}
+      id={test.testName}
     >
       <div
         className={css.itemTop}

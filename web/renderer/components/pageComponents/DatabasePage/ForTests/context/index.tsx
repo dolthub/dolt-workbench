@@ -372,9 +372,7 @@ export function TestProvider({ children, params }: Props) {
       }
 
       setTimeout(() => {
-        const testElement = document.querySelector(
-          `[data-test-name="${newTest.testName}"]`,
-        );
+        const testElement = document.getElementById(newTest.testName);
         testElement?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);
     },
@@ -428,9 +426,7 @@ export function TestProvider({ children, params }: Props) {
     setState({ hasHandledHash: true });
 
     setTimeout(() => {
-      const testElement = document.querySelector(
-        `[data-test-name="${decodedHash}"]`,
-      );
+      const testElement = document.getElementById(decodedHash);
       if (testElement) {
         testElement.scrollIntoView({
           behavior: "smooth",

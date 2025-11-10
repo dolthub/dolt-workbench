@@ -28,7 +28,6 @@ export function TestResultsListItem({
           [css.red]: isFailure,
           [css.green]: isSuccess,
         })}
-        data-test-name={test.testName}
       >
         <div className={css.icon}>
           <TestResultsListItemIconSwitch test={test} />
