@@ -17,17 +17,9 @@ export const defaultState = {
 export type TestState = typeof defaultState;
 
 export type TestContextType = {
-  expandedItems: Set<string>;
-  expandedGroups: Set<string>;
-  emptyGroups: Set<string>;
-  editingTestNames: Record<string, string>;
-  tests: Test[];
+  state: TestState;
   groupedTests: Record<string, Test[]>;
   sortedGroupEntries: Array<[string, Test[]]>;
-  testResults: Record<
-    string,
-    { status: "passed" | "failed"; error?: string } | undefined
-  >;
   testsLoading: boolean;
   testsError?: string;
   toggleExpanded: (testName: string) => void;

@@ -5,11 +5,8 @@ import { useSetState } from "@dolthub/react-hooks";
 
 export function useEditTestGroup(group: string) {
   const {
-    tests,
-    expandedGroups,
-    emptyGroups,
+    state,
     groupedTests,
-    testResults,
     setState,
     handleRunGroup,
     handleCreateTest,
@@ -24,12 +21,12 @@ export function useEditTestGroup(group: string) {
   });
 
   const handleDeleteGroup = (groupName: string) => {
-    const newExpandedGroups = new Set(expandedGroups);
+    const newExpandedGroups = new Set(state.expandedGroups);
     newExpandedGroups.delete(groupName);
-    const newEmptyGroups = new Set(emptyGroups);
+    const newEmptyGroups = new Set(state.emptyGroups);
     newEmptyGroups.delete(groupName);
     setState({
-      tests: tests.filter(test => test.testGroup !== groupName),
+      tests: state.tests.filter(test => test.testGroup !== groupName),
       expandedGroups: newExpandedGroups,
       emptyGroups: newEmptyGroups,
       hasUnsavedChanges: true,
@@ -41,13 +38,13 @@ export function useEditTestGroup(group: string) {
 
   const handleRenameGroup = (oldName: string, newName: string) => {
     if (newName.trim() && oldName !== newName.trim()) {
-      const newExpandedGroups = new Set(expandedGroups);
+      const newExpandedGroups = new Set(state.expandedGroups);
       if (newExpandedGroups.has(oldName)) {
         newExpandedGroups.delete(oldName);
         newExpandedGroups.add(newName.trim());
       }
       setState({
-        tests: tests.map(test =>
+        tests: state.tests.map(test =>
           test.testGroup === oldName
             ? { ...test, testGroup: newName.trim() }
             : test,
@@ -87,9 +84,9 @@ export function useEditTestGroup(group: string) {
     }
   };
 
-  const isExpanded = expandedGroups.has(group);
+  const isExpanded = state.expandedGroups.has(group);
   const testCount = groupedTests[group].length || 0;
-  const groupResult = getGroupResult(group, groupedTests, testResults);
+  const groupResult = getGroupResult(group, groupedTests, state.testResults);
 
   return {
     groupName,

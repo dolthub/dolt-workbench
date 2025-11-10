@@ -454,14 +454,19 @@ export function TestProvider({ children, params }: Props) {
 
   const value = useMemo(() => {
     return {
-      expandedItems,
-      expandedGroups,
-      emptyGroups,
-      editingTestNames,
-      tests,
+      state: {
+        expandedItems,
+        expandedGroups,
+        editingTestNames,
+        hasUnsavedChanges,
+        tests,
+        emptyGroups,
+        testResults,
+        hasHandledHash,
+      },
+      setState,
       groupedTests,
       sortedGroupEntries,
-      testResults,
       testsLoading,
       testsError: testsError?.message,
       toggleExpanded,
@@ -471,7 +476,6 @@ export function TestProvider({ children, params }: Props) {
       handleRunAll,
       handleCreateTest,
       handleHashNavigation,
-      setState,
     };
   }, [
     expandedItems,
@@ -491,6 +495,8 @@ export function TestProvider({ children, params }: Props) {
     handleRunAll,
     handleCreateTest,
     handleHashNavigation,
+    hasHandledHash,
+    hasUnsavedChanges,
     setState,
   ]);
 

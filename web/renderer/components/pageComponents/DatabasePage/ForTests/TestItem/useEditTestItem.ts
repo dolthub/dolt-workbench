@@ -5,14 +5,11 @@ import { useSetState } from "@dolthub/react-hooks";
 
 export function useEditTestItem(test: Test) {
   const {
-    expandedItems,
-    editingTestNames,
-    testResults,
+    state,
+    setState,
     sortedGroupEntries,
-    tests,
     toggleExpanded,
     handleRunTest,
-    setState,
   } = useTestContext();
 
   const [testItemState, setTestItemState] = useSetState({
@@ -25,20 +22,20 @@ export function useEditTestItem(test: Test) {
   const updateTest = useCallback(
     (name: string, field: keyof Test, value: string) => {
       setState({
-        tests: tests.map((test: Test) =>
+        tests: state.tests.map((test: Test) =>
           test.testName === name ? { ...test, [field]: value } : test,
         ),
         hasUnsavedChanges: true,
       });
     },
-    [tests, setState],
+    [state.tests, setState],
   );
 
   const handleDeleteTest = (testName: string) => {
-    const newExpandedItems = new Set(expandedItems);
+    const newExpandedItems = new Set(state.expandedItems);
     newExpandedItems.delete(testName);
     setState({
-      tests: tests.filter(test => test.testName !== testName),
+      tests: state.tests.filter(test => test.testName !== testName),
       expandedItems: newExpandedItems,
       hasUnsavedChanges: true,
     });
@@ -47,19 +44,19 @@ export function useEditTestItem(test: Test) {
   const handleTestNameEdit = (testName: string, name: string) => {
     setState({
       editingTestNames: {
-        ...editingTestNames,
+        ...state.editingTestNames,
         [testName]: name,
       },
     });
   };
 
   const handleTestNameBlur = (testName: string) => {
-    const newName = editingTestNames[testName];
-    const test = tests.find(t => t.testName === testName);
+    const newName = state.editingTestNames[testName];
+    const test = state.tests.find(t => t.testName === testName);
     if (newName.trim() && newName !== test?.testName) {
       updateTest(testName, "testName", newName.trim());
     }
-    const newEditingTestNames = { ...editingTestNames };
+    const newEditingTestNames = { ...state.editingTestNames };
     delete newEditingTestNames[testName];
     setState({ editingTestNames: newEditingTestNames });
   };
@@ -91,9 +88,9 @@ export function useEditTestItem(test: Test) {
   const groupOptions = sortedGroupEntries
     .map(entry => entry[0])
     .filter(group => group !== "");
-  const isExpanded = expandedItems.has(test.testName);
-  const editingName = editingTestNames[test.testName];
-  const testResult = testResults[test.testName];
+  const isExpanded = state.expandedItems.has(test.testName);
+  const editingName = state.editingTestNames[test.testName];
+  const testResult = state.testResults[test.testName];
 
   return {
     testItemState,

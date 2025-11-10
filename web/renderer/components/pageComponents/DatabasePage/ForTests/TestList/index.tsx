@@ -21,14 +21,12 @@ export default function TestList({ params }: Props) {
   const [newGroupName, setNewGroupName] = useState("");
 
   const {
-    expandedGroups,
-    tests,
+    state,
+    setState,
     groupedTests,
     sortedGroupEntries,
-    emptyGroups,
     testsLoading,
     testsError,
-    setState,
     handleRunAll,
     handleHashNavigation,
   } = useTestContext();
@@ -44,11 +42,11 @@ export default function TestList({ params }: Props) {
     if (
       groupName.trim() &&
       !Object.keys(groupedTests).includes(groupName.trim()) &&
-      !emptyGroups.has(groupName.trim())
+      !state.emptyGroups.has(groupName.trim())
     ) {
       setState({
-        emptyGroups: new Set([...emptyGroups, groupName.trim()]),
-        expandedGroups: new Set([...expandedGroups, groupName.trim()]),
+        emptyGroups: new Set([...state.emptyGroups, groupName.trim()]),
+        expandedGroups: new Set([...state.expandedGroups, groupName.trim()]),
       });
       return true;
     }
@@ -82,7 +80,7 @@ export default function TestList({ params }: Props) {
             </div>
 
             <div className={css.primaryActions}>
-              {tests.length > 0 && (
+              {state.tests.length > 0 && (
                 <Button onClick={handleRunAll} className={css.runAllButton}>
                   Run All
                 </Button>
@@ -99,13 +97,13 @@ export default function TestList({ params }: Props) {
         onCreateGroup={onCreateGroup}
         onClose={() => setShowNewGroupModal(false)}
       />
-      {tests.length ? (
+      {state.tests.length ? (
         <div className={css.tagContainer}>
           <div className={css.list}>
             {sortedGroupEntries
               .filter(([groupName]) => groupName !== "")
               .map(([groupName, groupTests]) => {
-                const isGroupExpanded = expandedGroups.has(groupName);
+                const isGroupExpanded = state.expandedGroups.has(groupName);
                 return (
                   <div key={groupName} className={css.groupedTests}>
                     <TestGroup group={groupName} />
