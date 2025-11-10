@@ -136,7 +136,7 @@ export default function TestList({ params }: Props) {
   const { testsLoading, testsError } = useTestContext();
 
   if (testsLoading) return <Loader loaded={false} />;
-  if (testsError) return <ErrorMsg err={new Error(testsError)} />;
+  if (testsError) return <ErrorMsg errString={testsError} />;
 
   return <TestListInner params={params} />;
 }
