@@ -1,5 +1,10 @@
 import { Test } from "@gen/graphql-types";
 
+export type TestResults = Record<string, {
+  status: "passed" | "failed";
+  error?: string
+} | undefined>
+
 export const defaultState = {
   expandedItems: new Set<string>(),
   expandedGroups: new Set<string>(),
@@ -7,10 +12,7 @@ export const defaultState = {
   hasUnsavedChanges: false,
   tests: [] as Test[],
   emptyGroups: new Set<string>(),
-  testResults: {} as Record<
-    string,
-    { status: "passed" | "failed"; error?: string } | undefined
-  >,
+  testResults: {} as TestResults,
   hasHandledHash: false,
 };
 

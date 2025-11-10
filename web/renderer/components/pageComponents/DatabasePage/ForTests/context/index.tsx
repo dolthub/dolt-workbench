@@ -9,7 +9,7 @@ import {
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { ReactNode, useMemo, useEffect, useRef, useCallback } from "react";
-import { TestContextType, defaultState } from "./state";
+import { TestContextType, defaultState, TestResults } from "./state";
 import { getResults, groupTests, sortGroupEntries } from "../utils";
 
 export const TestContext = createCustomContext<TestContextType>("TestContext");
@@ -155,7 +155,7 @@ export function TestProvider({ children, params }: Props) {
           };
           return acc;
         },
-        {} as Record<string, { status: "passed" | "failed"; error?: string }>,
+        {} as TestResults,
       );
 
       setState({
