@@ -1,5 +1,5 @@
 import { createCustomContext } from "@dolthub/react-contexts";
-import { useContextWithError, useSetState } from "@dolthub/react-hooks";
+import { useContextWithError, useEffectAsync, useSetState } from "@dolthub/react-hooks";
 import {
   Test,
   useRunTestsLazyQuery,
@@ -79,13 +79,10 @@ export function TestProvider({ children, params }: Props) {
     setState({ tests: initialTests });
   }, [data?.tests.list, setState]);
 
-  useEffect(() => {
+  useEffectAsync(async () => {
     if (!hasUnsavedChanges) return;
-    const save = async () => {
-      await handleSaveAll();
-      setState({ hasUnsavedChanges: false });
-    };
-    void save();
+    await handleSaveAll();
+    setState({ hasUnsavedChanges: false })
   }, [hasUnsavedChanges, handleSaveAll, setState]);
 
   useEffect(() => {
