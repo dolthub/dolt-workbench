@@ -68,12 +68,6 @@ export function TestProvider({ children, params }: Props) {
   }, [saveTestsMutation, tests]);
 
   useEffect(() => {
-    if (testsError) {
-      console.error("Error loading tests:", testsError);
-    }
-  }, [testsError]);
-
-  useEffect(() => {
     if (!data?.tests.list) return;
     const initialTests = data.tests.list.map(({ __typename, ...test }) => test);
     setState({ tests: initialTests });
@@ -188,7 +182,6 @@ export function TestProvider({ children, params }: Props) {
         });
 
         if (result.error) {
-          console.error("Error running test:", result.error);
           const targetTest = tests.find(t => t.testName === testName);
           if (targetTest) {
             handleTestError(result.error.message, [targetTest]);
@@ -213,7 +206,6 @@ export function TestProvider({ children, params }: Props) {
           },
         });
       } catch (err) {
-        console.error("Error running test:", err);
         const targetTest = tests.find(t => t.testName === testName);
         if (targetTest) {
           const errorMessage =
