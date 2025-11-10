@@ -4,13 +4,8 @@ import { Test } from "@gen/graphql-types";
 import { useSetState } from "@dolthub/react-hooks";
 
 export function useEditTestItem(test: Test) {
-  const {
-    state,
-    setState,
-    sortedGroupEntries,
-    toggleExpanded,
-    handleRunTest,
-  } = useTestContext();
+  const { state, setState, sortedGroupEntries, toggleExpanded, handleRunTest } =
+    useTestContext();
 
   const [testItemState, setTestItemState] = useSetState({
     showDeleteConfirm: false,

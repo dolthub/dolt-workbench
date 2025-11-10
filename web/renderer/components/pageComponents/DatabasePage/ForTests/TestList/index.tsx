@@ -94,7 +94,7 @@ function TestListInner({ params }: Props) {
         onCreateGroup={onCreateGroup}
         onClose={() => setShowNewGroupModal(false)}
       />
-      
+
       {state.tests.length ? (
         <div className={css.tagContainer}>
           <div className={css.list}>
@@ -137,6 +137,6 @@ export default function TestList({ params }: Props) {
 
   if (testsLoading) return <Loader loaded={false} />;
   if (testsError) return <ErrorMsg err={new Error(testsError)} />;
-  
+
   return <TestListInner params={params} />;
 }

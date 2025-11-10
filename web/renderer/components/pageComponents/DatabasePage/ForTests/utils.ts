@@ -1,9 +1,7 @@
 import { Test, TestResult } from "@gen/graphql-types";
 import { TestResults } from "@pageComponents/DatabasePage/ForTests/context/state";
 
-export function getResults(
-  testResults: TestResult[],
-): TestResults {
+export function getResults(testResults: TestResult[]): TestResults {
   const results: Record<
     string,
     { status: "passed" | "failed"; error?: string }

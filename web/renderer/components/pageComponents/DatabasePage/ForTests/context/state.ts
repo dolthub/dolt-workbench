@@ -1,9 +1,13 @@
 import { Test } from "@gen/graphql-types";
 
-export type TestResults = Record<string, {
-  status: "passed" | "failed";
-  error?: string
-} | undefined>
+export type TestResults = Record<
+  string,
+  | {
+      status: "passed" | "failed";
+      error?: string;
+    }
+  | undefined
+>;
 
 export const defaultState = {
   expandedItems: new Set<string>(),
