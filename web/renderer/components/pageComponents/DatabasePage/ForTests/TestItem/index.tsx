@@ -51,7 +51,7 @@ export default function TestItem({ test, className }: Props) {
           <FaChevronRight className={css.expandIcon} />
           <input
             className={css.editableTestName}
-            value={editingName || test.testName}
+            value={editingName ?? test.testName}
             onChange={e => handleTestNameEdit(test.testName, e.target.value)}
             onFocus={() => handleTestNameEdit(test.testName, test.testName)}
             onBlur={() => handleTestNameBlur(test.testName)}
