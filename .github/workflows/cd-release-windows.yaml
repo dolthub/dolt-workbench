@@ -46,9 +46,9 @@ jobs:
           platform: win
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         with:
-          node-version: "latest"
+          node-version: "24"
 
       - name: Install dependencies
         uses: ./.github/actions/install-dependencies
