@@ -17,6 +17,22 @@ jest.mock("next/router", () => {
   };
 });
 
+jest.mock("@hooks/useDatabaseDetails", () => {
+  return {
+    __esModule: true,
+    default: () => {
+      return {
+        isDolt: true,
+        isPostgres: false,
+        disableDoltFeature: false,
+        hideDoltFeature: false,
+        loading: false,
+        error: undefined,
+      };
+    },
+  };
+});
+
 const params: RefParams = {
   databaseName: "test",
   refName: "main",
