@@ -3,6 +3,7 @@ import { createContextWithDisplayName } from "@dolthub/react-contexts";
 import { useEffectAsync } from "@dolthub/react-hooks";
 import { ReactNode, useContext, useState } from "react";
 import useSWR from "swr";
+import useTauri from "@hooks/useTauri";
 
 type ServerConfig = {
   graphqlApiUrl: string | undefined;
@@ -36,14 +37,20 @@ function useServerConfigIPC(): ServerConfigReturnType {
     undefined,
   );
   const [error, setError] = useState<any>(undefined);
+  const { apiConfig } = useTauri();
 
   useEffectAsync(async () => {
     const fetchConfig = async () => {
-      try {
-        const config = await window.ipc.invoke("api-config");
+      if (process.env.NEXT_PUBLIC_FOR_TAURI === "true") {
+        const config = apiConfig();
         setData(config);
-      } catch (err) {
-        setError(err);
+      } else {
+        try {
+          const config = await window.ipc.invoke("api-config");
+          setData(config);
+        } catch (err) {
+          setError(err);
+        }
       }
     };
 
@@ -74,7 +81,8 @@ function IPCConfigProvider({ children }: Props): JSX.Element {
 // ServerConfigProvider needs to wrap every page, and is only used in _app
 export function ServerConfigProvider({ children }: Props): JSX.Element {
   // For Electron, use IPC to fetch config, otherwise use API, since api routes are not available in Electron
-  return process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ? (
+  return process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" ||
+    process.env.NEXT_PUBLIC_FOR_TAURI === "true" ? (
     <IPCConfigProvider>{children}</IPCConfigProvider>
   ) : (
     <APIConfigProvider>{children}</APIConfigProvider>

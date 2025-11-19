@@ -15,11 +15,13 @@ import { ReactNode, SyntheticEvent, useEffect, useMemo, useState } from "react";
 import { maybeDatabase } from "@lib/urls";
 import { ConfigContextType, defaultState, getDefaultState } from "./state";
 import { getConnectionUrl } from "./utils";
+import useTauri from "@hooks/useTauri";
 
 export const ConfigContext =
   createCustomContext<ConfigContextType>("ConfigContext");
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+const forTauri = process.env.NEXT_PUBLIC_FOR_TAURI === "true";
 
 type Props = {
   children: ReactNode;
@@ -38,6 +40,7 @@ export function ConfigProvider({ children }: Props) {
   const [err, setErr] = useState<Error | undefined>(
     res.err || connectionsRes.error,
   );
+  const { startDoltServer, cloneDoltDatabase } = useTauri();
 
   useEffectOnMount(() => {
     const isDocker = window.location.origin === "http://localhost:3000";
@@ -55,7 +58,7 @@ export function ConfigProvider({ children }: Props) {
   }, [res.err]);
 
   useEffectOnMount(() => {
-    if (!forElectron) return;
+    if (!forElectron || !forTauri) return;
     window.ipc.getDoltServerError(async (msg: string) => {
       setErr(Error(msg));
     });
@@ -100,17 +103,26 @@ export function ConfigProvider({ children }: Props) {
     e.preventDefault();
     setState({ loading: true });
     try {
-      const result = await window.ipc.invoke(
-        "start-dolt-server",
-        state.name.trim(),
-        state.port,
-        !state.cloneDolt,
-        state.database,
-      );
+      if (forElectron) {
+        const result = await window.ipc.invoke(
+          "start-dolt-server",
+          state.name.trim(),
+          state.port,
+          !state.cloneDolt,
+          state.database,
+        );
 
-      if (result !== "success") {
-        setErr(Error(result));
-        return;
+        if (result !== "success") {
+          setErr(Error(result));
+          return;
+        }
+      } else if (forTauri) {
+        await startDoltServer(
+          state.name.trim(),
+          state.port,
+          !state.cloneDolt,
+          state.database,
+        );
       }
       await onSubmit(e);
     } catch (error) {
@@ -138,14 +150,25 @@ export function ConfigProvider({ children }: Props) {
         });
       }, 10);
 
-      const result = await window.ipc.invoke(
-        "clone-dolthub-db",
-        owner.trim(),
-        remoteDbName.trim(),
-        newDbName.trim(),
-        state.name,
-        state.port,
-      );
+      let result;
+      if (forElectron) {
+        result = await window.ipc.invoke(
+          "clone-dolthub-db",
+          owner.trim(),
+          remoteDbName.trim(),
+          newDbName.trim(),
+          state.name,
+          state.port,
+        );
+      } else if (forTauri) {
+        result = await cloneDoltDatabase(
+          owner.trim(),
+          remoteDbName.trim(),
+          newDbName.trim(),
+          state.name,
+          state.port,
+        );
+      }
 
       if (result !== "success") {
         setErr(Error(result));

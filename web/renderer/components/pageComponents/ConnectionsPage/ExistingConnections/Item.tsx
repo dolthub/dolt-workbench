@@ -8,8 +8,10 @@ import Image from "next/legacy/image";
 import { SyntheticEvent, useState } from "react";
 import css from "./index.module.css";
 import useAddConnection from "./useAddConnection";
+import useTauri from "@hooks/useTauri";
 
 const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+const forTauri = process.env.NEXT_PUBLIC_FOR_TAURI === "true";
 
 type Props = {
   conn: DatabaseConnectionFragment;
@@ -28,12 +30,13 @@ export default function Item({
   const [startDoltServerError, setStartDoltServerError] = useState<
     Error | undefined
   >(undefined);
+  const { startDoltServer } = useTauri();
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     const restartDoltServer =
-      forElectron && conn.isLocalDolt && !doltServerIsActive;
+      (forElectron || forTauri) && conn.isLocalDolt && !doltServerIsActive;
 
     if (!restartDoltServer) {
       await onAdd();
@@ -41,7 +44,17 @@ export default function Item({
     }
 
     try {
-      await window.ipc.invoke("start-dolt-server", conn.name, conn.port, false);
+      if (forElectron) {
+        await window.ipc.invoke(
+          "start-dolt-server",
+          conn.name,
+          conn.port,
+          false,
+        );
+      }
+      if (forTauri) {
+        await startDoltServer(conn.name, conn.port ?? "", false);
+      }
     } catch (error) {
       setStartDoltServerError(new Error(`${error}`));
     }

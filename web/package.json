@@ -33,7 +33,8 @@
     "yalc": "yalc link",
     "yalc:clean": "yalc remove --all",
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build",
-    "clean": "tsc -b --clean && yarn yalc:clean"
+    "clean": "tsc -b --clean && yarn yalc:clean",
+    "package:tauri": "yarn --cwd ../graphql-server build && ncc build ../graphql-server/dist/main.js -o ../graphql-server/gql_dist && pkg ../graphql-server/gql_dist/index.js --output ./src-tauri/binaries/graphql-server && rm -rf ../graphql-server/gql_dist && cp build/mac/dolt src-tauri/binaries && node build/renameTauriSidecar.js dolt && node build/renameTauriSidecar.js graphql-server"
   },
   "dependencies": {
     "@apollo/client": "^3.9.9",
@@ -42,6 +43,11 @@
     "@dolthub/react-hooks": "^0.1.8",
     "@dolthub/web-utils": "^0.1.9",
     "@react-icons/all-files": "^4.1.0",
+    "@tauri-apps/api": "^2.8.0",
+    "@tauri-apps/plugin-fs": "~2",
+    "@tauri-apps/plugin-opener": "~2",
+    "@tauri-apps/plugin-shell": "^2.3.1",
+    "@vercel/ncc": "^0.38.4",
     "ace-builds": "^1.37.5",
     "apollo-upload-client": "^17.0.0",
     "chance": "^1.1.13",
@@ -81,6 +87,7 @@
     "@graphql-codegen/fragment-matcher": "^5.1.0",
     "@graphql-codegen/typescript-operations": "^5.0.1",
     "@graphql-codegen/typescript-react-apollo": "^4.0.0",
+    "@tauri-apps/cli": "^2.8.4",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.0",
@@ -101,6 +108,7 @@
     "@types/url-parse": "^1",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.38.0",
+    "@yao-pkg/pkg": "^6.8.0",
     "adm-zip": "^0.5.16",
     "autoprefixer": "^10.4.21",
     "babel-jest": "^29.7.0",
