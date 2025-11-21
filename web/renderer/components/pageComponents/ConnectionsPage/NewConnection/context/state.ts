@@ -22,6 +22,9 @@ export const defaultState = {
   isLocalDolt: false,
   cloneDolt: false,
   progress: 0,
+  clientCa: "",
+  clientCert: "",
+  clientKey: "",
 };
 
 export type ConfigState = typeof defaultState;

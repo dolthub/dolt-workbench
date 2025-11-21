@@ -34,6 +34,9 @@ export const DATABASES_BY_CONNECTION = gql`
     $hideDoltFeatures: Boolean
     $useSSL: Boolean
     $type: DatabaseType
+    $certificateAuthority: String
+    $clientCert: String
+    $clientKey: String
   ) {
     databasesByConnection(
       connectionUrl: $connectionUrl
@@ -41,6 +44,9 @@ export const DATABASES_BY_CONNECTION = gql`
       hideDoltFeatures: $hideDoltFeatures
       useSSL: $useSSL
       type: $type
+      certificateAuthority: $certificateAuthority
+      clientCert: $clientCert
+      clientKey: $clientKey
     )
   }
 `;
