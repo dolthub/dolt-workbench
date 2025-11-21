@@ -46,6 +46,15 @@ class AddDatabaseConnectionArgs {
 
   @Field({ nullable: true })
   isLocalDolt?: boolean;
+
+  @Field({ nullable: true })
+  certificateAuthority?: string;
+
+  @Field({ nullable: true })
+  clientCert?: string;
+
+  @Field({ nullable: true })
+  clientKey?: string;
 }
 
 @ObjectType()
@@ -277,5 +286,8 @@ function getWorkbenchConfigFromArgs(
     useSSL: !!args.useSSL,
     type,
     isLocalDolt: args.isLocalDolt,
+    certificateAuthority: args.certificateAuthority,
+    clientCert: args.clientCert,
+    clientKey: args.clientKey,
   };
 }

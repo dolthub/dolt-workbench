@@ -9,6 +9,9 @@ export const ADD_DATABASE_CONNECTION = gql`
     $type: DatabaseType
     $isLocalDolt: Boolean
     $port: String
+    $certificateAuthority: String
+    $clientCert: String
+    $clientKey: String
   ) {
     addDatabaseConnection(
       connectionUrl: $connectionUrl
@@ -18,6 +21,9 @@ export const ADD_DATABASE_CONNECTION = gql`
       type: $type
       isLocalDolt: $isLocalDolt
       port: $port
+      certificateAuthority: $certificateAuthority
+      clientCert: $clientCert
+      clientKey: $clientKey
     ) {
       currentDatabase
     }
@@ -34,6 +40,9 @@ export const STORED_CONNECTIONS = gql`
     type
     isDolt
     isLocalDolt
+    certificateAuthority
+    clientCert
+    clientKey
   }
   query StoredConnections {
     storedConnections {

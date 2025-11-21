@@ -106,6 +106,9 @@ type DatabaseConnection {
   type: DatabaseType
   isDolt: Boolean
   isLocalDolt: Boolean
+  certificateAuthority: String
+  clientCert: String
+  clientKey: String
 }
 
 enum DatabaseType {
@@ -388,8 +391,8 @@ type Query {
   currentConnection: DatabaseConnection
   storedConnections: [DatabaseConnection!]!
   databases: [String!]!
-  doltServerStatus(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): DoltServerStatus!
-  databasesByConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): [String!]!
+  doltServerStatus(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean, certificateAuthority: String, clientCert: String, clientKey: String): DoltServerStatus!
+  databasesByConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean, certificateAuthority: String, clientCert: String, clientKey: String): [String!]!
   schemas(databaseName: String!, refName: String!): [String!]!
   doltDatabaseDetails: DoltDatabaseDetails!
   diffStat(databaseName: String!, fromRefName: String!, toRefName: String!, refName: String, type: CommitDiffType, tableName: String): DiffStat!
@@ -453,7 +456,7 @@ input TestIdentifierArgs {
 type Mutation {
   createBranch(databaseName: String!, newBranchName: String!, fromRefName: String!): String!
   deleteBranch(databaseName: String!, branchName: String!): Boolean!
-  addDatabaseConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean): CurrentDatabaseState!
+  addDatabaseConnection(connectionUrl: String!, name: String!, port: String, hideDoltFeatures: Boolean, useSSL: Boolean, type: DatabaseType, isLocalDolt: Boolean, certificateAuthority: String, clientCert: String, clientKey: String): CurrentDatabaseState!
   removeDatabaseConnection(name: String!): Boolean!
   createDatabase(databaseName: String!): Boolean!
   createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!

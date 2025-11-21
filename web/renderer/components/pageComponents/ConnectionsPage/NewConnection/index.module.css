@@ -68,7 +68,7 @@
 }
 
 .label {
-  @apply text-left;
+  @apply text-left font-semibold;
 }
 
 .typeSelect {
@@ -141,3 +141,4 @@
 .goBack {
   @apply mx-8;
 }
+
