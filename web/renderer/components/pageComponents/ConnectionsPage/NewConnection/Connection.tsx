@@ -9,7 +9,6 @@ export default function Connection() {
   const { state, setState } = useConfigContext();
   const { activeTabIndex, setActiveTabIndex } = useTabsContext();
 
-
   const onNext = (e: SyntheticEvent) => {
     e.preventDefault();
     setActiveTabIndex(activeTabIndex + 1);
@@ -90,7 +89,6 @@ export default function Connection() {
       >
         Next
       </Button>
-
     </form>
   );
 }
