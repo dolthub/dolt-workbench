@@ -2,6 +2,8 @@ import { DatabaseConnectionFragment, DatabaseType } from "@gen/graphql-types";
 import { SetApolloErrorType } from "@lib/errors/types";
 import { Dispatch, SyntheticEvent } from "react";
 
+export type AuthType = "none" | "ssl" | "mtls";
+
 export const defaultState = {
   owner: "",
   name: "",
@@ -13,6 +15,7 @@ export const defaultState = {
   database: "",
   connectionUrl: "",
   hideDoltFeatures: false,
+  authType: "ssl" as AuthType,
   useSSL: true,
   showAbout: true,
   showConnectionDetails: false,
@@ -22,7 +25,7 @@ export const defaultState = {
   isLocalDolt: false,
   cloneDolt: false,
   progress: 0,
-  clientCa: "",
+  certificateAuthority: "",
   clientCert: "",
   clientKey: "",
 };

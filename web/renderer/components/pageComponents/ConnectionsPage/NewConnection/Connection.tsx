@@ -3,7 +3,6 @@ import { DatabaseType } from "@gen/graphql-types";
 import { SyntheticEvent } from "react";
 import css from "./index.module.css";
 import { useConfigContext } from "./context/config";
-import MutualTLSForm from "@pageComponents/ConnectionsPage/NewConnection/MutualTLSForm";
 
 export default function Connection() {
   const { state, setState } = useConfigContext();
@@ -80,7 +79,6 @@ export default function Connection() {
         labelClassName={css.label}
         data-cy="connection-database-input"
       />
-      <MutualTLSForm />
       <Button
         type="submit"
         disabled={!state.connectionUrl && (!state.host || !state.port)}

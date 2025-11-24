@@ -1,17 +1,13 @@
-.sectionDescription {
-  @apply text-sm text-stone-500 mb-4 leading-relaxed;
-}
-
 .fileInputWrapper {
-  @apply mb-4 flex items-center;
+  @apply mb-4 flex items-start;
 }
 
 .fileInputLabel {
-  @apply text-left min-w-[120px] mr-4 font-semibold;
+  @apply text-left min-w-[120px] mr-4 mt-2 font-semibold text-sm;
 }
 
 .customFileInput {
-  @apply relative flex items-center border border-stone-300 rounded bg-white overflow-hidden flex-1;
+  @apply relative flex items-center bg-white overflow-hidden ml-10;
 }
 
 .hiddenFileInput {
@@ -19,13 +15,13 @@
 }
 
 .fileInputDisplay {
-  @apply px-3 py-2 text-sm text-stone-700 flex-1 truncate;
+  @apply py-2 pl-3 text-sm text-stone-700 min-w-[150px] border border-stone-500 rounded-s truncate text-left;
 }
 
 .fileInputButton {
-  @apply px-3 py-2 bg-stone-100 border-l border-stone-300 text-sm text-stone-700 hover:bg-stone-300 pointer-events-none;
+  @apply px-3 py-2 text-sm hover:bg-stone-300 pointer-events-none rounded-s-none border border-stone-500;
 }
 
 .dropdownContent {
-  @apply p-4 min-w-[300px];
+  @apply min-w-[300px] w-full self-start ml-8 -mt-4;
 }
