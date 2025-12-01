@@ -3549,15 +3549,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@graphql-codegen/fragment-matcher@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "@graphql-codegen/fragment-matcher@npm:5.1.0"
+"@graphql-codegen/fragment-matcher@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@graphql-codegen/fragment-matcher@npm:6.0.0"
   dependencies:
-    "@graphql-codegen/plugin-helpers": "npm:^5.0.3"
+    "@graphql-codegen/plugin-helpers": "npm:^6.0.0"
     tslib: "npm:~2.6.0"
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: 10c0/43d6d2de1da1d978390dae83850e313e767a46bffccf76ab54d8df2674390c53739850c05950048633d4b01f3a2d1768f9bf7f50439eb10ac7d47f9853f1eaa0
+  checksum: 10c0/1dd3aa3a91cd0be7475900d3009a81e7de018dc10ad03060437b7eb059d77c24cc206bed88901b518b6744a35c18b0bef1c6a0eb1455d4efb5836855c84dcef9
   languageName: node
   linkType: hard
 
@@ -3605,22 +3605,6 @@ __metadata:
   peerDependencies:
     graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
   checksum: 10c0/fbe326270aef17792b326ad8d8ae3e82acf1b60f3137a4d99eb605c0c8d709830537fec112705484b5fd2c9ee1d0588fbf4269f31c9a5852567c5d4c0c7057b7
-  languageName: node
-  linkType: hard
-
-"@graphql-codegen/plugin-helpers@npm:^5.0.3":
-  version: 5.0.4
-  resolution: "@graphql-codegen/plugin-helpers@npm:5.0.4"
-  dependencies:
-    "@graphql-tools/utils": "npm:^10.0.0"
-    change-case-all: "npm:1.0.15"
-    common-tags: "npm:1.8.2"
-    import-from: "npm:4.0.0"
-    lodash: "npm:~4.17.0"
-    tslib: "npm:~2.6.0"
-  peerDependencies:
-    graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0 || ^16.0.0
-  checksum: 10c0/e1d7af8af8cfd5d8baa4fbf099fbe14ee45d43a2e66af38eb901348163e073a392e53cdd58aad27acf32d14da5b6a7bf06fe1daa793d99e462457f80025dec97
   languageName: node
   linkType: hard
 
@@ -9910,7 +9894,7 @@ __metadata:
     "@dolthub/web-utils": "npm:^0.1.9"
     "@electron/osx-sign": "npm:^2.0.0"
     "@graphql-codegen/cli": "npm:^6.0.0"
-    "@graphql-codegen/fragment-matcher": "npm:^5.1.0"
+    "@graphql-codegen/fragment-matcher": "npm:^6.0.0"
     "@graphql-codegen/typescript-operations": "npm:^5.0.1"
     "@graphql-codegen/typescript-react-apollo": "npm:^4.0.0"
     "@react-icons/all-files": "npm:^4.1.0"
