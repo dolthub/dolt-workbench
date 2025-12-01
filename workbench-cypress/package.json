@@ -31,7 +31,7 @@
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^3.6.3",
-    "eslint-plugin-cypress": "^4.3.0",
+    "eslint-plugin-cypress": "^5.2.0",
     "eslint-plugin-import": "^2.32.0",
     "npm-run-all2": "^8.0.4",
     "prettier": "^3.6.2"
