@@ -107,7 +107,7 @@
     "cssnano": "^7.0.7",
     "electron": "^36.8.1",
     "electron-builder": "^26.0.12",
-    "eslint": "^9.29.0",
+    "eslint": "^9.39.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-next": "^16.0.6",
