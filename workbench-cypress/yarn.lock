@@ -1834,10 +1834,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.34.0, @eslint/js@npm:^9.16.0":
+"@eslint/js@npm:9.34.0":
   version: 9.34.0
   resolution: "@eslint/js@npm:9.34.0"
   checksum: 10c0/53f1bfd2a374683d9382a6850354555f6e89a88416c34a5d34e9fbbaf717e97c2b06300e8f93e5eddba8bda8951ccab7f93a680e56ded1a3d21d526019e69bab
+  languageName: node
+  linkType: hard
+
+"@eslint/js@npm:^9.39.1":
+  version: 9.39.1
+  resolution: "@eslint/js@npm:9.39.1"
+  checksum: 10c0/6f7f26f8cdb7ad6327bbf9741973b6278eb946f18f70e35406e88194b0d5c522d0547a34a02f2a208eec95c5d1388cdf7ccb20039efd2e4cb6655615247a50f1
   languageName: node
   linkType: hard
 
@@ -7469,7 +7476,7 @@ __metadata:
     "@babel/preset-env": "npm:^7.28.3"
     "@babel/preset-typescript": "npm:^7.28.5"
     "@cypress/github-action": "npm:^6.10.2"
-    "@eslint/js": "npm:^9.16.0"
+    "@eslint/js": "npm:^9.39.1"
     "@typescript-eslint/eslint-plugin": "npm:^8.46.2"
     "@typescript-eslint/parser": "npm:^8.46.2"
     cypress: "npm:^15.3.0"
