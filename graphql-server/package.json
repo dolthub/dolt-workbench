@@ -4,7 +4,7 @@
   "description": "",
   "author": "DoltHub",
   "private": true,
-  "packageManager": "yarn@4.11.0",
+  "packageManager": "yarn@4.12.0",
   "scripts": {
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build && yarn check-server",
     "build": "nest build",
