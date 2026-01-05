@@ -6010,10 +6010,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/diff@npm:^5.2.1":
-  version: 5.2.3
-  resolution: "@types/diff@npm:5.2.3"
-  checksum: 10c0/dd2e99e272a7023f3e5c71099599553c7d6c9a6b9d67f202b593b8d59b0528361eba39a8674ab18eba76217b6bad8f1a09417a9a571daaf7c0f49d67d4f305e2
+"@types/diff@npm:^8.0.0":
+  version: 8.0.0
+  resolution: "@types/diff@npm:8.0.0"
+  dependencies:
+    diff: "npm:*"
+  checksum: 10c0/c6e3376abeac8bc77b33252afc239a3cfc2729ecf59abcf00fa0f0eca8c505fd3a375a99a64afecdbb97fbec77b9a6aa8a8918f4d53fd5b45638d609343717cc
   languageName: node
   linkType: hard
 
@@ -9969,17 +9971,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"diff@npm:*, diff@npm:^8.0.2":
+  version: 8.0.2
+  resolution: "diff@npm:8.0.2"
+  checksum: 10c0/abfb387f033e089df3ec3be960205d17b54df8abf0924d982a7ced3a94c557a4e6cbff2e78b121f216b85f466b3d8d041673a386177c311aaea41459286cc9bc
+  languageName: node
+  linkType: hard
+
 "diff@npm:^4.0.1":
   version: 4.0.2
   resolution: "diff@npm:4.0.2"
   checksum: 10c0/81b91f9d39c4eaca068eb0c1eb0e4afbdc5bb2941d197f513dd596b820b956fef43485876226d65d497bebc15666aa2aa82c679e84f65d5f2bfbf14ee46e32c1
-  languageName: node
-  linkType: hard
-
-"diff@npm:^5.1.0":
-  version: 5.2.0
-  resolution: "diff@npm:5.2.0"
-  checksum: 10c0/aed0941f206fe261ecb258dc8d0ceea8abbde3ace5827518ff8d302f0fc9cc81ce116c4d8f379151171336caf0516b79e01abdc1ed1201b6440d895a66689eb4
   languageName: node
   linkType: hard
 
@@ -10078,7 +10080,7 @@ __metadata:
     "@types/apollo-upload-client": "npm:^17"
     "@types/babel__core": "npm:^7"
     "@types/chance": "npm:^1.1.7"
-    "@types/diff": "npm:^5.2.1"
+    "@types/diff": "npm:^8.0.0"
     "@types/jest": "npm:^29.5.6"
     "@types/lodash": "npm:^4.17.21"
     "@types/node": "npm:^25.0.3"
@@ -10099,7 +10101,7 @@ __metadata:
     classnames: "npm:^2.3.2"
     commit-graph: "npm:^2.3.12"
     cssnano: "npm:^7.0.7"
-    diff: "npm:^5.1.0"
+    diff: "npm:^8.0.2"
     electron: "npm:^36.8.1"
     electron-builder: "npm:^26.0.12"
     electron-serve: "npm:^1.3.0"
