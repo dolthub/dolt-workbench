@@ -91,7 +91,7 @@
     "@types/chance": "^1.1.7",
     "@types/diff": "^5.2.1",
     "@types/jest": "^29.5.6",
-    "@types/lodash": "^4.17.20",
+    "@types/lodash": "^4.17.21",
     "@types/node": "^24.3.0",
     "@types/react": "^19.0.10",
     "@types/react-copy-to-clipboard": "^5.0.6",
