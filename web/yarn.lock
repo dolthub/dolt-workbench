@@ -10387,7 +10387,6 @@ __metadata:
     stylelint-config-recommended: "npm:^14.0.0"
     swr: "npm:^2.3.6"
     tailwindcss: "npm:^3.4.15"
-    tar: "npm:^7.5.7"
     ts-jest: "npm:^29.4.5"
     typescript: "npm:^5.9.3"
     url-parse: "npm:^1.5.10"
@@ -20199,7 +20198,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tar@npm:^7.4.3, tar@npm:^7.5.6, tar@npm:^7.5.7":
+"tar@npm:^7.4.3, tar@npm:^7.5.6":
   version: 7.5.7
   resolution: "tar@npm:7.5.7"
   dependencies:
