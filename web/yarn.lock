@@ -6413,13 +6413,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lodash@npm:^4.17.21":
-  version: 4.17.21
-  resolution: "@types/lodash@npm:4.17.21"
-  checksum: 10c0/73cb006e047d8871e9d63f3a165543bf16c44a5b6fe3f9f6299e37cb8d67a7b1d55ac730959a81f9def510fd07232ff7e30e05413e5d5a12793baad84ebe36c3
-  languageName: node
-  linkType: hard
-
 "@types/mdast@npm:^4.0.0":
   version: 4.0.4
   resolution: "@types/mdast@npm:4.0.4"
@@ -10323,7 +10316,6 @@ __metadata:
     "@types/chance": "npm:^1.1.7"
     "@types/diff": "npm:^5.2.1"
     "@types/jest": "npm:^29.5.6"
-    "@types/lodash": "npm:^4.17.21"
     "@types/node": "npm:^25.0.3"
     "@types/react": "npm:^19.0.10"
     "@types/react-copy-to-clipboard": "npm:^5.0.6"
@@ -10368,7 +10360,6 @@ __metadata:
     jest-environment-jsdom: "npm:^29.7.0"
     localforage: "npm:^1.10.0"
     localforage-getitems: "npm:^1.4.2"
-    lodash: "npm:^4.17.23"
     next: "npm:^16.1.5"
     next-useragent: "npm:^2.8.0"
     nextron: "npm:^9.5.0"
@@ -14844,13 +14835,6 @@ __metadata:
   linkType: hard
 
 "lodash@npm:^4.17.15, lodash@npm:^4.17.2, lodash@npm:~4.17.0":
-  version: 4.17.21
-  resolution: "lodash@npm:4.17.21"
-  checksum: 10c0/d8cbea072bb08655bb4c989da418994b073a608dffa608b09ac04b43a791b12aeae7cd7ad919aa4c925f33b48490b5cfe6c1f71d827956071dae2e7bb3a6b74c
-  languageName: node
-  linkType: hard
-
-"lodash@npm:^4.17.23":
   version: 4.17.23
   resolution: "lodash@npm:4.17.23"
   checksum: 10c0/1264a90469f5bb95d4739c43eb6277d15b6d9e186df4ac68c3620443160fc669e2f14c11e7d8b2ccf078b81d06147c01a8ccced9aab9f9f63d50dcf8cace6bf6
