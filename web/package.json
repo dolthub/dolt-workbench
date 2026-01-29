@@ -55,7 +55,7 @@
     "isomorphic-unfetch": "^4.0.2",
     "localforage": "^1.10.0",
     "localforage-getitems": "^1.4.2",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "next": "^15.5.9",
     "next-useragent": "^2.8.0",
     "node-sql-parser": "^4.17.0",
