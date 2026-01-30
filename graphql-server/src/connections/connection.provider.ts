@@ -25,6 +25,12 @@ export class WorkbenchConfig {
   schema?: string; // Postgres only
 
   isLocalDolt?: boolean;
+
+  certificateAuthority?: string;
+
+  clientCert?: string;
+
+  clientKey?: string;
 }
 
 @Injectable()
@@ -117,6 +123,9 @@ export function getDataSource(config: WorkbenchConfig): DataSource {
     schema: config.schema,
     ssl: config.useSSL
       ? {
+          ca: config.certificateAuthority,
+          cert: config.clientCert,
+          key: config.clientKey,
           rejectUnauthorized: false,
         }
       : undefined,
