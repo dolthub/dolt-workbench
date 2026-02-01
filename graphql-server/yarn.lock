@@ -910,7 +910,7 @@ __metadata:
   dependencies:
     "@apollo/server": "npm:^4.12.0"
     "@dolthub/web-utils": "npm:^0.1.9"
-    "@nestjs/apollo": "npm:^13.1.0"
+    "@nestjs/apollo": "npm:^13.2.3"
     "@nestjs/cli": "npm:^11.0.10"
     "@nestjs/common": "npm:^11.1.6"
     "@nestjs/config": "npm:^4.0.2"
@@ -2093,9 +2093,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/apollo@npm:^13.1.0":
-  version: 13.1.0
-  resolution: "@nestjs/apollo@npm:13.1.0"
+"@nestjs/apollo@npm:^13.2.3":
+  version: 13.2.3
+  resolution: "@nestjs/apollo@npm:13.2.3"
   dependencies:
     "@apollo/server-plugin-landing-page-graphql-playground": "npm:4.0.1"
     iterall: "npm:1.3.0"
@@ -2103,9 +2103,9 @@ __metadata:
     tslib: "npm:2.8.1"
   peerDependencies:
     "@apollo/gateway": ^2.0.0
-    "@apollo/server": ^4.11.3
+    "@apollo/server": ^5.0.0
     "@apollo/subgraph": ^2.0.0
-    "@as-integrations/fastify": ^2.1.1
+    "@as-integrations/fastify": ^2.1.1 || ^3.0.0
     "@nestjs/common": ^11.0.1
     "@nestjs/core": ^11.0.1
     "@nestjs/graphql": ^13.0.0
@@ -2115,9 +2115,11 @@ __metadata:
       optional: true
     "@apollo/subgraph":
       optional: true
+    "@as-integrations/express5":
+      optional: true
     "@as-integrations/fastify":
       optional: true
-  checksum: 10c0/21dc8127a65607290fd179ee111f0d073fa34c0b022b080d69c3ebc8657cb09993e2bf2a89e53aae9a1b2d74c2cd230e1d014a74893cbbc5723f9ef92027877c
+  checksum: 10c0/d1deea14c3e9613466fa6dde9eec2b36131e7a0f7968784205b1a241644018cb3f5aff0edceba44457c2cbb2b000c0bccfac18524e3ccec2fd16a09bc806c737
   languageName: node
   linkType: hard
 
