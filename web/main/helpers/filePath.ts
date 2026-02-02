@@ -62,3 +62,20 @@ export function getSocketPath() {
   // Create a customized filename without special characters
   return path.join(socketDir, "dolt.sock");
 }
+
+// Returns the path to the dolt-mcp-server binary based on the platform and environment.
+export function getMcpServerPath(): string {
+  if (process.platform === "darwin") {
+    return isProd
+      ? path.join(process.resourcesPath, "..", "MacOS", "dolt-mcp-server")
+      : path.join(__dirname, "..", "build", "mac", "dolt-mcp-server");
+  } else if (process.platform === "linux") {
+    return isProd
+      ? path.join(process.resourcesPath, "dolt-mcp-server")
+      : path.join(__dirname, "..", "build", "linux", "dolt-mcp-server");
+  } else {
+    return isProd
+      ? path.join(process.resourcesPath, "dolt-mcp-server.exe")
+      : path.join(__dirname, "..", "build", "appx", "dolt-mcp-server.exe");
+  }
+}

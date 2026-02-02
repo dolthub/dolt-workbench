@@ -1,5 +1,12 @@
 import { contextBridge, ipcRenderer } from "electron";
 
+export type McpServerConfig = {
+  host: string;
+  port: number;
+  user: string;
+  database: string;
+};
+
 const handler = {
   async invoke(channel: string, ...args: unknown[]) {
     return ipcRenderer.invoke(channel, ...args);
@@ -42,6 +49,16 @@ const handler = {
   onLoginStarted: (callback: (requestId: string) => void) => {
     ipcRenderer.on("login-started", (_event, requestId) => callback(requestId));
   },
+  startMcpServer: (config: McpServerConfig) =>
+    ipcRenderer.send("start-mcp-server", config),
+  stopMcpServer: () => ipcRenderer.send("stop-mcp-server"),
+  onMcpServerError: (callback: (value: string) => void) =>
+    ipcRenderer.on("mcp-server-error", (_event, value) => callback(value)),
+  onMcpServerLog: (callback: (value: string) => void) =>
+    ipcRenderer.on("mcp-server-log", (_event, value) => callback(value)),
+  onMcpServerExit: (
+    callback: (value: { code: number | null; signal: string | null }) => void,
+  ) => ipcRenderer.on("mcp-server-exit", (_event, value) => callback(value)),
 };
 
 contextBridge.exposeInMainWorld("ipc", handler);

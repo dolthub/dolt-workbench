@@ -16,6 +16,7 @@ import path from "path";
 import { cloneAndStartDatabase } from "./doltClone";
 import { doltLogin } from "./doltLogin";
 import { startServer } from "./doltServer";
+import { McpServerConfig, startMcpServer } from "./mcpServer";
 import { createWindow } from "./helpers/createWindow";
 import { initMenu } from "./helpers/menu";
 import {
@@ -62,6 +63,7 @@ if (process.platform === "linux") {
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
+let mcpServerProcess: ChildProcess | null;
 const activeExecutions = new Map<string, ChildProcess>();
 
 function isExternalUrl(url: string) {
@@ -223,6 +225,10 @@ app.on("before-quit", () => {
   if (doltServerProcess) {
     doltServerProcess.kill();
     doltServerProcess = null;
+  }
+  if (mcpServerProcess) {
+    mcpServerProcess.kill();
+    mcpServerProcess = null;
   }
 });
 
@@ -413,3 +419,23 @@ ipcMain.handle(
     }
   },
 );
+
+ipcMain.on("start-mcp-server", (_, config: McpServerConfig) => {
+  try {
+    if (mcpServerProcess) {
+      console.log("MCP server already running");
+      return;
+    }
+    mcpServerProcess = startMcpServer(mainWindow, config);
+  } catch (error) {
+    console.error("Failed to start MCP server:", error);
+    mainWindow.webContents.send("mcp-server-error", getErrorMessage(error));
+  }
+});
+
+ipcMain.on("stop-mcp-server", () => {
+  if (mcpServerProcess) {
+    mcpServerProcess.kill();
+    mcpServerProcess = null;
+  }
+});
