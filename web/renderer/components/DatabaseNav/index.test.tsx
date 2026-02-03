@@ -1,5 +1,6 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
+import { AgentProvider } from "@contexts/agent";
 import { renderAndWait } from "@lib/testUtils.test";
 import { screen } from "@testing-library/react";
 import DatabaseNav from ".";
@@ -15,7 +16,9 @@ describe("test for DatabaseNav", () => {
           databaseDetailsMock(true, false),
         ]}
       >
-        <DatabaseNav params={mocks.refParams} initialTabIndex={0} />
+        <AgentProvider>
+          <DatabaseNav params={mocks.refParams} initialTabIndex={0} />
+        </AgentProvider>
       </MockedProvider>,
     );
     expect(await screen.findByText(/database/i)).toBeInTheDocument();
@@ -30,7 +33,9 @@ describe("test for DatabaseNav", () => {
       <MockedProvider
         mocks={[...mocks.mocks, databaseDetailsMock(false, true)]}
       >
-        <DatabaseNav params={mocks.refParams} initialTabIndex={0} />
+        <AgentProvider>
+          <DatabaseNav params={mocks.refParams} initialTabIndex={0} />
+        </AgentProvider>
       </MockedProvider>,
     );
     expect(await screen.findByText(/database/i)).toBeInTheDocument();

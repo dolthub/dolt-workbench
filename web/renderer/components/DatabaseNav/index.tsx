@@ -2,6 +2,7 @@ import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Tooltip } from "@dolthub/react-components";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { OptionalRefParams } from "@lib/params";
+import AgentNavItem from "./AgentNavItem";
 import NavItem from "./Item";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";
@@ -43,6 +44,10 @@ function Inner(props: Props) {
           }
           return <NotDoltWrapper key={tab}>{item}</NotDoltWrapper>;
         })}
+        <AgentNavItem
+          initialTabIndex={props.initialTabIndex}
+          tabIndex={tabs.length}
+        />
       </ul>
     </div>
   );

@@ -16,9 +16,9 @@ import path from "path";
 import { cloneAndStartDatabase } from "./doltClone";
 import { doltLogin } from "./doltLogin";
 import { startServer } from "./doltServer";
-import { McpServerConfig, startMcpServer } from "./mcpServer";
 import { createWindow } from "./helpers/createWindow";
 import { initMenu } from "./helpers/menu";
+import { registerAgentIpcHandlers, cleanupAgent } from "./agent";
 import {
   getErrorMessage,
   removeDoltServerFolder,
@@ -63,7 +63,6 @@ if (process.platform === "linux") {
 let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
-let mcpServerProcess: ChildProcess | null;
 const activeExecutions = new Map<string, ChildProcess>();
 
 function isExternalUrl(url: string) {
@@ -172,6 +171,7 @@ app.on("ready", async () => {
 
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   setupTitleBarClickMac();
+  registerAgentIpcHandlers(mainWindow);
   await createGraphqlSeverProcess();
 
   await waitForGraphQLServer("http://localhost:9002/graphql");
@@ -217,7 +217,7 @@ ipcMain.on("update-menu", (_event, databaseName?: string) => {
   updateMenu(databaseName);
 });
 
-app.on("before-quit", () => {
+app.on("before-quit", async () => {
   if (graphqlServerProcess) {
     graphqlServerProcess.kill();
     graphqlServerProcess = null;
@@ -226,10 +226,7 @@ app.on("before-quit", () => {
     doltServerProcess.kill();
     doltServerProcess = null;
   }
-  if (mcpServerProcess) {
-    mcpServerProcess.kill();
-    mcpServerProcess = null;
-  }
+  await cleanupAgent();
 });
 
 app.on("window-all-closed", () => {
@@ -419,23 +416,3 @@ ipcMain.handle(
     }
   },
 );
-
-ipcMain.on("start-mcp-server", (_, config: McpServerConfig) => {
-  try {
-    if (mcpServerProcess) {
-      console.log("MCP server already running");
-      return;
-    }
-    mcpServerProcess = startMcpServer(mainWindow, config);
-  } catch (error) {
-    console.error("Failed to start MCP server:", error);
-    mainWindow.webContents.send("mcp-server-error", getErrorMessage(error));
-  }
-});
-
-ipcMain.on("stop-mcp-server", () => {
-  if (mcpServerProcess) {
-    mcpServerProcess.kill();
-    mcpServerProcess = null;
-  }
-});
