@@ -8,7 +8,19 @@ import {
   ToolResultEvent,
 } from "./types";
 
-const SYSTEM_PROMPT = `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with the connected Dolt database.
+function getSystemPrompt(
+  database: string,
+  dbType?: string,
+  isDolt?: boolean,
+): string {
+  const typeInfo = dbType
+    ? `The database type is ${isDolt ? "Dolt" : dbType}.`
+    : "";
+  return `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with Dolt, MySQL, and Postgres databases.
+
+If interacting with a Dolt database, use Dolt MCP tools. For MySQL and Postgres, use 'mysql' and 'psql' CLI tools in Bash.
+
+You are currently connected to the database: "${database}". ${typeInfo}
 
 When users ask questions about their database, use the available tools to:
 - List tables and their schemas
@@ -19,6 +31,7 @@ When users ask questions about their database, use the available tools to:
 Always be helpful and explain what you're doing.
 
 When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`;
+}
 
 // Tools that require explicit user confirmation before execution
 const TOOLS_REQUIRING_CONFIRMATION = [
@@ -153,10 +166,17 @@ export class ClaudeAgent {
       );
       console.log("MCP args:", mcpArgs);
 
+      const { mcpConfig } = this.config;
+      const systemPrompt = getSystemPrompt(
+        mcpConfig.database,
+        mcpConfig.type,
+        mcpConfig.isDolt,
+      );
+
       const queryOptions: Parameters<typeof query>[0] = {
         prompt: userMessage,
         options: {
-          systemPrompt: SYSTEM_PROMPT,
+          systemPrompt,
           mcpServers: {
             dolt: {
               command: mcpServerPath,

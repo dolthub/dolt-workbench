@@ -5,6 +5,8 @@ export type McpServerConfig = {
   password?: string;
   database: string;
   useSSL?: boolean;
+  type?: string;
+  isDolt?: boolean;
 };
 
 export type AgentConfig = {

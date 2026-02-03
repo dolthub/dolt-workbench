@@ -75,6 +75,8 @@ export default function DatabaseLayout(props: Props) {
         ...parsed,
         database: props.params.databaseName,
         useSSL: connectionData.currentConnection.useSSL ?? false,
+        type: connectionData.currentConnection.type ?? undefined,
+        isDolt: connectionData.currentConnection.isDolt ?? false,
       };
       setMcpConfig(config);
     } else {
@@ -88,6 +90,7 @@ export default function DatabaseLayout(props: Props) {
   }, [
     connectionData?.currentConnection?.connectionUrl,
     connectionData?.currentConnection?.useSSL,
+    connectionData?.currentConnection?.type,
     props.params.databaseName,
     setMcpConfig,
   ]);

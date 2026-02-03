@@ -7,6 +7,7 @@ export type McpServerConfig = {
   password?: string;
   database: string;
   useSSL?: boolean;
+  type?: string; // DatabaseType: "Mysql" | "Postgres"
 };
 
 export type AgentConfig = {

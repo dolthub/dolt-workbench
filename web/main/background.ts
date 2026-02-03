@@ -194,7 +194,7 @@ app.on("ready", async () => {
 
     return { action: "deny" };
   });
-  mainWindow.setMinimumSize(1080, 780);
+  mainWindow.setMinimumSize(1200, 780);
 
   // hit when clicking <a href/> with no target
   // optionally redirect to browser
