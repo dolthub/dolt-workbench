@@ -9,7 +9,7 @@
   "packageManager": "yarn@4.12.0",
   "scripts": {
     "build:graphql": "yarn --cwd ../graphql-server build",
-    "download:dolt": "node build/downloadDolt.js",
+    "download:dependencies": "node build/downloadDependencies.js",
     "dev:app": "yarn build:graphql && nextron --renderer-port 7777",
     "build:dmg": "yarn build:graphql && nextron build --config ./build/builder-dmg-config.yaml",
     "build:mas": "yarn build:graphql && nextron build --config ./build/builder-mas-config.yaml",

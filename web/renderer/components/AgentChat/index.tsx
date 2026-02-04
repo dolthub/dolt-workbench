@@ -29,9 +29,9 @@ export default function AgentChat({ onClose }: Props) {
   const autoConnectAttemptedRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Auto-scroll to bottom when messages change
+  // Auto-scroll to bottom when messages change (instant to avoid jarring animation on re-renders)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({ behavior: "instant" });
   }, [messages, isStreaming]);
 
   const handleConnect = useCallback(
@@ -87,8 +87,7 @@ export default function AgentChat({ onClose }: Props) {
 
   const handleDisconnect = async () => {
     await disconnect();
-    autoConnectAttemptedRef.current = false;
-    setShowApiKeyModal(true);
+    onClose();
   };
 
   const handleEditApiKey = () => {

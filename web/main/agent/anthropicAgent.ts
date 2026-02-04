@@ -1,5 +1,11 @@
-import { PermissionResult, query } from "@anthropic-ai/claude-agent-sdk";
+import {
+  createSdkMcpServer,
+  PermissionResult,
+  query,
+  tool,
+} from "@anthropic-ai/claude-agent-sdk";
 import { BrowserWindow, ipcMain } from "electron";
+import { z } from "zod";
 import { getMcpServerPath } from "../helpers/filePath";
 import {
   AgentConfig,
@@ -30,7 +36,9 @@ When users ask questions about their database, use the available tools to:
 
 Always be helpful and explain what you're doing.
 
-When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`;
+When presenting query results, format them in a readable way. For large result sets, summarize the key findings.
+
+IMPORTANT: After performing any write operation (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER queries, merging branches, creating/deleting branches, resetting, committing, etc.), you MUST silently call the refresh_page tool to update the workbench UI with the latest data. Do NOT mention that you are refreshing the page or that you called this tool - just call it silently in the background.`;
 }
 
 // Tools that require explicit user confirmation before execution
@@ -119,6 +127,61 @@ export class ClaudeAgent {
     });
   }
 
+  // Create SDK MCP server with custom workbench tools
+  private createWorkbenchMcpServer() {
+    const switchBranchTool = tool(
+      "switch_branch",
+      "Switch to a different branch in the database workbench. This will navigate the UI to show the selected branch.",
+      {
+        branch_name: z.string().describe("The name of the branch to switch to"),
+      },
+      async args => {
+        const branchName = args.branch_name;
+        if (!branchName) {
+          return {
+            content: [
+              { type: "text" as const, text: "Error: branch_name is required" },
+            ],
+          };
+        }
+        // Send event to renderer to switch branch
+        this.sendEvent("agent:switch-branch", { branchName });
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: `Successfully switched to branch: ${branchName}`,
+            },
+          ],
+        };
+      },
+    );
+
+    const refreshPageTool = tool(
+      "refresh_page",
+      "Refresh the workbench UI to show the latest data. Call this after any write operation (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, merge, commit, reset, branch creation/deletion, etc.) to ensure the UI displays the current state of the database.",
+      {},
+      async () => {
+        // Send event to renderer to refresh the page
+        this.sendEvent("agent:refresh-page", {});
+        return {
+          content: [
+            {
+              type: "text" as const,
+              text: "Page refresh triggered. The workbench UI will now show the latest data.",
+            },
+          ],
+        };
+      },
+    );
+
+    return createSdkMcpServer({
+      name: "workbench",
+      version: "1.0.0",
+      tools: [switchBranchTool, refreshPageTool],
+    });
+  }
+
   cleanup(): void {
     ipcMain.removeAllListeners("agent:tool-confirmation-response");
   }
@@ -173,6 +236,9 @@ export class ClaudeAgent {
         mcpConfig.isDolt,
       );
 
+      // Create SDK MCP server with workbench-specific tools
+      const workbenchMcpServer = this.createWorkbenchMcpServer();
+
       const queryOptions: Parameters<typeof query>[0] = {
         prompt: userMessage,
         options: {
@@ -182,6 +248,7 @@ export class ClaudeAgent {
               command: mcpServerPath,
               args: mcpArgs,
             },
+            workbench: workbenchMcpServer,
           },
           // Don't pre-allow tools - let canUseTool handle permissions
           permissionMode: "default",
@@ -317,7 +384,7 @@ export class ClaudeAgent {
             // Error subtypes have 'errors' array
             const errorResult = message as { errors?: string[] };
             const errorMsg =
-              errorResult.errors?.join(", ") || "Agent execution failed";
+              errorResult.errors?.join(", ") ?? "Agent execution failed";
             this.sendEvent("agent:error", { error: errorMsg });
           }
         }
@@ -341,9 +408,5 @@ export class ClaudeAgent {
 
   clearHistory(): void {
     this.sessionId = null;
-  }
-
-  getSessionId(): string | null {
-    return this.sessionId;
   }
 }

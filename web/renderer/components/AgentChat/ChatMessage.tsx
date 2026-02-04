@@ -8,6 +8,9 @@ type Props = {
   message: AgentMessage;
 };
 
+// Tool calls that should be hidden from the chat UI
+const HIDDEN_TOOL_CALLS = ["mcp__workbench__refresh_page"];
+
 function renderContentBlock(block: ContentBlock, index: number) {
   if (block.type === "text") {
     return (
@@ -17,6 +20,11 @@ function renderContentBlock(block: ContentBlock, index: number) {
         className={css.markdownContent}
       />
     );
+  }
+
+  // Hide certain tool calls from the UI
+  if (HIDDEN_TOOL_CALLS.includes(block.name)) {
+    return null;
   }
 
   // block.type === "tool_use"

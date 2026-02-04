@@ -152,6 +152,10 @@ const handler = {
     ipcRenderer.on("agent:tool-confirmation-request", (_event, value) =>
       callback(value),
     ),
+  onAgentSwitchBranch: (callback: (event: { branchName: string }) => void) =>
+    ipcRenderer.on("agent:switch-branch", (_event, value) => callback(value)),
+  onAgentRefreshPage: (callback: () => void) =>
+    ipcRenderer.on("agent:refresh-page", () => callback()),
 
   // Send tool confirmation response
   agentToolConfirmationResponse: (confirmed: boolean) =>
@@ -164,6 +168,8 @@ const handler = {
     ipcRenderer.removeAllListeners("agent:message-complete");
     ipcRenderer.removeAllListeners("agent:error");
     ipcRenderer.removeAllListeners("agent:tool-confirmation-request");
+    ipcRenderer.removeAllListeners("agent:switch-branch");
+    ipcRenderer.removeAllListeners("agent:refresh-page");
   },
 };
 
