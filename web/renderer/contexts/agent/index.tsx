@@ -206,6 +206,18 @@ export function AgentProvider({ children }: Props) {
       },
     );
 
+    // Handle branch switch requests - dispatch custom event for router navigation
+    window.ipc.onAgentSwitchBranch((event: { branchName: string }) => {
+      window.dispatchEvent(
+        new CustomEvent("agent-switch-branch", { detail: event.branchName }),
+      );
+    });
+
+    // Handle page refresh requests - dispatch custom event to refresh data
+    window.ipc.onAgentRefreshPage(() => {
+      window.dispatchEvent(new CustomEvent("agent-refresh-page"));
+    });
+
     // Cleanup listeners on unmount
     return () => {
       if (window.ipc?.removeAgentListeners) {

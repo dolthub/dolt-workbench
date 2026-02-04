@@ -1,14 +1,16 @@
+import { useApolloClient } from "@apollo/client";
 import DatabaseHeaderAndNav from "@components/DatabaseHeaderAndNav";
 import DatabaseTableHeader from "@components/DatabaseTableHeader";
 import DatabaseTableHeaderMobile from "@components/DatabaseTableHeader/DatabaseTableHeaderMobile";
 import DatabaseTableNav from "@components/DatabaseTableNav";
 import KeyNav from "@components/util/KeyNav";
-import { useAgentContext, McpServerConfig } from "@contexts/agent";
+import { McpServerConfig, useAgentContext } from "@contexts/agent";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import { useCurrentConnectionQuery } from "@gen/graphql-types";
 import { DatabasePageParams } from "@lib/params";
-import { RefUrl, database } from "@lib/urls";
+import { RefUrl, database, ref } from "@lib/urls";
 import cx from "classnames";
+import { useRouter } from "next/router";
 import { CSSProperties, ReactNode, useEffect, useState } from "react";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";
@@ -64,6 +66,8 @@ export default function DatabaseLayout(props: Props) {
   const { setMcpConfig, isPanelOpen, panelWidth, setHasSmallHeader } =
     useAgentContext();
   const isElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+  const router = useRouter();
+  const apolloClient = useApolloClient();
 
   // Update MCP config in global agent context when connection changes
   useEffect(() => {
@@ -99,6 +103,45 @@ export default function DatabaseLayout(props: Props) {
   useEffect(() => {
     setHasSmallHeader(showSmallHeader);
   }, [showSmallHeader, setHasSmallHeader]);
+
+  // Handle agent branch switch requests
+  useEffect(() => {
+    const handleBranchSwitch = (event: CustomEvent<string>) => {
+      const branchName = event.detail;
+      if (!branchName || !props.params.databaseName) return;
+
+      // Use the ref URL helper to construct the new path
+      const newUrl = ref({
+        databaseName: props.params.databaseName,
+        refName: branchName,
+      });
+      router.push(newUrl.href, newUrl.as).catch(console.error);
+    };
+
+    window.addEventListener(
+      "agent-switch-branch",
+      handleBranchSwitch as EventListener,
+    );
+    return () => {
+      window.removeEventListener(
+        "agent-switch-branch",
+        handleBranchSwitch as EventListener,
+      );
+    };
+  }, [router, props.params.databaseName]);
+
+  // Handle agent page refresh requests
+  useEffect(() => {
+    const handleRefreshPage = async () => {
+      await apolloClient.resetStore();
+      await router.push(router.asPath);
+    };
+
+    window.addEventListener("agent-refresh-page", handleRefreshPage);
+    return () => {
+      window.removeEventListener("agent-refresh-page", handleRefreshPage);
+    };
+  }, [apolloClient, router]);
 
   // Adjust content margin when agent panel is open (only in Electron)
   const contentStyle: CSSProperties =

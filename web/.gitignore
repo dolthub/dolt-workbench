@@ -52,6 +52,11 @@ yalc.lock
 /build/linux/dolt-x64
 /build/linux/dolt-arm64
 /build/connections
+/build/mac/dolt-mcp-server
+/build/mac/x86
+/build/linux/dolt-mcp-server-arm64
+/build/linux/dolt-mcp-server-x64
+/build/appx/dolt-mcp-server.exe
 
 # electron app build
 /app

@@ -1,7 +1,7 @@
 import { ToolUseContentBlock, useAgentContext } from "@contexts/agent";
 import { Button } from "@dolthub/react-components";
 import cx from "classnames";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import css from "./index.module.css";
 
 type Props = {
@@ -10,8 +10,10 @@ type Props = {
 
 // Format tool name for display (e.g., "mcp__dolt__create_dolt_commit" -> "Create Dolt Commit")
 function formatToolName(toolName: string): string {
-  // Remove the mcp__dolt__ prefix
-  const name = toolName.replace("mcp__dolt__", "");
+  // Remove common MCP prefixes
+  const name = toolName
+    .replace("mcp__dolt__", "")
+    .replace("mcp__workbench__", "");
   // Convert snake_case to Title Case
   return name
     .split("_")
@@ -24,6 +26,13 @@ export default function InlineToolCall({ block }: Props) {
   const [isExpanded, setIsExpanded] = useState(
     block.pendingConfirmation ?? false,
   );
+
+  // Auto-expand when confirmation is requested
+  useEffect(() => {
+    if (block.pendingConfirmation) {
+      setIsExpanded(true);
+    }
+  }, [block.pendingConfirmation]);
 
   const hasResult = block.result !== undefined;
   const isError = block.isError;
@@ -73,7 +82,7 @@ export default function InlineToolCall({ block }: Props) {
         <span className={css.toolName}>
           {isPendingConfirmation
             ? `Confirm: ${formatToolName(block.name)}`
-            : block.name}
+            : formatToolName(block.name)}
         </span>
         <span className={css.expandIcon}>{isExpanded ? "\u2212" : "+"}</span>
       </button>
