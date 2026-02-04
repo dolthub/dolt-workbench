@@ -38,8 +38,6 @@ files:
       - node_modules/semver
       - node_modules/type-fest
       - node_modules/uuid
-      - node_modules/@anthropic-ai/claude-agent-sdk
-      - node_modules/zod
 extraFiles:
   - from: ../graphql-server/dist
     to: graphql-server/dist
@@ -64,7 +62,6 @@ win:
     - nsis
   asarUnpack:
     - "**/*.node"
-    - "**/node_modules/@anthropic-ai/**"
 appx:
   applicationId: com.dolthub.doltworkbench
   publisherDisplayName: DoltHub

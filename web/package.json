@@ -36,7 +36,6 @@
     "clean": "tsc -b --clean && yarn yalc:clean"
   },
   "dependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.2.29",
     "@apollo/client": "^3.9.9",
     "@dolthub/react-components": "^0.2.9",
     "@dolthub/react-contexts": "^0.1.1",
@@ -76,6 +75,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
+    "@anthropic-ai/claude-agent-sdk": "^0.2.29",
     "@babel/core": "^7.28.0",
     "@electron/osx-sign": "^2.0.0",
     "@graphql-codegen/cli": "^6.0.0",
