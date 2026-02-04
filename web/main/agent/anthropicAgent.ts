@@ -6,26 +6,13 @@ import {
 } from "@anthropic-ai/claude-agent-sdk";
 import { BrowserWindow, ipcMain } from "electron";
 import { z } from "zod";
-import { getMcpServerPath } from "../helpers/filePath";
+import { getClaudeCliPaths, getMcpServerPath } from "../helpers/filePath";
 import {
   AgentConfig,
   ContentBlock,
   McpServerStatus,
   ToolResultEvent,
 } from "./types";
-import * as path from "node:path";
-
-
-// This is hacky, but it's necessary for now due to a known issue with the claude-agent-sdk
-// https://liruifengv.com/posts/claude-agent-sdk-pitfalls-en/
-function resolveClaudeCodeCli(): string {
-
-  if (process.env.NODE_ENV === "production") {
-    return path.join(__dirname, '../../../node_modules/@anthropic-ai/claude-agent-sdk/cli.js');
-  }
-
-  return path.join(__dirname, '../node_modules/@anthropic-ai/claude-agent-sdk/cli.js');
-}
 
 function getSystemPrompt(
   database: string,
@@ -240,7 +227,7 @@ export class ClaudeAgent {
         "Starting Claude Agent query with MCP server:",
         mcpServerPath,
       );
-      console.log("CLAUDE CODE CLI: ", resolveClaudeCodeCli());
+
       console.log("MCP args:", mcpArgs);
 
       const { mcpConfig } = this.config;
@@ -257,7 +244,7 @@ export class ClaudeAgent {
         prompt: userMessage,
         options: {
           systemPrompt,
-          pathToClaudeCodeExecutable: resolveClaudeCodeCli(),
+          pathToClaudeCodeExecutable: getClaudeCliPaths(),
           mcpServers: {
             dolt: {
               command: mcpServerPath,

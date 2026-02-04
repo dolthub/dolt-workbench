@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: DoltWorkbench
-buildVersion: 0.3.93
+buildVersion: 0.3.87
 copyright: Copyright © 2024 <DoltHub Inc>
 files:
   - filter:
@@ -39,7 +39,7 @@ files:
       - node_modules/uuid
 extraFiles:
   - from: node_modules/@anthropic-ai/claude-agent-sdk
-    to: node_modules/@anthropic-ai/claude-agent-sdk
+    to: Resources/node_modules/@anthropic-ai/claude-agent-sdk
   - from: ../graphql-server/dist
     to: graphql-server/dist
   - from: ../graphql-server/node_modules

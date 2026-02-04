@@ -61,6 +61,28 @@ jobs:
           draft: false
           prerelease: false
 
+  create-release-notes:
+    name: Create release notes
+    needs: create-release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger Release Notes
+        uses: peter-evans/repository-dispatch@v2.0.0
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: release-notes
+          client-payload: '{"version": "${{ needs.create-release.outputs.release_version }}", "release_id": "${{ needs.create-release.outputs.release_id }}"}'
+
+  docker-image-push:
+    needs: create-release
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Trigger Push Docker Image
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.REPO_ACCESS_TOKEN }}
+          event-type: push-docker-image
+          client-payload: '{"version": "${{ needs.create-release.outputs.release_version }}"}'
 
   build-mas:
     needs: create-release
@@ -104,6 +126,5 @@ jobs:
           gh pr merge --merge --delete-branch release/${{ needs.create-release.outputs.release_version }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
 
 
