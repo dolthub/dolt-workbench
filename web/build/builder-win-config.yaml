@@ -62,6 +62,7 @@ win:
     - nsis
   asarUnpack:
     - "**/*.node"
+    - "**/node_modules/@anthropic-ai/**"
 appx:
   applicationId: com.dolthub.doltworkbench
   publisherDisplayName: DoltHub

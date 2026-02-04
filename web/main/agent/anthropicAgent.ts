@@ -13,6 +13,19 @@ import {
   McpServerStatus,
   ToolResultEvent,
 } from "./types";
+import { existsSync } from "node:fs";
+
+
+function resolveClaudeCodeCli(): string {
+  const cliPath = require.resolve('@anthropic-ai/claude-agent-sdk/cli.js');
+  if (cliPath.includes('app.asar')) {
+    const unpackedPath = cliPath.replace('app.asar', 'app.asar.unpacked');
+    if (existsSync(unpackedPath)) {
+      return unpackedPath;
+    }
+  }
+  return cliPath;
+}
 
 function getSystemPrompt(
   database: string,
@@ -227,6 +240,7 @@ export class ClaudeAgent {
         "Starting Claude Agent query with MCP server:",
         mcpServerPath,
       );
+      console.log("CLAUDE CODE CLI: ", resolveClaudeCodeCli());
       console.log("MCP args:", mcpArgs);
 
       const { mcpConfig } = this.config;
@@ -243,6 +257,7 @@ export class ClaudeAgent {
         prompt: userMessage,
         options: {
           systemPrompt,
+          pathToClaudeCodeExecutable: resolveClaudeCodeCli(),
           mcpServers: {
             dolt: {
               command: mcpServerPath,
