@@ -1,11 +1,4 @@
-import {
-  createSdkMcpServer,
-  PermissionResult,
-  query,
-  tool,
-} from "@anthropic-ai/claude-agent-sdk";
 import { BrowserWindow, ipcMain } from "electron";
-import { z } from "zod";
 import { getMcpServerPath } from "../helpers/filePath";
 import {
   AgentConfig,
@@ -13,6 +6,35 @@ import {
   McpServerStatus,
   ToolResultEvent,
 } from "./types";
+
+// Type definitions for the SDK (types are erased at runtime, so this is safe)
+type PermissionResult =
+  | { behavior: "allow"; updatedInput: Record<string, unknown> }
+  | { behavior: "deny"; message: string };
+
+// Lazy-loaded SDK and zod functions (ESM modules loaded via dynamic import)
+let sdkModule: {
+  createSdkMcpServer: typeof import("@anthropic-ai/claude-agent-sdk").createSdkMcpServer;
+  query: typeof import("@anthropic-ai/claude-agent-sdk").query;
+  tool: typeof import("@anthropic-ai/claude-agent-sdk").tool;
+  z: typeof import("zod").z;
+} | null = null;
+
+async function loadSdk() {
+  if (!sdkModule) {
+    const [agentSdk, zod] = await Promise.all([
+      import("@anthropic-ai/claude-agent-sdk"),
+      import("zod"),
+    ]);
+    sdkModule = {
+      createSdkMcpServer: agentSdk.createSdkMcpServer,
+      query: agentSdk.query,
+      tool: agentSdk.tool,
+      z: zod.z,
+    };
+  }
+  return sdkModule;
+}
 
 function getSystemPrompt(
   database: string,
@@ -128,12 +150,14 @@ export class ClaudeAgent {
   }
 
   // Create SDK MCP server with custom workbench tools
-  private createWorkbenchMcpServer() {
-    const switchBranchTool = tool(
+  private async createWorkbenchMcpServer() {
+    const sdk = await loadSdk();
+
+    const switchBranchTool = sdk.tool(
       "switch_branch",
       "Switch to a different branch in the database workbench. This will navigate the UI to show the selected branch.",
       {
-        branch_name: z.string().describe("The name of the branch to switch to"),
+        branch_name: sdk.z.string().describe("The name of the branch to switch to"),
       },
       async args => {
         const branchName = args.branch_name;
@@ -157,7 +181,7 @@ export class ClaudeAgent {
       },
     );
 
-    const refreshPageTool = tool(
+    const refreshPageTool = sdk.tool(
       "refresh_page",
       "Refresh the workbench UI to show the latest data. Call this after any write operation (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, merge, commit, reset, branch creation/deletion, etc.) to ensure the UI displays the current state of the database.",
       {},
@@ -175,7 +199,7 @@ export class ClaudeAgent {
       },
     );
 
-    return createSdkMcpServer({
+    return sdk.createSdkMcpServer({
       name: "workbench",
       version: "1.0.0",
       tools: [switchBranchTool, refreshPageTool],
@@ -220,6 +244,9 @@ export class ClaudeAgent {
     this.abortController = new AbortController();
 
     try {
+      // Load SDK dynamically (ESM module)
+      const sdk = await loadSdk();
+
       const mcpServerPath = getMcpServerPath();
       const mcpArgs = this.getMcpServerArgs();
 
@@ -237,9 +264,9 @@ export class ClaudeAgent {
       );
 
       // Create SDK MCP server with workbench-specific tools
-      const workbenchMcpServer = this.createWorkbenchMcpServer();
+      const workbenchMcpServer = await this.createWorkbenchMcpServer();
 
-      const queryOptions: Parameters<typeof query>[0] = {
+      const queryOptions: Parameters<typeof sdk.query>[0] = {
         prompt: userMessage,
         options: {
           systemPrompt,
@@ -271,7 +298,7 @@ export class ClaudeAgent {
       const toolCallMap = new Map<string, number>(); // tool id -> index in contentBlocks
       let mcpServersStatus: McpServerStatus[] = [];
 
-      for await (const message of query(queryOptions)) {
+      for await (const message of sdk.query(queryOptions)) {
         // Handle system init message - capture session ID and MCP status
         if (message.type === "system" && message.subtype === "init") {
           this.sessionId = message.session_id;
