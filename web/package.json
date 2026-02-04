@@ -75,7 +75,7 @@
     "uuid": "^11.1.0"
   },
   "devDependencies": {
-    "@anthropic-ai/claude-agent-sdk": "^0.2.29",
+    "@anthropic-ai/claude-agent-sdk": "patch:@anthropic-ai/claude-agent-sdk@npm%3A0.2.29#~/.yarn/patches/@anthropic-ai-claude-agent-sdk-npm-0.2.29-30e8d56e19.patch",
     "@babel/core": "^7.28.0",
     "@electron/osx-sign": "^2.0.0",
     "@graphql-codegen/cli": "^6.0.0",
