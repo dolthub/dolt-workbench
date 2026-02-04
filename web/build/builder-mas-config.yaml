@@ -38,6 +38,8 @@ files:
       - node_modules/type-fest
       - node_modules/uuid
 extraFiles:
+  - from: node_modules/@anthropic-ai/claude-agent-sdk
+    to: node_modules/@anthropic-ai/claude-agent-sdk
   - from: ../graphql-server/dist
     to: graphql-server/dist
   - from: ../graphql-server/node_modules

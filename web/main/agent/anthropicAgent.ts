@@ -13,18 +13,18 @@ import {
   McpServerStatus,
   ToolResultEvent,
 } from "./types";
-import { existsSync } from "node:fs";
+import * as path from "node:path";
 
 
+// This is hacky, but it's necessary for now due to a known issue with the claude-agent-sdk
+// https://liruifengv.com/posts/claude-agent-sdk-pitfalls-en/
 function resolveClaudeCodeCli(): string {
-  const cliPath = require.resolve('@anthropic-ai/claude-agent-sdk/cli.js');
-  if (cliPath.includes('app.asar')) {
-    const unpackedPath = cliPath.replace('app.asar', 'app.asar.unpacked');
-    if (existsSync(unpackedPath)) {
-      return unpackedPath;
-    }
+
+  if (process.env.NODE_ENV === "production") {
+    return path.join(__dirname, '../../../node_modules/@anthropic-ai/claude-agent-sdk/cli.js');
   }
-  return cliPath;
+
+  return path.join(__dirname, '../node_modules/@anthropic-ai/claude-agent-sdk/cli.js');
 }
 
 function getSystemPrompt(
