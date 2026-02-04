@@ -71,6 +71,7 @@ mac:
   gatekeeperAssess: false
   asarUnpack:
     - "**/*.node"
+    - "**/node_modules/@anthropic-ai/**"
   provisioningProfile: build/mac/AppleDevelopment.provisionprofile
   entitlements: build/mac/entitlements.plist
   entitlementsInherit: build/mac/entitlements.inherit.plist
