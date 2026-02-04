@@ -3,7 +3,7 @@ directories:
   buildResources: build
 appId: com.dolthub.dolt-workbench
 productName: DoltWorkbench
-buildVersion: 0.3.88
+buildVersion: 0.3.89
 copyright: Copyright © 2024 <DoltHub Inc>
 files:
   - filter:
