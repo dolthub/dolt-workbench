@@ -6,7 +6,7 @@ import {
 } from "@anthropic-ai/claude-agent-sdk";
 import { BrowserWindow, ipcMain } from "electron";
 import { z } from "zod";
-import { getMcpServerPath } from "../helpers/filePath";
+import { getClaudeCliPaths, getMcpServerPath } from "../helpers/filePath";
 import {
   AgentConfig,
   ContentBlock,
@@ -227,6 +227,7 @@ export class ClaudeAgent {
         "Starting Claude Agent query with MCP server:",
         mcpServerPath,
       );
+
       console.log("MCP args:", mcpArgs);
 
       const { mcpConfig } = this.config;
@@ -243,6 +244,7 @@ export class ClaudeAgent {
         prompt: userMessage,
         options: {
           systemPrompt,
+          pathToClaudeCodeExecutable: getClaudeCliPaths(),
           mcpServers: {
             dolt: {
               command: mcpServerPath,

@@ -38,6 +38,8 @@ files:
       - node_modules/type-fest
       - node_modules/uuid
 extraFiles:
+  - from: node_modules/@anthropic-ai/claude-agent-sdk
+    to: Resources/node_modules/@anthropic-ai/claude-agent-sdk
   - from: ../graphql-server/dist
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
@@ -54,6 +56,8 @@ extraFiles:
     to: Resources/AppIcon.icns
   - from: build/mac/dolt
     to: MacOS/dolt
+  - from: build/mac/dolt-mcp-server
+    to: MacOS/dolt-mcp-server
 mac:
   category: public.app-category.developer-tools
   icon: build/mac/AppIcon.icns
@@ -66,6 +70,7 @@ mac:
       arch: universal
   asarUnpack:
     - "**/*.node"
+    - "**/node_modules/@anthropic-ai/**"
   artifactName: ${productName}-mac-${arch}-${buildVersion}.${ext}
   type: distribution
   notarize: true

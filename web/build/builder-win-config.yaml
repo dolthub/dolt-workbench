@@ -39,6 +39,8 @@ files:
       - node_modules/type-fest
       - node_modules/uuid
 extraFiles:
+  - from: node_modules/@anthropic-ai/claude-agent-sdk
+    to: Resources/node_modules/@anthropic-ai/claude-agent-sdk
   - from: ../graphql-server/dist
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
@@ -51,6 +53,8 @@ extraFiles:
       - "!**/*.md"
   - from: build/appx/dolt.exe
     to: Resources/dolt.exe
+  - from: build/appx/dolt-mcp-server.exe
+    to: Resources/dolt-mcp-server.exe
 win:
   icon: build/appx/icon.ico
   signAndEditExecutable: true
@@ -58,6 +62,9 @@ win:
   target:
     - appx
     - nsis
+  asarUnpack:
+    - "**/*.node"
+    - "**/node_modules/@anthropic-ai/**"
 appx:
   applicationId: com.dolthub.doltworkbench
   publisherDisplayName: DoltHub
