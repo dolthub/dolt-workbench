@@ -54,6 +54,8 @@ extraFiles:
     to: Resources/AppIcon.icns
   - from: build/mac/dolt
     to: MacOS/dolt
+  - from: build/mac/dolt-mcp-server
+    to: MacOS/dolt-mcp-server
 mac:
   category: public.app-category.developer-tools
   icon: build/mac/AppIcon.icns

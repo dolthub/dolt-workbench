@@ -51,6 +51,8 @@ extraFiles:
       - "!**/*.md"
   - from: "build/linux/dolt-${arch}"
     to: resources/dolt
+  - from: "build/linux/dolt-mcp-server-${arch}"
+    to: resources/dolt-mcp-server
 linux:
   icon: build/linux/icon.png
   category: "Development"

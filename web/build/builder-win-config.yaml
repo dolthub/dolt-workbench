@@ -51,6 +51,8 @@ extraFiles:
       - "!**/*.md"
   - from: build/appx/dolt.exe
     to: Resources/dolt.exe
+  - from: build/appx/dolt-mcp-server.exe
+    to: Resources/dolt-mcp-server.exe
 win:
   icon: build/appx/icon.ico
   signAndEditExecutable: true
