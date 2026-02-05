@@ -108,7 +108,7 @@
 }
 
 .agentButton {
-  @apply text-xl text-orange-400 hover:text-orange-300 cursor-pointer bg-transparent border-none p-1 rounded transition-colors;
+  @apply text-xl text-orange-400 hover:text-orange-300 cursor-pointer bg-transparent border border-orange-300 p-1 rounded transition-colors;
 }
 
 .agentButtonActive {
