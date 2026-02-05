@@ -29,6 +29,18 @@
   @apply flex justify-center text-white/90 ml-4 mr-12;
 }
 
+.tabButton {
+  @apply bg-transparent cursor-pointer px-4;
+  border: none;
+  border-bottom: 4px solid transparent;
+}
+
+.tabButton:hover,
+.tabButton.active {
+  border-bottom: 4px solid #ff8d69;
+  @apply text-[#FF8D69];
+}
+
 .tab:hover,
 .active {
   @apply border-b-4 border-[#FF8D69] text-[#FF8D69];
