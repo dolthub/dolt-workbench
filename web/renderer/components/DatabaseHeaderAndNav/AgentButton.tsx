@@ -1,16 +1,9 @@
 import { useAgentContext } from "@contexts/agent";
+import { RiRobot3Fill } from "react-icons/ri";
 import cx from "classnames";
 import css from "./index.module.css";
 
-type Props = {
-  initialTabIndex: number;
-  tabIndex: number;
-};
-
-export default function AgentNavItem({
-  initialTabIndex: _initialTabIndex,
-  tabIndex: _tabIndex,
-}: Props) {
+export default function AgentButton() {
   const { togglePanel, isPanelOpen } = useAgentContext();
 
   // Only show in Electron environment
@@ -19,16 +12,15 @@ export default function AgentNavItem({
   }
 
   return (
-    <li data-cy="db-agent-tab">
+    <>
       <button
         type="button"
-        className={cx(css.tab, css.tabButton, {
-          [css.active]: isPanelOpen,
-        })}
+        className={cx(css.agentButton, { [css.agentButtonActive]: isPanelOpen })}
         onClick={togglePanel}
+        data-cy="agent-button"
       >
-        <span className={css.innerTab}>Agent</span>
+        <RiRobot3Fill />
       </button>
-    </li>
+    </>
   );
 }
