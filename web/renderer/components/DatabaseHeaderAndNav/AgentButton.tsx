@@ -9,7 +9,10 @@ export default function AgentButton() {
   const { isDolt, isPostgres } = useDatabaseDetails();
 
   // Only show in Electron environment, and not for doltgres databases
-  if (process.env.NEXT_PUBLIC_FOR_ELECTRON !== "true" || (isDolt && isPostgres)) {
+  if (
+    process.env.NEXT_PUBLIC_FOR_ELECTRON !== "true" ||
+    (isDolt && isPostgres)
+  ) {
     return null;
   }
 
