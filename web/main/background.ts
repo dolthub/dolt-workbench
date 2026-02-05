@@ -18,6 +18,7 @@ import { doltLogin } from "./doltLogin";
 import { startServer } from "./doltServer";
 import { createWindow } from "./helpers/createWindow";
 import { initMenu } from "./helpers/menu";
+import { registerAgentIpcHandlers, cleanupAgent } from "./agent";
 import {
   getErrorMessage,
   removeDoltServerFolder,
@@ -170,6 +171,7 @@ app.on("ready", async () => {
 
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   setupTitleBarClickMac();
+  registerAgentIpcHandlers(mainWindow);
   await createGraphqlSeverProcess();
 
   await waitForGraphQLServer("http://localhost:9002/graphql");
@@ -192,7 +194,7 @@ app.on("ready", async () => {
 
     return { action: "deny" };
   });
-  mainWindow.setMinimumSize(1080, 780);
+  mainWindow.setMinimumSize(1200, 780);
 
   // hit when clicking <a href/> with no target
   // optionally redirect to browser
@@ -215,7 +217,7 @@ ipcMain.on("update-menu", (_event, databaseName?: string) => {
   updateMenu(databaseName);
 });
 
-app.on("before-quit", () => {
+app.on("before-quit", async () => {
   if (graphqlServerProcess) {
     graphqlServerProcess.kill();
     graphqlServerProcess = null;
@@ -224,6 +226,7 @@ app.on("before-quit", () => {
     doltServerProcess.kill();
     doltServerProcess = null;
   }
+  await cleanupAgent();
 });
 
 app.on("window-all-closed", () => {

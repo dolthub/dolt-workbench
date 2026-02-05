@@ -36,6 +36,47 @@ export function getDoltPaths(): string {
   }
 }
 
+// This is hacky, but it's necessary for now due to a known issue with the claude-agent-sdk
+// https://liruifengv.com/posts/claude-agent-sdk-pitfalls-en/
+export function getClaudeCliPaths(): string {
+  if (!isProd) {
+    return path.join(
+      __dirname,
+      "..",
+      "node_modules",
+      "@anthropic-ai",
+      "claude-agent-sdk",
+      "cli.js",
+    );
+  }
+  if (process.platform === "darwin") {
+    return path.join(
+      process.resourcesPath,
+      "node_modules",
+      "@anthropic-ai",
+      "claude-agent-sdk",
+      "cli.js",
+    );
+  } else if (process.platform === "linux") {
+    return path.join(
+      process.resourcesPath,
+      "node_modules",
+      "@anthropic-ai",
+      "claude-agent-sdk",
+      "cli.js",
+    );
+  } else {
+    return path.join(
+      process.resourcesPath,
+      "node_modules",
+      "@anthropic-ai",
+      "node_modules",
+      "claude-agent-sdk",
+      "cli.js",
+    );
+  }
+}
+
 type ErrorReturnType = {
   errorMsg?: string;
 };
@@ -61,4 +102,21 @@ export function getSocketPath() {
 
   // Create a customized filename without special characters
   return path.join(socketDir, "dolt.sock");
+}
+
+// Returns the path to the dolt-mcp-server binary based on the platform and environment.
+export function getMcpServerPath(): string {
+  if (process.platform === "darwin") {
+    return isProd
+      ? path.join(process.resourcesPath, "..", "MacOS", "dolt-mcp-server")
+      : path.join(__dirname, "..", "build", "mac", "dolt-mcp-server");
+  } else if (process.platform === "linux") {
+    return isProd
+      ? path.join(process.resourcesPath, "dolt-mcp-server")
+      : path.join(__dirname, "..", "build", "linux", "dolt-mcp-server");
+  } else {
+    return isProd
+      ? path.join(process.resourcesPath, "dolt-mcp-server.exe")
+      : path.join(__dirname, "..", "build", "appx", "dolt-mcp-server.exe");
+  }
 }
