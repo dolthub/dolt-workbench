@@ -64,8 +64,6 @@ function getUserShellPath(): string | null {
   }
 
   try {
-    // Use the user's default shell to get their PATH
-    // -ilc: interactive login shell, run command
     const shell = process.env.SHELL ?? "/bin/zsh";
     cachedShellPath = execSync(`${shell} -ilc 'echo $PATH'`, {
       encoding: "utf-8",
@@ -143,9 +141,7 @@ export class ClaudeAgent {
       options.toolUseID,
     );
 
-    // Check if this tool requires confirmation
     if (!TOOLS_REQUIRING_CONFIRMATION.includes(toolName)) {
-      // Allow the tool - pass through the original input
       return { behavior: "allow", updatedInput: input };
     }
 
@@ -158,7 +154,6 @@ export class ClaudeAgent {
       input,
     });
 
-    // Wait for user response
     return new Promise(resolve => {
       this.pendingConfirmation = {
         resolve,
@@ -178,21 +173,12 @@ export class ClaudeAgent {
         branch_name: z.string().describe("The name of the branch to switch to"),
       },
       async args => {
-        const branchName = args.branch_name;
-        if (!branchName) {
-          return {
-            content: [
-              { type: "text" as const, text: "Error: branch_name is required" },
-            ],
-          };
-        }
-        // Send event to renderer to switch branch
-        this.sendEvent("agent:switch-branch", { branchName });
+        this.sendEvent("agent:switch-branch", { branchName: args.branch_name });
         return {
           content: [
             {
               type: "text" as const,
-              text: `Successfully switched to branch: ${branchName}`,
+              text: `Successfully switched to branch: ${args.branch_name}`,
             },
           ],
         };
@@ -314,13 +300,12 @@ export class ClaudeAgent {
       // Track content blocks in order as they arrive
       const contentBlocks: ContentBlock[] = [];
       const toolCallMap = new Map<string, number>(); // tool id -> index in contentBlocks
-      let mcpServersStatus: McpServerStatus[] = [];
 
       for await (const message of query(queryOptions)) {
         // Handle system init message - capture session ID and MCP status
         if (message.type === "system" && message.subtype === "init") {
           this.sessionId = message.session_id;
-          mcpServersStatus = message.mcp_servers.map(
+          const mcpServersStatus: McpServerStatus[] = message.mcp_servers.map(
             (server: { name: string; status: string; error?: string }) => {
               return {
                 name: server.name,

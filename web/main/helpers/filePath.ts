@@ -40,14 +40,40 @@ export function getDoltPaths(): string {
 // https://liruifengv.com/posts/claude-agent-sdk-pitfalls-en/
 export function getClaudeCliPaths(): string {
   if (!isProd) {
-    return path.join(__dirname, "..", "node_modules", "@anthropic-ai", "claude-agent-sdk", "cli.js");
+    return path.join(
+      __dirname,
+      "..",
+      "node_modules",
+      "@anthropic-ai",
+      "claude-agent-sdk",
+      "cli.js",
+    );
   }
   if (process.platform === "darwin") {
-    return path.join(process.resourcesPath, "node_modules", "@anthropic-ai", "claude-agent-sdk", "cli.js");
+    return path.join(
+      process.resourcesPath,
+      "node_modules",
+      "@anthropic-ai",
+      "claude-agent-sdk",
+      "cli.js",
+    );
   } else if (process.platform === "linux") {
-    return path.join(process.resourcesPath, "node_modules", "@anthropic-ai", "claude-agent-sdk", "cli.js");
+    return path.join(
+      process.resourcesPath,
+      "node_modules",
+      "@anthropic-ai",
+      "claude-agent-sdk",
+      "cli.js",
+    );
   } else {
-    return path.join(process.resourcesPath, "node_modules", "@anthropic-ai", "node_modules", "claude-agent-sdk", "cli.js");
+    return path.join(
+      process.resourcesPath,
+      "node_modules",
+      "@anthropic-ai",
+      "node_modules",
+      "claude-agent-sdk",
+      "cli.js",
+    );
   }
 }
 

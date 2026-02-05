@@ -47,9 +47,7 @@ export function AgentProvider({ children }: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [isStreaming, setIsStreaming] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [_currentAssistantMessageId, setCurrentAssistantMessageId] = useState<
-    string | null
-  >(null);
+  const [, setCurrentAssistantMessageId] = useState<string | null>(null);
 
   // Panel visibility actions
   const openPanel = useCallback(() => setIsPanelOpen(true), []);
@@ -92,9 +90,7 @@ export function AgentProvider({ children }: Props) {
 
         // Also disconnect from the backend if we have IPC
         if (typeof window !== "undefined" && window.ipc) {
-          window.ipc.agentDisconnect().catch(() => {
-            // Ignore errors during disconnect
-          });
+          void window.ipc.agentDisconnect();
         }
       }
       lastValidDbRef.current = currentDbId;

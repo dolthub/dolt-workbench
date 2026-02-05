@@ -15,7 +15,9 @@ export default function AgentButton() {
     <>
       <button
         type="button"
-        className={cx(css.agentButton, { [css.agentButtonActive]: isPanelOpen })}
+        className={cx(css.agentButton, {
+          [css.agentButtonActive]: isPanelOpen,
+        })}
         onClick={togglePanel}
         data-cy="agent-button"
       >
