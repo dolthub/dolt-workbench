@@ -20,5 +20,5 @@ runs:
         GITHUB_TOKEN: ${{ github.token }}
       run: |
         yarn
-        yarn download:dolt
+        yarn download:dependencies
       shell: bash
