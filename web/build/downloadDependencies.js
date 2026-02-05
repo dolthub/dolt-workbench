@@ -7,11 +7,11 @@ const tar = require("tar");
 const AdmZip = require("adm-zip");
 
 // Get the latest version from GitHub API
-async function getLatestVersion() {
+async function getLatestVersion(gitRepo) {
   return new Promise((resolve, reject) => {
     https
       .get(
-        "https://api.github.com/repos/dolthub/dolt/releases/latest",
+        `https://api.github.com/repos/dolthub/${gitRepo}/releases/latest`,
         {
           headers: {
             "User-Agent": "Node.js",
@@ -41,48 +41,48 @@ async function getLatestVersion() {
   });
 }
 
-function getDownloadConfigs(version) {
-  const BASE_URL = `https://github.com/dolthub/dolt/releases/download/${version}`;
+function getDownloadConfigs(version, gitRepo, targetFile) {
+  const BASE_URL = `https://github.com/dolthub/${gitRepo}/releases/download/${version}`;
   return [
     // macOS ARM64
     {
       platform: "darwin",
       arch: "arm64",
-      url: `${BASE_URL}/dolt-darwin-arm64.tar.gz`,
-      dest: path.join(__dirname, "./mac/dolt"),
-      extract: async data => extractTarGz(data, "dolt"),
+      url: `${BASE_URL}/${targetFile}-darwin-arm64.tar.gz`,
+      dest: path.join(__dirname, `./mac/${targetFile}`),
+      extract: async data => extractTarGz(data, targetFile),
     },
     // Windows
     {
       platform: "win32",
       arch: "amd64",
-      url: `${BASE_URL}/dolt-windows-amd64.zip`,
-      dest: path.join(__dirname, "./appx/dolt.exe"),
+      url: `${BASE_URL}/${targetFile}-windows-amd64.zip`,
+      dest: path.join(__dirname, `./appx/${targetFile}.exe`),
       extract: async data => {
         const zip = new AdmZip(data);
         const zipEntries = zip.getEntries();
         const doltEntry = zipEntries.find(e =>
-          e.entryName.toLowerCase().endsWith("dolt.exe"),
+          e.entryName.toLowerCase().endsWith(`${targetFile}.exe`),
         );
-        if (!doltEntry) throw new Error("dolt.exe not found in ZIP");
+        if (!doltEntry) throw new Error(`${targetFile}.exe not found in ZIP`);
         return zip.readFile(doltEntry);
-      },
+      }
     },
     // Linux ARM64
     {
       platform: "linux",
       arch: "arm64",
-      url: `${BASE_URL}/dolt-linux-arm64.tar.gz`,
-      dest: path.join(__dirname, "./linux/dolt-arm64"),
-      extract: async data => extractTarGz(data, "dolt"),
+      url: `${BASE_URL}/${targetFile}-linux-arm64.tar.gz`,
+      dest: path.join(__dirname, `./linux/${targetFile}-arm64`),
+      extract: async data => extractTarGz(data, targetFile),
     },
     // Linux AMD64
     {
       platform: "linux",
       arch: "amd64",
-      url: `${BASE_URL}/dolt-linux-amd64.tar.gz`,
-      dest: path.join(__dirname, "./linux/dolt-x64"),
-      extract: async data => extractTarGz(data, "dolt"),
+      url: `${BASE_URL}/${targetFile}-linux-amd64.tar.gz`,
+      dest: path.join(__dirname, `./linux/${targetFile}-x64`),
+      extract: async data => extractTarGz(data, targetFile),
     },
   ];
 }
@@ -179,11 +179,24 @@ async function downloadConfig(config, platform) {
 
 async function downloadAllDoltBinaries() {
   console.log("Getting latest Dolt version...");
-  const version = await getLatestVersion();
+  const version = await getLatestVersion("dolt");
   console.log(`Using Dolt version: ${version}\n`);
 
-  const configs = getDownloadConfigs(version);
+  const configs = getDownloadConfigs(version, "dolt", "dolt");
   console.log(`Downloading ${configs.length} Dolt binaries...\n`);
+
+  for (const config of configs) {
+    await downloadConfig(config);
+  }
+}
+
+async function downloadAllDoltMcpBinaries() {
+  console.log("Getting latest Dolt MCP version...");
+  const version = await getLatestVersion("dolt-mcp");
+  console.log(`Using Dolt MCP version: ${version}\n`);
+
+  const configs = getDownloadConfigs(version, "dolt-mcp", "dolt-mcp-server");
+  console.log(`Downloading ${configs.length} Dolt MCP server binaries...\n`);
 
   for (const config of configs) {
     await downloadConfig(config);
@@ -194,3 +207,8 @@ downloadAllDoltBinaries().catch(err => {
   console.error("Unhandled error:", err);
   process.exit(1);
 });
+
+downloadAllDoltMcpBinaries(err => {
+  console.error("Unhandled error: ", err);
+  process.exit(1);
+})

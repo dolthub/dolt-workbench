@@ -39,6 +39,8 @@ files:
       - node_modules/type-fest
       - node_modules/uuid
 extraFiles:
+  - from: node_modules/@anthropic-ai/claude-agent-sdk
+    to: resources/node_modules/@anthropic-ai/claude-agent-sdk
   - from: ../graphql-server/dist
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
@@ -51,6 +53,8 @@ extraFiles:
       - "!**/*.md"
   - from: "build/linux/dolt-${arch}"
     to: resources/dolt
+  - from: "build/linux/dolt-mcp-server-${arch}"
+    to: resources/dolt-mcp-server
 linux:
   icon: build/linux/icon.png
   category: "Development"
