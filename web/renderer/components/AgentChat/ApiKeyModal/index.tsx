@@ -45,8 +45,9 @@ export default function ApiKeyModal({
       onSubmit={handleSubmit}
       disabled={!apiKey.trim() || isLoading}
       btnText={isLoading ? "Connecting..." : "Connect"}
+      err={error ? new Error(error) : undefined}
     >
-      <p className={css.modalDescription}>
+      <p className={css.description}>
         Enter your Anthropic API key to enable the AI agent. Your key will be
         stored for future sessions.
       </p>
@@ -59,7 +60,6 @@ export default function ApiKeyModal({
         required
         light
       />
-      {error && <div className={css.modalError}>{error}</div>}
     </FormModal>
   );
 }

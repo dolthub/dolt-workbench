@@ -1,5 +1,5 @@
 import { Button, Textarea } from "@dolthub/react-components";
-import { ChangeEvent, FormEvent, KeyboardEvent, useState } from "react";
+import { FormEvent, KeyboardEvent, useState } from "react";
 import css from "./index.module.css";
 
 type Props = {
@@ -26,15 +26,11 @@ export default function ChatInput({ onSend, disabled, isLoading }: Props) {
     }
   };
 
-  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-  };
-
   return (
-    <form onSubmit={handleSubmit} className={css.inputForm}>
+    <form onSubmit={handleSubmit} className={css.form}>
       <Textarea
         value={message}
-        onChange={handleChange}
+        onChangeString={setMessage}
         onKeyDown={handleKeyDown}
         placeholder="Ask about your database..."
         rows={2}

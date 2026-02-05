@@ -58,8 +58,7 @@
 }
 
 .agentPanel {
-  @apply fixed top-24 right-0 bottom-0 z-50 shadow-xl;
-  width: 400px;
+  @apply fixed top-24 right-0 bottom-0 z-50 shadow-xl w-[400px];
   animation: slideIn 0.2s ease-out;
 }
 
