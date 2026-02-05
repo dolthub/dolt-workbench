@@ -4,6 +4,7 @@ import {
   query,
   tool,
 } from "@anthropic-ai/claude-agent-sdk";
+import { execSync } from "child_process";
 import { BrowserWindow, ipcMain } from "electron";
 import { z } from "zod";
 import { getClaudeCliPaths, getMcpServerPath } from "../helpers/filePath";
@@ -48,6 +49,47 @@ const TOOLS_REQUIRING_CONFIRMATION = [
   "mcp__dolt__move_dolt_branch",
   "mcp__dolt__dolt_reset_hard",
 ];
+
+// Cache the user's shell PATH (fetched once at startup)
+let cachedShellPath: string | null = null;
+
+// Get the user's actual shell PATH by running their shell
+function getUserShellPath(): string | null {
+  if (cachedShellPath !== null) {
+    return cachedShellPath;
+  }
+
+  if (process.platform !== "darwin" && process.platform !== "linux") {
+    return null;
+  }
+
+  try {
+    // Use the user's default shell to get their PATH
+    // -ilc: interactive login shell, run command
+    const shell = process.env.SHELL ?? "/bin/zsh";
+    cachedShellPath = execSync(`${shell} -ilc 'echo $PATH'`, {
+      encoding: "utf-8",
+      timeout: 5000,
+    }).trim();
+    console.log("Got user shell PATH:", cachedShellPath);
+    return cachedShellPath;
+  } catch (err) {
+    console.error("Failed to get user shell PATH:", err);
+    return null;
+  }
+}
+
+// Get environment with the user's actual shell PATH
+function getAgentEnv(): Record<string, string | undefined> {
+  const env = { ...process.env };
+
+  const shellPath = getUserShellPath();
+  if (shellPath) {
+    env.PATH = shellPath;
+  }
+
+  return env;
+}
 
 export class ClaudeAgent {
   private mainWindow: BrowserWindow;
@@ -245,6 +287,7 @@ export class ClaudeAgent {
         options: {
           systemPrompt,
           pathToClaudeCodeExecutable: getClaudeCliPaths(),
+          env: getAgentEnv(),
           mcpServers: {
             dolt: {
               command: mcpServerPath,
