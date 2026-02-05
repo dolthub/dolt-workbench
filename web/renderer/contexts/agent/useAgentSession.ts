@@ -27,14 +27,10 @@ const defaultConnectionState: ConnectionState = {
   error: null,
 };
 
-export type AgentSessionState = {
+export type AgentSessionState = ConnectionState & {
   mcpConfig: McpServerConfig | null;
   setMcpConfig: (config: McpServerConfig | null) => void;
   messages: AgentMessage[];
-  isConnected: boolean;
-  isLoading: boolean;
-  isStreaming: boolean;
-  error: string | null;
   confirmToolCall: (toolUseId: string) => void;
   denyToolCall: (toolUseId: string) => void;
   connect: (apiKey: string, config: McpServerConfig) => Promise<boolean>;

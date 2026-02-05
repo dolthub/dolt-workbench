@@ -1,7 +1,7 @@
 import { AgentMessage, ContentBlock } from "@contexts/agent";
 import { Markdown } from "@dolthub/react-components";
 import cx from "classnames";
-import InlineToolCall from "./InlineToolCall";
+import InlineToolCall from "../InlineToolCall";
 import css from "./index.module.css";
 
 type Props = {
@@ -17,7 +17,7 @@ function renderContentBlock(block: ContentBlock, index: number) {
       <Markdown
         key={`text-${index}`}
         value={block.text}
-        className={css.markdownContent}
+        className={css.markdown}
       />
     );
   }
@@ -44,8 +44,8 @@ export default function ChatMessage({ message }: Props) {
 
     return (
       <div className={cx(css.message, css.userMessage)}>
-        <div className={css.messageRole}>You</div>
-        <div className={css.messageContent}>{textContent}</div>
+        <div className={css.role}>You</div>
+        <div className={css.content}>{textContent}</div>
       </div>
     );
   }
@@ -54,11 +54,11 @@ export default function ChatMessage({ message }: Props) {
   return (
     <div
       className={cx(css.message, css.assistantMessage, {
-        [css.streamingMessage]: message.isStreaming,
+        [css.streaming]: message.isStreaming,
       })}
     >
-      <div className={css.messageRole}>Assistant</div>
-      <div className={css.messageContent}>
+      <div className={css.role}>Assistant</div>
+      <div className={css.content}>
         {hasContent
           ? message.contentBlocks.map((block, index) =>
               renderContentBlock(block, index),

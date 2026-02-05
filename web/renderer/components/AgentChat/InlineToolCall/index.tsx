@@ -21,6 +21,17 @@ function formatToolName(toolName: string): string {
     .join(" ");
 }
 
+function getStatusIcon(
+  isPendingConfirmation: boolean,
+  isPending: boolean,
+  isError: boolean,
+): string {
+  if (isPendingConfirmation) return "?";
+  if (isPending) return "...";
+  if (isError) return "!";
+  return "\u2713";
+}
+
 export default function InlineToolCall({ block }: Props) {
   const { confirmToolCall, denyToolCall } = useAgentContext();
   const [isExpanded, setIsExpanded] = useState(
@@ -48,38 +59,24 @@ export default function InlineToolCall({ block }: Props) {
     }
   };
 
-  const handleConfirm = () => {
-    confirmToolCall(block.id);
-  };
-
-  const handleDeny = () => {
-    denyToolCall(block.id);
-  };
-
   return (
     <div
-      className={cx(css.inlineToolCall, {
-        [css.toolCallError]: isError,
-        [css.toolCallPending]: isPending,
-        [css.toolCallConfirmation]: isPendingConfirmation,
+      className={cx(css.container, {
+        [css.error]: isError,
+        [css.pending]: isPending,
+        [css.confirmation]: isPendingConfirmation,
       })}
     >
       <button
         type="button"
-        className={css.inlineToolCallHeader}
+        className={css.header}
         onClick={() => setIsExpanded(!isExpanded)}
         aria-expanded={isExpanded}
       >
-        <span className={css.toolCallIcon}>
-          {isPendingConfirmation
-            ? "?"
-            : isPending
-              ? "..."
-              : isError
-                ? "!"
-                : "\u2713"}
+        <span className={css.icon}>
+          {getStatusIcon(!!isPendingConfirmation, isPending, !!isError)}
         </span>
-        <span className={css.toolName}>
+        <span className={css.name}>
           {isPendingConfirmation
             ? `Confirm: ${formatToolName(block.name)}`
             : formatToolName(block.name)}
@@ -88,24 +85,24 @@ export default function InlineToolCall({ block }: Props) {
       </button>
 
       {isExpanded && (
-        <div className={css.toolCallDetails}>
+        <div className={css.details}>
           {isPendingConfirmation && (
             <div className={css.confirmationMessage}>
               This action requires your confirmation before proceeding.
             </div>
           )}
-          <div className={css.toolSection}>
-            <span className={css.toolSectionLabel}>Input:</span>
-            <pre className={css.toolCode}>{formatValue(block.input)}</pre>
+          <div className={css.section}>
+            <span className={css.sectionLabel}>Input:</span>
+            <pre className={css.code}>{formatValue(block.input)}</pre>
           </div>
           {hasResult && (
-            <div className={css.toolSection}>
-              <span className={css.toolSectionLabel}>
+            <div className={css.section}>
+              <span className={css.sectionLabel}>
                 {isError ? "Error:" : "Result:"}
               </span>
               <pre
-                className={cx(css.toolCode, {
-                  [css.toolCodeError]: isError,
+                className={cx(css.code, {
+                  [css.codeError]: isError,
                 })}
               >
                 {formatValue(block.result)}
@@ -114,8 +111,8 @@ export default function InlineToolCall({ block }: Props) {
           )}
           {isPendingConfirmation && (
             <div className={css.confirmationActions}>
-              <Button onClick={handleDeny}>Cancel</Button>
-              <Button onClick={handleConfirm} green>
+              <Button onClick={() => denyToolCall(block.id)}>Cancel</Button>
+              <Button onClick={() => confirmToolCall(block.id)} green>
                 Confirm
               </Button>
             </div>

@@ -9,6 +9,27 @@ type Props = {
   onClose: () => void;
 };
 
+function ActionButton({
+  onClick,
+  disabled,
+  children,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={css.textButton}
+    >
+      {children}
+    </button>
+  );
+}
+
 export default function AgentChat({ onClose }: Props) {
   const {
     mcpConfig,
@@ -90,21 +111,6 @@ export default function AgentChat({ onClose }: Props) {
     onClose();
   };
 
-  const handleEditApiKey = () => {
-    setShowApiKeyModal(true);
-  };
-
-  const handleClearHistory = async () => {
-    await clearHistory();
-  };
-
-  const handleCloseModal = () => {
-    setShowApiKeyModal(false);
-    if (!isConnected) {
-      onClose();
-    }
-  };
-
   return (
     <div className={css.container}>
       <button
@@ -153,37 +159,30 @@ export default function AgentChat({ onClose }: Props) {
         />
         {isConnected && (
           <div className={css.inputActions}>
-            <button
-              type="button"
-              onClick={handleClearHistory}
-              disabled={isLoading}
-              className={css.textButton}
-            >
+            <ActionButton onClick={clearHistory} disabled={isLoading}>
               Clear history
-            </button>
-            <button
-              type="button"
-              onClick={handleDisconnect}
-              disabled={isLoading}
-              className={css.textButton}
-            >
+            </ActionButton>
+            <ActionButton onClick={handleDisconnect} disabled={isLoading}>
               Disconnect
-            </button>
-            <button
-              type="button"
-              onClick={handleEditApiKey}
+            </ActionButton>
+            <ActionButton
+              onClick={() => setShowApiKeyModal(true)}
               disabled={isLoading}
-              className={css.textButton}
             >
               Edit API key
-            </button>
+            </ActionButton>
           </div>
         )}
       </div>
 
       <ApiKeyModal
         isOpen={showApiKeyModal}
-        onClose={handleCloseModal}
+        onClose={() => {
+          setShowApiKeyModal(false);
+          if (!isConnected) {
+            onClose();
+          }
+        }}
         onSubmit={handleConnect}
         isLoading={isLoading}
         error={connectError}

@@ -7,16 +7,9 @@ import css from "./index.module.css";
 const MIN_WIDTH = 320;
 const MAX_WIDTH = 800;
 
-export default function GlobalAgentPanel() {
-  const {
-    isPanelOpen,
-    closePanel,
-    mcpConfig,
-    panelWidth,
-    setPanelWidth,
-    hasSmallHeader,
-  } = useAgentContext();
-  const isElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+function Inner() {
+  const { closePanel, panelWidth, setPanelWidth, hasSmallHeader } =
+    useAgentContext();
   const [isResizing, setIsResizing] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
 
@@ -29,7 +22,6 @@ export default function GlobalAgentPanel() {
     (e: MouseEvent) => {
       if (!isResizing) return;
 
-      // Calculate new width based on mouse position from right edge
       const newWidth = window.innerWidth - e.clientX;
       const clampedWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, newWidth));
       setPanelWidth(clampedWidth);
@@ -57,11 +49,6 @@ export default function GlobalAgentPanel() {
     };
   }, [isResizing, handleMouseMove, handleMouseUp]);
 
-  // Don't render if not in Electron, panel is closed, or no database connection
-  if (!isElectron || !isPanelOpen || !mcpConfig) {
-    return null;
-  }
-
   return (
     <div
       className={cx(css.panel, { [css.smallHeader]: hasSmallHeader })}
@@ -78,4 +65,15 @@ export default function GlobalAgentPanel() {
       <AgentChat onClose={closePanel} />
     </div>
   );
+}
+
+export default function GlobalAgentPanel() {
+  const { isPanelOpen, mcpConfig } = useAgentContext();
+  const isElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+
+  if (!isElectron || !isPanelOpen || !mcpConfig) {
+    return null;
+  }
+
+  return <Inner />;
 }

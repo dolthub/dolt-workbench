@@ -1,0 +1,79 @@
+.container {
+  @apply my-2 border border-stone-300 rounded bg-white overflow-hidden;
+}
+
+.container.error {
+  @apply border-red-300;
+}
+
+.container.pending {
+  @apply border-amber-200;
+}
+
+.container.confirmation {
+  @apply border-yellow-300 bg-yellow-50;
+}
+
+.container.confirmation .header {
+  @apply bg-yellow-100 hover:bg-yellow-200;
+}
+
+.container.confirmation .icon {
+  @apply bg-yellow-200 text-yellow-700;
+}
+
+.header {
+  @apply flex items-center w-full px-3 py-2 text-left bg-stone-50 hover:bg-stone-100 cursor-pointer border-none;
+}
+
+.icon {
+  @apply w-6 h-6 flex items-center justify-center text-xs font-mono rounded bg-stone-300 mr-2;
+}
+
+.error .icon {
+  @apply bg-red-100 text-red-600;
+}
+
+.pending .icon {
+  @apply bg-amber-100 text-amber-600;
+}
+
+.name {
+  @apply flex-1 text-sm font-medium text-stone-700;
+}
+
+.expandIcon {
+  @apply text-stone-400 font-mono;
+}
+
+.details {
+  @apply px-3 py-2 border-t border-stone-300 bg-white;
+}
+
+.section {
+  @apply mb-2;
+}
+
+.section:last-child {
+  @apply mb-0;
+}
+
+.sectionLabel {
+  @apply text-xs font-semibold text-stone-500 block mb-1;
+}
+
+.code {
+  @apply text-xs font-mono bg-stone-50 p-2 rounded overflow-x-auto whitespace-pre-wrap break-all max-h-[200px] max-w-full overflow-y-auto box-border;
+}
+
+.codeError {
+  @apply bg-red-50 text-red-600;
+}
+
+.confirmationMessage {
+  @apply text-sm text-stone-600 mb-3;
+}
+
+.confirmationActions {
+  @apply flex justify-end gap-3 pt-3 mt-3 border-t border-yellow-200;
+}
