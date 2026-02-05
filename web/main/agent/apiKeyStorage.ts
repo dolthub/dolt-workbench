@@ -5,9 +5,6 @@ const store = new Store<{ encryptedApiKey?: string }>({ name: "agent-config" });
 
 const API_KEY_STORE_KEY = "encryptedApiKey";
 
-/**
- * Store the Anthropic API key securely using Electron's safeStorage
- */
 export function storeApiKey(apiKey: string): boolean {
   try {
     if (!safeStorage.isEncryptionAvailable()) {
@@ -25,9 +22,6 @@ export function storeApiKey(apiKey: string): boolean {
   }
 }
 
-/**
- * Retrieve the stored Anthropic API key
- */
 export function getStoredApiKey(): string | null {
   try {
     const stored = store.get(API_KEY_STORE_KEY);
@@ -36,7 +30,6 @@ export function getStoredApiKey(): string | null {
     }
 
     if (!safeStorage.isEncryptionAvailable()) {
-      // If encryption wasn't available when stored, it's in plain text
       return stored;
     }
 
@@ -48,9 +41,6 @@ export function getStoredApiKey(): string | null {
   }
 }
 
-/**
- * Clear the stored API key
- */
 export function clearStoredApiKey(): void {
   store.delete(API_KEY_STORE_KEY);
 }

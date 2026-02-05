@@ -27,7 +27,6 @@ export type ToolResultEvent = {
   isError?: boolean;
 };
 
-// Content block types for ordered message content
 export type TextContentBlock = {
   type: "text";
   text: string;
@@ -54,7 +53,6 @@ export type AgentMessage = {
   timestamp: number;
 };
 
-// MCP Server status from the SDK init message
 export type McpServerStatus = {
   name: string;
   status: "connected" | "failed";

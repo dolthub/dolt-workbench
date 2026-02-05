@@ -39,7 +39,6 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
           claudeAgent = null;
         }
 
-        // Create Claude Agent (MCP server is spawned per-query by the SDK)
         claudeAgent = new ClaudeAgent(config, mainWindow);
 
         console.log("Agent initialized with config:", {

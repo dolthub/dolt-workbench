@@ -42,7 +42,6 @@ Always be helpful and explain what you're doing.
 When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`;
 }
 
-// Tools that require explicit user confirmation before execution
 const TOOLS_REQUIRING_CONFIRMATION = [
   "mcp__dolt__create_dolt_commit",
   "mcp__dolt__delete_dolt_branch",
@@ -53,7 +52,6 @@ const TOOLS_REQUIRING_CONFIRMATION = [
 // Cache the user's shell PATH (fetched once at startup)
 let cachedShellPath: string | null = null;
 
-// Get the user's actual shell PATH by running their shell
 function getUserShellPath(): string | null {
   if (cachedShellPath !== null) {
     return cachedShellPath;
@@ -331,7 +329,6 @@ export class ClaudeAgent {
           continue;
         }
 
-        // Handle assistant messages (text and tool calls)
         // Content blocks arrive in order - we preserve this order
         if (message.type === "assistant") {
           const apiMessage = message.message;
@@ -404,7 +401,6 @@ export class ClaudeAgent {
           }
         }
 
-        // Handle final result
         if (message.type === "result") {
           if (message.subtype === "success") {
             this.sendEvent("agent:message-complete", {
