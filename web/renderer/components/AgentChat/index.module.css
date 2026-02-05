@@ -1,0 +1,45 @@
+.container {
+  @apply flex flex-col h-full flex-1 bg-white border-l border-stone-300 relative min-w-0 w-full;
+}
+
+.closeButton {
+  @apply absolute top-2 right-4 z-10 w-8 h-8 flex items-center justify-center;
+  @apply text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full;
+  @apply text-2xl font-light bg-transparent border-none cursor-pointer leading-none transition-all duration-150;
+}
+
+.messagesContainer {
+  @apply flex-1 overflow-y-auto overflow-x-hidden p-4 pr-9 space-y-4 min-w-0 w-full;
+}
+
+.emptyState {
+  @apply flex flex-col items-center justify-center h-full text-center text-stone-500;
+}
+
+.emptyStateHint {
+  @apply text-sm text-stone-400 mt-2;
+}
+
+.errorBanner {
+  @apply flex items-center justify-between px-4 py-2 bg-red-50 border-t border-red-300 text-red-600 text-sm;
+}
+
+.dismissError {
+  @apply text-red-600 hover:text-red-600 bg-transparent border-none cursor-pointer underline;
+}
+
+.inputContainer {
+  @apply p-4 border-t border-stone-300 bg-white min-w-0 w-full box-border;
+}
+
+.inputActions {
+  @apply flex items-center justify-center gap-4 pt-2;
+}
+
+.textButton {
+  @apply text-xs text-stone-400 hover:text-stone-600 bg-transparent border-none cursor-pointer underline transition-colors duration-150;
+}
+
+.textButton:disabled {
+  @apply text-stone-300 cursor-not-allowed no-underline;
+}

@@ -56,3 +56,17 @@
 .noHeader {
   min-height: calc(100vh - 11.5rem);
 }
+
+.agentPanel {
+  @apply fixed top-24 right-0 bottom-0 z-50 shadow-xl w-[400px];
+  animation: slideIn 0.2s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}

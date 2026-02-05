@@ -1,0 +1,15 @@
+.form {
+  @apply flex flex-col gap-2;
+}
+
+.textarea {
+  @apply w-full resize-none;
+}
+
+.textarea textarea {
+  @apply text-sm;
+}
+
+.sendButton {
+  @apply self-end;
+}

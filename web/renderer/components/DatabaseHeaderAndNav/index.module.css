@@ -106,3 +106,11 @@
     @apply hidden;
   }
 }
+
+.agentButton {
+  @apply text-xl text-orange-400 hover:text-orange-300 cursor-pointer bg-transparent border border-orange-300 p-1 rounded transition-colors;
+}
+
+.agentButtonActive {
+  @apply text-orange-300 bg-orange-400/20;
+}

@@ -1,5 +1,7 @@
 import "@components/AceEditor/ace-editor.css";
 import "@components/util/KeyNav/index.css";
+import GlobalAgentPanel from "@components/GlobalAgentPanel";
+import { AgentProvider } from "@contexts/agent";
 import { ServerConfigProvider, useServerConfig } from "@contexts/serverConfig";
 import {
   ThemeProvider,
@@ -10,7 +12,7 @@ import "github-markdown-css/github-markdown-light.css";
 import App from "next/app";
 import { SWRConfig } from "swr";
 import "../styles/global.css";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 // configure fetch for use with SWR
 const fetcher = async (input: RequestInfo, init: RequestInit) => {
@@ -24,15 +26,21 @@ const fetcher = async (input: RequestInfo, init: RequestInit) => {
 function Inner(props: { pageProps: any; Component: any }) {
   const { graphqlApiUrl } = useServerConfig();
   const { params } = props.pageProps;
+  const isElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
 
   useEffect(() => {
-    if (process.env.NEXT_PUBLIC_FOR_ELECTRON === "true") {
+    if (isElectron) {
       // enable the tools when the database is selected
       window.ipc.updateAppMenu(params?.databaseName);
     }
-  }, [props.pageProps]);
+  }, [props.pageProps, isElectron]);
 
-  const WrappedPage = withApollo(graphqlApiUrl)(props.Component);
+  // Memoize the wrapped page component to prevent recreation on every render
+  const WrappedPage = useMemo(
+    () => withApollo(graphqlApiUrl)(props.Component),
+    [graphqlApiUrl, props.Component],
+  );
+
   return <WrappedPage {...props.pageProps} />;
 }
 
@@ -51,7 +59,10 @@ export default class DoltSQLWorkbench extends App {
       <SWRConfig value={{ fetcher }}>
         <ServerConfigProvider>
           <ThemeProvider themeRGBOverrides={workbenchTailwindColorTheme}>
-            <Inner pageProps={pageProps} Component={Component} />
+            <AgentProvider>
+              <Inner pageProps={pageProps} Component={Component} />
+              <GlobalAgentPanel />
+            </AgentProvider>
           </ThemeProvider>
         </ServerConfigProvider>
       </SWRConfig>

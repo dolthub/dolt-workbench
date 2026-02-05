@@ -10,6 +10,7 @@ import cx from "classnames";
 import { ReactNode, useState } from "react";
 import Wrapper from "./Wrapper";
 import css from "./index.module.css";
+import useAgentLayout from "./useAgentLayout";
 
 type Props = {
   title?: string;
@@ -36,6 +37,11 @@ export default function DatabaseLayout(props: Props) {
   const useFullWidth = forDataTable || !!props.wide;
   const { isMobile } = useReactiveWidth(1024);
   const [showTableNav, setShowTableNav] = useState(false);
+  const { contentStyle } = useAgentLayout(
+    props.params.databaseName,
+    showSmallHeader,
+  );
+
   return (
     <Wrapper params={props.params}>
       <DatabaseHeaderAndNav
@@ -51,6 +57,7 @@ export default function DatabaseLayout(props: Props) {
           [css.contentWithHeader]: !!showHeader,
           [css.contentWithSmallHeader]: showSmallHeader,
         })}
+        style={contentStyle}
       >
         {props.leftTableNav || (
           <DatabaseTableNav

@@ -1,0 +1,101 @@
+.message {
+  @apply p-3 rounded-lg overflow-hidden break-words max-w-full box-border;
+}
+
+.userMessage {
+  @apply bg-sky-50 border border-sky-100 ml-[15%];
+}
+
+.assistantMessage {
+  @apply bg-stone-50 border border-stone-100 mr-[15%];
+}
+
+.streaming {
+  @apply border-sky-300;
+}
+
+.role {
+  @apply text-xs font-semibold text-stone-500 mb-1;
+}
+
+.content {
+  @apply text-sm text-stone-700 overflow-hidden break-words;
+}
+
+.markdown {
+  @apply text-sm overflow-hidden !bg-transparent break-words;
+}
+
+.markdown > div {
+  @apply !bg-transparent overflow-hidden;
+}
+
+.markdown p {
+  @apply my-2;
+}
+
+.markdown p:first-child {
+  @apply mt-0;
+}
+
+.markdown p:last-child {
+  @apply mb-0;
+}
+
+.markdown ul,
+.markdown ol {
+  @apply my-2 pl-5;
+}
+
+.markdown li {
+  @apply my-1;
+}
+
+.markdown code {
+  @apply bg-stone-100 px-1 py-0.5 rounded text-xs font-mono;
+}
+
+.markdown pre {
+  @apply bg-stone-100 p-3 rounded overflow-x-auto my-2;
+}
+
+.markdown pre code {
+  @apply bg-transparent p-0;
+}
+
+.markdown table {
+  @apply border-collapse my-2 block overflow-x-auto max-w-full;
+}
+
+.markdown th,
+.markdown td {
+  @apply border border-stone-100 px-2 py-1 text-left;
+}
+
+.markdown th {
+  @apply bg-stone-100 font-semibold;
+}
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  @apply font-semibold mt-3 mb-2;
+}
+
+.markdown h1 {
+  @apply text-lg;
+}
+
+.markdown h2 {
+  @apply text-base;
+}
+
+.markdown h3,
+.markdown h4 {
+  @apply text-sm;
+}
+
+.thinking {
+  @apply text-stone-400 italic;
+}
