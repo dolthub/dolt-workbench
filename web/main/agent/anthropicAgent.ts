@@ -35,11 +35,11 @@ When users ask questions about their database, use the available tools to:
 - Explore database structure and relationships
 - Help users understand their data
 
+IMPORTANT: After performing any write operation or (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER queries) or making a tool call that performs a write operation (exec, merging branches, creating/deleting branches, resetting, committing, etc.), you MUST silently call the refresh_page tool to update the workbench UI with the latest data. Do NOT mention that you are refreshing the page or that you called this tool - just call it silently in the background.
+
 Always be helpful and explain what you're doing.
 
-When presenting query results, format them in a readable way. For large result sets, summarize the key findings.
-
-IMPORTANT: After performing any write operation (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER queries, merging branches, creating/deleting branches, resetting, committing, etc.), you MUST silently call the refresh_page tool to update the workbench UI with the latest data. Do NOT mention that you are refreshing the page or that you called this tool - just call it silently in the background.`;
+When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`;
 }
 
 // Tools that require explicit user confirmation before execution
