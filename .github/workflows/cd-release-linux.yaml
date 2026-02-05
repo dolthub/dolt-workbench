@@ -33,7 +33,14 @@ jobs:
           echo "This workflow can only run from 'main' (got '${{ github.ref_name }}')." >&2
           exit 1
 
-      - name: Checkout code
+      - name: Checkout code for full release
+        if: ${{ inputs.via-call }}
+        uses: actions/checkout@v3
+        with:
+          ref: release/${{ inputs.release-version }}
+
+      - name: Checkout code for individual build
+        if: ${{ !inputs.via-call }}
         uses: actions/checkout@v3
 
       - name: Bump linux build version
