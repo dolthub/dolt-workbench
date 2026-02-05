@@ -1,21 +1,15 @@
 .container {
-  @apply flex flex-col h-full flex-1 bg-white border-l border-stone-300 relative;
-  min-width: 0;
-  width: 100%;
+  @apply flex flex-col h-full flex-1 bg-white border-l border-stone-300 relative min-w-0 w-full;
 }
 
 .closeButton {
   @apply absolute top-2 right-4 z-10 w-8 h-8 flex items-center justify-center;
   @apply text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full;
-  @apply text-2xl font-light bg-transparent border-none cursor-pointer;
-  line-height: 1;
-  transition: all 0.15s ease;
+  @apply text-2xl font-light bg-transparent border-none cursor-pointer leading-none transition-all duration-150;
 }
 
 .messagesContainer {
-  @apply flex-1 overflow-y-auto overflow-x-hidden p-4 pr-9 space-y-4;
-  min-width: 0;
-  width: 100%;
+  @apply flex-1 overflow-y-auto overflow-x-hidden p-4 pr-9 space-y-4 min-w-0 w-full;
 }
 
 .emptyState {
@@ -27,21 +21,15 @@
 }
 
 .message {
-  @apply p-3 rounded-lg overflow-hidden;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  box-sizing: border-box;
+  @apply p-3 rounded-lg overflow-hidden break-words max-w-full box-border;
 }
 
 .userMessage {
-  @apply bg-sky-50 border border-sky-100;
-  margin-left: 15%;
+  @apply bg-sky-50 border border-sky-100 ml-[15%];
 }
 
 .assistantMessage {
-  @apply bg-stone-50 border border-stone-100;
-  margin-right: 15%;
+  @apply bg-stone-50 border border-stone-100 mr-[15%];
 }
 
 .streamingMessage {
@@ -53,21 +41,15 @@
 }
 
 .messageContent {
-  @apply text-sm text-stone-700 overflow-hidden;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  @apply text-sm text-stone-700 overflow-hidden break-words;
 }
 
 .markdownContent {
-  @apply text-sm overflow-hidden;
-  background: transparent !important;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  @apply text-sm overflow-hidden !bg-transparent break-words;
 }
 
 .markdownContent > div {
-  background: transparent !important;
-  overflow: hidden;
+  @apply !bg-transparent overflow-hidden;
 }
 
 .markdownContent p {
@@ -104,10 +86,7 @@
 }
 
 .markdownContent table {
-  @apply border-collapse my-2;
-  display: block;
-  overflow-x: auto;
-  max-width: 100%;
+  @apply border-collapse my-2 block overflow-x-auto max-w-full;
 }
 
 .markdownContent th,
@@ -140,14 +119,11 @@
 }
 
 .toolCallsContainer {
-  @apply mt-3;
-  min-width: 0;
-  max-width: 100%;
+  @apply mt-3 min-w-0 max-w-full;
 }
 
 .toolCallsToggle {
-  @apply flex items-center gap-2 px-3 py-2 text-sm text-stone-600 bg-stone-100 hover:bg-stone-300 rounded cursor-pointer border-none w-full text-left;
-  transition: background-color 0.15s ease;
+  @apply flex items-center gap-2 px-3 py-2 text-sm text-stone-600 bg-stone-100 hover:bg-stone-300 rounded cursor-pointer border-none w-full text-left transition-colors duration-150;
 }
 
 .toolCallsToggleIcon {
@@ -219,11 +195,7 @@
 }
 
 .toolCode {
-  @apply text-xs font-mono bg-stone-50 p-2 rounded overflow-x-auto whitespace-pre-wrap break-all;
-  max-height: 200px;
-  max-width: 100%;
-  overflow-y: auto;
-  box-sizing: border-box;
+  @apply text-xs font-mono bg-stone-50 p-2 rounded overflow-x-auto whitespace-pre-wrap break-all max-h-[200px] max-w-full overflow-y-auto box-border;
 }
 
 .toolCodeError {
@@ -231,10 +203,7 @@
 }
 
 .inputContainer {
-  @apply p-4 border-t border-stone-300 bg-white;
-  min-width: 0;
-  width: 100%;
-  box-sizing: border-box;
+  @apply p-4 border-t border-stone-300 bg-white min-w-0 w-full box-border;
 }
 
 .inputForm {
@@ -274,8 +243,7 @@
 }
 
 .textButton {
-  @apply text-xs text-stone-400 hover:text-stone-600 bg-transparent border-none cursor-pointer underline;
-  transition: color 0.15s ease;
+  @apply text-xs text-stone-400 hover:text-stone-600 bg-transparent border-none cursor-pointer underline transition-colors duration-150;
 }
 
 .textButton:disabled {
@@ -341,9 +309,7 @@
 }
 
 .confirmationCode {
-  @apply text-xs font-mono bg-stone-100 p-3 rounded overflow-x-auto whitespace-pre-wrap;
-  max-height: 150px;
-  overflow-y: auto;
+  @apply text-xs font-mono bg-stone-100 p-3 rounded overflow-x-auto whitespace-pre-wrap max-h-[150px] overflow-y-auto;
 }
 
 .confirmationWarning {

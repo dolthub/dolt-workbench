@@ -1,7 +1,6 @@
 .panel {
-  @apply fixed top-24 right-0 bottom-0 z-50 shadow-xl bg-white flex;
+  @apply fixed top-24 right-0 bottom-0 z-50 shadow-xl bg-white flex overflow-hidden;
   animation: slideIn 0.2s ease-out;
-  overflow: hidden;
 }
 
 .panel.smallHeader {
@@ -18,8 +17,7 @@
 }
 
 .resizeHandle {
-  @apply absolute top-0 bottom-0 left-0 w-1 bg-transparent hover:bg-sky-400 cursor-ew-resize z-20;
-  transition: background-color 0.15s ease;
+  @apply absolute top-0 bottom-0 left-0 w-1 bg-transparent hover:bg-sky-400 cursor-ew-resize z-20 transition-colors duration-150;
 }
 
 .resizeHandle:active {
