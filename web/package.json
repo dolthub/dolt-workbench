@@ -101,7 +101,7 @@
     "@types/react-timeago": "^8.0.0",
     "@types/url-parse": "^1",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
-    "@typescript-eslint/parser": "^8.38.0",
+    "@typescript-eslint/parser": "^8.54.0",
     "adm-zip": "^0.5.16",
     "autoprefixer": "^10.4.23",
     "babel-jest": "^29.7.0",
