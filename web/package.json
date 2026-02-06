@@ -107,7 +107,7 @@
     "babel-jest": "^29.7.0",
     "cssnano": "^7.0.7",
     "electron": "^36.8.1",
-    "electron-builder": "^26.4.0",
+    "electron-builder": "26.0.16",
     "eslint": "^9.39.1",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-airbnb-typescript": "^18.0.0",
