@@ -51,6 +51,7 @@ WORKDIR /app/web
 
 # Copy the package.json and yarn.lock files
 COPY web/yarn.lock web/package.json web/.yarnrc.yml ./
+COPY web/.yarn/patches ./.yarn/patches
 
 # Install dependencies
 RUN corepack enable
