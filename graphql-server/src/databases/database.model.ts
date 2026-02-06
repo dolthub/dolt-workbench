@@ -26,4 +26,13 @@ export class DatabaseConnection {
 
   @Field({ nullable: true })
   isLocalDolt?: boolean;
+
+  @Field({ nullable: true })
+  certificateAuthority?: string;
+
+  @Field({ nullable: true })
+  clientCert?: string;
+
+  @Field({ nullable: true })
+  clientKey?: string;
 }
