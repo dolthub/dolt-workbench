@@ -41,6 +41,9 @@ files:
 extraFiles:
   - from: node_modules/@anthropic-ai/claude-agent-sdk
     to: Resources/node_modules/@anthropic-ai/claude-agent-sdk
+    filter:
+      - "**/*"
+      - "!**/vendor/ripgrep/**"
   - from: ../graphql-server/dist
     to: graphql-server/dist
   - from: ../graphql-server/node_modules
