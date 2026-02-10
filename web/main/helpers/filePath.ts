@@ -70,7 +70,6 @@ export function getClaudeCliPaths(): string {
       process.resourcesPath,
       "node_modules",
       "@anthropic-ai",
-      "node_modules",
       "claude-agent-sdk",
       "cli.js",
     );
