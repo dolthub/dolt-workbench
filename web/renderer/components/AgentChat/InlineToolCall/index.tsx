@@ -90,12 +90,6 @@ export default function InlineToolCall({ block }: Props) {
               e.stopPropagation();
               cancelToolCall(block.id, block.name);
             }}
-            onKeyDown={e => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.stopPropagation();
-                cancelToolCall(block.id, block.name);
-              }
-            }}
             title="Cancel this tool call"
           >
             <span className={css.stopIcon} />
