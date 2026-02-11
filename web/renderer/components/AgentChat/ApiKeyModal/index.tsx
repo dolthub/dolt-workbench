@@ -1,4 +1,4 @@
-import { FormInput, FormModal } from "@dolthub/react-components";
+import { ExternalLink, FormInput, FormModal } from "@dolthub/react-components";
 import { SyntheticEvent, useEffect, useState } from "react";
 import css from "./index.module.css";
 
@@ -49,7 +49,11 @@ export default function ApiKeyModal({
     >
       <p className={css.description}>
         Enter your Anthropic API key to enable the AI agent. Your key will be
-        stored for future sessions.
+        stored for future sessions. You can find your API key{" "}
+        <ExternalLink href="https://platform.claude.com/settings/keys">
+          here
+        </ExternalLink>
+        .
       </p>
       <FormInput
         value={apiKey}
