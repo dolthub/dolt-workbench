@@ -272,25 +272,25 @@ export class ClaudeAgent {
 
     const workbenchMcpServer = this.createWorkbenchMcpServer();
 
-      const queryOptions: Parameters<typeof query>[0] = {
-        prompt: userMessage,
-        options: {
-          model: "claude-opus-4-6",
-          systemPrompt,
-          pathToClaudeCodeExecutable: getClaudeCliPaths(),
-          env: getAgentEnv(),
-          mcpServers: {
-            dolt: {
-              command: mcpServerPath,
-              args: mcpArgs,
-            },
-            workbench: workbenchMcpServer,
+    const queryOptions: Parameters<typeof query>[0] = {
+      prompt: userMessage,
+      options: {
+        model: "claude-opus-4-6",
+        systemPrompt,
+        pathToClaudeCodeExecutable: getClaudeCliPaths(),
+        env: getAgentEnv(),
+        mcpServers: {
+          dolt: {
+            command: mcpServerPath,
+            args: mcpArgs,
           },
-          permissionMode: "default",
-          canUseTool: async (toolName, input, options) =>
-            this.canUseTool(toolName, input, { toolUseID: options.toolUseID }),
+          workbench: workbenchMcpServer,
         },
-      };
+        permissionMode: "default",
+        canUseTool: async (toolName, input, options) =>
+          this.canUseTool(toolName, input, { toolUseID: options.toolUseID }),
+      },
+    };
 
     // Resume session if we have one
     if (this.sessionId) {
