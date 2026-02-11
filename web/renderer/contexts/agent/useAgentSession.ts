@@ -166,19 +166,28 @@ export function useAgentSession(): AgentSessionState {
     });
 
     window.ipc.onAgentInterrupted(() => {
-      // Dismiss any pending tool confirmations on interrupted messages
+      // Mark any pending tool confirmations or in-flight tool calls as cancelled
       setMessages(prev =>
         prev.map(msg => {
           if (msg.role !== "assistant") return msg;
-          const hasConfirmation = msg.contentBlocks.some(
-            block => block.type === "tool_use" && block.pendingConfirmation,
+          const hasPending = msg.contentBlocks.some(
+            block =>
+              block.type === "tool_use" &&
+              (block.pendingConfirmation || block.result === undefined),
           );
-          if (!hasConfirmation) return msg;
+          if (!hasPending) return msg;
           const updatedBlocks = msg.contentBlocks.map(block => {
             if (block.type === "tool_use" && block.pendingConfirmation) {
               return {
                 ...block,
                 pendingConfirmation: false,
+                isError: true,
+                result: "Interrupted by new message",
+              };
+            }
+            if (block.type === "tool_use" && block.result === undefined) {
+              return {
+                ...block,
                 isError: true,
                 result: "Interrupted by new message",
               };
