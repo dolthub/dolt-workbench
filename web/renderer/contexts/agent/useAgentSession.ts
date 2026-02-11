@@ -33,6 +33,7 @@ export type AgentSessionState = ConnectionState & {
   messages: AgentMessage[];
   confirmToolCall: (toolUseId: string) => void;
   denyToolCall: (toolUseId: string) => void;
+  cancelToolCall: (toolUseId: string, toolName: string) => void;
   connect: (apiKey: string, config: McpServerConfig) => Promise<boolean>;
   sendMessage: (message: string) => Promise<void>;
   disconnect: () => Promise<void>;
@@ -166,6 +167,40 @@ export function useAgentSession(): AgentSessionState {
       window.dispatchEvent(new CustomEvent("agent-refresh-page"));
     });
 
+    window.ipc.onAgentInterrupted(() => {
+      // Mark any pending tool confirmations or in-flight tool calls as cancelled
+      setMessages(prev =>
+        prev.map(msg => {
+          if (msg.role !== "assistant") return msg;
+          const hasPending = msg.contentBlocks.some(
+            block =>
+              block.type === "tool_use" &&
+              (block.pendingConfirmation || block.result === undefined),
+          );
+          if (!hasPending) return msg;
+          const updatedBlocks = msg.contentBlocks.map(block => {
+            if (block.type === "tool_use" && block.pendingConfirmation) {
+              return {
+                ...block,
+                pendingConfirmation: false,
+                isError: true,
+                result: "Interrupted by new message",
+              };
+            }
+            if (block.type === "tool_use" && block.result === undefined) {
+              return {
+                ...block,
+                isError: true,
+                result: "Interrupted by new message",
+              };
+            }
+            return block;
+          });
+          return { ...msg, contentBlocks: updatedBlocks };
+        }),
+      );
+    });
+
     return () => window.ipc?.removeAgentListeners?.();
   }, [setConnState]);
 
@@ -208,7 +243,7 @@ export function useAgentSession(): AgentSessionState {
         return;
       }
 
-      setConnState({ isLoading: true, isStreaming: true, error: null });
+      setConnState({ isStreaming: true, error: null });
 
       const timestamp = Date.now();
       const userMessage: AgentMessage = {
@@ -226,7 +261,17 @@ export function useAgentSession(): AgentSessionState {
         timestamp,
       };
 
-      setMessages(prev => [...prev, userMessage, assistantMessage]);
+      // If last message is a streaming assistant (interrupt), mark it as done
+      setMessages(prev => {
+        const updated = [...prev];
+        if (updated.length > 0) {
+          const lastMsg = updated[updated.length - 1];
+          if (lastMsg.role === "assistant" && lastMsg.isStreaming) {
+            updated[updated.length - 1] = { ...lastMsg, isStreaming: false };
+          }
+        }
+        return [...updated, userMessage, assistantMessage];
+      });
 
       try {
         const result = await window.ipc.agentSendMessage(message);
@@ -235,7 +280,6 @@ export function useAgentSession(): AgentSessionState {
           setConnState({
             error: result.error ?? "Failed to send message",
             isStreaming: false,
-            isLoading: false,
           });
           // Remove the empty assistant message on failure
           setMessages(prev => prev.slice(0, -1));
@@ -246,7 +290,6 @@ export function useAgentSession(): AgentSessionState {
         setConnState({
           error: errorMessage,
           isStreaming: false,
-          isLoading: false,
         });
         // Remove the empty assistant message on failure
         setMessages(prev => prev.slice(0, -1));
@@ -326,6 +369,26 @@ export function useAgentSession(): AgentSessionState {
     );
   }, []);
 
+  const cancelToolCall = useCallback((toolUseId: string, toolName: string) => {
+    if (typeof window === "undefined" || !window.ipc) return;
+
+    // Mark the tool as cancelled in the UI, keep the same message streaming
+    setMessages(prev =>
+      prev.map(msg => {
+        if (msg.role !== "assistant") return msg;
+        const updatedBlocks = msg.contentBlocks.map(block => {
+          if (block.type === "tool_use" && block.id === toolUseId) {
+            return { ...block, result: "Cancelled by user", isError: true };
+          }
+          return block;
+        });
+        return { ...msg, contentBlocks: updatedBlocks };
+      }),
+    );
+
+    void window.ipc.agentCancelTool(toolName);
+  }, []);
+
   return {
     mcpConfig,
     setMcpConfig,
@@ -336,6 +399,7 @@ export function useAgentSession(): AgentSessionState {
     error: connState.error,
     confirmToolCall,
     denyToolCall,
+    cancelToolCall,
     connect,
     sendMessage,
     disconnect,

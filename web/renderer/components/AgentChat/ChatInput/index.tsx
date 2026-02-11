@@ -5,15 +5,14 @@ import css from "./index.module.css";
 type Props = {
   onSend: (message: string) => void;
   disabled?: boolean;
-  isLoading?: boolean;
 };
 
-export default function ChatInput({ onSend, disabled, isLoading }: Props) {
+export default function ChatInput({ onSend, disabled }: Props) {
   const [message, setMessage] = useState("");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (message.trim() && !disabled && !isLoading) {
+    if (message.trim() && !disabled) {
       onSend(message.trim());
       setMessage("");
     }
@@ -34,16 +33,16 @@ export default function ChatInput({ onSend, disabled, isLoading }: Props) {
         onKeyDown={handleKeyDown}
         placeholder="Ask about your database..."
         rows={2}
-        disabled={disabled || isLoading}
+        disabled={disabled}
         className={css.textarea}
         light
       />
       <Button
         type="submit"
-        disabled={!message.trim() || disabled || isLoading}
+        disabled={!message.trim() || disabled}
         className={css.sendButton}
       >
-        {isLoading ? "Thinking..." : "Send"}
+        Send
       </Button>
     </form>
   );

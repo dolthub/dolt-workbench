@@ -120,6 +120,8 @@ const handler = {
   agentDisconnect: async () => ipcRenderer.invoke("agent:disconnect"),
   agentClearHistory: async () => ipcRenderer.invoke("agent:clear-history"),
   agentAbort: async () => ipcRenderer.invoke("agent:abort"),
+  agentCancelTool: async (toolName: string) =>
+    ipcRenderer.invoke("agent:cancel-tool", toolName),
 
   // API Key storage
   agentGetApiKey: async (): Promise<string | null> =>
@@ -156,6 +158,8 @@ const handler = {
     ipcRenderer.on("agent:switch-branch", (_event, value) => callback(value)),
   onAgentRefreshPage: (callback: () => void) =>
     ipcRenderer.on("agent:refresh-page", () => callback()),
+  onAgentInterrupted: (callback: () => void) =>
+    ipcRenderer.on("agent:interrupted", () => callback()),
 
   // Send tool confirmation response
   agentToolConfirmationResponse: (confirmed: boolean) =>
@@ -170,6 +174,7 @@ const handler = {
     ipcRenderer.removeAllListeners("agent:tool-confirmation-request");
     ipcRenderer.removeAllListeners("agent:switch-branch");
     ipcRenderer.removeAllListeners("agent:refresh-page");
+    ipcRenderer.removeAllListeners("agent:interrupted");
   },
 };
 

@@ -83,6 +83,7 @@ export type AgentContextType = {
   // Tool confirmation (inline)
   confirmToolCall: (toolUseId: string) => void;
   denyToolCall: (toolUseId: string) => void;
+  cancelToolCall: (toolUseId: string, toolName: string) => void;
 
   // Actions
   connect: (apiKey: string, mcpConfig: McpServerConfig) => Promise<boolean>;

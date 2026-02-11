@@ -46,6 +46,14 @@
   @apply text-stone-400 font-mono;
 }
 
+.stopButton {
+  @apply mr-2 p-1.5 flex items-center justify-center rounded hover:bg-stone-100 cursor-pointer border-none bg-transparent;
+}
+
+.stopIcon {
+  @apply text-red-300 text-xl;
+}
+
 .details {
   @apply px-3 py-2 border-t border-stone-300 bg-white;
 }
