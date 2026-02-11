@@ -33,7 +33,7 @@ function getStatusIcon(
 }
 
 export default function InlineToolCall({ block }: Props) {
-  const { confirmToolCall, denyToolCall } = useAgentContext();
+  const { confirmToolCall, denyToolCall, cancelToolCall } = useAgentContext();
   const [isExpanded, setIsExpanded] = useState(
     block.pendingConfirmation ?? false,
   );
@@ -81,6 +81,26 @@ export default function InlineToolCall({ block }: Props) {
             ? `Confirm: ${formatToolName(block.name)}`
             : formatToolName(block.name)}
         </span>
+        {isPending && (
+          <span
+            role="button"
+            tabIndex={0}
+            className={css.stopButton}
+            onClick={e => {
+              e.stopPropagation();
+              cancelToolCall(block.id, block.name);
+            }}
+            onKeyDown={e => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.stopPropagation();
+                cancelToolCall(block.id, block.name);
+              }
+            }}
+            title="Cancel this tool call"
+          >
+            <span className={css.stopIcon} />
+          </span>
+        )}
         <span className={css.expandIcon}>{isExpanded ? "\u2212" : "+"}</span>
       </button>
 

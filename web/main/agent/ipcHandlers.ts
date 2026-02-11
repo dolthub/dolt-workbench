@@ -64,16 +64,13 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
   // Send message to agent
   ipcMain.handle(
     "agent:send-message",
-    async (
-      _,
-      message: string,
-    ): Promise<{ success: boolean; error?: string }> => {
+    (_, message: string): { success: boolean; error?: string } => {
       if (!claudeAgent) {
         return { success: false, error: "Agent not connected" };
       }
 
       try {
-        await claudeAgent.sendMessage(message);
+        claudeAgent.sendMessage(message);
         return { success: true };
       } catch (error) {
         console.error("Agent send message error:", error);
@@ -113,6 +110,26 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
         claudeAgent.clearHistory();
       }
       return { success: true };
+    },
+  );
+
+  // Cancel a specific tool call and resume
+  ipcMain.handle(
+    "agent:cancel-tool",
+    (_, toolName: string): { success: boolean; error?: string } => {
+      if (!claudeAgent) {
+        return { success: false, error: "Agent not connected" };
+      }
+
+      try {
+        claudeAgent.cancelToolCall(toolName);
+        return { success: true };
+      } catch (error) {
+        console.error("Agent cancel tool error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Failed to cancel tool";
+        return { success: false, error: errorMessage };
+      }
     },
   );
 
