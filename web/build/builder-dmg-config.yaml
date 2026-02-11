@@ -36,6 +36,8 @@ files:
       - node_modules/require-from-string
       - node_modules/semver
       - node_modules/type-fest
+      - node_modules/update-electron-app
+      - node_modules/ms
       - node_modules/uuid
 extraFiles:
   - from: node_modules/@anthropic-ai/claude-agent-sdk
@@ -69,6 +71,7 @@ mac:
     CFBundleIconFile: AppIcon
   target:
     - target: dmg
+    - target: zip
   artifactName: ${productName}-mac-${arch}.${ext}
   hardenedRuntime: true
   gatekeeperAssess: false

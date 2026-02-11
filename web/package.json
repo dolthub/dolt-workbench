@@ -3,6 +3,7 @@
   "name": "dolt-workbench",
   "description": "SQL workbench for MySQL and PostgreSQL databases",
   "homepage": "https://github.com/dolthub/dolt-workbench",
+  "repository": "dolthub/dolt-workbench",
   "version": "0.3.62",
   "main": "app/background.js",
   "author": "DoltHub",
@@ -71,6 +72,7 @@
     "sharp": "^0.34.3",
     "swr": "^2.3.6",
     "tailwindcss": "^3.4.15",
+    "update-electron-app": "^3.1.2",
     "url-parse": "^1.5.10",
     "uuid": "^11.1.0"
   },

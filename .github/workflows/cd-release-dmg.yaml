@@ -118,7 +118,9 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: v${{ inputs.release-version }}
-          files: ${{ github.workspace }}/web/dist/DoltWorkbench-mac-arm64.dmg
+          files: |
+            ${{ github.workspace }}/web/dist/DoltWorkbench-mac-arm64.dmg
+            ${{ github.workspace }}/web/dist/DoltWorkbench-mac-arm64.zip
 
   commit-build-version:
     name: Commit new build version

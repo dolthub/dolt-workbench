@@ -82,6 +82,8 @@ jobs:
           tag_name: v${{ inputs.release-version }}
           files: |
             ${{ github.workspace }}/web/dist/Dolt-Workbench-win-x64.exe
+            ${{ github.workspace }}/web/dist/*.nupkg
+            ${{ github.workspace }}/web/dist/RELEASES
 
       - name: Upload app store artifact
         uses: actions/upload-artifact@v4
