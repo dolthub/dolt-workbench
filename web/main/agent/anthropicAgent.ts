@@ -4,6 +4,7 @@ import {
   query,
   tool,
 } from "@anthropic-ai/claude-agent-sdk";
+import type { Query } from "@anthropic-ai/claude-agent-sdk";
 import { execSync } from "child_process";
 import { BrowserWindow, ipcMain } from "electron";
 import { z } from "zod";
@@ -35,7 +36,7 @@ When users ask questions about their database, use the available tools to:
 - Explore database structure and relationships
 - Help users understand their data
 
-IMPORTANT: 
+IMPORTANT:
 - After performing any write operation (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER queries) or making a tool call that performs a write operation (exec, merging branches, creating/deleting branches, resetting, committing, etc.), you MUST silently call the refresh_page tool to update the workbench UI with the latest data. Do NOT mention that you are refreshing the page or that you called this tool - just call it silently in the background. These refresh calls should happen after EVERY write operation. For example, if you decide to make two 'exec' calls and a 'delete_dolt_branch' call, the order of tool calls should be 'exec' -> 'refresh_page' -> 'exec' -> 'refresh_page' -> 'delete_dolt_branch' -> 'refresh_page'.
 - If the user asks you to create or modify the README.md, LICENSE.md, or AGENT.md, use the 'dolt_docs' system table.
 
@@ -93,13 +94,18 @@ export class ClaudeAgent {
   private mainWindow: BrowserWindow;
   private config: AgentConfig;
   private sessionId: string | null = null;
-  private abortController: AbortController | null = null;
+  private queryHandle: Query | null = null;
+  private isProcessing = false;
   private pendingConfirmation: {
     resolve: (result: PermissionResult) => void;
     toolName: string;
     input: Record<string, unknown>;
     toolUseId: string;
   } | null = null;
+
+  // Track content blocks for the current turn
+  private contentBlocks: ContentBlock[] = [];
+  private toolCallMap = new Map<string, number>();
 
   constructor(config: AgentConfig, mainWindow: BrowserWindow) {
     this.config = config;
@@ -244,64 +250,67 @@ export class ClaudeAgent {
     return args;
   }
 
-  async sendMessage(userMessage: string): Promise<void> {
-    this.abortController = new AbortController();
+  private startQuery(userMessage: string, preserveContent = false): void {
+    if (!preserveContent) {
+      this.contentBlocks = [];
+      this.toolCallMap.clear();
+    }
+    this.isProcessing = true;
 
-    try {
-      const mcpServerPath = getMcpServerPath();
-      const mcpArgs = this.getMcpServerArgs();
+    const mcpServerPath = getMcpServerPath();
+    const mcpArgs = this.getMcpServerArgs();
 
-      console.log(
-        "Starting Claude Agent query with MCP server:",
-        mcpServerPath,
-      );
+    console.log("MCP server:", mcpServerPath);
+    console.log("MCP args:", mcpArgs);
 
-      console.log("MCP args:", mcpArgs);
+    const { mcpConfig } = this.config;
+    const systemPrompt = getSystemPrompt(
+      mcpConfig.database,
+      mcpConfig.type,
+      mcpConfig.isDolt,
+    );
 
-      const { mcpConfig } = this.config;
-      const systemPrompt = getSystemPrompt(
-        mcpConfig.database,
-        mcpConfig.type,
-        mcpConfig.isDolt,
-      );
+    const workbenchMcpServer = this.createWorkbenchMcpServer();
 
-      // Create SDK MCP server with workbench-specific tools
-      const workbenchMcpServer = this.createWorkbenchMcpServer();
-
-      const queryOptions: Parameters<typeof query>[0] = {
-        prompt: userMessage,
-        options: {
-          systemPrompt,
-          pathToClaudeCodeExecutable: getClaudeCliPaths(),
-          env: getAgentEnv(),
-          mcpServers: {
-            dolt: {
-              command: mcpServerPath,
-              args: mcpArgs,
-            },
-            workbench: workbenchMcpServer,
+    const queryOptions: Parameters<typeof query>[0] = {
+      prompt: userMessage,
+      options: {
+        systemPrompt,
+        pathToClaudeCodeExecutable: getClaudeCliPaths(),
+        env: getAgentEnv(),
+        mcpServers: {
+          dolt: {
+            command: mcpServerPath,
+            args: mcpArgs,
           },
-          // Don't pre-allow tools - let canUseTool handle permissions
-          permissionMode: "default",
-          abortController: this.abortController,
-          canUseTool: async (toolName, input, options) =>
-            this.canUseTool(toolName, input, { toolUseID: options.toolUseID }),
+          workbench: workbenchMcpServer,
         },
+        permissionMode: "default",
+        canUseTool: async (toolName, input, options) =>
+          this.canUseTool(toolName, input, { toolUseID: options.toolUseID }),
+      },
+    };
+
+    // Resume session if we have one
+    if (this.sessionId) {
+      queryOptions.options = {
+        ...queryOptions.options,
+        resume: this.sessionId,
       };
+    }
 
-      // Resume session if we have one
-      if (this.sessionId) {
-        queryOptions.options = {
-          ...queryOptions.options,
-          resume: this.sessionId,
-        };
-      }
+    this.queryHandle = query(queryOptions);
 
-      // Track content blocks in order as they arrive
-      const contentBlocks: ContentBlock[] = [];
-      const toolCallMap = new Map<string, number>(); // tool id -> index in contentBlocks
+    // Fire and forget - processEvents runs in background
+    void this.processEvents(this.queryHandle);
+  }
 
-      for await (const message of query(queryOptions)) {
+  private async processEvents(handle: Query): Promise<void> {
+    try {
+      for await (const message of handle) {
+        // If a newer query started, stop processing stale events
+        if (this.queryHandle !== handle) return;
+
         // Handle system init message - capture session ID and MCP status
         if (message.type === "system" && message.subtype === "init") {
           this.sessionId = message.session_id;
@@ -341,7 +350,7 @@ export class ClaudeAgent {
                   type: "text",
                   text: block.text,
                 };
-                contentBlocks.push(textBlock);
+                this.contentBlocks.push(textBlock);
                 this.sendEvent("agent:content-block", textBlock);
               } else if (block.type === "tool_use") {
                 const toolBlock: ContentBlock = {
@@ -350,8 +359,8 @@ export class ClaudeAgent {
                   name: block.name,
                   input: block.input as Record<string, unknown>,
                 };
-                toolCallMap.set(block.id, contentBlocks.length);
-                contentBlocks.push(toolBlock);
+                this.toolCallMap.set(block.id, this.contentBlocks.length);
+                this.contentBlocks.push(toolBlock);
                 this.sendEvent("agent:content-block", toolBlock);
               }
             }
@@ -378,9 +387,11 @@ export class ClaudeAgent {
                 };
 
                 // Update the corresponding tool_use block with the result
-                const blockIndex = toolCallMap.get(toolResultBlock.tool_use_id);
+                const blockIndex = this.toolCallMap.get(
+                  toolResultBlock.tool_use_id,
+                );
                 if (blockIndex !== undefined) {
-                  const toolBlock = contentBlocks[blockIndex];
+                  const toolBlock = this.contentBlocks[blockIndex];
                   if (toolBlock.type === "tool_use") {
                     toolBlock.result = toolResultBlock.content;
                     toolBlock.isError = toolResultBlock.is_error;
@@ -388,7 +399,7 @@ export class ClaudeAgent {
                 }
 
                 // Send tool result event with the tool ID so renderer can update
-                const toolBlock = contentBlocks[blockIndex ?? -1] as
+                const toolBlock = this.contentBlocks[blockIndex ?? -1] as
                   | { name?: string }
                   | undefined;
                 const resultEvent: ToolResultEvent = {
@@ -406,7 +417,7 @@ export class ClaudeAgent {
         if (message.type === "result") {
           if (message.subtype === "success") {
             this.sendEvent("agent:message-complete", {
-              contentBlocks,
+              contentBlocks: this.contentBlocks,
             });
           } else {
             // Error subtypes have 'errors' array
@@ -418,23 +429,93 @@ export class ClaudeAgent {
         }
       }
     } catch (error) {
+      // Ignore errors from stale/interrupted queries
+      if (this.queryHandle !== handle) return;
+
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
       console.error("Claude Agent error:", error);
       this.sendEvent("agent:error", { error: errorMessage });
-      throw error;
     } finally {
-      this.abortController = null;
+      // Only clean up state if this is still the active query
+      if (this.queryHandle === handle) {
+        this.queryHandle = null;
+        this.isProcessing = false;
+      }
     }
+  }
+
+  sendMessage(userMessage: string): void {
+    if (this.isProcessing) {
+      // Deny any pending tool confirmation
+      if (this.pendingConfirmation) {
+        const { resolve, toolName } = this.pendingConfirmation;
+        this.pendingConfirmation = null;
+        resolve({
+          behavior: "deny",
+          message: `Interrupted: User declined to execute ${toolName}`,
+        });
+      }
+
+      // Close the current query to stop it
+      this.queryHandle?.close();
+      this.queryHandle = null;
+      this.isProcessing = false;
+      this.sendEvent("agent:interrupted", {});
+    }
+
+    // Start a fresh query for this message (with resume if we have a session)
+    this.startQuery(userMessage);
+  }
+
+  cancelToolCall(toolName: string): void {
+    if (!this.isProcessing) return;
+
+    // Deny any pending tool confirmation
+    if (this.pendingConfirmation) {
+      const { resolve, toolName: pendingName } = this.pendingConfirmation;
+      this.pendingConfirmation = null;
+      resolve({
+        behavior: "deny",
+        message: `Cancelled: ${pendingName}`,
+      });
+    }
+
+    // Mark the tool as cancelled in our content blocks
+    for (const block of this.contentBlocks) {
+      if (
+        block.type === "tool_use" &&
+        block.name === toolName &&
+        !block.result
+      ) {
+        block.result = "Cancelled by user";
+        block.isError = true;
+      }
+    }
+
+    // Close the current query
+    this.queryHandle?.close();
+    this.queryHandle = null;
+    this.isProcessing = false;
+    this.sendEvent("agent:interrupted", {});
+
+    // Resume with a message informing the agent about the cancellation, preserving existing content
+    this.startQuery(
+      `The user cancelled the execution of the "${toolName}" tool. It did not return a result. Please continue without it.`,
+      true,
+    );
   }
 
   abort(): void {
-    if (this.abortController) {
-      this.abortController.abort();
-    }
+    this.queryHandle?.close();
+    this.queryHandle = null;
+    this.isProcessing = false;
+    this.contentBlocks = [];
+    this.toolCallMap.clear();
   }
 
   clearHistory(): void {
+    this.abort();
     this.sessionId = null;
   }
 }

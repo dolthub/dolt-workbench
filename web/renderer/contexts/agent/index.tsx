@@ -38,6 +38,7 @@ export function AgentProvider({ children }: Props) {
       error: session.error,
       confirmToolCall: session.confirmToolCall,
       denyToolCall: session.denyToolCall,
+      cancelToolCall: session.cancelToolCall,
       connect: session.connect,
       sendMessage: session.sendMessage,
       disconnect: session.disconnect,

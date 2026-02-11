@@ -152,11 +152,7 @@ export default function AgentChat({ onClose }: Props) {
       )}
 
       <div className={css.inputContainer}>
-        <ChatInput
-          onSend={handleSendMessage}
-          disabled={!isConnected}
-          isLoading={isLoading || isStreaming}
-        />
+        <ChatInput onSend={handleSendMessage} disabled={!isConnected} />
         {isConnected && (
           <div className={css.inputActions}>
             <ActionButton onClick={clearHistory} disabled={isLoading}>
