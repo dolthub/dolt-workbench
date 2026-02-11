@@ -51,7 +51,7 @@
 }
 
 .stopIcon {
-  @apply block w-3 h-3 rounded-sm bg-red-300;
+  @apply text-red-300 text-xl;
 }
 
 .details {

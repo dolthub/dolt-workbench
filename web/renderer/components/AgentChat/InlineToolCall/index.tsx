@@ -1,7 +1,8 @@
 import { ToolUseContentBlock, useAgentContext } from "@contexts/agent";
 import { Button } from "@dolthub/react-components";
 import cx from "classnames";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { FaStopCircle } from "@react-icons/all-files/fa/FaStopCircle";
 import css from "./index.module.css";
 
 type Props = {
@@ -50,6 +51,25 @@ export default function InlineToolCall({ block }: Props) {
   const isPendingConfirmation = block.pendingConfirmation;
   const isPending = !hasResult && !isPendingConfirmation;
 
+  // Only show stop button after 2 seconds of pending
+  const [showStop, setShowStop] = useState(false);
+  const stopTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    if (isPending) {
+      stopTimerRef.current = setTimeout(() => setShowStop(true), 2000);
+    } else {
+      setShowStop(false);
+      if (stopTimerRef.current) {
+        clearTimeout(stopTimerRef.current);
+        stopTimerRef.current = null;
+      }
+    }
+    return () => {
+      if (stopTimerRef.current) clearTimeout(stopTimerRef.current);
+    };
+  }, [isPending]);
+
   const formatValue = (value: unknown): string => {
     if (typeof value === "string") return value;
     try {
@@ -81,10 +101,9 @@ export default function InlineToolCall({ block }: Props) {
             ? `Confirm: ${formatToolName(block.name)}`
             : formatToolName(block.name)}
         </span>
-        {isPending && (
-          <span
-            role="button"
-            tabIndex={0}
+        {showStop && (
+          <button
+            type="button"
             className={css.stopButton}
             onClick={e => {
               e.stopPropagation();
@@ -92,8 +111,8 @@ export default function InlineToolCall({ block }: Props) {
             }}
             title="Cancel this tool call"
           >
-            <span className={css.stopIcon} />
-          </span>
+            <FaStopCircle className={css.stopIcon} />
+          </button>
         )}
         <span className={css.expandIcon}>{isExpanded ? "\u2212" : "+"}</span>
       </button>
