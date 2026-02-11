@@ -95,6 +95,8 @@ export function useAgentSession(): AgentSessionState {
         if (lastMessage.role === "assistant") {
           const updatedBlocks = lastMessage.contentBlocks.map(block => {
             if (block.type === "tool_use" && block.id === event.id) {
+              // Don't overwrite results already set by deny/cancel actions
+              if (block.result !== undefined) return block;
               return { ...block, result: event.result, isError: event.isError };
             }
             return block;
