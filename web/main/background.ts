@@ -24,7 +24,7 @@ import {
   removeDoltServerFolder,
 } from "./helpers/removeDoltServerFolder";
 
-const { updateElectronApp } = require('update-electron-app');
+const { updateElectronApp } = require("update-electron-app");
 updateElectronApp();
 
 const isProd = process.env.NODE_ENV === "production";
