@@ -278,7 +278,7 @@ export class ClaudeAgent {
         model: "claude-opus-4-6",
         systemPrompt,
         pathToClaudeCodeExecutable: getClaudeCliPaths(),
-        env: getAgentEnv(),
+        env: { ...getAgentEnv(), ANTHROPIC_API_KEY: this.config.apiKey },
         mcpServers: {
           dolt: {
             command: mcpServerPath,
