@@ -43,15 +43,15 @@ export default function useAgentLayout(
   // Update MCP config in global agent context when connection changes
   useEffect(() => {
     if (connectionData?.currentConnection?.connectionUrl) {
-      const parsed = parseConnectionUrl(
-        connectionData.currentConnection.connectionUrl,
-      );
+      const conn = connectionData.currentConnection;
+      const parsed = parseConnectionUrl(conn.connectionUrl);
       const config: McpServerConfig = {
         ...parsed,
+        port: conn.port ? parseInt(conn.port, 10) : parsed.port,
         database: databaseName,
-        useSSL: connectionData.currentConnection.useSSL ?? false,
-        type: connectionData.currentConnection.type ?? undefined,
-        isDolt: connectionData.currentConnection.isDolt ?? false,
+        useSSL: conn.useSSL ?? false,
+        type: conn.type ?? undefined,
+        isDolt: conn.isDolt ?? false,
       };
       setMcpConfig(config);
     } else {
@@ -63,6 +63,7 @@ export default function useAgentLayout(
     };
   }, [
     connectionData?.currentConnection?.connectionUrl,
+    connectionData?.currentConnection?.port,
     connectionData?.currentConnection?.useSSL,
     connectionData?.currentConnection?.type,
     databaseName,
