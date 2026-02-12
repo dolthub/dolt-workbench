@@ -39,6 +39,8 @@ files:
       - node_modules/type-fest
       - node_modules/update-electron-app
       - node_modules/ms
+      - node_modules/github-url-to-object
+      - node_modules/is-url
       - node_modules/uuid
 extraFiles:
   - from: node_modules/@anthropic-ai/claude-agent-sdk
