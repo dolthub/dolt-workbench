@@ -1,5 +1,5 @@
 import { FormSelect } from "@dolthub/react-components";
-import { MODEL_OPTIONS, MODELS } from "@contexts/agent/types";
+import { DEFAULT_MODEL, MODEL_OPTIONS } from "@contexts/agent/types";
 import css from "./index.module.css";
 
 type Props = {
@@ -18,7 +18,7 @@ export default function ModelSelector({
       <FormSelect
         val={selectedModel}
         onChangeValue={v => {
-          onChangeModel(v ?? MODELS.SONNET);
+          onChangeModel(v ?? DEFAULT_MODEL);
         }}
         options={MODEL_OPTIONS}
         light

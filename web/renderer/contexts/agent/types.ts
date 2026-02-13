@@ -21,7 +21,7 @@ export const MODEL_OPTIONS = [
   { label: "Haiku 4.5", value: MODELS.HAIKU },
 ];
 
-export const DEFAULT_MODEL = MODELS.SONNET;
+export const DEFAULT_MODEL = MODELS.OPUS;
 
 export type AgentConfig = {
   apiKey: string;
