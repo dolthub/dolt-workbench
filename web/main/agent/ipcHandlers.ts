@@ -133,6 +133,26 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
     },
   );
 
+  // Set model
+  ipcMain.handle(
+    "agent:set-model",
+    (_, model: string): { success: boolean; error?: string } => {
+      if (!claudeAgent) {
+        return { success: false, error: "Agent not connected" };
+      }
+
+      try {
+        claudeAgent.setModel(model);
+        return { success: true };
+      } catch (error) {
+        console.error("Agent set model error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Failed to set model";
+        return { success: false, error: errorMessage };
+      }
+    },
+  );
+
   // Abort current operation
   ipcMain.handle(
     "agent:abort",

@@ -2,14 +2,18 @@
   @apply flex flex-col h-full flex-1 bg-white border-l border-stone-300 relative min-w-0 w-full;
 }
 
+.toolbar {
+  @apply flex items-center justify-between px-4 py-2 border-b border-stone-300;
+}
+
 .closeButton {
-  @apply absolute top-2 right-4 z-10 w-8 h-8 flex items-center justify-center;
+  @apply w-8 h-8 flex items-center justify-center;
   @apply text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full;
   @apply text-2xl font-light bg-transparent border-none cursor-pointer leading-none transition-all duration-150;
 }
 
 .messagesContainer {
-  @apply flex-1 overflow-y-auto overflow-x-hidden p-4 pr-9 space-y-4 min-w-0 w-full;
+  @apply flex-1 overflow-y-auto overflow-x-hidden p-4 space-y-4 min-w-0 w-full;
 }
 
 .emptyState {

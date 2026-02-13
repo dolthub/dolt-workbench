@@ -32,6 +32,8 @@ export function AgentProvider({ children }: Props) {
       mcpConfig: session.mcpConfig,
       setMcpConfig: session.setMcpConfig,
       messages: session.messages,
+      selectedModel: session.selectedModel,
+      setSelectedModel: session.setSelectedModel,
       isConnected: session.isConnected,
       isLoading: session.isLoading,
       isStreaming: session.isStreaming,
