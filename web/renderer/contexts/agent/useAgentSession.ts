@@ -4,6 +4,7 @@ import {
   AgentConfig,
   AgentMessage,
   ContentBlock,
+  DEFAULT_MODEL,
   McpServerConfig,
   ToolResultEvent,
 } from "./types";
@@ -31,6 +32,8 @@ export type AgentSessionState = ConnectionState & {
   mcpConfig: McpServerConfig | null;
   setMcpConfig: (config: McpServerConfig | null) => void;
   messages: AgentMessage[];
+  selectedModel: string;
+  setSelectedModel: (model: string) => void;
   confirmToolCall: (toolUseId: string) => void;
   denyToolCall: (toolUseId: string) => void;
   cancelToolCall: (toolUseId: string, toolName: string) => void;
@@ -44,6 +47,8 @@ export type AgentSessionState = ConnectionState & {
 export function useAgentSession(): AgentSessionState {
   const [mcpConfig, setMcpConfig] = useState<McpServerConfig | null>(null);
   const [messages, setMessages] = useState<AgentMessage[]>([]);
+  const [selectedModel, setSelectedModelState] =
+    useState<string>(DEFAULT_MODEL);
   const [connState, setConnState] = useSetState<ConnectionState>(
     defaultConnectionState,
   );
@@ -214,7 +219,11 @@ export function useAgentSession(): AgentSessionState {
       setConnState({ isLoading: true, error: null });
 
       try {
-        const agentConfig: AgentConfig = { apiKey, mcpConfig: config };
+        const agentConfig: AgentConfig = {
+          apiKey,
+          mcpConfig: config,
+          model: selectedModel,
+        };
         const result = await window.ipc.agentConnect(agentConfig);
 
         if (result.success) {
@@ -233,7 +242,7 @@ export function useAgentSession(): AgentSessionState {
         return false;
       }
     },
-    [setConnState],
+    [setConnState, selectedModel],
   );
 
   const sendMessage = useCallback(
@@ -330,6 +339,13 @@ export function useAgentSession(): AgentSessionState {
     [setConnState],
   );
 
+  const setSelectedModel = useCallback((model: string) => {
+    setSelectedModelState(model);
+    if (typeof window !== "undefined" && window.ipc?.agentSetModel) {
+      void window.ipc.agentSetModel(model);
+    }
+  }, []);
+
   const confirmToolCall = useCallback((toolUseId: string) => {
     if (typeof window === "undefined" || !window.ipc) return;
     window.ipc.agentToolConfirmationResponse(true);
@@ -393,6 +409,8 @@ export function useAgentSession(): AgentSessionState {
     mcpConfig,
     setMcpConfig,
     messages,
+    selectedModel,
+    setSelectedModel,
     isConnected: connState.isConnected,
     isLoading: connState.isLoading,
     isStreaming: connState.isStreaming,

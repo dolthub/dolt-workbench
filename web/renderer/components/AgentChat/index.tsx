@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ApiKeyModal from "./ApiKeyModal";
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
+import ModelSelector from "./ModelSelector";
 import css from "./index.module.css";
 
 type Props = {
@@ -38,6 +39,8 @@ export default function AgentChat({ onClose }: Props) {
     isLoading,
     isStreaming,
     error,
+    selectedModel,
+    setSelectedModel,
     connect,
     sendMessage,
     disconnect,
@@ -113,14 +116,21 @@ export default function AgentChat({ onClose }: Props) {
 
   return (
     <div className={css.container}>
-      <button
-        type="button"
-        onClick={onClose}
-        className={css.closeButton}
-        aria-label="Close panel"
-      >
-        ×
-      </button>
+      <div className={css.toolbar}>
+        <ModelSelector
+          selectedModel={selectedModel}
+          onChangeModel={setSelectedModel}
+          disabled={isStreaming}
+        />
+        <button
+          type="button"
+          onClick={onClose}
+          className={css.closeButton}
+          aria-label="Close panel"
+        >
+          ×
+        </button>
+      </div>
 
       <div className={css.messagesContainer}>
         {messages.length === 0 ? (

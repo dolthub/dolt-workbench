@@ -220,6 +220,10 @@ export class ClaudeAgent {
     ipcMain.removeAllListeners("agent:tool-confirmation-response");
   }
 
+  setModel(model: string): void {
+    this.config.model = model;
+  }
+
   private sendEvent(channel: string, data: unknown): void {
     if (!this.mainWindow.isDestroyed()) {
       this.mainWindow.webContents.send(channel, data);
@@ -275,7 +279,7 @@ export class ClaudeAgent {
     const queryOptions: Parameters<typeof query>[0] = {
       prompt: userMessage,
       options: {
-        model: "claude-opus-4-6",
+        model: this.config.model,
         systemPrompt,
         pathToClaudeCodeExecutable: getClaudeCliPaths(),
         env: { ...getAgentEnv(), ANTHROPIC_API_KEY: this.config.apiKey },

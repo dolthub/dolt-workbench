@@ -13,6 +13,7 @@ export type McpServerConfig = {
 export type AgentConfig = {
   apiKey: string;
   mcpConfig: McpServerConfig;
+  model: string;
 };
 
 export type ToolCallEvent = {
@@ -120,6 +121,8 @@ const handler = {
   agentDisconnect: async () => ipcRenderer.invoke("agent:disconnect"),
   agentClearHistory: async () => ipcRenderer.invoke("agent:clear-history"),
   agentAbort: async () => ipcRenderer.invoke("agent:abort"),
+  agentSetModel: async (model: string) =>
+    ipcRenderer.invoke("agent:set-model", model),
   agentCancelTool: async (toolName: string) =>
     ipcRenderer.invoke("agent:cancel-tool", toolName),
 

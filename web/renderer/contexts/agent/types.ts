@@ -9,9 +9,24 @@ export type McpServerConfig = {
   isDolt?: boolean;
 };
 
+export const MODELS = {
+  SONNET: "claude-sonnet-4-5-20250929",
+  OPUS: "claude-opus-4-6",
+  HAIKU: "claude-haiku-4-5-20251001",
+} as const;
+
+export const MODEL_OPTIONS = [
+  { label: "Sonnet 4.5", value: MODELS.SONNET },
+  { label: "Opus 4.6", value: MODELS.OPUS },
+  { label: "Haiku 4.5", value: MODELS.HAIKU },
+];
+
+export const DEFAULT_MODEL = MODELS.SONNET;
+
 export type AgentConfig = {
   apiKey: string;
   mcpConfig: McpServerConfig;
+  model: string;
 };
 
 export type ToolCallEvent = {
@@ -84,6 +99,10 @@ export type AgentContextType = {
   confirmToolCall: (toolUseId: string) => void;
   denyToolCall: (toolUseId: string) => void;
   cancelToolCall: (toolUseId: string, toolName: string) => void;
+
+  // Model selection
+  selectedModel: string;
+  setSelectedModel: (model: string) => void;
 
   // Actions
   connect: (apiKey: string, mcpConfig: McpServerConfig) => Promise<boolean>;

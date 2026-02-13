@@ -12,6 +12,7 @@ export type McpServerConfig = {
 export type AgentConfig = {
   apiKey: string;
   mcpConfig: McpServerConfig;
+  model: string;
 };
 
 export type ToolCallEvent = {
