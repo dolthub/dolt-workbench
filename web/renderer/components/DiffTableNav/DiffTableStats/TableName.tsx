@@ -18,14 +18,6 @@ type Props = {
 function TableLink({ displayedTableName, diffSummary }: TableProps) {
   const router = useRouter();
   const { stayWithinPage, setActiveTableName } = useDiffContext();
-  const queryDelimiter = router.asPath.includes("?refName") ? "&" : "?";
-  const asPathWithoutQuery = router.asPath.split(
-    `${queryDelimiter}tableName=`,
-  )[0];
-  const url = {
-    href: `${asPathWithoutQuery}${queryDelimiter}tableName=${diffSummary.tableName}`,
-    as: `${asPathWithoutQuery}${queryDelimiter}tableName=${diffSummary.tableName}`,
-  };
 
   if (stayWithinPage) {
     return (
@@ -37,7 +29,21 @@ function TableLink({ displayedTableName, diffSummary }: TableProps) {
       </Button.Link>
     );
   }
-  return <Link {...url}>{displayedTableName}</Link>;
+
+  const queryDelimiter = router.asPath.includes("?refName") ? "&" : "?";
+  const asPathWithoutQuery = router.asPath.split(
+    `${queryDelimiter}tableName=`,
+  )[0];
+  const url = `${asPathWithoutQuery}${queryDelimiter}tableName=${diffSummary.tableName}`;
+  return (
+    <Link
+      href={url}
+      shallow
+      onClick={() => setActiveTableName(diffSummary.tableName)}
+    >
+      {displayedTableName}
+    </Link>
+  );
 }
 
 export default function TableName(props: Props) {
