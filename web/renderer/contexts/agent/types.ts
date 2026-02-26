@@ -71,6 +71,12 @@ export type AgentMessage = {
   timestamp: number;
 };
 
+export type SessionInfo = {
+  sessionId: string;
+  firstMessage: string;
+  lastUpdated: number;
+};
+
 export type AgentContextType = {
   // Panel visibility and size
   isPanelOpen: boolean;
@@ -103,6 +109,13 @@ export type AgentContextType = {
   // Model selection
   selectedModel: string;
   setSelectedModel: (model: string) => void;
+
+  // Session management
+  currentSessionId: string | null;
+  sessions: SessionInfo[];
+  newChat: () => Promise<void>;
+  switchSession: (sessionId: string) => Promise<void>;
+  deleteSession: (sessionId: string) => Promise<void>;
 
   // Actions
   connect: (apiKey: string, mcpConfig: McpServerConfig) => Promise<boolean>;

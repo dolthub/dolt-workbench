@@ -6,6 +6,10 @@
   @apply flex items-center justify-between px-4 py-2 border-b border-stone-300;
 }
 
+.toolbarLeft {
+  @apply flex items-center gap-2;
+}
+
 .closeButton {
   @apply w-8 h-8 flex items-center justify-center;
   @apply text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full;
