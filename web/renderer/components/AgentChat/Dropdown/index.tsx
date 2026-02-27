@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import cx from "classnames";
 import css from "./index.module.css";
 
@@ -26,27 +26,43 @@ export default function Dropdown({
 }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  const positionMenu = useCallback(() => {
+    if (!triggerRef.current || !menuRef.current) return;
+    const rect = triggerRef.current.getBoundingClientRect();
+    const menu = menuRef.current;
+    menu.style.top = `${rect.bottom + 4}px`;
+    menu.style.left = `${rect.left}px`;
+    // Clamp width so it doesn't overflow the window
+    menu.style.maxWidth = `${window.innerWidth - rect.left - 8}px`;
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (
         wrapperRef.current &&
-        !wrapperRef.current.contains(e.target as Node)
+        !wrapperRef.current.contains(e.target as Node) &&
+        menuRef.current &&
+        !menuRef.current.contains(e.target as Node)
       ) {
         setIsOpen(false);
       }
     }
     if (isOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      positionMenu();
     }
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen]);
+  }, [isOpen, positionMenu]);
 
   const selected = options.find(o => o.value === value);
 
   return (
     <div className={css.wrapper} ref={wrapperRef}>
       <button
+        ref={triggerRef}
         type="button"
         className={css.trigger}
         onClick={() => setIsOpen(!isOpen)}
@@ -58,7 +74,7 @@ export default function Dropdown({
         <span className={css.triggerArrow}>▾</span>
       </button>
       {isOpen && (
-        <div className={css.menu}>
+        <div ref={menuRef} className={css.menu}>
           {options.map(option => (
             <div
               key={option.value}

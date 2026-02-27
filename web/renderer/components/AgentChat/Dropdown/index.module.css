@@ -1,9 +1,9 @@
 .wrapper {
-  @apply relative;
+  @apply relative min-w-0;
 }
 
 .trigger {
-  @apply flex items-center gap-1 px-2 py-1 text-sm bg-white border border-stone-300 rounded cursor-pointer hover:bg-stone-50 transition-colors duration-150 min-w-0;
+  @apply flex items-center gap-1 px-2 py-1 text-sm bg-white border border-stone-300 rounded cursor-pointer hover:bg-stone-50 transition-colors duration-150 min-w-0 max-w-full;
 }
 
 .trigger:disabled {
@@ -19,11 +19,11 @@
 }
 
 .menu {
-  @apply absolute top-full left-0 mt-1 bg-white border border-stone-300 rounded shadow-lg z-50 min-w-full max-h-60 overflow-y-auto;
+  @apply fixed bg-white border border-stone-300 rounded shadow-lg z-50 max-h-60 overflow-y-auto;
 }
 
 .option {
-  @apply flex items-center justify-between w-full px-2 py-1.5 text-sm text-left cursor-pointer hover:bg-stone-100 transition-colors duration-150 border-none bg-transparent min-w-0;
+  @apply flex items-center w-full px-2 py-1.5 text-sm text-left cursor-pointer hover:bg-stone-100 transition-colors duration-150 border-none bg-transparent min-w-0;
 }
 
 .optionActive {

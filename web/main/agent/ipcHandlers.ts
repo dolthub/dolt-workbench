@@ -185,7 +185,12 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
 
   ipcMain.handle(
     "agent:register-session",
-    async (_, sessionId: string, databaseId: string, firstMessage: string): Promise<void> => {
+    async (
+      _,
+      sessionId: string,
+      databaseId: string,
+      firstMessage: string,
+    ): Promise<void> => {
       registerSession(sessionId, databaseId, firstMessage);
     },
   );
@@ -199,10 +204,7 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
 
   ipcMain.handle(
     "agent:switch-session",
-    (
-      _,
-      sessionId: string | null,
-    ): { success: boolean; error?: string } => {
+    (_, sessionId: string | null): { success: boolean; error?: string } => {
       if (!claudeAgent) {
         return { success: false, error: "Agent not connected" };
       }
@@ -213,9 +215,7 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
       } catch (error) {
         console.error("Agent switch session error:", error);
         const errorMessage =
-          error instanceof Error
-            ? error.message
-            : "Failed to switch session";
+          error instanceof Error ? error.message : "Failed to switch session";
         return { success: false, error: errorMessage };
       }
     },

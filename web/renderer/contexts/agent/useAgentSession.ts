@@ -194,16 +194,12 @@ export function useAgentSession(): AgentSessionState {
       if (dbId && window.ipc?.agentRegisterSession) {
         // Get the first user message text for the session label
         setMessages(prev => {
-          const lastUserMsg = [...prev]
-            .reverse()
-            .find(m => m.role === "user");
+          const lastUserMsg = [...prev].reverse().find(m => m.role === "user");
           const firstText = lastUserMsg?.contentBlocks.find(
             b => b.type === "text",
           );
           const label =
-            firstText && "text" in firstText
-              ? firstText.text
-              : "New chat";
+            firstText && "text" in firstText ? firstText.text : "New chat";
           void window.ipc
             .agentRegisterSession(event.sessionId, dbId, label)
             .then(async () => refreshSessions());

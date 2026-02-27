@@ -142,7 +142,12 @@ const handler = {
     databaseId: string,
     firstMessage: string,
   ): Promise<void> =>
-    ipcRenderer.invoke("agent:register-session", sessionId, databaseId, firstMessage),
+    ipcRenderer.invoke(
+      "agent:register-session",
+      sessionId,
+      databaseId,
+      firstMessage,
+    ),
   agentUnregisterSession: async (sessionId: string): Promise<void> =>
     ipcRenderer.invoke("agent:unregister-session", sessionId),
   agentSwitchSession: async (

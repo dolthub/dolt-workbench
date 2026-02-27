@@ -79,15 +79,24 @@ export function loadSessionMessages(sessionId: string): AgentMessage[] {
         if (Array.isArray(content)) {
           // Check if there are tool_result blocks (merge into previous assistant)
           const toolResults = content.filter(
-            (b): b is { type: "tool_result"; tool_use_id: string; content?: unknown; is_error?: boolean } =>
-              typeof b === "object" && b.type === "tool_result",
+            (
+              b,
+            ): b is {
+              type: "tool_result";
+              tool_use_id: string;
+              content?: unknown;
+              is_error?: boolean;
+            } => typeof b === "object" && b.type === "tool_result",
           );
           if (toolResults.length > 0 && messages.length > 0) {
             const lastMsg = messages[messages.length - 1];
             if (lastMsg.role === "assistant") {
               for (const tr of toolResults) {
                 for (const block of lastMsg.contentBlocks) {
-                  if (block.type === "tool_use" && block.id === tr.tool_use_id) {
+                  if (
+                    block.type === "tool_use" &&
+                    block.id === tr.tool_use_id
+                  ) {
                     block.result = tr.content;
                     block.isError = tr.is_error;
                   }
@@ -142,7 +151,8 @@ export function loadSessionMessages(sessionId: string): AgentMessage[] {
         }
 
         if (blocks.length > 0) {
-          const lastMsg = messages.length > 0 ? messages[messages.length - 1] : undefined;
+          const lastMsg =
+            messages.length > 0 ? messages[messages.length - 1] : undefined;
           if (lastMsg?.role === "assistant") {
             lastMsg.contentBlocks.push(...blocks);
           } else {

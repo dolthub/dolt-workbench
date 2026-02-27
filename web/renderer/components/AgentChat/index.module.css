@@ -7,11 +7,11 @@
 }
 
 .toolbarLeft {
-  @apply flex items-center gap-2;
+  @apply flex items-center gap-2 min-w-0 flex-1;
 }
 
 .closeButton {
-  @apply w-8 h-8 flex items-center justify-center;
+  @apply w-8 h-8 flex items-center justify-center flex-shrink-0;
   @apply text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-full;
   @apply text-2xl font-light bg-transparent border-none cursor-pointer leading-none transition-all duration-150;
 }
