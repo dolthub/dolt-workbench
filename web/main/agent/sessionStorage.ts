@@ -7,6 +7,21 @@ import { AgentMessage, ContentBlock, SessionInfo } from "./types";
 // SDK stores session JSONL files at ~/.claude/projects/-/
 const SDK_DIR = path.join(os.homedir(), ".claude", "projects", "-");
 
+type JsonlEntry = {
+  type: string;
+  message?: {
+    role?: string;
+    content?: string | Array<Record<string, unknown>>;
+  };
+};
+
+type ToolResultBlock = {
+  type: "tool_result";
+  tool_use_id: string;
+  content?: unknown;
+  is_error?: boolean;
+};
+
 type StoredSession = {
   databaseId: string;
   firstMessage: string;
@@ -48,13 +63,7 @@ export function loadSessionMessages(sessionId: string): AgentMessage[] {
     const messages: AgentMessage[] = [];
 
     for (const line of lines) {
-      let entry: {
-        type: string;
-        message?: {
-          role?: string;
-          content?: string | Array<Record<string, unknown>>;
-        };
-      };
+      let entry: JsonlEntry;
       try {
         entry = JSON.parse(line);
       } catch {
@@ -79,14 +88,8 @@ export function loadSessionMessages(sessionId: string): AgentMessage[] {
         if (Array.isArray(content)) {
           // Check if there are tool_result blocks (merge into previous assistant)
           const toolResults = content.filter(
-            (
-              b,
-            ): b is {
-              type: "tool_result";
-              tool_use_id: string;
-              content?: unknown;
-              is_error?: boolean;
-            } => typeof b === "object" && b.type === "tool_result",
+            (b): b is ToolResultBlock =>
+              typeof b === "object" && b.type === "tool_result",
           );
           if (toolResults.length > 0 && messages.length > 0) {
             const lastMsg = messages[messages.length - 1];
