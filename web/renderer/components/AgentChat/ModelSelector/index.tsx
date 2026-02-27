@@ -1,6 +1,5 @@
-import { FormSelect } from "@dolthub/react-components";
-import { DEFAULT_MODEL, MODEL_OPTIONS } from "@contexts/agent/types";
-import css from "./index.module.css";
+import { MODEL_OPTIONS } from "@contexts/agent/types";
+import Dropdown from "../Dropdown";
 
 type Props = {
   selectedModel: string;
@@ -14,17 +13,11 @@ export default function ModelSelector({
   disabled,
 }: Props) {
   return (
-    <div className={css.container}>
-      <FormSelect
-        val={selectedModel}
-        onChangeValue={v => {
-          onChangeModel(v ?? DEFAULT_MODEL);
-        }}
-        options={MODEL_OPTIONS}
-        light
-        small
-        isDisabled={disabled}
-      />
-    </div>
+    <Dropdown
+      value={selectedModel}
+      options={MODEL_OPTIONS}
+      onChange={v => onChangeModel(v)}
+      disabled={disabled}
+    />
   );
 }

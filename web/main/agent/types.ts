@@ -59,3 +59,9 @@ export type McpServerStatus = {
   status: "connected" | "failed";
   error?: string;
 };
+
+export type SessionInfo = {
+  sessionId: string;
+  firstMessage: string;
+  lastUpdated: number;
+};

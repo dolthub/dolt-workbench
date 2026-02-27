@@ -1,0 +1,15 @@
+.container {
+  @apply flex items-center;
+}
+
+.option {
+  @apply flex items-center justify-between w-full;
+}
+
+.optionLabel {
+  @apply truncate flex-1 min-w-0;
+}
+
+.deleteButton {
+  @apply flex-shrink-0 ml-2 w-5 h-5 flex items-center justify-center text-stone-300 hover:text-red-500 bg-transparent border-none cursor-pointer rounded hover:bg-red-50 transition-colors duration-150 text-sm leading-none;
+}

@@ -41,6 +41,11 @@ export function AgentProvider({ children }: Props) {
       confirmToolCall: session.confirmToolCall,
       denyToolCall: session.denyToolCall,
       cancelToolCall: session.cancelToolCall,
+      currentSessionId: session.currentSessionId,
+      sessions: session.sessions,
+      newChat: session.newChat,
+      switchSession: session.switchSession,
+      deleteSession: session.deleteSession,
       connect: session.connect,
       sendMessage: session.sendMessage,
       disconnect: session.disconnect,
@@ -66,4 +71,5 @@ export type {
   ToolCallEvent,
   ToolResultEvent,
   McpServerConfig,
+  SessionInfo,
 } from "./types";

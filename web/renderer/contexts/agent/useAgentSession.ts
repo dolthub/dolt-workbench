@@ -6,6 +6,7 @@ import {
   ContentBlock,
   DEFAULT_MODEL,
   McpServerConfig,
+  SessionInfo,
   ToolResultEvent,
 } from "./types";
 
@@ -37,6 +38,11 @@ export type AgentSessionState = ConnectionState & {
   confirmToolCall: (toolUseId: string) => void;
   denyToolCall: (toolUseId: string) => void;
   cancelToolCall: (toolUseId: string, toolName: string) => void;
+  currentSessionId: string | null;
+  sessions: SessionInfo[];
+  newChat: () => Promise<void>;
+  switchSession: (sessionId: string) => Promise<void>;
+  deleteSession: (sessionId: string) => Promise<void>;
   connect: (apiKey: string, config: McpServerConfig) => Promise<boolean>;
   sendMessage: (message: string) => Promise<void>;
   disconnect: () => Promise<void>;
@@ -52,6 +58,8 @@ export function useAgentSession(): AgentSessionState {
   const [connState, setConnState] = useSetState<ConnectionState>(
     defaultConnectionState,
   );
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [sessions, setSessions] = useState<SessionInfo[]>([]);
 
   const lastValidDbRef = useRef<string | null>(null);
 
@@ -72,6 +80,14 @@ export function useAgentSession(): AgentSessionState {
       lastValidDbRef.current = currentDbId;
     }
   }, [mcpConfig, setConnState]);
+
+  const refreshSessions = useCallback(async () => {
+    if (typeof window === "undefined" || !window.ipc) return;
+    const dbId = getDbIdentifier(mcpConfig);
+    if (!dbId) return;
+    const list = await window.ipc.agentListSessions(dbId);
+    setSessions(list);
+  }, [mcpConfig]);
 
   // Set up IPC event listeners
   useEffect(() => {
@@ -172,6 +188,26 @@ export function useAgentSession(): AgentSessionState {
       window.dispatchEvent(new CustomEvent("agent-refresh-page"));
     });
 
+    window.ipc.onAgentSessionId((event: { sessionId: string }) => {
+      setCurrentSessionId(event.sessionId);
+      const dbId = getDbIdentifier(mcpConfig);
+      if (dbId && window.ipc?.agentRegisterSession) {
+        // Get the first user message text for the session label
+        setMessages(prev => {
+          const lastUserMsg = [...prev].reverse().find(m => m.role === "user");
+          const firstText = lastUserMsg?.contentBlocks.find(
+            b => b.type === "text",
+          );
+          const label =
+            firstText && "text" in firstText ? firstText.text : "New chat";
+          void window.ipc
+            .agentRegisterSession(event.sessionId, dbId, label)
+            .then(async () => refreshSessions());
+          return prev;
+        });
+      }
+    });
+
     window.ipc.onAgentInterrupted(() => {
       // Mark any pending tool confirmations or in-flight tool calls as cancelled
       setMessages(prev =>
@@ -207,7 +243,7 @@ export function useAgentSession(): AgentSessionState {
     });
 
     return () => window.ipc?.removeAgentListeners?.();
-  }, [setConnState]);
+  }, [setConnState, mcpConfig, refreshSessions]);
 
   const connect = useCallback(
     async (apiKey: string, config: McpServerConfig): Promise<boolean> => {
@@ -228,6 +264,8 @@ export function useAgentSession(): AgentSessionState {
 
         if (result.success) {
           setConnState({ isConnected: true, isLoading: false });
+          // Load sessions for this database
+          void refreshSessions();
           return true;
         }
         setConnState({
@@ -242,7 +280,7 @@ export function useAgentSession(): AgentSessionState {
         return false;
       }
     },
-    [setConnState, selectedModel],
+    [setConnState, selectedModel, refreshSessions],
   );
 
   const sendMessage = useCallback(
@@ -339,6 +377,38 @@ export function useAgentSession(): AgentSessionState {
     [setConnState],
   );
 
+  const newChat = useCallback(async (): Promise<void> => {
+    if (typeof window === "undefined" || !window.ipc) return;
+    await window.ipc.agentSwitchSession(null);
+    setCurrentSessionId(null);
+    setMessages([]);
+  }, []);
+
+  const switchSession = useCallback(
+    async (sessionId: string): Promise<void> => {
+      if (typeof window === "undefined" || !window.ipc) return;
+      const loaded = await window.ipc.agentLoadSessionMessages(sessionId);
+      await window.ipc.agentSwitchSession(sessionId);
+      setCurrentSessionId(sessionId);
+      setMessages(loaded);
+    },
+    [],
+  );
+
+  const deleteSession = useCallback(
+    async (sessionId: string): Promise<void> => {
+      if (typeof window === "undefined" || !window.ipc) return;
+      await window.ipc.agentUnregisterSession(sessionId);
+      if (currentSessionId === sessionId) {
+        await window.ipc.agentSwitchSession(null);
+        setCurrentSessionId(null);
+        setMessages([]);
+      }
+      await refreshSessions();
+    },
+    [currentSessionId, refreshSessions],
+  );
+
   const setSelectedModel = useCallback((model: string) => {
     setSelectedModelState(model);
     if (typeof window !== "undefined" && window.ipc?.agentSetModel) {
@@ -418,6 +488,11 @@ export function useAgentSession(): AgentSessionState {
     confirmToolCall,
     denyToolCall,
     cancelToolCall,
+    currentSessionId,
+    sessions,
+    newChat,
+    switchSession,
+    deleteSession,
     connect,
     sendMessage,
     disconnect,

@@ -1,0 +1,47 @@
+.wrapper {
+  @apply relative min-w-0;
+}
+
+.trigger {
+  @apply flex items-center gap-1 px-2 py-1 text-sm bg-white border border-stone-300 rounded cursor-pointer hover:bg-stone-50 transition-colors duration-150 min-w-0 max-w-full;
+}
+
+.trigger:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.triggerLabel {
+  @apply truncate;
+}
+
+.triggerArrow {
+  @apply text-xs text-stone-400 flex-shrink-0;
+}
+
+.menu {
+  @apply fixed bg-white border border-stone-300 rounded shadow-lg z-50 max-h-60 overflow-y-auto;
+}
+
+.option {
+  @apply flex items-center w-full px-2 py-1.5 text-sm text-left cursor-pointer hover:bg-stone-100 transition-colors duration-150 border-none bg-transparent min-w-0;
+}
+
+.optionActive {
+  @apply bg-stone-50 font-medium;
+}
+
+.optionLabel {
+  @apply flex flex-col flex-1 min-w-0 cursor-pointer;
+}
+
+.optionLabelText {
+  @apply truncate;
+}
+
+.optionDetail {
+  @apply text-xs text-stone-400 leading-tight;
+}
+
+.deleteButton {
+  @apply flex-shrink-0 ml-2 w-5 h-5 flex items-center justify-center text-stone-300 hover:text-red-500 bg-transparent border-none cursor-pointer rounded hover:bg-red-50 transition-colors duration-150 text-sm leading-none;
+}

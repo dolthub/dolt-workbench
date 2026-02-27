@@ -5,7 +5,13 @@ import {
   getStoredApiKey,
   storeApiKey,
 } from "./apiKeyStorage";
-import { AgentConfig } from "./types";
+import {
+  listSessions,
+  loadSessionMessages,
+  registerSession,
+  unregisterSession,
+} from "./sessionStorage";
+import { AgentConfig, AgentMessage, SessionInfo } from "./types";
 
 let claudeAgent: ClaudeAgent | null = null;
 
@@ -161,6 +167,57 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
         claudeAgent.abort();
       }
       return { success: true };
+    },
+  );
+
+  // Session management handlers
+  ipcMain.handle(
+    "agent:list-sessions",
+    async (_, databaseId: string): Promise<SessionInfo[]> =>
+      listSessions(databaseId),
+  );
+
+  ipcMain.handle(
+    "agent:load-session-messages",
+    async (_, sessionId: string): Promise<AgentMessage[]> =>
+      loadSessionMessages(sessionId),
+  );
+
+  ipcMain.handle(
+    "agent:register-session",
+    async (
+      _,
+      sessionId: string,
+      databaseId: string,
+      firstMessage: string,
+    ): Promise<void> => {
+      registerSession(sessionId, databaseId, firstMessage);
+    },
+  );
+
+  ipcMain.handle(
+    "agent:unregister-session",
+    async (_, sessionId: string): Promise<void> => {
+      unregisterSession(sessionId);
+    },
+  );
+
+  ipcMain.handle(
+    "agent:switch-session",
+    (_, sessionId: string | null): { success: boolean; error?: string } => {
+      if (!claudeAgent) {
+        return { success: false, error: "Agent not connected" };
+      }
+
+      try {
+        claudeAgent.setSessionId(sessionId);
+        return { success: true };
+      } catch (error) {
+        console.error("Agent switch session error:", error);
+        const errorMessage =
+          error instanceof Error ? error.message : "Failed to switch session";
+        return { success: false, error: errorMessage };
+      }
     },
   );
 }

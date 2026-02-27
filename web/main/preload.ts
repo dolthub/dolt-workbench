@@ -60,6 +60,12 @@ export type ToolConfirmationRequest = {
   input: Record<string, unknown>;
 };
 
+export type SessionInfo = {
+  sessionId: string;
+  firstMessage: string;
+  lastUpdated: number;
+};
+
 const handler = {
   async invoke(channel: string, ...args: unknown[]) {
     return ipcRenderer.invoke(channel, ...args);
@@ -126,6 +132,29 @@ const handler = {
   agentCancelTool: async (toolName: string) =>
     ipcRenderer.invoke("agent:cancel-tool", toolName),
 
+  // Session management
+  agentListSessions: async (databaseId: string): Promise<SessionInfo[]> =>
+    ipcRenderer.invoke("agent:list-sessions", databaseId),
+  agentLoadSessionMessages: async (sessionId: string) =>
+    ipcRenderer.invoke("agent:load-session-messages", sessionId),
+  agentRegisterSession: async (
+    sessionId: string,
+    databaseId: string,
+    firstMessage: string,
+  ): Promise<void> =>
+    ipcRenderer.invoke(
+      "agent:register-session",
+      sessionId,
+      databaseId,
+      firstMessage,
+    ),
+  agentUnregisterSession: async (sessionId: string): Promise<void> =>
+    ipcRenderer.invoke("agent:unregister-session", sessionId),
+  agentSwitchSession: async (
+    sessionId: string | null,
+  ): Promise<{ success: boolean; error?: string }> =>
+    ipcRenderer.invoke("agent:switch-session", sessionId),
+
   // API Key storage
   agentGetApiKey: async (): Promise<string | null> =>
     ipcRenderer.invoke("agent:get-api-key"),
@@ -163,6 +192,8 @@ const handler = {
     ipcRenderer.on("agent:refresh-page", () => callback()),
   onAgentInterrupted: (callback: () => void) =>
     ipcRenderer.on("agent:interrupted", () => callback()),
+  onAgentSessionId: (callback: (event: { sessionId: string }) => void) =>
+    ipcRenderer.on("agent:session-id", (_event, value) => callback(value)),
 
   // Send tool confirmation response
   agentToolConfirmationResponse: (confirmed: boolean) =>
@@ -178,6 +209,7 @@ const handler = {
     ipcRenderer.removeAllListeners("agent:switch-branch");
     ipcRenderer.removeAllListeners("agent:refresh-page");
     ipcRenderer.removeAllListeners("agent:interrupted");
+    ipcRenderer.removeAllListeners("agent:session-id");
   },
 };
 

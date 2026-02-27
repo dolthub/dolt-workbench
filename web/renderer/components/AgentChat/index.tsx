@@ -4,6 +4,7 @@ import ApiKeyModal from "./ApiKeyModal";
 import ChatInput from "./ChatInput";
 import ChatMessage from "./ChatMessage";
 import ModelSelector from "./ModelSelector";
+import SessionSwitcher from "./SessionSwitcher";
 import css from "./index.module.css";
 
 type Props = {
@@ -41,6 +42,11 @@ export default function AgentChat({ onClose }: Props) {
     error,
     selectedModel,
     setSelectedModel,
+    currentSessionId,
+    sessions,
+    newChat,
+    switchSession,
+    deleteSession,
     connect,
     sendMessage,
     disconnect,
@@ -117,11 +123,23 @@ export default function AgentChat({ onClose }: Props) {
   return (
     <div className={css.container}>
       <div className={css.toolbar}>
-        <ModelSelector
-          selectedModel={selectedModel}
-          onChangeModel={setSelectedModel}
-          disabled={isStreaming}
-        />
+        <div className={css.toolbarLeft}>
+          <ModelSelector
+            selectedModel={selectedModel}
+            onChangeModel={setSelectedModel}
+            disabled={isStreaming}
+          />
+          {isConnected && (
+            <SessionSwitcher
+              currentSessionId={currentSessionId}
+              sessions={sessions}
+              onNewChat={newChat}
+              onSwitchSession={switchSession}
+              onDeleteSession={deleteSession}
+              disabled={isStreaming}
+            />
+          )}
+        </div>
         <button
           type="button"
           onClick={onClose}
@@ -166,7 +184,7 @@ export default function AgentChat({ onClose }: Props) {
         {isConnected && (
           <div className={css.inputActions}>
             <ActionButton onClick={clearHistory} disabled={isLoading}>
-              Clear history
+              Clear History
             </ActionButton>
             <ActionButton onClick={handleDisconnect} disabled={isLoading}>
               Disconnect
@@ -175,7 +193,7 @@ export default function AgentChat({ onClose }: Props) {
               onClick={() => setShowApiKeyModal(true)}
               disabled={isLoading}
             >
-              Edit API key
+              Edit API Key
             </ActionButton>
           </div>
         )}

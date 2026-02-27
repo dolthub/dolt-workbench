@@ -220,6 +220,15 @@ export class ClaudeAgent {
     ipcMain.removeAllListeners("agent:tool-confirmation-response");
   }
 
+  getSessionId(): string | null {
+    return this.sessionId;
+  }
+
+  setSessionId(id: string | null): void {
+    this.abort();
+    this.sessionId = id;
+  }
+
   setModel(model: string): void {
     this.config.model = model;
   }
@@ -279,6 +288,7 @@ export class ClaudeAgent {
     const queryOptions: Parameters<typeof query>[0] = {
       prompt: userMessage,
       options: {
+        cwd: "/",
         model: this.config.model,
         systemPrompt,
         pathToClaudeCodeExecutable: getClaudeCliPaths(),
@@ -319,6 +329,9 @@ export class ClaudeAgent {
         // Handle system init message - capture session ID and MCP status
         if (message.type === "system" && message.subtype === "init") {
           this.sessionId = message.session_id;
+          this.sendEvent("agent:session-id", {
+            sessionId: this.sessionId,
+          });
           const mcpServersStatus: McpServerStatus[] = message.mcp_servers.map(
             (server: { name: string; status: string; error?: string }) => {
               return {
