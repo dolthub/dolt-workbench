@@ -79,6 +79,9 @@ export function ConfigProvider({ children }: Props) {
           type: state.type,
           isLocalDolt: state.isLocalDolt,
           port: state.port,
+          certificateAuthority: state.certificateAuthority,
+          clientCert: state.clientCert,
+          clientKey: state.clientKey,
         },
       });
       await res.client.clearStore();

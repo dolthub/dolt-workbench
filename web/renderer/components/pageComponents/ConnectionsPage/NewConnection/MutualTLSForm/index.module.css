@@ -1,0 +1,27 @@
+.fileInputWrapper {
+  @apply mb-4 flex items-start;
+}
+
+.fileInputLabel {
+  @apply text-left min-w-[120px] mr-4 mt-2 font-semibold text-sm;
+}
+
+.customFileInput {
+  @apply relative flex items-center bg-white overflow-hidden ml-10;
+}
+
+.hiddenFileInput {
+  @apply absolute inset-0 w-full h-full opacity-0 cursor-pointer;
+}
+
+.fileInputDisplay {
+  @apply py-2 pl-3 text-sm text-stone-700 min-w-[150px] border border-stone-500 rounded-s truncate text-left;
+}
+
+.fileInputButton {
+  @apply px-3 py-2 text-sm hover:bg-stone-300 pointer-events-none rounded-s-none border border-stone-500;
+}
+
+.dropdownContent {
+  @apply min-w-[300px] w-full self-start ml-8 -mt-4;
+}
