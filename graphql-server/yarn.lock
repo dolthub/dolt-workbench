@@ -914,7 +914,7 @@ __metadata:
     "@nestjs/cli": "npm:^11.0.10"
     "@nestjs/common": "npm:^11.1.6"
     "@nestjs/config": "npm:^4.0.2"
-    "@nestjs/core": "npm:^11.0.12"
+    "@nestjs/core": "npm:^11.1.12"
     "@nestjs/graphql": "npm:^13.0.4"
     "@nestjs/platform-express": "npm:^11.1.11"
     "@nestjs/schematics": "npm:^11.0.7"
@@ -2195,14 +2195,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/core@npm:^11.0.12":
-  version: 11.0.12
-  resolution: "@nestjs/core@npm:11.0.12"
+"@nestjs/core@npm:^11.1.12":
+  version: 11.1.12
+  resolution: "@nestjs/core@npm:11.1.12"
   dependencies:
     "@nuxt/opencollective": "npm:0.4.1"
     fast-safe-stringify: "npm:2.1.1"
     iterare: "npm:1.2.1"
-    path-to-regexp: "npm:8.2.0"
+    path-to-regexp: "npm:8.3.0"
     tslib: "npm:2.8.1"
     uid: "npm:2.0.2"
   peerDependencies:
@@ -2219,7 +2219,7 @@ __metadata:
       optional: true
     "@nestjs/websockets":
       optional: true
-  checksum: 10c0/383df8690749dcf1fd5a4ed4f6d0ee58b9e7e93b33f0c03989dfd425e4bd2d9656512df6ccaa863d3636f2ba7c45ee06d66878973317d5c43759c9be4b3286db
+  checksum: 10c0/a07dd42cfecf88324fa9c029cec118ab54791edd72e00f0a2ccc48b364dc84e348514cabb26d3a18f52640a817a367c4a82b563871d2d2cd7898771cc7fe5ec9
   languageName: node
   linkType: hard
 
@@ -9074,17 +9074,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"path-to-regexp@npm:8.2.0, path-to-regexp@npm:^8.0.0":
-  version: 8.2.0
-  resolution: "path-to-regexp@npm:8.2.0"
-  checksum: 10c0/ef7d0a887b603c0a142fad16ccebdcdc42910f0b14830517c724466ad676107476bba2fe9fffd28fd4c141391ccd42ea426f32bb44c2c82ecaefe10c37b90f5a
-  languageName: node
-  linkType: hard
-
 "path-to-regexp@npm:8.3.0":
   version: 8.3.0
   resolution: "path-to-regexp@npm:8.3.0"
   checksum: 10c0/ee1544a73a3f294a97a4c663b0ce71bbf1621d732d80c9c9ed201b3e911a86cb628ebad691b9d40f40a3742fe22011e5a059d8eed2cf63ec2cb94f6fb4efe67c
+  languageName: node
+  linkType: hard
+
+"path-to-regexp@npm:^8.0.0":
+  version: 8.2.0
+  resolution: "path-to-regexp@npm:8.2.0"
+  checksum: 10c0/ef7d0a887b603c0a142fad16ccebdcdc42910f0b14830517c724466ad676107476bba2fe9fffd28fd4c141391ccd42ea426f32bb44c2c82ecaefe10c37b90f5a
   languageName: node
   linkType: hard
 
