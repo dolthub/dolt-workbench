@@ -201,10 +201,12 @@ app.on("ready", async () => {
 
   // hit when clicking <a href/> with no target
   // optionally redirect to browser
-  mainWindow.webContents.on("will-navigate", async (event, url) => {
+  mainWindow.webContents.on("will-navigate", (event, url) => {
     if (isExternalUrl(url)) {
-      await shell.openExternal(url);
       event.preventDefault();
+      shell
+        .openExternal(url)
+        .catch(err => console.error("Failed to open URL:", err));
     }
   });
 });
