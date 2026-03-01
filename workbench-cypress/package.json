@@ -27,7 +27,7 @@
     "@cypress/github-action": "^7.1.1",
     "@eslint/js": "^9.39.1",
     "@typescript-eslint/eslint-plugin": "^8.52.0",
-    "@typescript-eslint/parser": "^8.48.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "eslint": "^9.16.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-import-resolver-typescript": "^4.4.4",
