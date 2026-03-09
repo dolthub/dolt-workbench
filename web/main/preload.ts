@@ -108,6 +108,14 @@ const handler = {
   onLoginStarted: (callback: (requestId: string) => void) => {
     ipcRenderer.on("login-started", (_event, requestId) => callback(requestId));
   },
+  // Commit author storage
+  getCommitAuthor: async (): Promise<{
+    name: string;
+    email: string;
+  } | null> => ipcRenderer.invoke("get-commit-author"),
+  setCommitAuthor: async (author: { name: string; email: string }) =>
+    ipcRenderer.invoke("set-commit-author", author),
+
   startMcpServer: (config: McpServerConfig) =>
     ipcRenderer.send("start-mcp-server", config),
   stopMcpServer: () => ipcRenderer.send("stop-mcp-server"),

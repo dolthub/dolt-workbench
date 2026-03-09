@@ -1,5 +1,5 @@
-import HeaderUserCheckbox from "@components/HeaderUserCheckbox";
-import { FormModal, Textarea } from "@dolthub/react-components";
+import { FormInput, FormModal, Textarea } from "@dolthub/react-components";
+import { useEffectAsync } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import { StatusFragment } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
@@ -16,20 +16,50 @@ type Props = ModalProps & {
   status: StatusFragment[];
 };
 
+const isElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
+
 export default function CommitModal(props: Props) {
   const router = useRouter();
   const defaultMsg = getDefaultCommitMsg(props.params.refName, props.status);
   const [msg, setMsg] = useState(defaultMsg);
+  const [authorName, setAuthorName] = useState("");
+  const [authorEmail, setAuthorEmail] = useState("");
   const userHeaders = useUserHeaders();
-  const [addCommitAuthor, setAddCommitAuthor] = useState(!!userHeaders);
   const { getCallProcedure } = useSqlBuilder();
 
-  const onSubmit = (e: SyntheticEvent) => {
+  const headerName = userHeaders?.user;
+  const headerEmail = userHeaders?.email;
+  const hasHeaders = !!headerName || !!headerEmail;
+
+  // Load stored author for Electron, or populate from headers
+  useEffectAsync(async () => {
+    if (hasHeaders) {
+      setAuthorName(headerName ?? "");
+      setAuthorEmail(headerEmail ?? "");
+      return;
+    }
+    if (isElectron) {
+      const stored = await window.ipc.getCommitAuthor();
+      if (stored) {
+        setAuthorName(stored.name);
+        setAuthorEmail(stored.email);
+      }
+    }
+  }, [userHeaders]);
+
+  const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
+    // Persist author on desktop when not using headers
+    if (isElectron && !hasHeaders && authorName && authorEmail) {
+      await window.ipc.setCommitAuthor({
+        name: authorName,
+        email: authorEmail,
+      });
+    }
     const q = getCallProcedure("DOLT_COMMIT", [
       "-Am",
       msg,
-      ...getAuthorArgs(userHeaders?.user, userHeaders?.email),
+      ...getAuthorArgs(authorName, authorEmail),
     ]);
     const { href, as } = sqlQuery({ ...props.params, q });
     router.push(href, as).catch(console.error);
@@ -64,12 +94,24 @@ export default function CommitModal(props: Props) {
           required
           light
         />
-        <HeaderUserCheckbox
-          shouldAddAuthor={addCommitAuthor}
-          setShouldAddAuthor={setAddCommitAuthor}
-          userHeaders={userHeaders}
-          kind="commit"
-        />
+        <div className={css.authorFields}>
+          <FormInput
+            value={authorName}
+            label="Author Name"
+            onChangeString={setAuthorName}
+            placeholder="Author Name"
+            disabled={hasHeaders}
+            light
+          />
+          <FormInput
+            value={authorEmail}
+            label="Author Email"
+            onChangeString={setAuthorEmail}
+            placeholder="author@example.com"
+            disabled={hasHeaders}
+            light
+          />
+        </div>
       </div>
     </FormModal>
   );

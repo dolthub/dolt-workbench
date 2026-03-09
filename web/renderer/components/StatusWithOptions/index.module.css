@@ -31,6 +31,14 @@
   }
 }
 
+.authorFields {
+  @apply mt-3 flex flex-col gap-2;
+}
+
+.authorNote {
+  @apply text-sm text-stone-500 mt-1;
+}
+
 .checkboxContainer {
   @apply flex items-start text-sm;
 }
