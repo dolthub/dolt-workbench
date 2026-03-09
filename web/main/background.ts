@@ -19,6 +19,7 @@ import { startServer } from "./doltServer";
 import { createWindow } from "./helpers/createWindow";
 import { initMenu } from "./helpers/menu";
 import { registerAgentIpcHandlers, cleanupAgent } from "./agent";
+import { getStoredAuthor, setStoredAuthor, StoredAuthor } from "./authorStorage";
 import {
   getErrorMessage,
   removeDoltServerFolder,
@@ -246,6 +247,13 @@ ipcMain.handle("get-headers", (event, arg) => {
   };
   return headers;
 });
+
+ipcMain.handle("get-commit-author", () => getStoredAuthor());
+
+ipcMain.handle(
+  "set-commit-author",
+  (_, author: StoredAuthor) => setStoredAuthor(author),
+);
 
 ipcMain.handle("api-config", async () => {
   const cfg = {
