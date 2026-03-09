@@ -111,22 +111,6 @@ export default function CommitModal(props: Props) {
             disabled={hasHeaders}
             light
           />
-          {hasHeaders && (
-            <p className={css.authorNote}>
-              Author is set from request headers and cannot be edited.
-            </p>
-          )}
-          {!hasHeaders && !isElectron && (
-            <p className={css.authorNote}>
-              Optional. If not provided, the SQL user will be used as the commit
-              author.
-            </p>
-          )}
-          {!hasHeaders && isElectron && (
-            <p className={css.authorNote}>
-              Optional. Author will be saved for future commits.
-            </p>
-          )}
         </div>
       </div>
     </FormModal>
