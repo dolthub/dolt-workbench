@@ -1,8 +1,8 @@
+import { Commit } from "@dolthub/commit-graph";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { colors as customColors } from "@lib/tailwind";
 import { commit } from "@lib/urls";
-import { Commit } from "commit-graph";
 import { NextRouter } from "next/router";
 
 export function getCommit(

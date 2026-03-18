@@ -1,13 +1,13 @@
 import { getCommit } from "@components/CommitGraph/utils";
 import CommitLink from "@components/links/CommitLink";
+import { DiffSection } from "@dolthub/commit-graph";
 import { Button, ErrorMsg, Tooltip } from "@dolthub/react-components";
 import { getLongDateTimeString } from "@dolthub/web-utils";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import { RefParams } from "@lib/params";
-import { useRouter } from "next/router";
 import cx from "classnames";
-import { DiffSection } from "commit-graph";
+import { useRouter } from "next/router";
 import css from "./index.module.css";
 import ResetRevertCommit from "./ResetRevertCommit";
 

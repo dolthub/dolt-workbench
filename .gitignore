@@ -1,3 +1,4 @@
 **/*.env
 web/build/mac/dolt
 web/build/appx/dolt.exe
+.DS_Store

@@ -1,12 +1,12 @@
-import { useCallback, useState } from "react";
-import { ChangedItem, Diff } from "commit-graph";
-import { errorMatches, handleCaughtApolloError } from "@lib/errors/helpers";
-import { ApolloErrorType } from "@lib/errors/types";
+import { ChangedItem, Diff } from "@dolthub/commit-graph";
 import {
   DiffSummaryFragment,
   useDiffSummariesLazyQuery,
 } from "@gen/graphql-types";
+import { errorMatches, handleCaughtApolloError } from "@lib/errors/helpers";
+import { ApolloErrorType } from "@lib/errors/types";
 import { RefParams } from "@lib/params";
+import { useCallback, useState } from "react";
 import useApolloError from "../useApolloError";
 
 type ReturnType = {

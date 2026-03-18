@@ -1,6 +1,6 @@
+import { Diff } from "@dolthub/commit-graph";
 import { useOnClickOutside, useSetState } from "@dolthub/react-hooks";
 import { RefParams } from "@lib/params";
-import { Diff } from "commit-graph";
 import { useRef } from "react";
 import useDiffForTableListLazy from "./useDiffForTableListLazy";
 

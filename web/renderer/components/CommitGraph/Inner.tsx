@@ -1,8 +1,8 @@
+import { Diff, CommitGraph as Graph } from "@dolthub/commit-graph";
 import { CommitForHistoryFragment } from "@gen/graphql-types";
 import { BranchHeads } from "@hooks/useCommitListForCommitGraph";
 import { RefParams } from "@lib/params";
 import { useRouter } from "next/router";
-import { CommitGraph as Graph, Diff } from "commit-graph";
 import css from "./index.module.css";
 import { branchPathColors, getCommits } from "./utils";
 
@@ -34,7 +34,6 @@ export default function Inner(props: Props) {
         hasMore={props.hasMore}
         parentID="main-content"
         getDiff={props.getDiff}
-        forDolt
       />
     </div>
   );
