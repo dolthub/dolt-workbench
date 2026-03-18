@@ -909,7 +909,7 @@ __metadata:
   resolution: "@dolt-sql-workbench/graphql-server@workspace:."
   dependencies:
     "@apollo/server": "npm:^4.12.0"
-    "@dolthub/web-utils": "npm:^0.1.9"
+    "@dolthub/web-utils": "npm:^0.3.0"
     "@nestjs/apollo": "npm:^13.1.0"
     "@nestjs/cli": "npm:^11.0.10"
     "@nestjs/common": "npm:^11.1.6"
@@ -955,13 +955,17 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/web-utils@npm:^0.1.9":
-  version: 0.1.9
-  resolution: "@dolthub/web-utils@npm:0.1.9"
+"@dolthub/web-utils@npm:^0.3.0":
+  version: 0.3.0
+  resolution: "@dolthub/web-utils@npm:0.3.0"
   dependencies:
-    node-sql-parser: "npm:^5.3.5"
     timeago.js: "npm:^4.0.2"
-  checksum: 10c0/15e98e80615c09e0461cd10d738c54dd12f73526c0d2556740dc5830f280c073d1b4aeccb73e3a1817251f82a1716a09d6d35b6e718627b2c40b8cb731e087e7
+  peerDependencies:
+    node-sql-parser: ^5.4.0
+  peerDependenciesMeta:
+    node-sql-parser:
+      optional: true
+  checksum: 10c0/a69c16b1ea32b9d59e0f2113128a5d3d347099133c14ee6b13df593b68569cae7382bd2f1edff41ff2568203f54b955dc38720d756865d757b88a0baef25440c
   languageName: node
   linkType: hard
 
@@ -2884,13 +2888,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/pegjs@npm:^0.10.0":
-  version: 0.10.6
-  resolution: "@types/pegjs@npm:0.10.6"
-  checksum: 10c0/ee4a31cf07679ae5422fec95e499ad059483a9ab2815af1ada0ee858a00af6c7e6579a8e172810c1c9db04005941bef96d0dd2c28648769211f57df330f9c30f
-  languageName: node
-  linkType: hard
-
 "@types/qs@npm:*":
   version: 6.9.15
   resolution: "@types/qs@npm:6.9.15"
@@ -4143,13 +4140,6 @@ __metadata:
   bin:
     baseline-browser-mapping: dist/cli.js
   checksum: 10c0/c54356eb90cf251f351708f151fa42d0331814c03baa7bdcc802767f721fd9fe069eea88ae42395984bfddcae0c2fba2e5ee25d7921ce7cdcefc2f47440673d4
-  languageName: node
-  linkType: hard
-
-"big-integer@npm:^1.6.48":
-  version: 1.6.52
-  resolution: "big-integer@npm:1.6.52"
-  checksum: 10c0/9604224b4c2ab3c43c075d92da15863077a9f59e5d4205f4e7e76acd0cd47e8d469ec5e5dba8d9b32aa233951893b29329ca56ac80c20ce094b4a647a66abae0
   languageName: node
   linkType: hard
 
@@ -8703,16 +8693,6 @@ __metadata:
   version: 2.0.21
   resolution: "node-releases@npm:2.0.21"
   checksum: 10c0/0eb94916eeebbda9d51da6a9ea47428a12b2bb0dd94930c949632b0c859356abf53b2e5a2792021f96c5fda4f791a8e195f2375b78ae7dba8d8bc3141baa1469
-  languageName: node
-  linkType: hard
-
-"node-sql-parser@npm:^5.3.5":
-  version: 5.3.10
-  resolution: "node-sql-parser@npm:5.3.10"
-  dependencies:
-    "@types/pegjs": "npm:^0.10.0"
-    big-integer: "npm:^1.6.48"
-  checksum: 10c0/a4c417a429d4d438548f858e62be091148a52256c39b419c0e0eb259af5feb6fa555928a98e2fe3a07a974a2ce065ea12df04ac18f5a01bfa918df32cebc6a2a
   languageName: node
   linkType: hard
 

@@ -1,6 +1,7 @@
 import { getCommit } from "@components/CommitGraph/utils";
 import Link from "@components/links/Link";
 import ResetModal from "@components/StatusWithOptions/ResetModal";
+import { DiffSection } from "@dolthub/commit-graph";
 import { Button, ErrorMsg, Loader, Tooltip } from "@dolthub/react-components";
 import {
   CommitForHistoryFragment,
@@ -13,7 +14,6 @@ import { diff } from "@lib/urls";
 import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
 import cx from "classnames";
 import { useRouter } from "next/router";
-import { DiffSection } from "commit-graph";
 import { useState } from "react";
 import css from "./index.module.css";
 
