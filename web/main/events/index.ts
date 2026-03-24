@@ -6,8 +6,9 @@ import {
 
 const PRODUCTION_EVENTS_URL = "https://eventsapi.dolthub.com";
 const isProd = process.env.NODE_ENV === "production";
-// const eventsApiUrl = isProd ? PRODUCTION_EVENTS_URL : process.env.EVENTS_GRPC_URL;
-const eventsApiUrl = "https://eventsapi.awsdev.ld-corp.com"
+const eventsApiUrl = isProd
+  ? PRODUCTION_EVENTS_URL
+  : process.env.EVENTS_GRPC_URL;
 let machineId: string | undefined;
 
 function getMachineId(): string {
