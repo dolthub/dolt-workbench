@@ -4820,6 +4820,26 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@improbable-eng/grpc-web-node-http-transport@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@improbable-eng/grpc-web-node-http-transport@npm:0.15.0"
+  peerDependencies:
+    "@improbable-eng/grpc-web": ">=0.13.0"
+  checksum: 10c0/3a33cbc8b5182fa7caed005fe09eadb6018dcbbd981bbd49fd512a6b82275c329e945aadce394125e17708949aac951ac3235925df32f841c62adceb24f16762
+  languageName: node
+  linkType: hard
+
+"@improbable-eng/grpc-web@npm:^0.15.0":
+  version: 0.15.0
+  resolution: "@improbable-eng/grpc-web@npm:0.15.0"
+  dependencies:
+    browser-headers: "npm:^0.4.1"
+  peerDependencies:
+    google-protobuf: ^3.14.0
+  checksum: 10c0/98949a73bf98a54e5df02a3a13e3dadad83a610a35ed57600e566a842777e02bec71de413e42a7728267a38c5ccf30af67fe516486e68546c2701e95d2446f5c
+  languageName: node
+  linkType: hard
+
 "@inquirer/ansi@npm:^1.0.0":
   version: 1.0.0
   resolution: "@inquirer/ansi@npm:1.0.0"
@@ -6349,6 +6369,13 @@ __metadata:
   version: 7946.0.14
   resolution: "@types/geojson@npm:7946.0.14"
   checksum: 10c0/54f3997708fa2970c03eeb31f7e4540a0eb6387b15e9f8a60513a1409c23cafec8d618525404573468b59c6fecbfd053724b3327f7fca416729c26271d799f55
+  languageName: node
+  linkType: hard
+
+"@types/google-protobuf@npm:^3.15.12":
+  version: 3.15.12
+  resolution: "@types/google-protobuf@npm:3.15.12"
+  checksum: 10c0/721783234e627f367dd710c345a1eaa9dca4ac64910032cef0c851c1821e05d06ffb51e9d1693080f1c0797a8674f89130fa56a390395ec7791ea8506d2f3bfb
   languageName: node
   linkType: hard
 
@@ -8420,6 +8447,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"browser-headers@npm:^0.4.1":
+  version: 0.4.1
+  resolution: "browser-headers@npm:0.4.1"
+  checksum: 10c0/3b08864bb955b295ab3dd6ab775c7798096c2e85486571803b4070ec484de83ccceebe531a8b00d5daf4463fada5e7ca18cd1a71cc1ee0dfdbab705332318cef
+  languageName: node
+  linkType: hard
+
 "browserslist@npm:^4.0.0, browserslist@npm:^4.23.3, browserslist@npm:^4.24.0":
   version: 4.24.0
   resolution: "browserslist@npm:4.24.0"
@@ -10303,6 +10337,8 @@ __metadata:
     "@graphql-codegen/fragment-matcher": "npm:^6.0.0"
     "@graphql-codegen/typescript-operations": "npm:^5.0.1"
     "@graphql-codegen/typescript-react-apollo": "npm:^4.0.0"
+    "@improbable-eng/grpc-web": "npm:^0.15.0"
+    "@improbable-eng/grpc-web-node-http-transport": "npm:^0.15.0"
     "@react-icons/all-files": "npm:^4.1.0"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.1"
@@ -10313,6 +10349,7 @@ __metadata:
     "@types/babel__core": "npm:^7"
     "@types/chance": "npm:^1.1.7"
     "@types/diff": "npm:^5.2.1"
+    "@types/google-protobuf": "npm:^3.15.12"
     "@types/jest": "npm:^29.5.6"
     "@types/lodash": "npm:^4.17.21"
     "@types/node": "npm:^25.0.3"
@@ -10353,6 +10390,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^5.2.0"
     eslint-plugin-testing-library: "npm:^6.2.2"
     github-markdown-css: "npm:^5.9.0"
+    google-protobuf: "npm:^3.21.4"
     graphql: "npm:^16.8.1"
     isomorphic-unfetch: "npm:^4.0.2"
     jest: "npm:^29.7.0"
@@ -10363,6 +10401,7 @@ __metadata:
     next: "npm:^15.5.9"
     next-useragent: "npm:^2.8.0"
     nextron: "npm:^9.5.0"
+    node-machine-id: "npm:^1.1.12"
     node-sql-parser: "npm:^4.17.0"
     npm-run-all2: "npm:^7.0.2"
     postcss: "npm:^8.5.6"
@@ -12585,6 +12624,13 @@ __metadata:
   bin:
     gonzales: bin/gonzales.js
   checksum: 10c0/b99a6ef4bf28ca0b0adcc0b42fd0179676ee8bfe1d3e3c0025d7d38ba35a3f2d5b1d4beb16101a7fc7cb2dbda1ec045bbce0932697095df41d729bac1703476f
+  languageName: node
+  linkType: hard
+
+"google-protobuf@npm:^3.21.4":
+  version: 3.21.4
+  resolution: "google-protobuf@npm:3.21.4"
+  checksum: 10c0/28f2800f7fe1a8fc55eb58ba76e158268407bfb3b90646eaf8a177dd92a2e522459b773f8132ae546e60ac3b6f5947557a1cf3d963a05bb594f43bcde640f54f
   languageName: node
   linkType: hard
 
@@ -16198,6 +16244,13 @@ __metadata:
   version: 0.4.0
   resolution: "node-int64@npm:0.4.0"
   checksum: 10c0/a6a4d8369e2f2720e9c645255ffde909c0fbd41c92ea92a5607fc17055955daac99c1ff589d421eee12a0d24e99f7bfc2aabfeb1a4c14742f6c099a51863f31a
+  languageName: node
+  linkType: hard
+
+"node-machine-id@npm:^1.1.12":
+  version: 1.1.12
+  resolution: "node-machine-id@npm:1.1.12"
+  checksum: 10c0/ab2fea5f75a6f1ce3c76c5e0ae3903b631230e0a99b003d176568fff8ddbdf7b2943be96cd8d220c497ca0f6149411831f8a450601929f326781cb1b59bab7f8
   languageName: node
   linkType: hard
 

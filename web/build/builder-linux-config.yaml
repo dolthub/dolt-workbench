@@ -42,6 +42,11 @@ files:
       - node_modules/github-url-to-object
       - node_modules/is-url
       - node_modules/uuid
+      - node_modules/google-protobuf
+      - node_modules/@improbable-eng/grpc-web
+      - node_modules/@improbable-eng/grpc-web-node-http-transport
+      - node_modules/browser-headers
+      - node_modules/node-machine-id
 extraFiles:
   - from: node_modules/@anthropic-ai/claude-agent-sdk
     to: resources/node_modules/@anthropic-ai/claude-agent-sdk

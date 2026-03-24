@@ -19,6 +19,7 @@ import { startServer } from "./doltServer";
 import { createWindow } from "./helpers/createWindow";
 import { initMenu } from "./helpers/menu";
 import { registerAgentIpcHandlers, cleanupAgent } from "./agent";
+import { initEvents } from "./events";
 import {
   getStoredAuthor,
   setStoredAuthor,
@@ -180,6 +181,7 @@ app.on("ready", async () => {
   Menu.setApplicationMenu(initMenu(mainWindow, isProd));
   setupTitleBarClickMac();
   registerAgentIpcHandlers(mainWindow);
+  initEvents();
   await createGraphqlSeverProcess();
 
   await waitForGraphQLServer("http://localhost:9002/graphql");

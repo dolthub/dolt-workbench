@@ -12,6 +12,7 @@ import {
   unregisterSession,
 } from "./sessionStorage";
 import { AgentConfig, AgentMessage, SessionInfo } from "./types";
+import { sendAgentConnectedEvent } from "../events";
 
 let claudeAgent: ClaudeAgent | null = null;
 
@@ -55,6 +56,7 @@ export function registerAgentIpcHandlers(mainWindow: BrowserWindow): void {
           hasPassword: !!config.mcpConfig.password,
         });
 
+        sendAgentConnectedEvent();
         return { success: true };
       } catch (error) {
         console.error("Agent initialization error:", error);
