@@ -70,7 +70,7 @@ Why is your SQL workbench stuck in 2003? The Dolt Workbench brings a modern brow
 workbench features you know and love. It makes browsing table data and schemas more
 intuitive and looks good doing it.
 
-![Modern, web based table-browser](https://static.dolthub.com/blogimages/dolt-workbench/table-browser.png/ac8c260b384b4441aa91080d888d4e9ab5ab77c65175313b1a9644d72ceffb0e.webp)
+![Modern, web based table-browser](./images/workbench-main.png)
 
 ### Auto-generate SQL queries
 
