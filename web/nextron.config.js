@@ -1,8 +1,8 @@
+const path = require("path");
+
 process.env.NEXT_PUBLIC_FOR_ELECTRON = "true";
 process.env.NEXT_PUBLIC_FOR_MAC_NAV =
   process.platform === "darwin" ? "true" : "false";
-
-const path = require("path");
 
 module.exports = {
   mainSrcDir: "main",
@@ -25,6 +25,13 @@ module.exports = {
         return false;
       };
     }
+
+    // Resolve @eventsapi_schema alias for webpack (mirrors tsconfig paths).
+    config.resolve = config.resolve || {};
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      "@eventsapi_schema": path.resolve(__dirname, "../eventsapi_schema"),
+    };
 
     // Nextron externalizes dependencies by exact name, but the proto bindings
     // require sub-paths (e.g. google-protobuf/google/protobuf/timestamp_pb.js).

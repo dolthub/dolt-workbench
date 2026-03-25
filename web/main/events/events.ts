@@ -1,8 +1,8 @@
-import { ClientEvent } from "../../../eventsapi_schema/dolt/services/eventsapi/v1alpha1/client_event_pb";
+import { ClientEvent } from "@eventsapi_schema/dolt/services/eventsapi/v1alpha1/client_event_pb";
 import {
   ClientEventType,
   ClientEventTypeMap,
-} from "../../../eventsapi_schema/dolt/services/eventsapi/v1alpha1/event_constants_pb";
+} from "@eventsapi_schema/dolt/services/eventsapi/v1alpha1/event_constants_pb";
 import * as googleTS from "google-protobuf/google/protobuf/timestamp_pb";
 import { v4 as randomUUID } from "uuid";
 import { sendEvents } from "./eventsApi";

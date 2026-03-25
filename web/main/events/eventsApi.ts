@@ -4,16 +4,16 @@ import {
   ClientEvent,
   LogEventsRequest,
   LogEventsResponse,
-} from "../../../eventsapi_schema/dolt/services/eventsapi/v1alpha1/client_event_pb";
+} from "@eventsapi_schema/dolt/services/eventsapi/v1alpha1/client_event_pb";
 import {
   ClientEventsServiceClient,
   ServiceError,
-} from "../../../eventsapi_schema/dolt/services/eventsapi/v1alpha1/client_event_pb_service";
+} from "@eventsapi_schema/dolt/services/eventsapi/v1alpha1/client_event_pb_service";
 import {
   AppID,
   Platform,
   PlatformMap,
-} from "../../../eventsapi_schema/dolt/services/eventsapi/v1alpha1/event_constants_pb";
+} from "@eventsapi_schema/dolt/services/eventsapi/v1alpha1/event_constants_pb";
 import { app } from "electron";
 
 function getPlatform(): PlatformMap[keyof PlatformMap] {
