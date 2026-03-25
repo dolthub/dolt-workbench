@@ -6,9 +6,9 @@ import { AgentMessage, ContentBlock, SessionInfo } from "./types";
 
 // SDK stores session JSONL files at ~/.claude/projects/-/
 const SDK_DIR = path.join(os.homedir(), ".claude", "projects", "-");
-const IMAGES_DIR = path.join(SDK_DIR, "images");
+export const IMAGES_DIR = path.join(SDK_DIR, "images");
 
-const IMAGE_MIME_TYPES: Record<string, string> = {
+export const IMAGE_MIME_TYPES: Record<string, string> = {
   ".png": "image/png",
   ".jpg": "image/jpeg",
   ".jpeg": "image/jpeg",

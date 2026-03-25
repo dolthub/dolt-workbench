@@ -8,10 +8,10 @@ import type { Query } from "@anthropic-ai/claude-agent-sdk";
 import { execSync } from "child_process";
 import { BrowserWindow, ipcMain } from "electron";
 import { copyFileSync, mkdirSync, readFileSync } from "fs";
-import os from "os";
 import path from "path";
 import { z } from "zod";
 import { getClaudeCliPaths, getMcpServerPath } from "../helpers/filePath";
+import { IMAGE_MIME_TYPES, IMAGES_DIR } from "./sessionStorage";
 import {
   AgentConfig,
   ContentBlock,
@@ -224,15 +224,7 @@ export class ClaudeAgent {
       async args => {
         try {
           const ext = path.extname(args.image_path).toLowerCase();
-          const mimeTypes: Record<string, string> = {
-            ".png": "image/png",
-            ".jpg": "image/jpeg",
-            ".jpeg": "image/jpeg",
-            ".gif": "image/gif",
-            ".svg": "image/svg+xml",
-            ".webp": "image/webp",
-          };
-          const mimeType = mimeTypes[ext];
+          const mimeType = IMAGE_MIME_TYPES[ext];
           if (!mimeType) {
             return {
               content: [
@@ -250,14 +242,7 @@ export class ClaudeAgent {
 
           // Persist image for session history reconstruction
           if (this.sessionId) {
-            const imagesDir = path.join(
-              os.homedir(),
-              ".claude",
-              "projects",
-              "-",
-              "images",
-              this.sessionId,
-            );
+            const imagesDir = path.join(IMAGES_DIR, this.sessionId);
             mkdirSync(imagesDir, { recursive: true });
             const destPath = path.join(
               imagesDir,
