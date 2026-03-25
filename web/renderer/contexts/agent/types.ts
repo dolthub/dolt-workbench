@@ -58,7 +58,16 @@ export type ToolUseContentBlock = {
   pendingConfirmation?: boolean;
 };
 
-export type ContentBlock = TextContentBlock | ToolUseContentBlock;
+export type ImageContentBlock = {
+  type: "image";
+  src: string;
+  alt?: string;
+};
+
+export type ContentBlock =
+  | TextContentBlock
+  | ToolUseContentBlock
+  | ImageContentBlock;
 
 export type MessageRole = "user" | "assistant";
 

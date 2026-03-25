@@ -1,6 +1,8 @@
-import { AgentMessage, ContentBlock } from "@contexts/agent";
+import { AgentMessage, ContentBlock, ImageContentBlock } from "@contexts/agent";
 import { Markdown } from "@dolthub/react-components";
+import { HiDownload } from "@react-icons/all-files/hi/HiDownload";
 import cx from "classnames";
+import { useCallback } from "react";
 import InlineToolCall from "../InlineToolCall";
 import css from "./index.module.css";
 
@@ -9,7 +11,33 @@ type Props = {
 };
 
 // Tool calls that should be hidden from the chat UI
-const HIDDEN_TOOL_CALLS = ["mcp__workbench__refresh_page"];
+const HIDDEN_TOOL_CALLS = [
+  "mcp__workbench__refresh_page",
+  "mcp__workbench__display_image",
+];
+
+function ImageBlock({ block }: { block: ImageContentBlock }) {
+  const handleDownload = useCallback(() => {
+    const link = document.createElement("a");
+    link.href = block.src;
+    link.download = block.alt ?? "image.png";
+    link.click();
+  }, [block.src, block.alt]);
+
+  return (
+    <div className={css.imageWrapper}>
+      <button
+        type="button"
+        className={css.downloadButton}
+        onClick={handleDownload}
+        aria-label="Download image"
+      >
+        <HiDownload />
+      </button>
+      <img src={block.src} alt={block.alt ?? "image"} className={css.image} />
+    </div>
+  );
+}
 
 function renderContentBlock(block: ContentBlock, index: number) {
   if (block.type === "text") {
@@ -20,6 +48,10 @@ function renderContentBlock(block: ContentBlock, index: number) {
         className={css.markdown}
       />
     );
+  }
+
+  if (block.type === "image") {
+    return <ImageBlock key={`image-${index}`} block={block} />;
   }
 
   // Hide certain tool calls from the UI

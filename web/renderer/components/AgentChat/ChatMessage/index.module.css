@@ -26,6 +26,25 @@
   @apply text-sm overflow-hidden !bg-transparent break-words;
 }
 
+.imageWrapper {
+  @apply relative inline-block my-2;
+}
+
+.imageWrapper:hover .downloadButton {
+  @apply opacity-100;
+}
+
+.downloadButton {
+  @apply absolute top-2 right-2 opacity-0 transition-opacity duration-150
+    bg-sky-600 hover:bg-sky-700 text-white
+    rounded-lg p-1.5 shadow-lg cursor-pointer border-0
+    text-lg z-10;
+}
+
+.image {
+  @apply max-w-full rounded-lg block;
+}
+
 .markdown > div {
   @apply !bg-transparent overflow-hidden;
 }

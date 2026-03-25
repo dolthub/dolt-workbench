@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import css from "./index.module.css";
 
 const MIN_WIDTH = 320;
-const MAX_WIDTH = 800;
 
 function Inner() {
   const { closePanel, panelWidth, setPanelWidth, hasSmallHeader } =
@@ -23,7 +22,7 @@ function Inner() {
       if (!isResizing) return;
 
       const newWidth = window.innerWidth - e.clientX;
-      const clampedWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, newWidth));
+      const clampedWidth = Math.min(window.innerWidth, Math.max(MIN_WIDTH, newWidth));
       setPanelWidth(clampedWidth);
     },
     [isResizing, setPanelWidth],

@@ -66,6 +66,7 @@ export function useAgentContext(): AgentContextType {
 export type {
   AgentMessage,
   ContentBlock,
+  ImageContentBlock,
   TextContentBlock,
   ToolUseContentBlock,
   ToolCallEvent,
