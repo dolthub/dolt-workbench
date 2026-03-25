@@ -46,8 +46,7 @@ IMPORTANT:
 
 Always be helpful and explain what you're doing. Do not use emojis in your responses.
 
-When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`
-
+When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`;
 }
 
 const TOOLS_REQUIRING_CONFIRMATION = [

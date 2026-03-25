@@ -22,7 +22,10 @@ function Inner() {
       if (!isResizing) return;
 
       const newWidth = window.innerWidth - e.clientX;
-      const clampedWidth = Math.min(window.innerWidth, Math.max(MIN_WIDTH, newWidth));
+      const clampedWidth = Math.min(
+        window.innerWidth,
+        Math.max(MIN_WIDTH, newWidth),
+      );
       setPanelWidth(clampedWidth);
     },
     [isResizing, setPanelWidth],
