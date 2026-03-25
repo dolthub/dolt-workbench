@@ -6,6 +6,41 @@ import { AgentMessage, ContentBlock, SessionInfo } from "./types";
 
 // SDK stores session JSONL files at ~/.claude/projects/-/
 const SDK_DIR = path.join(os.homedir(), ".claude", "projects", "-");
+export const IMAGES_DIR = path.join(SDK_DIR, "images");
+
+export const IMAGE_MIME_TYPES: Record<string, string> = {
+  ".png": "image/png",
+  ".jpg": "image/jpeg",
+  ".jpeg": "image/jpeg",
+  ".gif": "image/gif",
+  ".svg": "image/svg+xml",
+  ".webp": "image/webp",
+};
+
+function loadPersistedImage(
+  sessionId: string,
+  imagePath: string,
+): ContentBlock | null {
+  try {
+    const filename = path.basename(imagePath);
+    const persistedPath = path.join(IMAGES_DIR, sessionId, filename);
+    if (!fs.existsSync(persistedPath)) return null;
+
+    const ext = path.extname(filename).toLowerCase();
+    const mimeType = IMAGE_MIME_TYPES[ext];
+    if (!mimeType) return null;
+
+    const imageData = fs.readFileSync(persistedPath);
+    const base64 = imageData.toString("base64");
+    return {
+      type: "image",
+      src: `data:${mimeType};base64,${base64}`,
+      alt: filename,
+    };
+  } catch {
+    return null;
+  }
+}
 
 type JsonlEntry = {
   type: string;
@@ -150,6 +185,20 @@ export function loadSessionMessages(sessionId: string): AgentMessage[] {
               name: toolBlock.name,
               input: toolBlock.input,
             });
+
+            // Reconstruct image block for display_image tool calls
+            if (
+              toolBlock.name === "mcp__workbench__display_image" &&
+              typeof toolBlock.input.image_path === "string"
+            ) {
+              const imageBlock = loadPersistedImage(
+                sessionId,
+                toolBlock.input.image_path,
+              );
+              if (imageBlock) {
+                blocks.push(imageBlock);
+              }
+            }
           }
         }
 

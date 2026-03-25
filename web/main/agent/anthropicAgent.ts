@@ -7,8 +7,11 @@ import {
 import type { Query } from "@anthropic-ai/claude-agent-sdk";
 import { execSync } from "child_process";
 import { BrowserWindow, ipcMain } from "electron";
+import { copyFileSync, mkdirSync, readFileSync } from "fs";
+import path from "path";
 import { z } from "zod";
 import { getClaudeCliPaths, getMcpServerPath } from "../helpers/filePath";
+import { IMAGE_MIME_TYPES, IMAGES_DIR } from "./sessionStorage";
 import {
   AgentConfig,
   ContentBlock,
@@ -39,6 +42,7 @@ When users ask questions about their database, use the available tools to:
 IMPORTANT:
 - After performing any write operation (INSERT, UPDATE, DELETE, CREATE, DROP, ALTER queries) or making a tool call that performs a write operation (exec, merging branches, creating/deleting branches, resetting, committing, etc.), you MUST silently call the refresh_page tool to update the workbench UI with the latest data. Do NOT mention that you are refreshing the page or that you called this tool - just call it silently in the background. These refresh calls should happen after EVERY write operation. For example, if you decide to make two 'exec' calls and a 'delete_dolt_branch' call, the order of tool calls should be 'exec' -> 'refresh_page' -> 'exec' -> 'refresh_page' -> 'delete_dolt_branch' -> 'refresh_page'.
 - If the user asks you to create or modify the README.md, LICENSE.md, or AGENT.md, use the 'dolt_docs' system table.
+- When you create an image file (chart, graph, plot, etc.), call the display_image tool with the file path to show it inline in the chat.
 
 Always be helpful and explain what you're doing. Do not use emojis in your responses.
 
@@ -209,10 +213,75 @@ export class ClaudeAgent {
       },
     );
 
+    const displayImageTool = tool(
+      "display_image",
+      "Display an image in the chat. Use this after creating a chart, graph, or any image file to show it inline in the conversation. The image file must exist on disk.",
+      {
+        image_path: z
+          .string()
+          .describe("Absolute path to the image file to display"),
+      },
+      async args => {
+        try {
+          const ext = path.extname(args.image_path).toLowerCase();
+          const mimeType = IMAGE_MIME_TYPES[ext];
+          if (!mimeType) {
+            return {
+              content: [
+                {
+                  type: "text" as const,
+                  text: `Unsupported image format: ${ext}`,
+                },
+              ],
+            };
+          }
+
+          const imageData = readFileSync(args.image_path);
+          const base64 = imageData.toString("base64");
+          const dataUri = `data:${mimeType};base64,${base64}`;
+
+          // Persist image for session history reconstruction
+          if (this.sessionId) {
+            const imagesDir = path.join(IMAGES_DIR, this.sessionId);
+            mkdirSync(imagesDir, { recursive: true });
+            const destPath = path.join(
+              imagesDir,
+              path.basename(args.image_path),
+            );
+            copyFileSync(args.image_path, destPath);
+          }
+
+          // Inject image as a content block into the message stream
+          const imageBlock: ContentBlock = {
+            type: "image",
+            src: dataUri,
+            alt: path.basename(args.image_path),
+          };
+          this.contentBlocks.push(imageBlock);
+          this.sendEvent("agent:content-block", imageBlock);
+
+          return {
+            content: [
+              {
+                type: "text" as const,
+                text: `Image displayed: ${args.image_path}`,
+              },
+            ],
+          };
+        } catch (err) {
+          const msg =
+            err instanceof Error ? err.message : "Failed to read image";
+          return {
+            content: [{ type: "text" as const, text: `Error: ${msg}` }],
+          };
+        }
+      },
+    );
+
     return createSdkMcpServer({
       name: "workbench",
       version: "1.0.0",
-      tools: [switchBranchTool, refreshPageTool],
+      tools: [switchBranchTool, refreshPageTool, displayImageTool],
     });
   }
 
