@@ -70,7 +70,7 @@ Why is your SQL workbench stuck in 2003? The Dolt Workbench brings a modern brow
 workbench features you know and love. It makes browsing table data and schemas more
 intuitive and looks good doing it.
 
-<img width="1357" alt="Modern, web based table-browser" src="https://www.dolthub.com/blog/static/3f1358cd506d7b8ed383ea0751b67446/4f2ef/table-browser.png">
+<img width="1357" alt="Modern, web based table-browser" src="https://static.dolthub.com/blogimages/dolt-workbench/table-browser.png/ac8c260b384b4441aa91080d888d4e9ab5ab77c65175313b1a9644d72ceffb0e.webp">
 
 ### Auto-generate SQL queries
 
@@ -86,6 +86,15 @@ Cell buttons can also be used to edit data. Double click into any cell to edit i
 and easily remove or add rows, columns, and tables using helper buttons.
 
 ![Edit data](./images/edit-data.png)
+
+### Agent Mode
+
+Use the agent chat interface to interact with your database through natural
+language. Agent mode lets you execute queries and make modifications
+across Dolt, MySQL, and PostgreSQL databases. With Dolt, you can preview changes and 
+approve commits before they're finalized.
+
+![Agent Mode](./images/agent-mode.png)
 
 ### ER diagrams
 
@@ -210,6 +219,14 @@ CREATE DATABASE dolt_workbench;
 ## Getting started from source
 
 First, clone this repository.
+
+```
+git clone https://github.com/dolthub/dolt-workbench.git
+```
+Then, from the root directory, pull in the `eventsapi_schema` submodule.
+```
+git submodule update --init
+```
 
 ### Run the GraphQL server
 
