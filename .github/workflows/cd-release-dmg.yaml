@@ -38,10 +38,13 @@ jobs:
         uses: actions/checkout@v3
         with:
           ref: release/${{ inputs.release-version }}
+          submodules: true
 
       - name: Checkout code for individual build
         if: ${{ !inputs.via-call }}
         uses: actions/checkout@v3
+        with:
+          submodules: true
 
       - name: Bump build version
         uses: ./.github/actions/bump-build-version

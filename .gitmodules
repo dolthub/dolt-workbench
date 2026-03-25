@@ -1,0 +1,3 @@
+[submodule "eventsapi_schema"]
+	path = eventsapi_schema
+	url = https://github.com/dolthub/eventsapi_schema.git

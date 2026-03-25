@@ -25,7 +25,8 @@
       "@contexts/*": ["renderer/contexts/*"],
       "@gen/*": ["renderer/gen/*"],
       "@hooks/*": ["renderer/hooks/*"],
-      "@lib/*": ["renderer/lib/*"]
+      "@lib/*": ["renderer/lib/*"],
+      "@eventsapi_schema/*": ["../eventsapi_schema/*"]
     },
     "plugins": [
       {
