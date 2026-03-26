@@ -52,6 +52,14 @@ updateElectronApp();
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
+
+// Write diagnostic logs to a file in userData so we can debug production issues
+const logFilePath = path.join(userDataPath, "workbench-debug.log");
+function debugLog(...args: unknown[]) {
+  const msg = `[${new Date().toISOString()}] ${args.map(a => (typeof a === "string" ? a : JSON.stringify(a))).join(" ")}\n`;
+  fs.appendFileSync(logFilePath, msg);
+  console.log(...args);
+}
 const schemaPath = isProd
   ? path.join(userDataPath, "schema.gql")
   : "../graphql-server/schema.gql";
@@ -108,11 +116,12 @@ async function createGraphqlSeverProcess() {
       : path.join("../graphql-server", "dist", "main.js");
 
   // Diagnostics: log the resolved path and whether it exists
-  console.log("GraphQL server path:", serverPath);
-  console.log("GraphQL server path exists:", fs.existsSync(serverPath));
+  debugLog("GraphQL server path:", serverPath);
+  debugLog("resourcesPath:", process.resourcesPath);
+  debugLog("GraphQL server path exists:", fs.existsSync(serverPath));
   if (!fs.existsSync(serverPath)) {
     const parentDir = path.join(process.resourcesPath, "..");
-    console.error(
+    debugLog(
       "GraphQL server not found. Contents of",
       parentDir,
       ":",
@@ -123,11 +132,11 @@ async function createGraphqlSeverProcess() {
   graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
   graphqlServerProcess.on("spawn", () => {
-    console.log("GraphQL server process spawned successfully");
+    debugLog("GraphQL server process spawned successfully");
   });
 
   graphqlServerProcess.on("exit", code => {
-    console.log("GraphQL server process exited with code:", code);
+    debugLog("GraphQL server process exited with code:", code);
   });
 
   graphqlServerProcess.stdout?.on("data", async (chunk: Buffer) => {
@@ -237,7 +246,7 @@ app.on("ready", async () => {
     await createGraphqlSeverProcess();
     await waitForGraphQLServer("http://localhost:9002/graphql");
   } catch (error) {
-    console.error("GraphQL server failed to start:", error);
+    debugLog("GraphQL server failed to start:", String(error));
   }
 
   try {
@@ -248,7 +257,7 @@ app.on("ready", async () => {
       await mainWindow.loadURL(`http://localhost:${port}`);
     }
   } catch (error) {
-    console.error("Failed to load app URL:", error);
+    debugLog("Failed to load app URL:", String(error));
     const errorMsg =
       error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : "";
