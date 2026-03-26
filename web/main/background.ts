@@ -35,6 +35,7 @@ updateElectronApp();
 
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
+
 const schemaPath = isProd
   ? path.join(userDataPath, "schema.gql")
   : "../graphql-server/schema.gql";
@@ -79,16 +80,28 @@ function isExternalUrl(url: string) {
 }
 
 async function createGraphqlSeverProcess() {
-  const serverPath =
-    process.env.NODE_ENV === "production"
-      ? path.join(
-          process.resourcesPath,
-          "..",
-          "graphql-server",
-          "dist",
-          "main.js",
-        )
-      : path.join("../graphql-server", "dist", "main.js");
+  let serverPath: string;
+  if (process.env.NODE_ENV !== "production") {
+    serverPath = path.join("../graphql-server", "dist", "main.js");
+  } else if (process.platform === "win32") {
+    // On Windows, graphql-server is inside resources/ (required by Squirrel packaging)
+    serverPath = path.join(
+      process.resourcesPath,
+      "graphql-server",
+      "dist",
+      "main.js",
+    );
+  } else {
+    // On macOS/Linux, graphql-server is at the app root
+    serverPath = path.join(
+      process.resourcesPath,
+      "..",
+      "graphql-server",
+      "dist",
+      "main.js",
+    );
+  }
+
   graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
 
   graphqlServerProcess.stdout?.on("data", async (chunk: Buffer) => {
@@ -182,15 +195,24 @@ app.on("ready", async () => {
   setupTitleBarClickMac();
   registerAgentIpcHandlers(mainWindow);
   initEvents();
-  await createGraphqlSeverProcess();
 
-  await waitForGraphQLServer("http://localhost:9002/graphql");
+  // Start GraphQL server but don't let failures prevent page load
+  try {
+    await createGraphqlSeverProcess();
+    await waitForGraphQLServer("http://localhost:9002/graphql");
+  } catch (error) {
+    console.error("GraphQL server failed to start:", error);
+  }
 
-  if (isProd) {
-    await mainWindow.loadURL("app://./");
-  } else {
-    const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}`);
+  try {
+    if (isProd) {
+      await mainWindow.loadURL("app://./");
+    } else {
+      const port = process.argv[2];
+      await mainWindow.loadURL(`http://localhost:${port}`);
+    }
+  } catch (error) {
+    console.error("Failed to load app URL:", error);
   }
 
   // hit when middle-clicking buttons or <a href/> with a target set to _blank

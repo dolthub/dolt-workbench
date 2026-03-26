@@ -54,9 +54,9 @@ extraFiles:
       - "**/*"
       - "!**/vendor/ripgrep/**"
   - from: ../graphql-server/dist
-    to: graphql-server/dist
+    to: resources/graphql-server/dist
   - from: ../graphql-server/node_modules
-    to: graphql-server/node_modules
+    to: resources/graphql-server/node_modules
     filter:
       - "**/*"
       - "!**/*.ts"
