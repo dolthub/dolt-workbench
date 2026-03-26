@@ -104,16 +104,27 @@ function isExternalUrl(url: string) {
 }
 
 async function createGraphqlSeverProcess() {
-  const serverPath =
-    process.env.NODE_ENV === "production"
-      ? path.join(
-          process.resourcesPath,
-          "..",
-          "graphql-server",
-          "dist",
-          "main.js",
-        )
-      : path.join("../graphql-server", "dist", "main.js");
+  let serverPath: string;
+  if (process.env.NODE_ENV !== "production") {
+    serverPath = path.join("../graphql-server", "dist", "main.js");
+  } else if (process.platform === "win32") {
+    // On Windows (Squirrel), graphql-server is inside resources/
+    serverPath = path.join(
+      process.resourcesPath,
+      "graphql-server",
+      "dist",
+      "main.js",
+    );
+  } else {
+    // On macOS/Linux, graphql-server is at the app root (one level above resources/)
+    serverPath = path.join(
+      process.resourcesPath,
+      "..",
+      "graphql-server",
+      "dist",
+      "main.js",
+    );
+  }
 
   // Diagnostics: log the resolved path and whether it exists
   debugLog("GraphQL server path:", serverPath);
