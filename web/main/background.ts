@@ -1,3 +1,19 @@
+// Handle Squirrel install/update/uninstall events on Windows.
+// Must run before anything else to prevent the app from fully starting during
+// Squirrel lifecycle operations (which would leave zombie processes, corrupt
+// state, or block the installer).
+if (process.platform === "win32") {
+  const squirrelCmd = process.argv[1];
+  if (
+    squirrelCmd === "--squirrel-install" ||
+    squirrelCmd === "--squirrel-updated" ||
+    squirrelCmd === "--squirrel-uninstall" ||
+    squirrelCmd === "--squirrel-obsolete"
+  ) {
+    process.exit(0);
+  }
+}
+
 import { ChildProcess } from "child_process";
 import {
   app,
@@ -12,6 +28,7 @@ import {
   UtilityProcess,
 } from "electron";
 import serve from "electron-serve";
+import fs from "fs";
 import path from "path";
 import { cloneAndStartDatabase } from "./doltClone";
 import { doltLogin } from "./doltLogin";
@@ -89,7 +106,29 @@ async function createGraphqlSeverProcess() {
           "main.js",
         )
       : path.join("../graphql-server", "dist", "main.js");
+
+  // Diagnostics: log the resolved path and whether it exists
+  console.log("GraphQL server path:", serverPath);
+  console.log("GraphQL server path exists:", fs.existsSync(serverPath));
+  if (!fs.existsSync(serverPath)) {
+    const parentDir = path.join(process.resourcesPath, "..");
+    console.error(
+      "GraphQL server not found. Contents of",
+      parentDir,
+      ":",
+      fs.existsSync(parentDir) ? fs.readdirSync(parentDir) : "DIR NOT FOUND",
+    );
+  }
+
   graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
+
+  graphqlServerProcess.on("spawn", () => {
+    console.log("GraphQL server process spawned successfully");
+  });
+
+  graphqlServerProcess.on("exit", code => {
+    console.log("GraphQL server process exited with code:", code);
+  });
 
   graphqlServerProcess.stdout?.on("data", async (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
@@ -182,15 +221,47 @@ app.on("ready", async () => {
   setupTitleBarClickMac();
   registerAgentIpcHandlers(mainWindow);
   initEvents();
-  await createGraphqlSeverProcess();
 
-  await waitForGraphQLServer("http://localhost:9002/graphql");
+  // Log load failures for diagnostics
+  mainWindow.webContents.on(
+    "did-fail-load",
+    (_event, errorCode, errorDescription, validatedURL) => {
+      console.error(
+        `Failed to load ${validatedURL}: ${errorDescription} (code: ${errorCode})`,
+      );
+    },
+  );
 
-  if (isProd) {
-    await mainWindow.loadURL("app://./");
-  } else {
-    const port = process.argv[2];
-    await mainWindow.loadURL(`http://localhost:${port}`);
+  // Start GraphQL server but don't let failures prevent page load
+  try {
+    await createGraphqlSeverProcess();
+    await waitForGraphQLServer("http://localhost:9002/graphql");
+  } catch (error) {
+    console.error("GraphQL server failed to start:", error);
+  }
+
+  try {
+    if (isProd) {
+      await mainWindow.loadURL("app://./");
+    } else {
+      const port = process.argv[2];
+      await mainWindow.loadURL(`http://localhost:${port}`);
+    }
+  } catch (error) {
+    console.error("Failed to load app URL:", error);
+    const errorMsg =
+      error instanceof Error ? error.message : String(error);
+    const errorStack = error instanceof Error ? error.stack : "";
+    await mainWindow.loadURL(
+      `data:text/html;charset=utf-8,${encodeURIComponent(`<!DOCTYPE html>
+<html><body style="font-family: system-ui; padding: 40px; color: #333;">
+<h1>Dolt Workbench failed to start</h1>
+<p>${errorMsg}</p>
+<p>resourcesPath: ${process.resourcesPath}</p>
+<p>Please file a bug at <a href="https://github.com/dolthub/dolt-workbench/issues">GitHub Issues</a> with this information.</p>
+<pre>${errorStack}</pre>
+</body></html>`)}`,
+    );
   }
 
   // hit when middle-clicking buttons or <a href/> with a target set to _blank
