@@ -1,19 +1,3 @@
-// Handle Squirrel install/update/uninstall events on Windows.
-// Must run before anything else to prevent the app from fully starting during
-// Squirrel lifecycle operations (which would leave zombie processes, corrupt
-// state, or block the installer).
-if (process.platform === "win32") {
-  const squirrelCmd = process.argv[1];
-  if (
-    squirrelCmd === "--squirrel-install" ||
-    squirrelCmd === "--squirrel-updated" ||
-    squirrelCmd === "--squirrel-uninstall" ||
-    squirrelCmd === "--squirrel-obsolete"
-  ) {
-    process.exit(0);
-  }
-}
-
 import { ChildProcess } from "child_process";
 import {
   app,
@@ -28,7 +12,6 @@ import {
   UtilityProcess,
 } from "electron";
 import serve from "electron-serve";
-import fs from "fs";
 import path from "path";
 import { cloneAndStartDatabase } from "./doltClone";
 import { doltLogin } from "./doltLogin";
@@ -53,13 +36,6 @@ updateElectronApp();
 const isProd = process.env.NODE_ENV === "production";
 const userDataPath = app.getPath("userData");
 
-// Write diagnostic logs to a file in userData so we can debug production issues
-const logFilePath = path.join(userDataPath, "workbench-debug.log");
-function debugLog(...args: unknown[]) {
-  const msg = `[${new Date().toISOString()}] ${args.map(a => (typeof a === "string" ? a : JSON.stringify(a))).join(" ")}\n`;
-  fs.appendFileSync(logFilePath, msg);
-  console.log(...args);
-}
 const schemaPath = isProd
   ? path.join(userDataPath, "schema.gql")
   : "../graphql-server/schema.gql";
@@ -126,29 +102,7 @@ async function createGraphqlSeverProcess() {
     );
   }
 
-  // Diagnostics: log the resolved path and whether it exists
-  debugLog("GraphQL server path:", serverPath);
-  debugLog("resourcesPath:", process.resourcesPath);
-  debugLog("GraphQL server path exists:", fs.existsSync(serverPath));
-  if (!fs.existsSync(serverPath)) {
-    const parentDir = path.join(process.resourcesPath, "..");
-    debugLog(
-      "GraphQL server not found. Contents of",
-      parentDir,
-      ":",
-      fs.existsSync(parentDir) ? fs.readdirSync(parentDir) : "DIR NOT FOUND",
-    );
-  }
-
   graphqlServerProcess = utilityProcess.fork(serverPath, [], { stdio: "pipe" });
-
-  graphqlServerProcess.on("spawn", () => {
-    debugLog("GraphQL server process spawned successfully");
-  });
-
-  graphqlServerProcess.on("exit", code => {
-    debugLog("GraphQL server process exited with code:", code);
-  });
 
   graphqlServerProcess.stdout?.on("data", async (chunk: Buffer) => {
     console.log("server data", chunk.toString("utf8"));
@@ -242,22 +196,12 @@ app.on("ready", async () => {
   registerAgentIpcHandlers(mainWindow);
   initEvents();
 
-  // Log load failures for diagnostics
-  mainWindow.webContents.on(
-    "did-fail-load",
-    (_event, errorCode, errorDescription, validatedURL) => {
-      console.error(
-        `Failed to load ${validatedURL}: ${errorDescription} (code: ${errorCode})`,
-      );
-    },
-  );
-
   // Start GraphQL server but don't let failures prevent page load
   try {
     await createGraphqlSeverProcess();
     await waitForGraphQLServer("http://localhost:9002/graphql");
   } catch (error) {
-    debugLog("GraphQL server failed to start:", String(error));
+    console.error("GraphQL server failed to start:", error);
   }
 
   try {
@@ -268,19 +212,7 @@ app.on("ready", async () => {
       await mainWindow.loadURL(`http://localhost:${port}`);
     }
   } catch (error) {
-    debugLog("Failed to load app URL:", String(error));
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    const errorStack = error instanceof Error ? error.stack : "";
-    await mainWindow.loadURL(
-      `data:text/html;charset=utf-8,${encodeURIComponent(`<!DOCTYPE html>
-<html><body style="font-family: system-ui; padding: 40px; color: #333;">
-<h1>Dolt Workbench failed to start</h1>
-<p>${errorMsg}</p>
-<p>resourcesPath: ${process.resourcesPath}</p>
-<p>Please file a bug at <a href="https://github.com/dolthub/dolt-workbench/issues">GitHub Issues</a> with this information.</p>
-<pre>${errorStack}</pre>
-</body></html>`)}`,
-    );
+    console.error("Failed to load app URL:", error);
   }
 
   // hit when middle-clicking buttons or <a href/> with a target set to _blank
