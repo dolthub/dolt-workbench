@@ -258,8 +258,7 @@ app.on("ready", async () => {
     }
   } catch (error) {
     debugLog("Failed to load app URL:", String(error));
-    const errorMsg =
-      error instanceof Error ? error.message : String(error);
+    const errorMsg = error instanceof Error ? error.message : String(error);
     const errorStack = error instanceof Error ? error.stack : "";
     await mainWindow.loadURL(
       `data:text/html;charset=utf-8,${encodeURIComponent(`<!DOCTYPE html>
