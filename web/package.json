@@ -4,10 +4,10 @@
   "description": "SQL workbench for MySQL and PostgreSQL databases",
   "homepage": "https://github.com/dolthub/dolt-workbench",
   "repository": "dolthub/dolt-workbench",
-  "version": "0.3.69",
+  "version": "0.3.71",
   "main": "app/background.js",
   "author": "DoltHub",
-  "packageManager": "yarn@4.12.0",
+  "packageManager": "yarn@4.13.0",
   "scripts": {
     "build:graphql": "yarn --cwd ../graphql-server build",
     "download:dependencies": "node build/downloadDependencies.js",
@@ -148,7 +148,7 @@
     "rimraf": "^6.0.1",
     "stylelint": "^16.15.0",
     "stylelint-config-recommended": "^14.0.0",
-    "tar": "^7.5.8",
+    "tar": "^7.5.11",
     "ts-jest": "^29.4.5",
     "typescript": "^5.9.3",
     "webpack-preprocessor-loader": "^1.3.0",
@@ -159,7 +159,7 @@
     "@babel/runtime@npm:7.26.0": "7.26.10",
     "brace-expansion": "2.0.2",
     "tmp": "0.2.4",
-    "tar": "7.5.8",
+    "tar": "7.5.11",
     "js-yaml": "4.1.1",
     "immutable": "3.8.3"
   }
