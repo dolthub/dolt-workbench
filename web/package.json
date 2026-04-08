@@ -172,6 +172,7 @@
     "minimatch@npm:^9.0.4": "9.0.7",
     "minimatch@npm:^9.0.5": "9.0.7",
     "minimatch@npm:^10.0.3": "10.2.3",
-    "minimatch@npm:^10.1.1": "10.2.3"
+    "minimatch@npm:^10.1.1": "10.2.3",
+    "picomatch@npm:^4.0.3": "4.0.4"
   }
 }

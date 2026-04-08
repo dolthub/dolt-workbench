@@ -100,6 +100,11 @@
     "glob": "10.5.0",
     "js-yaml": "4.1.1",
     "minimatch@npm:^5.0.1": "5.1.8",
-    "minimatch@npm:^9.0.4": "9.0.7"
+    "minimatch@npm:^9.0.4": "9.0.7",
+    "picomatch@npm:^2.0.4": "2.3.2",
+    "picomatch@npm:^2.3.1": "2.3.2",
+    "picomatch@npm:4.0.2": "4.0.4",
+    "picomatch@npm:^4.0.2": "4.0.4",
+    "picomatch@npm:^4.0.3": "4.0.4"
   }
 }
