@@ -10354,7 +10354,7 @@ __metadata:
     classnames: "npm:^2.3.2"
     cssnano: "npm:^7.0.7"
     diff: "npm:^5.2.2"
-    electron: "npm:^36.8.1"
+    electron: "npm:^39.8.5"
     electron-builder: "npm:^26.4.0"
     electron-builder-squirrel-windows: "npm:^26.4.0"
     electron-serve: "npm:^1.3.0"
@@ -10682,16 +10682,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^36.8.1":
-  version: 36.9.1
-  resolution: "electron@npm:36.9.1"
+"electron@npm:^39.8.5":
+  version: 39.8.7
+  resolution: "electron@npm:39.8.7"
   dependencies:
     "@electron/get": "npm:^2.0.0"
     "@types/node": "npm:^22.7.7"
     extract-zip: "npm:^2.0.1"
   bin:
     electron: cli.js
-  checksum: 10c0/3363799641a781ddc2b622049197d90b0a5635ee5d26d5d691070dbdf494ce32b3b2ddef8f515bb0460a2c6522444e97aa8c1b61e4a3a0d60f3c0606fb5358a1
+  checksum: 10c0/cec8fd0842f565fa5c6acf909e141bab269df1e78ff5eb2fcaf256e7f073060872f6a18dc2aced4888606445d15b79f9ef971c011e5c06b6bd7a0247ae104cdb
   languageName: node
   linkType: hard
 
