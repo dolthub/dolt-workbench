@@ -105,6 +105,7 @@
     "picomatch@npm:^2.3.1": "2.3.2",
     "picomatch@npm:4.0.2": "4.0.4",
     "picomatch@npm:^4.0.2": "4.0.4",
-    "picomatch@npm:^4.0.3": "4.0.4"
+    "picomatch@npm:^4.0.3": "4.0.4",
+    "serialize-javascript": "7.0.5"
   }
 }
