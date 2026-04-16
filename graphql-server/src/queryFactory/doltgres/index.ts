@@ -293,10 +293,12 @@ export class DoltgresQueryFactory
       args.databaseName,
       args.refName,
     );
-    return rows.map(r => ({
-      ...r,
-      table_name: tableWithoutSchema(r.table_name),
-    }));
+    return rows.map(r => {
+      return {
+        ...r,
+        table_name: tableWithoutSchema(r.table_name),
+      };
+    });
   }
 
   async getTag(args: t.TagArgs): t.UPR {
