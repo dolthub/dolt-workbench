@@ -313,24 +313,24 @@ export class ClaudeAgent {
     console.log("MCP CONFIG: ", mcpConfig);
     const args = [
       "--stdio",
-      "--dolt-host",
+      "--host",
       mcpConfig.host,
-      "--dolt-port",
+      "--port",
       String(mcpConfig.port),
-      "--dolt-user",
+      "--user",
       mcpConfig.user,
-      "--dolt-database",
+      "--database",
       mcpConfig.database,
-      "--dolt-password",
+      "--password",
       mcpConfig.password ?? "",
     ];
 
     if (mcpConfig.useSSL) {
-      args.push("--dolt-tls", "skip-verify");
+      args.push("--tls", "skip-verify");
     }
 
     if (mcpConfig.type?.toLowerCase() === "postgres") {
-      args.push("--dolt-dialect", "postgres");
+      args.push("--doltgres");
     }
 
     return args;
@@ -367,11 +367,13 @@ export class ClaudeAgent {
         pathToClaudeCodeExecutable: getClaudeCliPaths(),
         env: { ...getAgentEnv(), ANTHROPIC_API_KEY: this.config.apiKey },
         mcpServers: {
-          dolt: {
-            command: mcpServerPath,
-            args: mcpArgs,
-          },
           workbench: workbenchMcpServer,
+          ...(mcpConfig.isDolt && {
+            dolt: {
+              command: mcpServerPath,
+              args: mcpArgs,
+            },
+          }),
         },
         permissionMode: "default",
         canUseTool: async (toolName, input, options) =>
