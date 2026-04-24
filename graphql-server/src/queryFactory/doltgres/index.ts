@@ -288,11 +288,17 @@ export class DoltgresQueryFactory
   }
 
   async getStatus(args: t.RefArgs): t.PR {
-    return this.queryForBuilder(
+    const rows = await this.queryForBuilder(
       async em => dem.getDoltStatus(em),
       args.databaseName,
       args.refName,
     );
+    return rows.map(r => {
+      return {
+        ...r,
+        table_name: tableWithoutSchema(r.table_name),
+      };
+    });
   }
 
   async getTag(args: t.TagArgs): t.UPR {

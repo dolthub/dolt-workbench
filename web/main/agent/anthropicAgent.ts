@@ -27,9 +27,9 @@ function getSystemPrompt(
   const typeInfo = dbType
     ? `The database type is ${isDolt ? "Dolt" : dbType}.`
     : "";
-  return `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with Dolt, MySQL, and Postgres databases.
+  return `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with Dolt, Doltgres, MySQL, and Postgres databases.
 
-If interacting with a Dolt database, use Dolt MCP tools. For MySQL and Postgres, use 'mysql' and 'psql' CLI tools in Bash.
+If interacting with a Dolt or Doltgres database, use Dolt MCP tools. For MySQL and Postgres, use 'mysql' and 'psql' CLI tools in Bash.
 
 You are currently connected to the database: "${database}". ${typeInfo}
 
@@ -313,20 +313,24 @@ export class ClaudeAgent {
     console.log("MCP CONFIG: ", mcpConfig);
     const args = [
       "--stdio",
-      "--dolt-host",
+      "--host",
       mcpConfig.host,
-      "--dolt-port",
+      "--port",
       String(mcpConfig.port),
-      "--dolt-user",
+      "--user",
       mcpConfig.user,
-      "--dolt-database",
+      "--database",
       mcpConfig.database,
-      "--dolt-password",
+      "--password",
       mcpConfig.password ?? "",
     ];
 
     if (mcpConfig.useSSL) {
-      args.push("--dolt-tls", "skip-verify");
+      args.push("--tls", "skip-verify");
+    }
+
+    if (mcpConfig.type?.toLowerCase() === "postgres") {
+      args.push("--doltgres");
     }
 
     return args;
@@ -363,11 +367,13 @@ export class ClaudeAgent {
         pathToClaudeCodeExecutable: getClaudeCliPaths(),
         env: { ...getAgentEnv(), ANTHROPIC_API_KEY: this.config.apiKey },
         mcpServers: {
-          dolt: {
-            command: mcpServerPath,
-            args: mcpArgs,
-          },
           workbench: workbenchMcpServer,
+          ...(mcpConfig.isDolt && {
+            dolt: {
+              command: mcpServerPath,
+              args: mcpArgs,
+            },
+          }),
         },
         permissionMode: "default",
         canUseTool: async (toolName, input, options) =>
