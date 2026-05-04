@@ -106,12 +106,15 @@ export type DatabaseConnection = {
   __typename?: 'DatabaseConnection';
   connectionUrl: Scalars['String']['output'];
   hideDoltFeatures?: Maybe<Scalars['Boolean']['output']>;
+  host?: Maybe<Scalars['String']['output']>;
   isDolt?: Maybe<Scalars['Boolean']['output']>;
   isLocalDolt?: Maybe<Scalars['Boolean']['output']>;
   name: Scalars['String']['output'];
+  password?: Maybe<Scalars['String']['output']>;
   port?: Maybe<Scalars['String']['output']>;
   type?: Maybe<DatabaseType>;
   useSSL?: Maybe<Scalars['Boolean']['output']>;
+  user?: Maybe<Scalars['String']['output']>;
 };
 
 export enum DatabaseType {
@@ -1046,7 +1049,7 @@ export type ResetDatabaseMutation = { __typename?: 'Mutation', resetDatabase: bo
 export type CurrentConnectionQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, port?: string | null, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null, isLocalDolt?: boolean | null } | null };
+export type CurrentConnectionQuery = { __typename?: 'Query', currentConnection?: { __typename?: 'DatabaseConnection', connectionUrl: string, name: string, port?: string | null, hideDoltFeatures?: boolean | null, useSSL?: boolean | null, type?: DatabaseType | null, isDolt?: boolean | null, isLocalDolt?: boolean | null, host?: string | null, user?: string | null, password?: string | null } | null };
 
 export type DatabasesByConnectionQueryVariables = Exact<{
   connectionUrl: Scalars['String']['input'];
@@ -2379,6 +2382,9 @@ export const CurrentConnectionDocument = gql`
     type
     isDolt
     isLocalDolt
+    host
+    user
+    password
   }
 }
     `;

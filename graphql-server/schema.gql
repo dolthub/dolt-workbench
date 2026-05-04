@@ -106,6 +106,9 @@ type DatabaseConnection {
   type: DatabaseType
   isDolt: Boolean
   isLocalDolt: Boolean
+  host: String
+  user: String
+  password: String
 }
 
 enum DatabaseType {

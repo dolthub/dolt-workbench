@@ -5,26 +5,6 @@ import { ref } from "@lib/urls";
 import { useRouter } from "next/router";
 import { CSSProperties, useEffect } from "react";
 
-function parseConnectionUrl(connectionUrl: string): {
-  host: string;
-  port: number;
-  user: string;
-  password?: string;
-} {
-  try {
-    const url = new URL(connectionUrl);
-    return {
-      host: url.hostname || "127.0.0.1",
-      port: parseInt(url.port, 10) || 3306,
-      user: url.username || "root",
-      password: url.password || undefined,
-    };
-  } catch (e) {
-    console.error("parseConnectionUrl error:", e);
-    return { host: "127.0.0.1", port: 3306, user: "root" };
-  }
-}
-
 type AgentLayoutState = {
   contentStyle: CSSProperties;
 };
@@ -42,12 +22,13 @@ export default function useAgentLayout(
 
   // Update MCP config in global agent context when connection changes
   useEffect(() => {
-    if (connectionData?.currentConnection?.connectionUrl) {
-      const conn = connectionData.currentConnection;
-      const parsed = parseConnectionUrl(conn.connectionUrl);
+    const conn = connectionData?.currentConnection;
+    if (conn?.host) {
       const config: McpServerConfig = {
-        ...parsed,
-        port: conn.port ? parseInt(conn.port, 10) : parsed.port,
+        host: conn.host,
+        port: conn.port ? parseInt(conn.port, 10) : 3306,
+        user: conn.user ?? "root",
+        password: conn.password ?? undefined,
         database: databaseName,
         useSSL: conn.useSSL ?? false,
         type: conn.type ?? undefined,
@@ -62,10 +43,13 @@ export default function useAgentLayout(
       setMcpConfig(null);
     };
   }, [
-    connectionData?.currentConnection?.connectionUrl,
+    connectionData?.currentConnection?.host,
+    connectionData?.currentConnection?.user,
+    connectionData?.currentConnection?.password,
     connectionData?.currentConnection?.port,
     connectionData?.currentConnection?.useSSL,
     connectionData?.currentConnection?.type,
+    connectionData?.currentConnection?.isDolt,
     databaseName,
     setMcpConfig,
   ]);

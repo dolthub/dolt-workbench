@@ -26,4 +26,13 @@ export class DatabaseConnection {
 
   @Field({ nullable: true })
   isLocalDolt?: boolean;
+
+  @Field({ nullable: true })
+  host?: string;
+
+  @Field({ nullable: true })
+  user?: string;
+
+  @Field({ nullable: true })
+  password?: string;
 }
