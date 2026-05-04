@@ -13,6 +13,7 @@ import {
   newQueryFactory,
   WorkbenchConfig,
 } from "../connections/connection.provider";
+import { parseConnectionUrl } from "../connections/util";
 import { DataStoreService } from "../dataStore/dataStore.service";
 import { FileStoreService } from "../fileStore/fileStore.service";
 import {
@@ -109,6 +110,7 @@ export class DatabaseResolver {
       config.connectionUrl.startsWith(x.connectionUrl),
     )?.name;
     if (!connectionName) return undefined;
+    const parsed = parseConnectionUrl(config.connectionUrl);
     return {
       connectionUrl: config.connectionUrl,
       name: connectionName,
@@ -118,6 +120,9 @@ export class DatabaseResolver {
       type: config.type,
       isDolt,
       isLocalDolt: config.isLocalDolt,
+      host: parsed.host,
+      user: parsed.user,
+      password: parsed.password,
     };
   }
 

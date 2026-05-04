@@ -23,6 +23,9 @@ export const CURRENT_CONNECTION = gql`
       type
       isDolt
       isLocalDolt
+      host
+      user
+      password
     }
   }
 `;
