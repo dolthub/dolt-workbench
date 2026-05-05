@@ -44,9 +44,7 @@ describe("buildMysqlDeleteRow", () => {
       where: [{ column: "name", value: "O'Hara" }],
     });
     expect(out.params).toEqual(["O'Hara"]);
-    expect(out.displaySql).toBe(
-      "DELETE FROM `users` WHERE `name` = 'O''Hara'",
-    );
+    expect(out.displaySql).toBe("DELETE FROM `users` WHERE `name` = 'O''Hara'");
   });
 
   it("escapes embedded backticks in identifiers", () => {
@@ -54,9 +52,7 @@ describe("buildMysqlDeleteRow", () => {
       tableName: "weird`table",
       where: [{ column: "id`col", value: "1" }],
     });
-    expect(out.sql).toBe(
-      "DELETE FROM `weird``table` WHERE `id``col` = ?",
-    );
+    expect(out.sql).toBe("DELETE FROM `weird``table` WHERE `id``col` = ?");
   });
 
   it("throws when no where clauses are provided", () => {

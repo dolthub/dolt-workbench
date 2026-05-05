@@ -5,7 +5,7 @@ describe("quotePgId", () => {
     expect(quotePgId("users")).toBe('"users"');
   });
 
-  it('escapes embedded double-quotes by doubling', () => {
+  it("escapes embedded double-quotes by doubling", () => {
     expect(quotePgId('a"b')).toBe('"a""b"');
   });
 });
