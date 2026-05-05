@@ -897,6 +897,7 @@ export type SqlSelect = {
   _id: Scalars['ID']['output'];
   columns: Array<Column>;
   databaseName: Scalars['String']['output'];
+  isMutation: Scalars['Boolean']['output'];
   queryExecutionMessage: Scalars['String']['output'];
   queryExecutionStatus: QueryExecutionStatus;
   queryString: Scalars['String']['output'];
@@ -1264,7 +1265,7 @@ export type SqlSelectForSqlDataTableQueryVariables = Exact<{
 }>;
 
 
-export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, warnings?: Array<string> | null, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
+export type SqlSelectForSqlDataTableQuery = { __typename?: 'Query', sqlSelect: { __typename?: 'SqlSelect', queryExecutionStatus: QueryExecutionStatus, queryExecutionMessage: string, isMutation: boolean, warnings?: Array<string> | null, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type StatusFragment = { __typename?: 'Status', _id: string, refName: string, tableName: string, staged: boolean, status: string };
 
@@ -3230,6 +3231,7 @@ export const SqlSelectForSqlDataTableDocument = gql`
   ) {
     queryExecutionStatus
     queryExecutionMessage
+    isMutation
     columns {
       ...ColumnForSqlDataTable
     }

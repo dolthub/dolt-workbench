@@ -13,6 +13,7 @@ import {
 import * as t from "../types";
 import * as qh from "./queries";
 import { changeSchema, getSchema, tableWithSchema } from "./utils";
+import { classifyPgResult } from "./classifyResult";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -136,14 +137,20 @@ export class PostgresQueryFactory
   // TODO: get warnings for postgres
   async getSqlSelect(
     args: t.RefMaybeSchemaArgs & { queryString: string },
-  ): Promise<{ rows: t.RawRows; warnings?: string[] }> {
+  ): Promise<{
+    rows: t.RawRows;
+    isMutation: boolean;
+    executionMessage: string;
+    warnings?: string[];
+  }> {
     return this.queryQR(
       async qr => {
         if (args.schemaName) {
           await changeSchema(qr, args.schemaName);
         }
-        const res = await qr.query(args.queryString, []);
-        return { rows: res };
+        const conn = await qr.connect();
+        const res = await conn.query(args.queryString, []);
+        return classifyPgResult(res);
       },
       args.databaseName,
       args.refName,

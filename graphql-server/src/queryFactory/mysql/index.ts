@@ -5,6 +5,7 @@ import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
 import { BaseQueryFactory } from "../base";
 import * as t from "../types";
+import { classifyMysqlResult } from "./classifyResult";
 import * as qh from "./queries";
 import {
   getTableInfo,
@@ -140,18 +141,22 @@ export class MySQLQueryFactory
     );
   }
 
-  async getSqlSelect(
-    args: t.RefArgs & { queryString: string },
-  ): Promise<{ rows: t.RawRows; warnings?: string[] }> {
-    return this.queryMultiple(
-      async query => {
-        const rows = await query(args.queryString, [
-          args.databaseName,
-          args.refName,
-        ]);
-        const warningsRes = await query(qh.showWarningsQuery);
+  async getSqlSelect(args: t.RefArgs & { queryString: string }): Promise<{
+    rows: t.RawRows;
+    isMutation: boolean;
+    executionMessage: string;
+    warnings?: string[];
+  }> {
+    return this.queryQR(
+      async qr => {
+        const result = await qr.query(
+          args.queryString,
+          [args.databaseName, args.refName],
+          true,
+        );
+        const warningsRes: t.RawRows = await qr.query(qh.showWarningsQuery);
         const warnings = warningsRes.map(w => w.Message);
-        return { rows, warnings };
+        return { ...classifyMysqlResult(result), warnings };
       },
       args.databaseName,
       args.refName,

@@ -32,6 +32,9 @@ export class SqlSelect {
   @Field()
   queryExecutionMessage: string;
 
+  @Field()
+  isMutation: boolean;
+
   @Field(_type => [String], { nullable: true })
   warnings?: string[];
 }
@@ -39,11 +42,21 @@ export class SqlSelect {
 export function fromSqlSelectRow(
   databaseName: string,
   refName: string,
-  doltRows: RawRow | RawRow[] | undefined,
+  doltRows: RawRow[],
+  isMutation: boolean,
+  executionMessage: string,
   queryString: string,
   offset: number,
   warnings?: string[],
 ): SqlSelect {
+  // eslint-disable-next-line no-console
+  console.log("[isMutation-probe]", {
+    queryString: queryString.slice(0, 120),
+    isMutation,
+    rowCount: doltRows.length,
+    executionMessage,
+    sample: doltRows.length > 0 ? Object.keys(doltRows[0]) : null,
+  });
   const res = {
     _id: `/databases/${databaseName}/refs/${refName}/queries/${queryString}`,
     databaseName,
@@ -52,28 +65,15 @@ export function fromSqlSelectRow(
     rows: { list: [] },
     columns: [],
     queryExecutionStatus: QueryExecutionStatus.Success,
-    queryExecutionMessage: "",
+    queryExecutionMessage: executionMessage,
+    isMutation,
     warnings,
   };
 
-  // Some mutation queries do not return an array
-  if (!Array.isArray(doltRows)) {
-    if (!doltRows) {
-      return res;
-    }
-    return {
-      ...res,
-      queryExecutionMessage: `Query OK, ${
-        doltRows.affectedRows
-      } rows affected.${
-        doltRows.info.length > 0 ? doltRows.info.replace("#", " ") : ""
-      }`,
-    };
-  }
-
-  if (!doltRows.length) {
+  if (isMutation || doltRows.length === 0) {
     return res;
   }
+
   const rows: row.Row[] = doltRows
     .slice(offset, offset + ROW_LIMIT)
     .map(row.fromDoltRowRes);

@@ -34,6 +34,7 @@ export const SQL_SELECT_QUERY = gql`
     ) {
       queryExecutionStatus
       queryExecutionMessage
+      isMutation
       columns {
         ...ColumnForSqlDataTable
       }

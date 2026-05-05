@@ -17,6 +17,7 @@ type Props = TimeoutProps & {
   gqlError?: ApolloErrorType;
   executionStatus?: QueryExecutionStatus;
   executionMessage?: string;
+  isMutation?: boolean;
 };
 
 export default function SqlMessage(props: Props) {

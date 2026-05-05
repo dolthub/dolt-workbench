@@ -23,6 +23,7 @@ export const defaultState = {
   warnings: [] as string[],
   executionStatus: undefined as unknown as QueryExecutionStatus,
   executionMessage: "",
+  isMutation: false,
 };
 export type RowsState = typeof defaultState;
 
@@ -37,6 +38,7 @@ function getDefaultState(data?: SqlSelectForSqlDataTableQuery): RowsState {
       data?.sqlSelect.queryExecutionStatus ||
       (undefined as unknown as QueryExecutionStatus),
     executionMessage: data?.sqlSelect.queryExecutionMessage || "",
+    isMutation: data?.sqlSelect.isMutation ?? false,
   };
 }
 
