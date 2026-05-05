@@ -16,7 +16,8 @@ export function useSqlStrings(
   const { editorString, setEditorString } = useSqlEditorContext();
   const defaultQuery = getDefaultQueryString(params.schemaName);
 
-  const flattenNewLines = (query: string) => query.replaceAll(/\r\n|\n|\r/gm, " ");
+  const flattenNewLines = (query: string) =>
+    query.replaceAll(/\r\n|\n|\r/gm, " ");
 
   const getSqlString = (): string => {
     if (empty) {
@@ -26,7 +27,7 @@ export function useSqlStrings(
       return flattenNewLines(editorString);
     }
     if (!params.q && !params.tableName) return defaultQuery;
-    return flattenNewLines(params.q || selectFromTable(params.tableName ?? ""))
+    return flattenNewLines(params.q || selectFromTable(params.tableName ?? ""));
   };
 
   const getEditorString = useCallback((): string => {
