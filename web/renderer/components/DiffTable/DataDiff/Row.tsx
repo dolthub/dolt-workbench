@@ -77,6 +77,7 @@ export default function Row(props: Props) {
                 row={props.rowDiff.added}
                 columns={props.cols}
                 refName={props.refName}
+                onClose={() => setShowDropdown(false)}
               />
             </CellDropdown>
           )}

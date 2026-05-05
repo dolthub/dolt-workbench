@@ -13,6 +13,7 @@ import {
 import * as t from "../types";
 import * as qh from "./queries";
 import { changeSchema, getSchema, tableWithSchema } from "./utils";
+import { buildPgDeleteRow } from "./buildDeleteRow";
 import { classifyPgResult } from "./classifyResult";
 
 export class PostgresQueryFactory
@@ -128,6 +129,30 @@ export class PostgresQueryFactory
           tableWithSchema({ ...args, schemaName }),
           page,
         );
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async deleteRow(
+    args: t.RefMaybeSchemaArgs & {
+      tableName: string;
+      where: Array<{ column: string; value: string }>;
+    },
+  ): Promise<{ rowsAffected: number; queryString: string }> {
+    return this.queryQR(
+      async qr => {
+        const schemaName = await getSchema(qr, args);
+        if (args.schemaName) {
+          await changeSchema(qr, args.schemaName);
+        }
+        const built = buildPgDeleteRow({ ...args, schemaName });
+        const result = await qr.query(built.sql, built.params, true);
+        return {
+          rowsAffected: result.affected ?? 0,
+          queryString: built.displaySql,
+        };
       },
       args.databaseName,
       args.refName,

@@ -290,57 +290,6 @@ describe("test removeColumnFromQuery", () => {
   });
 });
 
-describe("test deleteFromTable", () => {
-  const tests: Array<{
-    desc: string;
-    tableName: string;
-    columns: ColumnForDataTableFragment[];
-    row: RowForDataTableFragment;
-    expectedQuery: string;
-  }> = [
-    {
-      desc: "one pk",
-      tableName: "test-table",
-      columns: [td.idPKColumn, td.nameColumn],
-      row: { columnValues: [td.idColValue, td.nameColValue] },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = '1'`,
-    },
-    {
-      desc: "two pks",
-      tableName: "test-table",
-      columns: [td.idPKColumn, td.pkPKColumn, td.nameColumn],
-      row: { columnValues: [td.idColValue, td.idTwoColValue, td.nameColValue] },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = '1' AND \`pk2\` = '2'`,
-    },
-    {
-      desc: "three pks with single quote val",
-      tableName: "test-table",
-      columns: [
-        td.idPKColumn,
-        td.pkPKColumn,
-        { ...td.nameColumn, isPrimaryKey: true },
-      ],
-      row: {
-        columnValues: [
-          td.idColValue,
-          td.idTwoColValue,
-          td.nameSingleQuoteColValue,
-        ],
-      },
-      expectedQuery: `DELETE FROM \`test-table\` WHERE \`id\` = '1' AND \`pk2\` = '2' AND \`name\` = 'Taylor\\'s chair'`,
-    },
-  ];
-
-  tests.forEach(t => {
-    it(t.desc, async () => {
-      const { deleteFromTable } = await renderUseSqlBuilder();
-      expect(deleteFromTable(t.tableName, toPKCols(t.row, t.columns))).toEqual(
-        t.expectedQuery,
-      );
-    });
-  });
-});
-
 describe("test updateTableQuery and updateTableMakeNullQuery", () => {
   const tests: Array<{
     desc: string;

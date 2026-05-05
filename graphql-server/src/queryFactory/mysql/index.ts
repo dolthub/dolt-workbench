@@ -5,6 +5,7 @@ import { SchemaItem } from "../../schemas/schema.model";
 import { TableDetails } from "../../tables/table.model";
 import { BaseQueryFactory } from "../base";
 import * as t from "../types";
+import { buildMysqlDeleteRow } from "./buildDeleteRow";
 import { classifyMysqlResult } from "./classifyResult";
 import * as qh from "./queries";
 import {
@@ -136,6 +137,26 @@ export class MySQLQueryFactory
   async getTableRows(args: t.TableArgs, page: t.TableRowPagination): t.PR {
     return this.queryForBuilder(
       async em => getTableRows(em, args.tableName, page),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async deleteRow(
+    args: t.RefArgs & {
+      tableName: string;
+      where: Array<{ column: string; value: string }>;
+    },
+  ): Promise<{ rowsAffected: number; queryString: string }> {
+    const built = buildMysqlDeleteRow(args);
+    return this.queryQR(
+      async qr => {
+        const result = await qr.query(built.sql, built.params, true);
+        return {
+          rowsAffected: result.affected ?? 0,
+          queryString: built.displaySql,
+        };
+      },
       args.databaseName,
       args.refName,
     );

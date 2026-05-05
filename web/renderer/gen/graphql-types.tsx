@@ -15,9 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch. */
   Timestamp: { input: any; output: any; }
-  /** The `Upload` scalar type represents a file upload. */
   Upload: { input: any; output: any; }
 };
 
@@ -251,6 +249,7 @@ export type Mutation = {
   createTag: Scalars['String']['output'];
   deleteBranch: Scalars['Boolean']['output'];
   deleteRemote: Scalars['Boolean']['output'];
+  deleteRow: MutationResult;
   deleteTag: Scalars['Boolean']['output'];
   doltClone: Scalars['Boolean']['output'];
   fetchRemote: FetchRes;
@@ -328,6 +327,15 @@ export type MutationDeleteBranchArgs = {
 export type MutationDeleteRemoteArgs = {
   databaseName: Scalars['String']['input'];
   remoteName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteRowArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  where: Array<WhereClause>;
 };
 
 
@@ -416,6 +424,12 @@ export type MutationSaveTestsArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   tests: TestListArgs;
+};
+
+export type MutationResult = {
+  __typename?: 'MutationResult';
+  queryString: Scalars['String']['output'];
+  rowsAffected: Scalars['Int']['output'];
 };
 
 export type PullConflictSummary = {
@@ -1015,11 +1029,27 @@ export type TextDiff = {
   rightLines: Scalars['String']['output'];
 };
 
+export type WhereClause = {
+  column: Scalars['String']['input'];
+  value: Scalars['String']['input'];
+};
+
 export type WorkingDiff = {
   __typename?: 'WorkingDiff';
   diffColumnNames: Array<Scalars['String']['output']>;
   diffColumnValues: Array<ColumnValue>;
 };
+
+export type DeleteRowMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  where: Array<WhereClause> | WhereClause;
+}>;
+
+
+export type DeleteRowMutation = { __typename?: 'Mutation', deleteRow: { __typename?: 'MutationResult', rowsAffected: number, queryString: string } };
 
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -2238,6 +2268,50 @@ export const BranchForCommitGraphFragmentDoc = gql`
   head
 }
     `;
+export const DeleteRowDocument = gql`
+    mutation DeleteRow($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $where: [WhereClause!]!) {
+  deleteRow(
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+    tableName: $tableName
+    where: $where
+  ) {
+    rowsAffected
+    queryString
+  }
+}
+    `;
+export type DeleteRowMutationFn = Apollo.MutationFunction<DeleteRowMutation, DeleteRowMutationVariables>;
+
+/**
+ * __useDeleteRowMutation__
+ *
+ * To run a mutation, you first call `useDeleteRowMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteRowMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteRowMutation, { data, loading, error }] = useDeleteRowMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *      tableName: // value for 'tableName'
+ *      where: // value for 'where'
+ *   },
+ * });
+ */
+export function useDeleteRowMutation(baseOptions?: Apollo.MutationHookOptions<DeleteRowMutation, DeleteRowMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteRowMutation, DeleteRowMutationVariables>(DeleteRowDocument, options);
+      }
+export type DeleteRowMutationHookResult = ReturnType<typeof useDeleteRowMutation>;
+export type DeleteRowMutationResult = Apollo.MutationResult<DeleteRowMutation>;
+export type DeleteRowMutationOptions = Apollo.BaseMutationOptions<DeleteRowMutation, DeleteRowMutationVariables>;
 export const CreateDatabaseDocument = gql`
     mutation CreateDatabase($databaseName: String!) {
   createDatabase(databaseName: $databaseName)

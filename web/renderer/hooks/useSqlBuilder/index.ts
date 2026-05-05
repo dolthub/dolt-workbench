@@ -19,10 +19,6 @@ export default function useSqlBuilder() {
     return sqlify(u.getSqlInsert(ins));
   }
 
-  function convertToSqlDelete(del: Partial<Delete>): string {
-    return sqlify(u.getSqlDelete(del));
-  }
-
   function convertToSqlAlter(alt: Partial<Alter>): string {
     return sqlify(u.getSqlAlter(alt));
   }
@@ -158,13 +154,6 @@ export default function useSqlBuilder() {
     });
   }
 
-  function deleteFromTable(tableName: string, cond: u.Conditions): string {
-    return convertToSqlDelete({
-      from: [{ table: tableName, db: null, as: null }],
-      where: u.getWhereAndFromConditions(cond, isPostgres),
-    });
-  }
-
   function getDefaultQueryString(schemaName?: string): string {
     if (isPostgres) {
       return `SELECT *
@@ -286,7 +275,6 @@ where schemaname='${schemaName ?? "public"}';`;
     convertToSqlWithNewColNames,
     convertToSqlWithOrderBy,
     createView,
-    deleteFromTable,
     dropTable,
     getCallProcedure,
     getDefaultQueryString,
