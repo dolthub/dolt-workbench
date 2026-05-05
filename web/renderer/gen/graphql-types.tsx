@@ -15,9 +15,7 @@ export type Scalars = {
   Boolean: { input: boolean; output: boolean; }
   Int: { input: number; output: number; }
   Float: { input: number; output: number; }
-  /** `Date` type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch. */
   Timestamp: { input: any; output: any; }
-  /** The `Upload` scalar type represents a file upload. */
   Upload: { input: any; output: any; }
 };
 
