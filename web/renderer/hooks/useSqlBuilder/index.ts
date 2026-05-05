@@ -1,13 +1,6 @@
 import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import {
-  Alter,
-  Delete,
-  Drop,
-  Insert_Replace,
-  Select,
-  Update,
-} from "node-sql-parser";
+import { Alter, Drop, Insert_Replace, Select, Update } from "node-sql-parser";
 import * as u from "./util";
 import { escapeSingleQuotes } from "./util";
 

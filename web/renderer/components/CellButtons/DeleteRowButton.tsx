@@ -35,7 +35,9 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
 
   const onClick = async () => {
     const where = toPKColsMapQueryCols(props.row, props.columns, columns).map(
-      c => ({ column: c.col, value: c.val }),
+      c => {
+        return { column: c.col, value: c.val };
+      },
     );
     const res = await deleteRow({
       variables: { databaseName, refName, schemaName, tableName, where },
