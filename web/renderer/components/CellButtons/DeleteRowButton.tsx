@@ -5,37 +5,48 @@ import { Button } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
+  useDeleteRowMutation,
 } from "@gen/graphql-types";
-import useSqlBuilder from "@hooks/useSqlBuilder";
+import useMutation from "@hooks/useMutation";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
+import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
+import { useApolloClient } from "@apollo/client";
 import css from "./index.module.css";
-import { toPKColsMapQueryCols } from "./utils";
+import { toPKWhereClauses } from "./utils";
 
 type Props = {
   row: RowForDataTableFragment;
   columns: ColumnForDataTableFragment[];
   refName?: string;
+  onClose?: () => void;
 };
 
 export default function DeleteRowButton(props: Props): JSX.Element | null {
-  const { executeQuery, setEditorString } = useSqlEditorContext();
+  const { setEditorString, setError } = useSqlEditorContext();
   const { params, columns } = useDataTableContext();
-  const { tableName } = params;
-  const { deleteFromTable } = useSqlBuilder();
+  const { tableName, schemaName, databaseName } = params;
+  const refName = props.refName ?? params.refName;
+  const client = useApolloClient();
+  const { mutateFn: deleteRow } = useMutation({
+    hook: useDeleteRowMutation,
+  });
 
   if (!tableName || isUneditableDoltSystemTable(tableName)) return null;
 
   const onClick = async () => {
-    const query = deleteFromTable(
-      tableName,
-      toPKColsMapQueryCols(props.row, props.columns, columns),
-    );
-    setEditorString(query);
-    await executeQuery({
-      ...params,
-      refName: props.refName ?? params.refName,
-      query,
+    const where = toPKWhereClauses(props.row, props.columns, columns);
+    const res = await deleteRow({
+      variables: { databaseName, refName, schemaName, tableName, where },
     });
+    if (res.success && res.data?.deleteRow.queryString) {
+      setEditorString(res.data.deleteRow.queryString);
+      client
+        .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
+        .catch(console.error);
+    } else if (res.error) {
+      setError(res.error);
+    }
+    props.onClose?.();
   };
 
   return (

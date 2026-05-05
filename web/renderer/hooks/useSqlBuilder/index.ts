@@ -1,13 +1,6 @@
 import { ColumnForDataTableFragment, SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import {
-  Alter,
-  Delete,
-  Drop,
-  Insert_Replace,
-  Select,
-  Update,
-} from "node-sql-parser";
+import { Alter, Drop, Insert_Replace, Select, Update } from "node-sql-parser";
 import * as u from "./util";
 import { escapeSingleQuotes } from "./util";
 
@@ -17,10 +10,6 @@ export default function useSqlBuilder() {
 
   function convertToSqlInsert(ins: Partial<Insert_Replace>): string {
     return sqlify(u.getSqlInsert(ins));
-  }
-
-  function convertToSqlDelete(del: Partial<Delete>): string {
-    return sqlify(u.getSqlDelete(del));
   }
 
   function convertToSqlAlter(alt: Partial<Alter>): string {
@@ -158,13 +147,6 @@ export default function useSqlBuilder() {
     });
   }
 
-  function deleteFromTable(tableName: string, cond: u.Conditions): string {
-    return convertToSqlDelete({
-      from: [{ table: tableName, db: null, as: null }],
-      where: u.getWhereAndFromConditions(cond, isPostgres),
-    });
-  }
-
   function getDefaultQueryString(schemaName?: string): string {
     if (isPostgres) {
       return `SELECT *
@@ -286,7 +268,6 @@ where schemaname='${schemaName ?? "public"}';`;
     convertToSqlWithNewColNames,
     convertToSqlWithOrderBy,
     createView,
-    deleteFromTable,
     dropTable,
     getCallProcedure,
     getDefaultQueryString,

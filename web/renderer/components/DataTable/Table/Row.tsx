@@ -40,7 +40,10 @@ export default function Row(props: Props) {
             forRow
           >
             <HideRowButton {...props} />
-            <DeleteRowButton {...props} />
+            <DeleteRowButton
+              {...props}
+              onClose={() => setShowDropdown(false)}
+            />
             <CopyRowButton {...props} />
           </CellDropdown>
         )}

@@ -9,6 +9,7 @@ import { PullResolver } from "./pulls/pull.resolver";
 import { RemoteResolver } from "./remotes/remote.resolver";
 import { RowDiffResolver } from "./rowDiffs/rowDiff.resolver";
 import { RowResolver } from "./rows/row.resolver";
+import { RowMutationResolver } from "./rows/rowMutation.resolver";
 import { SchemaDiffResolver } from "./schemaDiffs/schemaDiff.resolver";
 import { SchemaResolver } from "./schemas/schema.resolver";
 import { SqlSelectResolver } from "./sqlSelects/sqlSelect.resolver";
@@ -30,6 +31,7 @@ const resolvers = [
   PullResolver,
   RemoteResolver,
   RowDiffResolver,
+  RowMutationResolver,
   RowResolver,
   SchemaDiffResolver,
   SchemaResolver,

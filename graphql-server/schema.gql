@@ -284,6 +284,11 @@ type RowDiffList {
   columns: [Column!]!
 }
 
+type MutationResult {
+  rowsAffected: Int!
+  queryString: String!
+}
+
 type TextDiff {
   leftLines: String!
   rightLines: String!
@@ -472,6 +477,7 @@ type Mutation {
   pushToRemote(remoteName: String!, databaseName: String!, refName: String!, branchName: String!): PushRes!
   fetchRemote(databaseName: String!, remoteName: String!): FetchRes!
   createBranchFromRemote(remoteName: String!, databaseName: String!, branchName: String!): FetchRes!
+  deleteRow(schemaName: String, tableName: String!, refName: String!, databaseName: String!, where: [WhereClause!]!): MutationResult!
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!
@@ -499,6 +505,12 @@ enum LoadDataModifier {
 input AuthorInfo {
   name: String!
   email: String!
+}
+
+input WhereClause {
+  column: String!
+  value: String!
+  type: String
 }
 
 input TestListArgs {

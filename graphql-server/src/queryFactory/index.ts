@@ -78,6 +78,13 @@ export declare class QueryFactory {
     warnings?: string[];
   }>;
 
+  deleteRow(
+    args: t.RefMaybeSchemaArgs & {
+      tableName: string;
+      where: Array<{ column: string; value: string; type?: string }>;
+    },
+  ): Promise<{ rowsAffected: number; queryString: string }>;
+
   getSchemas(
     args: t.RefMaybeSchemaArgs,
     type?: SchemaType,

@@ -95,6 +95,28 @@ export function toPKCols(
     });
 }
 
+export type WhereClauseInput = {
+  column: string;
+  value: string;
+  type: string;
+};
+
+export function toPKWhereClauses(
+  row: RowForDataTableFragment,
+  queryCols: ColumnForDataTableFragment[],
+  tableCols?: ColumnForDataTableFragment[],
+): WhereClauseInput[] {
+  return mapQueryColsToAllCols(queryCols, tableCols)
+    .filter(c => c.isPrimaryKey)
+    .map((col, i) => {
+      return {
+        column: col.name,
+        value: row.columnValues[i].displayValue,
+        type: col.type,
+      };
+    });
+}
+
 function mapQueryColsToAllCols(
   queryCols: ColumnForDataTableFragment[],
   allCols?: ColumnForDataTableFragment[],
