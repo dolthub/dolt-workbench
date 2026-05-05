@@ -141,9 +141,7 @@ export class MySQLQueryFactory
     );
   }
 
-  async getSqlSelect(
-    args: t.RefArgs & { queryString: string },
-  ): Promise<{
+  async getSqlSelect(args: t.RefArgs & { queryString: string }): Promise<{
     rows: t.RawRows;
     isMutation: boolean;
     executionMessage: string;

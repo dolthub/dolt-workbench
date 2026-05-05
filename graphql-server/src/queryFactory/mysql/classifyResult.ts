@@ -30,7 +30,7 @@ export function classifyMysqlResult(
   if (!isMutation) {
     return { rows: result.records, isMutation: false, executionMessage: "" };
   }
-  const info: string = isOkPacket(result.raw) ? result.raw.info ?? "" : "";
+  const info: string = isOkPacket(result.raw) ? (result.raw.info ?? "") : "";
   return {
     rows: [],
     isMutation: true,
