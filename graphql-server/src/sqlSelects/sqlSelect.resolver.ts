@@ -28,6 +28,8 @@ export class SqlSelectResolver {
       args.databaseName,
       args.refName,
       res.rows,
+      res.isMutation,
+      res.executionMessage,
       args.queryString,
       offset,
       res.warnings,
