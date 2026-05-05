@@ -510,6 +510,7 @@ input AuthorInfo {
 input WhereClause {
   column: String!
   value: String!
+  type: String
 }
 
 input TestListArgs {

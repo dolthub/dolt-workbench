@@ -12,7 +12,7 @@ import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { useApolloClient } from "@apollo/client";
 import css from "./index.module.css";
-import { toPKColsMapQueryCols } from "./utils";
+import { toPKWhereClauses } from "./utils";
 
 type Props = {
   row: RowForDataTableFragment;
@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function DeleteRowButton(props: Props): JSX.Element | null {
-  const { setEditorString } = useSqlEditorContext();
+  const { setEditorString, setError } = useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
   const refName = props.refName ?? params.refName;
@@ -34,11 +34,7 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
   if (!tableName || isUneditableDoltSystemTable(tableName)) return null;
 
   const onClick = async () => {
-    const where = toPKColsMapQueryCols(props.row, props.columns, columns).map(
-      c => {
-        return { column: c.col, value: c.val };
-      },
-    );
+    const where = toPKWhereClauses(props.row, props.columns, columns);
     const res = await deleteRow({
       variables: { databaseName, refName, schemaName, tableName, where },
     });
@@ -47,6 +43,8 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
+    } else if (res.error) {
+      setError(res.error);
     }
     props.onClose?.();
   };

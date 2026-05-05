@@ -13,7 +13,8 @@ import {
 import * as t from "../types";
 import * as qh from "./queries";
 import { changeSchema, getSchema, tableWithSchema } from "./utils";
-import { buildPgDeleteRow } from "./buildDeleteRow";
+import { buildDeleteRow } from "../buildDeleteRow";
+import { PG_DIALECT } from "../dialect";
 import { classifyPgResult } from "./classifyResult";
 
 export class PostgresQueryFactory
@@ -138,7 +139,7 @@ export class PostgresQueryFactory
   async deleteRow(
     args: t.RefMaybeSchemaArgs & {
       tableName: string;
-      where: Array<{ column: string; value: string }>;
+      where: Array<{ column: string; value: string; type?: string }>;
     },
   ): Promise<{ rowsAffected: number; queryString: string }> {
     return this.queryQR(
@@ -147,7 +148,7 @@ export class PostgresQueryFactory
         if (args.schemaName) {
           await changeSchema(qr, args.schemaName);
         }
-        const built = buildPgDeleteRow({ ...args, schemaName });
+        const built = buildDeleteRow({ ...args, schemaName }, PG_DIALECT);
         const result = await qr.query(built.sql, built.params, true);
         return {
           rowsAffected: result.affected ?? 0,

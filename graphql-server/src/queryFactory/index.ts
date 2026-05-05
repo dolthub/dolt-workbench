@@ -81,7 +81,7 @@ export declare class QueryFactory {
   deleteRow(
     args: t.RefMaybeSchemaArgs & {
       tableName: string;
-      where: Array<{ column: string; value: string }>;
+      where: Array<{ column: string; value: string; type?: string }>;
     },
   ): Promise<{ rowsAffected: number; queryString: string }>;
 

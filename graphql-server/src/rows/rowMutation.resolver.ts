@@ -18,6 +18,9 @@ export class WhereClause {
 
   @Field()
   value: string;
+
+  @Field({ nullable: true })
+  type?: string;
 }
 
 @ObjectType()

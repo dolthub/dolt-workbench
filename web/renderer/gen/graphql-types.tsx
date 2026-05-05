@@ -1031,6 +1031,7 @@ export type TextDiff = {
 
 export type WhereClause = {
   column: Scalars['String']['input'];
+  type?: InputMaybe<Scalars['String']['input']>;
   value: Scalars['String']['input'];
 };
 

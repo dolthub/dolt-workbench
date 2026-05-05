@@ -9,7 +9,7 @@ import {
   MutationUpdaterFunction,
   NormalizedCacheObject,
 } from "@apollo/client";
-import { handleCaughtApolloError } from "@lib/errors/helpers";
+import { getCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType, SetApolloErrorType } from "@lib/errors/types";
 import { RefetchQueries } from "@lib/refetchQueries";
 import useApolloError from "./useApolloError";
@@ -36,7 +36,7 @@ type FnResult<TData> = FetchResult<
   TData,
   Record<string, any>,
   Record<string, any>
-> & { success: boolean };
+> & { success: boolean; error?: ApolloErrorType };
 
 export type MutationResultType<TData, TVariables> = {
   loading: boolean;
@@ -72,8 +72,9 @@ export default function useMutation<TData, TVariables>({
       const res = await fn(options);
       return { ...res, success: true };
     } catch (e) {
-      handleCaughtApolloError(e, er => setErr(handleErr(er, improveErr)));
-      return { data: undefined, success: false };
+      const normalized = handleErr(getCaughtApolloError(e), improveErr);
+      setErr(normalized);
+      return { data: undefined, success: false, error: normalized };
     }
   };
   return { loading, called, mutateFn, err, setErr, client };
