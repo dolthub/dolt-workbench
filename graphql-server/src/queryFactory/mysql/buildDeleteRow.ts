@@ -1,8 +1,3 @@
-// Pure SQL emission for MySQL/Dolt DELETE-by-equality. The server is the
-// only place that knows what dialect-correct SQL looks like; the resolver
-// passes structured input and we emit a parameterized statement plus a
-// best-effort display string for echoing back to the editor.
-
 export type WhereClause = { column: string; value: string };
 
 export type DeleteRowArgs = {

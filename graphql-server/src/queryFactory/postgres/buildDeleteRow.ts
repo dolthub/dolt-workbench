@@ -1,7 +1,3 @@
-// Pure SQL emission for Postgres/Doltgres DELETE-by-equality. Mirrors the
-// MySQL version but uses double-quote identifier escaping and `$N`
-// positional parameters.
-
 export type WhereClause = { column: string; value: string };
 
 export type DeleteRowArgs = {
