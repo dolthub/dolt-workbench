@@ -32,6 +32,9 @@ export class SqlSelect {
   @Field()
   queryExecutionMessage: string;
 
+  @Field()
+  isMutation: boolean;
+
   @Field(_type => [String], { nullable: true })
   warnings?: string[];
 }
@@ -44,6 +47,7 @@ export function fromSqlSelectRow(
   offset: number,
   warnings?: string[],
 ): SqlSelect {
+  const isMutation = !Array.isArray(doltRows);
   const res = {
     _id: `/databases/${databaseName}/refs/${refName}/queries/${queryString}`,
     databaseName,
@@ -53,6 +57,7 @@ export function fromSqlSelectRow(
     columns: [],
     queryExecutionStatus: QueryExecutionStatus.Success,
     queryExecutionMessage: "",
+    isMutation,
     warnings,
   };
 

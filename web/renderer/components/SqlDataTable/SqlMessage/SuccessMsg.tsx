@@ -1,7 +1,6 @@
 import Link from "@components/links/Link";
 import { pluralize } from "@dolthub/web-utils";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
-import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
 import { ref } from "@lib/urls";
 import css from "./index.module.css";
@@ -11,12 +10,12 @@ type Props = {
   executionMessage?: string;
   rowsLen: number;
   params: SqlQueryParams;
+  isMutation?: boolean;
 };
 
 export default function SuccessMsg(props: Props) {
-  const { isMutation } = useSqlParser();
   const lower = props.params.q.toLowerCase();
-  if (isMutation(props.params.q)) {
+  if (props.isMutation) {
     return (
       <div className={css.status}>
         {lower.startsWith("use") && <BranchMsg params={props.params} />}
