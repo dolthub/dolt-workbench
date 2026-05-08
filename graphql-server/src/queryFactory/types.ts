@@ -82,20 +82,21 @@ export type ColumnValue = {
   type?: string;
 };
 
-export type DeleteRowArgs = RefMaybeSchemaArgs & {
-  tableName: string;
+export type DeleteRowArgs = TableMaybeSchemaArgs & {
   where: ColumnValue[];
 };
 
-export type InsertRowArgs = RefMaybeSchemaArgs & {
-  tableName: string;
+export type InsertRowArgs = TableMaybeSchemaArgs & {
   values: ColumnValue[];
 };
 
-export type UpdateRowArgs = RefMaybeSchemaArgs & {
-  tableName: string;
+export type UpdateRowArgs = TableMaybeSchemaArgs & {
   set: ColumnValue[];
   where: ColumnValue[];
+};
+
+export type DropColumnArgs = TableMaybeSchemaArgs & {
+  columnName: string;
 };
 
 export type MutationResult = {

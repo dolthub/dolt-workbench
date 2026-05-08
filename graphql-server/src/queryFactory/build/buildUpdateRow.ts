@@ -1,25 +1,19 @@
 import { EntityManager, UpdateResult } from "typeorm";
 import { ColumnValue } from "../types";
 import {
+  Built,
   buildColumnValueMap,
   buildWhereConditions,
   interpolateForDisplay,
   newParamAccumulator,
 } from "./buildUtils";
 
-export type BuiltUpdate = {
-  sql: string;
-  params: string[];
-  displaySql: string;
-  execute: () => Promise<UpdateResult>;
-};
-
 export function buildUpdateRow(
   em: EntityManager,
   target: string,
   set: ColumnValue[],
   where: ColumnValue[],
-): BuiltUpdate {
+): Built<UpdateResult> {
   if (set.length === 0) {
     throw new Error("updateRow requires at least one set clause");
   }

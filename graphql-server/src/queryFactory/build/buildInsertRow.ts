@@ -1,23 +1,17 @@
 import { EntityManager, InsertResult } from "typeorm";
 import { ColumnValue } from "../types";
 import {
+  Built,
   buildColumnValueMap,
   interpolateForDisplay,
   newParamAccumulator,
 } from "./buildUtils";
 
-export type BuiltInsert = {
-  sql: string;
-  params: string[];
-  displaySql: string;
-  execute: () => Promise<InsertResult>;
-};
-
 export function buildInsertRow(
   em: EntityManager,
   target: string,
   values: ColumnValue[],
-): BuiltInsert {
+): Built<InsertResult> {
   if (values.length === 0) {
     throw new Error("insertRow requires at least one column value");
   }

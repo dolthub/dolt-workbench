@@ -1,23 +1,17 @@
 import { DeleteResult, EntityManager } from "typeorm";
 import { ColumnValue } from "../types";
 import {
+  Built,
   buildWhereConditions,
   interpolateForDisplay,
   newParamAccumulator,
 } from "./buildUtils";
 
-export type BuiltDelete = {
-  sql: string;
-  params: string[];
-  displaySql: string;
-  execute: () => Promise<DeleteResult>;
-};
-
 export function buildDeleteRow(
   em: EntityManager,
   target: string,
   where: ColumnValue[],
-): BuiltDelete {
+): Built<DeleteResult> {
   if (where.length === 0) {
     throw new Error("deleteRow requires at least one where clause");
   }

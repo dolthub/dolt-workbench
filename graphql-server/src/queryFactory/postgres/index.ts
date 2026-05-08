@@ -14,9 +14,14 @@ import * as t from "../types";
 import * as qh from "./queries";
 import { changeSchema, getSchema, tableWithSchema } from "./utils";
 import { buildDeleteRow } from "../build/buildDeleteRow";
+import { buildDropColumn } from "../build/buildDropColumn";
+import { buildDropTable } from "../build/buildDropTable";
 import { buildInsertRow } from "../build/buildInsertRow";
 import { buildUpdateRow } from "../build/buildUpdateRow";
-import { mutationExecutionMessage } from "../build/buildUtils";
+import {
+  DDL_EXECUTION_MESSAGE,
+  mutationExecutionMessage,
+} from "../build/buildUtils";
 import { classifyPgResult } from "./classifyResult";
 
 export class PostgresQueryFactory
@@ -212,6 +217,48 @@ export class PostgresQueryFactory
           rowsAffected,
           queryString: built.displaySql,
           executionMessage: mutationExecutionMessage(rowsAffected),
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async dropColumn(args: t.DropColumnArgs): Promise<t.MutationResult> {
+    return this.queryQR(
+      async qr => {
+        const schemaName = await getSchema(qr, args);
+        const target = tableWithSchema({
+          tableName: args.tableName,
+          schemaName,
+        });
+        const built = buildDropColumn(qr.manager, target, args.columnName);
+        await built.execute();
+        return {
+          rowsAffected: 0,
+          queryString: built.displaySql,
+          executionMessage: DDL_EXECUTION_MESSAGE,
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async dropTable(args: t.TableMaybeSchemaArgs): Promise<t.MutationResult> {
+    return this.queryQR(
+      async qr => {
+        const schemaName = await getSchema(qr, args);
+        const target = tableWithSchema({
+          tableName: args.tableName,
+          schemaName,
+        });
+        const built = buildDropTable(qr.manager, target);
+        await built.execute();
+        return {
+          rowsAffected: 0,
+          queryString: built.displaySql,
+          executionMessage: DDL_EXECUTION_MESSAGE,
         };
       },
       args.databaseName,

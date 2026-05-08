@@ -1,8 +1,24 @@
 import { pluralize } from "@dolthub/web-utils";
 import { ColumnValue } from "../types";
 
+export type Built<TResult> = {
+  sql: string;
+  params: string[];
+  displaySql: string;
+  execute: () => Promise<TResult>;
+};
+
 export function mutationExecutionMessage(rowsAffected: number): string {
   return `Query OK, ${rowsAffected} ${pluralize(rowsAffected, "row")} affected.`;
+}
+
+export const DDL_EXECUTION_MESSAGE = "Query OK.";
+
+export function escapeQualifiedIdentifier(
+  escape: (name: string) => string,
+  qualified: string,
+): string {
+  return qualified.split(".").map(escape).join(".");
 }
 
 export function escapeStringLiteral(s: string): string {

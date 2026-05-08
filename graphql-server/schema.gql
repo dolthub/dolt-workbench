@@ -488,6 +488,8 @@ type Mutation {
   deleteRow(schemaName: String, tableName: String!, refName: String!, databaseName: String!, where: [ColumnValueInput!]!): MutationResult!
   insertRow(schemaName: String, tableName: String!, refName: String!, databaseName: String!, values: [ColumnValueInput!]!): MutationResult!
   updateRow(schemaName: String, tableName: String!, refName: String!, databaseName: String!, set: [ColumnValueInput!]!, where: [ColumnValueInput!]!): MutationResult!
+  dropColumn(schemaName: String, tableName: String!, refName: String!, databaseName: String!, columnName: String!): MutationResult!
+  dropTable(tableName: String!, refName: String!, databaseName: String!, schemaName: String): MutationResult!
   restoreAllTables(databaseName: String!, refName: String!): Boolean!
   createTag(tagName: String!, databaseName: String!, message: String, fromRefName: String!, author: AuthorInfo): String!
   deleteTag(databaseName: String!, tagName: String!): Boolean!

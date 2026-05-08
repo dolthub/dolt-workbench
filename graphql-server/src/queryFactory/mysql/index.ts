@@ -6,9 +6,14 @@ import { TableDetails } from "../../tables/table.model";
 import { BaseQueryFactory } from "../base";
 import * as t from "../types";
 import { buildDeleteRow } from "../build/buildDeleteRow";
+import { buildDropColumn } from "../build/buildDropColumn";
+import { buildDropTable } from "../build/buildDropTable";
 import { buildInsertRow } from "../build/buildInsertRow";
 import { buildUpdateRow } from "../build/buildUpdateRow";
-import { mutationExecutionMessage } from "../build/buildUtils";
+import {
+  DDL_EXECUTION_MESSAGE,
+  mutationExecutionMessage,
+} from "../build/buildUtils";
 import { classifyMysqlResult } from "./classifyResult";
 import * as qh from "./queries";
 import {
@@ -203,6 +208,42 @@ export class MySQLQueryFactory
           rowsAffected,
           queryString: built.displaySql,
           executionMessage: mutationExecutionMessage(rowsAffected),
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async dropColumn(args: t.DropColumnArgs): Promise<t.MutationResult> {
+    return this.queryQR(
+      async qr => {
+        const built = buildDropColumn(
+          qr.manager,
+          args.tableName,
+          args.columnName,
+        );
+        await built.execute();
+        return {
+          rowsAffected: 0,
+          queryString: built.displaySql,
+          executionMessage: DDL_EXECUTION_MESSAGE,
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async dropTable(args: t.TableMaybeSchemaArgs): Promise<t.MutationResult> {
+    return this.queryQR(
+      async qr => {
+        const built = buildDropTable(qr.manager, args.tableName);
+        await built.execute();
+        return {
+          rowsAffected: 0,
+          queryString: built.displaySql,
+          executionMessage: DDL_EXECUTION_MESSAGE,
         };
       },
       args.databaseName,

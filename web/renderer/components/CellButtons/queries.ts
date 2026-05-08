@@ -67,3 +67,25 @@ export const UPDATE_ROW = gql`
     }
   }
 `;
+
+export const DROP_COLUMN = gql`
+  mutation DropColumn(
+    $databaseName: String!
+    $refName: String!
+    $schemaName: String
+    $tableName: String!
+    $columnName: String!
+  ) {
+    dropColumn(
+      databaseName: $databaseName
+      refName: $refName
+      schemaName: $schemaName
+      tableName: $tableName
+      columnName: $columnName
+    ) {
+      rowsAffected
+      queryString
+      executionMessage
+    }
+  }
+`;

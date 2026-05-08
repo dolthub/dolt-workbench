@@ -1,24 +1,28 @@
 import DatabaseUploadStageLink from "@components/links/DatabaseUploadStageLink";
 import Link from "@components/links/Link";
+import { useApolloClient } from "@apollo/client";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import {
   ColumnValueInput,
+  useDropTableMutation,
   usePreviewInsertRowLazyQuery,
   useTagListQuery,
 } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
-import useSqlBuilder from "@hooks/useSqlBuilder";
+import useMutation from "@hooks/useMutation";
 import {
   TableOptionalSchemaParams,
   UploadParamsWithOptions,
 } from "@lib/params";
-import { table } from "@lib/urls";
+import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
+import { ref, table } from "@lib/urls";
 import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
 import { AiOutlineDelete } from "@react-icons/all-files/ai/AiOutlineDelete";
 import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
 import { ImTable2 } from "@react-icons/all-files/im/ImTable2";
+import { useRouter } from "next/router";
 import OptionSquare from "./OptionSquare";
 import css from "./index.module.css";
 import { mapColTypeToFakeValue } from "./utils";
@@ -32,11 +36,13 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const { executeQuery, setEditorString, setError, toggleSqlEditor } =
+  const { setEditorString, setError, setExecutionMessage, toggleSqlEditor } =
     useSqlEditorContext();
-  const { dropTable } = useSqlBuilder();
   const { columns } = useDataTableContext();
   const [previewInsertRow] = usePreviewInsertRowLazyQuery();
+  const { mutateFn: dropTable } = useMutation({ hook: useDropTableMutation });
+  const client = useApolloClient();
+  const router = useRouter();
 
   const uploadParams: UploadParamsWithOptions = {
     ...props.params,
@@ -65,10 +71,18 @@ function Inner(props: InnerProps) {
   };
 
   const onDrop = async () => {
-    await executeQuery({
-      ...props.params,
-      query: dropTable(props.params.tableName),
-    });
+    const res = await dropTable({ variables: props.params });
+    if (res.success && res.data?.dropTable) {
+      setEditorString(res.data.dropTable.queryString);
+      setExecutionMessage(res.data.dropTable.executionMessage);
+      client
+        .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
+        .catch(console.error);
+      const { href, as } = ref(props.params);
+      router.push(href, as).catch(console.error);
+    } else if (res.error) {
+      setError(res.error);
+    }
   };
 
   return (

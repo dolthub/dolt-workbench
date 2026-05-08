@@ -258,6 +258,8 @@ export type Mutation = {
   deleteRow: MutationResult;
   deleteTag: Scalars['Boolean']['output'];
   doltClone: Scalars['Boolean']['output'];
+  dropColumn: MutationResult;
+  dropTable: MutationResult;
   fetchRemote: FetchRes;
   insertRow: MutationResult;
   loadDataFile: Scalars['Boolean']['output'];
@@ -357,6 +359,23 @@ export type MutationDoltCloneArgs = {
   databaseName: Scalars['String']['input'];
   ownerName: Scalars['String']['input'];
   remoteDbName: Scalars['String']['input'];
+};
+
+
+export type MutationDropColumnArgs = {
+  columnName: Scalars['String']['input'];
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+};
+
+
+export type MutationDropTableArgs = {
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
 };
 
 
@@ -1107,6 +1126,17 @@ export type UpdateRowMutationVariables = Exact<{
 
 export type UpdateRowMutation = { __typename?: 'Mutation', updateRow: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
+export type DropColumnMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  columnName: Scalars['String']['input'];
+}>;
+
+
+export type DropColumnMutation = { __typename?: 'Mutation', dropColumn: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
+
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
 }>;
@@ -1715,6 +1745,16 @@ export type PreviewInsertRowQueryVariables = Exact<{
 
 
 export type PreviewInsertRowQuery = { __typename?: 'Query', previewInsertRow: string };
+
+export type DropTableMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+}>;
+
+
+export type DropTableMutation = { __typename?: 'Mutation', dropTable: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
 export type TestListQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -2472,6 +2512,51 @@ export function useUpdateRowMutation(baseOptions?: Apollo.MutationHookOptions<Up
 export type UpdateRowMutationHookResult = ReturnType<typeof useUpdateRowMutation>;
 export type UpdateRowMutationResult = Apollo.MutationResult<UpdateRowMutation>;
 export type UpdateRowMutationOptions = Apollo.BaseMutationOptions<UpdateRowMutation, UpdateRowMutationVariables>;
+export const DropColumnDocument = gql`
+    mutation DropColumn($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $columnName: String!) {
+  dropColumn(
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+    tableName: $tableName
+    columnName: $columnName
+  ) {
+    rowsAffected
+    queryString
+    executionMessage
+  }
+}
+    `;
+export type DropColumnMutationFn = Apollo.MutationFunction<DropColumnMutation, DropColumnMutationVariables>;
+
+/**
+ * __useDropColumnMutation__
+ *
+ * To run a mutation, you first call `useDropColumnMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDropColumnMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [dropColumnMutation, { data, loading, error }] = useDropColumnMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *      tableName: // value for 'tableName'
+ *      columnName: // value for 'columnName'
+ *   },
+ * });
+ */
+export function useDropColumnMutation(baseOptions?: Apollo.MutationHookOptions<DropColumnMutation, DropColumnMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DropColumnMutation, DropColumnMutationVariables>(DropColumnDocument, options);
+      }
+export type DropColumnMutationHookResult = ReturnType<typeof useDropColumnMutation>;
+export type DropColumnMutationResult = Apollo.MutationResult<DropColumnMutation>;
+export type DropColumnMutationOptions = Apollo.BaseMutationOptions<DropColumnMutation, DropColumnMutationVariables>;
 export const CreateDatabaseDocument = gql`
     mutation CreateDatabase($databaseName: String!) {
   createDatabase(databaseName: $databaseName)
@@ -4927,6 +5012,49 @@ export type PreviewInsertRowQueryHookResult = ReturnType<typeof usePreviewInsert
 export type PreviewInsertRowLazyQueryHookResult = ReturnType<typeof usePreviewInsertRowLazyQuery>;
 export type PreviewInsertRowSuspenseQueryHookResult = ReturnType<typeof usePreviewInsertRowSuspenseQuery>;
 export type PreviewInsertRowQueryResult = Apollo.QueryResult<PreviewInsertRowQuery, PreviewInsertRowQueryVariables>;
+export const DropTableDocument = gql`
+    mutation DropTable($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!) {
+  dropTable(
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+    tableName: $tableName
+  ) {
+    rowsAffected
+    queryString
+    executionMessage
+  }
+}
+    `;
+export type DropTableMutationFn = Apollo.MutationFunction<DropTableMutation, DropTableMutationVariables>;
+
+/**
+ * __useDropTableMutation__
+ *
+ * To run a mutation, you first call `useDropTableMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDropTableMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [dropTableMutation, { data, loading, error }] = useDropTableMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *      tableName: // value for 'tableName'
+ *   },
+ * });
+ */
+export function useDropTableMutation(baseOptions?: Apollo.MutationHookOptions<DropTableMutation, DropTableMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DropTableMutation, DropTableMutationVariables>(DropTableDocument, options);
+      }
+export type DropTableMutationHookResult = ReturnType<typeof useDropTableMutation>;
+export type DropTableMutationResult = Apollo.MutationResult<DropTableMutation>;
+export type DropTableMutationOptions = Apollo.BaseMutationOptions<DropTableMutation, DropTableMutationVariables>;
 export const TestListDocument = gql`
     query TestList($databaseName: String!, $refName: String!) {
   tests(databaseName: $databaseName, refName: $refName) {
