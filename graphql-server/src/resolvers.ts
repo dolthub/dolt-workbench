@@ -12,6 +12,7 @@ import { RowResolver } from "./rows/row.resolver";
 import { RowMutationResolver } from "./rows/rowMutation.resolver";
 import { SchemaDiffResolver } from "./schemaDiffs/schemaDiff.resolver";
 import { SchemaResolver } from "./schemas/schema.resolver";
+import { DoltDiffResolver } from "./rowDiffs/doltDiff.resolver";
 import { SelectTableRowsResolver } from "./sqlSelects/selectTableRows.resolver";
 import { SqlSelectResolver } from "./sqlSelects/sqlSelect.resolver";
 import { StatusResolver } from "./status/status.resolver";
@@ -36,6 +37,7 @@ const resolvers = [
   RowResolver,
   SchemaDiffResolver,
   SchemaResolver,
+  DoltDiffResolver,
   SelectTableRowsResolver,
   SqlSelectResolver,
   StatusResolver,

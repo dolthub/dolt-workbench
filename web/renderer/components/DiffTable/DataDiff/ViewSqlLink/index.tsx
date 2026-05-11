@@ -1,16 +1,16 @@
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
 import Link from "@components/links/Link";
-import { SmallLoader } from "@dolthub/react-components";
+import { ErrorMsg, SmallLoader } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   CommitDiffType,
   useDataTableQuery,
+  useDoltCommitDiffQuery,
 } from "@gen/graphql-types";
-import { useGetDoltCommitDiffQuery } from "@hooks/useDoltQueryBuilder/useGetDoltCommitDiffQuery";
 import { RequiredRefsParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
 import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
-import { HiddenColIndexes } from "../utils";
+import { HiddenColIndexes, isHiddenColumn } from "../utils";
 import css from "./index.module.css";
 
 type Props = {
@@ -27,7 +27,27 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const { generateQuery } = useGetDoltCommitDiffQuery(props);
+  const excludedColumns = props.columns
+    .filter((_, i) => isHiddenColumn(i, props.hiddenColIndexes))
+    .map(c => c.name);
+  const { data, loading, error } = useDoltCommitDiffQuery({
+    variables: {
+      databaseName: props.params.databaseName,
+      refName: props.params.refName,
+      tableName: props.params.tableName,
+      fromCommitId: props.params.fromRefName,
+      toCommitId: props.params.toRefName,
+      excludedColumns,
+      type: props.type,
+    },
+  });
+
+  if (error) {
+    return <ErrorMsg err={error} />;
+  }
+  if (loading || !data?.doltCommitDiff) {
+    return <SmallLoader loaded={false} />;
+  }
 
   return (
     <DropdownItem
@@ -37,7 +57,7 @@ function Inner(props: InnerProps) {
       <Link
         {...sqlQuery({
           ...props.params,
-          q: generateQuery(),
+          q: data.doltCommitDiff,
         })}
         className={css.sqlLink}
       >

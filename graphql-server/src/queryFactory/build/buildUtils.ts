@@ -1,6 +1,6 @@
 import { pluralize } from "@dolthub/web-utils";
-import { EntityManager } from "typeorm";
-import { ColumnValue } from "../types";
+import { EntityManager, SelectQueryBuilder } from "typeorm";
+import { ColumnValue, RawRows } from "../types";
 
 export type Built<TResult> = {
   sql: string;
@@ -100,6 +100,42 @@ export type ParamAccumulator = {
 
 export function newParamAccumulator(): ParamAccumulator {
   return { namedParams: {}, paramTypes: [], idx: 0 };
+}
+
+export function bindParam(
+  acc: ParamAccumulator,
+  value: string,
+  type?: string,
+): string {
+  const key = `p${acc.idx}`;
+  acc.idx += 1;
+  acc.namedParams[key] = value;
+  acc.paramTypes.push({ column: "", value, type });
+  return key;
+}
+
+export function builtSelect(
+  qb: SelectQueryBuilder<any>,
+  acc: ParamAccumulator,
+): Built<RawRows> {
+  const [sql, params] = qb.getQueryAndParameters() as [string, string[]];
+  const displaySql = interpolateForDisplay(sql, params, acc.paramTypes);
+  return { sql, params, displaySql, execute: async () => qb.getRawMany() };
+}
+
+const DIFF_METADATA_COLS = [
+  "from_commit",
+  "from_commit_date",
+  "to_commit",
+  "to_commit_date",
+];
+
+export function diffSelectClause(
+  columnNames: string[],
+  escape: (n: string) => string,
+): string {
+  const fromTo = columnNames.flatMap(c => [`from_${c}`, `to_${c}`]);
+  return ["diff_type", ...fromTo, ...DIFF_METADATA_COLS].map(escape).join(", ");
 }
 
 export function buildWhereConditions(

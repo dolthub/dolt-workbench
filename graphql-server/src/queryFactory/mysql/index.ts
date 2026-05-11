@@ -384,6 +384,18 @@ export class MySQLQueryFactory
     throw notDoltError("get working diff rows");
   }
 
+  async doltCommitDiff(_args: t.DoltCommitDiffArgs): Promise<string> {
+    throw notDoltError("dolt commit diff preview");
+  }
+
+  async doltCellDiff(_args: t.DoltCellDiffArgs): Promise<string> {
+    throw notDoltError("dolt cell diff preview");
+  }
+
+  async doltCellHistory(_args: t.DoltCellHistoryArgs): Promise<string> {
+    throw notDoltError("dolt cell history preview");
+  }
+
   // Returns static branch
   async getBranch(args: t.BranchArgs): t.USPR {
     return {

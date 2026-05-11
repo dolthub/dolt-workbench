@@ -8,6 +8,9 @@ import { SchemaItem } from "../../schemas/schema.model";
 import { systemTableValues } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
 import { handleTableNotFound } from "../../utils";
+import { buildDoltCellDiff } from "../build/buildDoltCellDiff";
+import { buildDoltCellHistory } from "../build/buildDoltCellHistory";
+import { buildDoltCommitDiff } from "../build/buildDoltCommitDiff";
 import * as dem from "../dolt/doltEntityManager";
 import {
   getAuthorString,
@@ -16,7 +19,11 @@ import {
   unionCols,
 } from "../dolt/utils";
 import { PostgresQueryFactory } from "../postgres";
-import { getSchema, tableWithoutSchema } from "../postgres/utils";
+import {
+  getSchema,
+  tableWithSchema,
+  tableWithoutSchema,
+} from "../postgres/utils";
 import * as t from "../types";
 import * as qh from "./queries";
 
@@ -619,6 +626,110 @@ export class DoltgresQueryFactory
       args.databaseName,
       args.refName,
     );
+  }
+
+  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<string> {
+    return this.queryQR(
+      async qr => {
+        const { baseTableName, schemaName } = await this.normalizeTable(
+          qr,
+          args,
+        );
+        const columnNames = await this.introspectColumnNames(
+          { ...args, tableName: baseTableName, schemaName },
+          args.excludedColumns,
+        );
+        const target = tableWithSchema({
+          tableName: `dolt_commit_diff_${baseTableName}`,
+          schemaName,
+        });
+        return buildDoltCommitDiff(qr.manager, target, {
+          fromCommitId: args.fromCommitId,
+          toCommitId: args.toCommitId,
+          columnNames,
+          type: args.type,
+        }).displaySql;
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async doltCellDiff(args: t.DoltCellDiffArgs): Promise<string> {
+    return this.queryQR(
+      async qr => {
+        const { baseTableName, schemaName } = await this.normalizeTable(
+          qr,
+          args,
+        );
+        const columnNames = await this.introspectColumnNames({
+          ...args,
+          tableName: baseTableName,
+          schemaName,
+        });
+        const target = tableWithSchema({
+          tableName: `dolt_diff_${baseTableName}`,
+          schemaName,
+        });
+        return buildDoltCellDiff(qr.manager, target, {
+          pkValues: args.pkValues,
+          columnNames,
+          columnName: args.columnName,
+        }).displaySql;
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async doltCellHistory(args: t.DoltCellHistoryArgs): Promise<string> {
+    return this.queryQR(
+      async qr => {
+        const { baseTableName, schemaName } = await this.normalizeTable(
+          qr,
+          args,
+        );
+        const columnNames = await this.introspectColumnNames({
+          ...args,
+          tableName: baseTableName,
+          schemaName,
+        });
+        const target = tableWithSchema({
+          tableName: `dolt_history_${baseTableName}`,
+          schemaName,
+        });
+        return buildDoltCellHistory(qr.manager, target, {
+          pkValues: args.pkValues,
+          columnNames,
+          columnName: args.columnName,
+        }).displaySql;
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  // Some callers (diff summaries) pass tableName schema-qualified
+  // (e.g. "public.customers"). Strip it so prefixed targets like
+  // dolt_commit_diff_X aren't constructed from the qualified form.
+  private async normalizeTable(
+    qr: QueryRunner,
+    args: t.TableMaybeSchemaArgs,
+  ): Promise<{ baseTableName: string; schemaName: string }> {
+    const schemaName = await getSchema(qr, args);
+    return { baseTableName: tableWithoutSchema(args.tableName), schemaName };
+  }
+
+  private async introspectColumnNames(
+    args: t.TableMaybeSchemaArgs,
+    excluded?: string[],
+  ): Promise<string[]> {
+    const tableInfo = await this.getTableInfo(args);
+    if (!tableInfo) {
+      throw new Error(`table "${args.tableName}" not found`);
+    }
+    const excludedSet = new Set(excluded ?? []);
+    return tableInfo.columns.map(c => c.name).filter(n => !excludedSet.has(n));
   }
 }
 

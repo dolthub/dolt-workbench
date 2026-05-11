@@ -9,6 +9,9 @@ import { SchemaItem } from "../../schemas/schema.model";
 import { systemTableValues } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
 import { ROW_LIMIT, handleTableNotFound } from "../../utils";
+import { buildDoltCellDiff } from "../build/buildDoltCellDiff";
+import { buildDoltCellHistory } from "../build/buildDoltCellHistory";
+import { buildDoltCommitDiff } from "../build/buildDoltCommitDiff";
 import { MySQLQueryFactory } from "../mysql";
 import * as myqh from "../mysql/queries";
 import { mapTablesRes } from "../mysql/utils";
@@ -640,6 +643,64 @@ export class DoltQueryFactory
       args.databaseName,
       args.refName,
     );
+  }
+
+  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<string> {
+    const columnNames = await this.introspectColumnNames(
+      args,
+      args.excludedColumns,
+    );
+    return this.queryForBuilder(
+      async em =>
+        buildDoltCommitDiff(em, `dolt_commit_diff_${args.tableName}`, {
+          fromCommitId: args.fromCommitId,
+          toCommitId: args.toCommitId,
+          columnNames,
+          type: args.type,
+        }).displaySql,
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async doltCellDiff(args: t.DoltCellDiffArgs): Promise<string> {
+    const columnNames = await this.introspectColumnNames(args);
+    return this.queryForBuilder(
+      async em =>
+        buildDoltCellDiff(em, `dolt_diff_${args.tableName}`, {
+          pkValues: args.pkValues,
+          columnNames,
+          columnName: args.columnName,
+        }).displaySql,
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async doltCellHistory(args: t.DoltCellHistoryArgs): Promise<string> {
+    const columnNames = await this.introspectColumnNames(args);
+    return this.queryForBuilder(
+      async em =>
+        buildDoltCellHistory(em, `dolt_history_${args.tableName}`, {
+          pkValues: args.pkValues,
+          columnNames,
+          columnName: args.columnName,
+        }).displaySql,
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  private async introspectColumnNames(
+    args: t.TableArgs,
+    excluded?: string[],
+  ): Promise<string[]> {
+    const tableInfo = await this.getTableInfo(args);
+    if (!tableInfo) {
+      throw new Error(`table "${args.tableName}" not found`);
+    }
+    const excludedSet = new Set(excluded ?? []);
+    return tableInfo.columns.map(c => c.name).filter(n => !excludedSet.has(n));
   }
 }
 

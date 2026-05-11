@@ -1,0 +1,68 @@
+import { EntityManager } from "typeorm";
+import { ColumnValue, RawRows } from "../types";
+import {
+  Built,
+  bindParam,
+  builtSelect,
+  diffSelectClause,
+  newParamAccumulator,
+  ParamAccumulator,
+} from "./buildUtils";
+
+export type DoltCellDiffBuildArgs = {
+  pkValues: ColumnValue[];
+  columnNames: string[];
+  columnName?: string;
+};
+
+export function buildDoltCellDiff(
+  em: EntityManager,
+  target: string,
+  args: DoltCellDiffBuildArgs,
+): Built<RawRows> {
+  const escape = em.connection.driver.escape.bind(em.connection.driver);
+  const acc = newParamAccumulator();
+
+  const cellOnly = args.columnName !== undefined;
+  const includedCols = cellOnly
+    ? [args.columnName as string]
+    : args.columnNames;
+  const alias = target.split(".").pop() ?? target;
+  let qb = em
+    .createQueryBuilder()
+    .select(diffSelectClause(includedCols, escape))
+    .from(target, alias);
+
+  const toCond = buildPkCondition(args.pkValues, "to", escape, acc);
+  const fromCond = buildPkCondition(args.pkValues, "from", escape, acc);
+  const pkWhere = `(${toCond}) OR (${fromCond})`;
+
+  let where = pkWhere;
+  if (cellOnly) {
+    const col = args.columnName as string;
+    const fromCol = escape(`from_${col}`);
+    const toCol = escape(`to_${col}`);
+    const cellNotEqual = `${fromCol} <> ${toCol} OR (${fromCol} IS NULL AND ${toCol} IS NOT NULL) OR (${fromCol} IS NOT NULL AND ${toCol} IS NULL)`;
+    where = `(${pkWhere}) AND (${cellNotEqual})`;
+  }
+
+  qb = qb
+    .where(where, acc.namedParams)
+    .orderBy(escape("to_commit_date"), "DESC");
+
+  return builtSelect(qb, acc);
+}
+
+function buildPkCondition(
+  pkValues: ColumnValue[],
+  prefix: "to" | "from",
+  escape: (n: string) => string,
+  acc: ParamAccumulator,
+): string {
+  return pkValues
+    .map(pk => {
+      const key = bindParam(acc, pk.value ?? "", pk.type);
+      return `${escape(`${prefix}_${pk.column}`)} = :${key}`;
+    })
+    .join(" AND ");
+}

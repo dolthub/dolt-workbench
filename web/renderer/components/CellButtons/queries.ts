@@ -68,6 +68,46 @@ export const UPDATE_ROW = gql`
   }
 `;
 
+export const DOLT_CELL_DIFF = gql`
+  query DoltCellDiff(
+    $databaseName: String!
+    $refName: String!
+    $schemaName: String
+    $tableName: String!
+    $pkValues: [ColumnValueInput!]!
+    $columnName: String
+  ) {
+    doltCellDiff(
+      databaseName: $databaseName
+      refName: $refName
+      schemaName: $schemaName
+      tableName: $tableName
+      pkValues: $pkValues
+      columnName: $columnName
+    )
+  }
+`;
+
+export const DOLT_CELL_HISTORY = gql`
+  query DoltCellHistory(
+    $databaseName: String!
+    $refName: String!
+    $schemaName: String
+    $tableName: String!
+    $pkValues: [ColumnValueInput!]!
+    $columnName: String
+  ) {
+    doltCellHistory(
+      databaseName: $databaseName
+      refName: $refName
+      schemaName: $schemaName
+      tableName: $tableName
+      pkValues: $pkValues
+      columnName: $columnName
+    )
+  }
+`;
+
 export const DROP_COLUMN = gql`
   mutation DropColumn(
     $databaseName: String!

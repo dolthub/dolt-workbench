@@ -4,19 +4,27 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, Loader } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
+  ColumnValueInput,
   RowForDataTableFragment,
   SchemaItemFragment,
+  useDoltCellDiffLazyQuery,
 } from "@gen/graphql-types";
-import { useGetDoltDiffQuery } from "@hooks/useDoltQueryBuilder/useGetDoltDiffQuery";
 import useSqlParser from "@hooks/useSqlParser";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
-import { TableParams } from "@lib/params";
+import { TableOptionalSchemaParams } from "@lib/params";
+import { query } from "@lib/urls";
 import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
 import cx from "classnames";
-import { ReactNode, useEffect, useState } from "react";
+import { useRouter } from "next/router";
+import { ReactNode } from "react";
 import TableType from "./TableType";
 import css from "./index.module.css";
-import { getTableColsFromQueryCols, isKeyless, queryShowingPKs } from "./utils";
+import {
+  convertTimestamp,
+  getTableColsFromQueryCols,
+  isKeyless,
+  queryShowingPKs,
+} from "./utils";
 
 type Props = {
   cidx: number;
@@ -28,37 +36,63 @@ type Props = {
 type InnerProps = Omit<Props, "doltDisabled"> & {
   disabled?: boolean;
   disabledPopup?: ReactNode;
-  params: TableParams;
+  params: TableOptionalSchemaParams;
+};
+
+export type CellHistoryContext = {
+  tableName: string;
+  schemaName?: string;
+  pkValues: ColumnValueInput[];
+  columnName?: string;
 };
 
 function Inner(props: InnerProps) {
+  const router = useRouter();
+  const { setError } = useSqlEditorContext();
   const currCol = props.columns[props.cidx];
-  const { executeQuery } = useSqlEditorContext();
-  const [submitting, setSubmitting] = useState(false);
+  const [fetchDoltCellDiff, { loading }] = useDoltCellDiffLazyQuery();
   const isPK = currCol.isPrimaryKey;
-  const { generateQuery } = useGetDoltDiffQuery({
-    ...props,
-    row: props.row,
-    isPK,
-  });
 
-  useEffect(() => {
-    if (!submitting) {
+  const onClick = async () => {
+    const pkValues = toPkValues(props.columns, props.row);
+    const columnName = isPK ? undefined : currCol.name;
+    const res = await fetchDoltCellDiff({
+      variables: {
+        databaseName: props.params.databaseName,
+        refName: props.params.refName,
+        schemaName: props.params.schemaName,
+        tableName: props.params.tableName,
+        pkValues,
+        columnName,
+      },
+    });
+    if (res.error) {
+      setError(res.error);
       return;
     }
-
-    const query = generateQuery();
-    executeQuery({ ...props.params, query }).catch(console.error);
-    setSubmitting(false);
-  }, [submitting, props.params, executeQuery, isPK, props]);
+    const sql = res.data?.doltCellDiff;
+    if (!sql) return;
+    const ctx: CellHistoryContext = {
+      tableName: props.params.tableName,
+      schemaName: props.params.schemaName,
+      pkValues,
+      columnName,
+    };
+    const { href, as } = query(props.params).withQuery({
+      q: sql,
+      schemaName: props.params.schemaName,
+      cellHistoryContext: JSON.stringify(ctx),
+    });
+    router.push(href, as).catch(console.error);
+  };
 
   return (
     <span className={css.history}>
-      <Loader loaded={!submitting} />
+      <Loader loaded={!loading} />
       <Button.Link
-        onClick={() => setSubmitting(true)}
+        onClick={onClick}
         className={css.button}
-        disabled={props.disabled}
+        disabled={props.disabled || loading}
       >
         {isPK ? "Row History" : "Cell History"}
         {props.disabled && <BsFillQuestionCircleFill className={css.help} />}
@@ -93,9 +127,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
     isView ||
     isSystemTable ||
     !columns ||
-    // Need values of all PK columns to generate query for history
     !pksShowing ||
-    // History will not work for joins
     isJoin;
 
   return (
@@ -121,6 +153,24 @@ export default function HistoryButton(props: Props): JSX.Element | null {
       }
     />
   );
+}
+
+function toPkValues(
+  cols: ColumnForDataTableFragment[],
+  row: RowForDataTableFragment,
+): ColumnValueInput[] {
+  return cols
+    .map((col, i) => {
+      return { col, value: row.columnValues[i].displayValue };
+    })
+    .filter(c => c.col.isPrimaryKey)
+    .map(({ col, value }) => {
+      return {
+        column: col.name,
+        value: col.type === "TIMESTAMP" ? convertTimestamp(value) : value,
+        type: col.type,
+      };
+    });
 }
 
 function getIsView(tableName: string, views?: SchemaItemFragment[]): boolean {
