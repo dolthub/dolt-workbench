@@ -4,9 +4,8 @@ import HistoryTable from "@components/HistoryTable";
 import SchemaFragment from "@components/SchemaFragment";
 import SqlDataTable from "@components/SqlDataTable";
 import QueryBreadcrumbs from "@components/breadcrumbs/QueryBreadcrumbs";
-import { DataTableProvider } from "@contexts/dataTable";
+import { DataTableProvider, useDataTableContext } from "@contexts/dataTable";
 import { SchemaType } from "@gen/graphql-types";
-import useSqlParser from "@hooks/useSqlParser";
 import { parseDefinition } from "@lib/definitionUrl";
 import { RefParams, SqlQueryParams } from "@lib/params";
 import { ref, sqlQuery } from "@lib/urls";
@@ -19,9 +18,9 @@ type Props = {
 
 function Inner({ params }: Props) {
   const router = useRouter();
-  const { isMutation } = useSqlParser();
+  const { isMutation } = useDataTableContext();
   const routeRefChangeTo = (p: RefParams) =>
-    isMutation(params.q)
+    isMutation
       ? ref(p)
       : sqlQuery({ ...p, q: params.q, active: params.active });
 
@@ -69,12 +68,8 @@ function Inner({ params }: Props) {
 }
 
 export default function ForQuery(props: Props) {
-  const { isMutation } = useSqlParser();
   return (
-    <DataTableProvider
-      {...props}
-      showingWorkingDiff={isMutation(props.params.q)}
-    >
+    <DataTableProvider {...props}>
       <Inner {...props} />
     </DataTableProvider>
   );

@@ -3,7 +3,6 @@ import DiffTableNav from "@components/DiffTableNav";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { DiffProvider, useDiffContext } from "@contexts/diff";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
-import useSqlParser from "@hooks/useSqlParser";
 import { RefOptionalSchemaParams } from "@lib/params";
 import css from "./index.module.css";
 
@@ -29,17 +28,9 @@ export default function WorkingDiff(props: Props) {
   const toRefName = "WORKING";
   const params = { ...props.params, toRefName, fromRefName };
 
-  const { getTableNames, loading } = useSqlParser();
-  if (loading) return <Loader loaded={false} />;
-  const tns = getTableNames(params.q);
-
   return (
     <NotDoltWrapper hideNotDolt>
-      <DiffProvider
-        params={params}
-        stayWithinPage
-        initialTableName={tns ? tns[0] : undefined}
-      >
+      <DiffProvider params={params} stayWithinPage>
         <Inner />
       </DiffProvider>
     </NotDoltWrapper>
