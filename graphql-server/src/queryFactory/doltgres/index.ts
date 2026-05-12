@@ -8,9 +8,12 @@ import { SchemaItem } from "../../schemas/schema.model";
 import { systemTableValues } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
 import { handleTableNotFound } from "../../utils";
+import { buildDeleteRow } from "../build/buildDeleteRow";
 import { buildDoltCellDiff } from "../build/buildDoltCellDiff";
 import { buildDoltCellHistory } from "../build/buildDoltCellHistory";
 import { buildDoltCommitDiff } from "../build/buildDoltCommitDiff";
+import { buildSaveDoc } from "../build/buildSaveDoc";
+import { mutationExecutionMessage } from "../build/buildUtils";
 import * as dem from "../dolt/doltEntityManager";
 import {
   getAuthorString,
@@ -634,9 +637,7 @@ export class DoltgresQueryFactory
     );
   }
 
-  async doltCommitDiff(
-    args: t.DoltCommitDiffArgs,
-  ): Promise<t.SqlSelectResult> {
+  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
@@ -747,6 +748,39 @@ export class DoltgresQueryFactory
           isMutation: false,
           executionMessage: "",
           queryString: built.displaySql,
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult> {
+    return this.queryQR(
+      async qr => {
+        if (!args.markdown) {
+          const built = buildDeleteRow(qr.manager, "dolt_docs", [
+            { column: "doc_name", value: args.docName, type: "varchar" },
+          ]);
+          const result = await built.execute();
+          const rowsAffected = result.affected ?? 0;
+          return {
+            rowsAffected,
+            queryString: built.displaySql,
+            executionMessage: mutationExecutionMessage(rowsAffected),
+          };
+        }
+        const built = buildSaveDoc(
+          qr.manager,
+          "dolt_docs",
+          args.docName,
+          args.markdown,
+        );
+        await built.execute();
+        return {
+          rowsAffected: 1,
+          queryString: built.displaySql,
+          executionMessage: mutationExecutionMessage(1),
         };
       },
       args.databaseName,

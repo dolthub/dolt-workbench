@@ -126,6 +126,7 @@ export const refetchUpdateDatabaseQueriesCacheEvict: RefetchOptions = {
       "branchNames",
       "views",
       "docs",
+      "docOrDefaultDoc",
       "commits",
       "status",
       "diffSummaries",

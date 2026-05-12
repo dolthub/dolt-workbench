@@ -101,6 +101,8 @@ export declare class QueryFactory {
 
   schemaDefinition(args: t.SchemaDefinitionArgs): Promise<t.SqlSelectResult>;
 
+  saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult>;
+
   getSchemas(
     args: t.RefMaybeSchemaArgs,
     type?: SchemaType,

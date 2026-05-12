@@ -129,6 +129,11 @@ export type SchemaDefinitionArgs = RefMaybeSchemaArgs & {
   kind: SchemaType;
 };
 
+export type SaveDocArgs = RefArgs & {
+  docName: string;
+  markdown: string;
+};
+
 export type OrderByClause = {
   column: string;
   direction: "ASC" | "DESC";

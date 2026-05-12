@@ -7,6 +7,7 @@ import {
 import useEditDoc from "@hooks/useEditDoc";
 import { DocParams } from "@lib/params";
 import toDocType from "@lib/toDocType";
+import { SyntheticEvent } from "react";
 
 type Props = {
   markdown: string;
@@ -28,8 +29,13 @@ export default function Editor(props: Props) {
     props.setShowEditor(false);
   };
 
+  const handleSubmit = async (e: SyntheticEvent) => {
+    const result = await onSubmit(e);
+    if (result.success) props.setShowEditor(false);
+  };
+
   return (
-    <form onSubmit={onSubmit} aria-label="markdown-editor">
+    <form onSubmit={handleSubmit} aria-label="markdown-editor">
       <Loader loaded={!state.loading} />
       <TextareaWithMarkdown
         rows={15}

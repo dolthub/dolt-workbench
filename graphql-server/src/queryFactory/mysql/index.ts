@@ -422,6 +422,10 @@ export class MySQLQueryFactory
     );
   }
 
+  async saveDoc(_args: t.SaveDocArgs): Promise<t.MutationResult> {
+    throw notDoltError("save doc");
+  }
+
   // Returns static branch
   async getBranch(args: t.BranchArgs): t.USPR {
     return {

@@ -13,6 +13,10 @@ import {
 } from "@gen/graphql-types";
 import useEditDoc from "@hooks/useEditDoc";
 import { RefParams } from "@lib/params";
+import { fromDocType } from "@lib/toDocType";
+import { doc } from "@lib/urls";
+import { useRouter } from "next/router";
+import { SyntheticEvent } from "react";
 import Header from "./Header";
 import css from "./index.module.css";
 
@@ -25,6 +29,7 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
+  const router = useRouter();
   const options = getOptions(props.docRows);
   const { state, setState, onSubmit } = useEditDoc(
     props.params,
@@ -34,6 +39,17 @@ function Inner(props: InnerProps) {
     !state.docType || state.docType === DocType.Unspecified;
   const disabled = invalidDocType || !state.markdown;
 
+  const handleSubmit = async (e: SyntheticEvent) => {
+    const result = await onSubmit(e);
+    if (result.success && state.docType) {
+      const docName = fromDocType(state.docType);
+      if (docName) {
+        const { href, as } = doc({ ...props.params, docName });
+        router.push(href, as).catch(console.error);
+      }
+    }
+  };
+
   return (
     <div className={css.container}>
       <Header params={props.params} />
@@ -42,7 +58,7 @@ function Inner(props: InnerProps) {
           params={props.params}
           noWritesAction="add a doc"
         >
-          <form onSubmit={onSubmit}>
+          <form onSubmit={handleSubmit}>
             <div className={css.selectContainer}>
               <div className={css.label}>Type</div>
               <FormSelect
