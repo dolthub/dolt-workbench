@@ -293,9 +293,7 @@ function ProviderForTableName(props: TableProps) {
         !!workingDiffRows &&
         workingDiffRows.length > 0,
       tableShape: props.tableShape,
-      executedQueryString: hasStacking
-        ? selectTableRowsRes.data?.selectTableRows.queryString
-        : undefined,
+      executedQueryString: selectTableRowsRes.data?.selectTableRows.queryString,
     };
   }, [
     loadMore,

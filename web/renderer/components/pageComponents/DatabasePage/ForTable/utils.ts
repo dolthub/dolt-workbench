@@ -1,7 +1,8 @@
 import { getDateString, getTimeWithSeconds, nTimes } from "@dolthub/web-utils";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { ColumnValue } from "@hooks/useSqlBuilder/util";
 import { loremer } from "@lib/loremer";
+
+type ColumnValue = { type: string; value: string | number };
 
 export function mapColTypeToFakeValue(
   col: ColumnForDataTableFragment,
