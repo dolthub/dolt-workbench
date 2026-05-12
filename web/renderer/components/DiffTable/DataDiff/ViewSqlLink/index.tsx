@@ -1,16 +1,15 @@
 import { DropdownItem } from "@components/DatabaseOptionsDropdown";
-import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Button, SmallLoader } from "@dolthub/react-components";
+import Link from "@components/links/Link";
+import { SmallLoader } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   CommitDiffType,
   useDataTableQuery,
-  useDoltCommitDiffLazyQuery,
 } from "@gen/graphql-types";
+import { encodeCommitDiff } from "@lib/commitDiffUrl";
 import { RequiredRefsParams } from "@lib/params";
-import { sqlQuery } from "@lib/urls";
+import { query as queryRoute } from "@lib/urls";
 import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
-import { useRouter } from "next/router";
 import { HiddenColIndexes, isHiddenColumn } from "../utils";
 import css from "./index.module.css";
 
@@ -28,43 +27,31 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const router = useRouter();
-  const { setError } = useSqlEditorContext();
-  const [fetchDoltCommitDiff, { loading }] = useDoltCommitDiffLazyQuery();
-
-  const onClick = async () => {
-    const excludedColumns = props.columns
-      .filter((_, i) => isHiddenColumn(i, props.hiddenColIndexes))
-      .map(c => c.name);
-    const res = await fetchDoltCommitDiff({
-      variables: {
-        databaseName: props.params.databaseName,
-        refName: props.params.refName,
-        tableName: props.params.tableName,
-        fromCommitId: props.params.fromRefName,
-        toCommitId: props.params.toRefName,
-        excludedColumns,
-        type: props.type,
-      },
-    });
-    if (res.error) {
-      setError(res.error);
-      return;
-    }
-    const sql = res.data?.doltCommitDiff;
-    if (!sql) return;
-    const { href, as } = sqlQuery({ ...props.params, q: sql });
-    router.push(href, as).catch(console.error);
-  };
+  const excludedColumns = props.columns
+    .filter((_, i) => isHiddenColumn(i, props.hiddenColIndexes))
+    .map(c => c.name);
+  const commitDiffParams = encodeCommitDiff({
+    tableName: props.params.tableName,
+    fromCommitId: props.params.fromRefName,
+    toCommitId: props.params.toRefName,
+    excludedColumns,
+    type: props.type,
+  });
+  const baseRoute = queryRoute(props.params);
+  const pushQuery = { ...commitDiffParams };
 
   return (
     <DropdownItem
       icon={<AiOutlineConsoleSql className={css.sqlIcon} />}
       data-cy="view-sql-link"
     >
-      <Button.Link onClick={onClick} disabled={loading} className={css.sqlLink}>
+      <Link
+        href={{ pathname: baseRoute.hrefPathname(), query: pushQuery }}
+        as={{ pathname: baseRoute.asPathname(), query: pushQuery }}
+        className={css.sqlLink}
+      >
         View SQL
-      </Button.Link>
+      </Link>
     </DropdownItem>
   );
 }

@@ -136,18 +136,8 @@ export function asStringParams(params: unknown[]): string[] {
 export function builtSelect(
   qb: SelectQueryBuilder<any>,
   acc: ParamAccumulator,
-): Built<RawRows> {
-  const [sql, rawParams] = qb.getQueryAndParameters();
-  const params = asStringParams(rawParams);
-  const displaySql = interpolateForDisplay(sql, params, acc.paramTypes);
-  return { sql, params, displaySql, execute: async () => qb.getRawMany() };
-}
-
-export function previewSql(
-  qb: SelectQueryBuilder<any>,
-  acc: ParamAccumulator,
   escape: (name: string) => string,
-): BuiltSql {
+): Built<RawRows> {
   const [rawSql, rawParams] = qb.getQueryAndParameters();
   const params = asStringParams(rawParams);
   const sql = stripSentinelAlias(rawSql, escape);
@@ -155,7 +145,7 @@ export function previewSql(
     interpolateForDisplay(rawSql, params, acc.paramTypes),
     escape,
   );
-  return { sql, params, displaySql };
+  return { sql, params, displaySql, execute: async () => qb.getRawMany() };
 }
 
 const DIFF_METADATA_COLS = [

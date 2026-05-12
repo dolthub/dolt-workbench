@@ -1,13 +1,11 @@
 import useViewList from "@components/Views/useViewList";
 import { useDataTableContext } from "@contexts/dataTable";
-import { useSqlEditorContext } from "@contexts/sqleditor";
-import { Button, Loader } from "@dolthub/react-components";
+import { Button } from "@dolthub/react-components";
 import {
   ColumnForDataTableFragment,
   ColumnValueInput,
   RowForDataTableFragment,
   SchemaItemFragment,
-  useDoltCellDiffLazyQuery,
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
 import { encodeCellHistory } from "@lib/cellHistoryUrl";
@@ -42,30 +40,12 @@ type InnerProps = Omit<Props, "doltDisabled"> & {
 
 function Inner(props: InnerProps) {
   const router = useRouter();
-  const { setError } = useSqlEditorContext();
   const currCol = props.columns[props.cidx];
-  const [fetchDoltCellDiff, { loading }] = useDoltCellDiffLazyQuery();
   const isPK = currCol.isPrimaryKey;
 
-  const onClick = async () => {
+  const onClick = () => {
     const pkValues = toPkValues(props.columns, props.row);
     const columnName = isPK ? undefined : currCol.name;
-    const res = await fetchDoltCellDiff({
-      variables: {
-        databaseName: props.params.databaseName,
-        refName: props.params.refName,
-        schemaName: props.params.schemaName,
-        tableName: props.params.tableName,
-        pkValues,
-        columnName,
-      },
-    });
-    if (res.error) {
-      setError(res.error);
-      return;
-    }
-    const sql = res.data?.doltCellDiff;
-    if (!sql) return;
     const historyParams = encodeCellHistory({
       tableName: props.params.tableName,
       schemaName: props.params.schemaName,
@@ -74,7 +54,6 @@ function Inner(props: InnerProps) {
     });
     const baseRoute = query(props.params);
     const pushQuery = {
-      q: sql,
       schemaName: props.params.schemaName,
       ...historyParams,
     };
@@ -88,11 +67,10 @@ function Inner(props: InnerProps) {
 
   return (
     <span className={css.history}>
-      <Loader loaded={!loading} />
       <Button.Link
         onClick={onClick}
         className={css.button}
-        disabled={props.disabled || loading}
+        disabled={props.disabled}
       >
         {isPK ? "Row History" : "Cell History"}
         {props.disabled && <BsFillQuestionCircleFill className={css.help} />}

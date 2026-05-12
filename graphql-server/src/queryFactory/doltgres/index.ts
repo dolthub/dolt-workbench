@@ -630,7 +630,9 @@ export class DoltgresQueryFactory
     );
   }
 
-  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<string> {
+  async doltCommitDiff(
+    args: t.DoltCommitDiffArgs,
+  ): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
@@ -654,19 +656,25 @@ export class DoltgresQueryFactory
           tableName: `dolt_commit_diff_${baseTableName}`,
           schemaName,
         });
-        return buildDoltCommitDiff(qr.manager, target, {
+        const built = buildDoltCommitDiff(qr.manager, target, {
           fromCommitId: args.fromCommitId,
           toCommitId: args.toCommitId,
           columnNames,
           type: args.type,
-        }).displaySql;
+        });
+        return {
+          rows: await built.execute(),
+          isMutation: false,
+          executionMessage: "",
+          queryString: built.displaySql,
+        };
       },
       args.databaseName,
       args.refName,
     );
   }
 
-  async doltCellDiff(args: t.DoltCellLookupArgs): Promise<string> {
+  async doltCellDiff(args: t.DoltCellLookupArgs): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
@@ -686,18 +694,26 @@ export class DoltgresQueryFactory
           tableName: `dolt_diff_${baseTableName}`,
           schemaName,
         });
-        return buildDoltCellDiff(qr.manager, target, {
+        const built = buildDoltCellDiff(qr.manager, target, {
           pkValues: pkValuesWithTypes(args.pkValues, columns),
           columnNames: columns.map(c => c.name),
           columnName: args.columnName,
-        }).displaySql;
+        });
+        return {
+          rows: await built.execute(),
+          isMutation: false,
+          executionMessage: "",
+          queryString: built.displaySql,
+        };
       },
       args.databaseName,
       args.refName,
     );
   }
 
-  async doltCellHistory(args: t.DoltCellLookupArgs): Promise<string> {
+  async doltCellHistory(
+    args: t.DoltCellLookupArgs,
+  ): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
@@ -717,11 +733,17 @@ export class DoltgresQueryFactory
           tableName: `dolt_history_${baseTableName}`,
           schemaName,
         });
-        return buildDoltCellHistory(qr.manager, target, {
+        const built = buildDoltCellHistory(qr.manager, target, {
           pkValues: pkValuesWithTypes(args.pkValues, columns),
           columnNames: columns.map(c => c.name),
           columnName: args.columnName,
-        }).displaySql;
+        });
+        return {
+          rows: await built.execute(),
+          isMutation: false,
+          executionMessage: "",
+          queryString: built.displaySql,
+        };
       },
       args.databaseName,
       args.refName,

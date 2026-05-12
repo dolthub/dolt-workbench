@@ -1,12 +1,13 @@
 import { EntityManager } from "typeorm";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
+import { RawRows } from "../types";
 import {
-  BuiltSql,
+  Built,
   SENTINEL_ALIAS,
   bindParam,
+  builtSelect,
   diffSelectClause,
   newParamAccumulator,
-  previewSql,
 } from "./buildUtils";
 
 export type DoltCommitDiffBuildArgs = {
@@ -20,7 +21,7 @@ export function buildDoltCommitDiff(
   em: EntityManager,
   target: string,
   args: DoltCommitDiffBuildArgs,
-): BuiltSql {
+): Built<RawRows> {
   const escape = em.connection.driver.escape.bind(em.connection.driver);
   const acc = newParamAccumulator();
 
@@ -47,5 +48,5 @@ export function buildDoltCommitDiff(
     );
   }
 
-  return previewSql(qb, acc, escape);
+  return builtSelect(qb, acc, escape);
 }

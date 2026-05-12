@@ -1,6 +1,26 @@
 import { gql } from "@apollo/client";
 
 export const DOLT_COMMIT_DIFF = gql`
+  fragment RowForDoltCommitDiff on Row {
+    columnValues {
+      displayValue
+    }
+    diff {
+      diffColumnNames
+      diffColumnValues {
+        displayValue
+      }
+    }
+  }
+  fragment ColumnForDoltCommitDiff on Column {
+    name
+    isPrimaryKey
+    type
+    sourceTable
+    constraints {
+      notNull
+    }
+  }
   query DoltCommitDiff(
     $databaseName: String!
     $refName: String!
@@ -20,6 +40,16 @@ export const DOLT_COMMIT_DIFF = gql`
       toCommitId: $toCommitId
       excludedColumns: $excludedColumns
       type: $type
-    )
+    ) {
+      queryString
+      columns {
+        ...ColumnForDoltCommitDiff
+      }
+      rows {
+        list {
+          ...RowForDoltCommitDiff
+        }
+      }
+    }
   }
 `;

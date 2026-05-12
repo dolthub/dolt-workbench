@@ -419,9 +419,9 @@ type Query {
   doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
-  doltCommitDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, fromCommitId: String!, toCommitId: String!, excludedColumns: [String!], type: CommitDiffType): String!
-  doltCellDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): String!
-  doltCellHistory(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): String!
+  doltCommitDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, fromCommitId: String!, toCommitId: String!, excludedColumns: [String!], type: CommitDiffType): SqlSelect!
+  doltCellDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): SqlSelect!
+  doltCellHistory(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): SqlSelect!
   selectTableRows(schemaName: String, tableName: String!, refName: String!, databaseName: String!, orderBy: [OrderByClause!], where: [ColumnValueInput!], excludePks: [PkRow!], projection: [String!], offset: Int): SqlSelect!
   sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!, offset: Int): SqlSelect!
   sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!, offset: Int): String!

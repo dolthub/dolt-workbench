@@ -1,18 +1,19 @@
 import { EntityManager } from "typeorm";
+import { RawRows } from "../types";
 import { DoltCellLookupBuildArgs } from "./buildDoltCellDiff";
 import {
-  BuiltSql,
+  Built,
   SENTINEL_ALIAS,
   buildWhereConditions,
+  builtSelect,
   newParamAccumulator,
-  previewSql,
 } from "./buildUtils";
 
 export function buildDoltCellHistory(
   em: EntityManager,
   target: string,
   args: DoltCellLookupBuildArgs,
-): BuiltSql {
+): Built<RawRows> {
   const escape = em.connection.driver.escape.bind(em.connection.driver);
   const acc = newParamAccumulator();
 
@@ -34,5 +35,5 @@ export function buildDoltCellHistory(
     .where(buildWhereConditions(args.pkValues, escape, acc), acc.namedParams)
     .orderBy(escape("commit_date"), "DESC");
 
-  return previewSql(qb, acc, escape);
+  return builtSelect(qb, acc, escape);
 }

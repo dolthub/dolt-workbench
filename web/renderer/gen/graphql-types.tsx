@@ -584,9 +584,9 @@ export type Query = {
   diffSummaries: Array<DiffSummary>;
   docOrDefaultDoc?: Maybe<Doc>;
   docs: DocList;
-  doltCellDiff: Scalars['String']['output'];
-  doltCellHistory: Scalars['String']['output'];
-  doltCommitDiff: Scalars['String']['output'];
+  doltCellDiff: SqlSelect;
+  doltCellHistory: SqlSelect;
+  doltCommitDiff: SqlSelect;
   doltDatabaseDetails: DoltDatabaseDetails;
   doltProcedures: Array<SchemaItem>;
   doltSchemas: Array<SchemaItem>;
@@ -1208,6 +1208,12 @@ export type UpdateRowMutationVariables = Exact<{
 
 export type UpdateRowMutation = { __typename?: 'Mutation', updateRow: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
+export type RowForDoltCellLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type ColumnForDoltCellLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+
+export type SqlSelectForDoltCellLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+
 export type DoltCellDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1218,7 +1224,7 @@ export type DoltCellDiffQueryVariables = Exact<{
 }>;
 
 
-export type DoltCellDiffQuery = { __typename?: 'Query', doltCellDiff: string };
+export type DoltCellDiffQuery = { __typename?: 'Query', doltCellDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
 
 export type DoltCellHistoryQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1230,7 +1236,7 @@ export type DoltCellHistoryQueryVariables = Exact<{
 }>;
 
 
-export type DoltCellHistoryQuery = { __typename?: 'Query', doltCellHistory: string };
+export type DoltCellHistoryQuery = { __typename?: 'Query', doltCellHistory: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
 
 export type DropColumnMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1242,6 +1248,24 @@ export type DropColumnMutationVariables = Exact<{
 
 
 export type DropColumnMutation = { __typename?: 'Mutation', dropColumn: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
+
+export type RowForDoltCommitDiffFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type ColumnForDoltCommitDiffFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+
+export type DoltCommitDiffQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  tableName: Scalars['String']['input'];
+  fromCommitId: Scalars['String']['input'];
+  toCommitId: Scalars['String']['input'];
+  excludedColumns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
+  type?: InputMaybe<CommitDiffType>;
+}>;
+
+
+export type DoltCommitDiffQuery = { __typename?: 'Query', doltCommitDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
 
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1383,20 +1407,6 @@ export type DiffStatQueryVariables = Exact<{
 
 
 export type DiffStatQuery = { __typename?: 'Query', diffStat: { __typename?: 'DiffStat', rowsUnmodified: number, rowsAdded: number, rowsDeleted: number, rowsModified: number, cellsModified: number, rowCount: number, cellCount: number } };
-
-export type DoltCommitDiffQueryVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-  refName: Scalars['String']['input'];
-  schemaName?: InputMaybe<Scalars['String']['input']>;
-  tableName: Scalars['String']['input'];
-  fromCommitId: Scalars['String']['input'];
-  toCommitId: Scalars['String']['input'];
-  excludedColumns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
-  type?: InputMaybe<CommitDiffType>;
-}>;
-
-
-export type DoltCommitDiffQuery = { __typename?: 'Query', doltCommitDiff: string };
 
 export type ColumnForDiffTableListFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
 
@@ -2052,6 +2062,68 @@ export type TableNamesQueryVariables = Exact<{
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
+export const ColumnForDoltCellLookupFragmentDoc = gql`
+    fragment ColumnForDoltCellLookup on Column {
+  name
+  isPrimaryKey
+  type
+  sourceTable
+  constraints {
+    notNull
+  }
+}
+    `;
+export const RowForDoltCellLookupFragmentDoc = gql`
+    fragment RowForDoltCellLookup on Row {
+  columnValues {
+    displayValue
+  }
+  diff {
+    diffColumnNames
+    diffColumnValues {
+      displayValue
+    }
+  }
+}
+    `;
+export const SqlSelectForDoltCellLookupFragmentDoc = gql`
+    fragment SqlSelectForDoltCellLookup on SqlSelect {
+  queryString
+  columns {
+    ...ColumnForDoltCellLookup
+  }
+  rows {
+    list {
+      ...RowForDoltCellLookup
+    }
+  }
+}
+    ${ColumnForDoltCellLookupFragmentDoc}
+${RowForDoltCellLookupFragmentDoc}`;
+export const RowForDoltCommitDiffFragmentDoc = gql`
+    fragment RowForDoltCommitDiff on Row {
+  columnValues {
+    displayValue
+  }
+  diff {
+    diffColumnNames
+    diffColumnValues {
+      displayValue
+    }
+  }
+}
+    `;
+export const ColumnForDoltCommitDiffFragmentDoc = gql`
+    fragment ColumnForDoltCommitDiff on Column {
+  name
+  isPrimaryKey
+  type
+  sourceTable
+  constraints {
+    notNull
+  }
+}
+    `;
 export const SchemaItemFragmentDoc = gql`
     fragment SchemaItem on SchemaItem {
   name
@@ -2677,9 +2749,11 @@ export const DoltCellDiffDocument = gql`
     tableName: $tableName
     pkValues: $pkValues
     columnName: $columnName
-  )
+  ) {
+    ...SqlSelectForDoltCellLookup
+  }
 }
-    `;
+    ${SqlSelectForDoltCellLookupFragmentDoc}`;
 
 /**
  * __useDoltCellDiffQuery__
@@ -2727,9 +2801,11 @@ export const DoltCellHistoryDocument = gql`
     tableName: $tableName
     pkValues: $pkValues
     columnName: $columnName
-  )
+  ) {
+    ...SqlSelectForDoltCellLookup
+  }
 }
-    `;
+    ${SqlSelectForDoltCellLookupFragmentDoc}`;
 
 /**
  * __useDoltCellHistoryQuery__
@@ -2813,6 +2889,71 @@ export function useDropColumnMutation(baseOptions?: Apollo.MutationHookOptions<D
 export type DropColumnMutationHookResult = ReturnType<typeof useDropColumnMutation>;
 export type DropColumnMutationResult = Apollo.MutationResult<DropColumnMutation>;
 export type DropColumnMutationOptions = Apollo.BaseMutationOptions<DropColumnMutation, DropColumnMutationVariables>;
+export const DoltCommitDiffDocument = gql`
+    query DoltCommitDiff($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $excludedColumns: [String!], $type: CommitDiffType) {
+  doltCommitDiff(
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+    tableName: $tableName
+    fromCommitId: $fromCommitId
+    toCommitId: $toCommitId
+    excludedColumns: $excludedColumns
+    type: $type
+  ) {
+    queryString
+    columns {
+      ...ColumnForDoltCommitDiff
+    }
+    rows {
+      list {
+        ...RowForDoltCommitDiff
+      }
+    }
+  }
+}
+    ${ColumnForDoltCommitDiffFragmentDoc}
+${RowForDoltCommitDiffFragmentDoc}`;
+
+/**
+ * __useDoltCommitDiffQuery__
+ *
+ * To run a query within a React component, call `useDoltCommitDiffQuery` and pass it any options that fit your needs.
+ * When your component renders, `useDoltCommitDiffQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useDoltCommitDiffQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *      tableName: // value for 'tableName'
+ *      fromCommitId: // value for 'fromCommitId'
+ *      toCommitId: // value for 'toCommitId'
+ *      excludedColumns: // value for 'excludedColumns'
+ *      type: // value for 'type'
+ *   },
+ * });
+ */
+export function useDoltCommitDiffQuery(baseOptions: Apollo.QueryHookOptions<DoltCommitDiffQuery, DoltCommitDiffQueryVariables> & ({ variables: DoltCommitDiffQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>(DoltCommitDiffDocument, options);
+      }
+export function useDoltCommitDiffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>(DoltCommitDiffDocument, options);
+        }
+export function useDoltCommitDiffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>(DoltCommitDiffDocument, options);
+        }
+export type DoltCommitDiffQueryHookResult = ReturnType<typeof useDoltCommitDiffQuery>;
+export type DoltCommitDiffLazyQueryHookResult = ReturnType<typeof useDoltCommitDiffLazyQuery>;
+export type DoltCommitDiffSuspenseQueryHookResult = ReturnType<typeof useDoltCommitDiffSuspenseQuery>;
+export type DoltCommitDiffQueryResult = Apollo.QueryResult<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>;
 export const CreateDatabaseDocument = gql`
     mutation CreateDatabase($databaseName: String!) {
   createDatabase(databaseName: $databaseName)
@@ -3484,60 +3625,6 @@ export type DiffStatQueryHookResult = ReturnType<typeof useDiffStatQuery>;
 export type DiffStatLazyQueryHookResult = ReturnType<typeof useDiffStatLazyQuery>;
 export type DiffStatSuspenseQueryHookResult = ReturnType<typeof useDiffStatSuspenseQuery>;
 export type DiffStatQueryResult = Apollo.QueryResult<DiffStatQuery, DiffStatQueryVariables>;
-export const DoltCommitDiffDocument = gql`
-    query DoltCommitDiff($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $excludedColumns: [String!], $type: CommitDiffType) {
-  doltCommitDiff(
-    databaseName: $databaseName
-    refName: $refName
-    schemaName: $schemaName
-    tableName: $tableName
-    fromCommitId: $fromCommitId
-    toCommitId: $toCommitId
-    excludedColumns: $excludedColumns
-    type: $type
-  )
-}
-    `;
-
-/**
- * __useDoltCommitDiffQuery__
- *
- * To run a query within a React component, call `useDoltCommitDiffQuery` and pass it any options that fit your needs.
- * When your component renders, `useDoltCommitDiffQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useDoltCommitDiffQuery({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *      refName: // value for 'refName'
- *      schemaName: // value for 'schemaName'
- *      tableName: // value for 'tableName'
- *      fromCommitId: // value for 'fromCommitId'
- *      toCommitId: // value for 'toCommitId'
- *      excludedColumns: // value for 'excludedColumns'
- *      type: // value for 'type'
- *   },
- * });
- */
-export function useDoltCommitDiffQuery(baseOptions: Apollo.QueryHookOptions<DoltCommitDiffQuery, DoltCommitDiffQueryVariables> & ({ variables: DoltCommitDiffQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>(DoltCommitDiffDocument, options);
-      }
-export function useDoltCommitDiffLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>(DoltCommitDiffDocument, options);
-        }
-export function useDoltCommitDiffSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>) {
-          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
-          return Apollo.useSuspenseQuery<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>(DoltCommitDiffDocument, options);
-        }
-export type DoltCommitDiffQueryHookResult = ReturnType<typeof useDoltCommitDiffQuery>;
-export type DoltCommitDiffLazyQueryHookResult = ReturnType<typeof useDoltCommitDiffLazyQuery>;
-export type DoltCommitDiffSuspenseQueryHookResult = ReturnType<typeof useDoltCommitDiffSuspenseQuery>;
-export type DoltCommitDiffQueryResult = Apollo.QueryResult<DoltCommitDiffQuery, DoltCommitDiffQueryVariables>;
 export const RowDiffsDocument = gql`
     query RowDiffs($databaseName: String!, $tableName: String!, $fromRefName: String!, $toRefName: String!, $refName: String, $offset: Int, $filterByRowType: DiffRowType, $type: CommitDiffType) {
   rowDiffs(

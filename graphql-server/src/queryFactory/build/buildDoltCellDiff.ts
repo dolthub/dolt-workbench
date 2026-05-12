@@ -1,13 +1,13 @@
 import { EntityManager } from "typeorm";
-import { ColumnValue } from "../types";
+import { ColumnValue, RawRows } from "../types";
 import {
-  BuiltSql,
+  Built,
   SENTINEL_ALIAS,
   bindParam,
+  builtSelect,
   diffSelectClause,
   newParamAccumulator,
   ParamAccumulator,
-  previewSql,
 } from "./buildUtils";
 
 export type DoltCellLookupBuildArgs = {
@@ -20,7 +20,7 @@ export function buildDoltCellDiff(
   em: EntityManager,
   target: string,
   args: DoltCellLookupBuildArgs,
-): BuiltSql {
+): Built<RawRows> {
   const escape = em.connection.driver.escape.bind(em.connection.driver);
   const acc = newParamAccumulator();
 
@@ -48,7 +48,7 @@ export function buildDoltCellDiff(
     .where(where, acc.namedParams)
     .orderBy(escape("to_commit_date"), "DESC");
 
-  return previewSql(qb, acc, escape);
+  return builtSelect(qb, acc, escape);
 }
 
 function pkConditions(
