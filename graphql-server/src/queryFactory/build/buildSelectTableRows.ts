@@ -24,10 +24,9 @@ export function buildSelectTableRows(
   const escape = em.connection.driver.escape.bind(em.connection.driver);
   const acc = newParamAccumulator();
 
+  const projection = args.projection?.filter(c => c.length > 0) ?? [];
   const selectClause =
-    args.projection && args.projection.length > 0
-      ? args.projection.map(c => escape(c)).join(", ")
-      : "*";
+    projection.length > 0 ? projection.map(c => escape(c)).join(", ") : "*";
 
   const alias = target.split(".").pop() ?? target;
   let qb = em.createQueryBuilder().select(selectClause).from(target, alias);
@@ -58,13 +57,10 @@ export function buildSelectTableRows(
     });
   }
 
-  const [preLimitSql, preLimitParams] = qb.getQueryAndParameters() as [
-    string,
-    string[],
-  ];
+  const [preLimitSql, preLimitRawParams] = qb.getQueryAndParameters();
   const displaySql = interpolateForDisplay(
     preLimitSql,
-    preLimitParams,
+    asStringParams(preLimitRawParams),
     acc.paramTypes,
   );
 
@@ -73,12 +69,16 @@ export function buildSelectTableRows(
     qb = qb.offset(args.offset);
   }
 
-  const [sql, params] = qb.getQueryAndParameters() as [string, string[]];
+  const [sql, rawParams] = qb.getQueryAndParameters();
 
   return {
     sql,
-    params,
+    params: asStringParams(rawParams),
     displaySql,
     execute: async () => qb.getRawMany(),
   };
+}
+
+function asStringParams(params: unknown[]): string[] {
+  return params.map(p => String(p));
 }

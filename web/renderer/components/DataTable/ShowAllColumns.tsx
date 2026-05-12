@@ -1,19 +1,17 @@
 import { useDataTableContext } from "@contexts/dataTable";
 import { Button } from "@dolthub/react-components";
-import { parseStackingParams, pushStack } from "@lib/dataTableParams";
-import { useRouter } from "next/router";
+import useDataTableStack from "@hooks/useDataTableStack";
 import css from "./index.module.css";
 
 export default function ShowAllColumns() {
-  const router = useRouter();
   const { params, tableShape } = useDataTableContext();
-  const stack = parseStackingParams(router.query);
+  const { stack, update } = useDataTableStack();
 
   if (!params.tableName || !tableShape) return null;
   if (!stack.projection || stack.projection.length === 0) return null;
 
   const onClick = () => {
-    pushStack(router, { ...stack, projection: undefined });
+    update({ ...stack, projection: undefined });
   };
 
   return (

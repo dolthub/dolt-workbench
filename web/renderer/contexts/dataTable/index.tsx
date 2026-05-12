@@ -84,12 +84,18 @@ function ProviderForTableName(props: TableProps) {
   // every render and would make `stack` reference-unstable.
   const orderByParam = router.query.orderBy;
   const whereParam = router.query.where;
-  const excludePksParam = router.query.excludePks;
+  const hideParam = router.query.hide;
   const projectionParam = router.query.projection;
+
+  const tableRes = useDataTableQuery({
+    variables: props.params,
+  });
+  const tableColumns = tableRes.data?.table.columns;
+
   const stack = useMemo(
-    () => parseStackingParams(router.query),
+    () => parseStackingParams(router.query, tableColumns ?? []),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [orderByParam, whereParam, excludePksParam, projectionParam],
+    [orderByParam, whereParam, hideParam, projectionParam, tableColumns],
   );
   const hasStacking = !!(
     stack.orderBy?.length ||
@@ -97,10 +103,6 @@ function ProviderForTableName(props: TableProps) {
     stack.excludePks?.length ||
     stack.projection?.length
   );
-
-  const tableRes = useDataTableQuery({
-    variables: props.params,
-  });
 
   const selectTableRowsRes = useSelectTableRowsForDataTableQuery({
     variables: {

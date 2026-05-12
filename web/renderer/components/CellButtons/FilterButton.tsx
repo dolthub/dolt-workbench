@@ -1,12 +1,8 @@
 import { useDataTableContext } from "@contexts/dataTable";
 import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import {
-  appendWhere,
-  parseStackingParams,
-  pushStack,
-} from "@lib/dataTableParams";
-import { useRouter } from "next/router";
+import useDataTableStack from "@hooks/useDataTableStack";
+import { appendWhere } from "@lib/dataTableParams";
 import css from "./index.module.css";
 import { convertTimestamp } from "./utils";
 
@@ -17,8 +13,8 @@ type Props = {
 };
 
 export default function FilterButton({ col, value, dataCy }: Props) {
-  const router = useRouter();
   const { params, tableShape } = useDataTableContext();
+  const { stack, update } = useDataTableStack();
   const { tableName } = params;
 
   if (!tableName || !tableShape) return null;
@@ -29,14 +25,9 @@ export default function FilterButton({ col, value, dataCy }: Props) {
     const val = col.type.toLowerCase().includes("timestamp")
       ? convertTimestamp(value)
       : value;
-    const stack = parseStackingParams(router.query);
-    pushStack(router, {
+    update({
       ...stack,
-      where: appendWhere(stack.where, {
-        column: col.name,
-        value: val,
-        type: col.type,
-      }),
+      where: appendWhere(stack.where, { column: col.name, value: val }),
     });
   };
 

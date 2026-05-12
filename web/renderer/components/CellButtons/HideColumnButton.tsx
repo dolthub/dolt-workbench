@@ -1,12 +1,8 @@
 import { useDataTableContext } from "@contexts/dataTable";
 import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import {
-  parseStackingParams,
-  pushStack,
-  removeFromProjection,
-} from "@lib/dataTableParams";
-import { useRouter } from "next/router";
+import useDataTableStack from "@hooks/useDataTableStack";
+import { removeFromProjection } from "@lib/dataTableParams";
 import css from "./index.module.css";
 
 type Props = {
@@ -15,14 +11,13 @@ type Props = {
 };
 
 export default function HideColumnButton({ col, columns }: Props) {
-  const router = useRouter();
   const { tableShape } = useDataTableContext();
+  const { stack, update } = useDataTableStack();
 
   if (!tableShape) return null;
 
   const onClick = () => {
-    const stack = parseStackingParams(router.query);
-    pushStack(router, {
+    update({
       ...stack,
       projection: removeFromProjection(
         stack.projection,

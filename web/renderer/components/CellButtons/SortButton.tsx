@@ -2,14 +2,9 @@
 import { useDataTableContext } from "@contexts/dataTable";
 import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment, SortDirection } from "@gen/graphql-types";
-import {
-  getColumnSort,
-  parseStackingParams,
-  pushStack,
-  setColumnSort,
-} from "@lib/dataTableParams";
+import useDataTableStack from "@hooks/useDataTableStack";
+import { getColumnSort, setColumnSort } from "@lib/dataTableParams";
 import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-import { useRouter } from "next/router";
 import css from "./index.module.css";
 
 type Direction = "ASC" | "DESC" | undefined;
@@ -21,9 +16,8 @@ type Props = {
 };
 
 export default function SortButton({ col, dir, dataCy }: Props) {
-  const router = useRouter();
   const { tableShape } = useDataTableContext();
-  const stack = parseStackingParams(router.query);
+  const { stack, update } = useDataTableStack();
 
   if (!tableShape) return null;
   const currentDir = getColumnSort(stack.orderBy, col.name);
@@ -32,7 +26,7 @@ export default function SortButton({ col, dir, dataCy }: Props) {
   const sortDirection = getDirection(dir, col.type);
 
   const onClick = () => {
-    pushStack(router, {
+    update({
       ...stack,
       orderBy: setColumnSort(stack.orderBy, col.name, targetDir),
     });

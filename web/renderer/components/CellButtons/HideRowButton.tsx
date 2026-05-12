@@ -4,12 +4,8 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import {
-  appendExcludePk,
-  parseStackingParams,
-  pushStack,
-} from "@lib/dataTableParams";
-import { useRouter } from "next/router";
+import useDataTableStack from "@hooks/useDataTableStack";
+import { appendExcludePk } from "@lib/dataTableParams";
 import css from "./index.module.css";
 import { toPKWhereClauses } from "./utils";
 
@@ -19,16 +15,15 @@ type Props = {
 };
 
 export default function HideRowButton(props: Props) {
-  const router = useRouter();
   const { params, columns, tableShape } = useDataTableContext();
+  const { stack, update } = useDataTableStack();
   const { tableName } = params;
 
   if (!tableName || !tableShape) return null;
 
   const onClick = () => {
     const values = toPKWhereClauses(props.row, props.columns, columns);
-    const stack = parseStackingParams(router.query);
-    pushStack(router, {
+    update({
       ...stack,
       excludePks: appendExcludePk(stack.excludePks, { values }),
     });

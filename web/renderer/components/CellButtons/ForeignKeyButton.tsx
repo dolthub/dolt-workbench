@@ -66,17 +66,19 @@ type FKTableLinkProps = {
 
 function FKTableLink(props: FKTableLinkProps) {
   const where = props.columns.map(c => {
-    return {
-      column: c.columnName,
-      value: c.columnValue,
-    };
+    return { column: c.columnName, value: c.columnValue };
   });
   const route = table({
     databaseName: props.params.databaseName,
     refName: props.params.refName,
     schemaName: props.params.schemaName,
     tableName: props.table,
-  }).withQuery(stackingParamsToQuery({ where }));
+  }).withQuery(
+    stackingParamsToQuery({ where }) as Record<
+      string,
+      string | undefined | null
+    >,
+  );
 
   return (
     <span key={props.table}>
