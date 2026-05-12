@@ -1,5 +1,4 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import useSqlParser from "@hooks/useSqlParser";
 import { OptionalRefParams } from "@lib/params";
 import { debounce } from "lodash";
 import dynamic from "next/dynamic";
@@ -17,29 +16,16 @@ type Props = {
 };
 
 export default function MobileSqlEditor(props: Props) {
-  const { isMutation } = useSqlParser();
-  const { editorString, setEditorString, executeQuery, setError } =
+  const { editorString, setEditorString, executeQuery } =
     useSqlEditorContext("Tables");
   const aceEditor = useRef<any>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (!submitting) return;
-    if (isMutation(editorString)) {
-      setError(new Error("You currently cannot edit data."));
-      setSubmitting(false);
-      return;
-    }
     setSubmitting(false);
     executeQuery({ ...props.params, query: editorString }).catch(console.error);
-  }, [
-    submitting,
-    executeQuery,
-    setSubmitting,
-    editorString,
-    props.params,
-    setError,
-  ]);
+  }, [submitting, executeQuery, setSubmitting, editorString, props.params]);
 
   return (
     <div>

@@ -6,7 +6,6 @@ import {
   useSetState,
 } from "@dolthub/react-hooks";
 import useApolloError from "@hooks/useApolloError";
-import useSqlParser from "@hooks/useSqlParser";
 import { ApolloErrorType } from "@lib/errors/types";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -20,7 +19,6 @@ export const SqlEditorContext =
 // SqlEditorProvider should only be used in DatabasePage and the query catalog
 // page (to execute queries)
 export function SqlEditorProvider(props: Props) {
-  const { isMultipleQueries } = useSqlParser();
   const { isMobile } = useReactiveWidth(1024);
   const [editorString, setEditorString] = useState("");
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);
@@ -52,10 +50,6 @@ export function SqlEditorProvider(props: Props) {
     (executeProps: ExecuteProps) => {
       if (!executeProps.refName) {
         setErr(new Error("Cannot run select query without ref"));
-        return;
-      }
-      if (isMultipleQueries(executeProps.query)) {
-        setErr(new Error("The SQL workbench doesn't support multiple queries"));
         return;
       }
       const { href, as } = sqlQuery({

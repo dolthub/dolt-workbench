@@ -24,6 +24,8 @@ const dataTableCtxMock = {
   setWorkingDiffRowsToggled: () => {},
   diffExists: false,
   tableShape: true,
+  isMutation: false,
+  setIsMutation: () => {},
 };
 
 const dbParams = {
