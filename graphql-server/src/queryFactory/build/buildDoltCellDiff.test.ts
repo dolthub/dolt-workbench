@@ -15,11 +15,11 @@ describe("buildDoltCellDiff", () => {
       columnNames: ["id", "name"],
     });
     expect(out.sql).toBe(
-      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` `dolt_diff_users` WHERE (`to_id` = ?) OR (`from_id` = ?) ORDER BY `to_commit_date` DESC",
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` WHERE (`to_id` = ?) OR (`from_id` = ?) ORDER BY `to_commit_date` DESC",
     );
     expect(out.params).toEqual(["5", "5"]);
     expect(out.displaySql).toBe(
-      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` `dolt_diff_users` WHERE (`to_id` = 5) OR (`from_id` = 5) ORDER BY `to_commit_date` DESC",
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` WHERE (`to_id` = 5) OR (`from_id` = 5) ORDER BY `to_commit_date` DESC",
     );
   });
 
@@ -30,7 +30,7 @@ describe("buildDoltCellDiff", () => {
       columnName: "name",
     });
     expect(out.sql).toBe(
-      "SELECT `diff_type`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` `dolt_diff_users` WHERE ((`to_id` = ?) OR (`from_id` = ?)) AND (`from_name` <> `to_name` OR (`from_name` IS NULL AND `to_name` IS NOT NULL) OR (`from_name` IS NOT NULL AND `to_name` IS NULL)) ORDER BY `to_commit_date` DESC",
+      "SELECT `diff_type`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` WHERE ((`to_id` = ?) OR (`from_id` = ?)) AND (`from_name` <> `to_name` OR (`from_name` IS NULL AND `to_name` IS NOT NULL) OR (`from_name` IS NOT NULL AND `to_name` IS NULL)) ORDER BY `to_commit_date` DESC",
     );
     expect(out.params).toEqual(["5", "5"]);
   });
@@ -44,7 +44,7 @@ describe("buildDoltCellDiff", () => {
       columnNames: ["tenant_id", "order_id", "status"],
     });
     expect(out.sql).toBe(
-      "SELECT `diff_type`, `from_tenant_id`, `to_tenant_id`, `from_order_id`, `to_order_id`, `from_status`, `to_status`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_orders` `dolt_diff_orders` WHERE (`to_tenant_id` = ? AND `to_order_id` = ?) OR (`from_tenant_id` = ? AND `from_order_id` = ?) ORDER BY `to_commit_date` DESC",
+      "SELECT `diff_type`, `from_tenant_id`, `to_tenant_id`, `from_order_id`, `to_order_id`, `from_status`, `to_status`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_orders` WHERE (`to_tenant_id` = ? AND `to_order_id` = ?) OR (`from_tenant_id` = ? AND `from_order_id` = ?) ORDER BY `to_commit_date` DESC",
     );
     expect(out.params).toEqual(["1", "42", "1", "42"]);
   });
@@ -56,7 +56,7 @@ describe("buildDoltCellDiff", () => {
     });
     expect(out.params).toEqual(["O'Hara", "O'Hara"]);
     expect(out.displaySql).toBe(
-      "SELECT `diff_type`, `from_name`, `to_name`, `from_city`, `to_city`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` `dolt_diff_users` WHERE (`to_name` = 'O''Hara') OR (`from_name` = 'O''Hara') ORDER BY `to_commit_date` DESC",
+      "SELECT `diff_type`, `from_name`, `to_name`, `from_city`, `to_city`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` WHERE (`to_name` = 'O''Hara') OR (`from_name` = 'O''Hara') ORDER BY `to_commit_date` DESC",
     );
   });
 
@@ -67,7 +67,7 @@ describe("buildDoltCellDiff", () => {
       columnName: "name",
     });
     expect(out.sql).toBe(
-      'SELECT "diff_type", "from_name", "to_name", "from_commit", "from_commit_date", "to_commit", "to_commit_date" FROM "public"."dolt_diff_users" "dolt_diff_users" WHERE (("to_id" = $1) OR ("from_id" = $2)) AND ("from_name" <> "to_name" OR ("from_name" IS NULL AND "to_name" IS NOT NULL) OR ("from_name" IS NOT NULL AND "to_name" IS NULL)) ORDER BY "to_commit_date" DESC',
+      'SELECT "diff_type", "from_name", "to_name", "from_commit", "from_commit_date", "to_commit", "to_commit_date" FROM "public"."dolt_diff_users" WHERE (("to_id" = $1) OR ("from_id" = $2)) AND ("from_name" <> "to_name" OR ("from_name" IS NULL AND "to_name" IS NOT NULL) OR ("from_name" IS NOT NULL AND "to_name" IS NULL)) ORDER BY "to_commit_date" DESC',
     );
     expect(out.params).toEqual(["5", "5"]);
   });

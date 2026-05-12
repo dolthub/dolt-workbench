@@ -304,7 +304,6 @@ function ProviderForTableName(props: TableProps) {
     lastDiffQueryOffset,
     props.params,
     props.tableShape,
-    hasStacking,
     selectTableRowsRes.data,
     selectTableRowsRes.error,
     selectTableRowsRes.loading,
@@ -338,6 +337,7 @@ export function DataTableProvider({
   children,
   showingWorkingDiff,
 }: Props) {
+  const router = useRouter();
   const { isMutation, requireTableNamesForSelect, loading } = useSqlParser();
   const tableNames = useMemo(
     () =>
@@ -347,6 +347,7 @@ export function DataTableProvider({
     [params, loading],
   );
   const tableShape = "tableName" in params;
+  const executedQueryString = executedSqlFromRouter(router.query.executedSql);
 
   const value = useMemo(() => {
     return {
@@ -365,8 +366,16 @@ export function DataTableProvider({
       setWorkingDiffRowsToggled: () => {},
       diffExists: false,
       tableShape,
+      executedQueryString,
     };
-  }, [loading, params, showingWorkingDiff, tableNames, tableShape]);
+  }, [
+    loading,
+    params,
+    showingWorkingDiff,
+    tableNames,
+    tableShape,
+    executedQueryString,
+  ]);
 
   const isMut = "q" in params && isMutation(params.q);
   if (isMut || !tableNames.length) {
@@ -390,4 +399,8 @@ export function DataTableProvider({
 
 export function useDataTableContext(): DataTableContextType {
   return useContextWithError(DataTableContext);
+}
+
+function executedSqlFromRouter(raw: unknown): string | undefined {
+  return typeof raw === "string" ? raw : undefined;
 }

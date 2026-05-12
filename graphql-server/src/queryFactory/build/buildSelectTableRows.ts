@@ -2,10 +2,12 @@ import { EntityManager } from "typeorm";
 import { ColumnValue, OrderByClause, PkRow, RawRows } from "../types";
 import {
   Built,
+  SENTINEL_ALIAS,
   asStringParams,
   buildWhereConditions,
   interpolateForDisplay,
   newParamAccumulator,
+  stripSentinelAlias,
 } from "./buildUtils";
 
 export type SelectTableRowsBuildArgs = {
@@ -29,8 +31,10 @@ export function buildSelectTableRows(
   const selectClause =
     projection.length > 0 ? projection.map(c => escape(c)).join(", ") : "*";
 
-  const alias = target.split(".").pop() ?? target;
-  let qb = em.createQueryBuilder().select(selectClause).from(target, alias);
+  let qb = em
+    .createQueryBuilder()
+    .select(selectClause)
+    .from(target, SENTINEL_ALIAS);
 
   const whereParts: string[] = [];
   if (args.where && args.where.length > 0) {
@@ -59,10 +63,13 @@ export function buildSelectTableRows(
   }
 
   const [preLimitSql, preLimitRawParams] = qb.getQueryAndParameters();
-  const displaySql = interpolateForDisplay(
-    preLimitSql,
-    asStringParams(preLimitRawParams),
-    acc.paramTypes,
+  const displaySql = stripSentinelAlias(
+    interpolateForDisplay(
+      preLimitSql,
+      asStringParams(preLimitRawParams),
+      acc.paramTypes,
+    ),
+    escape,
   );
 
   qb = qb.limit(args.limit);
@@ -70,7 +77,8 @@ export function buildSelectTableRows(
     qb = qb.offset(args.offset);
   }
 
-  const [sql, rawParams] = qb.getQueryAndParameters();
+  const [rawSql, rawParams] = qb.getQueryAndParameters();
+  const sql = stripSentinelAlias(rawSql, escape);
 
   return {
     sql,

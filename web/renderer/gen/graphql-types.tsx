@@ -1612,16 +1612,6 @@ export type CreateBranchMutationVariables = Exact<{
 
 export type CreateBranchMutation = { __typename?: 'Mutation', createBranch: string };
 
-export type CallProcedureMutationVariables = Exact<{
-  databaseName: Scalars['String']['input'];
-  refName: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  args: Array<Scalars['String']['input']> | Scalars['String']['input'];
-}>;
-
-
-export type CallProcedureMutation = { __typename?: 'Mutation', callProcedure: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
-
 export type CommitForAfterCommitHistoryFragment = { __typename?: 'Commit', _id: string, commitId: string, parents: Array<string>, message: string, committedAt: any, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
 export type HistoryForCommitQueryVariables = Exact<{
@@ -2016,6 +2006,16 @@ export type DiffSummariesQueryVariables = Exact<{
 
 
 export type DiffSummariesQuery = { __typename?: 'Query', diffSummaries: Array<{ __typename?: 'DiffSummary', _id: string, fromTableName: string, toTableName: string, tableName: string, tableType: TableDiffType, hasDataChanges: boolean, hasSchemaChanges: boolean }> };
+
+export type CallProcedureMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  args: Array<Scalars['String']['input']> | Scalars['String']['input'];
+}>;
+
+
+export type CallProcedureMutation = { __typename?: 'Mutation', callProcedure: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
 export type DoltWriterForHistoryFragment = { __typename?: 'DoltWriter', _id: string, username?: string | null, displayName: string, emailAddress: string };
 
@@ -4350,49 +4350,6 @@ export function useCreateBranchMutation(baseOptions?: Apollo.MutationHookOptions
 export type CreateBranchMutationHookResult = ReturnType<typeof useCreateBranchMutation>;
 export type CreateBranchMutationResult = Apollo.MutationResult<CreateBranchMutation>;
 export type CreateBranchMutationOptions = Apollo.BaseMutationOptions<CreateBranchMutation, CreateBranchMutationVariables>;
-export const CallProcedureDocument = gql`
-    mutation CallProcedure($databaseName: String!, $refName: String!, $name: String!, $args: [String!]!) {
-  callProcedure(
-    databaseName: $databaseName
-    refName: $refName
-    name: $name
-    args: $args
-  ) {
-    rowsAffected
-    queryString
-    executionMessage
-  }
-}
-    `;
-export type CallProcedureMutationFn = Apollo.MutationFunction<CallProcedureMutation, CallProcedureMutationVariables>;
-
-/**
- * __useCallProcedureMutation__
- *
- * To run a mutation, you first call `useCallProcedureMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCallProcedureMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [callProcedureMutation, { data, loading, error }] = useCallProcedureMutation({
- *   variables: {
- *      databaseName: // value for 'databaseName'
- *      refName: // value for 'refName'
- *      name: // value for 'name'
- *      args: // value for 'args'
- *   },
- * });
- */
-export function useCallProcedureMutation(baseOptions?: Apollo.MutationHookOptions<CallProcedureMutation, CallProcedureMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CallProcedureMutation, CallProcedureMutationVariables>(CallProcedureDocument, options);
-      }
-export type CallProcedureMutationHookResult = ReturnType<typeof useCallProcedureMutation>;
-export type CallProcedureMutationResult = Apollo.MutationResult<CallProcedureMutation>;
-export type CallProcedureMutationOptions = Apollo.BaseMutationOptions<CallProcedureMutation, CallProcedureMutationVariables>;
 export const HistoryForCommitDocument = gql`
     query HistoryForCommit($databaseName: String!, $afterCommitId: String!) {
   commits(afterCommitId: $afterCommitId, databaseName: $databaseName) {
@@ -5958,6 +5915,49 @@ export type DiffSummariesQueryHookResult = ReturnType<typeof useDiffSummariesQue
 export type DiffSummariesLazyQueryHookResult = ReturnType<typeof useDiffSummariesLazyQuery>;
 export type DiffSummariesSuspenseQueryHookResult = ReturnType<typeof useDiffSummariesSuspenseQuery>;
 export type DiffSummariesQueryResult = Apollo.QueryResult<DiffSummariesQuery, DiffSummariesQueryVariables>;
+export const CallProcedureDocument = gql`
+    mutation CallProcedure($databaseName: String!, $refName: String!, $name: String!, $args: [String!]!) {
+  callProcedure(
+    databaseName: $databaseName
+    refName: $refName
+    name: $name
+    args: $args
+  ) {
+    rowsAffected
+    queryString
+    executionMessage
+  }
+}
+    `;
+export type CallProcedureMutationFn = Apollo.MutationFunction<CallProcedureMutation, CallProcedureMutationVariables>;
+
+/**
+ * __useCallProcedureMutation__
+ *
+ * To run a mutation, you first call `useCallProcedureMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCallProcedureMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [callProcedureMutation, { data, loading, error }] = useCallProcedureMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      name: // value for 'name'
+ *      args: // value for 'args'
+ *   },
+ * });
+ */
+export function useCallProcedureMutation(baseOptions?: Apollo.MutationHookOptions<CallProcedureMutation, CallProcedureMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CallProcedureMutation, CallProcedureMutationVariables>(CallProcedureDocument, options);
+      }
+export type CallProcedureMutationHookResult = ReturnType<typeof useCallProcedureMutation>;
+export type CallProcedureMutationResult = Apollo.MutationResult<CallProcedureMutation>;
+export type CallProcedureMutationOptions = Apollo.BaseMutationOptions<CallProcedureMutation, CallProcedureMutationVariables>;
 export const HistoryForBranchDocument = gql`
     query HistoryForBranch($databaseName: String!, $refName: String!, $offset: Int) {
   commits(databaseName: $databaseName, refName: $refName, offset: $offset) {

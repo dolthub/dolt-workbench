@@ -2,8 +2,8 @@ import { EntityManager } from "typeorm";
 import { DoltCellLookupBuildArgs } from "./buildDoltCellDiff";
 import {
   BuiltSql,
+  SENTINEL_ALIAS,
   buildWhereConditions,
-  deriveAlias,
   newParamAccumulator,
   previewSql,
 } from "./buildUtils";
@@ -30,9 +30,9 @@ export function buildDoltCellHistory(
   const qb = em
     .createQueryBuilder()
     .select(selectCols)
-    .from(target, deriveAlias(target))
+    .from(target, SENTINEL_ALIAS)
     .where(buildWhereConditions(args.pkValues, escape, acc), acc.namedParams)
     .orderBy(escape("commit_date"), "DESC");
 
-  return previewSql(qb, acc);
+  return previewSql(qb, acc, escape);
 }

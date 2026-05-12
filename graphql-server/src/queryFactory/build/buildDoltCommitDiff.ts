@@ -2,8 +2,8 @@ import { EntityManager } from "typeorm";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import {
   BuiltSql,
+  SENTINEL_ALIAS,
   bindParam,
-  deriveAlias,
   diffSelectClause,
   newParamAccumulator,
   previewSql,
@@ -27,7 +27,7 @@ export function buildDoltCommitDiff(
   let qb = em
     .createQueryBuilder()
     .select(diffSelectClause(args.columnNames, escape))
-    .from(target, deriveAlias(target));
+    .from(target, SENTINEL_ALIAS);
 
   if (args.type === CommitDiffType.ThreeDot) {
     const pTo = bindParam(acc, args.toCommitId);
@@ -47,5 +47,5 @@ export function buildDoltCommitDiff(
     );
   }
 
-  return previewSql(qb, acc);
+  return previewSql(qb, acc, escape);
 }

@@ -12,9 +12,9 @@ describe("buildSelectTableRows", () => {
   describe("mysql", () => {
     it("emits SELECT * with limit when no other args", () => {
       const out = buildSelectTableRows(mysqlEm, "users", { limit: 51 });
-      expect(out.sql).toBe("SELECT * FROM `users` `users` LIMIT 51");
+      expect(out.sql).toBe("SELECT * FROM `users` LIMIT 51");
       expect(out.params).toEqual([]);
-      expect(out.displaySql).toBe("SELECT * FROM `users` `users`");
+      expect(out.displaySql).toBe("SELECT * FROM `users`");
     });
 
     it("emits SELECT with explicit projection when provided", () => {
@@ -22,7 +22,7 @@ describe("buildSelectTableRows", () => {
         projection: ["id", "name"],
         limit: 51,
       });
-      expect(out.sql).toBe("SELECT `id`, `name` FROM `users` `users` LIMIT 51");
+      expect(out.sql).toBe("SELECT `id`, `name` FROM `users` LIMIT 51");
     });
 
     it("emits SELECT * when projection is empty", () => {
@@ -30,7 +30,7 @@ describe("buildSelectTableRows", () => {
         projection: [],
         limit: 51,
       });
-      expect(out.sql).toBe("SELECT * FROM `users` `users` LIMIT 51");
+      expect(out.sql).toBe("SELECT * FROM `users` LIMIT 51");
     });
 
     it("emits ORDER BY for a single column (ASC)", () => {
@@ -39,7 +39,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT * FROM `users` `users` ORDER BY `name` ASC LIMIT 51",
+        "SELECT * FROM `users` ORDER BY `name` ASC LIMIT 51",
       );
     });
 
@@ -52,7 +52,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT * FROM `users` `users` ORDER BY `tenant_id` ASC, `created_at` DESC LIMIT 51",
+        "SELECT * FROM `users` ORDER BY `tenant_id` ASC, `created_at` DESC LIMIT 51",
       );
     });
 
@@ -65,11 +65,11 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT * FROM `users` `users` WHERE `active` = ? AND `tenant_id` = ? LIMIT 51",
+        "SELECT * FROM `users` WHERE `active` = ? AND `tenant_id` = ? LIMIT 51",
       );
       expect(out.params).toEqual(["true", "5"]);
       expect(out.displaySql).toBe(
-        "SELECT * FROM `users` `users` WHERE `active` = TRUE AND `tenant_id` = 5",
+        "SELECT * FROM `users` WHERE `active` = TRUE AND `tenant_id` = 5",
       );
     });
 
@@ -82,7 +82,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT * FROM `users` `users` WHERE NOT (`id` = ?) AND NOT (`id` = ?) LIMIT 51",
+        "SELECT * FROM `users` WHERE NOT (`id` = ?) AND NOT (`id` = ?) LIMIT 51",
       );
       expect(out.params).toEqual(["1", "2"]);
     });
@@ -100,7 +100,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT * FROM `users` `users` WHERE NOT (`tenant_id` = ? AND `id` = ?) LIMIT 51",
+        "SELECT * FROM `users` WHERE NOT (`tenant_id` = ? AND `id` = ?) LIMIT 51",
       );
       expect(out.params).toEqual(["5", "1"]);
     });
@@ -112,7 +112,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT * FROM `users` `users` WHERE `active` = ? AND NOT (`id` = ?) LIMIT 51",
+        "SELECT * FROM `users` WHERE `active` = ? AND NOT (`id` = ?) LIMIT 51",
       );
       expect(out.params).toEqual(["true", "7"]);
     });
@@ -122,7 +122,7 @@ describe("buildSelectTableRows", () => {
         offset: 100,
         limit: 51,
       });
-      expect(out.sql).toBe("SELECT * FROM `users` `users` LIMIT 51 OFFSET 100");
+      expect(out.sql).toBe("SELECT * FROM `users` LIMIT 51 OFFSET 100");
     });
 
     it("omits OFFSET when offset is 0", () => {
@@ -130,7 +130,7 @@ describe("buildSelectTableRows", () => {
         offset: 0,
         limit: 51,
       });
-      expect(out.sql).toBe("SELECT * FROM `users` `users` LIMIT 51");
+      expect(out.sql).toBe("SELECT * FROM `users` LIMIT 51");
     });
 
     it("kitchen sink: projection + where + excludePks + multi-orderBy + offset", () => {
@@ -146,24 +146,24 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        "SELECT `id`, `name` FROM `users` `users` WHERE `active` = ? AND NOT (`id` = ?) ORDER BY `name` ASC, `id` DESC LIMIT 51 OFFSET 50",
+        "SELECT `id`, `name` FROM `users` WHERE `active` = ? AND NOT (`id` = ?) ORDER BY `name` ASC, `id` DESC LIMIT 51 OFFSET 50",
       );
       expect(out.params).toEqual(["true", "3"]);
     });
   });
 
   describe("postgres", () => {
-    it("emits SELECT * with $-placeholders and schema-qualified target (alias is just the table name)", () => {
+    it("emits SELECT * with $-placeholders and schema-qualified target", () => {
       const out = buildSelectTableRows(pgEm, "public.users", {
         where: [{ column: "id", value: "1", type: "int" }],
         limit: 51,
       });
       expect(out.sql).toBe(
-        'SELECT * FROM "public"."users" "users" WHERE "id" = $1 LIMIT 51',
+        'SELECT * FROM "public"."users" WHERE "id" = $1 LIMIT 51',
       );
       expect(out.params).toEqual(["1"]);
       expect(out.displaySql).toBe(
-        `SELECT * FROM "public"."users" "users" WHERE "id" = 1`,
+        `SELECT * FROM "public"."users" WHERE "id" = 1`,
       );
     });
 
@@ -173,7 +173,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        'SELECT "ts", "event" FROM "analytics"."events" "events" LIMIT 51',
+        'SELECT "ts", "event" FROM "analytics"."events" LIMIT 51',
       );
     });
 
@@ -186,7 +186,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        'SELECT * FROM "public"."users" "users" ORDER BY "tenant_id" ASC, "name" DESC LIMIT 51',
+        'SELECT * FROM "public"."users" ORDER BY "tenant_id" ASC, "name" DESC LIMIT 51',
       );
     });
 
@@ -199,7 +199,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        'SELECT * FROM "public"."users" "users" WHERE NOT ("id" = $1) AND NOT ("id" = $2) LIMIT 51',
+        'SELECT * FROM "public"."users" WHERE NOT ("id" = $1) AND NOT ("id" = $2) LIMIT 51',
       );
       expect(out.params).toEqual(["1", "2"]);
     });
@@ -210,7 +210,7 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        'SELECT * FROM "public"."users" "users" LIMIT 51 OFFSET 100',
+        'SELECT * FROM "public"."users" LIMIT 51 OFFSET 100',
       );
     });
 
@@ -224,11 +224,11 @@ describe("buildSelectTableRows", () => {
         limit: 51,
       });
       expect(out.sql).toBe(
-        'SELECT "id", "name" FROM "public"."users" "users" WHERE "active" = $1 AND NOT ("id" = $2) ORDER BY "name" ASC LIMIT 51 OFFSET 50',
+        'SELECT "id", "name" FROM "public"."users" WHERE "active" = $1 AND NOT ("id" = $2) ORDER BY "name" ASC LIMIT 51 OFFSET 50',
       );
       expect(out.params).toEqual(["true", "3"]);
       expect(out.displaySql).toBe(
-        `SELECT "id", "name" FROM "public"."users" "users" WHERE "active" = TRUE AND NOT ("id" = 3) ORDER BY "name" ASC`,
+        `SELECT "id", "name" FROM "public"."users" WHERE "active" = TRUE AND NOT ("id" = 3) ORDER BY "name" ASC`,
       );
     });
   });

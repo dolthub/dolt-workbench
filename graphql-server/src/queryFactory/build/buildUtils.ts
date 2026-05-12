@@ -12,8 +12,16 @@ export type Built<TResult> = BuiltSql & {
   execute: () => Promise<TResult>;
 };
 
-export function deriveAlias(target: string): string {
-  return target.split(".").pop() ?? target;
+// TypeORM's SelectQueryBuilder.from(target, alias) requires an alias and emits
+// it as `FROM <target> <alias>`. Build helpers pass SENTINEL_ALIAS and call
+// stripSentinelAlias on the rendered SQL to drop it.
+export const SENTINEL_ALIAS = "__t__";
+
+export function stripSentinelAlias(
+  sql: string,
+  escape: (name: string) => string,
+): string {
+  return sql.replace(` ${escape(SENTINEL_ALIAS)}`, "");
 }
 
 export function mutationExecutionMessage(rowsAffected: number): string {
@@ -138,10 +146,15 @@ export function builtSelect(
 export function previewSql(
   qb: SelectQueryBuilder<any>,
   acc: ParamAccumulator,
+  escape: (name: string) => string,
 ): BuiltSql {
-  const [sql, rawParams] = qb.getQueryAndParameters();
+  const [rawSql, rawParams] = qb.getQueryAndParameters();
   const params = asStringParams(rawParams);
-  const displaySql = interpolateForDisplay(sql, params, acc.paramTypes);
+  const sql = stripSentinelAlias(rawSql, escape);
+  const displaySql = stripSentinelAlias(
+    interpolateForDisplay(rawSql, params, acc.paramTypes),
+    escape,
+  );
   return { sql, params, displaySql };
 }
 

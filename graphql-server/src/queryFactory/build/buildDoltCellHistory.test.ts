@@ -15,11 +15,11 @@ describe("buildDoltCellHistory", () => {
       columnNames: ["id", "name"],
     });
     expect(out.sql).toBe(
-      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` `dolt_history_users` WHERE `id` = ? ORDER BY `commit_date` DESC",
+      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` WHERE `id` = ? ORDER BY `commit_date` DESC",
     );
     expect(out.params).toEqual(["5"]);
     expect(out.displaySql).toBe(
-      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` `dolt_history_users` WHERE `id` = 5 ORDER BY `commit_date` DESC",
+      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` WHERE `id` = 5 ORDER BY `commit_date` DESC",
     );
   });
 
@@ -30,7 +30,7 @@ describe("buildDoltCellHistory", () => {
       columnName: "name",
     });
     expect(out.sql).toBe(
-      "SELECT `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` `dolt_history_users` WHERE `id` = ? ORDER BY `commit_date` DESC",
+      "SELECT `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` WHERE `id` = ? ORDER BY `commit_date` DESC",
     );
   });
 
@@ -43,7 +43,7 @@ describe("buildDoltCellHistory", () => {
       columnNames: ["tenant_id", "order_id", "status"],
     });
     expect(out.sql).toBe(
-      "SELECT `tenant_id`, `order_id`, `status`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_orders` `dolt_history_orders` WHERE `tenant_id` = ? AND `order_id` = ? ORDER BY `commit_date` DESC",
+      "SELECT `tenant_id`, `order_id`, `status`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_orders` WHERE `tenant_id` = ? AND `order_id` = ? ORDER BY `commit_date` DESC",
     );
     expect(out.params).toEqual(["1", "42"]);
   });
@@ -54,7 +54,7 @@ describe("buildDoltCellHistory", () => {
       columnNames: ["id", "name"],
     });
     expect(out.sql).toBe(
-      'SELECT "id", "name", "commit_hash", "committer", "commit_date" FROM "public"."dolt_history_users" "dolt_history_users" WHERE "id" = $1 ORDER BY "commit_date" DESC',
+      'SELECT "id", "name", "commit_hash", "committer", "commit_date" FROM "public"."dolt_history_users" WHERE "id" = $1 ORDER BY "commit_date" DESC',
     );
   });
 });

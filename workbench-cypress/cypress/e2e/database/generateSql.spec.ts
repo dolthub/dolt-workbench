@@ -96,7 +96,7 @@ describe(pageName, () => {
   const orderByType = "old-new";
   const orderByDirection = "ASC";
 
-  const expectedSql = `SELECT * FROM \`${tableName}\` \`${tableName}\` WHERE \`${whereColumnName}\` = ${whereColumnValue}`;
+  const expectedSql = `SELECT * FROM \`${tableName}\` WHERE \`${whereColumnName}\` = ${whereColumnValue}`;
   const expectedSqlWithOrderBy = `${expectedSql} ORDER BY \`${orderByColumnName}\` ${orderByDirection}`;
 
   const tests = [

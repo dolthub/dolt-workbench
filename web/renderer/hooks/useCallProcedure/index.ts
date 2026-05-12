@@ -1,15 +1,22 @@
 import { useApolloClient } from "@apollo/client";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { useCallProcedureMutation } from "@gen/graphql-types";
-import useMutation from "./useMutation";
 import { RefParams } from "@lib/params";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { ref } from "@lib/urls";
 import { useRouter } from "next/router";
+import useMutation from "../useMutation";
 
 type CallProcedureResult = { success: boolean };
 
-export default function useCallProcedure(params: RefParams) {
+type UseCallProcedureReturn = {
+  callProcedure: (name: string, args: string[]) => Promise<CallProcedureResult>;
+  loading: boolean;
+};
+
+export default function useCallProcedure(
+  params: RefParams,
+): UseCallProcedureReturn {
   const { setEditorString, setError, setExecutionMessage } =
     useSqlEditorContext();
   const { mutateFn, loading } = useMutation({
