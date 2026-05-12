@@ -37,9 +37,7 @@ export class DoltDiffResolver {
   constructor(private readonly conn: ConnectionProvider) {}
 
   @Query(_returns => SqlSelect)
-  async doltCommitDiff(
-    @Args() args: DoltCommitDiffArgs,
-  ): Promise<SqlSelect> {
+  async doltCommitDiff(@Args() args: DoltCommitDiffArgs): Promise<SqlSelect> {
     const conn = this.conn.connection();
     const res = await conn.doltCommitDiff(args);
     return fromServerPaginatedRows(

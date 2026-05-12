@@ -634,9 +634,7 @@ export class DoltgresQueryFactory
     );
   }
 
-  async doltCommitDiff(
-    args: t.DoltCommitDiffArgs,
-  ): Promise<t.SqlSelectResult> {
+  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
