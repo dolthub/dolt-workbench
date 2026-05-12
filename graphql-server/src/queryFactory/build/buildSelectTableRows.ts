@@ -29,7 +29,10 @@ export function buildSelectTableRows(
   const selectClause =
     projection.length > 0 ? projection.map(c => escape(c)).join(", ") : "*";
 
-  const alias = target.split(".").pop() ?? target;
+  // TypeORM's SelectQueryBuilder.from(target, alias) requires an alias and emits
+  // it as `FROM <target> <alias>`. Use a sentinel alias so we can strip it from
+  // the rendered SQL without risk of collision.
+  const alias = "__t__";
   let qb = em.createQueryBuilder().select(selectClause).from(target, alias);
 
   const whereParts: string[] = [];
@@ -58,11 +61,16 @@ export function buildSelectTableRows(
     });
   }
 
+  const aliasFragment = ` ${escape(alias)}`;
+  const stripAlias = (sql: string): string => sql.replace(aliasFragment, "");
+
   const [preLimitSql, preLimitRawParams] = qb.getQueryAndParameters();
-  const displaySql = interpolateForDisplay(
-    preLimitSql,
-    asStringParams(preLimitRawParams),
-    acc.paramTypes,
+  const displaySql = stripAlias(
+    interpolateForDisplay(
+      preLimitSql,
+      asStringParams(preLimitRawParams),
+      acc.paramTypes,
+    ),
   );
 
   qb = qb.limit(args.limit);
@@ -70,7 +78,8 @@ export function buildSelectTableRows(
     qb = qb.offset(args.offset);
   }
 
-  const [sql, rawParams] = qb.getQueryAndParameters();
+  const [rawSql, rawParams] = qb.getQueryAndParameters();
+  const sql = stripAlias(rawSql);
 
   return {
     sql,

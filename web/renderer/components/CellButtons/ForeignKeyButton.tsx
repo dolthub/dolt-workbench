@@ -73,16 +73,17 @@ function FKTableLink(props: FKTableLinkProps) {
     refName: props.params.refName,
     schemaName: props.params.schemaName,
     tableName: props.table,
-  }).withQuery(
-    stackingParamsToQuery({ where }) as Record<
-      string,
-      string | undefined | null
-    >,
-  );
+  });
+  const query = stackingParamsToQuery({ where });
 
   return (
     <span key={props.table}>
-      <Link {...route}>{props.table}</Link>
+      <Link
+        href={{ pathname: route.hrefPathname(), query }}
+        as={{ pathname: route.asPathname(), query }}
+      >
+        {props.table}
+      </Link>
     </span>
   );
 }
