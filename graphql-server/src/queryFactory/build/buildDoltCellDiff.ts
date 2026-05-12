@@ -2,8 +2,8 @@ import { EntityManager } from "typeorm";
 import { ColumnValue } from "../types";
 import {
   BuiltSql,
+  SENTINEL_ALIAS,
   bindParam,
-  deriveAlias,
   diffSelectClause,
   newParamAccumulator,
   ParamAccumulator,
@@ -30,7 +30,7 @@ export function buildDoltCellDiff(
   let qb = em
     .createQueryBuilder()
     .select(diffSelectClause(includedCols, escape))
-    .from(target, deriveAlias(target));
+    .from(target, SENTINEL_ALIAS);
 
   const toCond = pkConditions(args.pkValues, "to", escape, acc);
   const fromCond = pkConditions(args.pkValues, "from", escape, acc);
@@ -48,7 +48,7 @@ export function buildDoltCellDiff(
     .where(where, acc.namedParams)
     .orderBy(escape("to_commit_date"), "DESC");
 
-  return previewSql(qb, acc);
+  return previewSql(qb, acc, escape);
 }
 
 function pkConditions(

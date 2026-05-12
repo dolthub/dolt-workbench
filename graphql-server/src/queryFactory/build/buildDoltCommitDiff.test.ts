@@ -17,11 +17,11 @@ describe("buildDoltCommitDiff", () => {
       columnNames: ["id", "name"],
     });
     expect(out.sql).toBe(
-      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` `dolt_commit_diff_users` WHERE `from_commit` = ? AND `to_commit` = ?",
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` WHERE `from_commit` = ? AND `to_commit` = ?",
     );
     expect(out.params).toEqual(["abc", "def"]);
     expect(out.displaySql).toBe(
-      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` `dolt_commit_diff_users` WHERE `from_commit` = 'abc' AND `to_commit` = 'def'",
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` WHERE `from_commit` = 'abc' AND `to_commit` = 'def'",
     );
   });
 
@@ -33,10 +33,10 @@ describe("buildDoltCommitDiff", () => {
       type: CommitDiffType.ThreeDot,
     });
     expect(out.sql).toBe(
-      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` `dolt_commit_diff_users` WHERE `from_commit` = DOLT_MERGE_BASE(?, ?) AND `to_commit` = HASHOF(?)",
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` WHERE `from_commit` = DOLT_MERGE_BASE(?, ?) AND `to_commit` = HASHOF(?)",
     );
     expect(out.displaySql).toBe(
-      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` `dolt_commit_diff_users` WHERE `from_commit` = DOLT_MERGE_BASE('branch_b', 'branch_a') AND `to_commit` = HASHOF('branch_a')",
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` WHERE `from_commit` = DOLT_MERGE_BASE('branch_b', 'branch_a') AND `to_commit` = HASHOF('branch_a')",
     );
   });
 
@@ -47,7 +47,7 @@ describe("buildDoltCommitDiff", () => {
       columnNames: ["id"],
     });
     expect(out.sql).toBe(
-      'SELECT "diff_type", "from_id", "to_id", "from_commit", "from_commit_date", "to_commit", "to_commit_date" FROM "public"."dolt_commit_diff_users" "dolt_commit_diff_users" WHERE "from_commit" = $1 AND "to_commit" = $2',
+      'SELECT "diff_type", "from_id", "to_id", "from_commit", "from_commit_date", "to_commit", "to_commit_date" FROM "public"."dolt_commit_diff_users" WHERE "from_commit" = $1 AND "to_commit" = $2',
     );
     expect(out.params).toEqual(["abc", "def"]);
   });

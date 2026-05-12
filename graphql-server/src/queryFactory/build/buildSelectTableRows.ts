@@ -2,10 +2,12 @@ import { EntityManager } from "typeorm";
 import { ColumnValue, OrderByClause, PkRow, RawRows } from "../types";
 import {
   Built,
+  SENTINEL_ALIAS,
   asStringParams,
   buildWhereConditions,
   interpolateForDisplay,
   newParamAccumulator,
+  stripSentinelAlias,
 } from "./buildUtils";
 
 export type SelectTableRowsBuildArgs = {
@@ -29,11 +31,10 @@ export function buildSelectTableRows(
   const selectClause =
     projection.length > 0 ? projection.map(c => escape(c)).join(", ") : "*";
 
-  // TypeORM's SelectQueryBuilder.from(target, alias) requires an alias and emits
-  // it as `FROM <target> <alias>`. Use a sentinel alias so we can strip it from
-  // the rendered SQL without risk of collision.
-  const alias = "__t__";
-  let qb = em.createQueryBuilder().select(selectClause).from(target, alias);
+  let qb = em
+    .createQueryBuilder()
+    .select(selectClause)
+    .from(target, SENTINEL_ALIAS);
 
   const whereParts: string[] = [];
   if (args.where && args.where.length > 0) {
@@ -61,16 +62,14 @@ export function buildSelectTableRows(
     });
   }
 
-  const aliasFragment = ` ${escape(alias)}`;
-  const stripAlias = (sql: string): string => sql.replace(aliasFragment, "");
-
   const [preLimitSql, preLimitRawParams] = qb.getQueryAndParameters();
-  const displaySql = stripAlias(
+  const displaySql = stripSentinelAlias(
     interpolateForDisplay(
       preLimitSql,
       asStringParams(preLimitRawParams),
       acc.paramTypes,
     ),
+    escape,
   );
 
   qb = qb.limit(args.limit);
@@ -79,7 +78,7 @@ export function buildSelectTableRows(
   }
 
   const [rawSql, rawParams] = qb.getQueryAndParameters();
-  const sql = stripAlias(rawSql);
+  const sql = stripSentinelAlias(rawSql, escape);
 
   return {
     sql,
