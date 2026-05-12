@@ -157,6 +157,12 @@ enum TableDiffType {
   Renamed
 }
 
+type MutationResult {
+  rowsAffected: Int!
+  queryString: String!
+  executionMessage: String!
+}
+
 type ColumnValue {
   displayValue: String!
 }
@@ -282,12 +288,6 @@ type RowDiffList {
   nextOffset: Int
   list: [RowDiff!]!
   columns: [Column!]!
-}
-
-type MutationResult {
-  rowsAffected: Int!
-  queryString: String!
-  executionMessage: String!
 }
 
 type TextDiff {
@@ -495,6 +495,7 @@ type Mutation {
   createSchema(refName: String!, databaseName: String!, schemaName: String!): Boolean!
   resetDatabase(newDatabase: String): Boolean!
   doltClone(databaseName: String!, ownerName: String!, remoteDbName: String!): Boolean!
+  saveDoc(refName: String!, databaseName: String!, docType: DocType!, markdown: String!): MutationResult!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
   mergeAndResolveConflicts(author: AuthorInfo, fromBranchName: String!, toBranchName: String!, databaseName: String!, resolveOursTables: [String!]!, resolveTheirsTables: [String!]!): Boolean!
