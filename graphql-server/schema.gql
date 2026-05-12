@@ -301,19 +301,6 @@ type SchemaDiff {
   numChangedSchemas: Int
 }
 
-type SchemaItem {
-  name: String!
-  type: SchemaType!
-}
-
-enum SchemaType {
-  View
-  Procedure
-  Event
-  Trigger
-  Table
-}
-
 type SqlSelect {
   _id: ID!
   databaseName: String!
@@ -331,6 +318,19 @@ enum QueryExecutionStatus {
   Success
   Error
   Timeout
+}
+
+type SchemaItem {
+  name: String!
+  type: SchemaType!
+}
+
+enum SchemaType {
+  View
+  Procedure
+  Event
+  Trigger
+  Table
 }
 
 type Status {
@@ -419,6 +419,7 @@ type Query {
   doltSchemas(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
+  schemaDefinition(schemaName: String, refName: String!, databaseName: String!, name: String!, kind: SchemaType!): SqlSelect!
   doltCommitDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, fromCommitId: String!, toCommitId: String!, excludedColumns: [String!], type: CommitDiffType): SqlSelect!
   doltCellDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): SqlSelect!
   doltCellHistory(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): SqlSelect!

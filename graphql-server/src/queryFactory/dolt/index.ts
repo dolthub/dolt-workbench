@@ -647,9 +647,7 @@ export class DoltQueryFactory
     );
   }
 
-  async doltCommitDiff(
-    args: t.DoltCommitDiffArgs,
-  ): Promise<t.SqlSelectResult> {
+  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<t.SqlSelectResult> {
     const columns = await introspectColumns(
       async () => this.getTableInfo(args),
       args.tableName,

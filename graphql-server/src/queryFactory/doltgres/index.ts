@@ -35,6 +35,10 @@ export class DoltgresQueryFactory
 {
   isDolt = true;
 
+  protected catalogName(args: t.RefArgs): string {
+    return `${args.databaseName}/${args.refName}`;
+  }
+
   async checkoutDatabase(
     qr: QueryRunner,
     dbName: string,
@@ -630,9 +634,7 @@ export class DoltgresQueryFactory
     );
   }
 
-  async doltCommitDiff(
-    args: t.DoltCommitDiffArgs,
-  ): Promise<t.SqlSelectResult> {
+  async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(

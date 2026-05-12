@@ -601,6 +601,7 @@ export type Query = {
   rowDiffs: RowDiffList;
   rows: RowList;
   runTests: TestResultList;
+  schemaDefinition: SqlSelect;
   schemaDiff?: Maybe<SchemaDiff>;
   schemas: Array<Scalars['String']['output']>;
   selectTableRows: SqlSelect;
@@ -838,6 +839,15 @@ export type QueryRunTestsArgs = {
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
   testIdentifier?: InputMaybe<TestIdentifierArgs>;
+};
+
+
+export type QuerySchemaDefinitionArgs = {
+  databaseName: Scalars['String']['input'];
+  kind: SchemaType;
+  name: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
 };
 
 
@@ -1381,6 +1391,21 @@ export type RowsForDoltProceduresQueryVariables = Exact<{
 
 
 export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
+
+export type RowForSchemaDefinitionFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+
+export type ColumnForSchemaDefinitionFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+
+export type SchemaDefinitionQueryVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  schemaName?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+  kind: SchemaType;
+}>;
+
+
+export type SchemaDefinitionQuery = { __typename?: 'Query', schemaDefinition: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
 
 export type CommitForDiffSelectorFragment = { __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
@@ -2128,6 +2153,30 @@ export const SchemaItemFragmentDoc = gql`
     fragment SchemaItem on SchemaItem {
   name
   type
+}
+    `;
+export const RowForSchemaDefinitionFragmentDoc = gql`
+    fragment RowForSchemaDefinition on Row {
+  columnValues {
+    displayValue
+  }
+  diff {
+    diffColumnNames
+    diffColumnValues {
+      displayValue
+    }
+  }
+}
+    `;
+export const ColumnForSchemaDefinitionFragmentDoc = gql`
+    fragment ColumnForSchemaDefinition on Column {
+  name
+  isPrimaryKey
+  type
+  sourceTable
+  constraints {
+    notNull
+  }
 }
     `;
 export const CommitForDiffSelectorFragmentDoc = gql`
@@ -3532,6 +3581,65 @@ export type RowsForDoltProceduresQueryHookResult = ReturnType<typeof useRowsForD
 export type RowsForDoltProceduresLazyQueryHookResult = ReturnType<typeof useRowsForDoltProceduresLazyQuery>;
 export type RowsForDoltProceduresSuspenseQueryHookResult = ReturnType<typeof useRowsForDoltProceduresSuspenseQuery>;
 export type RowsForDoltProceduresQueryResult = Apollo.QueryResult<RowsForDoltProceduresQuery, RowsForDoltProceduresQueryVariables>;
+export const SchemaDefinitionDocument = gql`
+    query SchemaDefinition($databaseName: String!, $refName: String!, $schemaName: String, $name: String!, $kind: SchemaType!) {
+  schemaDefinition(
+    databaseName: $databaseName
+    refName: $refName
+    schemaName: $schemaName
+    name: $name
+    kind: $kind
+  ) {
+    queryString
+    columns {
+      ...ColumnForSchemaDefinition
+    }
+    rows {
+      list {
+        ...RowForSchemaDefinition
+      }
+    }
+  }
+}
+    ${ColumnForSchemaDefinitionFragmentDoc}
+${RowForSchemaDefinitionFragmentDoc}`;
+
+/**
+ * __useSchemaDefinitionQuery__
+ *
+ * To run a query within a React component, call `useSchemaDefinitionQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSchemaDefinitionQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSchemaDefinitionQuery({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      schemaName: // value for 'schemaName'
+ *      name: // value for 'name'
+ *      kind: // value for 'kind'
+ *   },
+ * });
+ */
+export function useSchemaDefinitionQuery(baseOptions: Apollo.QueryHookOptions<SchemaDefinitionQuery, SchemaDefinitionQueryVariables> & ({ variables: SchemaDefinitionQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SchemaDefinitionQuery, SchemaDefinitionQueryVariables>(SchemaDefinitionDocument, options);
+      }
+export function useSchemaDefinitionLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SchemaDefinitionQuery, SchemaDefinitionQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SchemaDefinitionQuery, SchemaDefinitionQueryVariables>(SchemaDefinitionDocument, options);
+        }
+export function useSchemaDefinitionSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<SchemaDefinitionQuery, SchemaDefinitionQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<SchemaDefinitionQuery, SchemaDefinitionQueryVariables>(SchemaDefinitionDocument, options);
+        }
+export type SchemaDefinitionQueryHookResult = ReturnType<typeof useSchemaDefinitionQuery>;
+export type SchemaDefinitionLazyQueryHookResult = ReturnType<typeof useSchemaDefinitionLazyQuery>;
+export type SchemaDefinitionSuspenseQueryHookResult = ReturnType<typeof useSchemaDefinitionSuspenseQuery>;
+export type SchemaDefinitionQueryResult = Apollo.QueryResult<SchemaDefinitionQuery, SchemaDefinitionQueryVariables>;
 export const CommitsForDiffSelectorDocument = gql`
     query CommitsForDiffSelector($refName: String!, $databaseName: String!) {
   commits(refName: $refName, databaseName: $databaseName) {

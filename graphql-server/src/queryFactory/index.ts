@@ -99,6 +99,8 @@ export declare class QueryFactory {
 
   doltCellHistory(args: t.DoltCellLookupArgs): Promise<t.SqlSelectResult>;
 
+  schemaDefinition(args: t.SchemaDefinitionArgs): Promise<t.SqlSelectResult>;
+
   getSchemas(
     args: t.RefMaybeSchemaArgs,
     type?: SchemaType,
