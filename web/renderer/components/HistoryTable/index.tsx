@@ -1,8 +1,8 @@
 import SqlDataTable from "@components/SqlDataTable";
-import { CellHistoryContext } from "@components/CellButtons/HistoryButton";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import { useDoltCellHistoryLazyQuery } from "@gen/graphql-types";
+import { parseCellHistory } from "@lib/cellHistoryUrl";
 import { SqlQueryParams } from "@lib/params";
 import { useRouter } from "next/router";
 import { useMemo, useState } from "react";
@@ -14,19 +14,25 @@ type Props = {
 
 export default function HistoryTable(props: Props) {
   const router = useRouter();
-  const { executeQuery } = useSqlEditorContext();
-  const [err, setErr] = useState("");
+  const { executeQuery, setError } = useSqlEditorContext();
+  const [missingCtxErr, setMissingCtxErr] = useState("");
   const [fetchDoltCellHistory, { loading }] = useDoltCellHistoryLazyQuery();
 
   const ctx = useMemo(
-    () => parseCellHistoryContext(router.query.cellHistoryContext),
-    [router.query.cellHistoryContext],
+    () => parseCellHistory(router.query),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      router.query.historyTable,
+      router.query.historySchema,
+      router.query.historyPk,
+      router.query.historyCell,
+    ],
   );
   const forRow = !ctx?.columnName;
 
   const onClick = async () => {
     if (!ctx) {
-      setErr(
+      setMissingCtxErr(
         "Cannot generate history query for this view. Click Row or Cell History from a table view to enable this.",
       );
       return;
@@ -42,14 +48,11 @@ export default function HistoryTable(props: Props) {
       },
     });
     if (res.error) {
-      setErr(res.error.message);
+      setError(res.error);
       return;
     }
     const sql = res.data?.doltCellHistory;
-    if (!sql) {
-      setErr("Error generating history query.");
-      return;
-    }
+    if (!sql) return;
     await executeQuery({ ...props.params, query: sql });
   };
 
@@ -64,18 +67,7 @@ export default function HistoryTable(props: Props) {
         See all commits including ones that did not change this{" "}
         {forRow ? "row" : "cell"}
       </Button.Link>
-      <ErrorMsg errString={err} className={css.err} />
+      <ErrorMsg errString={missingCtxErr} className={css.err} />
     </div>
   );
-}
-
-function parseCellHistoryContext(
-  raw: string | string[] | undefined,
-): CellHistoryContext | undefined {
-  if (typeof raw !== "string" || raw.length === 0) return undefined;
-  try {
-    return JSON.parse(raw) as CellHistoryContext;
-  } catch {
-    return undefined;
-  }
 }

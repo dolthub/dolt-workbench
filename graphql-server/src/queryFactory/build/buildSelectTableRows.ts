@@ -2,6 +2,7 @@ import { EntityManager } from "typeorm";
 import { ColumnValue, OrderByClause, PkRow, RawRows } from "../types";
 import {
   Built,
+  asStringParams,
   buildWhereConditions,
   interpolateForDisplay,
   newParamAccumulator,
@@ -77,8 +78,4 @@ export function buildSelectTableRows(
     displaySql,
     execute: async () => qb.getRawMany(),
   };
-}
-
-function asStringParams(params: unknown[]): string[] {
-  return params.map(p => String(p));
 }

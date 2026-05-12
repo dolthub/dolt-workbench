@@ -1,4 +1,28 @@
+import { Column } from "../../columns/column.model";
+import { TableDetails } from "../../tables/table.model";
+import { ColumnValue } from "../types";
 import * as t from "../types";
+
+export async function introspectColumns(
+  fetch: () => Promise<TableDetails | undefined>,
+  tableName: string,
+): Promise<Column[]> {
+  const tableInfo = await fetch();
+  if (!tableInfo) {
+    throw new Error(`table "${tableName}" not found`);
+  }
+  return tableInfo.columns;
+}
+
+export function pkValuesWithTypes(
+  pkValues: ColumnValue[],
+  columns: Column[],
+): ColumnValue[] {
+  const typeMap = new Map(columns.map(c => [c.name, c.type]));
+  return pkValues.map(pk =>
+    pk.type ? pk : { ...pk, type: typeMap.get(pk.column) },
+  );
+}
 
 export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
   try {

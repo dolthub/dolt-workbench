@@ -16,6 +16,8 @@ import {
   getAuthorString,
   getTestIdentifierArg,
   handleRefNotFound,
+  introspectColumns,
+  pkValuesWithTypes,
   unionCols,
 } from "../dolt/utils";
 import { PostgresQueryFactory } from "../postgres";
@@ -635,10 +637,19 @@ export class DoltgresQueryFactory
           qr,
           args,
         );
-        const columnNames = await this.introspectColumnNames(
-          { ...args, tableName: baseTableName, schemaName },
-          args.excludedColumns,
+        const columns = await introspectColumns(
+          async () =>
+            this.getTableInfo({
+              ...args,
+              tableName: baseTableName,
+              schemaName,
+            }),
+          args.tableName,
         );
+        const excluded = new Set(args.excludedColumns ?? []);
+        const columnNames = columns
+          .map(c => c.name)
+          .filter(n => !excluded.has(n));
         const target = tableWithSchema({
           tableName: `dolt_commit_diff_${baseTableName}`,
           schemaName,
@@ -655,25 +666,29 @@ export class DoltgresQueryFactory
     );
   }
 
-  async doltCellDiff(args: t.DoltCellDiffArgs): Promise<string> {
+  async doltCellDiff(args: t.DoltCellLookupArgs): Promise<string> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
           qr,
           args,
         );
-        const columnNames = await this.introspectColumnNames({
-          ...args,
-          tableName: baseTableName,
-          schemaName,
-        });
+        const columns = await introspectColumns(
+          async () =>
+            this.getTableInfo({
+              ...args,
+              tableName: baseTableName,
+              schemaName,
+            }),
+          args.tableName,
+        );
         const target = tableWithSchema({
           tableName: `dolt_diff_${baseTableName}`,
           schemaName,
         });
         return buildDoltCellDiff(qr.manager, target, {
-          pkValues: args.pkValues,
-          columnNames,
+          pkValues: pkValuesWithTypes(args.pkValues, columns),
+          columnNames: columns.map(c => c.name),
           columnName: args.columnName,
         }).displaySql;
       },
@@ -682,25 +697,29 @@ export class DoltgresQueryFactory
     );
   }
 
-  async doltCellHistory(args: t.DoltCellHistoryArgs): Promise<string> {
+  async doltCellHistory(args: t.DoltCellLookupArgs): Promise<string> {
     return this.queryQR(
       async qr => {
         const { baseTableName, schemaName } = await this.normalizeTable(
           qr,
           args,
         );
-        const columnNames = await this.introspectColumnNames({
-          ...args,
-          tableName: baseTableName,
-          schemaName,
-        });
+        const columns = await introspectColumns(
+          async () =>
+            this.getTableInfo({
+              ...args,
+              tableName: baseTableName,
+              schemaName,
+            }),
+          args.tableName,
+        );
         const target = tableWithSchema({
           tableName: `dolt_history_${baseTableName}`,
           schemaName,
         });
         return buildDoltCellHistory(qr.manager, target, {
-          pkValues: args.pkValues,
-          columnNames,
+          pkValues: pkValuesWithTypes(args.pkValues, columns),
+          columnNames: columns.map(c => c.name),
           columnName: args.columnName,
         }).displaySql;
       },
@@ -718,18 +737,6 @@ export class DoltgresQueryFactory
   ): Promise<{ baseTableName: string; schemaName: string }> {
     const schemaName = await getSchema(qr, args);
     return { baseTableName: tableWithoutSchema(args.tableName), schemaName };
-  }
-
-  private async introspectColumnNames(
-    args: t.TableMaybeSchemaArgs,
-    excluded?: string[],
-  ): Promise<string[]> {
-    const tableInfo = await this.getTableInfo(args);
-    if (!tableInfo) {
-      throw new Error(`table "${args.tableName}" not found`);
-    }
-    const excludedSet = new Set(excluded ?? []);
-    return tableInfo.columns.map(c => c.name).filter(n => !excludedSet.has(n));
   }
 }
 

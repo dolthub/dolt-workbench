@@ -10,6 +10,7 @@ import {
   useDoltCellDiffLazyQuery,
 } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
+import { encodeCellHistory } from "@lib/cellHistoryUrl";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableOptionalSchemaParams } from "@lib/params";
 import { query } from "@lib/urls";
@@ -39,13 +40,6 @@ type InnerProps = Omit<Props, "doltDisabled"> & {
   params: TableOptionalSchemaParams;
 };
 
-export type CellHistoryContext = {
-  tableName: string;
-  schemaName?: string;
-  pkValues: ColumnValueInput[];
-  columnName?: string;
-};
-
 function Inner(props: InnerProps) {
   const router = useRouter();
   const { setError } = useSqlEditorContext();
@@ -72,17 +66,17 @@ function Inner(props: InnerProps) {
     }
     const sql = res.data?.doltCellDiff;
     if (!sql) return;
-    const ctx: CellHistoryContext = {
+    const historyParams = encodeCellHistory({
       tableName: props.params.tableName,
       schemaName: props.params.schemaName,
       pkValues,
       columnName,
-    };
+    });
     const { href, as } = query(props.params).withQuery({
       q: sql,
       schemaName: props.params.schemaName,
-      cellHistoryContext: JSON.stringify(ctx),
-    });
+      ...historyParams,
+    } as unknown as Record<string, string | undefined | null>);
     router.push(href, as).catch(console.error);
   };
 

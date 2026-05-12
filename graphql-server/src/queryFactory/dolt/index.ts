@@ -22,6 +22,8 @@ import {
   getAuthorString,
   getTestIdentifierArg,
   handleRefNotFound,
+  introspectColumns,
+  pkValuesWithTypes,
   unionCols,
 } from "./utils";
 import { InsertResult } from "typeorm";
@@ -646,10 +648,12 @@ export class DoltQueryFactory
   }
 
   async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<string> {
-    const columnNames = await this.introspectColumnNames(
-      args,
-      args.excludedColumns,
+    const columns = await introspectColumns(
+      async () => this.getTableInfo(args),
+      args.tableName,
     );
+    const excluded = new Set(args.excludedColumns ?? []);
+    const columnNames = columns.map(c => c.name).filter(n => !excluded.has(n));
     return this.queryForBuilder(
       async em =>
         buildDoltCommitDiff(em, `dolt_commit_diff_${args.tableName}`, {
@@ -663,13 +667,16 @@ export class DoltQueryFactory
     );
   }
 
-  async doltCellDiff(args: t.DoltCellDiffArgs): Promise<string> {
-    const columnNames = await this.introspectColumnNames(args);
+  async doltCellDiff(args: t.DoltCellLookupArgs): Promise<string> {
+    const columns = await introspectColumns(
+      async () => this.getTableInfo(args),
+      args.tableName,
+    );
     return this.queryForBuilder(
       async em =>
         buildDoltCellDiff(em, `dolt_diff_${args.tableName}`, {
-          pkValues: args.pkValues,
-          columnNames,
+          pkValues: pkValuesWithTypes(args.pkValues, columns),
+          columnNames: columns.map(c => c.name),
           columnName: args.columnName,
         }).displaySql,
       args.databaseName,
@@ -677,30 +684,21 @@ export class DoltQueryFactory
     );
   }
 
-  async doltCellHistory(args: t.DoltCellHistoryArgs): Promise<string> {
-    const columnNames = await this.introspectColumnNames(args);
+  async doltCellHistory(args: t.DoltCellLookupArgs): Promise<string> {
+    const columns = await introspectColumns(
+      async () => this.getTableInfo(args),
+      args.tableName,
+    );
     return this.queryForBuilder(
       async em =>
         buildDoltCellHistory(em, `dolt_history_${args.tableName}`, {
-          pkValues: args.pkValues,
-          columnNames,
+          pkValues: pkValuesWithTypes(args.pkValues, columns),
+          columnNames: columns.map(c => c.name),
           columnName: args.columnName,
         }).displaySql,
       args.databaseName,
       args.refName,
     );
-  }
-
-  private async introspectColumnNames(
-    args: t.TableArgs,
-    excluded?: string[],
-  ): Promise<string[]> {
-    const tableInfo = await this.getTableInfo(args);
-    if (!tableInfo) {
-      throw new Error(`table "${args.tableName}" not found`);
-    }
-    const excludedSet = new Set(excluded ?? []);
-    return tableInfo.columns.map(c => c.name).filter(n => !excludedSet.has(n));
   }
 }
 

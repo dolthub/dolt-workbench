@@ -1,15 +1,16 @@
 import { EntityManager } from "typeorm";
-import { ColumnValue, RawRows } from "../types";
+import { ColumnValue } from "../types";
 import {
-  Built,
+  BuiltSql,
   bindParam,
-  builtSelect,
+  deriveAlias,
   diffSelectClause,
   newParamAccumulator,
   ParamAccumulator,
+  previewSql,
 } from "./buildUtils";
 
-export type DoltCellDiffBuildArgs = {
+export type DoltCellLookupBuildArgs = {
   pkValues: ColumnValue[];
   columnNames: string[];
   columnName?: string;
@@ -18,30 +19,27 @@ export type DoltCellDiffBuildArgs = {
 export function buildDoltCellDiff(
   em: EntityManager,
   target: string,
-  args: DoltCellDiffBuildArgs,
-): Built<RawRows> {
+  args: DoltCellLookupBuildArgs,
+): BuiltSql {
   const escape = em.connection.driver.escape.bind(em.connection.driver);
   const acc = newParamAccumulator();
 
-  const cellOnly = args.columnName !== undefined;
-  const includedCols = cellOnly
-    ? [args.columnName as string]
-    : args.columnNames;
-  const alias = target.split(".").pop() ?? target;
+  const { columnName } = args;
+  const includedCols = columnName ? [columnName] : args.columnNames;
+
   let qb = em
     .createQueryBuilder()
     .select(diffSelectClause(includedCols, escape))
-    .from(target, alias);
+    .from(target, deriveAlias(target));
 
-  const toCond = buildPkCondition(args.pkValues, "to", escape, acc);
-  const fromCond = buildPkCondition(args.pkValues, "from", escape, acc);
+  const toCond = pkConditions(args.pkValues, "to", escape, acc);
+  const fromCond = pkConditions(args.pkValues, "from", escape, acc);
   const pkWhere = `(${toCond}) OR (${fromCond})`;
 
   let where = pkWhere;
-  if (cellOnly) {
-    const col = args.columnName as string;
-    const fromCol = escape(`from_${col}`);
-    const toCol = escape(`to_${col}`);
+  if (columnName) {
+    const fromCol = escape(`from_${columnName}`);
+    const toCol = escape(`to_${columnName}`);
     const cellNotEqual = `${fromCol} <> ${toCol} OR (${fromCol} IS NULL AND ${toCol} IS NOT NULL) OR (${fromCol} IS NOT NULL AND ${toCol} IS NULL)`;
     where = `(${pkWhere}) AND (${cellNotEqual})`;
   }
@@ -50,10 +48,10 @@ export function buildDoltCellDiff(
     .where(where, acc.namedParams)
     .orderBy(escape("to_commit_date"), "DESC");
 
-  return builtSelect(qb, acc);
+  return previewSql(qb, acc);
 }
 
-function buildPkCondition(
+function pkConditions(
   pkValues: ColumnValue[],
   prefix: "to" | "from",
   escape: (n: string) => string,

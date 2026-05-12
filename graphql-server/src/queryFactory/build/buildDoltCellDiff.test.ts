@@ -49,6 +49,17 @@ describe("buildDoltCellDiff", () => {
     expect(out.params).toEqual(["1", "42", "1", "42"]);
   });
 
+  it("escapes single quotes in string PK values for displaySql", () => {
+    const out = buildDoltCellDiff(mysqlEm, "dolt_diff_users", {
+      pkValues: [{ column: "name", value: "O'Hara", type: "varchar" }],
+      columnNames: ["name", "city"],
+    });
+    expect(out.params).toEqual(["O'Hara", "O'Hara"]);
+    expect(out.displaySql).toBe(
+      "SELECT `diff_type`, `from_name`, `to_name`, `from_city`, `to_city`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` `dolt_diff_users` WHERE (`to_name` = 'O''Hara') OR (`from_name` = 'O''Hara') ORDER BY `to_commit_date` DESC",
+    );
+  });
+
   it("emits postgres-flavored cell history", () => {
     const out = buildDoltCellDiff(pgEm, "public.dolt_diff_users", {
       pkValues: [{ column: "id", value: "5", type: "int" }],
@@ -58,5 +69,6 @@ describe("buildDoltCellDiff", () => {
     expect(out.sql).toBe(
       'SELECT "diff_type", "from_name", "to_name", "from_commit", "from_commit_date", "to_commit", "to_commit_date" FROM "public"."dolt_diff_users" "dolt_diff_users" WHERE (("to_id" = $1) OR ("from_id" = $2)) AND ("from_name" <> "to_name" OR ("from_name" IS NULL AND "to_name" IS NOT NULL) OR ("from_name" IS NOT NULL AND "to_name" IS NULL)) ORDER BY "to_commit_date" DESC',
     );
+    expect(out.params).toEqual(["5", "5"]);
   });
 });

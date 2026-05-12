@@ -118,12 +118,7 @@ export type DoltCommitDiffArgs = TableMaybeSchemaArgs & {
   type?: CommitDiffType;
 };
 
-export type DoltCellDiffArgs = TableMaybeSchemaArgs & {
-  pkValues: ColumnValue[];
-  columnName?: string;
-};
-
-export type DoltCellHistoryArgs = TableMaybeSchemaArgs & {
+export type DoltCellLookupArgs = TableMaybeSchemaArgs & {
   pkValues: ColumnValue[];
   columnName?: string;
 };

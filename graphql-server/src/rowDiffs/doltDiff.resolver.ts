@@ -20,16 +20,7 @@ export class DoltCommitDiffArgs extends TableMaybeSchemaArgs {
 }
 
 @ArgsType()
-export class DoltCellDiffArgs extends TableMaybeSchemaArgs {
-  @Field(_type => [ColumnValueInput])
-  pkValues: ColumnValueInput[];
-
-  @Field({ nullable: true })
-  columnName?: string;
-}
-
-@ArgsType()
-export class DoltCellHistoryArgs extends TableMaybeSchemaArgs {
+export class DoltCellLookupArgs extends TableMaybeSchemaArgs {
   @Field(_type => [ColumnValueInput])
   pkValues: ColumnValueInput[];
 
@@ -48,13 +39,13 @@ export class DoltDiffResolver {
   }
 
   @Query(_returns => String)
-  async doltCellDiff(@Args() args: DoltCellDiffArgs): Promise<string> {
+  async doltCellDiff(@Args() args: DoltCellLookupArgs): Promise<string> {
     const conn = this.conn.connection();
     return conn.doltCellDiff(args);
   }
 
   @Query(_returns => String)
-  async doltCellHistory(@Args() args: DoltCellHistoryArgs): Promise<string> {
+  async doltCellHistory(@Args() args: DoltCellLookupArgs): Promise<string> {
     const conn = this.conn.connection();
     return conn.doltCellHistory(args);
   }

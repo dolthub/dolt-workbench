@@ -2,12 +2,19 @@ import { pluralize } from "@dolthub/web-utils";
 import { EntityManager, SelectQueryBuilder } from "typeorm";
 import { ColumnValue, RawRows } from "../types";
 
-export type Built<TResult> = {
+export type BuiltSql = {
   sql: string;
   params: string[];
   displaySql: string;
+};
+
+export type Built<TResult> = BuiltSql & {
   execute: () => Promise<TResult>;
 };
+
+export function deriveAlias(target: string): string {
+  return target.split(".").pop() ?? target;
+}
 
 export function mutationExecutionMessage(rowsAffected: number): string {
   return `Query OK, ${rowsAffected} ${pluralize(rowsAffected, "row")} affected.`;
@@ -114,13 +121,28 @@ export function bindParam(
   return key;
 }
 
+export function asStringParams(params: unknown[]): string[] {
+  return params.map(p => String(p));
+}
+
 export function builtSelect(
   qb: SelectQueryBuilder<any>,
   acc: ParamAccumulator,
 ): Built<RawRows> {
-  const [sql, params] = qb.getQueryAndParameters() as [string, string[]];
+  const [sql, rawParams] = qb.getQueryAndParameters();
+  const params = asStringParams(rawParams);
   const displaySql = interpolateForDisplay(sql, params, acc.paramTypes);
   return { sql, params, displaySql, execute: async () => qb.getRawMany() };
+}
+
+export function previewSql(
+  qb: SelectQueryBuilder<any>,
+  acc: ParamAccumulator,
+): BuiltSql {
+  const [sql, rawParams] = qb.getQueryAndParameters();
+  const params = asStringParams(rawParams);
+  const displaySql = interpolateForDisplay(sql, params, acc.paramTypes);
+  return { sql, params, displaySql };
 }
 
 const DIFF_METADATA_COLS = [
