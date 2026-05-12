@@ -72,12 +72,18 @@ function Inner(props: InnerProps) {
       pkValues,
       columnName,
     });
-    const { href, as } = query(props.params).withQuery({
+    const baseRoute = query(props.params);
+    const pushQuery = {
       q: sql,
       schemaName: props.params.schemaName,
       ...historyParams,
-    } as unknown as Record<string, string | undefined | null>);
-    router.push(href, as).catch(console.error);
+    };
+    router
+      .push(
+        { pathname: baseRoute.hrefPathname(), query: pushQuery },
+        { pathname: baseRoute.asPathname(), query: pushQuery },
+      )
+      .catch(console.error);
   };
 
   return (
@@ -91,7 +97,9 @@ function Inner(props: InnerProps) {
         {isPK ? "Row History" : "Cell History"}
         {props.disabled && <BsFillQuestionCircleFill className={css.help} />}
       </Button.Link>
-      <span className={css.popup}>{props.disabledPopup}</span>
+      {props.disabled && (
+        <span className={css.popup}>{props.disabledPopup}</span>
+      )}
     </span>
   );
 }
