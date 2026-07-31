@@ -365,9 +365,9 @@ export class DoltgresQueryFactory
         }
         const res = await query(qh.getCallMerge(!!args.author), params);
 
-        if (res.length && res[0].dolt_merge[2] !== "0") {
+        if (res.length && res[0].conflicts !== "0") {
           await query("ROLLBACK");
-          const msg = res[0].dolt_merge[3] ?? "Merge conflict detected";
+          const msg = res[0].message ?? "Merge conflict detected";
           throw new Error(msg);
         }
 
@@ -515,7 +515,7 @@ export class DoltgresQueryFactory
 
         console.log("[restore_all]: calling");
         const res = await qr.query(qh.callResetHard);
-        if (res.length && res[0].dolt_reset[0] !== "0") {
+        if (res.length && res[0].status !== "0") {
           console.log("[restore_all]: reset not successful, rolling back");
           await qr.query("ROLLBACK");
           throw new Error("Reset --hard not successful");
@@ -529,7 +529,7 @@ export class DoltgresQueryFactory
             const checkRes = await qr.query(qh.callCheckoutTable, [
               tableWithoutSchema(r.table_name),
             ]);
-            if (checkRes.length && checkRes[0].dolt_checkout[0] !== "0") {
+            if (checkRes.length && checkRes[0].status !== "0") {
               console.log(
                 "[restore_all]: checkout not successful, rolling back",
               );
