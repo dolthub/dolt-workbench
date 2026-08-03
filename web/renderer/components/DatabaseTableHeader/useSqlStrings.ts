@@ -1,7 +1,7 @@
-import { useDataTableContext } from "@contexts/dataTable";
+import { DataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { DatabasePageParams } from "@lib/params";
-import { useCallback, useEffect } from "react";
+import { useCallback, useContext, useEffect } from "react";
 
 const exampleCreateTable = `CREATE TABLE tablename (pk INT, col1 VARCHAR(255), PRIMARY KEY (pk));`;
 
@@ -10,7 +10,7 @@ export function useSqlStrings(
   empty = false,
 ): { sqlString: string; editorString: string } {
   const { editorString, setEditorString } = useSqlEditorContext();
-  const { executedQueryString } = useDataTableContext();
+  const executedQueryString = useContext(DataTableContext)?.executedQueryString;
 
   const flattenNewLines = (query: string) =>
     query.replaceAll(/\r\n|\n|\r/gm, " ");
