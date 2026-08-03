@@ -22,7 +22,7 @@ type Props = {
 };
 
 export default function DeleteRowButton(props: Props): JSX.Element | null {
-  const { setEditorString, setError, setExecutionMessage } =
+  const { setExecutedQuery, setError, setExecutionMessage } =
     useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
@@ -40,7 +40,7 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
       variables: { databaseName, refName, schemaName, tableName, where },
     });
     if (res.success && res.data?.deleteRow) {
-      setEditorString(res.data.deleteRow.queryString);
+      setExecutedQuery(res.data.deleteRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.deleteRow.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)

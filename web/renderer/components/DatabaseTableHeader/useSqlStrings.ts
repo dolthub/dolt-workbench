@@ -1,4 +1,4 @@
-import { DataTableContext } from "@contexts/dataTable";
+import { DataTableContext, DataTableContextType } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { DatabasePageParams } from "@lib/params";
 import { useCallback, useContext, useEffect } from "react";
@@ -10,7 +10,9 @@ export function useSqlStrings(
   empty = false,
 ): { sqlString: string; editorString: string } {
   const { editorString, setEditorString } = useSqlEditorContext();
-  const executedQueryString = useContext(DataTableContext)?.executedQueryString;
+  const executedQueryString = (
+    useContext(DataTableContext) as DataTableContextType | undefined
+  )?.executedQueryString;
 
   const flattenNewLines = (query: string) =>
     query.replaceAll(/\r\n|\n|\r/gm, " ");

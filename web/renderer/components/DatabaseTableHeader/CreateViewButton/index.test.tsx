@@ -49,8 +49,9 @@ describe("test for ViewQueryButton", () => {
 
     await user.click(screen.getByRole("button", { name: "Create" }));
     await waitFor(() => {
-      expect(mocks.setEditorString).toHaveBeenCalledWith(
+      expect(mocks.setExecutedQuery).toHaveBeenCalledWith(
         `CREATE VIEW \`${viewName}\` AS ${sqlString}`,
+        { isMutation: true },
       );
     });
     expect(mocks.setExecutionMessage).toHaveBeenCalledWith("Query OK.");
