@@ -33,6 +33,7 @@ export class SqlSelectResolver {
       args.queryString,
       offset,
       res.warnings,
+      res.columns,
     );
   }
 

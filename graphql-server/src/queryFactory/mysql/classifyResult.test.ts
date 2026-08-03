@@ -1,21 +1,30 @@
-import { classifyMysqlResult } from "./classifyResult";
+import { FieldPacket } from "mysql2";
+import { classifyMysqlResult, mapFieldsToColumns } from "./classifyResult";
+
+function field(
+  overrides: Partial<Omit<FieldPacket, "constructor">>,
+): FieldPacket {
+  return {
+    catalog: "def",
+    decimals: 0,
+    flags: 0,
+    name: "col",
+    orgName: "col",
+    orgTable: "",
+    table: "",
+    ...overrides,
+  } as FieldPacket;
+}
 
 describe("classifyMysqlResult", () => {
   describe("SELECT-shaped results: isMutation false, rows preserved", () => {
     const reads = [
       {
         desc: "SELECT with rows",
-        result: {
-          raw: [
-            { id: 1, name: "alice" },
-            { id: 2, name: "bob" },
-          ],
-          records: [
-            { id: 1, name: "alice" },
-            { id: 2, name: "bob" },
-          ],
-          // affected explicitly undefined for SELECT-shaped results
-        },
+        raw: [
+          { id: 1, name: "alice" },
+          { id: 2, name: "bob" },
+        ],
         expectedRows: [
           { id: 1, name: "alice" },
           { id: 2, name: "bob" },
@@ -23,42 +32,65 @@ describe("classifyMysqlResult", () => {
       },
       {
         desc: "SELECT with zero rows",
-        result: { raw: [], records: [] },
+        raw: [],
         expectedRows: [],
       },
       {
         desc: "SHOW TABLES",
-        result: {
-          raw: [{ Tables_in_db: "users" }],
-          records: [{ Tables_in_db: "users" }],
-        },
+        raw: [{ Tables_in_db: "users" }],
         expectedRows: [{ Tables_in_db: "users" }],
       },
       {
         desc: "DESCRIBE",
-        result: {
-          raw: [{ Field: "id", Type: "int" }],
-          records: [{ Field: "id", Type: "int" }],
-        },
+        raw: [{ Field: "id", Type: "int" }],
         expectedRows: [{ Field: "id", Type: "int" }],
       },
       {
         desc: "EXPLAIN",
-        result: {
-          raw: [{ id: 1, select_type: "SIMPLE" }],
-          records: [{ id: 1, select_type: "SIMPLE" }],
-        },
+        raw: [{ id: 1, select_type: "SIMPLE" }],
         expectedRows: [{ id: 1, select_type: "SIMPLE" }],
       },
     ];
 
     reads.forEach(t => {
       it(t.desc, () => {
-        const out = classifyMysqlResult(t.result);
+        const out = classifyMysqlResult(t.raw);
         expect(out.isMutation).toBe(false);
         expect(out.executionMessage).toBe("");
         expect(out.rows).toEqual(t.expectedRows);
+        expect(out.columns).toBeUndefined();
       });
+    });
+
+    it("maps field packets to columns", () => {
+      const out = classifyMysqlResult(
+        [{ id: 1, name: "alice" }],
+        [
+          field({
+            name: "id",
+            orgName: "id",
+            orgTable: "users",
+            flags: 2,
+            columnType: 8,
+          }),
+          field({
+            name: "name",
+            orgName: "name",
+            orgTable: "users",
+            flags: 0,
+            columnType: 253,
+          }),
+        ],
+      );
+      expect(out.columns).toEqual([
+        { name: "id", isPrimaryKey: true, type: "bigint", sourceTable: "users" },
+        {
+          name: "name",
+          isPrimaryKey: false,
+          type: "varchar",
+          sourceTable: "users",
+        },
+      ]);
     });
   });
 
@@ -66,67 +98,78 @@ describe("classifyMysqlResult", () => {
     const mutations = [
       {
         desc: "INSERT one row, no info",
-        result: {
-          raw: { affectedRows: 1, info: "" },
-          records: [],
-          affected: 1,
-        },
+        raw: { affectedRows: 1, info: "" },
         expectedMessage: "Query OK, 1 row affected.",
       },
       {
         desc: "UPDATE with info (replace # with space)",
-        result: {
-          raw: {
-            affectedRows: 3,
-            info: "Rows matched: 3#Changed: 3#Warnings: 0",
-          },
-          records: [],
-          affected: 3,
+        raw: {
+          affectedRows: 3,
+          info: "Rows matched: 3#Changed: 3#Warnings: 0",
         },
         expectedMessage:
           "Query OK, 3 rows affected.Rows matched: 3 Changed: 3#Warnings: 0",
       },
       {
         desc: "DELETE",
-        result: {
-          raw: { affectedRows: 5, info: "" },
-          records: [],
-          affected: 5,
-        },
+        raw: { affectedRows: 5, info: "" },
         expectedMessage: "Query OK, 5 rows affected.",
       },
       {
         desc: "DDL: CREATE TABLE (affectedRows 0, no info)",
-        result: {
-          raw: { affectedRows: 0, info: "" },
-          records: [],
-          affected: 0,
-        },
+        raw: { affectedRows: 0, info: "" },
         expectedMessage: "Query OK, 0 rows affected.",
       },
       {
         desc: "raw missing info field",
-        result: {
-          raw: { affectedRows: 2 },
-          records: [],
-          affected: 2,
-        },
+        raw: { affectedRows: 2 },
         expectedMessage: "Query OK, 2 rows affected.",
       },
       {
         desc: "raw is null (defensive)",
-        result: { raw: null, records: [], affected: 0 },
+        raw: null,
         expectedMessage: "Query OK, 0 rows affected.",
       },
     ];
 
     mutations.forEach(t => {
       it(t.desc, () => {
-        const out = classifyMysqlResult(t.result);
+        const out = classifyMysqlResult(t.raw);
         expect(out.isMutation).toBe(true);
         expect(out.rows).toEqual([]);
         expect(out.executionMessage).toBe(t.expectedMessage);
       });
     });
+  });
+});
+
+describe("mapFieldsToColumns", () => {
+  it("returns undefined for missing or empty fields", () => {
+    expect(mapFieldsToColumns(undefined)).toBeUndefined();
+    expect(mapFieldsToColumns([])).toBeUndefined();
+  });
+
+  it("handles string array flags", () => {
+    const out = mapFieldsToColumns([
+      field({ name: "id", flags: ["NOT_NULL", "PRI_KEY"] as any }),
+    ]);
+    expect(out?.[0].isPrimaryKey).toBe(true);
+  });
+
+  it("prefers typeName when present", () => {
+    const out = mapFieldsToColumns([
+      field({ name: "id", typeName: "LONGLONG", columnType: 8 }),
+    ]);
+    expect(out?.[0].type).toBe("longlong");
+  });
+
+  it("omits sourceTable for computed columns", () => {
+    const out = mapFieldsToColumns([field({ name: "1+1", orgTable: "" })]);
+    expect(out?.[0].sourceTable).toBeUndefined();
+  });
+
+  it("falls back to unknown for unmapped type codes", () => {
+    const out = mapFieldsToColumns([field({ name: "x", columnType: 999 })]);
+    expect(out?.[0].type).toBe("unknown");
   });
 });

@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
-import { RawRow } from "../queryFactory/types";
+import { RawRow, ResultColumn } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { QueryExecutionStatus } from "./sqlSelect.enums";
 import { ROW_LIMIT, getNextOffset } from "../utils";
@@ -91,6 +91,7 @@ export function fromSqlSelectRow(
   queryString: string,
   offset: number,
   warnings?: string[],
+  resultColumns?: ResultColumn[],
 ): SqlSelect {
   const res = {
     _id: `/databases/${databaseName}/refs/${refName}/queries/${queryString}`,
@@ -98,7 +99,7 @@ export function fromSqlSelectRow(
     refName,
     queryString,
     rows: { list: [] },
-    columns: [],
+    columns: isMutation ? [] : (resultColumns ?? []),
     queryExecutionStatus: QueryExecutionStatus.Success,
     queryExecutionMessage: executionMessage,
     isMutation,
@@ -112,9 +113,11 @@ export function fromSqlSelectRow(
   const rows: row.Row[] = doltRows
     .slice(offset, offset + ROW_LIMIT)
     .map(row.fromDoltRowRes);
-  const columns: column.Column[] = Object.keys(doltRows[0]).map(c => {
-    return { name: c, isPrimaryKey: false, type: "unknown" };
-  });
+  const columns: column.Column[] =
+    resultColumns ??
+    Object.keys(doltRows[0]).map(c => {
+      return { name: c, isPrimaryKey: false, type: "unknown" };
+    });
 
   return {
     ...res,

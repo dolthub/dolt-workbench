@@ -4,6 +4,7 @@ import { useContextWithError } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
+  ColumnForSqlDataTableFragment,
   ForeignKeysForDataTableFragment,
   RowForDataTableFragment,
   RowsForDataTableQuery,
@@ -63,6 +64,7 @@ export type DataTableContextType = {
   executedQueryString?: string;
   isMutation: boolean;
   setIsMutation: (b: boolean) => void;
+  setQueryColumns: (cols?: ColumnForSqlDataTableFragment[]) => void;
 };
 
 export const DataTableContext =
@@ -305,6 +307,7 @@ function ProviderForTableName(props: TableProps) {
       executedQueryString: selectTableRowsRes.data?.selectTableRows.queryString,
       isMutation: false,
       setIsMutation: () => {},
+      setQueryColumns: () => {},
     };
   }, [
     loadMore,
@@ -345,13 +348,33 @@ function ProviderForTableName(props: TableProps) {
 export function DataTableProvider({ params, children }: Props) {
   const router = useRouter();
   const tableShape = "tableName" in params;
-  const tableNames = tableShape ? [params.tableName] : [];
   const executedQueryString = executedSqlFromRouter(router.query.executedSql);
   const [isMutation, setIsMutation] = useState(false);
+  const [queryColumns, setQueryColumns] = useState<
+    ColumnForSqlDataTableFragment[] | undefined
+  >(undefined);
+
+  const sourceTable = getSingleSourceTable(queryColumns);
+  const tableRes = useDataTableQuery({
+    variables: {
+      databaseName: params.databaseName,
+      refName: params.refName,
+      tableName: sourceTable ?? "",
+      schemaName: params.schemaName,
+    },
+    skip: tableShape || !sourceTable,
+  });
+
+  let tableNames: string[] = [];
+  if (tableShape) {
+    tableNames = [params.tableName];
+  } else if (sourceTable) {
+    tableNames = [sourceTable];
+  }
 
   const value = useMemo(() => {
     return {
-      params,
+      params: sourceTable ? { ...params, tableName: sourceTable } : params,
       loading: false,
       loadingWorkingDiff: false,
       loadMore: async () => {},
@@ -360,6 +383,8 @@ export function DataTableProvider({ params, children }: Props) {
       hasMoreWorkingDiff: false,
       showingWorkingDiff: isMutation,
       tableNames,
+      columns: tableRes.data?.table.columns,
+      foreignKeys: tableRes.data?.table.foreignKeys,
       onAddEmptyRow: () => {},
       pendingRow: undefined,
       setPendingRow: () => {},
@@ -369,8 +394,17 @@ export function DataTableProvider({ params, children }: Props) {
       executedQueryString,
       isMutation,
       setIsMutation,
+      setQueryColumns,
     };
-  }, [params, tableNames, tableShape, executedQueryString, isMutation]);
+  }, [
+    params,
+    tableNames,
+    tableShape,
+    executedQueryString,
+    isMutation,
+    sourceTable,
+    tableRes.data,
+  ]);
 
   if (!("tableName" in params)) {
     return (
@@ -397,4 +431,13 @@ export function useDataTableContext(): DataTableContextType {
 
 function executedSqlFromRouter(raw: unknown): string | undefined {
   return typeof raw === "string" ? raw : undefined;
+}
+
+function getSingleSourceTable(
+  cols?: ColumnForSqlDataTableFragment[],
+): string | undefined {
+  if (!cols || cols.length === 0) return undefined;
+  const first = cols[0].sourceTable;
+  if (!first) return undefined;
+  return cols.every(c => c.sourceTable === first) ? first : undefined;
 }

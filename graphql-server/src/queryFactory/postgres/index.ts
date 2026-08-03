@@ -26,6 +26,7 @@ import {
   mutationExecutionMessage,
 } from "../build/buildUtils";
 import { classifyPgResult } from "./classifyResult";
+import { resolvePgResultColumns } from "./resultColumns";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -357,7 +358,14 @@ export class PostgresQueryFactory
         }
         const conn = await qr.connect();
         const res = await conn.query(args.queryString, []);
-        return classifyPgResult(res);
+        const classified = classifyPgResult(res);
+        if (classified.isMutation) {
+          return classified;
+        }
+        return {
+          ...classified,
+          columns: await resolvePgResultColumns(qr, res.fields),
+        };
       },
       args.databaseName,
       args.refName,

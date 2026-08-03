@@ -19,7 +19,7 @@ type Props = {
 };
 
 export default function ForeignKeyButton(props: Props) {
-  const { params, foreignKeys, tableShape } = useDataTableContext();
+  const { params, foreignKeys } = useDataTableContext();
   const foreignKeyMap = getForeignKeyMap(
     foreignKeys,
     props.row,
@@ -31,7 +31,7 @@ export default function ForeignKeyButton(props: Props) {
   const tableDropdownRef = useRef<HTMLSpanElement>(null);
   useOnClickOutside(tableDropdownRef, () => setShowTableDropdown(false));
 
-  if (!hasForeignKey || !tableShape) return null;
+  if (!hasForeignKey) return null;
 
   return (
     <span ref={tableDropdownRef} className={css.foreignKey}>

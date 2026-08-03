@@ -30,10 +30,13 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   useSqlQuery(props.params, props.client, props.state.isMutation, props.error);
-  const { setIsMutation } = useDataTableContext();
+  const { setIsMutation, setQueryColumns } = useDataTableContext();
   useEffect(() => {
     setIsMutation(props.state.isMutation);
   }, [props.state.isMutation, setIsMutation]);
+  useEffect(() => {
+    setQueryColumns(props.state.cols);
+  }, [props.state.cols, setQueryColumns]);
   const msg = (
     <SqlMessage
       params={props.params}

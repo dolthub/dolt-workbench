@@ -1,5 +1,6 @@
 import { mutationExecutionMessage } from "../build/buildUtils";
 import * as t from "../types";
+import { PgFieldDef } from "./resultColumns";
 
 export const PG_READ_COMMANDS: ReadonlySet<string> = new Set([
   "SELECT",
@@ -12,6 +13,7 @@ export type PgQueryResult = {
   command?: string;
   rows?: t.RawRow[];
   rowCount?: number | null;
+  fields?: PgFieldDef[];
 };
 
 export type ClassifiedResult = {
