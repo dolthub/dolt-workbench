@@ -4,27 +4,9 @@ import * as t from "../types";
 export type PgFieldDef = {
   name: string;
   tableID: number;
-  columnID: number;
-  dataTypeID: number;
 };
 
-const resultColumnInfoQuery = `SELECT c.oid AS table_oid, c.relname AS table_name, a.attnum, ty.typname AS col_type,
-  COALESCE(pk.is_pk, FALSE) AS is_pk
-FROM pg_class c
-JOIN pg_attribute a ON a.attrelid = c.oid AND a.attnum > 0
-JOIN pg_type ty ON ty.oid = a.atttypid
-LEFT JOIN (
-  SELECT i.indrelid, unnest(i.indkey) AS attnum, TRUE AS is_pk
-  FROM pg_index i
-  WHERE i.indisprimary
-) pk ON pk.indrelid = c.oid AND pk.attnum = a.attnum
-WHERE c.oid = ANY($1)`;
-
-type ColumnInfo = {
-  tableName: string;
-  isPk: boolean;
-  type: string;
-};
+const tableNamesQuery = `SELECT oid, relname FROM pg_class WHERE oid = ANY($1)`;
 
 export async function resolvePgResultColumns(
   qr: QueryRunner,
@@ -35,32 +17,21 @@ export async function resolvePgResultColumns(
   const tableIds = [
     ...new Set(fields.map(f => f.tableID).filter(id => id > 0)),
   ];
-  const info = new Map<string, ColumnInfo>();
+  const tableNames = new Map<string, string>();
 
   if (tableIds.length > 0) {
     try {
-      const rows: t.RawRows = await qr.query(resultColumnInfoQuery, [
-        tableIds,
-      ]);
-      rows.forEach(r => {
-        info.set(`${r.table_oid}.${r.attnum}`, {
-          tableName: r.table_name,
-          isPk: r.is_pk === true || r.is_pk === "t",
-          type: r.col_type,
-        });
-      });
+      const rows: t.RawRows = await qr.query(tableNamesQuery, [tableIds]);
+      rows.forEach(r => tableNames.set(String(r.oid), r.relname));
     } catch (err) {
-      console.error("Failed to resolve result column metadata:", err);
+      console.error("Failed to resolve result column source tables:", err);
     }
   }
 
   return fields.map(f => {
-    const colInfo = info.get(`${f.tableID}.${f.columnID}`);
     return {
       name: f.name,
-      isPrimaryKey: colInfo?.isPk ?? false,
-      type: colInfo?.type ?? "unknown",
-      sourceTable: colInfo?.tableName,
+      sourceTable: tableNames.get(String(f.tableID)),
     };
   });
 }

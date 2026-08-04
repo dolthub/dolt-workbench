@@ -9,8 +9,6 @@ function fieldDef(overrides: Partial<PgFieldDef>): PgFieldDef {
   return {
     name: "col",
     tableID: 0,
-    columnID: 0,
-    dataTypeID: 23,
     ...overrides,
   };
 }
@@ -18,89 +16,56 @@ function fieldDef(overrides: Partial<PgFieldDef>): PgFieldDef {
 describe("resolvePgResultColumns", () => {
   it("returns undefined for missing or empty fields", async () => {
     const query = jest.fn();
-    expect(await resolvePgResultColumns(fakeQr(query), undefined)).toBeUndefined();
+    expect(
+      await resolvePgResultColumns(fakeQr(query), undefined),
+    ).toBeUndefined();
     expect(await resolvePgResultColumns(fakeQr(query), [])).toBeUndefined();
     expect(query).not.toHaveBeenCalled();
   });
 
-  it("maps table columns to name, pk, type, and sourceTable", async () => {
+  it("resolves table oids to source table names", async () => {
     const query = jest.fn().mockResolvedValue([
-      {
-        table_oid: 100,
-        table_name: "users",
-        attnum: 1,
-        col_type: "int4",
-        is_pk: true,
-      },
-      {
-        table_oid: 100,
-        table_name: "users",
-        attnum: 2,
-        col_type: "varchar",
-        is_pk: false,
-      },
+      { oid: 100, relname: "users" },
+      { oid: 200, relname: "orders" },
     ]);
     const out = await resolvePgResultColumns(fakeQr(query), [
-      fieldDef({ name: "id", tableID: 100, columnID: 1 }),
-      fieldDef({ name: "renamed", tableID: 100, columnID: 2 }),
+      fieldDef({ name: "id", tableID: 100 }),
+      fieldDef({ name: "renamed", tableID: 100 }),
+      fieldDef({ name: "total", tableID: 200 }),
     ]);
     expect(out).toEqual([
-      { name: "id", isPrimaryKey: true, type: "int4", sourceTable: "users" },
-      {
-        name: "renamed",
-        isPrimaryKey: false,
-        type: "varchar",
-        sourceTable: "users",
-      },
+      { name: "id", sourceTable: "users" },
+      { name: "renamed", sourceTable: "users" },
+      { name: "total", sourceTable: "orders" },
     ]);
     expect(query).toHaveBeenCalledTimes(1);
-    expect(query.mock.calls[0][1]).toEqual([[100]]);
-  });
-
-  it("handles doltgres-style 't' booleans for is_pk", async () => {
-    const query = jest.fn().mockResolvedValue([
-      {
-        table_oid: 100,
-        table_name: "users",
-        attnum: 1,
-        col_type: "int4",
-        is_pk: "t",
-      },
-    ]);
-    const out = await resolvePgResultColumns(fakeQr(query), [
-      fieldDef({ name: "id", tableID: 100, columnID: 1 }),
-    ]);
-    expect(out?.[0].isPrimaryKey).toBe(true);
-  });
-
-  it("skips the catalog lookup when no fields reference a table", async () => {
-    const query = jest.fn();
-    const out = await resolvePgResultColumns(fakeQr(query), [
-      fieldDef({ name: "?column?", tableID: 0, columnID: 0 }),
-    ]);
-    expect(query).not.toHaveBeenCalled();
-    expect(out).toEqual([
-      { name: "?column?", isPrimaryKey: false, type: "unknown" },
-    ]);
-  });
-
-  it("dedupes table oids in the catalog lookup", async () => {
-    const query = jest.fn().mockResolvedValue([]);
-    await resolvePgResultColumns(fakeQr(query), [
-      fieldDef({ name: "a", tableID: 100, columnID: 1 }),
-      fieldDef({ name: "b", tableID: 100, columnID: 2 }),
-      fieldDef({ name: "c", tableID: 200, columnID: 1 }),
-    ]);
     expect(query.mock.calls[0][1]).toEqual([[100, 200]]);
   });
 
-  it("degrades to bare column names when the catalog lookup fails", async () => {
-    const query = jest.fn().mockRejectedValue(new Error("no pg_index"));
+  it("handles string oids in query results", async () => {
+    const query = jest
+      .fn()
+      .mockResolvedValue([{ oid: "100", relname: "users" }]);
     const out = await resolvePgResultColumns(fakeQr(query), [
-      fieldDef({ name: "id", tableID: 100, columnID: 1 }),
+      fieldDef({ name: "id", tableID: 100 }),
     ]);
-    expect(out).toEqual([
-      { name: "id", isPrimaryKey: false, type: "unknown" },
+    expect(out?.[0].sourceTable).toBe("users");
+  });
+
+  it("skips the lookup when no fields reference a table", async () => {
+    const query = jest.fn();
+    const out = await resolvePgResultColumns(fakeQr(query), [
+      fieldDef({ name: "?column?", tableID: 0 }),
     ]);
+    expect(query).not.toHaveBeenCalled();
+    expect(out).toEqual([{ name: "?column?" }]);
+  });
+
+  it("degrades to bare column names when the lookup fails", async () => {
+    const query = jest.fn().mockRejectedValue(new Error("no pg_class"));
+    const out = await resolvePgResultColumns(fakeQr(query), [
+      fieldDef({ name: "id", tableID: 100 }),
+    ]);
+    expect(out).toEqual([{ name: "id" }]);
   });
 });

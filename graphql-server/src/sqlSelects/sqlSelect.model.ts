@@ -39,6 +39,19 @@ export class SqlSelect {
   warnings?: string[];
 }
 
+function toColumns(
+  resultColumns?: ResultColumn[],
+): column.Column[] | undefined {
+  return resultColumns?.map(c => {
+    return {
+      name: c.name,
+      isPrimaryKey: false,
+      type: "unknown",
+      sourceTable: c.sourceTable,
+    };
+  });
+}
+
 export function fromServerPaginatedRows(
   databaseName: string,
   refName: string,
@@ -99,7 +112,7 @@ export function fromSqlSelectRow(
     refName,
     queryString,
     rows: { list: [] },
-    columns: isMutation ? [] : (resultColumns ?? []),
+    columns: isMutation ? [] : (toColumns(resultColumns) ?? []),
     queryExecutionStatus: QueryExecutionStatus.Success,
     queryExecutionMessage: executionMessage,
     isMutation,
@@ -114,7 +127,7 @@ export function fromSqlSelectRow(
     .slice(offset, offset + ROW_LIMIT)
     .map(row.fromDoltRowRes);
   const columns: column.Column[] =
-    resultColumns ??
+    toColumns(resultColumns) ??
     Object.keys(doltRows[0]).map(c => {
       return { name: c, isPrimaryKey: false, type: "unknown" };
     });

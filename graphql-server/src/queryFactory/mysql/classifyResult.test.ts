@@ -66,30 +66,13 @@ describe("classifyMysqlResult", () => {
       const out = classifyMysqlResult(
         [{ id: 1, name: "alice" }],
         [
-          field({
-            name: "id",
-            orgName: "id",
-            orgTable: "users",
-            flags: 2,
-            columnType: 8,
-          }),
-          field({
-            name: "name",
-            orgName: "name",
-            orgTable: "users",
-            flags: 0,
-            columnType: 253,
-          }),
+          field({ name: "id", orgName: "id", orgTable: "users" }),
+          field({ name: "name", orgName: "name", orgTable: "users" }),
         ],
       );
       expect(out.columns).toEqual([
-        { name: "id", isPrimaryKey: true, type: "bigint", sourceTable: "users" },
-        {
-          name: "name",
-          isPrimaryKey: false,
-          type: "varchar",
-          sourceTable: "users",
-        },
+        { name: "id", sourceTable: "users" },
+        { name: "name", sourceTable: "users" },
       ]);
     });
   });
@@ -149,27 +132,8 @@ describe("mapFieldsToColumns", () => {
     expect(mapFieldsToColumns([])).toBeUndefined();
   });
 
-  it("handles string array flags", () => {
-    const out = mapFieldsToColumns([
-      field({ name: "id", flags: ["NOT_NULL", "PRI_KEY"] as any }),
-    ]);
-    expect(out?.[0].isPrimaryKey).toBe(true);
-  });
-
-  it("prefers typeName when present", () => {
-    const out = mapFieldsToColumns([
-      field({ name: "id", typeName: "LONGLONG", columnType: 8 }),
-    ]);
-    expect(out?.[0].type).toBe("longlong");
-  });
-
   it("omits sourceTable for computed columns", () => {
     const out = mapFieldsToColumns([field({ name: "1+1", orgTable: "" })]);
     expect(out?.[0].sourceTable).toBeUndefined();
-  });
-
-  it("falls back to unknown for unmapped type codes", () => {
-    const out = mapFieldsToColumns([field({ name: "x", columnType: 999 })]);
-    expect(out?.[0].type).toBe("unknown");
   });
 });

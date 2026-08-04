@@ -66,8 +66,6 @@ export type RawRows = RawRow[];
 
 export type ResultColumn = {
   name: string;
-  isPrimaryKey: boolean;
-  type: string;
   sourceTable?: string;
 };
 
