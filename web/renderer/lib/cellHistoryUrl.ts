@@ -28,7 +28,8 @@ export function encodeCellHistory(ctx: CellHistoryContext): CellHistoryQuery {
     [KEYS.schema]: ctx.schemaName,
     [KEYS.pk]: ctx.pkValues.length
       ? ctx.pkValues.map(
-          pk => `${pk.column}.${encodeURIComponent(pk.value ?? "")}`,
+          pk =>
+            `${encodeURIComponent(pk.column)}:${encodeURIComponent(pk.value ?? "")}`,
         )
       : undefined,
     [KEYS.cell]: ctx.columnName,
@@ -49,10 +50,10 @@ export function parseCellHistory(
 }
 
 function decodePk(s: string): ColumnValueInput {
-  const i = s.indexOf(".");
-  if (i === -1) return { column: s, value: "" };
+  const i = s.indexOf(":");
+  if (i === -1) return { column: decodeURIComponent(s), value: "" };
   return {
-    column: s.slice(0, i),
+    column: decodeURIComponent(s.slice(0, i)),
     value: decodeURIComponent(s.slice(i + 1)),
   };
 }

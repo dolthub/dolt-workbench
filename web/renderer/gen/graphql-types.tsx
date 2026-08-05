@@ -1227,11 +1227,11 @@ export type UpdateRowMutationVariables = Exact<{
 
 export type UpdateRowMutation = { __typename?: 'Mutation', updateRow: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
-export type RowForDoltCellLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+export type RowForDoltCellLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
-export type ColumnForDoltCellLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+export type ColumnForDoltCellLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
 
-export type SqlSelectForDoltCellLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+export type SqlSelectForDoltCellLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type DoltCellDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1243,7 +1243,7 @@ export type DoltCellDiffQueryVariables = Exact<{
 }>;
 
 
-export type DoltCellDiffQuery = { __typename?: 'Query', doltCellDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type DoltCellDiffQuery = { __typename?: 'Query', doltCellDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type DoltCellHistoryQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1255,7 +1255,7 @@ export type DoltCellHistoryQueryVariables = Exact<{
 }>;
 
 
-export type DoltCellHistoryQuery = { __typename?: 'Query', doltCellHistory: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type DoltCellHistoryQuery = { __typename?: 'Query', doltCellHistory: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type DropColumnMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -2111,22 +2111,12 @@ export const ColumnForDoltCellLookupFragmentDoc = gql`
   name
   isPrimaryKey
   type
-  sourceTable
-  constraints {
-    notNull
-  }
 }
     `;
 export const RowForDoltCellLookupFragmentDoc = gql`
     fragment RowForDoltCellLookup on Row {
   columnValues {
     displayValue
-  }
-  diff {
-    diffColumnNames
-    diffColumnValues {
-      displayValue
-    }
   }
 }
     `;

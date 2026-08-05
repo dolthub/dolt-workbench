@@ -73,21 +73,11 @@ const DOLT_CELL_LOOKUP_FRAGMENT = gql`
     columnValues {
       displayValue
     }
-    diff {
-      diffColumnNames
-      diffColumnValues {
-        displayValue
-      }
-    }
   }
   fragment ColumnForDoltCellLookup on Column {
     name
     isPrimaryKey
     type
-    sourceTable
-    constraints {
-      notNull
-    }
   }
   fragment SqlSelectForDoltCellLookup on SqlSelect {
     queryString
