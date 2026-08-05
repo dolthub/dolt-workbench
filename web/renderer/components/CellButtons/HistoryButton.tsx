@@ -86,7 +86,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const { tableName } = params;
   const { views, loading } = useViewList(params);
 
-  if (loading) {
+  if (loading && !views) {
     return (
       <span className={cx(css.button, css.loading)}>Loading history...</span>
     );

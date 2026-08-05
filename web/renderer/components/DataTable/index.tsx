@@ -74,8 +74,10 @@ function WithContext(props: TableProps) {
   } = useDataTableContext();
 
   if (
-    (!workingDiffRowsToggled && loading) ||
-    (workingDiffRowsToggled && loadingWorkingDiff)
+    (!workingDiffRowsToggled && loading && (!rows || !columns)) ||
+    (workingDiffRowsToggled &&
+      loadingWorkingDiff &&
+      (!workingDiffRows || !columns))
   ) {
     return <Loader loaded={false} />;
   }

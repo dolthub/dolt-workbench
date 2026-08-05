@@ -36,6 +36,14 @@ export function SqlEditorProvider(props: Props) {
     setShowSqlEditor(isMobile);
   }, [isMobile]);
 
+  useEffect(() => {
+    const clearExecutionMessage = () => setExecutionMessage(undefined);
+    router.events.on("routeChangeStart", clearExecutionMessage);
+    return () => {
+      router.events.off("routeChangeStart", clearExecutionMessage);
+    };
+  }, [router.events]);
+
   // Handles error modal state
   useEffect(() => {
     if (!err || modalState.errorIsOpen) {

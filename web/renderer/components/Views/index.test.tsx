@@ -19,6 +19,7 @@ jest.mock("next/router", () => {
 
 describe("tests Views", () => {
   it("renders correctly with no views", async () => {
+    useMockRouter(jestRouter, {});
     await renderAndWait(
       <MockedProvider mocks={[mocks.rowsForEmptyViewsMock]}>
         <SqlEditorProvider params={mocks.params}>
