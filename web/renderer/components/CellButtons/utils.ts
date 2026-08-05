@@ -87,14 +87,11 @@ export function toPKWhereClauses(
   tableCols?: ColumnForDataTableFragment[],
 ): WhereClauseInput[] {
   return mapQueryColsToAllCols(queryCols, tableCols)
+    .filter(c => c.isPrimaryKey)
     .map((col, i) => {
-      return { col, value: row.columnValues[i].displayValue };
-    })
-    .filter(c => c.col.isPrimaryKey)
-    .map(({ col, value }) => {
       return {
         column: col.name,
-        value,
+        value: row.columnValues[i].displayValue,
         type: col.type,
       };
     });

@@ -318,11 +318,14 @@ export class MySQLQueryFactory
   ): Promise<t.SqlSelectResult> {
     return this.queryQR(
       async qr => {
-        const conn = await qr.connect();
-        const [raw, fields] = await conn.promise().query(args.queryString);
+        const result = await qr.query(
+          args.queryString,
+          [args.databaseName, args.refName],
+          true,
+        );
         const warningsRes: t.RawRows = await qr.query(qh.showWarningsQuery);
         const warnings = warningsRes.map(w => w.Message);
-        return { ...classifyMysqlResult(raw, fields), warnings };
+        return { ...classifyMysqlResult(result), warnings };
       },
       args.databaseName,
       args.refName,

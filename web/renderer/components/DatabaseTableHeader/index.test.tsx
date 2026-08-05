@@ -26,7 +26,6 @@ const dataTableCtxMock = {
   tableShape: true,
   isMutation: false,
   setIsMutation: () => {},
-  setQueryColumns: () => {},
 };
 
 const dbParams = {

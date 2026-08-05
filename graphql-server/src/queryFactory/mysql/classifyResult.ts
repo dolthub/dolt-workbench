@@ -1,4 +1,3 @@
-import { FieldPacket } from "mysql2";
 import { mutationExecutionMessage } from "../build/buildUtils";
 import * as t from "../types";
 
@@ -7,42 +6,36 @@ export type MysqlOkPacket = {
   info?: string;
 };
 
+export type MysqlStructuredResult = {
+  raw: t.RawRow[] | MysqlOkPacket | null | undefined;
+  records: t.RawRow[];
+  affected?: number;
+};
+
 export type ClassifiedResult = {
   rows: t.RawRows;
   isMutation: boolean;
   executionMessage: string;
-  columns?: t.ResultColumn[];
 };
 
-export function mapFieldsToColumns(
-  fields?: FieldPacket[],
-): t.ResultColumn[] | undefined {
-  if (!fields || fields.length === 0) return undefined;
-  return fields.map(f => {
-    return {
-      name: f.name,
-      sourceTable: f.orgTable || undefined,
-    };
-  });
+function isOkPacket(
+  raw: t.RawRow[] | MysqlOkPacket | null | undefined,
+): raw is MysqlOkPacket {
+  return !!raw && !Array.isArray(raw);
 }
 
 export function classifyMysqlResult(
-  raw: t.RawRows | MysqlOkPacket | null | undefined,
-  fields?: FieldPacket[],
+  result: MysqlStructuredResult,
 ): ClassifiedResult {
-  if (Array.isArray(raw)) {
-    return {
-      rows: raw,
-      isMutation: false,
-      executionMessage: "",
-      columns: mapFieldsToColumns(fields),
-    };
+  const isMutation = result.affected !== undefined;
+  if (!isMutation) {
+    return { rows: result.records, isMutation: false, executionMessage: "" };
   }
-  const info = raw?.info ?? "";
+  const info: string = isOkPacket(result.raw) ? (result.raw.info ?? "") : "";
   const suffix = info.length > 0 ? info.replace("#", " ") : "";
   return {
     rows: [],
     isMutation: true,
-    executionMessage: `${mutationExecutionMessage(raw?.affectedRows ?? 0)}${suffix}`,
+    executionMessage: `${mutationExecutionMessage(result.affected ?? 0)}${suffix}`,
   };
 }

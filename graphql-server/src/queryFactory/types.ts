@@ -64,18 +64,12 @@ export type RawRowWithDiff = {
 };
 export type RawRows = RawRow[];
 
-export type ResultColumn = {
-  name: string;
-  sourceTable?: string;
-};
-
 export type SqlSelectResult = {
   rows: RawRows;
   isMutation: boolean;
   executionMessage: string;
   warnings?: string[];
   queryString?: string;
-  columns?: ResultColumn[];
 };
 export type RawRowsWithDiff = RawRowWithDiff[];
 export type PR = Promise<RawRows>;

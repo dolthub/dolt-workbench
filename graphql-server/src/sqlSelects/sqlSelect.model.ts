@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import * as column from "../columns/column.model";
-import { RawRow, ResultColumn } from "../queryFactory/types";
+import { RawRow } from "../queryFactory/types";
 import * as row from "../rows/row.model";
 import { QueryExecutionStatus } from "./sqlSelect.enums";
 import { ROW_LIMIT, getNextOffset } from "../utils";
@@ -37,19 +37,6 @@ export class SqlSelect {
 
   @Field(_type => [String], { nullable: true })
   warnings?: string[];
-}
-
-function toColumns(
-  resultColumns?: ResultColumn[],
-): column.Column[] | undefined {
-  return resultColumns?.map(c => {
-    return {
-      name: c.name,
-      isPrimaryKey: false,
-      type: "unknown",
-      sourceTable: c.sourceTable,
-    };
-  });
 }
 
 export function fromServerPaginatedRows(
@@ -104,7 +91,6 @@ export function fromSqlSelectRow(
   queryString: string,
   offset: number,
   warnings?: string[],
-  resultColumns?: ResultColumn[],
 ): SqlSelect {
   const res = {
     _id: `/databases/${databaseName}/refs/${refName}/queries/${queryString}`,
@@ -112,7 +98,7 @@ export function fromSqlSelectRow(
     refName,
     queryString,
     rows: { list: [] },
-    columns: isMutation ? [] : (toColumns(resultColumns) ?? []),
+    columns: [],
     queryExecutionStatus: QueryExecutionStatus.Success,
     queryExecutionMessage: executionMessage,
     isMutation,
@@ -126,11 +112,9 @@ export function fromSqlSelectRow(
   const rows: row.Row[] = doltRows
     .slice(offset, offset + ROW_LIMIT)
     .map(row.fromDoltRowRes);
-  const columns: column.Column[] =
-    toColumns(resultColumns) ??
-    Object.keys(doltRows[0]).map(c => {
-      return { name: c, isPrimaryKey: false, type: "unknown" };
-    });
+  const columns: column.Column[] = Object.keys(doltRows[0]).map(c => {
+    return { name: c, isPrimaryKey: false, type: "unknown" };
+  });
 
   return {
     ...res,
