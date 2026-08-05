@@ -68,32 +68,32 @@ export const UPDATE_ROW = gql`
   }
 `;
 
-const DOLT_CELL_LOOKUP_FRAGMENT = gql`
-  fragment RowForDoltCellLookup on Row {
+export const DOLT_LOOKUP_FRAGMENT = gql`
+  fragment RowForDoltLookup on Row {
     columnValues {
       displayValue
     }
   }
-  fragment ColumnForDoltCellLookup on Column {
+  fragment ColumnForDoltLookup on Column {
     name
     isPrimaryKey
     type
   }
-  fragment SqlSelectForDoltCellLookup on SqlSelect {
+  fragment SqlSelectForDoltLookup on SqlSelect {
     queryString
     columns {
-      ...ColumnForDoltCellLookup
+      ...ColumnForDoltLookup
     }
     rows {
       list {
-        ...RowForDoltCellLookup
+        ...RowForDoltLookup
       }
     }
   }
 `;
 
 export const DOLT_CELL_DIFF = gql`
-  ${DOLT_CELL_LOOKUP_FRAGMENT}
+  ${DOLT_LOOKUP_FRAGMENT}
   query DoltCellDiff(
     $databaseName: String!
     $refName: String!
@@ -110,13 +110,13 @@ export const DOLT_CELL_DIFF = gql`
       pkValues: $pkValues
       columnName: $columnName
     ) {
-      ...SqlSelectForDoltCellLookup
+      ...SqlSelectForDoltLookup
     }
   }
 `;
 
 export const DOLT_CELL_HISTORY = gql`
-  ${DOLT_CELL_LOOKUP_FRAGMENT}
+  ${DOLT_LOOKUP_FRAGMENT}
   query DoltCellHistory(
     $databaseName: String!
     $refName: String!
@@ -133,7 +133,7 @@ export const DOLT_CELL_HISTORY = gql`
       pkValues: $pkValues
       columnName: $columnName
     ) {
-      ...SqlSelectForDoltCellLookup
+      ...SqlSelectForDoltLookup
     }
   }
 `;

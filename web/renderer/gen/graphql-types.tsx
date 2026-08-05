@@ -1227,11 +1227,11 @@ export type UpdateRowMutationVariables = Exact<{
 
 export type UpdateRowMutation = { __typename?: 'Mutation', updateRow: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
-export type RowForDoltCellLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
+export type RowForDoltLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
-export type ColumnForDoltCellLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
+export type ColumnForDoltLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
 
-export type SqlSelectForDoltCellLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
+export type SqlSelectForDoltLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type DoltCellDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1268,10 +1268,6 @@ export type DropColumnMutationVariables = Exact<{
 
 export type DropColumnMutation = { __typename?: 'Mutation', dropColumn: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
-export type RowForDoltCommitDiffFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
-
-export type ColumnForDoltCommitDiffFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
-
 export type DoltCommitDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1284,7 +1280,7 @@ export type DoltCommitDiffQueryVariables = Exact<{
 }>;
 
 
-export type DoltCommitDiffQuery = { __typename?: 'Query', doltCommitDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type DoltCommitDiffQuery = { __typename?: 'Query', doltCommitDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -2106,58 +2102,34 @@ export type TableNamesQueryVariables = Exact<{
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
-export const ColumnForDoltCellLookupFragmentDoc = gql`
-    fragment ColumnForDoltCellLookup on Column {
+export const ColumnForDoltLookupFragmentDoc = gql`
+    fragment ColumnForDoltLookup on Column {
   name
   isPrimaryKey
   type
 }
     `;
-export const RowForDoltCellLookupFragmentDoc = gql`
-    fragment RowForDoltCellLookup on Row {
+export const RowForDoltLookupFragmentDoc = gql`
+    fragment RowForDoltLookup on Row {
   columnValues {
     displayValue
   }
 }
     `;
-export const SqlSelectForDoltCellLookupFragmentDoc = gql`
-    fragment SqlSelectForDoltCellLookup on SqlSelect {
+export const SqlSelectForDoltLookupFragmentDoc = gql`
+    fragment SqlSelectForDoltLookup on SqlSelect {
   queryString
   columns {
-    ...ColumnForDoltCellLookup
+    ...ColumnForDoltLookup
   }
   rows {
     list {
-      ...RowForDoltCellLookup
+      ...RowForDoltLookup
     }
   }
 }
-    ${ColumnForDoltCellLookupFragmentDoc}
-${RowForDoltCellLookupFragmentDoc}`;
-export const RowForDoltCommitDiffFragmentDoc = gql`
-    fragment RowForDoltCommitDiff on Row {
-  columnValues {
-    displayValue
-  }
-  diff {
-    diffColumnNames
-    diffColumnValues {
-      displayValue
-    }
-  }
-}
-    `;
-export const ColumnForDoltCommitDiffFragmentDoc = gql`
-    fragment ColumnForDoltCommitDiff on Column {
-  name
-  isPrimaryKey
-  type
-  sourceTable
-  constraints {
-    notNull
-  }
-}
-    `;
+    ${ColumnForDoltLookupFragmentDoc}
+${RowForDoltLookupFragmentDoc}`;
 export const SchemaItemFragmentDoc = gql`
     fragment SchemaItem on SchemaItem {
   name
@@ -2808,10 +2780,10 @@ export const DoltCellDiffDocument = gql`
     pkValues: $pkValues
     columnName: $columnName
   ) {
-    ...SqlSelectForDoltCellLookup
+    ...SqlSelectForDoltLookup
   }
 }
-    ${SqlSelectForDoltCellLookupFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useDoltCellDiffQuery__
@@ -2860,10 +2832,10 @@ export const DoltCellHistoryDocument = gql`
     pkValues: $pkValues
     columnName: $columnName
   ) {
-    ...SqlSelectForDoltCellLookup
+    ...SqlSelectForDoltLookup
   }
 }
-    ${SqlSelectForDoltCellLookupFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useDoltCellHistoryQuery__
@@ -2959,19 +2931,10 @@ export const DoltCommitDiffDocument = gql`
     excludedColumns: $excludedColumns
     type: $type
   ) {
-    queryString
-    columns {
-      ...ColumnForDoltCommitDiff
-    }
-    rows {
-      list {
-        ...RowForDoltCommitDiff
-      }
-    }
+    ...SqlSelectForDoltLookup
   }
 }
-    ${ColumnForDoltCommitDiffFragmentDoc}
-${RowForDoltCommitDiffFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useDoltCommitDiffQuery__

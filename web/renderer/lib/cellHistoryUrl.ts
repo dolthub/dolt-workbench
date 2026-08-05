@@ -1,4 +1,5 @@
 import { ColumnValueInput } from "@gen/graphql-types";
+import { listParam, strParam } from "@lib/queryParams";
 import { ParsedUrlQuery } from "querystring";
 
 export type CellHistoryContext = {
@@ -56,15 +57,4 @@ function decodePk(s: string): ColumnValueInput {
     column: decodeURIComponent(s.slice(0, i)),
     value: decodeURIComponent(s.slice(i + 1)),
   };
-}
-
-function strParam(raw: string | string[] | undefined): string | undefined {
-  if (typeof raw !== "string" || raw.length === 0) return undefined;
-  return raw;
-}
-
-function listParam(raw: string | string[] | undefined): string[] {
-  if (raw === undefined) return [];
-  const list = Array.isArray(raw) ? raw : [raw];
-  return list.filter(s => s.length > 0);
 }
