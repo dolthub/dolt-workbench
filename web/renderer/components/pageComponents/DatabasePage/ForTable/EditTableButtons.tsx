@@ -1,3 +1,4 @@
+import DeleteModal from "@components/DeleteModal";
 import DatabaseUploadStageLink from "@components/links/DatabaseUploadStageLink";
 import Link from "@components/links/Link";
 import { useApolloClient } from "@apollo/client";
@@ -6,12 +7,12 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import {
   ColumnValueInput,
+  DropTableMutation,
   useDropTableMutation,
   usePreviewInsertRowLazyQuery,
   useTagListQuery,
 } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
-import useMutation from "@hooks/useMutation";
 import {
   TableOptionalSchemaParams,
   UploadParamsWithOptions,
@@ -23,6 +24,7 @@ import { AiOutlineDelete } from "@react-icons/all-files/ai/AiOutlineDelete";
 import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
 import { ImTable2 } from "@react-icons/all-files/im/ImTable2";
 import { useRouter } from "next/router";
+import { useState } from "react";
 import OptionSquare from "./OptionSquare";
 import css from "./index.module.css";
 import { mapColTypeToFakeValue } from "./utils";
@@ -45,7 +47,7 @@ function Inner(props: InnerProps) {
   } = useSqlEditorContext();
   const { columns } = useDataTableContext();
   const [previewInsertRow] = usePreviewInsertRowLazyQuery();
-  const { mutateFn: dropTable } = useMutation({ hook: useDropTableMutation });
+  const [dropModalOpen, setDropModalOpen] = useState(false);
   const client = useApolloClient();
   const router = useRouter();
 
@@ -75,19 +77,17 @@ function Inner(props: InnerProps) {
     }
   };
 
-  const onDrop = async () => {
-    const res = await dropTable({ variables: props.params });
-    if (res.success && res.data?.dropTable) {
-      setExecutedQuery(res.data.dropTable.queryString, { isMutation: true });
-      client
-        .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
-        .catch(console.error);
-      const { href, as } = ref(props.params);
-      await router.push(href, as).catch(console.error);
-      setExecutionMessage(res.data.dropTable.executionMessage);
-    } else if (res.error) {
-      setError(res.error);
-    }
+  const onDropped = (data: DropTableMutation): undefined => {
+    setExecutedQuery(data.dropTable.queryString, { isMutation: true });
+    client
+      .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
+      .catch(console.error);
+    const { href, as } = ref(props.params);
+    router
+      .push(href, as)
+      .then(() => setExecutionMessage(data.dropTable.executionMessage))
+      .catch(console.error);
+    return undefined;
   };
 
   return (
@@ -141,13 +141,32 @@ function Inner(props: InnerProps) {
         />
       </div>
       <Button.Link
-        onClick={onDrop}
+        onClick={() => setDropModalOpen(true)}
         className={css.drop}
         disabled={props.refIsTag}
+        data-cy="drop-table-button"
         red
       >
         <AiOutlineDelete /> Drop Table
       </Button.Link>
+      <DeleteModal
+        isOpen={dropModalOpen}
+        setIsOpen={setDropModalOpen}
+        asset="table"
+        title="Drop Table"
+        btnText="Drop Table"
+        buttonDataCy="drop-table-confirm-button"
+        mutationProps={{
+          hook: useDropTableMutation,
+          variables: props.params,
+        }}
+        callback={onDropped}
+      >
+        <p>
+          Are you sure you want to drop table{" "}
+          <span className={css.tableName}>{props.params.tableName}</span>?
+        </p>
+      </DeleteModal>
       <Link {...table(props.params)}>
         <Button.Link underlined className={css.cancel}>
           Cancel

@@ -48,12 +48,17 @@ export function isReadOnlyDatabaseRevisionError(err: ApolloErrorType): boolean {
   return !!err?.message.match(/Database .+\/.+ is read-only./g);
 }
 
+const readOnlyRevisionHint = `You may see this error if a tag is selected from the left branch/tag dropdown. Please select a branch to make changes to this database.`;
+
 export function improveGqlError(err: ApolloErrorType): ApolloErrorType {
   if (!err) return err;
-  if (isReadOnlyDatabaseRevisionError(err)) {
+  if (
+    isReadOnlyDatabaseRevisionError(err) &&
+    !err.message.includes(readOnlyRevisionHint)
+  ) {
     // eslint-disable-next-line no-param-reassign
     err.message = `${err.message}
-You may see this error if a tag is selected from the left branch/tag dropdown. Please select a branch to make changes to this database.`;
+${readOnlyRevisionHint}`;
   }
   return err;
 }

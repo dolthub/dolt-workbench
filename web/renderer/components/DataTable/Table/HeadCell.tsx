@@ -2,6 +2,7 @@ import ChangeColumnStatusButton from "@components/CellButtons/ChangeColumnStatus
 import DropColumnButton from "@components/CellButtons/DropColumnButton";
 import HideColumnButton from "@components/CellButtons/HideColumnButton";
 import SortButton from "@components/CellButtons/SortButton";
+import { useDataTableContext } from "@contexts/dataTable";
 import { CellDropdown } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { isLongContentType } from "@lib/dataTable";
@@ -32,11 +33,13 @@ export default function HeadCell({
   setColumnStatus,
   idx,
 }: Props) {
+  const { tableShape } = useDataTableContext();
   const [showDropdown, setShowDropdown] = useState(false);
   const showCollapseCellButton = isLongContentType(col.type, col.name);
   const dataCy = `${isMobile ? "mobile" : "desktop"}-db-data-table-column-${col.name}`;
   const dataCyDropDown = `${dataCy}-dropdown`;
   const dataCyDropDownSortButton = `${dataCyDropDown}-sort`;
+  const showDropdownButton = tableShape || showCollapseCellButton;
   return (
     <th
       className={cx(css.cell, {
@@ -46,31 +49,33 @@ export default function HeadCell({
     >
       {col.name}
       {col.isPrimaryKey && <FiKey className={css.key} />}
-      <CellDropdown
-        showDropdown={showDropdown}
-        setShowDropdown={setShowDropdown}
-        buttonClassName={css.menu}
-        data-cy={dataCyDropDown}
-      >
-        <SortButton dir="ASC" col={col} dataCy={dataCyDropDownSortButton} />
-        <SortButton dir="DESC" col={col} dataCy={dataCyDropDownSortButton} />
-        <SortButton col={col} dataCy={dataCyDropDownSortButton} />
-        <HideColumnButton col={col} columns={columns} />
-        {!col.isPrimaryKey && <DropColumnButton col={col} />}
-        {showCollapseCellButton && (
-          <ChangeColumnStatusButton
-            columnStatus={columnStatus}
-            setColumnStatus={setColumnStatus}
-            setShowDropdown={setShowDropdown}
-            index={idx}
-            newStatus={
-              columnStatus[idx] === CellStatusActionType.Expand
-                ? CellStatusActionType.Collapse
-                : CellStatusActionType.Expand
-            }
-          />
-        )}
-      </CellDropdown>
+      {showDropdownButton && (
+        <CellDropdown
+          showDropdown={showDropdown}
+          setShowDropdown={setShowDropdown}
+          buttonClassName={css.menu}
+          data-cy={dataCyDropDown}
+        >
+          <SortButton dir="ASC" col={col} dataCy={dataCyDropDownSortButton} />
+          <SortButton dir="DESC" col={col} dataCy={dataCyDropDownSortButton} />
+          <SortButton col={col} dataCy={dataCyDropDownSortButton} />
+          <HideColumnButton col={col} columns={columns} />
+          {!col.isPrimaryKey && <DropColumnButton col={col} />}
+          {showCollapseCellButton && (
+            <ChangeColumnStatusButton
+              columnStatus={columnStatus}
+              setColumnStatus={setColumnStatus}
+              setShowDropdown={setShowDropdown}
+              index={idx}
+              newStatus={
+                columnStatus[idx] === CellStatusActionType.Expand
+                  ? CellStatusActionType.Collapse
+                  : CellStatusActionType.Expand
+              }
+            />
+          )}
+        </CellDropdown>
+      )}
     </th>
   );
 }
