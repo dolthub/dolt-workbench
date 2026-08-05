@@ -15,6 +15,7 @@ export type ExecuteProps = OptionalRefParams & {
 export type SqlEditorContextType = {
   editorString: string;
   setEditorString: (s: string) => void;
+  setExecutedQuery: (query: string, opts?: { isMutation?: boolean }) => void;
   showSqlEditor: boolean;
   toggleSqlEditor: (s?: boolean) => void;
   executeQuery: (p: ExecuteProps) => Promise<void>;

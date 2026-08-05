@@ -18,7 +18,7 @@ type Props = {
 };
 
 export default function DropColumnButton({ col, refName }: Props) {
-  const { setEditorString, setError, setExecutionMessage } =
+  const { setExecutedQuery, setError, setExecutionMessage } =
     useSqlEditorContext();
   const { params } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
@@ -41,7 +41,7 @@ export default function DropColumnButton({ col, refName }: Props) {
       },
     });
     if (res.success && res.data?.dropColumn) {
-      setEditorString(res.data.dropColumn.queryString);
+      setExecutedQuery(res.data.dropColumn.queryString, { isMutation: true });
       setExecutionMessage(res.data.dropColumn.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)

@@ -20,7 +20,7 @@ const ALL_COMMITS = "allCommits";
 
 export default function HistoryTable(props: Props) {
   const router = useRouter();
-  const { setEditorString } = useSqlEditorContext();
+  const { setExecutedQuery } = useSqlEditorContext();
   const allCommits = router.query.historyMode === ALL_COMMITS;
 
   const ctx = useMemo(
@@ -57,8 +57,8 @@ export default function HistoryTable(props: Props) {
     : diffRes.data?.doltCellDiff;
 
   useEffect(() => {
-    if (data?.queryString) setEditorString(data.queryString);
-  }, [data?.queryString, setEditorString]);
+    if (data?.queryString) setExecutedQuery(data.queryString);
+  }, [data?.queryString, setExecutedQuery]);
 
   if (!ctx) {
     return (

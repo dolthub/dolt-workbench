@@ -36,8 +36,13 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
-  const { setEditorString, setError, setExecutionMessage, toggleSqlEditor } =
-    useSqlEditorContext();
+  const {
+    setEditorString,
+    setExecutedQuery,
+    setError,
+    setExecutionMessage,
+    toggleSqlEditor,
+  } = useSqlEditorContext();
   const { columns } = useDataTableContext();
   const [previewInsertRow] = usePreviewInsertRowLazyQuery();
   const { mutateFn: dropTable } = useMutation({ hook: useDropTableMutation });
@@ -73,7 +78,7 @@ function Inner(props: InnerProps) {
   const onDrop = async () => {
     const res = await dropTable({ variables: props.params });
     if (res.success && res.data?.dropTable) {
-      setEditorString(res.data.dropTable.queryString);
+      setExecutedQuery(res.data.dropTable.queryString, { isMutation: true });
       setExecutionMessage(res.data.dropTable.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
