@@ -1,3 +1,4 @@
+import { NetworkStatus } from "@apollo/client";
 import { Loader } from "@dolthub/react-components";
 import { useRefPageQuery } from "@gen/graphql-types";
 import { RefOptionalSchemaParams } from "@lib/params";
@@ -10,13 +11,23 @@ type Props = {
 };
 
 export default function ForRef({ params }: Props) {
-  const { data, error, loading } = useRefPageQuery({
-    variables: { ...params, filterSystemTables: true },
+  const res = useRefPageQuery({
+    variables: {
+      databaseName: params.databaseName,
+      refName: params.refName,
+      schemaName: params.schemaName,
+      filterSystemTables: true,
+    },
   });
+  const data =
+    res.data ??
+    (res.networkStatus === NetworkStatus.refetch
+      ? res.previousData
+      : undefined);
 
-  if (loading) return <Loader loaded={!loading} />;
+  if (res.loading && !data) return <Loader loaded={false} />;
 
-  if (error) return <ForError error={error} params={params} />;
+  if (res.error) return <ForError error={res.error} params={params} />;
 
   if (!data?.tableNames.list.length) return <ForEmpty params={params} />;
 
