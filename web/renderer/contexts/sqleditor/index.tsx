@@ -81,9 +81,8 @@ export function SqlEditorProvider(props: Props) {
         active: executeProps.expandedSection,
       });
       router.push(href, as).catch(console.error);
-      recordQuery(props.params.databaseName, executeProps.query);
     },
-    [router, setErr, props.params.databaseName],
+    [router, setErr],
   );
 
   const executeQuery = useCallback(
@@ -92,6 +91,7 @@ export function SqlEditorProvider(props: Props) {
         setErr(new Error("Cannot run select query without ref"));
         return;
       }
+      recordQuery(props.params.databaseName, executeProps.query);
       if (queryIsRecentMutation(executeProps.query)) {
         handleQuery(executeProps);
         return;
@@ -107,7 +107,7 @@ export function SqlEditorProvider(props: Props) {
             databaseName: executeProps.databaseName,
             refName: executeProps.refName,
             queryString: executeProps.query,
-            schemaName: executeProps.schemaName,
+            schemaName: executeProps.schemaName || undefined,
           },
           fetchPolicy: "network-only",
         });
@@ -129,7 +129,13 @@ export function SqlEditorProvider(props: Props) {
         setLoading(false);
       }
     },
-    [client, handleQuery, queryIsRecentMutation, setErr],
+    [
+      client,
+      handleQuery,
+      queryIsRecentMutation,
+      setErr,
+      props.params.databaseName,
+    ],
   );
 
   const setExecutedQuery = useCallback(
