@@ -109,6 +109,43 @@ function Query(props: Props & { forceNetworkRun?: boolean }) {
   );
 }
 
+function RecentMutation(props: Props & { runAgain: () => void }) {
+  const { executionMessage } = useSqlEditorContext();
+  const { setIsMutation } = useDataTableContext();
+  useEffect(() => {
+    setIsMutation(true);
+  }, [setIsMutation]);
+
+  return (
+    <>
+      <DataTableLayout params={props.params}>
+        <InnerDataTable
+          rows={[]}
+          columns={[]}
+          loadMore={async () => {}}
+          hasMore={false}
+          message={
+            <>
+              <SqlMessage
+                params={props.params}
+                executionMessage={executionMessage}
+                executionStatus={QueryExecutionStatus.Success}
+                isMutation
+                rowsLen={0}
+              />
+              <div className={css.queryRunMsg}>
+                Warning: You recently ran this query. Are you sure you want to
+                run it again? <Button onClick={props.runAgain}>Yes</Button>
+              </div>
+            </>
+          }
+        />
+      </DataTableLayout>
+      <WorkingDiff {...props} />
+    </>
+  );
+}
+
 export default function SqlDataTable(props: Props) {
   const { queryIsRecentMutation } = useSessionQueryHistory(
     props.params.databaseName,
@@ -117,13 +154,7 @@ export default function SqlDataTable(props: Props) {
 
   if (queryIsRecentMutation(props.params.q) && !runQueryAnyway) {
     return (
-      <div>
-        <div className={css.queryRunMsg}>
-          Warning: You recently ran this query. Are you sure you want to run it
-          again? <Button onClick={() => setRunQueryAnyway(true)}>Yes</Button>
-        </div>
-        <WorkingDiff {...props} />
-      </div>
+      <RecentMutation {...props} runAgain={() => setRunQueryAnyway(true)} />
     );
   }
 
