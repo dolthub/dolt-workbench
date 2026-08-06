@@ -126,13 +126,15 @@ function RecentMutation(props: Props & { runAgain: () => void }) {
           hasMore={false}
           message={
             <>
-              <SqlMessage
-                params={props.params}
-                executionMessage={executionMessage}
-                executionStatus={QueryExecutionStatus.Success}
-                isMutation
-                rowsLen={0}
-              />
+              {executionMessage && (
+                <SqlMessage
+                  params={props.params}
+                  executionMessage={executionMessage}
+                  executionStatus={QueryExecutionStatus.Success}
+                  isMutation
+                  rowsLen={0}
+                />
+              )}
               <div className={css.queryRunMsg}>
                 Warning: You recently ran this query. Are you sure you want to
                 run it again? <Button onClick={props.runAgain}>Yes</Button>
