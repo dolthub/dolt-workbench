@@ -1397,10 +1397,6 @@ export type RowsForDoltProceduresQueryVariables = Exact<{
 
 export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
-export type RowForSchemaDefinitionFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
-
-export type ColumnForSchemaDefinitionFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
-
 export type SchemaDefinitionQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1410,7 +1406,7 @@ export type SchemaDefinitionQueryVariables = Exact<{
 }>;
 
 
-export type SchemaDefinitionQuery = { __typename?: 'Query', schemaDefinition: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type SchemaDefinitionQuery = { __typename?: 'Query', schemaDefinition: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type CommitForDiffSelectorFragment = { __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
@@ -2134,30 +2130,6 @@ export const SchemaItemFragmentDoc = gql`
     fragment SchemaItem on SchemaItem {
   name
   type
-}
-    `;
-export const RowForSchemaDefinitionFragmentDoc = gql`
-    fragment RowForSchemaDefinition on Row {
-  columnValues {
-    displayValue
-  }
-  diff {
-    diffColumnNames
-    diffColumnValues {
-      displayValue
-    }
-  }
-}
-    `;
-export const ColumnForSchemaDefinitionFragmentDoc = gql`
-    fragment ColumnForSchemaDefinition on Column {
-  name
-  isPrimaryKey
-  type
-  sourceTable
-  constraints {
-    notNull
-  }
 }
     `;
 export const CommitForDiffSelectorFragmentDoc = gql`
@@ -3562,19 +3534,10 @@ export const SchemaDefinitionDocument = gql`
     name: $name
     kind: $kind
   ) {
-    queryString
-    columns {
-      ...ColumnForSchemaDefinition
-    }
-    rows {
-      list {
-        ...RowForSchemaDefinition
-      }
-    }
+    ...SqlSelectForDoltLookup
   }
 }
-    ${ColumnForSchemaDefinitionFragmentDoc}
-${RowForSchemaDefinitionFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useSchemaDefinitionQuery__
