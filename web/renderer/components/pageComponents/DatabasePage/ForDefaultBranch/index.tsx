@@ -1,6 +1,7 @@
+import { NetworkStatus } from "@apollo/client";
 import { Loader } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
-import { OptionalRefParams, RefParams } from "@lib/params";
+import { OptionalRefAndSchemaParams, RefParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { ReactNode, cloneElement } from "react";
 import ForEmpty from "../ForEmpty";
@@ -9,7 +10,7 @@ import ForTable from "../ForTable";
 import DatabasePage from "../component";
 
 type Props = {
-  params: OptionalRefParams;
+  params: OptionalRefAndSchemaParams;
   title?: string;
   hideDefaultTable?: boolean;
   initialTabIndex?: number;
@@ -29,13 +30,23 @@ export default function ForDefaultBranch({
   hideDefaultTable = false,
   ...props
 }: Props) {
-  const { data, loading, error } = useDefaultBranchPageQuery({
-    variables: { ...params, filterSystemTables: true },
+  const res = useDefaultBranchPageQuery({
+    variables: {
+      databaseName: params.databaseName,
+      schemaName: params.schemaName,
+      filterSystemTables: true,
+    },
   });
-  if (loading) return <Loader loaded={false} />;
+  const data =
+    res.data ??
+    (res.networkStatus === NetworkStatus.refetch
+      ? res.previousData
+      : undefined);
 
-  if (error) {
-    return <ForError {...props} error={error} params={params} />;
+  if (res.loading && !data) return <Loader loaded={false} />;
+
+  if (res.error) {
+    return <ForError {...props} error={res.error} params={params} />;
   }
   const defaultBranch = data?.defaultBranch;
   const branchName = defaultBranch?.branchName;

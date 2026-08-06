@@ -7,6 +7,7 @@ type ReturnType = {
   disableDoltFeature: boolean;
   hideDoltFeature: boolean;
   loading: boolean;
+  hasData: boolean;
   error?: ApolloErrorType;
 };
 
@@ -23,6 +24,7 @@ export default function useDatabaseDetails(): ReturnType {
     disableDoltFeature: !isDolt && !hideDolt,
     hideDoltFeature: !isDolt && hideDolt,
     loading: res.loading,
+    hasData: !!res.data,
     error: res.error,
   };
 }

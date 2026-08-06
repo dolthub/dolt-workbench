@@ -41,14 +41,14 @@ export default function useCallProcedure(
       setExecutedQuery(res.data.callProcedure.queryString, {
         isMutation: true,
       });
-      setExecutionMessage(res.data.callProcedure.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
       const { href, as } = ref(params).withQuery({
         executedSql: res.data.callProcedure.queryString,
       });
-      router.push(href, as).catch(console.error);
+      await router.push(href, as).catch(console.error);
+      setExecutionMessage(res.data.callProcedure.executionMessage);
       return { success: true };
     }
     if (res.error) {

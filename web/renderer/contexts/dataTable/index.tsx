@@ -88,10 +88,16 @@ function ProviderForTableName(props: TableProps) {
   const hideParam = router.query.hide;
   const projectionParam = router.query.projection;
 
+  const { databaseName, refName, tableName, schemaName } = props.params;
+  const queryParams = useMemo(() => {
+    return { databaseName, refName, tableName, schemaName };
+  }, [databaseName, refName, tableName, schemaName]);
+
   const tableRes = useDataTableQuery({
-    variables: props.params,
+    variables: queryParams,
   });
-  const tableColumns = tableRes.data?.table.columns;
+  const [table, setTable] = useState(tableRes.data?.table);
+  const tableColumns = table?.columns;
 
   const stack = useMemo(
     () => parseStackingParams(router.query, tableColumns ?? []),
@@ -107,7 +113,7 @@ function ProviderForTableName(props: TableProps) {
 
   const selectTableRowsRes = useSelectTableRowsForDataTableQuery({
     variables: {
-      ...props.params,
+      ...queryParams,
       orderBy: stack.orderBy,
       where: stack.where,
       excludePks: stack.excludePks,
@@ -124,11 +130,11 @@ function ProviderForTableName(props: TableProps) {
   }, [hasStacking, stackedQueryString, props.params.databaseName]);
 
   const rowWithDiffRes = useRowsForDataTableQuery({
-    variables: { ...props.params, withDiff: true },
+    variables: { ...queryParams, withDiff: true },
   });
 
   const diffOnlyRes = useWorkingDiffRowsForDataTableQuery({
-    variables: props.params,
+    variables: queryParams,
   });
 
   const [rows, setRows] = useState(
@@ -156,20 +162,26 @@ function ProviderForTableName(props: TableProps) {
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
 
   useEffect(() => {
-    setRows(
-      hasStacking
-        ? selectTableRowsRes.data?.selectTableRows.rows.list
-        : (rowWithDiffRes.data?.rows.list ??
-            selectTableRowsRes.data?.selectTableRows.rows.list),
-    );
+    if (!tableRes.data?.table) return;
+    setTable(tableRes.data.table);
+  }, [tableRes.data]);
+
+  useEffect(() => {
+    const next = hasStacking
+      ? selectTableRowsRes.data?.selectTableRows.rows.list
+      : (rowWithDiffRes.data?.rows.list ??
+        selectTableRowsRes.data?.selectTableRows.rows.list);
+    if (!next) return;
+    setRows(next);
     setOffset(selectTableRowsRes.data?.selectTableRows.rows.nextOffset);
     // Stale lastOffset would falsely disable pagination after a query change.
     setLastOffset(undefined);
   }, [selectTableRowsRes.data, rowWithDiffRes.data, hasStacking]);
 
   useEffect(() => {
-    setWorkingDiffRows(diffOnlyRes.data?.workingDiffRows.list);
-    setDiffQueryOffset(diffOnlyRes.data?.workingDiffRows.nextOffset);
+    if (!diffOnlyRes.data) return;
+    setWorkingDiffRows(diffOnlyRes.data.workingDiffRows.list);
+    setDiffQueryOffset(diffOnlyRes.data.workingDiffRows.nextOffset);
   }, [diffOnlyRes.data]);
 
   const loadMore = useCallback(async () => {
@@ -183,7 +195,7 @@ function ProviderForTableName(props: TableProps) {
     >({
       query: SelectTableRowsForDataTableDocument,
       variables: {
-        ...props.params,
+        ...queryParams,
         orderBy: stack.orderBy,
         where: stack.where,
         excludePks: stack.excludePks,
@@ -207,7 +219,7 @@ function ProviderForTableName(props: TableProps) {
     >({
       query: RowsForDataTableQueryDocument,
       variables: {
-        ...props.params,
+        ...queryParams,
         offset,
         withDiff: true,
       },
@@ -225,7 +237,7 @@ function ProviderForTableName(props: TableProps) {
     });
   }, [
     offset,
-    props.params,
+    queryParams,
     selectTableRowsRes.client,
     rowWithDiffRes.client,
     rows,
@@ -244,7 +256,7 @@ function ProviderForTableName(props: TableProps) {
     >({
       query: WorkingDiffRowsForDataTableQueryDocument,
       variables: {
-        ...props.params,
+        ...queryParams,
         offset: diffQueryOffset,
       },
     });
@@ -256,15 +268,15 @@ function ProviderForTableName(props: TableProps) {
       (prevWorkingDiffRows ?? []).concat(newWorkingDiffRows),
     );
     setDiffQueryOffset(newDiffQueryOffset);
-  }, [diffQueryOffset, props.params, diffOnlyRes.client]);
+  }, [diffQueryOffset, queryParams, diffOnlyRes.client]);
 
   const onAddEmptyRow = () => {
-    const emptyRow = generateEmptyRow(tableRes.data?.table.columns ?? []);
+    const emptyRow = generateEmptyRow(table?.columns ?? []);
     setPendingRow(emptyRow);
   };
 
   // Align columns with columnValues; Row.tsx returns null on length mismatch.
-  const allColumns = tableRes.data?.table.columns;
+  const allColumns = table?.columns;
   const visibleColumns = useMemo(() => {
     if (!allColumns) return allColumns;
     if (!stack.projection || stack.projection.length === 0) return allColumns;
@@ -289,7 +301,7 @@ function ProviderForTableName(props: TableProps) {
         diffQueryOffset !== null &&
         diffQueryOffset !== lastDiffQueryOffset,
       columns: visibleColumns,
-      foreignKeys: tableRes.data?.table.foreignKeys,
+      foreignKeys: table?.foreignKeys,
       error: tableRes.error ?? selectTableRowsRes.error,
       errorWorkingDiff: tableRes.error ?? diffOnlyRes.error,
       showingWorkingDiff: false,
@@ -325,7 +337,7 @@ function ProviderForTableName(props: TableProps) {
     rows,
     workingDiffRows,
     visibleColumns,
-    tableRes.data?.table.foreignKeys,
+    table?.foreignKeys,
     tableRes.error,
     tableRes.loading,
     props.tableNames,
@@ -382,6 +394,7 @@ export function DataTableProvider({ params, children }: Props) {
 
   return (
     <ProviderForTableName
+      key={`${params.databaseName}/${params.refName}/${params.schemaName ?? ""}/${params.tableName}`}
       params={params}
       tableNames={tableNames}
       tableShape={tableShape}
