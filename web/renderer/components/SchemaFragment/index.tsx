@@ -119,6 +119,5 @@ function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
   if (isPostgres) return 0;
   if (kind === SchemaType.Table || kind === SchemaType.View) return 1;
   if (kind === SchemaType.Trigger || kind === SchemaType.Procedure) return 2;
-  if (kind === SchemaType.Event) return 3;
-  return 0;
+  return 3;
 }
