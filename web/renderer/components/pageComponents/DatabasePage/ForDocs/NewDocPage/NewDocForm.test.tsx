@@ -1,11 +1,13 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
 import { SqlEditorProvider } from "@contexts/sqleditor";
+import { DocType } from "@gen/graphql-types";
 import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
-import { screen } from "@testing-library/react";
-import { docsMock, markdown } from "../DocsPage/DocList/mocks";
+import { doc } from "@lib/urls";
+import { screen, waitFor } from "@testing-library/react";
+import { docsMock, markdown, saveDocMock } from "../DocsPage/DocList/mocks";
 import NewDocForm from "./NewDocForm";
 
 const dbParams = { databaseName: "test" };
@@ -32,7 +34,11 @@ describe("test NewDocForm", () => {
     useMockRouter(jestRouter, {});
     const { user } = setup(
       <MockedProvider
-        mocks={[docsMock(params, []), databaseDetailsMock(true, false)]}
+        mocks={[
+          docsMock(params, []),
+          databaseDetailsMock(true, false),
+          saveDocMock(params, DocType.Agent, markdown),
+        ]}
       >
         <SqlEditorProvider params={params}>
           <NewDocForm params={params} />
@@ -53,5 +59,8 @@ describe("test NewDocForm", () => {
     expect(button).toBeEnabled();
 
     await user.click(button);
+
+    const { href, as } = doc({ ...params, docName: "AGENT.md" });
+    await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });
 });

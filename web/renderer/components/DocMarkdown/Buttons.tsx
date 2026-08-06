@@ -24,13 +24,13 @@ type InnerProps = {
 
 function Inner(props: InnerProps) {
   const router = useRouter();
-  const { onSubmit, state } = useEditDoc(
+  const { onDelete, state } = useEditDoc(
     props.params,
     toDocType(props.params.docName),
   );
 
   const handleDelete = async (e: SyntheticEvent) => {
-    const result = await onSubmit(e);
+    const result = await onDelete(e);
     if (result.success) {
       const { href, as } = defaultDoc(props.params);
       router.push(href, as).catch(console.error);

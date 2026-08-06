@@ -134,6 +134,10 @@ export type SaveDocArgs = RefArgs & {
   markdown: string;
 };
 
+export type DeleteDocArgs = RefArgs & {
+  docName: string;
+};
+
 export type OrderByClause = {
   column: string;
   direction: "ASC" | "DESC";

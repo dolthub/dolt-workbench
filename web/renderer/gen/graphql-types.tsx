@@ -256,6 +256,7 @@ export type Mutation = {
   createTag: Scalars['String']['output'];
   createView: MutationResult;
   deleteBranch: Scalars['Boolean']['output'];
+  deleteDoc: MutationResult;
   deleteRemote: Scalars['Boolean']['output'];
   deleteRow: MutationResult;
   deleteTag: Scalars['Boolean']['output'];
@@ -351,6 +352,13 @@ export type MutationCreateViewArgs = {
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDocArgs = {
+  databaseName: Scalars['String']['input'];
+  docType: DocType;
+  refName: Scalars['String']['input'];
 };
 
 
@@ -2087,6 +2095,15 @@ export type SaveDocMutationVariables = Exact<{
 
 
 export type SaveDocMutation = { __typename?: 'Mutation', saveDoc: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
+
+export type DeleteDocMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  docType: DocType;
+}>;
+
+
+export type DeleteDocMutation = { __typename?: 'Mutation', deleteDoc: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -6217,6 +6234,43 @@ export function useSaveDocMutation(baseOptions?: Apollo.MutationHookOptions<Save
 export type SaveDocMutationHookResult = ReturnType<typeof useSaveDocMutation>;
 export type SaveDocMutationResult = Apollo.MutationResult<SaveDocMutation>;
 export type SaveDocMutationOptions = Apollo.BaseMutationOptions<SaveDocMutation, SaveDocMutationVariables>;
+export const DeleteDocDocument = gql`
+    mutation DeleteDoc($databaseName: String!, $refName: String!, $docType: DocType!) {
+  deleteDoc(databaseName: $databaseName, refName: $refName, docType: $docType) {
+    rowsAffected
+    queryString
+    executionMessage
+  }
+}
+    `;
+export type DeleteDocMutationFn = Apollo.MutationFunction<DeleteDocMutation, DeleteDocMutationVariables>;
+
+/**
+ * __useDeleteDocMutation__
+ *
+ * To run a mutation, you first call `useDeleteDocMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteDocMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteDocMutation, { data, loading, error }] = useDeleteDocMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      docType: // value for 'docType'
+ *   },
+ * });
+ */
+export function useDeleteDocMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDocMutation, DeleteDocMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteDocMutation, DeleteDocMutationVariables>(DeleteDocDocument, options);
+      }
+export type DeleteDocMutationHookResult = ReturnType<typeof useDeleteDocMutation>;
+export type DeleteDocMutationResult = Apollo.MutationResult<DeleteDocMutation>;
+export type DeleteDocMutationOptions = Apollo.BaseMutationOptions<DeleteDocMutation, DeleteDocMutationVariables>;
 export const TableNamesDocument = gql`
     query TableNames($databaseName: String!, $refName: String!, $schemaName: String, $filterSystemTables: Boolean) {
   tableNames(

@@ -5,7 +5,10 @@ import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import * as foreignKey from "../../indexes/foreignKey.model";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
-import { systemTableValues } from "../../systemTables/systemTable.enums";
+import {
+  DoltSystemTable,
+  systemTableValues,
+} from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
 import { handleTableNotFound } from "../../utils";
 import { buildDeleteRow } from "../build/buildDeleteRow";
@@ -758,21 +761,9 @@ export class DoltgresQueryFactory
   async saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult> {
     return this.queryQR(
       async qr => {
-        if (!args.markdown) {
-          const built = buildDeleteRow(qr.manager, "dolt_docs", [
-            { column: "doc_name", value: args.docName, type: "varchar" },
-          ]);
-          const result = await built.execute();
-          const rowsAffected = result.affected ?? 0;
-          return {
-            rowsAffected,
-            queryString: built.displaySql,
-            executionMessage: mutationExecutionMessage(rowsAffected),
-          };
-        }
         const built = buildSaveDoc(
           qr.manager,
-          "dolt_docs",
+          DoltSystemTable.DOCS,
           args.docName,
           args.markdown,
         );
@@ -781,6 +772,25 @@ export class DoltgresQueryFactory
           rowsAffected: 1,
           queryString: built.displaySql,
           executionMessage: mutationExecutionMessage(1),
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async deleteDoc(args: t.DeleteDocArgs): Promise<t.MutationResult> {
+    return this.queryQR(
+      async qr => {
+        const built = buildDeleteRow(qr.manager, DoltSystemTable.DOCS, [
+          { column: "doc_name", value: args.docName, type: "varchar" },
+        ]);
+        const result = await built.execute();
+        const rowsAffected = result.affected ?? 0;
+        return {
+          rowsAffected,
+          queryString: built.displaySql,
+          executionMessage: mutationExecutionMessage(rowsAffected),
         };
       },
       args.databaseName,

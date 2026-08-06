@@ -6,7 +6,10 @@ import * as index from "../../indexes/index.model";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
-import { systemTableValues } from "../../systemTables/systemTable.enums";
+import {
+  DoltSystemTable,
+  systemTableValues,
+} from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
 import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { buildDeleteRow } from "../build/buildDeleteRow";
@@ -738,21 +741,9 @@ export class DoltQueryFactory
   async saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult> {
     return this.queryForBuilder(
       async em => {
-        if (!args.markdown) {
-          const built = buildDeleteRow(em, "dolt_docs", [
-            { column: "doc_name", value: args.docName, type: "varchar" },
-          ]);
-          const result = await built.execute();
-          const rowsAffected = result.affected ?? 0;
-          return {
-            rowsAffected,
-            queryString: built.displaySql,
-            executionMessage: mutationExecutionMessage(rowsAffected),
-          };
-        }
         const built = buildSaveDoc(
           em,
-          "dolt_docs",
+          DoltSystemTable.DOCS,
           args.docName,
           args.markdown,
         );
@@ -761,6 +752,25 @@ export class DoltQueryFactory
           rowsAffected: 1,
           queryString: built.displaySql,
           executionMessage: mutationExecutionMessage(1),
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async deleteDoc(args: t.DeleteDocArgs): Promise<t.MutationResult> {
+    return this.queryForBuilder(
+      async em => {
+        const built = buildDeleteRow(em, DoltSystemTable.DOCS, [
+          { column: "doc_name", value: args.docName, type: "varchar" },
+        ]);
+        const result = await built.execute();
+        const rowsAffected = result.affected ?? 0;
+        return {
+          rowsAffected,
+          queryString: built.displaySql,
+          executionMessage: mutationExecutionMessage(rowsAffected),
         };
       },
       args.databaseName,

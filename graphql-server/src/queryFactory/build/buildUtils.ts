@@ -93,8 +93,6 @@ export function formatValueLiteral(
 
 const PLACEHOLDER_PATTERN = /\$\d+|\?/g;
 
-// Postgres placeholders are positional ($n) and may repeat when one param is
-// referenced twice; mysql's ? placeholders are strictly sequential.
 export function interpolateForDisplay(
   sql: string,
   params: string[],
@@ -102,7 +100,13 @@ export function interpolateForDisplay(
 ): string {
   let i = 0;
   return sql.replace(PLACEHOLDER_PATTERN, match => {
-    const idx = match === "?" ? i++ : parseInt(match.slice(1), 10) - 1;
+    let idx: number;
+    if (match === "?") {
+      idx = i;
+      i += 1;
+    } else {
+      idx = parseInt(match.slice(1), 10) - 1;
+    }
     return formatValueLiteral(params[idx], types[idx]?.type);
   });
 }
