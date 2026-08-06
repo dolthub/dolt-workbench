@@ -51,7 +51,10 @@ type ReturnType = {
   client: ApolloClient<any>;
 };
 
-export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
+export default function useSqlSelectRows(
+  params: SqlQueryParams,
+  forceNetworkRun?: boolean,
+): ReturnType {
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
     variables: {
       databaseName: params.databaseName,
@@ -59,7 +62,7 @@ export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
       queryString: params.q,
       schemaName: params.schemaName,
     },
-    fetchPolicy: "cache-and-network",
+    fetchPolicy: forceNetworkRun ? "network-only" : "cache-first",
   });
 
   const [state, setState] = useSetState(getDefaultState(data));

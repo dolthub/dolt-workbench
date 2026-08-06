@@ -2,14 +2,19 @@ import { ApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { useDataTableContext } from "@contexts/dataTable";
-import { Button, Loader } from "@dolthub/react-components";
+import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button, Loader, isTimeoutError } from "@dolthub/react-components";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
+import { QueryExecutionStatus } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
 import { useEffect, useState } from "react";
 import SqlMessage from "./SqlMessage";
-import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
+import {
+  improveGqlError,
+  isReadOnlyDatabaseRevisionError,
+} from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
 import css from "./index.module.css";
 import useSqlQuery from "./useSqlQuery";
@@ -31,9 +36,31 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   useSqlQuery(props.params, props.client, props.state.isMutation, props.error);
   const { setIsMutation } = useDataTableContext();
+  const { setError } = useSqlEditorContext();
   useEffect(() => {
     setIsMutation(props.state.isMutation);
   }, [props.state.isMutation, setIsMutation]);
+  useEffect(() => {
+    if (props.error) {
+      if (isTimeoutError(props.error.message) || props.error.message === "") {
+        return;
+      }
+      setError(improveGqlError(props.error));
+      return;
+    }
+    if (
+      props.state.executionStatus === QueryExecutionStatus.Error &&
+      props.state.executionMessage &&
+      !isTimeoutError(props.state.executionMessage)
+    ) {
+      setError(new Error(props.state.executionMessage));
+    }
+  }, [
+    props.error,
+    props.state.executionStatus,
+    props.state.executionMessage,
+    setError,
+  ]);
   const msg = (
     <SqlMessage
       params={props.params}
@@ -65,9 +92,9 @@ function Inner(props: InnerProps) {
   );
 }
 
-function Query(props: Props) {
+function Query(props: Props & { forceNetworkRun?: boolean }) {
   const { state, fetchMore, hasMore, loading, client, error } =
-    useSqlSelectRows(props.params);
+    useSqlSelectRows(props.params, props.forceNetworkRun);
 
   if (loading) return <Loader loaded={false} />;
 
@@ -101,5 +128,5 @@ export default function SqlDataTable(props: Props) {
     );
   }
 
-  return <Query {...props} />;
+  return <Query {...props} forceNetworkRun={runQueryAnyway} />;
 }
