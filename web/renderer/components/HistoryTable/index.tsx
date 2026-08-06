@@ -77,9 +77,8 @@ export default function HistoryTable(props: Props) {
 
   return (
     <>
-      <DataTableLayout params={props.params}>
+      <DataTableLayout params={{ ...props.params, q: data?.queryString ?? "" }}>
         <InnerDataTable
-          params={props.params}
           rows={data?.rows.list}
           columns={data?.columns}
           loadMore={async () => {}}

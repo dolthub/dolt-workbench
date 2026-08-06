@@ -57,7 +57,6 @@ export default function DefinitionView(props: Props) {
   return (
     <DataTableLayout params={props.params}>
       <InnerDataTable
-        params={props.params}
         rows={data?.rows.list}
         columns={data?.columns}
         loadMore={async () => {}}

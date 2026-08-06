@@ -75,7 +75,6 @@ function Inner(props: InnerProps) {
     <>
       <DataTableLayout params={props.params}>
         <InnerDataTable
-          params={props.params}
           rows={props.state.rows}
           columns={props.state.cols}
           loadMore={props.fetchMore}
