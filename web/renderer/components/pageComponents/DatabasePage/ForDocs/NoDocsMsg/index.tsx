@@ -3,6 +3,7 @@ import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button, CodeBlock } from "@dolthub/react-components";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import { callProcedure } from "@lib/callProcedure";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
 import css from "./index.module.css";
@@ -59,9 +60,10 @@ function AddFromWorkbench(props: Props) {
 
 function AddFromSQL() {
   const { isPostgres } = useDatabaseDetails();
-  const commitExample = isPostgres
-    ? "SELECT DOLT_COMMIT('-am', 'Add docs');"
-    : "CALL DOLT_COMMIT('-am', 'Add docs');";
+  const commitExample = callProcedure(isPostgres, "DOLT_COMMIT", [
+    "-am",
+    "Add docs",
+  ]);
   return (
     <>
       <h3>Adding a doc using SQL</h3>

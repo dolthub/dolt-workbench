@@ -1,10 +1,15 @@
 import { MockedProvider } from "@apollo/client/testing";
+import { SqlEditorProvider } from "@contexts/sqleditor";
 import { DocType } from "@gen/graphql-types";
-import useMockRouter from "@hooks/useMockRouter";
+import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
-import { getDoc } from "@pageComponents/DatabasePage/ForDocs/DocsPage/DocList/mocks";
-import { render, screen } from "@testing-library/react";
+import { defaultDoc } from "@lib/urls";
+import {
+  deleteDocMock,
+  getDoc,
+} from "@pageComponents/DatabasePage/ForDocs/DocsPage/DocList/mocks";
+import { render, screen, waitFor } from "@testing-library/react";
 import DocMarkdown from ".";
 
 const jestRouter = jest.spyOn(require("next/router"), "useRouter");
@@ -104,11 +109,13 @@ describe("test DocMarkdown", () => {
     useMockRouter(jestRouter, {});
     const docName = "README.md";
     const { user } = setup(
-      <MockedProvider>
-        <DocMarkdown
-          params={{ ...params, docName }}
-          rowData={getDoc(DocType.Readme)}
-        />
+      <MockedProvider mocks={[deleteDocMock(params, DocType.Readme)]}>
+        <SqlEditorProvider params={params}>
+          <DocMarkdown
+            params={{ ...params, docName }}
+            rowData={getDoc(DocType.Readme)}
+          />
+        </SqlEditorProvider>
       </MockedProvider>,
     );
 
@@ -120,5 +127,9 @@ describe("test DocMarkdown", () => {
 
     await user.click(screen.getByText("edit"));
     expect(screen.getByLabelText("markdown-editor")).toBeVisible();
+
+    await user.click(screen.getByText("delete"));
+    const { href, as } = defaultDoc(params);
+    await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });
 });

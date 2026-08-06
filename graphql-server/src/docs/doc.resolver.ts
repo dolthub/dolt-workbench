@@ -27,20 +27,15 @@ class SaveDocArgs extends RefArgs {
   markdown: string;
 }
 
+@ArgsType()
+class DeleteDocArgs extends RefArgs {
+  @Field(_type => DocType)
+  docType: DocType;
+}
+
 @Resolver(_of => Doc)
 export class DocsResolver {
   constructor(private readonly conn: ConnectionProvider) {}
-
-  @Mutation(_returns => MutationResult)
-  async saveDoc(@Args() args: SaveDocArgs): Promise<MutationResult> {
-    const conn = this.conn.connection();
-    return conn.saveDoc({
-      databaseName: args.databaseName,
-      refName: args.refName,
-      docName: args.docType,
-      markdown: args.markdown,
-    });
-  }
 
   @Query(_returns => DocList)
   async docs(
@@ -74,5 +69,26 @@ export class DocsResolver {
       d.doc_name === DocType.Readme ? -1 : 1,
     );
     return fromDoltDocsRow(args.refName, sortedDocs[0]);
+  }
+
+  @Mutation(_returns => MutationResult)
+  async saveDoc(@Args() args: SaveDocArgs): Promise<MutationResult> {
+    const conn = this.conn.connection();
+    return conn.saveDoc({
+      databaseName: args.databaseName,
+      refName: args.refName,
+      docName: args.docType,
+      markdown: args.markdown,
+    });
+  }
+
+  @Mutation(_returns => MutationResult)
+  async deleteDoc(@Args() args: DeleteDocArgs): Promise<MutationResult> {
+    const conn = this.conn.connection();
+    return conn.deleteDoc({
+      databaseName: args.databaseName,
+      refName: args.refName,
+      docName: args.docType,
+    });
   }
 }

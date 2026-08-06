@@ -61,9 +61,8 @@ export default function CommitDiffTable(props: Props) {
   if (res.loading) return <Loader loaded={false} />;
 
   return (
-    <DataTableLayout params={props.params}>
+    <DataTableLayout params={{ ...props.params, q: data?.queryString ?? "" }}>
       <InnerDataTable
-        params={props.params}
         rows={data?.rows.list}
         columns={data?.columns}
         loadMore={async () => {}}

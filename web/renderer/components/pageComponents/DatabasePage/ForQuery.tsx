@@ -6,6 +6,7 @@ import SqlDataTable from "@components/SqlDataTable";
 import QueryBreadcrumbs from "@components/breadcrumbs/QueryBreadcrumbs";
 import { DataTableProvider, useDataTableContext } from "@contexts/dataTable";
 import { SchemaType } from "@gen/graphql-types";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { parseDefinition } from "@lib/definitionUrl";
 import { RefParams, SqlQueryParams } from "@lib/params";
 import { ref, sqlQuery } from "@lib/urls";
@@ -19,6 +20,7 @@ type Props = {
 function Inner({ params }: Props) {
   const router = useRouter();
   const { isMutation } = useDataTableContext();
+  const { isPostgres } = useDatabaseDetails();
   const routeRefChangeTo = (p: RefParams) =>
     isMutation
       ? ref(p)
@@ -49,9 +51,12 @@ function Inner({ params }: Props) {
 
   const def = parseDefinition(router.query);
   if (def) {
+    const tabular =
+      isPostgres &&
+      (def.kind === SchemaType.Table || def.kind === SchemaType.Event);
     return (
       <DatabasePage {...commonProps}>
-        {def.kind === SchemaType.Table ? (
+        {tabular ? (
           <DefinitionView params={params} />
         ) : (
           <SchemaFragment params={params} />

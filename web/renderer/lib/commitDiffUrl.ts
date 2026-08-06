@@ -1,4 +1,5 @@
 import { CommitDiffType } from "@gen/graphql-types";
+import { listParam, strParam } from "@lib/queryParams";
 import { ParsedUrlQuery } from "querystring";
 
 export type CommitDiffContext = {
@@ -64,15 +65,4 @@ function parseType(
   if (raw === CommitDiffType.TwoDot) return CommitDiffType.TwoDot;
   if (raw === CommitDiffType.ThreeDot) return CommitDiffType.ThreeDot;
   return undefined;
-}
-
-function strParam(raw: string | string[] | undefined): string | undefined {
-  if (typeof raw !== "string" || raw.length === 0) return undefined;
-  return raw;
-}
-
-function listParam(raw: string | string[] | undefined): string[] {
-  if (raw === undefined) return [];
-  const list = Array.isArray(raw) ? raw : [raw];
-  return list.filter(s => s.length > 0);
 }

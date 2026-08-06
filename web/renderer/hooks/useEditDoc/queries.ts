@@ -19,3 +19,21 @@ export const SAVE_DOC = gql`
     }
   }
 `;
+
+export const DELETE_DOC = gql`
+  mutation DeleteDoc(
+    $databaseName: String!
+    $refName: String!
+    $docType: DocType!
+  ) {
+    deleteDoc(
+      databaseName: $databaseName
+      refName: $refName
+      docType: $docType
+    ) {
+      rowsAffected
+      queryString
+      executionMessage
+    }
+  }
+`;

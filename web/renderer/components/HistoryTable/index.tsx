@@ -16,12 +16,10 @@ type Props = {
   params: SqlQueryParams;
 };
 
-const ALL_COMMITS = "allCommits";
-
 export default function HistoryTable(props: Props) {
   const router = useRouter();
   const { setExecutedQuery } = useSqlEditorContext();
-  const allCommits = router.query.historyMode === ALL_COMMITS;
+  const allCommits = router.query.historyAll === "1";
 
   const ctx = useMemo(
     () => parseCellHistory(router.query),
@@ -73,15 +71,14 @@ export default function HistoryTable(props: Props) {
 
   const forRow = !ctx.columnName;
   const onSeeAllClick = async () => {
-    const nextQuery = { ...router.query, historyMode: ALL_COMMITS };
+    const nextQuery = { ...router.query, historyAll: "1" };
     await router.push({ pathname: router.pathname, query: nextQuery });
   };
 
   return (
     <>
-      <DataTableLayout params={props.params}>
+      <DataTableLayout params={{ ...props.params, q: data?.queryString ?? "" }}>
         <InnerDataTable
-          params={props.params}
           rows={data?.rows.list}
           columns={data?.columns}
           loadMore={async () => {}}

@@ -35,9 +35,9 @@ type InnerProps = Props & {
 function Inner({ rows, params, fragIdx, isView, name }: InnerProps) {
   const { isMobile } = useReactiveWidth(1024);
 
-  if (!rows.length) return <ErrorMsg errString="View not found" />;
+  if (!rows.length) return <ErrorMsg errString="Definition not found" />;
   if (rows.length > 1) {
-    return <ErrorMsg errString="Found two views with the same name" />;
+    return <ErrorMsg errString="Found two definitions with the same name" />;
   }
 
   const fragment = rows[0].columnValues[fragIdx]?.displayValue ?? "";
@@ -100,7 +100,9 @@ export default function SchemaFragment(props: Props) {
   }, [data?.queryString, setEditorString]);
 
   if (!ctx) return <ErrorMsg errString="Definition not found" />;
-  if (res.loading || !data) return <Loader loaded={false} />;
+  if (res.loading) return <Loader loaded={false} />;
+  if (res.error) return <ErrorMsg err={res.error} />;
+  if (!data) return <ErrorMsg errString="Definition not found" />;
 
   return (
     <Inner
@@ -115,8 +117,7 @@ export default function SchemaFragment(props: Props) {
 
 function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
   if (isPostgres) return 0;
-  if (kind === SchemaType.View) return 1;
+  if (kind === SchemaType.Table || kind === SchemaType.View) return 1;
   if (kind === SchemaType.Trigger || kind === SchemaType.Procedure) return 2;
-  if (kind === SchemaType.Event) return 3;
-  return 0;
+  return 3;
 }

@@ -1,4 +1,5 @@
 import { ColumnValueInput } from "@gen/graphql-types";
+import { listParam, strParam } from "@lib/queryParams";
 import { ParsedUrlQuery } from "querystring";
 
 export type CellHistoryContext = {
@@ -28,7 +29,8 @@ export function encodeCellHistory(ctx: CellHistoryContext): CellHistoryQuery {
     [KEYS.schema]: ctx.schemaName,
     [KEYS.pk]: ctx.pkValues.length
       ? ctx.pkValues.map(
-          pk => `${pk.column}.${encodeURIComponent(pk.value ?? "")}`,
+          pk =>
+            `${encodeURIComponent(pk.column)}:${encodeURIComponent(pk.value ?? "")}`,
         )
       : undefined,
     [KEYS.cell]: ctx.columnName,
@@ -49,21 +51,10 @@ export function parseCellHistory(
 }
 
 function decodePk(s: string): ColumnValueInput {
-  const i = s.indexOf(".");
-  if (i === -1) return { column: s, value: "" };
+  const i = s.indexOf(":");
+  if (i === -1) return { column: decodeURIComponent(s), value: "" };
   return {
-    column: s.slice(0, i),
+    column: decodeURIComponent(s.slice(0, i)),
     value: decodeURIComponent(s.slice(i + 1)),
   };
-}
-
-function strParam(raw: string | string[] | undefined): string | undefined {
-  if (typeof raw !== "string" || raw.length === 0) return undefined;
-  return raw;
-}
-
-function listParam(raw: string | string[] | undefined): string[] {
-  if (raw === undefined) return [];
-  const list = Array.isArray(raw) ? raw : [raw];
-  return list.filter(s => s.length > 0);
 }

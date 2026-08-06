@@ -99,11 +99,15 @@ export function interpolateForDisplay(
   types: Array<{ type?: string }>,
 ): string {
   let i = 0;
-  return sql.replace(PLACEHOLDER_PATTERN, () => {
-    const value = params[i];
-    const type = types[i]?.type;
-    i += 1;
-    return formatValueLiteral(value, type);
+  return sql.replace(PLACEHOLDER_PATTERN, match => {
+    let idx: number;
+    if (match === "?") {
+      idx = i;
+      i += 1;
+    } else {
+      idx = parseInt(match.slice(1), 10) - 1;
+    }
+    return formatValueLiteral(params[idx], types[idx]?.type);
   });
 }
 

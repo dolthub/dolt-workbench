@@ -57,7 +57,10 @@ describe("tests Views", () => {
         name: new RegExp(`^${escaped}$`),
       });
       const route = table({ ...mocks.params, tableName: mock.name });
-      expect(link).toHaveAttribute("href", route.asPathname());
+      expect(link).toHaveAttribute(
+        "href",
+        `${route.asPathname()}?active=Views`,
+      );
     });
   });
 });
