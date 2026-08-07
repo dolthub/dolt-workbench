@@ -61,17 +61,18 @@ async function renderAndTestComponent(
   expect(await screen.findByText("Create View")).toBeInTheDocument();
   expect(screen.getByText("Copy")).toBeInTheDocument();
   const button = screen.getByText("Copy");
-  window.prompt = jest.fn();
+  const writeText = jest.fn().mockResolvedValue(undefined);
+  Object.defineProperty(window.navigator, "clipboard", {
+    value: { writeText },
+    configurable: true,
+  });
 
   expect(button).toHaveTextContent("Copy");
 
   await user.click(button);
 
   expect(button).toHaveTextContent("Copied");
-  expect(window.prompt).toHaveBeenCalledWith(
-    "Copy to clipboard: Ctrl+C, Enter",
-    expectedCopiedQuery,
-  );
+  expect(writeText).toHaveBeenCalledWith(expectedCopiedQuery);
 }
 
 describe("test DatabaseTableHeader", () => {

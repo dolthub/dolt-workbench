@@ -1,5 +1,5 @@
 import { excerpt } from "@dolthub/web-utils";
-import { FiKey } from "@react-icons/all-files/fi/FiKey";
+import { FiKey } from "react-icons/fi";
 import { Handle, Position } from "reactflow";
 import css from "./index.module.css";
 import { NodeData } from "./types";

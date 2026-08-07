@@ -12,7 +12,7 @@ import {
 } from "@gen/graphql-types";
 import useSqlBuilder from "@hooks/useSqlBuilder";
 import { SqlQueryParams } from "@lib/params";
-import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
+import { MdPlayCircleOutline } from "react-icons/md";
 import dynamic from "next/dynamic";
 import css from "./index.module.css";
 import { getSchemaInfo } from "./util";

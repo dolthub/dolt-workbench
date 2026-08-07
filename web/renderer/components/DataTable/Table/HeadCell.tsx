@@ -10,7 +10,7 @@ import {
   ColumnStatus,
   SetColumnStatus,
 } from "@lib/tableTypes";
-import { FiKey } from "@react-icons/all-files/fi/FiKey";
+import { FiKey } from "react-icons/fi";
 import cx from "classnames";
 import { useState } from "react";
 import css from "./index.module.css";

@@ -17,9 +17,8 @@ import {
 } from "@gen/graphql-types";
 import { getBitDisplayValue, isLongContentType } from "@lib/dataTable";
 import { CellStatusActionType, ColumnStatus } from "@lib/tableTypes";
-import { IoReturnDownForwardSharp } from "@react-icons/all-files/io5/IoReturnDownForwardSharp";
-import { MdKeyboardTab } from "@react-icons/all-files/md/MdKeyboardTab";
-import { MdSpaceBar } from "@react-icons/all-files/md/MdSpaceBar";
+import { IoReturnDownForwardSharp } from "react-icons/io5";
+import { MdKeyboardTab, MdSpaceBar } from "react-icons/md";
 import cx from "classnames";
 import { useEffect, useState } from "react";
 import css from "./index.module.css";

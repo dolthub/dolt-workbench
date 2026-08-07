@@ -2,7 +2,7 @@ import { ToolUseContentBlock, useAgentContext } from "@contexts/agent";
 import { Button } from "@dolthub/react-components";
 import cx from "classnames";
 import { useEffect, useRef, useState } from "react";
-import { FaStopCircle } from "@react-icons/all-files/fa/FaStopCircle";
+import { FaStopCircle } from "react-icons/fa";
 import css from "./index.module.css";
 
 type Props = {

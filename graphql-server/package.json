@@ -30,7 +30,7 @@
   "dependencies": {
     "@apollo/server": "^5.5.0",
     "@as-integrations/express5": "^1.1.2",
-    "@dolthub/web-utils": "^0.3.0",
+    "@dolthub/web-utils": "^0.3.1",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/common": "^11.1.6",

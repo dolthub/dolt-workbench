@@ -1,6 +1,6 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Btn } from "@dolthub/react-components";
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import { IoMdClose } from "react-icons/io";
 import css from "./index.module.css";
 
 export default function ExecutionMessage() {

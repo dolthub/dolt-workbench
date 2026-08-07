@@ -1,8 +1,10 @@
 import { TableDiffType } from "@gen/graphql-types";
-import { GoDiffAdded } from "@react-icons/all-files/go/GoDiffAdded";
-import { GoDiffModified } from "@react-icons/all-files/go/GoDiffModified";
-import { GoDiffRemoved } from "@react-icons/all-files/go/GoDiffRemoved";
-import { GoDiffRenamed } from "@react-icons/all-files/go/GoDiffRenamed";
+import {
+  VscDiffAdded,
+  VscDiffModified,
+  VscDiffRemoved,
+  VscDiffRenamed,
+} from "react-icons/vsc";
 
 type Props = {
   tableType: TableDiffType;
@@ -11,12 +13,12 @@ type Props = {
 export default function StatIcon({ tableType }: Props) {
   switch (tableType) {
     case TableDiffType.Added:
-      return <GoDiffAdded />;
+      return <VscDiffAdded />;
     case TableDiffType.Dropped:
-      return <GoDiffRemoved />;
+      return <VscDiffRemoved />;
     case TableDiffType.Renamed:
-      return <GoDiffRenamed />;
+      return <VscDiffRenamed />;
     default:
-      return <GoDiffModified />;
+      return <VscDiffModified />;
   }
 }

@@ -1,9 +1,11 @@
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
-import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
-import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
-import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
-import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
-import { FaPlus } from "@react-icons/all-files/fa/FaPlus";
+import {
+  FaCheck,
+  FaChevronRight,
+  FaPlay,
+  FaPlus,
+  FaTimes,
+  FaTrash,
+} from "react-icons/fa";
 import { Button } from "@dolthub/react-components";
 import cx from "classnames";
 import css from "./index.module.css";

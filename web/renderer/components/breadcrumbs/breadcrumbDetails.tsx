@@ -11,7 +11,7 @@ import {
   TableParams,
 } from "@lib/params";
 import { branches, commitLog, database, defaultDoc, releases } from "@lib/urls";
-import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
+import { FiDatabase } from "react-icons/fi";
 import css from "./index.module.css";
 import { BreadcrumbDetails, BreadcrumbName, BreadcrumbType } from "./types";
 

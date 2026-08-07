@@ -3,7 +3,7 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button } from "@dolthub/react-components";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
-import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
+import { FiPlus } from "react-icons/fi";
 import css from "./index.module.css";
 
 type Props = {

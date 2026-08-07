@@ -4,8 +4,8 @@ import {
   RemoteFragment,
 } from "@gen/graphql-types";
 import { OptionalRefParams } from "@lib/params";
-import { GoCheck } from "@react-icons/all-files/go/GoCheck";
-import { IoPushOutline } from "@react-icons/all-files/io5/IoPushOutline";
+import { GoCheck } from "react-icons/go";
+import { IoPushOutline } from "react-icons/io5";
 import usePullFromRemote from "../usePullFromRemote";
 import usePushToRemote from "../usePushToRemote";
 import css from "./index.module.css";

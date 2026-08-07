@@ -2,7 +2,7 @@ import SqlEditor from "@components/SqlEditor";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Btn, Loader } from "@dolthub/react-components";
 import { DatabasePageParams } from "@lib/params";
-import { BiPencil } from "@react-icons/all-files/bi/BiPencil";
+import { BiPencil } from "react-icons/bi";
 import dynamic from "next/dynamic";
 import Buttons from "./Buttons";
 import Errors from "./Errors";
