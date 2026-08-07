@@ -293,9 +293,7 @@ function ProviderForTableName(props: TableProps) {
         !!workingDiffRows &&
         workingDiffRows.length > 0,
       tableShape: props.tableShape,
-      executedQueryString: hasStacking
-        ? selectTableRowsRes.data?.selectTableRows.queryString
-        : executedSqlFromRouter(router.query.executedSql),
+      executedQueryString: selectTableRowsRes.data?.selectTableRows.queryString,
     };
   }, [
     loadMore,
@@ -306,7 +304,6 @@ function ProviderForTableName(props: TableProps) {
     lastDiffQueryOffset,
     props.params,
     props.tableShape,
-    hasStacking,
     selectTableRowsRes.data,
     selectTableRowsRes.error,
     selectTableRowsRes.loading,

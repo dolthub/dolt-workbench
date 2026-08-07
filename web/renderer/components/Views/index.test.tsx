@@ -1,9 +1,9 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { SqlEditorProvider } from "@contexts/sqleditor";
-import useMockRouter, { actions } from "@hooks/useMockRouter";
+import useMockRouter from "@hooks/useMockRouter";
 import { renderAndWait } from "@lib/testUtils.test";
-import { sqlQuery } from "@lib/urls";
-import { fireEvent, screen } from "@testing-library/react";
+import { table } from "@lib/urls";
+import { screen } from "@testing-library/react";
 import Views from "./index";
 import * as mocks from "./mocks";
 
@@ -51,14 +51,9 @@ describe("tests Views", () => {
     expect(await screen.findByRole("list")).toBeInTheDocument();
 
     mocks.rowsForViewsFragmentMock.forEach(mock => {
-      const button = screen.getByText(mock.name);
-      fireEvent.click(button);
-      const { href, as } = sqlQuery({
-        ...mocks.params,
-        q: `SELECT * FROM \`${mock.name}\``,
-        active: "Views",
-      });
-      expect(actions.push).toHaveBeenCalledWith(href, as);
+      const link = screen.getByRole("link", { name: new RegExp(mock.name) });
+      const route = table({ ...mocks.params, tableName: mock.name });
+      expect(link).toHaveAttribute("href", route.asPathname());
     });
   });
 });
