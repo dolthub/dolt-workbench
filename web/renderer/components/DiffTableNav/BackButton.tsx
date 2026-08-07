@@ -3,7 +3,7 @@ import PullLink from "@components/links/PullLink";
 import { Button, Loader } from "@dolthub/react-components";
 import useDefaultBranch from "@hooks/useDefaultBranch";
 import { DatabaseParams } from "@lib/params";
-import { FaChevronLeft } from "@react-icons/all-files/fa/FaChevronLeft";
+import { FaChevronLeft } from "react-icons/fa";
 import cx from "classnames";
 import css from "./index.module.css";
 

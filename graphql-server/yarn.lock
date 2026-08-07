@@ -840,7 +840,7 @@ __metadata:
   dependencies:
     "@apollo/server": "npm:^5.5.0"
     "@as-integrations/express5": "npm:^1.1.2"
-    "@dolthub/web-utils": "npm:^0.3.0"
+    "@dolthub/web-utils": "npm:^0.3.1"
     "@nestjs/apollo": "npm:^13.1.0"
     "@nestjs/cli": "npm:^11.0.10"
     "@nestjs/common": "npm:^11.1.6"
@@ -886,9 +886,9 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/web-utils@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@dolthub/web-utils@npm:0.3.0"
+"@dolthub/web-utils@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@dolthub/web-utils@npm:0.3.1"
   dependencies:
     timeago.js: "npm:^4.0.2"
   peerDependencies:
@@ -896,7 +896,7 @@ __metadata:
   peerDependenciesMeta:
     node-sql-parser:
       optional: true
-  checksum: 10c0/a69c16b1ea32b9d59e0f2113128a5d3d347099133c14ee6b13df593b68569cae7382bd2f1edff41ff2568203f54b955dc38720d756865d757b88a0baef25440c
+  checksum: 10c0/1cc6b151aeca1ecb7e542bbc902526f0d0331f6c478c3560de34e20772dd6f85b5263cbb6d5147704593a25d929616fb4cf05b1be1c007f5ea153f2e9d3fffb1
   languageName: node
   linkType: hard
 

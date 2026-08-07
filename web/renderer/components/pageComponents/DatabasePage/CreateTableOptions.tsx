@@ -5,7 +5,7 @@ import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { database } from "@lib/urls";
-import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
+import { AiOutlineCode } from "react-icons/ai";
 import cx from "classnames";
 import css from "./ForCreateTable/index.module.css";
 import OptionSquare from "./ForTable/OptionSquare";

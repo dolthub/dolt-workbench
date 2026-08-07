@@ -5,7 +5,7 @@ import { PullDetailsFragment } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { ApolloErrorType } from "@lib/errors/types";
 import { PullDiffParams } from "@lib/params";
-import { FiGitPullRequest } from "@react-icons/all-files/fi/FiGitPullRequest";
+import { FiGitPullRequest } from "react-icons/fi";
 import cx from "classnames";
 import { Arrow } from "./Arrow";
 import ErrorsWithDirections from "./ErrorsWithDirections";

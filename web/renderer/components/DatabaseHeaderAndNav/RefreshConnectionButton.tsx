@@ -7,7 +7,7 @@ import {
 } from "@dolthub/react-components";
 import { useResetDatabaseMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
-import { IoReloadSharp } from "@react-icons/all-files/io5/IoReloadSharp";
+import { IoReloadSharp } from "react-icons/io5";
 import { useState } from "react";
 import css from "./index.module.css";
 import { useRouter } from "next/router";

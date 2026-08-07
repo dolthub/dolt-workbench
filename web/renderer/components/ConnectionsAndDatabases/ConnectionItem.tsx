@@ -3,8 +3,8 @@ import {
   DatabaseConnectionFragment,
 } from "@gen/graphql-types";
 import URLParse from "url-parse";
-import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
+import { FaChevronRight } from "react-icons/fa";
+import { MdRemoveRedEye } from "react-icons/md";
 import { Button } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";

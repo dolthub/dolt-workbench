@@ -6,7 +6,7 @@ import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { DatabasePageParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
-import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
+import { GiHamburgerMenu } from "react-icons/gi";
 import cx from "classnames";
 import { useState } from "react";
 import MobileTableNavButton from "./MobileTableNavButton";

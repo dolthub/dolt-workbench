@@ -11,7 +11,7 @@ import {
 import useMutation from "@hooks/useMutation";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import cx from "classnames";
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import { IoMdClose } from "react-icons/io";
 import PendingCell from "./PendingCell";
 import css from "./index.module.css";
 

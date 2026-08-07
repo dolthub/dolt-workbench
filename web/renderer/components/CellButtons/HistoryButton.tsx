@@ -12,7 +12,7 @@ import { encodeCellHistory } from "@lib/cellHistoryUrl";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableOptionalSchemaParams } from "@lib/params";
 import { query } from "@lib/urls";
-import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { ReactNode } from "react";

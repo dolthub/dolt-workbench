@@ -10,9 +10,7 @@ import { Button, SmallLoader } from "@dolthub/react-components";
 import cx from "classnames";
 import { Arrow } from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/Arrow";
 import { TestResultsListItem } from "@pageComponents/DatabasePage/ForPulls/PullActions/Merge/TestResults/TestResultsListItem";
-import { FiX } from "@react-icons/all-files/fi/FiX";
-import { FiCircle } from "@react-icons/all-files/fi/FiCircle";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import { FiCheck, FiCircle, FiX } from "react-icons/fi";
 
 type TestStatusColors = {
   red: boolean;

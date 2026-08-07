@@ -3,7 +3,7 @@ import { Btn } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import { RefParams } from "@lib/params";
 import { sqlQuery } from "@lib/urls";
-import { RiBookOpenLine } from "@react-icons/all-files/ri/RiBookOpenLine";
+import { RiBookOpenLine } from "react-icons/ri";
 import cx from "classnames";
 import css from "./index.module.css";
 

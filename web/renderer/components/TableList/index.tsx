@@ -6,7 +6,7 @@ import { QueryHandler, Tooltip } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { createTable } from "@lib/urls";
-import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import { useEffect } from "react";
 import Item from "./Item";
 import css from "./index.module.css";

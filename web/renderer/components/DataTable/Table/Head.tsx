@@ -1,6 +1,6 @@
 import { useDataTableContext } from "@contexts/dataTable";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import { ColumnStatus, SetColumnStatus } from "@lib/tableTypes";
 import { getTableColsFromQueryCols } from "@components/CellButtons/utils";
 import useSqlParser from "@hooks/useSqlParser";

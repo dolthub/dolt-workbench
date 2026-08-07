@@ -2,7 +2,7 @@ import { DatabaseTypeLabel } from "@components/ConnectionsAndDatabases/DatabaseT
 import { getDatabaseType } from "@components/DatabaseTypeLabel";
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import { DatabaseConnectionFragment } from "@gen/graphql-types";
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import { IoMdClose } from "react-icons/io";
 import cx from "classnames";
 import Image from "next/legacy/image";
 import { SyntheticEvent, useState } from "react";

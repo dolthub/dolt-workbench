@@ -3,7 +3,7 @@ import DatabaseLink from "@components/links/DatabaseLink";
 import KeyNav from "@components/util/KeyNav";
 import { Button } from "@dolthub/react-components";
 import { DatabaseOptionalSchemaParams } from "@lib/params";
-import { GoChevronLeft } from "@react-icons/all-files/go/GoChevronLeft";
+import { GoChevronLeft } from "react-icons/go";
 import { ReactNode } from "react";
 import css from "./index.module.css";
 

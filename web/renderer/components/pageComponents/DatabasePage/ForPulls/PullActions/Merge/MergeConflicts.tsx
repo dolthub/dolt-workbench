@@ -3,7 +3,7 @@ import { formatNumber, pluralize } from "@dolthub/web-utils";
 import { PullConflictSummaryFragment } from "@gen/graphql-types";
 import { PullDiffParams } from "@lib/params";
 import { pullConflicts } from "@lib/urls";
-import { ImTable2 } from "@react-icons/all-files/im/ImTable2";
+import { ImTable2 } from "react-icons/im";
 import css from "./index.module.css";
 
 type Props = {

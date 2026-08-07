@@ -7,7 +7,7 @@ import {
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { database } from "@lib/urls";
-import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { AiOutlinePlusCircle } from "react-icons/ai";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";

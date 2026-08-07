@@ -12,10 +12,9 @@ import {
 import useMutation from "@hooks/useMutation";
 import { getBitDisplayValue } from "@lib/dataTable";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
-import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-import { BiText } from "@react-icons/all-files/bi/BiText";
-import { VscCircleSlash } from "@react-icons/all-files/vsc/VscCircleSlash";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { BiText } from "react-icons/bi";
+import { VscCircleSlash } from "react-icons/vsc";
 import cx from "classnames";
 import { HTMLInputTypeAttribute, SyntheticEvent, useState } from "react";
 import Input from "./Input";

@@ -3017,19 +3017,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@dolthub/react-components@npm:^0.3.3":
-  version: 0.3.3
-  resolution: "@dolthub/react-components@npm:0.3.3"
+"@dolthub/react-components@npm:^0.4.3":
+  version: 0.4.3
+  resolution: "@dolthub/react-components@npm:0.4.3"
   dependencies:
-    "@dolthub/react-contexts": "npm:^0.2.1"
-    "@dolthub/react-hooks": "npm:^0.2.2"
-    "@dolthub/web-utils": "npm:^0.3.0"
-    "@react-icons/all-files": "npm:^4.1.0"
+    "@dolthub/react-contexts": "npm:^0.3.1"
+    "@dolthub/react-hooks": "npm:^0.3.1"
+    "@dolthub/web-utils": "npm:^0.3.1"
     classnames: "npm:^2.5.1"
     deepmerge: "npm:^4.3.1"
-    numeral: "npm:^2.0.6"
-    react-copy-to-clipboard: "npm:^5.1.0"
-    react-loader: "npm:^2.4.7"
+    react-icons: "npm:^5.6.0"
     reactjs-popup: "npm:^2.0.6"
   peerDependencies:
     github-markdown-css: ^5.0.0
@@ -3037,7 +3034,7 @@ __metadata:
     react-dom: ^19
     react-markdown: ^9.0.0 || ^10.0.0
     react-select: ^5.0.0
-    react-tooltip: ^5.0.0
+    react-tooltip: ^5.0.0 || ^6.0.0
     remark-gfm: ^4.0.0
     tailwindcss: ^3.0.0
   peerDependenciesMeta:
@@ -3047,39 +3044,38 @@ __metadata:
       optional: true
     remark-gfm:
       optional: true
-  checksum: 10c0/dcb2069cf7eb7a9f76b6d0a1b1b56c9bced1247646f568cbb1c988dc6244d24f1ee35cba6038bf39d3d37bfe68f1ba7f37095b87f7cb29728577ab4cc31648ec
+  checksum: 10c0/bfdc98f77438afe4943a9ce79b18dd35b4e46c6e972534d9f3cebeb08acee757fe76fa569549eaab4f5c3eae0030b1728d58a00b83032a4cc887730673695929
   languageName: node
   linkType: hard
 
-"@dolthub/react-contexts@npm:^0.2.1":
-  version: 0.2.1
-  resolution: "@dolthub/react-contexts@npm:0.2.1"
+"@dolthub/react-contexts@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@dolthub/react-contexts@npm:0.3.1"
   dependencies:
-    "@dolthub/react-hooks": "npm:^0.2.2"
+    "@dolthub/react-hooks": "npm:^0.3.1"
   peerDependencies:
     react: ^19.1.0
     react-dom: ^19.1.1
-  checksum: 10c0/cc029a57ed52ea32adf54fda46cfb4213ba75b421adf0153aa4e6289ce6a2a290132e625f6e4d3510da578107e1cca828775ebaabe55284c5a0e0f1d5535ae75
+  checksum: 10c0/33732733eae9b5a7ef0f97bac58394fad40b99296e9816b31b6d15d5c9059070eb05991ad02365ee100f6446c02c59401ed2043a288bb2e9a8a8faf7579e6e65
   languageName: node
   linkType: hard
 
-"@dolthub/react-hooks@npm:^0.2.2":
-  version: 0.2.2
-  resolution: "@dolthub/react-hooks@npm:0.2.2"
+"@dolthub/react-hooks@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@dolthub/react-hooks@npm:0.3.1"
   dependencies:
-    "@dolthub/web-utils": "npm:^0.3.0"
-    js-cookie: "npm:^3.0.5"
-    react-hotkeys: "npm:^2.0.0"
+    "@dolthub/web-utils": "npm:^0.3.1"
+    js-cookie: "npm:^3.0.7"
   peerDependencies:
     react: ^19.1.0
     react-dom: ^19.1.1
-  checksum: 10c0/59c922f502439aa66d38a39cd4ee6b9e7fad39f69bdce9f71b8e4fcf6564d0e03223a5ebb521e907eaf923d5b628a1b1f719cee234451afa9df3ff1b191efebc
+  checksum: 10c0/84e5518b7d6f2e8b9f4bcc801d7f750fdbe3e44cf750da25464903c64066e4e446def28777c22a216e09cd47ad933c24fbc5e1cad4625153f6a034ef9204997d
   languageName: node
   linkType: hard
 
-"@dolthub/web-utils@npm:^0.3.0":
-  version: 0.3.0
-  resolution: "@dolthub/web-utils@npm:0.3.0"
+"@dolthub/web-utils@npm:^0.3.1":
+  version: 0.3.1
+  resolution: "@dolthub/web-utils@npm:0.3.1"
   dependencies:
     timeago.js: "npm:^4.0.2"
   peerDependencies:
@@ -3087,7 +3083,7 @@ __metadata:
   peerDependenciesMeta:
     node-sql-parser:
       optional: true
-  checksum: 10c0/a69c16b1ea32b9d59e0f2113128a5d3d347099133c14ee6b13df593b68569cae7382bd2f1edff41ff2568203f54b955dc38720d756865d757b88a0baef25440c
+  checksum: 10c0/1cc6b151aeca1ecb7e542bbc902526f0d0331f6c478c3560de34e20772dd6f85b5263cbb6d5147704593a25d929616fb4cf05b1be1c007f5ea153f2e9d3fffb1
   languageName: node
   linkType: hard
 
@@ -5640,15 +5636,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-icons/all-files@npm:^4.1.0":
-  version: 4.1.0
-  resolution: "@react-icons/all-files@npm:4.1.0"
-  peerDependencies:
-    react: "*"
-  checksum: 10c0/6327623b857ba2a9fdf835f2e7029feec7acdd53dc14163085789518d7e1323deb7db649b660d3bad3991285e8408238ad4d09c37b9a0ba7d2601dd74ac0ae56
-  languageName: node
-  linkType: hard
-
 "@reactflow/background@npm:11.3.14":
   version: 11.3.14
   resolution: "@reactflow/background@npm:11.3.14"
@@ -6488,15 +6475,6 @@ __metadata:
   version: 4.0.2
   resolution: "@types/parse-json@npm:4.0.2"
   checksum: 10c0/b1b863ac34a2c2172fbe0807a1ec4d5cb684e48d422d15ec95980b81475fac4fdb3768a8b13eef39130203a7c04340fc167bae057c7ebcafd7dec9fe6c36aeb1
-  languageName: node
-  linkType: hard
-
-"@types/react-copy-to-clipboard@npm:^5.0.6":
-  version: 5.0.7
-  resolution: "@types/react-copy-to-clipboard@npm:5.0.7"
-  dependencies:
-    "@types/react": "npm:*"
-  checksum: 10c0/33bea4549fa263b597d0dedb3807f99286d8ccf59adb370e3d82d1c9075195925a343982abd73c63cc47854a7240ddae79873a5cb3590c9b33c1b65bf9d07689
   languageName: node
   linkType: hard
 
@@ -9307,15 +9285,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"copy-to-clipboard@npm:^3.3.1":
-  version: 3.3.3
-  resolution: "copy-to-clipboard@npm:3.3.3"
-  dependencies:
-    toggle-selection: "npm:^1.0.6"
-  checksum: 10c0/3ebf5e8ee00601f8c440b83ec08d838e8eabb068c1fae94a9cda6b42f288f7e1b552f3463635f419af44bf7675afc8d0390d30876cf5c2d5d35f86d9c56a3e5f
-  languageName: node
-  linkType: hard
-
 "core-js-compat@npm:^3.38.0":
   version: 3.38.1
   resolution: "core-js-compat@npm:3.38.1"
@@ -9451,16 +9420,6 @@ __metadata:
   bin:
     create-jest: bin/create-jest.js
   checksum: 10c0/e7e54c280692470d3398f62a6238fd396327e01c6a0757002833f06d00afc62dd7bfe04ff2b9cd145264460e6b4d1eb8386f2925b7e567f97939843b7b0e812f
-  languageName: node
-  linkType: hard
-
-"create-react-class@npm:^15.5.2":
-  version: 15.7.0
-  resolution: "create-react-class@npm:15.7.0"
-  dependencies:
-    loose-envify: "npm:^1.3.1"
-    object-assign: "npm:^4.1.1"
-  checksum: 10c0/bce4b46e6d85b424cb50ca8089266c7664fcecfd81abaafb829680fae2e2e60dc6999cac88f5a16a38473ed284859f2328935a42fc5cd1b7cc48888fdd8363c9
   languageName: node
   linkType: hard
 
@@ -10207,10 +10166,10 @@ __metadata:
     "@apollo/client": "npm:^3.9.9"
     "@babel/core": "npm:^7.28.0"
     "@dolthub/commit-graph": "npm:^2.4.1"
-    "@dolthub/react-components": "npm:^0.3.3"
-    "@dolthub/react-contexts": "npm:^0.2.1"
-    "@dolthub/react-hooks": "npm:^0.2.2"
-    "@dolthub/web-utils": "npm:^0.3.0"
+    "@dolthub/react-components": "npm:^0.4.3"
+    "@dolthub/react-contexts": "npm:^0.3.1"
+    "@dolthub/react-hooks": "npm:^0.3.1"
+    "@dolthub/web-utils": "npm:^0.3.1"
     "@electron/osx-sign": "npm:^2.0.0"
     "@graphql-codegen/cli": "npm:^6.0.0"
     "@graphql-codegen/fragment-matcher": "npm:^6.0.0"
@@ -10218,7 +10177,6 @@ __metadata:
     "@graphql-codegen/typescript-react-apollo": "npm:^4.0.0"
     "@improbable-eng/grpc-web": "npm:^0.15.0"
     "@improbable-eng/grpc-web-node-http-transport": "npm:^0.15.0"
-    "@react-icons/all-files": "npm:^4.1.0"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/jest-dom": "npm:^6.9.1"
     "@testing-library/react": "npm:^16.3.0"
@@ -10233,7 +10191,6 @@ __metadata:
     "@types/lodash": "npm:^4.17.21"
     "@types/node": "npm:^25.0.3"
     "@types/react": "npm:^19.2.18"
-    "@types/react-copy-to-clipboard": "npm:^5.0.6"
     "@types/react-dom": "npm:^19.2.4"
     "@types/react-infinite-scroller": "npm:^1.2.3"
     "@types/react-timeago": "npm:^8.0.0"
@@ -10288,10 +10245,10 @@ __metadata:
     prettier: "npm:^3.7.3"
     react: "npm:^19.2.8"
     react-ace: "npm:^14.0.1"
-    react-copy-to-clipboard: "npm:^5.1.0"
     react-data-grid: "npm:7.0.0-beta.44"
     react-diff-viewer: "npm:^3.1.1"
     react-dom: "npm:^19.2.8"
+    react-icons: "npm:^5.7.0"
     react-infinite-scroller: "npm:^1.2.6"
     react-markdown: "npm:^10.1.0"
     react-select: "npm:^5.10.2"
@@ -14379,7 +14336,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"js-cookie@npm:^3.0.5":
+"js-cookie@npm:^3.0.7":
   version: 3.0.8
   resolution: "js-cookie@npm:3.0.8"
   checksum: 10c0/421912a4a55535bda32b3059835864e1182c3af5b4516df00a060edc1fa5a53d38bb8d5a91d5d305e396206f4fd11e829f17850aa5aa8164118c04d8ebf1ff5d
@@ -14846,7 +14803,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"loose-envify@npm:^1.0.0, loose-envify@npm:^1.3.1, loose-envify@npm:^1.4.0":
+"loose-envify@npm:^1.0.0, loose-envify@npm:^1.4.0":
   version: 1.4.0
   resolution: "loose-envify@npm:1.4.0"
   dependencies:
@@ -16319,13 +16276,6 @@ __metadata:
   version: 1.1.1
   resolution: "nullthrows@npm:1.1.1"
   checksum: 10c0/56f34bd7c3dcb3bd23481a277fa22918120459d3e9d95ca72976c72e9cac33a97483f0b95fc420e2eb546b9fe6db398273aba9a938650cdb8c98ee8f159dcb30
-  languageName: node
-  linkType: hard
-
-"numeral@npm:^2.0.6":
-  version: 2.0.6
-  resolution: "numeral@npm:2.0.6"
-  checksum: 10c0/5ed008d3fae05cfa4986b77a85ca10bff29ae6e1fa41a04cce05ea21f08a8a104226f88868930e2a94e3239708d6985d111b5d1291e8b9a3049ffc5365c332d4
   languageName: node
   linkType: hard
 
@@ -17818,7 +17768,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.1, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
+"prop-types@npm:^15.5.8, prop-types@npm:^15.6.0, prop-types@npm:^15.6.2, prop-types@npm:^15.7.2, prop-types@npm:^15.8.1":
   version: 15.8.1
   resolution: "prop-types@npm:15.8.1"
   dependencies:
@@ -17940,18 +17890,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-copy-to-clipboard@npm:^5.1.0":
-  version: 5.1.0
-  resolution: "react-copy-to-clipboard@npm:5.1.0"
-  dependencies:
-    copy-to-clipboard: "npm:^3.3.1"
-    prop-types: "npm:^15.8.1"
-  peerDependencies:
-    react: ^15.3.0 || 16 || 17 || 18
-  checksum: 10c0/de70d9f9c2d17cee207888ed791d4a042c300e5ca732503434d49e6745cff56c0d5ebcc82ab86237e9c2248e636d1d031b9f9cf9913ecec61d82a0e5ebc93881
-  languageName: node
-  linkType: hard
-
 "react-data-grid@npm:7.0.0-beta.44":
   version: 7.0.0-beta.44
   resolution: "react-data-grid@npm:7.0.0-beta.44"
@@ -17992,23 +17930,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hotkeys@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "react-hotkeys@npm:2.0.0"
-  dependencies:
-    prop-types: "npm:^15.6.1"
-  peerDependencies:
-    react: ">= 0.14.0"
-  checksum: 10c0/3b0b47c4426775a86ecf0654760d60e4141da8fc47ef90fe51053210259d55d5905750c3787abfdf5a1fbb29ca7c73a516fa0bec21055ddd7ac11116194ed067
-  languageName: node
-  linkType: hard
-
 "react-icons@npm:^5.3.0":
   version: 5.6.0
   resolution: "react-icons@npm:5.6.0"
   peerDependencies:
     react: "*"
   checksum: 10c0/addba1ebfd45cdf7f69291d0c93df64fca1271cfdb66df657abd223e3451c73356b035f50e75858627dd182b02129596c79eaaaa45d32eb52658e443a992645c
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^5.6.0, react-icons@npm:^5.7.0":
+  version: 5.7.0
+  resolution: "react-icons@npm:5.7.0"
+  peerDependencies:
+    react: "*"
+  checksum: 10c0/cc5ae92e61ef9d8fc83cb3f3ac2710deab9174c5831bdaf2a94b099acfc91074a60d4b3adfd3165dcb9b21799ca6c760b3f4f6596d75198c1ed2ea44240818c8
   languageName: node
   linkType: hard
 
@@ -18041,20 +17977,6 @@ __metadata:
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
   checksum: 10c0/f2f1e60010c683479e74c63f96b09fb41603527cd131a9959e2aee1e5a8b0caf270b365e5ca77d4a6b18aae659b60a86150bb3979073528877029b35aecd2072
-  languageName: node
-  linkType: hard
-
-"react-loader@npm:^2.4.7":
-  version: 2.4.7
-  resolution: "react-loader@npm:2.4.7"
-  dependencies:
-    create-react-class: "npm:^15.5.2"
-    prop-types: "npm:^15.5.8"
-    spin.js: "npm:2.x"
-  peerDependencies:
-    react: ^0.14.0 || ^15.0.0 || ^16.0.0
-    react-dom: ^0.14.0 || ^15.0.0 || ^16.0.0
-  checksum: 10c0/a8e151de86390cad3f2915264ce9d0bd41fb8601a4d7093c51aab41622414550060e786d889599d2c9e2a843c124e227d4644dff3155dd692413e66b244a8d00
   languageName: node
   linkType: hard
 
@@ -19340,13 +19262,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"spin.js@npm:2.x":
-  version: 2.3.2
-  resolution: "spin.js@npm:2.3.2"
-  checksum: 10c0/bf3ff85e8dc1491ce6ea8c0b83b559bb5d315fcb55104dd9a103b42d3bad03a7d3a1e72c6d7b32b7cc28d6f0b4fd93ed4321a41184debfa20fb71898c748e599
-  languageName: node
-  linkType: hard
-
 "sponge-case@npm:^1.0.1":
   version: 1.0.1
   resolution: "sponge-case@npm:1.0.1"
@@ -20143,13 +20058,6 @@ __metadata:
   dependencies:
     is-number: "npm:^7.0.0"
   checksum: 10c0/487988b0a19c654ff3e1961b87f471702e708fa8a8dd02a298ef16da7206692e8552a0250e8b3e8759270f62e9d8314616f6da274734d3b558b1fc7b7724e892
-  languageName: node
-  linkType: hard
-
-"toggle-selection@npm:^1.0.6":
-  version: 1.0.6
-  resolution: "toggle-selection@npm:1.0.6"
-  checksum: 10c0/f2cf1f2c70f374fd87b0cdc8007453ba9e981c4305a8bf4eac10a30e62ecdfd28bca7d18f8f15b15a506bf8a7bfb20dbe3539f0fcf2a2c8396c1a78d53e1f179
   languageName: node
   linkType: hard
 
