@@ -37,7 +37,12 @@ module.exports = {
     // require sub-paths (e.g. google-protobuf/google/protobuf/timestamp_pb.js).
     // Convert string externals to a function that matches by prefix.
     const prevExternals = config.externals || [];
-    const externalNames = prevExternals.filter(e => typeof e === "string");
+    // electron-serve v3+ is ESM-only, so it cannot stay external — the main
+    // process bundle is CommonJS and require() of it fails at runtime. Let
+    // webpack bundle it instead.
+    const externalNames = prevExternals.filter(
+      e => typeof e === "string" && e !== "electron-serve",
+    );
     const otherExternals = prevExternals.filter(e => typeof e !== "string");
     config.externals = [
       ...otherExternals,
