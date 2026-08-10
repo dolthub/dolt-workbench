@@ -14,6 +14,12 @@ import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
+import {
+  clearPendingSqlResult,
+  peekPendingSqlResult,
+  pendingSqlResultMatches,
+  subscribePendingSqlResult,
+} from "@lib/pendingSqlResult";
 import { useEffect, useState } from "react";
 
 export const defaultState = {
@@ -51,10 +57,20 @@ type ReturnType = {
   client: ApolloClient<any>;
 };
 
-export default function useSqlSelectRows(
-  params: SqlQueryParams,
-  forceNetworkRun?: boolean,
-): ReturnType {
+export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
+  const [handoff, setHandoff] = useState(peekPendingSqlResult);
+  useEffect(() => {
+    clearPendingSqlResult();
+    return subscribePendingSqlResult(() => {
+      setHandoff(peekPendingSqlResult());
+      clearPendingSqlResult();
+    });
+  }, []);
+  const handoffData =
+    handoff && pendingSqlResultMatches(handoff, params)
+      ? handoff.data
+      : undefined;
+
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
     variables: {
       databaseName: params.databaseName,
@@ -62,17 +78,22 @@ export default function useSqlSelectRows(
       queryString: params.q,
       schemaName: params.schemaName,
     },
-    fetchPolicy: forceNetworkRun ? "network-only" : "cache-first",
+    fetchPolicy: "cache-and-network",
+    skip: !!handoffData,
   });
 
-  const [state, setState] = useSetState(getDefaultState(data));
+  const [state, setState] = useSetState(getDefaultState(handoffData ?? data));
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
   const [err, setErr] = useApolloError(error);
 
   useEffect(() => {
+    if (handoffData) {
+      setState(getDefaultState(handoffData));
+      return;
+    }
     if (loading || error || !data) return;
     setState(getDefaultState(data));
-  }, [loading, error, data, setState]);
+  }, [loading, error, data, handoffData, setState]);
 
   const handleQuery = async (
     setRows: (rows: RowForDataTableFragment[]) => void,

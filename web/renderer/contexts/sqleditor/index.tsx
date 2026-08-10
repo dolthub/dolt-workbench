@@ -17,6 +17,7 @@ import {
 import useApolloError from "@hooks/useApolloError";
 import { getCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
+import { setPendingSqlResult } from "@lib/pendingSqlResult";
 import { recordMutation, recordQuery } from "@lib/sessionQueryHistory";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -117,6 +118,15 @@ export function SqlEditorProvider(props: Props) {
           setErr(new Error(message || "Query execution failed"));
           return;
         }
+        setPendingSqlResult({
+          variables: {
+            databaseName: executeProps.databaseName,
+            refName: executeProps.refName,
+            queryString: executeProps.query,
+            schemaName: executeProps.schemaName,
+          },
+          data: res.data,
+        });
         handleQuery(executeProps);
       } catch (e) {
         const apolloErr = getCaughtApolloError(e);
