@@ -6,7 +6,11 @@ export function buildCallProcedure(
   name: string,
   args: string[],
 ): Built<unknown> {
-  const verb = em.connection.options.type === "postgres" ? "SELECT" : "CALL";
+  const verb = ["postgres", "better-sqlite3"].includes(
+    em.connection.options.type,
+  )
+    ? "SELECT"
+    : "CALL";
   const argList = args.map(escapeStringLiteral).join(", ");
   const sql = `${verb} ${name}(${argList})`;
   return {
