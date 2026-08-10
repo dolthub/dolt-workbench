@@ -58,10 +58,7 @@ type ReturnType = {
   client: ApolloClient<any>;
 };
 
-export default function useSqlSelectRows(
-  params: SqlQueryParams,
-  forceNetworkRun?: boolean,
-): ReturnType {
+export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
   const [adopted, setAdopted] = useState<PendingSqlResult | undefined>(
     undefined,
   );
@@ -75,9 +72,7 @@ export default function useSqlSelectRows(
       : undefined;
   const retained =
     adopted && pendingSqlResultMatches(adopted, params) ? adopted : undefined;
-  const handoffData = forceNetworkRun
-    ? undefined
-    : (incoming ?? retained)?.data;
+  const handoffData = (incoming ?? retained)?.data;
 
   useEffect(() => {
     if (!incoming) return;
@@ -96,7 +91,7 @@ export default function useSqlSelectRows(
 
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
     variables,
-    fetchPolicy: forceNetworkRun ? "network-only" : "cache-first",
+    fetchPolicy: "cache-and-network",
     skip: !!handoffData,
   });
 

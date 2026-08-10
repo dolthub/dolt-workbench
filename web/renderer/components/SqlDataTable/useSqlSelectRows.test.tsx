@@ -251,19 +251,6 @@ describe("useSqlSelectRows", () => {
     expect(executedQueries).toEqual(["SELECT 1"]);
   });
 
-  it("forceNetworkRun executes even when a matching pending result exists", async () => {
-    const insertQ = "INSERT INTO t VALUES (1)";
-    setPendingSqlResult(makeResult(insertQ, "stranded deposit"));
-    const { result } = renderHook(
-      ({ params }) => useSqlSelectRows(params, true),
-      { initialProps: { params: makeParams(insertQ) }, wrapper },
-    );
-    await waitFor(() =>
-      expect(result.current.state.executionMessage).toBe(`network: ${insertQ}`),
-    );
-    expect(executedQueries).toEqual([insertQ]);
-  });
-
   it("matches a handoff when the page coerces an absent schemaName to an empty string", async () => {
     setPendingSqlResult(makeResult("INSERT INTO t VALUES (1)", "added"));
     const { result } = renderHook(({ params }) => useSqlSelectRows(params), {
