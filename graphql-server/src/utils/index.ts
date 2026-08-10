@@ -14,7 +14,10 @@ export async function handleTableNotFound<T>(
     const res = await q();
     return res;
   } catch (err) {
-    if (err.message.includes("table not found")) {
+    if (
+      err.message.includes("table not found") ||
+      err.message.includes("no such table")
+    ) {
       return undefined;
     }
     throw err;

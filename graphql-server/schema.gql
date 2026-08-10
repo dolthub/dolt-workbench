@@ -114,6 +114,7 @@ type DatabaseConnection {
 enum DatabaseType {
   Mysql
   Postgres
+  Sqlite
 }
 
 type DoltDatabaseDetails {

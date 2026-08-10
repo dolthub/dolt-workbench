@@ -7,6 +7,21 @@ export function replaceDatabaseInConnectionUrl(
   return url.toString();
 }
 
+export function getSqliteFilePath(connectionUrl: string): string {
+  const url = new URL(connectionUrl);
+  return decodeURIComponent(url.pathname);
+}
+
+export function dbNameFromFilePath(filePath: string): string {
+  const base = filePath.split("/").pop() ?? filePath;
+  const name = base.replace(/\.[^.]+$/, "");
+  return name || base;
+}
+
+export function getSqliteDbName(connectionUrl: string): string {
+  return dbNameFromFilePath(getSqliteFilePath(connectionUrl));
+}
+
 export type ParsedConnectionUrl = {
   host?: string;
   user?: string;
