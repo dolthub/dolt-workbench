@@ -15,12 +15,13 @@ import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
 import {
+  PendingSqlResult,
   clearPendingSqlResult,
   peekPendingSqlResult,
   pendingSqlResultMatches,
   subscribePendingSqlResult,
 } from "@lib/pendingSqlResult";
-import { useEffect, useState } from "react";
+import { useEffect, useReducer, useState } from "react";
 
 export const defaultState = {
   offset: undefined as Maybe<number>,
@@ -57,28 +58,45 @@ type ReturnType = {
   client: ApolloClient<any>;
 };
 
-export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
-  const [handoff, setHandoff] = useState(peekPendingSqlResult);
-  useEffect(() => {
-    clearPendingSqlResult();
-    return subscribePendingSqlResult(() => {
-      setHandoff(peekPendingSqlResult());
-      clearPendingSqlResult();
-    });
-  }, []);
-  const handoffData =
-    handoff && pendingSqlResultMatches(handoff, params)
-      ? handoff.data
+export default function useSqlSelectRows(
+  params: SqlQueryParams,
+  forceNetworkRun?: boolean,
+): ReturnType {
+  const [adopted, setAdopted] = useState<PendingSqlResult | undefined>(
+    undefined,
+  );
+  const [, rerenderOnSet] = useReducer((x: number) => x + 1, 0);
+  useEffect(() => subscribePendingSqlResult(rerenderOnSet), []);
+
+  const mailboxed = peekPendingSqlResult();
+  const incoming =
+    mailboxed && pendingSqlResultMatches(mailboxed, params)
+      ? mailboxed
       : undefined;
+  const retained =
+    adopted && pendingSqlResultMatches(adopted, params) ? adopted : undefined;
+  const handoffData = forceNetworkRun
+    ? undefined
+    : (incoming ?? retained)?.data;
+
+  useEffect(() => {
+    if (!incoming) return;
+    setAdopted(incoming);
+    if (peekPendingSqlResult() === incoming) {
+      clearPendingSqlResult();
+    }
+  }, [incoming]);
+
+  const variables = {
+    databaseName: params.databaseName,
+    refName: params.refName,
+    queryString: params.q,
+    schemaName: params.schemaName || undefined,
+  };
 
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
-    variables: {
-      databaseName: params.databaseName,
-      refName: params.refName,
-      queryString: params.q,
-      schemaName: params.schemaName,
-    },
-    fetchPolicy: "cache-and-network",
+    variables,
+    fetchPolicy: forceNetworkRun ? "network-only" : "cache-first",
     skip: !!handoffData,
   });
 
@@ -110,7 +128,7 @@ export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
         SqlSelectForSqlDataTableQueryVariables
       >({
         query: SqlSelectForSqlDataTableDocument,
-        variables: { ...params, queryString: params.q, offset },
+        variables: { ...variables, offset },
       });
       setRows(res.data.sqlSelect.rows.list);
       setState({ offset: res.data.sqlSelect.rows.nextOffset });

@@ -40,7 +40,7 @@ export function pendingSqlResultMatches(
     result.variables.databaseName === params.databaseName &&
     result.variables.refName === params.refName &&
     result.variables.queryString === params.q &&
-    (result.variables.schemaName ?? undefined) ===
-      (params.schemaName ?? undefined)
+    (result.variables.schemaName || undefined) ===
+      (params.schemaName || undefined)
   );
 }

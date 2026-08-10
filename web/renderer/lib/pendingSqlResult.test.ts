@@ -62,11 +62,17 @@ describe("pendingSqlResult", () => {
     ).toBe(false);
   });
 
-  it("treats null and undefined schemaName as equal", () => {
+  it("treats null, undefined, and empty-string schemaName as equal", () => {
     const withNullSchema = {
       ...result,
       variables: { ...result.variables, schemaName: null },
     };
     expect(pendingSqlResultMatches(withNullSchema, params)).toBe(true);
+    expect(
+      pendingSqlResultMatches(withNullSchema, { ...params, schemaName: "" }),
+    ).toBe(true);
+    expect(pendingSqlResultMatches(result, { ...params, schemaName: "" })).toBe(
+      true,
+    );
   });
 });

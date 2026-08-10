@@ -21,7 +21,7 @@ import { setPendingSqlResult } from "@lib/pendingSqlResult";
 import { recordMutation, recordQuery } from "@lib/sessionQueryHistory";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ExecuteProps, Props, SqlEditorContextType } from "./types";
 
 // This context handles the SQL console on the database page and executing queries
@@ -44,6 +44,7 @@ export function SqlEditorProvider(props: Props) {
   });
   const router = useRouter();
   const client = useApolloClient();
+  const executing = useRef(false);
   const { queryIsRecentMutation } = useSessionQueryHistory(
     props.params.databaseName,
   );
@@ -97,6 +98,10 @@ export function SqlEditorProvider(props: Props) {
         handleQuery(executeProps);
         return;
       }
+      if (executing.current) {
+        return;
+      }
+      executing.current = true;
       setLoading(true);
       try {
         const res = await client.query<
@@ -123,7 +128,7 @@ export function SqlEditorProvider(props: Props) {
             databaseName: executeProps.databaseName,
             refName: executeProps.refName,
             queryString: executeProps.query,
-            schemaName: executeProps.schemaName,
+            schemaName: executeProps.schemaName || undefined,
           },
           data: res.data,
         });
@@ -136,6 +141,7 @@ export function SqlEditorProvider(props: Props) {
           setErr(improveGqlError(apolloErr));
         }
       } finally {
+        executing.current = false;
         setLoading(false);
       }
     },

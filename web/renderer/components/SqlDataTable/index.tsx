@@ -92,9 +92,9 @@ function Inner(props: InnerProps) {
   );
 }
 
-function Query(props: Props) {
+function Query(props: Props & { forceNetworkRun?: boolean }) {
   const { state, fetchMore, hasMore, loading, client, error } =
-    useSqlSelectRows(props.params);
+    useSqlSelectRows(props.params, props.forceNetworkRun);
 
   if (loading) return <Loader loaded={false} />;
 
@@ -128,5 +128,5 @@ export default function SqlDataTable(props: Props) {
     );
   }
 
-  return <Query {...props} />;
+  return <Query {...props} forceNetworkRun={runQueryAnyway} />;
 }
