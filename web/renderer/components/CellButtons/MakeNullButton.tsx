@@ -56,7 +56,11 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
     if (res.success && res.data?.updateRow) {
       setExecutedQuery(res.data.updateRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.updateRow.executionMessage);
-      const nextWhere = rewriteWhereColumn(stack.where, props.currCol.name, null);
+      const nextWhere = rewriteWhereColumn(
+        stack.where,
+        props.currCol.name,
+        null,
+      );
       if (nextWhere !== stack.where) {
         updateStack({ ...stack, where: nextWhere });
       }
