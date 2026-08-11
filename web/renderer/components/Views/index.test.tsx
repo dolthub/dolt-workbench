@@ -34,7 +34,7 @@ describe("tests Views", () => {
     expect(link).toHaveTextContent("Add some");
     expect(link).toHaveProperty(
       "href",
-      "https://docs.dolthub.com/sql-reference/version-control/dolt-system-tables#dolt_schemas",
+      "https://dolthub.com/docs/sql-reference/version-control/dolt-system-tables#dolt_schemas",
     );
   });
 

@@ -35,11 +35,17 @@ GROUP BY index_name;`;
 
 // export const tableColsQuery = `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`;
 
+// Dolt system functions are invoked in the FROM clause so that their results
+// come back as named, typed columns (status, message, etc.), matching the
+// result shape of CALL on the MySQL side. Requires a Doltgres version where
+// the dolt_* functions declare OUT parameters (returning records rather than
+// text arrays).
+
 // BRANCHES
 
-export const callNewBranch = `SELECT DOLT_BRANCH($1::text, $2::text)`;
+export const callNewBranch = `SELECT * FROM DOLT_BRANCH($1::text, $2::text)`;
 
-export const callDeleteBranch = `SELECT DOLT_BRANCH('-D', $1::text)`;
+export const callDeleteBranch = `SELECT * FROM DOLT_BRANCH('-D', $1::text)`;
 
 // COMMITS
 
@@ -88,7 +94,7 @@ export const threeDotSchemaDiffQuery = (
 // PULLS
 
 export const getCallMerge = (hasAuthor = false) =>
-  `SELECT DOLT_MERGE($1::text, '--no-ff', '-m', $2::text${getAuthorNameString(hasAuthor, "$3::text")})`;
+  `SELECT * FROM DOLT_MERGE($1::text, '--no-ff', '-m', $2::text${getAuthorNameString(hasAuthor, "$3::text")})`;
 
 export const mergeConflictsSummaryQuery = `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS_SUMMARY($1::text, $2::text)`;
 
@@ -96,20 +102,20 @@ export const getMergeConflictsQuery = (offset: number) =>
   `SELECT * FROM DOLT_PREVIEW_MERGE_CONFLICTS($1::text, $2::text, $3::text) LIMIT ${ROW_LIMIT + 1} OFFSET ${offset}`;
 
 export const getResolveConflicts = (numTables: number) =>
-  `SELECT DOLT_CONFLICTS_RESOLVE($1::text, ${Array.from(
+  `SELECT * FROM DOLT_CONFLICTS_RESOLVE($1::text, ${Array.from(
     { length: numTables },
     (_, i) => `$${i + 2}::text`,
   ).join(", ")})`;
 
 export const getCommitMerge = (hasAuthor = false) =>
-  `SELECT DOLT_COMMIT('-Am', $1::text${getAuthorNameString(hasAuthor, "$2::text")})`;
+  `SELECT * FROM DOLT_COMMIT('-Am', $1::text${getAuthorNameString(hasAuthor, "$2::text")})`;
 
 // TAGS
 
-export const callDeleteTag = `SELECT DOLT_TAG('-d', $1::text)`;
+export const callDeleteTag = `SELECT * FROM DOLT_TAG('-d', $1::text)`;
 
 export const getCallNewTag = (hasMessage = false, hasAuthor = false) =>
-  `SELECT DOLT_TAG($1::text, $2::text${hasMessage ? `, '-m', $3::text` : ""}${getAuthorNameString(
+  `SELECT * FROM DOLT_TAG($1::text, $2::text${hasMessage ? `, '-m', $3::text` : ""}${getAuthorNameString(
     hasAuthor,
     hasMessage ? "$4::text" : "$3::text",
   )})`;
@@ -175,23 +181,23 @@ export function getOrderByFromDiffCols(cols: t.RawRows): string {
   return orderBy === "" ? "" : `ORDER BY ${orderBy} `;
 }
 
-export const callResetHard = `SELECT DOLT_RESET('--hard')`;
+export const callResetHard = `SELECT * FROM DOLT_RESET('--hard')`;
 
-export const callCheckoutTable = `SELECT DOLT_CHECKOUT($1::text)`;
+export const callCheckoutTable = `SELECT * FROM DOLT_CHECKOUT($1::text)`;
 
 // REMOTES
 
-export const callAddRemote = `SELECT DOLT_REMOTE('add', $1::text, $2::text)`;
+export const callAddRemote = `SELECT * FROM DOLT_REMOTE('add', $1::text, $2::text)`;
 
-export const callDeleteRemote = `SELECT DOLT_REMOTE('remove', $1::text)`;
+export const callDeleteRemote = `SELECT * FROM DOLT_REMOTE('remove', $1::text)`;
 
-export const callPullRemote = `SELECT DOLT_PULL($1::text, $2::text)`;
+export const callPullRemote = `SELECT * FROM DOLT_PULL($1::text, $2::text)`;
 
-export const callPushRemote = `SELECT DOLT_PUSH($1::text, $2::text)`;
+export const callPushRemote = `SELECT * FROM DOLT_PUSH($1::text, $2::text)`;
 
-export const callFetchRemote = `SELECT DOLT_FETCH($1::text)`;
+export const callFetchRemote = `SELECT * FROM DOLT_FETCH($1::text)`;
 
-export const callCreateBranchFromRemote = `CALL DOLT_BRANCH($1::text, $2::text)`;
+export const callCreateBranchFromRemote = `SELECT * FROM DOLT_BRANCH($1::text, $2::text)`;
 
 export const doltTestRun = (withArg?: boolean): string =>
   `SELECT * FROM DOLT_TEST_RUN(${withArg ? "$1::text" : ""})`;
