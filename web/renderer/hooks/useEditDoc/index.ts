@@ -1,12 +1,12 @@
+import { useApolloClient } from "@apollo/client";
+import { useSqlEditorContext } from "@contexts/sqleditor";
 import { useSetState } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
-import { DocType } from "@gen/graphql-types";
-import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import { DocType, useSaveDocMutation } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
-import { sqlQuery } from "@lib/urls";
-import { useRouter } from "next/router";
+import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { SyntheticEvent } from "react";
-import { getDocsQuery } from "./utils";
+import useMutation from "../useMutation";
 
 type DocState = {
   docType: Maybe<DocType>;
@@ -14,10 +14,12 @@ type DocState = {
   loading: boolean;
 };
 
+type SaveResult = { success: boolean };
+
 type ReturnType = {
   state: DocState;
   setState: React.Dispatch<Partial<DocState>>;
-  onSubmit: (e: SyntheticEvent) => Promise<void>;
+  onSubmit: (e: SyntheticEvent) => Promise<SaveResult>;
 };
 
 export default function useEditDoc(
@@ -30,20 +32,42 @@ export default function useEditDoc(
     markdown: defaultMarkdown,
     loading: false,
   });
-  const router = useRouter();
-  const { isPostgres } = useDatabaseDetails();
+  const { setEditorString, setError, setExecutionMessage } =
+    useSqlEditorContext();
+  const { mutateFn } = useMutation({ hook: useSaveDocMutation });
+  const client = useApolloClient();
 
-  const onSubmit = async (e: SyntheticEvent) => {
+  const onSubmit = async (e: SyntheticEvent): Promise<SaveResult> => {
     e.preventDefault();
-    if (!state.docType) return;
+    if (!state.docType || state.docType === DocType.Unspecified) {
+      return { success: false };
+    }
     setState({ loading: true });
 
-    const { href, as } = sqlQuery({
-      ...params,
-      q: getDocsQuery(state.docType, state.markdown, isPostgres),
+    const res = await mutateFn({
+      variables: {
+        databaseName: params.databaseName,
+        refName: params.refName,
+        docType: state.docType,
+        markdown: state.markdown,
+      },
     });
-    router.push(href, as).catch(console.error);
+
+    if (res.success && res.data?.saveDoc) {
+      setEditorString(res.data.saveDoc.queryString);
+      setExecutionMessage(res.data.saveDoc.executionMessage);
+      client
+        .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
+        .catch(console.error);
+      setState({ loading: false });
+      return { success: true };
+    }
+
+    if (res.error) {
+      setError(res.error);
+    }
     setState({ loading: false });
+    return { success: false };
   };
 
   return { state, setState, onSubmit };

@@ -272,6 +272,7 @@ export type Mutation = {
   removeDatabaseConnection: Scalars['Boolean']['output'];
   resetDatabase: Scalars['Boolean']['output'];
   restoreAllTables: Scalars['Boolean']['output'];
+  saveDoc: MutationResult;
   saveTests: TestList;
   updateRow: MutationResult;
 };
@@ -471,6 +472,14 @@ export type MutationResetDatabaseArgs = {
 
 export type MutationRestoreAllTablesArgs = {
   databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+};
+
+
+export type MutationSaveDocArgs = {
+  databaseName: Scalars['String']['input'];
+  docType: DocType;
+  markdown: Scalars['String']['input'];
   refName: Scalars['String']['input'];
 };
 
@@ -2076,6 +2085,16 @@ export type BranchListForCommitGraphQueryVariables = Exact<{
 
 
 export type BranchListForCommitGraphQuery = { __typename?: 'Query', branches: { __typename?: 'BranchList', nextOffset?: number | null, list: Array<{ __typename?: 'Branch', branchName: string, head?: string | null }> } };
+
+export type SaveDocMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  docType: DocType;
+  markdown: Scalars['String']['input'];
+}>;
+
+
+export type SaveDocMutation = { __typename?: 'Mutation', saveDoc: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -6239,6 +6258,49 @@ export type BranchListForCommitGraphQueryHookResult = ReturnType<typeof useBranc
 export type BranchListForCommitGraphLazyQueryHookResult = ReturnType<typeof useBranchListForCommitGraphLazyQuery>;
 export type BranchListForCommitGraphSuspenseQueryHookResult = ReturnType<typeof useBranchListForCommitGraphSuspenseQuery>;
 export type BranchListForCommitGraphQueryResult = Apollo.QueryResult<BranchListForCommitGraphQuery, BranchListForCommitGraphQueryVariables>;
+export const SaveDocDocument = gql`
+    mutation SaveDoc($databaseName: String!, $refName: String!, $docType: DocType!, $markdown: String!) {
+  saveDoc(
+    databaseName: $databaseName
+    refName: $refName
+    docType: $docType
+    markdown: $markdown
+  ) {
+    rowsAffected
+    queryString
+    executionMessage
+  }
+}
+    `;
+export type SaveDocMutationFn = Apollo.MutationFunction<SaveDocMutation, SaveDocMutationVariables>;
+
+/**
+ * __useSaveDocMutation__
+ *
+ * To run a mutation, you first call `useSaveDocMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSaveDocMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [saveDocMutation, { data, loading, error }] = useSaveDocMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      docType: // value for 'docType'
+ *      markdown: // value for 'markdown'
+ *   },
+ * });
+ */
+export function useSaveDocMutation(baseOptions?: Apollo.MutationHookOptions<SaveDocMutation, SaveDocMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SaveDocMutation, SaveDocMutationVariables>(SaveDocDocument, options);
+      }
+export type SaveDocMutationHookResult = ReturnType<typeof useSaveDocMutation>;
+export type SaveDocMutationResult = Apollo.MutationResult<SaveDocMutation>;
+export type SaveDocMutationOptions = Apollo.BaseMutationOptions<SaveDocMutation, SaveDocMutationVariables>;
 export const TableNamesDocument = gql`
     query TableNames($databaseName: String!, $refName: String!, $schemaName: String, $filterSystemTables: Boolean) {
   tableNames(
