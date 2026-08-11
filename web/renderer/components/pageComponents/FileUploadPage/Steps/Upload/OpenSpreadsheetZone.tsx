@@ -1,5 +1,5 @@
 import { Button } from "@dolthub/react-components";
-import { GrTable } from "@react-icons/all-files/gr/GrTable";
+import { GrTable } from "react-icons/gr";
 import cx from "classnames";
 import { useFileUploadContext } from "../../contexts/fileUploadLocalForage";
 import useUploadContext from "./contexts/upload";

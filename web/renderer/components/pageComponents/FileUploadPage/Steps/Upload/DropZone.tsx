@@ -1,6 +1,5 @@
 import { Button, ErrorMsg } from "@dolthub/react-components";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
+import { FiCheck, FiUpload } from "react-icons/fi";
 import cx from "classnames";
 import { useRef } from "react";
 import FileInfo from "../../FileInfo";

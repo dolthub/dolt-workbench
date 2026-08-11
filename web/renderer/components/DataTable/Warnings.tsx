@@ -1,4 +1,4 @@
-import { IoWarningOutline } from "@react-icons/all-files/io5/IoWarningOutline";
+import { IoWarningOutline } from "react-icons/io5";
 import css from "./index.module.css";
 
 type Props = {

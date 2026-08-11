@@ -1,5 +1,5 @@
 import { DatabaseParams } from "@lib/params";
-import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
+import { GiHamburgerMenu } from "react-icons/gi";
 import cx from "classnames";
 import { ReactNode, useState } from "react";
 import BackButton from "./BackButton";

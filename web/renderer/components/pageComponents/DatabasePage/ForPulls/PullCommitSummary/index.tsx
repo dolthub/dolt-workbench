@@ -1,6 +1,6 @@
 import { pluralize } from "@dolthub/web-utils";
 import { PullDetailSummaryFragment } from "@gen/graphql-types";
-import { RiGitRepositoryCommitsFill } from "@react-icons/all-files/ri/RiGitRepositoryCommitsFill";
+import { RiGitRepositoryCommitsFill } from "react-icons/ri";
 import TimeAgo from "react-timeago";
 import css from "./index.module.css";
 

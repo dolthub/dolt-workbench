@@ -2,7 +2,7 @@ import { SmallLoader } from "@dolthub/react-components";
 import { useDocsRowsForDocPageQuery } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 import { newDoc } from "@lib/urls";
-import { HiOutlineDocumentAdd } from "@react-icons/all-files/hi/HiOutlineDocumentAdd";
+import { HiOutlineDocumentAdd } from "react-icons/hi";
 import DropdownItem from "./Item";
 
 type InnerProps = {

@@ -5,7 +5,7 @@ import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
 import useRole from "@hooks/useRole";
 import { RefParams } from "@lib/params";
 import { diff } from "@lib/urls";
-import { IoArrowUndoOutline } from "@react-icons/all-files/io5/IoArrowUndoOutline";
+import { IoArrowUndoOutline } from "react-icons/io5";
 import cx from "classnames";
 import { useState } from "react";
 import CommitModal from "./CommitModal";

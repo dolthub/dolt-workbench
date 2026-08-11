@@ -1,5 +1,5 @@
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import { FiCheck } from "react-icons/fi";
+import { IoMdClose } from "react-icons/io";
 import css from "./index.module.css";
 
 type Props = {

@@ -1,8 +1,7 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { CopyButton } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
-import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
-import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import CreateViewButton from "./CreateViewButton";
 import css from "./index.module.css";
 

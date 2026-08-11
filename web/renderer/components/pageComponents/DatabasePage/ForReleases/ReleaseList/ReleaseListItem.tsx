@@ -4,8 +4,8 @@ import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { Button } from "@dolthub/react-components";
 import { TagForListFragment } from "@gen/graphql-types";
 import { DatabaseParams } from "@lib/params";
-import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
-import { IoIosGitCommit } from "@react-icons/all-files/io/IoIosGitCommit";
+import { FaRegTrashAlt } from "react-icons/fa";
+import { IoIosGitCommit } from "react-icons/io";
 import Timeago from "react-timeago";
 import css from "./index.module.css";
 

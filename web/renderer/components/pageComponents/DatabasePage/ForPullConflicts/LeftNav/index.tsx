@@ -3,7 +3,7 @@ import { QueryHandler } from "@dolthub/react-components";
 import { formatNumber } from "@dolthub/web-utils";
 import { PullDiffParams } from "@lib/params";
 import { pullConflicts } from "@lib/urls";
-import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
+import { GiHamburgerMenu } from "react-icons/gi";
 import cx from "classnames";
 import { useState } from "react";
 import { useConflictsContext } from "../contexts/conflicts";

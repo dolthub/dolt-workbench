@@ -5,8 +5,7 @@ import { tests as testsUrl } from "@lib/urls";
 import cx from "classnames";
 import css from "./index.module.css";
 import { excerpt } from "@dolthub/web-utils";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
-import { FiX } from "@react-icons/all-files/fi/FiX";
+import { FiCheck, FiX } from "react-icons/fi";
 
 export function TestResultsListItem({
   test,

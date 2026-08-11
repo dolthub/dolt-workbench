@@ -10,7 +10,7 @@ import {
   DatabaseConnectionFragment,
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
-import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import css from "./index.module.css";
 

@@ -4,7 +4,7 @@ import { ButtonWithPopup } from "@dolthub/react-components";
 import { RemoteFragment } from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
 import { OptionalRefParams } from "@lib/params";
-import { FaRegTrashAlt } from "@react-icons/all-files/fa/FaRegTrashAlt";
+import { FaRegTrashAlt } from "react-icons/fa";
 import { useState } from "react";
 import FetchButton from "./FetchButton";
 import FetchRemoteModal from "./FetchRemoteModal";

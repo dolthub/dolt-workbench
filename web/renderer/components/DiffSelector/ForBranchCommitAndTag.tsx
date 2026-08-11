@@ -1,7 +1,7 @@
 import { RefParams } from "@lib/params";
 import BranchCommitAndTagSelector from "@components/FormSelectForRefs/BranchCommitAndTagSelector";
 import { useState } from "react";
-import { BsArrowLeft } from "@react-icons/all-files/bs/BsArrowLeft";
+import { BsArrowLeft } from "react-icons/bs";
 import Link from "@components/links/Link";
 import { diff } from "@lib/urls";
 import { Button } from "@dolthub/react-components";

@@ -1,5 +1,5 @@
 import { Button } from "@dolthub/react-components";
-import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
+import { FaPlay } from "react-icons/fa";
 import css from "./index.module.css";
 
 type Props = {

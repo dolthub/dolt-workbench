@@ -1,6 +1,6 @@
 import { Btn } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import { IoMdClose } from "react-icons/io";
 import css from "./index.module.css";
 import { HiddenColIndexes, SetHiddenColIndexes, unhideColumn } from "./utils";
 
