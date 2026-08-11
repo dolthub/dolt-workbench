@@ -1,5 +1,4 @@
 import { gql } from "@apollo/client";
-import { DOLT_LOOKUP_FRAGMENT } from "@components/CellButtons/queries";
 
 export const ROWS_FOR_SCHEMAS = gql`
   fragment SchemaItem on SchemaItem {
@@ -30,7 +29,6 @@ export const ROWS_FOR_PROCEDURES = gql`
 `;
 
 export const SCHEMA_DEFINITION = gql`
-  ${DOLT_LOOKUP_FRAGMENT}
   query SchemaDefinition(
     $databaseName: String!
     $refName: String!

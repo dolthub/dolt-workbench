@@ -115,9 +115,18 @@ export default function SchemaFragment(props: Props) {
   );
 }
 
-function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
+export function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
   if (isPostgres) return 0;
-  if (kind === SchemaType.Table || kind === SchemaType.View) return 1;
-  if (kind === SchemaType.Trigger || kind === SchemaType.Procedure) return 2;
-  return 3;
+  switch (kind) {
+    case SchemaType.Table:
+    case SchemaType.View:
+      return 1;
+    case SchemaType.Trigger:
+    case SchemaType.Procedure:
+      return 2;
+    case SchemaType.Event:
+      return 3;
+    default:
+      return 0;
+  }
 }

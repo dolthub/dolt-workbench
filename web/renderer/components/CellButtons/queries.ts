@@ -116,7 +116,6 @@ export const DOLT_CELL_DIFF = gql`
 `;
 
 export const DOLT_CELL_HISTORY = gql`
-  ${DOLT_LOOKUP_FRAGMENT}
   query DoltCellHistory(
     $databaseName: String!
     $refName: String!
