@@ -125,7 +125,8 @@ export type DatabaseConnection = {
 
 export enum DatabaseType {
   Mysql = 'Mysql',
-  Postgres = 'Postgres'
+  Postgres = 'Postgres',
+  Sqlite = 'Sqlite'
 }
 
 export enum DiffRowType {
