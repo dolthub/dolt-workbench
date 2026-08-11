@@ -4,6 +4,7 @@ import { CreateViewDocument } from "@gen/graphql-types";
 export const setEditorString = jest.fn();
 export const setExecutedQuery = jest.fn();
 export const setExecutionMessage = jest.fn();
+export const setExecutionError = jest.fn();
 export const setError = jest.fn();
 
 export const SqlEditorContextProviderValueMock = {
@@ -16,6 +17,7 @@ export const SqlEditorContextProviderValueMock = {
   queryClickHandler: jest.fn(),
   setError,
   setExecutionMessage,
+  setExecutionError,
   loading: false,
   modalState: {
     forkIsOpen: false,

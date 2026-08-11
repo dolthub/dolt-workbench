@@ -23,7 +23,7 @@ type Props = {
 };
 
 export default function MakeNullButton(props: Props): JSX.Element | null {
-  const { setExecutedQuery, setError, setExecutionMessage } =
+  const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
@@ -57,7 +57,7 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
     } else if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
   };
 

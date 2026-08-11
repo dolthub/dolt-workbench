@@ -2,14 +2,19 @@ import { ApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { useDataTableContext } from "@contexts/dataTable";
-import { Button, Loader } from "@dolthub/react-components";
+import { useSqlEditorContext } from "@contexts/sqleditor";
+import { Button, Loader, isTimeoutError } from "@dolthub/react-components";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
+import { QueryExecutionStatus } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
 import { useEffect, useState } from "react";
 import SqlMessage from "./SqlMessage";
-import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
+import {
+  improveGqlError,
+  isReadOnlyDatabaseRevisionError,
+} from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
 import css from "./index.module.css";
 import useSqlQuery from "./useSqlQuery";
@@ -31,9 +36,33 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   useSqlQuery(props.params, props.client, props.state.isMutation, props.error);
   const { setIsMutation } = useDataTableContext();
+  const { setExecutionError } = useSqlEditorContext();
   useEffect(() => {
     setIsMutation(props.state.isMutation);
   }, [props.state.isMutation, setIsMutation]);
+  useEffect(() => {
+    if (props.error) {
+      if (isTimeoutError(props.error.message) || props.error.message === "") {
+        return;
+      }
+      setExecutionError(
+        improveGqlError(props.error)?.message ?? "INTERNAL_SERVER_ERROR",
+      );
+      return;
+    }
+    if (
+      props.state.executionStatus === QueryExecutionStatus.Error &&
+      props.state.executionMessage &&
+      !isTimeoutError(props.state.executionMessage)
+    ) {
+      setExecutionError(props.state.executionMessage);
+    }
+  }, [
+    props.error,
+    props.state.executionStatus,
+    props.state.executionMessage,
+    setExecutionError,
+  ]);
   const msg = (
     <SqlMessage
       params={props.params}

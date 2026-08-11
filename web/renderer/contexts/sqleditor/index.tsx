@@ -1,15 +1,27 @@
+import { useApolloClient } from "@apollo/client";
+import { improveGqlError } from "@components/SqlDataTable/SqlMessage/utils";
 import { createCustomContext } from "@dolthub/react-contexts";
+import { isTimeoutError } from "@dolthub/react-components";
 import {
   useContextWithError,
   useReactiveWidth,
+  useSessionQueryHistory,
   useSetState,
 } from "@dolthub/react-hooks";
+import {
+  QueryExecutionStatus,
+  SqlSelectForSqlDataTableDocument,
+  SqlSelectForSqlDataTableQuery,
+  SqlSelectForSqlDataTableQueryVariables,
+} from "@gen/graphql-types";
 import useApolloError from "@hooks/useApolloError";
+import { getCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
+import { setPendingSqlResult } from "@lib/pendingSqlResult";
 import { recordMutation, recordQuery } from "@lib/sessionQueryHistory";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ExecuteProps, Props, SqlEditorContextType } from "./types";
 
 // This context handles the SQL console on the database page and executing queries
@@ -24,23 +36,44 @@ export function SqlEditorProvider(props: Props) {
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useApolloError(undefined);
-  const [executionMessage, setExecutionMessage] = useState<string | undefined>(
+  const [executionMessage, setExecutionMessageState] = useState<
+    string | undefined
+  >(undefined);
+  const [executionError, setExecutionErrorState] = useState<string | undefined>(
     undefined,
   );
+
+  const setExecutionMessage = useCallback((m: string | undefined) => {
+    setExecutionMessageState(m);
+    if (m) setExecutionErrorState(undefined);
+  }, []);
+
+  const setExecutionError = useCallback((m: string | undefined) => {
+    setExecutionErrorState(m);
+    if (m) setExecutionMessageState(undefined);
+  }, []);
   const [modalState, setModalState] = useSetState({
     errorIsOpen: false,
   });
   const router = useRouter();
+  const client = useApolloClient();
+  const executing = useRef(false);
+  const { queryIsRecentMutation } = useSessionQueryHistory(
+    props.params.databaseName,
+  );
 
   useEffect(() => {
     setShowSqlEditor(isMobile);
   }, [isMobile]);
 
   useEffect(() => {
-    const clearExecutionMessage = () => setExecutionMessage(undefined);
-    router.events.on("routeChangeStart", clearExecutionMessage);
+    const clearMessages = () => {
+      setExecutionMessageState(undefined);
+      setExecutionErrorState(undefined);
+    };
+    router.events.on("routeChangeStart", clearMessages);
     return () => {
-      router.events.off("routeChangeStart", clearExecutionMessage);
+      router.events.off("routeChangeStart", clearMessages);
     };
   }, [router.events]);
 
@@ -72,12 +105,72 @@ export function SqlEditorProvider(props: Props) {
 
   const executeQuery = useCallback(
     async (executeProps: ExecuteProps) => {
-      setLoading(true);
-      handleQuery(executeProps);
+      if (!executeProps.refName) {
+        setErr(new Error("Cannot run select query without ref"));
+        return;
+      }
       recordQuery(props.params.databaseName, executeProps.query);
-      setLoading(false);
+      if (queryIsRecentMutation(executeProps.query)) {
+        handleQuery(executeProps);
+        return;
+      }
+      if (executing.current) {
+        return;
+      }
+      executing.current = true;
+      setLoading(true);
+      try {
+        const res = await client.query<
+          SqlSelectForSqlDataTableQuery,
+          SqlSelectForSqlDataTableQueryVariables
+        >({
+          query: SqlSelectForSqlDataTableDocument,
+          variables: {
+            databaseName: executeProps.databaseName,
+            refName: executeProps.refName,
+            queryString: executeProps.query,
+            schemaName: executeProps.schemaName || undefined,
+          },
+          fetchPolicy: "network-only",
+        });
+        const status = res.data.sqlSelect.queryExecutionStatus;
+        const message = res.data.sqlSelect.queryExecutionMessage || "";
+        if (status === QueryExecutionStatus.Error && !isTimeoutError(message)) {
+          setExecutionError(message || "Query execution failed");
+          return;
+        }
+        setPendingSqlResult({
+          variables: {
+            databaseName: executeProps.databaseName,
+            refName: executeProps.refName,
+            queryString: executeProps.query,
+            schemaName: executeProps.schemaName || undefined,
+          },
+          data: res.data,
+        });
+        handleQuery(executeProps);
+      } catch (e) {
+        const apolloErr = getCaughtApolloError(e);
+        if (apolloErr && isTimeoutError(apolloErr.message)) {
+          handleQuery(executeProps);
+        } else {
+          setExecutionError(
+            improveGqlError(apolloErr)?.message ?? "Query execution failed",
+          );
+        }
+      } finally {
+        executing.current = false;
+        setLoading(false);
+      }
     },
-    [handleQuery, props.params.databaseName],
+    [
+      client,
+      handleQuery,
+      queryIsRecentMutation,
+      setErr,
+      setExecutionError,
+      props.params.databaseName,
+    ],
   );
 
   const setExecutedQuery = useCallback(
@@ -132,6 +225,8 @@ export function SqlEditorProvider(props: Props) {
       setError,
       executionMessage,
       setExecutionMessage,
+      executionError,
+      setExecutionError,
       loading,
       modalState,
       setModalState,
@@ -147,6 +242,9 @@ export function SqlEditorProvider(props: Props) {
     err,
     setError,
     executionMessage,
+    setExecutionMessage,
+    executionError,
+    setExecutionError,
     loading,
     modalState,
     setModalState,

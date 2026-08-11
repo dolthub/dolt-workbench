@@ -13,6 +13,7 @@ type Props<TData, TVariables> = {
   cannotBeUndone?: boolean;
   asset: string;
   assetId?: string;
+  title?: string;
   btnText?: string;
   mutationProps: MutationProps<TData, TVariables>;
   callback?: (d: TData) => Error | undefined;
@@ -63,7 +64,7 @@ export default function DeleteModal<TData, TVariables>({
     <Modal
       isOpen={props.isOpen}
       onRequestClose={onClose}
-      title={`Delete ${props.asset}`}
+      title={props.title ?? `Delete ${props.asset}`}
       className={className}
       err={err}
       button={

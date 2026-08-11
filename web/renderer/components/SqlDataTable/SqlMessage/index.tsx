@@ -1,11 +1,9 @@
-import { ErrorMsg, isTimeoutError } from "@dolthub/react-components";
+import { isTimeoutError } from "@dolthub/react-components";
 import { QueryExecutionStatus } from "@gen/graphql-types";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
 import SuccessMsg from "./SuccessMsg";
 import TimeoutMessage from "./TimeoutMsg";
-import css from "./index.module.css";
-import { improveGqlError } from "./utils";
 
 type TimeoutProps = {
   rowsLen: number;
@@ -27,14 +25,7 @@ export default function SqlMessage(props: Props) {
     ) {
       return <TimeoutMessage {...props} />;
     }
-    return (
-      <ErrorMsg
-        className={css.status}
-        errString={
-          improveGqlError(props.gqlError)?.message || "INTERNAL_SERVER_ERROR"
-        }
-      />
-    );
+    return null;
   }
 
   switch (props.executionStatus) {
@@ -47,8 +38,6 @@ export default function SqlMessage(props: Props) {
       if (props.executionMessage && isTimeoutError(props.executionMessage)) {
         return <TimeoutMessage {...props} />;
       }
-      return (
-        <ErrorMsg className={css.status} errString={props.executionMessage} />
-      );
+      return null;
   }
 }

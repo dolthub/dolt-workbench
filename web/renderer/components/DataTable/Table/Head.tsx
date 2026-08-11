@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function Head(props: Props) {
-  const { columns, onAddEmptyRow, pendingRow, isMutation } =
+  const { columns, onAddEmptyRow, pendingRow, isMutation, tableShape } =
     useDataTableContext();
   const cols = getTableColsFromQueryCols(props.columns, columns);
 
@@ -27,7 +27,7 @@ export default function Head(props: Props) {
         }db-data-table-columns`}
       >
         <th>
-          {!pendingRow?.columnValues.length && !isMutation && (
+          {tableShape && !pendingRow?.columnValues.length && !isMutation && (
             <Btn
               onClick={() => {
                 onAddEmptyRow();

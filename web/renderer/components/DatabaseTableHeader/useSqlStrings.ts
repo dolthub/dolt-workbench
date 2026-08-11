@@ -1,6 +1,7 @@
 import { DataTableContext, DataTableContextType } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { DatabasePageParams } from "@lib/params";
+import { useRouter } from "next/router";
 import { useCallback, useContext, useEffect } from "react";
 
 const exampleCreateTable = `CREATE TABLE tablename (pk INT, col1 VARCHAR(255), PRIMARY KEY (pk));`;
@@ -10,6 +11,11 @@ export function useSqlStrings(
   empty = false,
 ): { sqlString: string; editorString: string } {
   const { editorString, setEditorString } = useSqlEditorContext();
+  const router = useRouter();
+  const executedSql =
+    typeof router.query.executedSql === "string"
+      ? router.query.executedSql
+      : undefined;
   const executedQueryString = (
     useContext(DataTableContext) as DataTableContextType | undefined
   )?.executedQueryString;
@@ -20,15 +26,18 @@ export function useSqlStrings(
   const getSqlString = (): string => {
     if (empty) return exampleCreateTable;
     if (editorString) return flattenNewLines(editorString);
-    return flattenNewLines(params.q || executedQueryString || "");
+    return flattenNewLines(
+      params.q || executedSql || executedQueryString || "",
+    );
   };
 
   const getEditorString = useCallback((): string => {
     if (empty) return sampleCreateQueryForEmpty();
     if (params.q) return params.q;
+    if (executedSql) return addEmptyLines([executedSql]);
     if (executedQueryString) return addEmptyLines([executedQueryString]);
     return addEmptyLines([]);
-  }, [params.q, empty, executedQueryString]);
+  }, [params.q, empty, executedSql, executedQueryString]);
 
   useEffect(() => {
     const sqlQuery = getEditorString();
