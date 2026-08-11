@@ -20,7 +20,6 @@ import {
   WorkingDiffRowsForDataTableQueryDocument,
   WorkingDiffRowsForDataTableQueryVariables,
 } from "@gen/graphql-types";
-import useSqlParser from "@hooks/useSqlParser";
 import { parseStackingParams } from "@lib/dataTableParams";
 import {
   RefOptionalSchemaParams,
@@ -61,6 +60,8 @@ type DataTableContextType = {
   diffExists: boolean;
   tableShape: boolean;
   executedQueryString?: string;
+  isMutation: boolean;
+  setIsMutation: (b: boolean) => void;
 };
 
 export const DataTableContext =
@@ -69,7 +70,6 @@ export const DataTableContext =
 type Props = {
   params: DataTableParams | SqlQueryParams;
   children: ReactNode;
-  showingWorkingDiff?: boolean;
 };
 
 type TableProps = Props & {
@@ -283,7 +283,7 @@ function ProviderForTableName(props: TableProps) {
       foreignKeys: tableRes.data?.table.foreignKeys,
       error: tableRes.error ?? selectTableRowsRes.error,
       errorWorkingDiff: tableRes.error ?? diffOnlyRes.error,
-      showingWorkingDiff: !!props.showingWorkingDiff,
+      showingWorkingDiff: false,
       tableNames: props.tableNames,
       onAddEmptyRow,
       pendingRow,
@@ -294,6 +294,8 @@ function ProviderForTableName(props: TableProps) {
         workingDiffRows.length > 0,
       tableShape: props.tableShape,
       executedQueryString: selectTableRowsRes.data?.selectTableRows.queryString,
+      isMutation: false,
+      setIsMutation: () => {},
     };
   }, [
     loadMore,
@@ -317,7 +319,6 @@ function ProviderForTableName(props: TableProps) {
     tableRes.data?.table.foreignKeys,
     tableRes.error,
     tableRes.loading,
-    props.showingWorkingDiff,
     props.tableNames,
     onAddEmptyRow,
     pendingRow,
@@ -332,33 +333,23 @@ function ProviderForTableName(props: TableProps) {
 }
 
 // DataTableProvider should only wrap DatabasePage.ForTable and DatabasePage.ForQueries
-export function DataTableProvider({
-  params,
-  children,
-  showingWorkingDiff,
-}: Props) {
+export function DataTableProvider({ params, children }: Props) {
   const router = useRouter();
-  const { isMutation, requireTableNamesForSelect, loading } = useSqlParser();
-  const tableNames = useMemo(
-    () =>
-      "tableName" in params
-        ? [params.tableName]
-        : requireTableNamesForSelect(params.q),
-    [params, loading],
-  );
   const tableShape = "tableName" in params;
+  const tableNames = tableShape ? [params.tableName] : [];
   const executedQueryString = executedSqlFromRouter(router.query.executedSql);
+  const [isMutation, setIsMutation] = useState(false);
 
   const value = useMemo(() => {
     return {
       params,
-      loading,
+      loading: false,
       loadingWorkingDiff: false,
       loadMore: async () => {},
       loadMoreWorkingDiff: async () => {},
       hasMore: false,
       hasMoreWorkingDiff: false,
-      showingWorkingDiff: !!showingWorkingDiff,
+      showingWorkingDiff: isMutation,
       tableNames,
       onAddEmptyRow: () => {},
       pendingRow: undefined,
@@ -367,18 +358,12 @@ export function DataTableProvider({
       diffExists: false,
       tableShape,
       executedQueryString,
+      isMutation,
+      setIsMutation,
     };
-  }, [
-    loading,
-    params,
-    showingWorkingDiff,
-    tableNames,
-    tableShape,
-    executedQueryString,
-  ]);
+  }, [params, tableNames, tableShape, executedQueryString, isMutation]);
 
-  const isMut = "q" in params && isMutation(params.q);
-  if (isMut || !tableNames.length) {
+  if (!("tableName" in params)) {
     return (
       <DataTableContext.Provider value={value}>
         {children}
@@ -388,7 +373,7 @@ export function DataTableProvider({
 
   return (
     <ProviderForTableName
-      params={{ ...params, tableName: tableNames[0] }}
+      params={params}
       tableNames={tableNames}
       tableShape={tableShape}
     >

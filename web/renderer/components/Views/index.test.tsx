@@ -51,7 +51,10 @@ describe("tests Views", () => {
     expect(await screen.findByRole("list")).toBeInTheDocument();
 
     mocks.rowsForViewsFragmentMock.forEach(mock => {
-      const link = screen.getByRole("link", { name: new RegExp(mock.name) });
+      const escaped = mock.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const link = screen.getByRole("link", {
+        name: new RegExp(`^${escaped}$`),
+      });
       const route = table({ ...mocks.params, tableName: mock.name });
       expect(link).toHaveAttribute("href", route.asPathname());
     });

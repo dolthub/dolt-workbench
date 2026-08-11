@@ -7,7 +7,6 @@ import {
   RowForDataTableFragment,
   SchemaItemFragment,
 } from "@gen/graphql-types";
-import useSqlParser from "@hooks/useSqlParser";
 import { encodeCellHistory } from "@lib/cellHistoryUrl";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { TableOptionalSchemaParams } from "@lib/params";
@@ -86,7 +85,6 @@ export default function HistoryButton(props: Props): JSX.Element | null {
   const { params, columns } = useDataTableContext();
   const { tableName } = params;
   const { views, loading } = useViewList(params);
-  const isJoin = useQueryHasMultipleTables(params.q);
 
   if (loading) {
     return (
@@ -107,8 +105,7 @@ export default function HistoryButton(props: Props): JSX.Element | null {
     isView ||
     isSystemTable ||
     !columns ||
-    !pksShowing ||
-    isJoin;
+    !pksShowing;
 
   return (
     <Inner
@@ -124,7 +121,6 @@ export default function HistoryButton(props: Props): JSX.Element | null {
               isView={isView}
               isSystemTable={isSystemTable}
               pksShowing={pksShowing}
-              isJoin={isJoin}
               keyless={keyless}
               doltDisabled={props.doltDisabled}
             />
@@ -158,19 +154,10 @@ function getIsView(tableName: string, views?: SchemaItemFragment[]): boolean {
   return views.some(v => v.name === tableName);
 }
 
-function useQueryHasMultipleTables(q?: string): boolean {
-  const { parseSelectQuery } = useSqlParser();
-  if (!q) return false;
-  const parsed = parseSelectQuery(q);
-  if (!parsed?.from) return false;
-  return parsed.from.length > 1;
-}
-
 type ReasonProps = {
   isView: boolean;
   isSystemTable: boolean;
   pksShowing: boolean;
-  isJoin: boolean;
   keyless: boolean;
   doltDisabled?: boolean;
 };
@@ -178,7 +165,6 @@ type ReasonProps = {
 function HistoryNotAvailableReason(props: ReasonProps) {
   if (props.doltDisabled) return <span>for non-Dolt databases.</span>;
   if (props.keyless) return <span>for keyless tables.</span>;
-  if (props.isJoin) return <span>for multiple tables.</span>;
   if (!props.pksShowing) return <span>for partial primary keys.</span>;
   return (
     <TableType isView={props.isView} isDoltSystemTable={props.isSystemTable} />

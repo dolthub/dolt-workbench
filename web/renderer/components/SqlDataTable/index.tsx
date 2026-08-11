@@ -1,12 +1,13 @@
 import { ApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
+import { useDataTableContext } from "@contexts/dataTable";
 import { Button, Loader } from "@dolthub/react-components";
 import { useSessionQueryHistory } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SqlMessage from "./SqlMessage";
 import { isReadOnlyDatabaseRevisionError } from "./SqlMessage/utils";
 import WorkingDiff from "./WorkingDiff";
@@ -29,6 +30,10 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   useSqlQuery(props.params, props.client, props.state.isMutation, props.error);
+  const { setIsMutation } = useDataTableContext();
+  useEffect(() => {
+    setIsMutation(props.state.isMutation);
+  }, [props.state.isMutation, setIsMutation]);
   const msg = (
     <SqlMessage
       params={props.params}

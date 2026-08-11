@@ -8349,13 +8349,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"big-integer@npm:^1.6.48":
-  version: 1.6.52
-  resolution: "big-integer@npm:1.6.52"
-  checksum: 10c0/9604224b4c2ab3c43c075d92da15863077a9f59e5d4205f4e7e76acd0cd47e8d469ec5e5dba8d9b32aa233951893b29329ca56ac80c20ce094b4a647a66abae0
-  languageName: node
-  linkType: hard
-
 "binary-extensions@npm:^2.0.0":
   version: 2.3.0
   resolution: "binary-extensions@npm:2.3.0"
@@ -10281,7 +10274,6 @@ __metadata:
     next-useragent: "npm:^2.8.0"
     nextron: "npm:^9.5.0"
     node-machine-id: "npm:^1.1.12"
-    node-sql-parser: "npm:^4.17.0"
     npm-run-all2: "npm:^7.0.2"
     postcss: "npm:^8.5.6"
     postcss-preset-env: "npm:^10.4.0"
@@ -16175,15 +16167,6 @@ __metadata:
   version: 2.0.27
   resolution: "node-releases@npm:2.0.27"
   checksum: 10c0/f1e6583b7833ea81880627748d28a3a7ff5703d5409328c216ae57befbced10ce2c991bea86434e8ec39003bd017f70481e2e5f8c1f7e0a7663241f81d6e00e2
-  languageName: node
-  linkType: hard
-
-"node-sql-parser@npm:^4.17.0":
-  version: 4.18.0
-  resolution: "node-sql-parser@npm:4.18.0"
-  dependencies:
-    big-integer: "npm:^1.6.48"
-  checksum: 10c0/0dd428f579326c802219acfc2fbbde2bbf775b302f02601861c8ec0df0df433a332e5d022eee882523475f81ce9681692eca982751577d452e1105551f2aa734
   languageName: node
   linkType: hard
 
