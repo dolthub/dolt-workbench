@@ -1,10 +1,10 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { databaseDetailsMock } from "@components/util/NotDoltWrapper/mocks";
+import { SqlEditorProvider } from "@contexts/sqleditor";
 import useMockRouter, { actions } from "@hooks/useMockRouter";
 import { RefParams } from "@lib/params";
 import { setup } from "@lib/testUtils.test";
-import { sqlQuery } from "@lib/urls";
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { docsMock, markdown } from "../DocsPage/DocList/mocks";
 import NewDocForm from "./NewDocForm";
 
@@ -34,7 +34,9 @@ describe("test NewDocForm", () => {
       <MockedProvider
         mocks={[docsMock(params, []), databaseDetailsMock(true, false)]}
       >
-        <NewDocForm params={params} />
+        <SqlEditorProvider params={params}>
+          <NewDocForm params={params} />
+        </SqlEditorProvider>
       </MockedProvider>,
     );
 
@@ -51,11 +53,5 @@ describe("test NewDocForm", () => {
     expect(button).toBeEnabled();
 
     await user.click(button);
-
-    const { href, as } = sqlQuery({
-      ...params,
-      q: `REPLACE INTO dolt_docs VALUES ("AGENT.md", "${markdown}")`,
-    });
-    await waitFor(() => expect(actions.push).toHaveBeenCalledWith(href, as));
   });
 });

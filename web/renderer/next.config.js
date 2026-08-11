@@ -1,6 +1,10 @@
 /** @type {import('next').NextConfig} */
 
 const nextConfig = {
+  env: {
+    NEXT_PUBLIC_FOR_ELECTRON: process.env.NEXT_PUBLIC_FOR_ELECTRON ?? "",
+    NEXT_PUBLIC_FOR_MAC_NAV: process.env.NEXT_PUBLIC_FOR_MAC_NAV ?? "",
+  },
   distDir:
     process.env.NEXT_PUBLIC_FOR_ELECTRON === "true" &&
     process.env.NODE_ENV === "production"

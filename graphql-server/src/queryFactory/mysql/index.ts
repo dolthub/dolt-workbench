@@ -400,6 +400,32 @@ export class MySQLQueryFactory
     throw notDoltError("dolt cell history");
   }
 
+  async schemaDefinition(
+    args: t.SchemaDefinitionArgs,
+  ): Promise<t.SqlSelectResult> {
+    return this.queryQR(
+      async qr => {
+        const escape = qr.manager.connection.driver.escape.bind(
+          qr.manager.connection.driver,
+        );
+        const sql = `SHOW CREATE ${args.kind.toUpperCase()} ${escape(args.name)}`;
+        const rows: t.RawRows = await qr.query(sql);
+        return {
+          rows,
+          isMutation: false,
+          executionMessage: "",
+          queryString: sql,
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async saveDoc(_args: t.SaveDocArgs): Promise<t.MutationResult> {
+    throw notDoltError("save doc");
+  }
+
   // Returns static branch
   async getBranch(args: t.BranchArgs): t.USPR {
     return {

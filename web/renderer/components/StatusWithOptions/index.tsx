@@ -1,6 +1,6 @@
 import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
-import { Button, Checkbox, Loader, Tooltip } from "@dolthub/react-components";
+import { Button, Checkbox, Tooltip } from "@dolthub/react-components";
 import { StatusFragment, useGetStatusQuery } from "@gen/graphql-types";
 import useRole from "@hooks/useRole";
 import { RefParams } from "@lib/params";
@@ -102,10 +102,12 @@ function Inner(props: InnerProps) {
 
 export default function StatusWithOptions(props: Props) {
   const res = useGetStatusQuery({
-    variables: props.params,
+    variables: {
+      databaseName: props.params.databaseName,
+      refName: props.params.refName,
+    },
     fetchPolicy: "cache-and-network",
   });
-  if (res.loading) return <Loader loaded={false} />;
   if (res.error || !res.data || res.data.status.length === 0) {
     return null;
   }

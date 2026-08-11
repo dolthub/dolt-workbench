@@ -1,8 +1,9 @@
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import { useSessionQueryHistory, useSetState } from "@dolthub/react-hooks";
+import { useSetState } from "@dolthub/react-hooks";
 import { DatabaseParams } from "@lib/params";
+import { getQueryHistory } from "@lib/sessionQueryHistory";
 import { Ace } from "ace-builds";
-import { Dispatch, useCallback, useEffect } from "react";
+import { Dispatch, useCallback, useEffect, useState } from "react";
 import { ICommand } from "react-ace";
 
 const defaultState = {
@@ -25,30 +26,35 @@ export default function useSqlEditorCommands(
 ): ReturnType {
   const { editorString, setEditorString, executeQuery, toggleSqlEditor } =
     useSqlEditorContext("Tables");
-  const { getPrevQuery, getNextQuery, history, queryIdx } =
-    useSessionQueryHistory(params.databaseName);
+  const [queryIdx, setQueryIdx] = useState<number | undefined>(undefined);
   const [state, setState] = useSetState(defaultState);
   const keyBindingCommands = getKeyBindingCommands(setState, toggleSqlEditor);
 
   const executeNextQuery = useCallback(() => {
-    const next = getNextQuery();
-    if (next) {
-      setEditorString(next);
+    const history = getQueryHistory(params.databaseName);
+    if (queryIdx !== undefined && queryIdx > 0 && history[queryIdx - 1]) {
+      setQueryIdx(queryIdx - 1);
+      setEditorString(history[queryIdx - 1]);
     } else if (queryIdx === 0 && state.queryDraft) {
+      setQueryIdx(undefined);
       setEditorString(state.queryDraft);
     }
     setState({ gettingNextQuery: false });
   }, [state.gettingNextQuery]);
 
   const executePrevQuery = useCallback(() => {
-    if (!queryIdx && history.length && history[0] !== editorString) {
-      setState({ queryDraft: editorString });
+    const history = getQueryHistory(params.databaseName);
+    let idx = queryIdx === undefined ? 0 : queryIdx + 1;
+    if (queryIdx === undefined) {
+      if (history[0] === editorString.trim()) {
+        idx = 1;
+      } else {
+        setState({ queryDraft: editorString });
+      }
     }
-    const shouldSkipFirst = (prev: string): boolean =>
-      !queryIdx && prev === editorString;
-    const prev = getPrevQuery(shouldSkipFirst);
-    if (prev) {
-      setEditorString(prev);
+    if (idx < history.length) {
+      setQueryIdx(idx);
+      setEditorString(history[idx]);
     }
     setState({ gettingPrevQuery: false });
   }, [state.gettingPrevQuery]);

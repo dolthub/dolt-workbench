@@ -1,3 +1,4 @@
+import { useDataTableContext } from "@contexts/dataTable";
 import {
   Button,
   ErrorMsg,
@@ -21,13 +22,15 @@ type Props = {
 } & ModalProps;
 
 function Inner(props: Props) {
+  const { executedQueryString } = useDataTableContext();
+  const queryString = props.params.q || executedQueryString || "";
   const [fileName, setFileName] = useState(
     `${props.params.databaseName}_${props.params.refName}_${Date.now()}.csv`,
   );
   const { loading, error, data } = useSqlSelectForCsvDownloadQuery({
     variables: {
       ...props.params,
-      queryString: props.params.q,
+      queryString,
     },
   });
 

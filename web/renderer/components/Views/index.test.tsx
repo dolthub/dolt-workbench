@@ -1,9 +1,9 @@
 import { MockedProvider } from "@apollo/client/testing";
 import { SqlEditorProvider } from "@contexts/sqleditor";
-import useMockRouter, { actions } from "@hooks/useMockRouter";
+import useMockRouter from "@hooks/useMockRouter";
 import { renderAndWait } from "@lib/testUtils.test";
-import { sqlQuery } from "@lib/urls";
-import { fireEvent, screen } from "@testing-library/react";
+import { table } from "@lib/urls";
+import { screen } from "@testing-library/react";
 import Views from "./index";
 import * as mocks from "./mocks";
 
@@ -19,6 +19,7 @@ jest.mock("next/router", () => {
 
 describe("tests Views", () => {
   it("renders correctly with no views", async () => {
+    useMockRouter(jestRouter, {});
     await renderAndWait(
       <MockedProvider mocks={[mocks.rowsForEmptyViewsMock]}>
         <SqlEditorProvider params={mocks.params}>
@@ -51,14 +52,12 @@ describe("tests Views", () => {
     expect(await screen.findByRole("list")).toBeInTheDocument();
 
     mocks.rowsForViewsFragmentMock.forEach(mock => {
-      const button = screen.getByText(mock.name);
-      fireEvent.click(button);
-      const { href, as } = sqlQuery({
-        ...mocks.params,
-        q: `SELECT * FROM \`${mock.name}\``,
-        active: "Views",
+      const escaped = mock.name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const link = screen.getByRole("link", {
+        name: new RegExp(`^${escaped}$`),
       });
-      expect(actions.push).toHaveBeenCalledWith(href, as);
+      const route = table({ ...mocks.params, tableName: mock.name });
+      expect(link).toHaveAttribute("href", route.asPathname());
     });
   });
 });

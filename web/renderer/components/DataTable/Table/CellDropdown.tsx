@@ -5,9 +5,12 @@ import FilterButton from "@components/CellButtons/FilterButton";
 import ForeignKeyButton from "@components/CellButtons/ForeignKeyButton";
 import HistoryButton from "@components/CellButtons/HistoryButton";
 import MakeNullButton from "@components/CellButtons/MakeNullButton";
+import buttonCss from "@components/CellButtons/index.module.css";
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
+import { useDataTableContext } from "@contexts/dataTable";
 import { CellDropdown as Dropdown } from "@dolthub/react-components";
 import { isNullValue } from "@dolthub/web-utils";
+import cx from "classnames";
 import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
@@ -34,6 +37,7 @@ type Props = {
 };
 
 export default function CellDropdown(props: Props) {
+  const { columns: tableCols, loading } = useDataTableContext();
   const isNull = isNullValue(props.rawVal);
   const showCollapseCellButton = isLongContentType(
     props.currentCol.type,
@@ -51,26 +55,40 @@ export default function CellDropdown(props: Props) {
         colType={props.currentCol.type}
         disabled={isNull}
       />
-      <EditCell
-        setEditing={props.setEditing}
-        queryCols={props.columns}
-        dataCy={`${props.dataCy}-edit`}
-      />
-      <MakeNullButton
-        row={props.row}
-        queryCols={props.columns}
-        currCol={props.currentCol}
-        isNull={isNull}
-      />
-      <NotDoltWrapper>
-        <HistoryButton {...props} />
-      </NotDoltWrapper>
-      <FilterButton
-        value={props.rawVal}
-        col={props.currentCol}
-        dataCy={`${props.dataCy}-filter`}
-      />
-      <ForeignKeyButton {...props} colName={props.currentCol.name} />
+      {loading && !tableCols ? (
+        <span className={cx(buttonCss.button, buttonCss.loading)}>
+          Loading...
+        </span>
+      ) : (
+        <>
+          <EditCell
+            setEditing={props.setEditing}
+            queryCols={props.columns}
+            dataCy={`${props.dataCy}-edit`}
+          />
+          <MakeNullButton
+            row={props.row}
+            queryCols={props.columns}
+            currCol={props.currentCol}
+            isNull={isNull}
+          />
+          <NotDoltWrapper
+            loader={
+              <span className={cx(buttonCss.button, buttonCss.loading)}>
+                Loading...
+              </span>
+            }
+          >
+            <HistoryButton {...props} />
+          </NotDoltWrapper>
+          <FilterButton
+            value={props.rawVal}
+            col={props.currentCol}
+            dataCy={`${props.dataCy}-filter`}
+          />
+          <ForeignKeyButton {...props} colName={props.currentCol.name} />
+        </>
+      )}
       {showCollapseCellButton && (
         <ChangeCellStatusButton
           setCellStatus={props.setCellStatus}

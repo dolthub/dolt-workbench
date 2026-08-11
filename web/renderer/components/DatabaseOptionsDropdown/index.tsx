@@ -1,7 +1,6 @@
 import { Btn, ButtonWithPopup } from "@dolthub/react-components";
 import { useEffectOnMount } from "@dolthub/react-hooks";
 import { fakeEscapePress } from "@dolthub/web-utils";
-import useSqlParser from "@hooks/useSqlParser";
 import { SqlQueryParams } from "@lib/params";
 import { CgArrowsH, CgCompress } from "react-icons/cg";
 import { AiOutlinePlus } from "react-icons/ai";
@@ -27,10 +26,9 @@ export default function DatabaseOptionsDropdown({
   onClickHideUnchangedCol,
   ...props
 }: Props): JSX.Element | null {
-  const { isMutation } = useSqlParser();
   const [modalOpen, setModalOpen] = useState(false);
   const [open, setOpen] = useState(false);
-  const { onAddEmptyRow, pendingRow } = useDataTableContext();
+  const { onAddEmptyRow, pendingRow, isMutation } = useDataTableContext();
 
   useEffectOnMount(() => {
     document.addEventListener("wheel", fakeEscapePress);
@@ -38,7 +36,7 @@ export default function DatabaseOptionsDropdown({
   });
 
   if (!onClickHideUnchangedCol && !props.children && !props.params) return null;
-  if (props.params && isMutation(props.params.q)) return null;
+  if (props.params && isMutation) return null;
 
   return (
     <div

@@ -1,48 +1,43 @@
-import { useDataTableContext } from "@contexts/dataTable";
+import { DataTableContext, DataTableContextType } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import useSqlBuilder from "@hooks/useSqlBuilder";
-import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { DatabasePageParams } from "@lib/params";
-import { useCallback, useEffect } from "react";
+import { useRouter } from "next/router";
+import { useCallback, useContext, useEffect } from "react";
 
-export const DEFAULT_LIMIT = 1000;
 const exampleCreateTable = `CREATE TABLE tablename (pk INT, col1 VARCHAR(255), PRIMARY KEY (pk));`;
 
 export function useSqlStrings(
   params: DatabasePageParams,
   empty = false,
 ): { sqlString: string; editorString: string } {
-  const { getDefaultQueryString, selectFromTable, isPostgres } =
-    useSqlBuilder();
   const { editorString, setEditorString } = useSqlEditorContext();
-  const { executedQueryString } = useDataTableContext();
-  const defaultQuery = getDefaultQueryString(params.schemaName);
+  const router = useRouter();
+  const executedSql =
+    typeof router.query.executedSql === "string"
+      ? router.query.executedSql
+      : undefined;
+  const executedQueryString = (
+    useContext(DataTableContext) as DataTableContextType | undefined
+  )?.executedQueryString;
 
   const flattenNewLines = (query: string) =>
     query.replaceAll(/\r\n|\n|\r/gm, " ");
 
   const getSqlString = (): string => {
-    if (empty) {
-      return exampleCreateTable;
-    }
-    if (editorString) {
-      return flattenNewLines(editorString);
-    }
-    if (!params.q && !params.tableName) return defaultQuery;
-    return flattenNewLines(params.q || selectFromTable(params.tableName ?? ""));
+    if (empty) return exampleCreateTable;
+    if (editorString) return flattenNewLines(editorString);
+    return flattenNewLines(
+      params.q || executedSql || executedQueryString || "",
+    );
   };
 
   const getEditorString = useCallback((): string => {
-    if (empty) {
-      return sampleCreateQueryForEmpty();
-    }
+    if (empty) return sampleCreateQueryForEmpty();
     if (params.q) return params.q;
+    if (executedSql) return addEmptyLines([executedSql]);
     if (executedQueryString) return addEmptyLines([executedQueryString]);
-    if (!params.tableName || isDoltSystemTable(params.tableName)) {
-      return addEmptyLines([defaultQuery]);
-    }
-    return addEmptyLines([selectFromTable(params.tableName, DEFAULT_LIMIT)]);
-  }, [params.q, params.tableName, empty, isPostgres, executedQueryString]);
+    return addEmptyLines([]);
+  }, [params.q, empty, executedSql, executedQueryString]);
 
   useEffect(() => {
     const sqlQuery = getEditorString();

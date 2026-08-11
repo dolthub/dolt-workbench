@@ -17,7 +17,7 @@ type UseCallProcedureReturn = {
 export default function useCallProcedure(
   params: RefParams,
 ): UseCallProcedureReturn {
-  const { setEditorString, setError, setExecutionMessage } =
+  const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const { mutateFn, loading } = useMutation({
     hook: useCallProcedureMutation,
@@ -38,19 +38,21 @@ export default function useCallProcedure(
       },
     });
     if (res.success && res.data?.callProcedure) {
-      setEditorString(res.data.callProcedure.queryString);
-      setExecutionMessage(res.data.callProcedure.executionMessage);
+      setExecutedQuery(res.data.callProcedure.queryString, {
+        isMutation: true,
+      });
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
       const { href, as } = ref(params).withQuery({
         executedSql: res.data.callProcedure.queryString,
       });
-      router.push(href, as).catch(console.error);
+      await router.push(href, as).catch(console.error);
+      setExecutionMessage(res.data.callProcedure.executionMessage);
       return { success: true };
     }
     if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
     return { success: false };
   };

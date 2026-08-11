@@ -1,21 +1,21 @@
+import Link from "@components/links/Link";
 import { useSqlEditorContext } from "@contexts/sqleditor";
-import {
-  Btn,
-  CopyButton,
-  ErrorMsg,
-  QueryHandler,
-} from "@dolthub/react-components";
+import { CopyButton, ErrorMsg, Loader } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import {
   RowForDataTableFragment,
-  useSqlSelectForSqlDataTableQuery,
+  SchemaType,
+  useSchemaDefinitionQuery,
 } from "@gen/graphql-types";
-import useSqlBuilder from "@hooks/useSqlBuilder";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import { parseDefinition } from "@lib/definitionUrl";
 import { SqlQueryParams } from "@lib/params";
 import { MdPlayCircleOutline } from "react-icons/md";
+import { table } from "@lib/urls";
 import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useEffect, useMemo } from "react";
 import css from "./index.module.css";
-import { getSchemaInfo } from "./util";
 
 const AceEditor = dynamic(async () => import("@components/AceEditor"), {
   ssr: false,
@@ -27,26 +27,20 @@ type Props = {
 
 type InnerProps = Props & {
   rows: RowForDataTableFragment[];
+  fragIdx: number;
+  isView: boolean;
+  name: string;
 };
 
-function Inner({ rows, params }: InnerProps) {
-  const { selectFromTable } = useSqlBuilder();
-  const { isView, fragIdx } = getSchemaInfo(params.q);
-  const { queryClickHandler } = useSqlEditorContext("Views");
+function Inner({ rows, params, fragIdx, isView, name }: InnerProps) {
   const { isMobile } = useReactiveWidth(1024);
-
-  const executeView = async (tableName: string) => {
-    const query = selectFromTable(tableName);
-    await queryClickHandler({ ...params, query });
-  };
 
   if (!rows.length) return <ErrorMsg errString="View not found" />;
   if (rows.length > 1) {
     return <ErrorMsg errString="Found two views with the same name" />;
   }
 
-  const name = rows[0].columnValues[0].displayValue;
-  const fragment = rows[0].columnValues[fragIdx].displayValue;
+  const fragment = rows[0].columnValues[fragIdx]?.displayValue ?? "";
 
   return (
     <div className={css.top}>
@@ -64,9 +58,9 @@ function Inner({ rows, params }: InnerProps) {
       />
       <div className={css.buttons}>
         {isView && (
-          <Btn className={css.play} onClick={async () => executeView(name)}>
+          <Link {...table({ ...params, tableName: name })} className={css.play}>
             <MdPlayCircleOutline />
-          </Btn>
+          </Link>
         )}
         <CopyButton text={fragment} />
       </div>
@@ -75,13 +69,54 @@ function Inner({ rows, params }: InnerProps) {
 }
 
 export default function SchemaFragment(props: Props) {
-  const res = useSqlSelectForSqlDataTableQuery({
-    variables: { ...props.params, queryString: props.params.q },
+  const router = useRouter();
+  const { isPostgres } = useDatabaseDetails();
+  const { setEditorString } = useSqlEditorContext();
+
+  const ctx = useMemo(
+    () => parseDefinition(router.query),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [
+      router.query.definitionName,
+      router.query.definitionKind,
+      router.query.definitionSchema,
+    ],
+  );
+
+  const res = useSchemaDefinitionQuery({
+    variables: {
+      databaseName: props.params.databaseName,
+      refName: props.params.refName,
+      schemaName: ctx?.schemaName,
+      name: ctx?.name ?? "",
+      kind: ctx?.kind ?? SchemaType.View,
+    },
+    skip: !ctx,
   });
+  const data = res.data?.schemaDefinition;
+
+  useEffect(() => {
+    if (data?.queryString) setEditorString(data.queryString);
+  }, [data?.queryString, setEditorString]);
+
+  if (!ctx) return <ErrorMsg errString="Definition not found" />;
+  if (res.loading || !data) return <Loader loaded={false} />;
+
   return (
-    <QueryHandler
-      result={res}
-      render={data => <Inner {...props} rows={data.sqlSelect.rows.list} />}
+    <Inner
+      {...props}
+      rows={data.rows.list}
+      fragIdx={fragIdxFor(ctx.kind, isPostgres)}
+      isView={ctx.kind === SchemaType.View}
+      name={ctx.name}
     />
   );
+}
+
+function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
+  if (isPostgres) return 0;
+  if (kind === SchemaType.View) return 1;
+  if (kind === SchemaType.Trigger || kind === SchemaType.Procedure) return 2;
+  if (kind === SchemaType.Event) return 3;
+  return 0;
 }

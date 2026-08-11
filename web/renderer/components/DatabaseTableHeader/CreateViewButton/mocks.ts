@@ -2,11 +2,14 @@ import { MockedResponse } from "@apollo/client/testing";
 import { CreateViewDocument } from "@gen/graphql-types";
 
 export const setEditorString = jest.fn();
+export const setExecutedQuery = jest.fn();
 export const setExecutionMessage = jest.fn();
+export const setExecutionError = jest.fn();
 export const setError = jest.fn();
 
 export const SqlEditorContextProviderValueMock = {
   setEditorString,
+  setExecutedQuery,
   editorString: "",
   toggleSqlEditor: jest.fn(),
   showSqlEditor: false,
@@ -14,6 +17,7 @@ export const SqlEditorContextProviderValueMock = {
   queryClickHandler: jest.fn(),
   setError,
   setExecutionMessage,
+  setExecutionError,
   loading: false,
   modalState: {
     forkIsOpen: false,

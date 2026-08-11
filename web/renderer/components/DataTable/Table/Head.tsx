@@ -3,7 +3,6 @@ import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import { ColumnStatus, SetColumnStatus } from "@lib/tableTypes";
 import { getTableColsFromQueryCols } from "@components/CellButtons/utils";
-import useSqlParser from "@hooks/useSqlParser";
 import { Btn } from "@dolthub/react-components";
 import HeadCell from "./HeadCell";
 import css from "./index.module.css";
@@ -16,9 +15,9 @@ type Props = {
 };
 
 export default function Head(props: Props) {
-  const { columns, onAddEmptyRow, pendingRow, params } = useDataTableContext();
+  const { columns, onAddEmptyRow, pendingRow, isMutation, tableShape } =
+    useDataTableContext();
   const cols = getTableColsFromQueryCols(props.columns, columns);
-  const { isMutation } = useSqlParser();
 
   return (
     <thead>
@@ -28,7 +27,7 @@ export default function Head(props: Props) {
         }db-data-table-columns`}
       >
         <th>
-          {!pendingRow?.columnValues.length && !isMutation(params.q) && (
+          {tableShape && !pendingRow?.columnValues.length && !isMutation && (
             <Btn
               onClick={() => {
                 onAddEmptyRow();

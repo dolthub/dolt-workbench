@@ -32,7 +32,7 @@ type Props = {
 };
 
 export default function EditCellInput(props: Props) {
-  const { setEditorString, setError, setExecutionMessage } =
+  const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
@@ -69,14 +69,14 @@ export default function EditCellInput(props: Props) {
       variables: { databaseName, refName, schemaName, tableName, set, where },
     });
     if (res.success && res.data?.updateRow) {
-      setEditorString(res.data.updateRow.queryString);
+      setExecutedQuery(res.data.updateRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.updateRow.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
       props.cancelEditing();
     } else if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
   };
 
