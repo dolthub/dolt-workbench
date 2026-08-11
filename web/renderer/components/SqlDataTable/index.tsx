@@ -36,7 +36,7 @@ type InnerProps = Props & {
 function Inner(props: InnerProps) {
   useSqlQuery(props.params, props.client, props.state.isMutation, props.error);
   const { setIsMutation } = useDataTableContext();
-  const { setError } = useSqlEditorContext();
+  const { setExecutionError } = useSqlEditorContext();
   useEffect(() => {
     setIsMutation(props.state.isMutation);
   }, [props.state.isMutation, setIsMutation]);
@@ -45,7 +45,9 @@ function Inner(props: InnerProps) {
       if (isTimeoutError(props.error.message) || props.error.message === "") {
         return;
       }
-      setError(improveGqlError(props.error));
+      setExecutionError(
+        improveGqlError(props.error)?.message ?? "INTERNAL_SERVER_ERROR",
+      );
       return;
     }
     if (
@@ -53,13 +55,13 @@ function Inner(props: InnerProps) {
       props.state.executionMessage &&
       !isTimeoutError(props.state.executionMessage)
     ) {
-      setError(new Error(props.state.executionMessage));
+      setExecutionError(props.state.executionMessage);
     }
   }, [
     props.error,
     props.state.executionStatus,
     props.state.executionMessage,
-    setError,
+    setExecutionError,
   ]);
   const msg = (
     <SqlMessage

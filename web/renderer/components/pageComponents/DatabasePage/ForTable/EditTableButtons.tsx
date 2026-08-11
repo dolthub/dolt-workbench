@@ -41,7 +41,7 @@ function Inner(props: InnerProps) {
   const {
     setEditorString,
     setExecutedQuery,
-    setError,
+    setExecutionError,
     setExecutionMessage,
     toggleSqlEditor,
   } = useSqlEditorContext();
@@ -73,7 +73,7 @@ function Inner(props: InnerProps) {
       setEditorString(res.data.previewInsertRow);
       toggleSqlEditor(true);
     } else if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
   };
 

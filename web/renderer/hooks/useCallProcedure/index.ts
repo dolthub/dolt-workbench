@@ -17,7 +17,7 @@ type UseCallProcedureReturn = {
 export default function useCallProcedure(
   params: RefParams,
 ): UseCallProcedureReturn {
-  const { setExecutedQuery, setError, setExecutionMessage } =
+  const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const { mutateFn, loading } = useMutation({
     hook: useCallProcedureMutation,
@@ -52,7 +52,7 @@ export default function useCallProcedure(
       return { success: true };
     }
     if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
     return { success: false };
   };

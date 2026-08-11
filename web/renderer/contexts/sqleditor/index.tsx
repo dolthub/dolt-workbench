@@ -36,9 +36,22 @@ export function SqlEditorProvider(props: Props) {
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useApolloError(undefined);
-  const [executionMessage, setExecutionMessage] = useState<string | undefined>(
+  const [executionMessage, setExecutionMessageState] = useState<
+    string | undefined
+  >(undefined);
+  const [executionError, setExecutionErrorState] = useState<string | undefined>(
     undefined,
   );
+
+  const setExecutionMessage = useCallback((m: string | undefined) => {
+    setExecutionMessageState(m);
+    if (m) setExecutionErrorState(undefined);
+  }, []);
+
+  const setExecutionError = useCallback((m: string | undefined) => {
+    setExecutionErrorState(m);
+    if (m) setExecutionMessageState(undefined);
+  }, []);
   const [modalState, setModalState] = useSetState({
     errorIsOpen: false,
   });
@@ -54,10 +67,13 @@ export function SqlEditorProvider(props: Props) {
   }, [isMobile]);
 
   useEffect(() => {
-    const clearExecutionMessage = () => setExecutionMessage(undefined);
-    router.events.on("routeChangeStart", clearExecutionMessage);
+    const clearMessages = () => {
+      setExecutionMessageState(undefined);
+      setExecutionErrorState(undefined);
+    };
+    router.events.on("routeChangeStart", clearMessages);
     return () => {
-      router.events.off("routeChangeStart", clearExecutionMessage);
+      router.events.off("routeChangeStart", clearMessages);
     };
   }, [router.events]);
 
@@ -120,7 +136,7 @@ export function SqlEditorProvider(props: Props) {
         const status = res.data.sqlSelect.queryExecutionStatus;
         const message = res.data.sqlSelect.queryExecutionMessage || "";
         if (status === QueryExecutionStatus.Error && !isTimeoutError(message)) {
-          setErr(new Error(message || "Query execution failed"));
+          setExecutionError(message || "Query execution failed");
           return;
         }
         setPendingSqlResult({
@@ -138,7 +154,9 @@ export function SqlEditorProvider(props: Props) {
         if (apolloErr && isTimeoutError(apolloErr.message)) {
           handleQuery(executeProps);
         } else {
-          setErr(improveGqlError(apolloErr));
+          setExecutionError(
+            improveGqlError(apolloErr)?.message ?? "Query execution failed",
+          );
         }
       } finally {
         executing.current = false;
@@ -150,6 +168,7 @@ export function SqlEditorProvider(props: Props) {
       handleQuery,
       queryIsRecentMutation,
       setErr,
+      setExecutionError,
       props.params.databaseName,
     ],
   );
@@ -206,6 +225,8 @@ export function SqlEditorProvider(props: Props) {
       setError,
       executionMessage,
       setExecutionMessage,
+      executionError,
+      setExecutionError,
       loading,
       modalState,
       setModalState,
@@ -221,6 +242,9 @@ export function SqlEditorProvider(props: Props) {
     err,
     setError,
     executionMessage,
+    setExecutionMessage,
+    executionError,
+    setExecutionError,
     loading,
     modalState,
     setModalState,
