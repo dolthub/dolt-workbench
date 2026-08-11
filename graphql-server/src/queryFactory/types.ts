@@ -1,6 +1,7 @@
 import { SortBranchesBy } from "../branches/branch.enum";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { DiffRowType } from "../rowDiffs/rowDiff.enums";
+import { SchemaType } from "../schemas/schema.enums";
 
 export type DBArgs = { databaseName: string };
 export type CloneArgs = DBArgs & { remoteDbPath: string };
@@ -121,6 +122,11 @@ export type DoltCommitDiffArgs = TableMaybeSchemaArgs & {
 export type DoltCellLookupArgs = TableMaybeSchemaArgs & {
   pkValues: ColumnValue[];
   columnName?: string;
+};
+
+export type SchemaDefinitionArgs = RefMaybeSchemaArgs & {
+  name: string;
+  kind: SchemaType;
 };
 
 export type OrderByClause = {

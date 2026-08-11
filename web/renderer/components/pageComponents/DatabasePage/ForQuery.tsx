@@ -1,11 +1,13 @@
 import CommitDiffTable from "@components/CommitDiffTable";
+import DefinitionView from "@components/DefinitionView";
 import HistoryTable from "@components/HistoryTable";
 import SchemaFragment from "@components/SchemaFragment";
 import SqlDataTable from "@components/SqlDataTable";
 import QueryBreadcrumbs from "@components/breadcrumbs/QueryBreadcrumbs";
 import { DataTableProvider } from "@contexts/dataTable";
+import { SchemaType } from "@gen/graphql-types";
 import useSqlParser from "@hooks/useSqlParser";
-import { isShowSchemaFragmentQuery } from "@lib/doltSystemTables";
+import { parseDefinition } from "@lib/definitionUrl";
 import { RefParams, SqlQueryParams } from "@lib/params";
 import { ref, sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
@@ -46,10 +48,15 @@ function Inner({ params }: Props) {
     );
   }
 
-  if (isShowSchemaFragmentQuery(params.q)) {
+  const def = parseDefinition(router.query);
+  if (def) {
     return (
       <DatabasePage {...commonProps}>
-        <SchemaFragment params={params} />
+        {def.kind === SchemaType.Table ? (
+          <DefinitionView params={params} />
+        ) : (
+          <SchemaFragment params={params} />
+        )}
       </DatabasePage>
     );
   }
