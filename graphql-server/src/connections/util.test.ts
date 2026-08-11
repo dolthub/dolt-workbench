@@ -70,6 +70,12 @@ describe("test sqlite connection url helpers", () => {
       expectedPath: "/Users/me/mydb",
       expectedName: "mydb",
     },
+    {
+      desc: "path with a literal % that is not a valid escape",
+      connectionUrl: "sqlite:/Users/me/50%off.db",
+      expectedPath: "/Users/me/50%off.db",
+      expectedName: "50%off",
+    },
   ];
 
   sqliteTests.forEach(test => {
@@ -81,5 +87,10 @@ describe("test sqlite connection url helpers", () => {
 
   it("should keep the base name for dotfiles", () => {
     expect(dbNameFromFilePath("/Users/me/.hidden")).toEqual(".hidden");
+  });
+
+  it("should handle Windows-style backslash paths", () => {
+    expect(dbNameFromFilePath("C:\\Users\\me\\mydb.db")).toEqual("mydb");
+    expect(dbNameFromFilePath("C:\\Users\\me/mixed/mydb.db")).toEqual("mydb");
   });
 });

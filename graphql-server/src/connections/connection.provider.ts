@@ -165,8 +165,6 @@ export async function newQueryFactory(
   }
 
   if (type === DatabaseType.Sqlite) {
-    // The doltlite driver registers dolt_version() for any file it opens, so
-    // the engine format is the only reliable discriminant.
     try {
       const res = await ds?.query("SELECT doltlite_engine() AS engine");
       if (res && res[0]?.engine === "prolly") {

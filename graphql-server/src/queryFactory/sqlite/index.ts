@@ -16,9 +16,6 @@ export class SqliteQueryFactory
 
   private queue: Promise<unknown> = Promise.resolve();
 
-  // The better-sqlite3 driver family shares one connection and a singleton
-  // QueryRunner, so logical units (e.g. a branch checkout plus its queries)
-  // from interleaved resolvers must not overlap.
   async handleAsyncQuery<T>(work: (qr: QueryRunner) => Promise<T>): Promise<T> {
     const run = async () => super.handleAsyncQuery(work);
     const res = this.queue.then(run, run);
@@ -29,7 +26,6 @@ export class SqliteQueryFactory
     return res;
   }
 
-  // Single-file database: there is no `USE` statement in SQLite.
   async checkoutDatabase(
     _qr: QueryRunner,
     _dbName: string,
@@ -49,8 +45,6 @@ export class SqliteQueryFactory
     return this.getDatabaseName();
   }
 
-  // The inherited qr.createDatabase() is a silent no-op for the sqlite driver
-  // family, which would falsely report success.
   async createDatabase(_args: t.DBArgs): Promise<void> {
     throw new Error("Cannot create a database on a SQLite connection");
   }

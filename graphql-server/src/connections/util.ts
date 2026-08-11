@@ -9,11 +9,15 @@ export function replaceDatabaseInConnectionUrl(
 
 export function getSqliteFilePath(connectionUrl: string): string {
   const url = new URL(connectionUrl);
-  return decodeURIComponent(url.pathname);
+  try {
+    return decodeURIComponent(url.pathname);
+  } catch {
+    return url.pathname;
+  }
 }
 
 export function dbNameFromFilePath(filePath: string): string {
-  const base = filePath.split("/").pop() ?? filePath;
+  const base = filePath.split(/[\\/]/).pop() ?? filePath;
   const name = base.replace(/\.[^.]+$/, "");
   return name || base;
 }
