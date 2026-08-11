@@ -25,8 +25,10 @@ export function buildSaveDoc(
   const escapedDocName = escape(DOC_NAME);
   const escapedDocText = escape(DOC_TEXT);
 
-  const isPostgres = em.connection.options.type === "postgres";
-  const upsertClause = isPostgres
+  const usesOnConflict = ["postgres", "better-sqlite3"].includes(
+    em.connection.options.type,
+  );
+  const upsertClause = usesOnConflict
     ? `ON CONFLICT (${escapedDocName}) DO UPDATE SET ${escapedDocText} = :${pText}`
     : `ON DUPLICATE KEY UPDATE ${escapedDocText} = VALUES(${escapedDocText})`;
   const namedSql = `INSERT INTO ${escapedTarget} (${escapedDocName}, ${escapedDocText}) VALUES (:${pName}, :${pText}) ${upsertClause}`;
