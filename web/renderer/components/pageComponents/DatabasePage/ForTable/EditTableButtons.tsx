@@ -77,7 +77,7 @@ function Inner(props: InnerProps) {
     }
   };
 
-  const onDropped = (data: DropTableMutation): undefined => {
+  const onDropped = (data: DropTableMutation): Error | undefined => {
     setExecutedQuery(data.dropTable.queryString, { isMutation: true });
     client
       .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
