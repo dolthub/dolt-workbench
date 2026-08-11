@@ -1,11 +1,19 @@
+import { useApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import {
+  DoltCellDiffDocument,
+  DoltCellDiffQuery,
+  DoltCellDiffQueryVariables,
+  DoltCellHistoryDocument,
+  DoltCellHistoryQuery,
+  DoltCellHistoryQueryVariables,
   useDoltCellDiffQuery,
   useDoltCellHistoryQuery,
 } from "@gen/graphql-types";
+import useDoltLookupRows from "@hooks/useDoltLookupRows";
 import { parseCellHistory } from "@lib/cellHistoryUrl";
 import { SqlQueryParams } from "@lib/params";
 import { useRouter } from "next/router";
@@ -54,6 +62,31 @@ export default function HistoryTable(props: Props) {
     ? historyRes.data?.doltCellHistory
     : diffRes.data?.doltCellDiff;
 
+  const client = useApolloClient();
+  const { rows, loadMore, hasMore, err } = useDoltLookupRows(
+    data,
+    async offset => {
+      if (allCommits) {
+        const page = await client.query<
+          DoltCellHistoryQuery,
+          DoltCellHistoryQueryVariables
+        >({
+          query: DoltCellHistoryDocument,
+          variables: { ...variables, offset },
+        });
+        return page.data.doltCellHistory;
+      }
+      const page = await client.query<
+        DoltCellDiffQuery,
+        DoltCellDiffQueryVariables
+      >({
+        query: DoltCellDiffDocument,
+        variables: { ...variables, offset },
+      });
+      return page.data.doltCellDiff;
+    },
+  );
+
   useEffect(() => {
     if (data?.queryString) setExecutedQuery(data.queryString);
   }, [data?.queryString, setExecutedQuery]);
@@ -79,11 +112,11 @@ export default function HistoryTable(props: Props) {
     <>
       <DataTableLayout params={{ ...props.params, q: data?.queryString ?? "" }}>
         <InnerDataTable
-          rows={data?.rows.list}
+          rows={rows}
           columns={data?.columns}
-          loadMore={async () => {}}
-          hasMore={false}
-          error={res.error}
+          loadMore={loadMore}
+          hasMore={hasMore}
+          error={res.error ?? err}
         />
       </DataTableLayout>
       {!allCommits && (

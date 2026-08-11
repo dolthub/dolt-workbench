@@ -71,4 +71,22 @@ describe("buildDoltCellDiff", () => {
     );
     expect(out.params).toEqual(["5", "5"]);
   });
+
+  it("applies limit and offset without changing displaySql", () => {
+    const out = buildDoltCellDiff(
+      mysqlEm,
+      "dolt_diff_users",
+      {
+        pkValues: [{ column: "id", value: "5", type: "int" }],
+        columnNames: ["id", "name"],
+      },
+      { limit: 51, offset: 50 },
+    );
+    expect(out.sql).toBe(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` WHERE (`to_id` = ?) OR (`from_id` = ?) ORDER BY `to_commit_date` DESC LIMIT 51 OFFSET 50",
+    );
+    expect(out.displaySql).toBe(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_name`, `to_name`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_diff_users` WHERE (`to_id` = 5) OR (`from_id` = 5) ORDER BY `to_commit_date` DESC",
+    );
+  });
 });

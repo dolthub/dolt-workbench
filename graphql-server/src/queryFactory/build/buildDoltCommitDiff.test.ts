@@ -40,6 +40,25 @@ describe("buildDoltCommitDiff", () => {
     );
   });
 
+  it("applies limit and offset without changing displaySql (mysql)", () => {
+    const out = buildDoltCommitDiff(
+      mysqlEm,
+      "dolt_commit_diff_users",
+      {
+        fromCommitId: "abc",
+        toCommitId: "def",
+        columnNames: ["id"],
+      },
+      { limit: 51, offset: 50 },
+    );
+    expect(out.sql).toBe(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` WHERE `from_commit` = ? AND `to_commit` = ? LIMIT 51 OFFSET 50",
+    );
+    expect(out.displaySql).toBe(
+      "SELECT `diff_type`, `from_id`, `to_id`, `from_commit`, `from_commit_date`, `to_commit`, `to_commit_date` FROM `dolt_commit_diff_users` WHERE `from_commit` = 'abc' AND `to_commit` = 'def'",
+    );
+  });
+
   it("emits 2-dot diff with schema-qualified target (postgres)", () => {
     const out = buildDoltCommitDiff(pgEm, "public.dolt_commit_diff_users", {
       fromCommitId: "abc",

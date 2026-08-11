@@ -10,7 +10,7 @@ import {
   systemTableValues,
 } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
-import { handleTableNotFound } from "../../utils";
+import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { buildDeleteRow } from "../build/buildDeleteRow";
 import { buildDoltCellDiff } from "../build/buildDoltCellDiff";
 import { buildDoltCellHistory } from "../build/buildDoltCellHistory";
@@ -664,12 +664,17 @@ export class DoltgresQueryFactory
           tableName: `dolt_commit_diff_${baseTableName}`,
           schemaName,
         });
-        const built = buildDoltCommitDiff(qr.manager, target, {
-          fromCommitId: args.fromCommitId,
-          toCommitId: args.toCommitId,
-          columnNames,
-          type: args.type,
-        });
+        const built = buildDoltCommitDiff(
+          qr.manager,
+          target,
+          {
+            fromCommitId: args.fromCommitId,
+            toCommitId: args.toCommitId,
+            columnNames,
+            type: args.type,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,
@@ -702,11 +707,16 @@ export class DoltgresQueryFactory
           tableName: `dolt_diff_${baseTableName}`,
           schemaName,
         });
-        const built = buildDoltCellDiff(qr.manager, target, {
-          pkValues: pkValuesWithTypes(args.pkValues, columns),
-          columnNames: columns.map(c => c.name),
-          columnName: args.columnName,
-        });
+        const built = buildDoltCellDiff(
+          qr.manager,
+          target,
+          {
+            pkValues: pkValuesWithTypes(args.pkValues, columns),
+            columnNames: columns.map(c => c.name),
+            columnName: args.columnName,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,
@@ -741,11 +751,16 @@ export class DoltgresQueryFactory
           tableName: `dolt_history_${baseTableName}`,
           schemaName,
         });
-        const built = buildDoltCellHistory(qr.manager, target, {
-          pkValues: pkValuesWithTypes(args.pkValues, columns),
-          columnNames: columns.map(c => c.name),
-          columnName: args.columnName,
-        });
+        const built = buildDoltCellHistory(
+          qr.manager,
+          target,
+          {
+            pkValues: pkValuesWithTypes(args.pkValues, columns),
+            columnNames: columns.map(c => c.name),
+            columnName: args.columnName,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,

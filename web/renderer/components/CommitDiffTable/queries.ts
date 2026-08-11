@@ -10,6 +10,7 @@ export const DOLT_COMMIT_DIFF = gql`
     $toCommitId: String!
     $excludedColumns: [String!]
     $type: CommitDiffType
+    $offset: Int
   ) {
     doltCommitDiff(
       databaseName: $databaseName
@@ -20,6 +21,7 @@ export const DOLT_COMMIT_DIFF = gql`
       toCommitId: $toCommitId
       excludedColumns: $excludedColumns
       type: $type
+      offset: $offset
     ) {
       ...SqlSelectForDoltLookup
     }

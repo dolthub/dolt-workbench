@@ -1,4 +1,3 @@
-import { ApolloError } from "@apollo/client";
 import { useDataTableContext } from "@contexts/dataTable";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
@@ -7,6 +6,7 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import DataTableLayout from "@layouts/DataTableLayout";
+import { ApolloErrorType } from "@lib/errors/types";
 import { TableParams } from "@lib/params";
 import { ReactNode } from "react";
 import AddRowsButton from "./AddRowsButton";
@@ -21,7 +21,7 @@ type Props = {
   rows?: RowForDataTableFragment[];
   columns?: ColumnForDataTableFragment[];
   message?: ReactNode | null;
-  error?: ApolloError;
+  error?: ApolloErrorType;
   warnings?: Maybe<string[]>;
 };
 
