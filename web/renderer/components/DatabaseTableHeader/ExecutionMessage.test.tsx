@@ -8,11 +8,11 @@ const mockContext = {
   setExecutionError: jest.fn(),
 };
 
-jest.mock("@contexts/sqleditor", () => ({
-  useSqlEditorContext: () => {
-    return mockContext;
-  },
-}));
+jest.mock("@contexts/sqleditor", () => {
+  return {
+    useSqlEditorContext: () => mockContext,
+  };
+});
 
 describe("ExecutionMessage", () => {
   afterEach(() => {
