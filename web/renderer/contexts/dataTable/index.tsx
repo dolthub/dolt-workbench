@@ -21,6 +21,7 @@ import {
   WorkingDiffRowsForDataTableQueryVariables,
 } from "@gen/graphql-types";
 import { parseStackingParams } from "@lib/dataTableParams";
+import { recordQuery } from "@lib/sessionQueryHistory";
 import {
   RefOptionalSchemaParams,
   SqlQueryParams,
@@ -36,7 +37,7 @@ type DataTableParams = TableParams & {
 };
 
 // This context handles data tables on the database page (for tables and queries)
-type DataTableContextType = {
+export type DataTableContextType = {
   params: RefOptionalSchemaParams & { tableName?: string; q?: string };
   loading: boolean;
   loadingWorkingDiff: boolean;
@@ -113,6 +114,14 @@ function ProviderForTableName(props: TableProps) {
       projection: stack.projection,
     },
   });
+
+  const stackedQueryString =
+    selectTableRowsRes.data?.selectTableRows.queryString;
+  useEffect(() => {
+    if (hasStacking && stackedQueryString) {
+      recordQuery(props.params.databaseName, stackedQueryString);
+    }
+  }, [hasStacking, stackedQueryString, props.params.databaseName]);
 
   const rowWithDiffRes = useRowsForDataTableQuery({
     variables: { ...props.params, withDiff: true },

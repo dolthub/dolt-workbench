@@ -24,7 +24,7 @@ export default function CreateViewModal({
   setIsOpen,
   ...props
 }: Props): JSX.Element {
-  const { setEditorString, setError, setExecutionMessage, error } =
+  const { setExecutedQuery, setError, setExecutionMessage, error } =
     useSqlEditorContext("Views");
   const { mutateFn: createView, loading } = useMutation({
     hook: useCreateViewMutation,
@@ -51,7 +51,7 @@ export default function CreateViewModal({
       },
     });
     if (res.success && res.data?.createView) {
-      setEditorString(res.data.createView.queryString);
+      setExecutedQuery(res.data.createView.queryString, { isMutation: true });
       setExecutionMessage(res.data.createView.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)

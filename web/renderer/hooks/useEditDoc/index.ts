@@ -32,7 +32,7 @@ export default function useEditDoc(
     markdown: defaultMarkdown,
     loading: false,
   });
-  const { setEditorString, setError, setExecutionMessage } =
+  const { setExecutedQuery, setError, setExecutionMessage } =
     useSqlEditorContext();
   const { mutateFn } = useMutation({ hook: useSaveDocMutation });
   const client = useApolloClient();
@@ -54,7 +54,7 @@ export default function useEditDoc(
     });
 
     if (res.success && res.data?.saveDoc) {
-      setEditorString(res.data.saveDoc.queryString);
+      setExecutedQuery(res.data.saveDoc.queryString, { isMutation: true });
       setExecutionMessage(res.data.saveDoc.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)

@@ -23,7 +23,7 @@ type Props = {
 
 export default function PendingRow(props: Props) {
   const { setPendingRow, params, columns } = useDataTableContext();
-  const { setEditorString, setError, setExecutionMessage } =
+  const { setExecutedQuery, setError, setExecutionMessage } =
     useSqlEditorContext();
   const client = useApolloClient();
   const { mutateFn: insertRow } = useMutation({ hook: useInsertRowMutation });
@@ -49,7 +49,7 @@ export default function PendingRow(props: Props) {
       variables: { databaseName, refName, schemaName, tableName, values },
     });
     if (res.success && res.data?.insertRow) {
-      setEditorString(res.data.insertRow.queryString);
+      setExecutedQuery(res.data.insertRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.insertRow.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)

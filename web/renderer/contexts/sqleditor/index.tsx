@@ -2,11 +2,11 @@ import { createCustomContext } from "@dolthub/react-contexts";
 import {
   useContextWithError,
   useReactiveWidth,
-  useSessionQueryHistory,
   useSetState,
 } from "@dolthub/react-hooks";
 import useApolloError from "@hooks/useApolloError";
 import { ApolloErrorType } from "@lib/errors/types";
+import { recordMutation, recordQuery } from "@lib/sessionQueryHistory";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -31,7 +31,6 @@ export function SqlEditorProvider(props: Props) {
     errorIsOpen: false,
   });
   const router = useRouter();
-  const { addQuery } = useSessionQueryHistory(props.params.databaseName);
 
   useEffect(() => {
     setShowSqlEditor(isMobile);
@@ -67,10 +66,22 @@ export function SqlEditorProvider(props: Props) {
     async (executeProps: ExecuteProps) => {
       setLoading(true);
       handleQuery(executeProps);
-      addQuery(executeProps.query);
+      recordQuery(props.params.databaseName, executeProps.query);
       setLoading(false);
     },
-    [handleQuery, addQuery],
+    [handleQuery, props.params.databaseName],
+  );
+
+  const setExecutedQuery = useCallback(
+    (query: string, opts?: { isMutation?: boolean }) => {
+      setEditorString(query);
+      if (opts?.isMutation) {
+        recordMutation(props.params.databaseName, query);
+      } else {
+        recordQuery(props.params.databaseName, query);
+      }
+    },
+    [props.params.databaseName],
   );
 
   const toggleSqlEditor = useCallback(
@@ -103,6 +114,7 @@ export function SqlEditorProvider(props: Props) {
   const value = useMemo(() => {
     return {
       setEditorString,
+      setExecutedQuery,
       editorString,
       toggleSqlEditor,
       showSqlEditor,
@@ -118,6 +130,7 @@ export function SqlEditorProvider(props: Props) {
     };
   }, [
     setEditorString,
+    setExecutedQuery,
     editorString,
     toggleSqlEditor,
     showSqlEditor,
