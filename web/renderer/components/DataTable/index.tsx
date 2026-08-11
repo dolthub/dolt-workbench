@@ -6,9 +6,8 @@ import {
   ColumnForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import useSqlBuilder from "@hooks/useSqlBuilder";
 import DataTableLayout from "@layouts/DataTableLayout";
-import { RefParams, SqlQueryParams, TableParams } from "@lib/params";
+import { RefParams, TableParams } from "@lib/params";
 import { ReactNode } from "react";
 import AddRowsButton from "./AddRowsButton";
 import ShowAllColumns from "./ShowAllColumns";
@@ -94,15 +93,11 @@ function WithContext(props: TableProps) {
 }
 
 export default function DataTable(props: { params: DataTableParams }) {
-  const { selectFromTable } = useSqlBuilder();
-  const params: SqlQueryParams = {
-    ...props.params,
-    q: selectFromTable(props.params.tableName),
-  };
+  const params = { ...props.params, q: "" };
   return (
     <>
       <DataTableLayout params={params} tableName={props.params.tableName}>
-        <WithContext params={{ ...props.params, q: params.q }} />
+        <WithContext params={params} />
       </DataTableLayout>
       <AddRowsButton {...props} />
     </>

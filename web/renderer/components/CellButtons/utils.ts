@@ -4,7 +4,6 @@ import {
   ForeignKeysForDataTableFragment,
   RowForDataTableFragment,
 } from "@gen/graphql-types";
-import { Conditions } from "@hooks/useSqlBuilder/util";
 
 export function isKeyless(cols?: ColumnForDataTableFragment[]): boolean {
   return !!cols?.every(col => !col.isPrimaryKey);
@@ -74,25 +73,6 @@ export function getTableColsFromQueryCols(
   tableCols?: ColumnForDataTableFragment[],
 ): ColumnForDataTableFragment[] {
   return queryCols.map(qc => tableCols?.find(tc => tc.name === qc.name) ?? qc);
-}
-
-export function toPKColsMapQueryCols(
-  row: RowForDataTableFragment,
-  queryCols: ColumnForDataTableFragment[],
-  cols?: ColumnForDataTableFragment[],
-): Conditions {
-  return toPKCols(row, mapQueryColsToAllCols(queryCols, cols));
-}
-
-export function toPKCols(
-  row: RowForDataTableFragment,
-  cols: ColumnForDataTableFragment[],
-): Conditions {
-  return cols
-    .filter(c => c.isPrimaryKey)
-    .map((col, i) => {
-      return { col: col.name, val: row.columnValues[i].displayValue };
-    });
 }
 
 export type WhereClauseInput = {

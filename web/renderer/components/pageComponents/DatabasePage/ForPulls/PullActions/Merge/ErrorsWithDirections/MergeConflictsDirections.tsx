@@ -1,6 +1,6 @@
 import DocsLink from "@components/links/DocsLink";
 import { CodeBlock } from "@dolthub/react-components";
-import useSqlBuilder from "@hooks/useSqlBuilder";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { PullDiffParams } from "@lib/params";
 import css from "./index.module.css";
 
@@ -8,15 +8,29 @@ type Props = {
   params: PullDiffParams;
 };
 
+function callProcedure(
+  isPostgres: boolean,
+  name: string,
+  args: string[],
+): string {
+  const quote = isPostgres
+    ? (s: string) => s.replace(/'/g, "''")
+    : (s: string) => s.replace(/'/g, "\\'");
+  const quotedArgs = args.map(a => `'${quote(a)}'`).join(", ");
+  return `${isPostgres ? "SELECT" : "CALL"} ${name}(${quotedArgs});`;
+}
+
 export default function MergeConflictsDirections({ params }: Props) {
-  const { getCallProcedure } = useSqlBuilder();
-  const checkout = getCallProcedure("DOLT_CHECKOUT", [params.refName]);
-  const merge = getCallProcedure("DOLT_MERGE", [params.fromBranchName]);
-  const conflictsResolve = getCallProcedure("DOLT_CONFLICTS_RESOLVE", [
+  const { isPostgres } = useDatabaseDetails();
+  const checkout = callProcedure(isPostgres, "DOLT_CHECKOUT", [params.refName]);
+  const merge = callProcedure(isPostgres, "DOLT_MERGE", [
+    params.fromBranchName,
+  ]);
+  const conflictsResolve = callProcedure(isPostgres, "DOLT_CONFLICTS_RESOLVE", [
     "--[ours|theirs]",
     "[tablename]",
   ]);
-  const commit = getCallProcedure("DOLT_COMMIT", [
+  const commit = callProcedure(isPostgres, "DOLT_COMMIT", [
     "-Am",
     `Merge branch ${params.fromBranchName}`,
   ]);

@@ -1,17 +1,12 @@
-import { useSqlEditorContext } from "@contexts/sqleditor";
-import {
-  Btn,
-  CopyButton,
-  ErrorMsg,
-  QueryHandler,
-} from "@dolthub/react-components";
+import Link from "@components/links/Link";
+import { CopyButton, ErrorMsg, QueryHandler } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import {
   RowForDataTableFragment,
   useSqlSelectForSqlDataTableQuery,
 } from "@gen/graphql-types";
-import useSqlBuilder from "@hooks/useSqlBuilder";
 import { SqlQueryParams } from "@lib/params";
+import { table } from "@lib/urls";
 import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import dynamic from "next/dynamic";
 import css from "./index.module.css";
@@ -30,15 +25,8 @@ type InnerProps = Props & {
 };
 
 function Inner({ rows, params }: InnerProps) {
-  const { selectFromTable } = useSqlBuilder();
   const { isView, fragIdx } = getSchemaInfo(params.q);
-  const { queryClickHandler } = useSqlEditorContext("Views");
   const { isMobile } = useReactiveWidth(1024);
-
-  const executeView = async (tableName: string) => {
-    const query = selectFromTable(tableName);
-    await queryClickHandler({ ...params, query });
-  };
 
   if (!rows.length) return <ErrorMsg errString="View not found" />;
   if (rows.length > 1) {
@@ -64,9 +52,9 @@ function Inner({ rows, params }: InnerProps) {
       />
       <div className={css.buttons}>
         {isView && (
-          <Btn className={css.play} onClick={async () => executeView(name)}>
+          <Link {...table({ ...params, tableName: name })} className={css.play}>
             <MdPlayCircleOutline />
-          </Btn>
+          </Link>
         )}
         <CopyButton text={fragment} />
       </div>
