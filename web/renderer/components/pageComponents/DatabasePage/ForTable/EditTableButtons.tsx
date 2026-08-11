@@ -79,12 +79,12 @@ function Inner(props: InnerProps) {
     const res = await dropTable({ variables: props.params });
     if (res.success && res.data?.dropTable) {
       setExecutedQuery(res.data.dropTable.queryString, { isMutation: true });
-      setExecutionMessage(res.data.dropTable.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
       const { href, as } = ref(props.params);
-      router.push(href, as).catch(console.error);
+      await router.push(href, as).catch(console.error);
+      setExecutionMessage(res.data.dropTable.executionMessage);
     } else if (res.error) {
       setError(res.error);
     }

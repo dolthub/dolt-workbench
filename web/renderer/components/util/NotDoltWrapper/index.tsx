@@ -10,11 +10,14 @@ type Props = {
   className?: string;
   bigMsg?: boolean;
   hideNotDolt?: boolean;
+  loader?: ReactElement;
 };
 
 export default function NotDoltWrapper(props: Props) {
   const res = useDatabaseDetails();
-  if (res.loading) return <Loader loaded={false} />;
+  if (res.loading && !res.hasData) {
+    return props.loader ?? <Loader loaded={false} />;
+  }
   if (res.error) return <ErrorMsg err={res.error} />;
   if (res.isDolt) {
     return props.children;
