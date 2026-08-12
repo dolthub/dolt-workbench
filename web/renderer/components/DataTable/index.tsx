@@ -1,4 +1,3 @@
-import { ApolloError } from "@apollo/client";
 import { useDataTableContext } from "@contexts/dataTable";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { Maybe } from "@dolthub/web-utils";
@@ -7,7 +6,8 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import DataTableLayout from "@layouts/DataTableLayout";
-import { RefParams, TableParams } from "@lib/params";
+import { ApolloErrorType } from "@lib/errors/types";
+import { TableParams } from "@lib/params";
 import { ReactNode } from "react";
 import AddRowsButton from "./AddRowsButton";
 import ShowAllColumns from "./ShowAllColumns";
@@ -21,8 +21,7 @@ type Props = {
   rows?: RowForDataTableFragment[];
   columns?: ColumnForDataTableFragment[];
   message?: ReactNode | null;
-  params: RefParams & { tableName?: Maybe<string>; q: string };
-  error?: ApolloError;
+  error?: ApolloErrorType;
   warnings?: Maybe<string[]>;
 };
 
@@ -53,11 +52,7 @@ export function Inner({ columns, rows, message = null, ...props }: Props) {
 
 type DataTableParams = TableParams & { offset?: Maybe<number> };
 
-type TableProps = {
-  params: DataTableParams & { q: string };
-};
-
-function WithContext(props: TableProps) {
+function WithContext() {
   const {
     loading,
     loadingWorkingDiff,
@@ -85,7 +80,6 @@ function WithContext(props: TableProps) {
 
   return (
     <Inner
-      params={props.params}
       loadMore={workingDiffRowsToggled ? loadMoreWorkingDiff : loadMore}
       rows={workingDiffRowsToggled ? workingDiffRows : rows}
       columns={columns}
@@ -100,7 +94,7 @@ export default function DataTable(props: { params: DataTableParams }) {
   return (
     <>
       <DataTableLayout params={params} tableName={props.params.tableName}>
-        <WithContext params={params} />
+        <WithContext />
       </DataTableLayout>
       <AddRowsButton {...props} />
     </>

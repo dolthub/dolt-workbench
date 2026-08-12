@@ -1,4 +1,4 @@
-import { Args, ArgsType, Field, Query, Resolver } from "@nestjs/graphql";
+import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
 import { CommitDiffType } from "../diffSummaries/diffSummary.enums";
 import { ColumnValueInput } from "../rows/rowMutation.resolver";
@@ -21,6 +21,9 @@ export class DoltCommitDiffArgs extends TableMaybeSchemaArgs {
 
   @Field(_type => CommitDiffType, { nullable: true })
   type?: CommitDiffType;
+
+  @Field(_type => Int, { nullable: true })
+  offset?: number;
 }
 
 @ArgsType()
@@ -30,6 +33,9 @@ export class DoltCellLookupArgs extends TableMaybeSchemaArgs {
 
   @Field({ nullable: true })
   columnName?: string;
+
+  @Field(_type => Int, { nullable: true })
+  offset?: number;
 }
 
 @Resolver()
@@ -46,7 +52,7 @@ export class DoltDiffResolver {
       res.rows,
       res.executionMessage,
       res.queryString ?? "",
-      0,
+      args.offset ?? 0,
     );
   }
 
@@ -60,7 +66,7 @@ export class DoltDiffResolver {
       res.rows,
       res.executionMessage,
       res.queryString ?? "",
-      0,
+      args.offset ?? 0,
     );
   }
 
@@ -74,7 +80,7 @@ export class DoltDiffResolver {
       res.rows,
       res.executionMessage,
       res.queryString ?? "",
-      0,
+      args.offset ?? 0,
     );
   }
 }

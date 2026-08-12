@@ -5,6 +5,7 @@ import {
   getColumnSort,
   parseStackingParams,
   removeFromProjection,
+  rewriteWhereColumn,
   setColumnSort,
   stackingParamsToQuery,
 } from "./dataTableParams";
@@ -254,6 +255,53 @@ describe("appendWhere", () => {
       { column: "a", value: "1", type: "int" },
       { column: "b", value: "2", type: "int" },
     ]);
+  });
+});
+
+describe("rewriteWhereColumn", () => {
+  it("returns current unchanged when column has no filter", () => {
+    const current = [{ column: "name", value: "scott", type: "varchar" }];
+    expect(rewriteWhereColumn(current, "id", "5")).toBe(current);
+    expect(rewriteWhereColumn(undefined, "id", "5")).toBeUndefined();
+  });
+
+  it("rewrites the value for a matching column", () => {
+    expect(
+      rewriteWhereColumn(
+        [
+          { column: "name", value: "scott", type: "varchar" },
+          { column: "id", value: "5", type: "int" },
+        ],
+        "name",
+        "scotty",
+      ),
+    ).toEqual([
+      { column: "name", value: "scotty", type: "varchar" },
+      { column: "id", value: "5", type: "int" },
+    ]);
+  });
+
+  it("removes the clause when value is null", () => {
+    expect(
+      rewriteWhereColumn(
+        [
+          { column: "name", value: "scott", type: "varchar" },
+          { column: "id", value: "5", type: "int" },
+        ],
+        "name",
+        null,
+      ),
+    ).toEqual([{ column: "id", value: "5", type: "int" }]);
+  });
+
+  it("returns undefined when removal empties the list", () => {
+    expect(
+      rewriteWhereColumn(
+        [{ column: "name", value: "scott", type: "varchar" }],
+        "name",
+        null,
+      ),
+    ).toBeUndefined();
   });
 });
 

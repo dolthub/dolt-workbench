@@ -18,7 +18,9 @@ export default function ViewItem(props: Props) {
   const { name } = props.view;
   const viewingQuery = isViewing(router.query.tableName, name);
   const id = `view-${name}`;
-  const route = table({ ...props.params, tableName: name });
+  const route = table({ ...props.params, tableName: name }).withQuery({
+    active: "Views",
+  });
 
   return (
     <li

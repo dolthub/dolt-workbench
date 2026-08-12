@@ -1,8 +1,15 @@
+import { useApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { ErrorMsg, Loader } from "@dolthub/react-components";
-import { useDoltCommitDiffQuery } from "@gen/graphql-types";
+import {
+  DoltCommitDiffDocument,
+  DoltCommitDiffQuery,
+  DoltCommitDiffQueryVariables,
+  useDoltCommitDiffQuery,
+} from "@gen/graphql-types";
+import useDoltLookupRows from "@hooks/useDoltLookupRows";
 import { parseCommitDiff } from "@lib/commitDiffUrl";
 import { SqlQueryParams } from "@lib/params";
 import { useRouter } from "next/router";
@@ -30,20 +37,36 @@ export default function CommitDiffTable(props: Props) {
     ],
   );
 
+  const variables = {
+    databaseName: props.params.databaseName,
+    refName: props.params.refName,
+    schemaName: ctx?.schemaName,
+    tableName: ctx?.tableName ?? "",
+    fromCommitId: ctx?.fromCommitId ?? "",
+    toCommitId: ctx?.toCommitId ?? "",
+    excludedColumns: ctx?.excludedColumns,
+    type: ctx?.type,
+  };
   const res = useDoltCommitDiffQuery({
-    variables: {
-      databaseName: props.params.databaseName,
-      refName: props.params.refName,
-      schemaName: ctx?.schemaName,
-      tableName: ctx?.tableName ?? "",
-      fromCommitId: ctx?.fromCommitId ?? "",
-      toCommitId: ctx?.toCommitId ?? "",
-      excludedColumns: ctx?.excludedColumns,
-      type: ctx?.type,
-    },
+    variables,
     skip: !ctx,
   });
   const data = res.data?.doltCommitDiff;
+
+  const client = useApolloClient();
+  const { rows, loadMore, hasMore, err } = useDoltLookupRows(
+    data,
+    async offset => {
+      const page = await client.query<
+        DoltCommitDiffQuery,
+        DoltCommitDiffQueryVariables
+      >({
+        query: DoltCommitDiffDocument,
+        variables: { ...variables, offset },
+      });
+      return page.data.doltCommitDiff;
+    },
+  );
 
   useEffect(() => {
     if (data?.queryString) setEditorString(data.queryString);
@@ -61,14 +84,13 @@ export default function CommitDiffTable(props: Props) {
   if (res.loading) return <Loader loaded={false} />;
 
   return (
-    <DataTableLayout params={props.params}>
+    <DataTableLayout params={{ ...props.params, q: data?.queryString ?? "" }}>
       <InnerDataTable
-        params={props.params}
-        rows={data?.rows.list}
+        rows={rows}
         columns={data?.columns}
-        loadMore={async () => {}}
-        hasMore={false}
-        error={res.error}
+        loadMore={loadMore}
+        hasMore={hasMore}
+        error={res.error ?? err}
       />
     </DataTableLayout>
   );

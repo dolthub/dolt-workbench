@@ -99,11 +99,15 @@ export function interpolateForDisplay(
   types: Array<{ type?: string }>,
 ): string {
   let i = 0;
-  return sql.replace(PLACEHOLDER_PATTERN, () => {
-    const value = params[i];
-    const type = types[i]?.type;
-    i += 1;
-    return formatValueLiteral(value, type);
+  return sql.replace(PLACEHOLDER_PATTERN, match => {
+    let idx: number;
+    if (match === "?") {
+      idx = i;
+      i += 1;
+    } else {
+      idx = parseInt(match.slice(1), 10) - 1;
+    }
+    return formatValueLiteral(params[idx], types[idx]?.type);
   });
 }
 
@@ -133,19 +137,42 @@ export function asStringParams(params: unknown[]): string[] {
   return params.map(p => String(p));
 }
 
+export type Page = {
+  limit: number;
+  offset?: number;
+};
+
 export function builtSelect(
   qb: SelectQueryBuilder<any>,
   acc: ParamAccumulator,
   escape: (name: string) => string,
+  page?: Page,
 ): Built<RawRows> {
-  const [rawSql, rawParams] = qb.getQueryAndParameters();
-  const params = asStringParams(rawParams);
-  const sql = stripSentinelAlias(rawSql, escape);
+  const [preLimitSql, preLimitParams] = qb.getQueryAndParameters();
   const displaySql = stripSentinelAlias(
-    interpolateForDisplay(rawSql, params, acc.paramTypes),
+    interpolateForDisplay(
+      preLimitSql,
+      asStringParams(preLimitParams),
+      acc.paramTypes,
+    ),
     escape,
   );
-  return { sql, params, displaySql, execute: async () => qb.getRawMany() };
+
+  if (page) {
+    qb = qb.limit(page.limit);
+    if (page.offset !== undefined && page.offset > 0) {
+      qb = qb.offset(page.offset);
+    }
+  }
+
+  const [rawSql, rawParams] = qb.getQueryAndParameters();
+  const sql = stripSentinelAlias(rawSql, escape);
+  return {
+    sql,
+    params: asStringParams(rawParams),
+    displaySql,
+    execute: async () => qb.getRawMany(),
+  };
 }
 
 const DIFF_METADATA_COLS = [

@@ -68,42 +68,33 @@ export const UPDATE_ROW = gql`
   }
 `;
 
-const DOLT_CELL_LOOKUP_FRAGMENT = gql`
-  fragment RowForDoltCellLookup on Row {
+export const DOLT_LOOKUP_FRAGMENT = gql`
+  fragment RowForDoltLookup on Row {
     columnValues {
       displayValue
     }
-    diff {
-      diffColumnNames
-      diffColumnValues {
-        displayValue
-      }
-    }
   }
-  fragment ColumnForDoltCellLookup on Column {
+  fragment ColumnForDoltLookup on Column {
     name
     isPrimaryKey
     type
-    sourceTable
-    constraints {
-      notNull
-    }
   }
-  fragment SqlSelectForDoltCellLookup on SqlSelect {
+  fragment SqlSelectForDoltLookup on SqlSelect {
     queryString
     columns {
-      ...ColumnForDoltCellLookup
+      ...ColumnForDoltLookup
     }
     rows {
+      nextOffset
       list {
-        ...RowForDoltCellLookup
+        ...RowForDoltLookup
       }
     }
   }
 `;
 
 export const DOLT_CELL_DIFF = gql`
-  ${DOLT_CELL_LOOKUP_FRAGMENT}
+  ${DOLT_LOOKUP_FRAGMENT}
   query DoltCellDiff(
     $databaseName: String!
     $refName: String!
@@ -111,6 +102,7 @@ export const DOLT_CELL_DIFF = gql`
     $tableName: String!
     $pkValues: [ColumnValueInput!]!
     $columnName: String
+    $offset: Int
   ) {
     doltCellDiff(
       databaseName: $databaseName
@@ -119,14 +111,14 @@ export const DOLT_CELL_DIFF = gql`
       tableName: $tableName
       pkValues: $pkValues
       columnName: $columnName
+      offset: $offset
     ) {
-      ...SqlSelectForDoltCellLookup
+      ...SqlSelectForDoltLookup
     }
   }
 `;
 
 export const DOLT_CELL_HISTORY = gql`
-  ${DOLT_CELL_LOOKUP_FRAGMENT}
   query DoltCellHistory(
     $databaseName: String!
     $refName: String!
@@ -134,6 +126,7 @@ export const DOLT_CELL_HISTORY = gql`
     $tableName: String!
     $pkValues: [ColumnValueInput!]!
     $columnName: String
+    $offset: Int
   ) {
     doltCellHistory(
       databaseName: $databaseName
@@ -142,8 +135,9 @@ export const DOLT_CELL_HISTORY = gql`
       tableName: $tableName
       pkValues: $pkValues
       columnName: $columnName
+      offset: $offset
     ) {
-      ...SqlSelectForDoltCellLookup
+      ...SqlSelectForDoltLookup
     }
   }
 `;

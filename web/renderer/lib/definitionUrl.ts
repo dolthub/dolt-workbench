@@ -1,4 +1,5 @@
 import { SchemaType } from "@gen/graphql-types";
+import { strParam } from "@lib/queryParams";
 import { ParsedUrlQuery } from "querystring";
 
 export type DefinitionContext = {
@@ -40,9 +41,4 @@ function parseKind(raw: string | string[] | undefined): SchemaType | undefined {
   if (typeof raw !== "string") return undefined;
   const values: SchemaType[] = Object.values(SchemaType);
   return values.find(v => v === raw);
-}
-
-function strParam(raw: string | string[] | undefined): string | undefined {
-  if (typeof raw !== "string" || raw.length === 0) return undefined;
-  return raw;
 }

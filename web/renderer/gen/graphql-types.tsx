@@ -256,6 +256,7 @@ export type Mutation = {
   createTag: Scalars['String']['output'];
   createView: MutationResult;
   deleteBranch: Scalars['Boolean']['output'];
+  deleteDoc: MutationResult;
   deleteRemote: Scalars['Boolean']['output'];
   deleteRow: MutationResult;
   deleteTag: Scalars['Boolean']['output'];
@@ -351,6 +352,13 @@ export type MutationCreateViewArgs = {
 export type MutationDeleteBranchArgs = {
   branchName: Scalars['String']['input'];
   databaseName: Scalars['String']['input'];
+};
+
+
+export type MutationDeleteDocArgs = {
+  databaseName: Scalars['String']['input'];
+  docType: DocType;
+  refName: Scalars['String']['input'];
 };
 
 
@@ -717,6 +725,7 @@ export type QueryDocsArgs = {
 export type QueryDoltCellDiffArgs = {
   columnName?: InputMaybe<Scalars['String']['input']>;
   databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   pkValues: Array<ColumnValueInput>;
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -727,6 +736,7 @@ export type QueryDoltCellDiffArgs = {
 export type QueryDoltCellHistoryArgs = {
   columnName?: InputMaybe<Scalars['String']['input']>;
   databaseName: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   pkValues: Array<ColumnValueInput>;
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
@@ -738,6 +748,7 @@ export type QueryDoltCommitDiffArgs = {
   databaseName: Scalars['String']['input'];
   excludedColumns?: InputMaybe<Array<Scalars['String']['input']>>;
   fromCommitId: Scalars['String']['input'];
+  offset?: InputMaybe<Scalars['Int']['input']>;
   refName: Scalars['String']['input'];
   schemaName?: InputMaybe<Scalars['String']['input']>;
   tableName: Scalars['String']['input'];
@@ -1227,11 +1238,11 @@ export type UpdateRowMutationVariables = Exact<{
 
 export type UpdateRowMutation = { __typename?: 'Mutation', updateRow: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
-export type RowForDoltCellLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
+export type RowForDoltLookupFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> };
 
-export type ColumnForDoltCellLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
+export type ColumnForDoltLookupFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string };
 
-export type SqlSelectForDoltCellLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } };
+export type SqlSelectForDoltLookupFragment = { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } };
 
 export type DoltCellDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1240,10 +1251,11 @@ export type DoltCellDiffQueryVariables = Exact<{
   tableName: Scalars['String']['input'];
   pkValues: Array<ColumnValueInput> | ColumnValueInput;
   columnName?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type DoltCellDiffQuery = { __typename?: 'Query', doltCellDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type DoltCellDiffQuery = { __typename?: 'Query', doltCellDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type DoltCellHistoryQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1252,10 +1264,11 @@ export type DoltCellHistoryQueryVariables = Exact<{
   tableName: Scalars['String']['input'];
   pkValues: Array<ColumnValueInput> | ColumnValueInput;
   columnName?: InputMaybe<Scalars['String']['input']>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type DoltCellHistoryQuery = { __typename?: 'Query', doltCellHistory: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type DoltCellHistoryQuery = { __typename?: 'Query', doltCellHistory: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type DropColumnMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1268,10 +1281,6 @@ export type DropColumnMutationVariables = Exact<{
 
 export type DropColumnMutation = { __typename?: 'Mutation', dropColumn: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
-export type RowForDoltCommitDiffFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
-
-export type ColumnForDoltCommitDiffFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
-
 export type DoltCommitDiffQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1281,10 +1290,11 @@ export type DoltCommitDiffQueryVariables = Exact<{
   toCommitId: Scalars['String']['input'];
   excludedColumns?: InputMaybe<Array<Scalars['String']['input']> | Scalars['String']['input']>;
   type?: InputMaybe<CommitDiffType>;
+  offset?: InputMaybe<Scalars['Int']['input']>;
 }>;
 
 
-export type DoltCommitDiffQuery = { __typename?: 'Query', doltCommitDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type DoltCommitDiffQuery = { __typename?: 'Query', doltCommitDiff: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type CreateDatabaseMutationVariables = Exact<{
   databaseName: Scalars['String']['input'];
@@ -1401,10 +1411,6 @@ export type RowsForDoltProceduresQueryVariables = Exact<{
 
 export type RowsForDoltProceduresQuery = { __typename?: 'Query', doltProcedures: Array<{ __typename?: 'SchemaItem', name: string, type: SchemaType }> };
 
-export type RowForSchemaDefinitionFragment = { __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null };
-
-export type ColumnForSchemaDefinitionFragment = { __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null };
-
 export type SchemaDefinitionQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -1414,7 +1420,7 @@ export type SchemaDefinitionQueryVariables = Exact<{
 }>;
 
 
-export type SchemaDefinitionQuery = { __typename?: 'Query', schemaDefinition: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string, sourceTable?: string | null, constraints?: Array<{ __typename?: 'ColConstraint', notNull: boolean }> | null }>, rows: { __typename?: 'RowList', list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }>, diff?: { __typename?: 'WorkingDiff', diffColumnNames: Array<string>, diffColumnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> } | null }> } } };
+export type SchemaDefinitionQuery = { __typename?: 'Query', schemaDefinition: { __typename?: 'SqlSelect', queryString: string, columns: Array<{ __typename?: 'Column', name: string, isPrimaryKey: boolean, type: string }>, rows: { __typename?: 'RowList', nextOffset?: number | null, list: Array<{ __typename?: 'Row', columnValues: Array<{ __typename?: 'ColumnValue', displayValue: string }> }> } } };
 
 export type CommitForDiffSelectorFragment = { __typename?: 'Commit', _id: string, commitId: string, message: string, committedAt: any, parents: Array<string>, committer: { __typename?: 'DoltWriter', _id: string, displayName: string, username?: string | null } };
 
@@ -2096,6 +2102,15 @@ export type SaveDocMutationVariables = Exact<{
 
 export type SaveDocMutation = { __typename?: 'Mutation', saveDoc: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
 
+export type DeleteDocMutationVariables = Exact<{
+  databaseName: Scalars['String']['input'];
+  refName: Scalars['String']['input'];
+  docType: DocType;
+}>;
+
+
+export type DeleteDocMutation = { __typename?: 'Mutation', deleteDoc: { __typename?: 'MutationResult', rowsAffected: number, queryString: string, executionMessage: string } };
+
 export type TableNamesQueryVariables = Exact<{
   databaseName: Scalars['String']['input'];
   refName: Scalars['String']['input'];
@@ -2106,96 +2121,39 @@ export type TableNamesQueryVariables = Exact<{
 
 export type TableNamesQuery = { __typename?: 'Query', tableNames: { __typename?: 'TableNames', list: Array<string> } };
 
-export const ColumnForDoltCellLookupFragmentDoc = gql`
-    fragment ColumnForDoltCellLookup on Column {
+export const ColumnForDoltLookupFragmentDoc = gql`
+    fragment ColumnForDoltLookup on Column {
   name
   isPrimaryKey
   type
-  sourceTable
-  constraints {
-    notNull
-  }
 }
     `;
-export const RowForDoltCellLookupFragmentDoc = gql`
-    fragment RowForDoltCellLookup on Row {
+export const RowForDoltLookupFragmentDoc = gql`
+    fragment RowForDoltLookup on Row {
   columnValues {
     displayValue
   }
-  diff {
-    diffColumnNames
-    diffColumnValues {
-      displayValue
-    }
-  }
 }
     `;
-export const SqlSelectForDoltCellLookupFragmentDoc = gql`
-    fragment SqlSelectForDoltCellLookup on SqlSelect {
+export const SqlSelectForDoltLookupFragmentDoc = gql`
+    fragment SqlSelectForDoltLookup on SqlSelect {
   queryString
   columns {
-    ...ColumnForDoltCellLookup
+    ...ColumnForDoltLookup
   }
   rows {
+    nextOffset
     list {
-      ...RowForDoltCellLookup
+      ...RowForDoltLookup
     }
   }
 }
-    ${ColumnForDoltCellLookupFragmentDoc}
-${RowForDoltCellLookupFragmentDoc}`;
-export const RowForDoltCommitDiffFragmentDoc = gql`
-    fragment RowForDoltCommitDiff on Row {
-  columnValues {
-    displayValue
-  }
-  diff {
-    diffColumnNames
-    diffColumnValues {
-      displayValue
-    }
-  }
-}
-    `;
-export const ColumnForDoltCommitDiffFragmentDoc = gql`
-    fragment ColumnForDoltCommitDiff on Column {
-  name
-  isPrimaryKey
-  type
-  sourceTable
-  constraints {
-    notNull
-  }
-}
-    `;
+    ${ColumnForDoltLookupFragmentDoc}
+${RowForDoltLookupFragmentDoc}`;
 export const SchemaItemFragmentDoc = gql`
     fragment SchemaItem on SchemaItem {
   name
   type
-}
-    `;
-export const RowForSchemaDefinitionFragmentDoc = gql`
-    fragment RowForSchemaDefinition on Row {
-  columnValues {
-    displayValue
-  }
-  diff {
-    diffColumnNames
-    diffColumnValues {
-      displayValue
-    }
-  }
-}
-    `;
-export const ColumnForSchemaDefinitionFragmentDoc = gql`
-    fragment ColumnForSchemaDefinition on Column {
-  name
-  isPrimaryKey
-  type
-  sourceTable
-  constraints {
-    notNull
-  }
 }
     `;
 export const CommitForDiffSelectorFragmentDoc = gql`
@@ -2809,7 +2767,7 @@ export type UpdateRowMutationHookResult = ReturnType<typeof useUpdateRowMutation
 export type UpdateRowMutationResult = Apollo.MutationResult<UpdateRowMutation>;
 export type UpdateRowMutationOptions = Apollo.BaseMutationOptions<UpdateRowMutation, UpdateRowMutationVariables>;
 export const DoltCellDiffDocument = gql`
-    query DoltCellDiff($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $pkValues: [ColumnValueInput!]!, $columnName: String) {
+    query DoltCellDiff($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $pkValues: [ColumnValueInput!]!, $columnName: String, $offset: Int) {
   doltCellDiff(
     databaseName: $databaseName
     refName: $refName
@@ -2817,11 +2775,12 @@ export const DoltCellDiffDocument = gql`
     tableName: $tableName
     pkValues: $pkValues
     columnName: $columnName
+    offset: $offset
   ) {
-    ...SqlSelectForDoltCellLookup
+    ...SqlSelectForDoltLookup
   }
 }
-    ${SqlSelectForDoltCellLookupFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useDoltCellDiffQuery__
@@ -2841,6 +2800,7 @@ export const DoltCellDiffDocument = gql`
  *      tableName: // value for 'tableName'
  *      pkValues: // value for 'pkValues'
  *      columnName: // value for 'columnName'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
@@ -2861,7 +2821,7 @@ export type DoltCellDiffLazyQueryHookResult = ReturnType<typeof useDoltCellDiffL
 export type DoltCellDiffSuspenseQueryHookResult = ReturnType<typeof useDoltCellDiffSuspenseQuery>;
 export type DoltCellDiffQueryResult = Apollo.QueryResult<DoltCellDiffQuery, DoltCellDiffQueryVariables>;
 export const DoltCellHistoryDocument = gql`
-    query DoltCellHistory($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $pkValues: [ColumnValueInput!]!, $columnName: String) {
+    query DoltCellHistory($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $pkValues: [ColumnValueInput!]!, $columnName: String, $offset: Int) {
   doltCellHistory(
     databaseName: $databaseName
     refName: $refName
@@ -2869,11 +2829,12 @@ export const DoltCellHistoryDocument = gql`
     tableName: $tableName
     pkValues: $pkValues
     columnName: $columnName
+    offset: $offset
   ) {
-    ...SqlSelectForDoltCellLookup
+    ...SqlSelectForDoltLookup
   }
 }
-    ${SqlSelectForDoltCellLookupFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useDoltCellHistoryQuery__
@@ -2893,6 +2854,7 @@ export const DoltCellHistoryDocument = gql`
  *      tableName: // value for 'tableName'
  *      pkValues: // value for 'pkValues'
  *      columnName: // value for 'columnName'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
@@ -2958,7 +2920,7 @@ export type DropColumnMutationHookResult = ReturnType<typeof useDropColumnMutati
 export type DropColumnMutationResult = Apollo.MutationResult<DropColumnMutation>;
 export type DropColumnMutationOptions = Apollo.BaseMutationOptions<DropColumnMutation, DropColumnMutationVariables>;
 export const DoltCommitDiffDocument = gql`
-    query DoltCommitDiff($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $excludedColumns: [String!], $type: CommitDiffType) {
+    query DoltCommitDiff($databaseName: String!, $refName: String!, $schemaName: String, $tableName: String!, $fromCommitId: String!, $toCommitId: String!, $excludedColumns: [String!], $type: CommitDiffType, $offset: Int) {
   doltCommitDiff(
     databaseName: $databaseName
     refName: $refName
@@ -2968,20 +2930,12 @@ export const DoltCommitDiffDocument = gql`
     toCommitId: $toCommitId
     excludedColumns: $excludedColumns
     type: $type
+    offset: $offset
   ) {
-    queryString
-    columns {
-      ...ColumnForDoltCommitDiff
-    }
-    rows {
-      list {
-        ...RowForDoltCommitDiff
-      }
-    }
+    ...SqlSelectForDoltLookup
   }
 }
-    ${ColumnForDoltCommitDiffFragmentDoc}
-${RowForDoltCommitDiffFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useDoltCommitDiffQuery__
@@ -3003,6 +2957,7 @@ ${RowForDoltCommitDiffFragmentDoc}`;
  *      toCommitId: // value for 'toCommitId'
  *      excludedColumns: // value for 'excludedColumns'
  *      type: // value for 'type'
+ *      offset: // value for 'offset'
  *   },
  * });
  */
@@ -3609,19 +3564,10 @@ export const SchemaDefinitionDocument = gql`
     name: $name
     kind: $kind
   ) {
-    queryString
-    columns {
-      ...ColumnForSchemaDefinition
-    }
-    rows {
-      list {
-        ...RowForSchemaDefinition
-      }
-    }
+    ...SqlSelectForDoltLookup
   }
 }
-    ${ColumnForSchemaDefinitionFragmentDoc}
-${RowForSchemaDefinitionFragmentDoc}`;
+    ${SqlSelectForDoltLookupFragmentDoc}`;
 
 /**
  * __useSchemaDefinitionQuery__
@@ -6301,6 +6247,43 @@ export function useSaveDocMutation(baseOptions?: Apollo.MutationHookOptions<Save
 export type SaveDocMutationHookResult = ReturnType<typeof useSaveDocMutation>;
 export type SaveDocMutationResult = Apollo.MutationResult<SaveDocMutation>;
 export type SaveDocMutationOptions = Apollo.BaseMutationOptions<SaveDocMutation, SaveDocMutationVariables>;
+export const DeleteDocDocument = gql`
+    mutation DeleteDoc($databaseName: String!, $refName: String!, $docType: DocType!) {
+  deleteDoc(databaseName: $databaseName, refName: $refName, docType: $docType) {
+    rowsAffected
+    queryString
+    executionMessage
+  }
+}
+    `;
+export type DeleteDocMutationFn = Apollo.MutationFunction<DeleteDocMutation, DeleteDocMutationVariables>;
+
+/**
+ * __useDeleteDocMutation__
+ *
+ * To run a mutation, you first call `useDeleteDocMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteDocMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteDocMutation, { data, loading, error }] = useDeleteDocMutation({
+ *   variables: {
+ *      databaseName: // value for 'databaseName'
+ *      refName: // value for 'refName'
+ *      docType: // value for 'docType'
+ *   },
+ * });
+ */
+export function useDeleteDocMutation(baseOptions?: Apollo.MutationHookOptions<DeleteDocMutation, DeleteDocMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteDocMutation, DeleteDocMutationVariables>(DeleteDocDocument, options);
+      }
+export type DeleteDocMutationHookResult = ReturnType<typeof useDeleteDocMutation>;
+export type DeleteDocMutationResult = Apollo.MutationResult<DeleteDocMutation>;
+export type DeleteDocMutationOptions = Apollo.BaseMutationOptions<DeleteDocMutation, DeleteDocMutationVariables>;
 export const TableNamesDocument = gql`
     query TableNames($databaseName: String!, $refName: String!, $schemaName: String, $filterSystemTables: Boolean) {
   tableNames(

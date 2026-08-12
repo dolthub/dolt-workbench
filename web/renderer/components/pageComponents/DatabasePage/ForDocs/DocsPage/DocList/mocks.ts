@@ -1,9 +1,11 @@
 import { MockedResponse } from "@apollo/client/testing";
 import {
+  DeleteDocDocument,
   DocForDocPageFragment,
   DocRowForDocPageFragment,
   DocsRowsForDocPageQueryDocument,
   DocType,
+  SaveDocDocument,
 } from "@gen/graphql-types";
 import { RefParams } from "@lib/params";
 
@@ -34,5 +36,36 @@ export const docsMock = (
     result: {
       data: { docs: { __typename: "DocList", list: docs.map(getDoc) } },
     },
+  };
+};
+
+const mutationResult = {
+  __typename: "MutationResult",
+  rowsAffected: 1,
+  queryString: "",
+  executionMessage: "Query OK, 1 row affected.",
+};
+
+export const saveDocMock = (
+  params: RefParams,
+  docType: DocType,
+  md: string,
+): MockedResponse => {
+  return {
+    request: {
+      query: SaveDocDocument,
+      variables: { ...params, docType, markdown: md },
+    },
+    result: { data: { saveDoc: mutationResult } },
+  };
+};
+
+export const deleteDocMock = (
+  params: RefParams,
+  docType: DocType,
+): MockedResponse => {
+  return {
+    request: { query: DeleteDocDocument, variables: { ...params, docType } },
+    result: { data: { deleteDoc: mutationResult } },
   };
 };

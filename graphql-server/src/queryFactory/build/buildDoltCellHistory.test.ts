@@ -57,4 +57,37 @@ describe("buildDoltCellHistory", () => {
       'SELECT "id", "name", "commit_hash", "committer", "commit_date" FROM "public"."dolt_history_users" WHERE "id" = $1 ORDER BY "commit_date" DESC',
     );
   });
+
+  it("applies limit and offset without changing displaySql", () => {
+    const out = buildDoltCellHistory(
+      mysqlEm,
+      "dolt_history_users",
+      {
+        pkValues: [{ column: "id", value: "5", type: "int" }],
+        columnNames: ["id", "name"],
+      },
+      { limit: 51, offset: 50 },
+    );
+    expect(out.sql).toBe(
+      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` WHERE `id` = ? ORDER BY `commit_date` DESC LIMIT 51 OFFSET 50",
+    );
+    expect(out.displaySql).toBe(
+      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` WHERE `id` = 5 ORDER BY `commit_date` DESC",
+    );
+  });
+
+  it("omits offset for the first page", () => {
+    const out = buildDoltCellHistory(
+      mysqlEm,
+      "dolt_history_users",
+      {
+        pkValues: [{ column: "id", value: "5", type: "int" }],
+        columnNames: ["id", "name"],
+      },
+      { limit: 51 },
+    );
+    expect(out.sql).toBe(
+      "SELECT `id`, `name`, `commit_hash`, `committer`, `commit_date` FROM `dolt_history_users` WHERE `id` = ? ORDER BY `commit_date` DESC LIMIT 51",
+    );
+  });
 });

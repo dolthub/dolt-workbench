@@ -103,6 +103,8 @@ export declare class QueryFactory {
 
   saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult>;
 
+  deleteDoc(args: t.DeleteDocArgs): Promise<t.MutationResult>;
+
   getSchemas(
     args: t.RefMaybeSchemaArgs,
     type?: SchemaType,
