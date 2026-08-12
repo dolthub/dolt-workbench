@@ -109,7 +109,9 @@ export function toWhereClauses(
   const hasPrimaryKey = mappedCols.some(col => col.isPrimaryKey);
 
   return mappedCols
-    .map((col, idx) => {return { col, idx }}) // Preserve original index for row.columnValues
+    .map((col, idx) => {
+      return { col, idx };
+    }) // Preserve original index for row.columnValues
     .filter(({ col }) => !hasPrimaryKey || col.isPrimaryKey)
     .map(({ col, idx }) => {
       const displayVal = row.columnValues[idx]?.displayValue;
