@@ -522,11 +522,79 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(await qf.getSchemas(dbArgs)).toEqual([]);
   });
 
+  it("reads tables at a tag through a detached session", async () => {
+    await ds.query("SELECT dolt_tag('detached-tag', 'main')");
+    await ds.query("INSERT INTO users (id, name) VALUES (20, 'after-tag')");
+    await commitAll("after tag");
+
+    const tables = await qf.getTableNames({
+      ...dbArgs,
+      refName: "detached-tag",
+    });
+    expect(tables).toContain("users");
+
+    const res = await qf.getSqlSelect({
+      ...dbArgs,
+      refName: "detached-tag",
+      queryString: "SELECT * FROM users WHERE id = 20",
+    });
+    expect(res.rows).toEqual([]);
+    const onMain = await qf.getSqlSelect({
+      ...dbArgs,
+      queryString: "SELECT id FROM users WHERE id = 20",
+    });
+    expect(onMain.rows).toEqual([{ id: 20 }]);
+  });
+
+  it("reads tables at a commit hash through a detached session", async () => {
+    const [head, parent] = await commitHashes();
+    const atParent = await qf.getSqlSelect({
+      ...dbArgs,
+      refName: parent,
+      queryString: "SELECT id FROM users WHERE id = 20",
+    });
+    expect(atParent.rows).toEqual([]);
+    const atHead = await qf.getSqlSelect({
+      ...dbArgs,
+      refName: head,
+      queryString: "SELECT id FROM users WHERE id = 20",
+    });
+    expect(atHead.rows).toEqual([{ id: 20 }]);
+    const info = await qf.getTableInfo({
+      ...dbArgs,
+      refName: parent,
+      tableName: "users",
+    });
+    expect(info?.columns.map(c => c.name)).toContain("id");
+  });
+
+  it("rejects writes in a detached session", async () => {
+    await expect(
+      qf.getSqlSelect({
+        ...dbArgs,
+        refName: "detached-tag",
+        queryString: "INSERT INTO users (id, name) VALUES (99, 'nope')",
+      }),
+    ).rejects.toThrow(/readonly/);
+    await ds.query("SELECT dolt_tag('-d', 'detached-tag')");
+  });
+
+  it("still maps unknown refs to a clear error", async () => {
+    await expect(
+      qf.getTableNames({ ...dbArgs, refName: "not-a-ref" }),
+    ).rejects.toThrow();
+  });
+
   it("stubs unsupported features with clear errors", async () => {
     expect(await qf.getTests(dbArgs)).toEqual([]);
-    await expect(
-      qf.getRemoteBranches({ ...dbArgs, remoteName: "origin", offset: 0 }),
-    ).rejects.toThrow(/not supported/);
+  });
+
+  it("returns remote branches from dolt_remote_branches", async () => {
+    // Tracking refs require clone/fetch, which this build lacks; this covers
+    // the query path and empty-list shape.
+    expect(
+      await qf.getRemoteBranches({ ...dbArgs, remoteName: "origin", offset: 0 }),
+    ).toEqual([]);
   });
 
   it("wires clone to the engine, which requires an empty database", async () => {

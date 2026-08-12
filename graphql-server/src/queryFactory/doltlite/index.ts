@@ -1,5 +1,6 @@
-import { QueryRunner } from "typeorm";
+import { DataSource, EntityManager, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
+import { doltliteDriver } from "../../connections/doltliteDriver";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
 import { DoltSystemTable } from "../../systemTables/systemTable.enums";
@@ -43,6 +44,120 @@ export class DoltLiteQueryFactory
     if (refName) {
       await qr.query(qh.callCheckout, [refName]);
     }
+  }
+
+  // dolt_checkout only accepts branch names. Tags and commit hashes are
+  // served from a read-only detached session instead, opened through the
+  // engine's `file@revision` syntax, so the four query entry points fall
+  // back to it when checkout rejects the ref. One page view fans out into
+  // many resolver calls for the same revision, so the connection is cached
+  // until a different revision is requested.
+  private revisionSource?: { revision: string; ds: Promise<DataSource> };
+
+  async query<T>(
+    q: string,
+    p: t.Params,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.withDetachedFallback(
+      refName,
+      async () => super.query(q, p, dbName, refName),
+      async qr => qr.query(q, p) as Promise<T>,
+    );
+  }
+
+  async queryMultiple<T>(
+    executeQuery: (pq: t.ParQuery) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.withDetachedFallback(
+      refName,
+      async () => super.queryMultiple(executeQuery, dbName, refName),
+      async qr => executeQuery(async (q, p) => qr.query(q, p)),
+    );
+  }
+
+  async queryForBuilder<T>(
+    executeQuery: (em: EntityManager) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.withDetachedFallback(
+      refName,
+      async () => super.queryForBuilder(executeQuery, dbName, refName),
+      async qr => executeQuery(qr.manager),
+    );
+  }
+
+  async queryQR<T>(
+    executeQuery: (qr: QueryRunner) => Promise<T>,
+    dbName?: string,
+    refName?: string,
+  ): Promise<T> {
+    return this.withDetachedFallback(
+      refName,
+      async () => super.queryQR(executeQuery, dbName, refName),
+      async qr => executeQuery(qr),
+    );
+  }
+
+  // checkoutDatabase runs before any work in a unit, so a "no such branch"
+  // failure means the work has not started and can safely run detached.
+  private async withDetachedFallback<T>(
+    refName: string | undefined,
+    attempt: () => Promise<T>,
+    detached: (qr: QueryRunner) => Promise<T>,
+  ): Promise<T> {
+    try {
+      return await attempt();
+    } catch (err) {
+      if (
+        !refName ||
+        !err.message.includes(`no such branch or table: ${refName}`)
+      ) {
+        throw err;
+      }
+      const ds = await this.getRevisionDS(refName);
+      const qr = ds.createQueryRunner();
+      try {
+        await qr.connect();
+        return await detached(qr);
+      } finally {
+        await qr.release();
+      }
+    }
+  }
+
+  private async getRevisionDS(revision: string): Promise<DataSource> {
+    if (this.revisionSource?.revision === revision) {
+      return this.revisionSource.ds;
+    }
+    const previous = this.revisionSource;
+    const dsPromise = (async () => {
+      const ds = new DataSource({
+        type: "better-sqlite3",
+        database: `${String(this.getDS().options.database)}@${revision}`,
+        driver: doltliteDriver,
+        statementCacheSize: 0,
+        synchronize: false,
+      });
+      try {
+        await ds.initialize();
+      } catch (err) {
+        if (this.revisionSource?.revision === revision) {
+          this.revisionSource = undefined;
+        }
+        throw err;
+      }
+      return ds;
+    })();
+    this.revisionSource = { revision, ds: dsPromise };
+    void previous?.ds
+      .then(async previousDs => previousDs.destroy())
+      .catch(() => undefined);
+    return dsPromise;
   }
 
   async callProcedure(args: t.CallProcedureArgs): Promise<t.MutationResult> {
@@ -97,8 +212,12 @@ export class DoltLiteQueryFactory
     return withUTCDates(branches, ["latest_commit_date"]);
   }
 
-  async getRemoteBranches(_: t.RemoteBranchesArgs): t.PR {
-    throw new Error("Remote branches are not supported for DoltLite databases");
+  async getRemoteBranches(args: t.RemoteBranchesArgs): t.PR {
+    const branches = await this.queryForBuilder(
+      async em => dem.getDoltRemoteBranchesPaginated(em, args),
+      args.databaseName,
+    );
+    return withUTCDates(branches, ["latest_commit_date"]);
   }
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
