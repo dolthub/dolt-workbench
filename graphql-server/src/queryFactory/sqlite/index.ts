@@ -16,6 +16,11 @@ export class SqliteQueryFactory
 
   private queue: Promise<unknown> = Promise.resolve();
 
+  // The better-sqlite3 driver family shares one connection and a singleton
+  // QueryRunner (release() is a no-op), so concurrently executing resolvers
+  // would interleave their statements. Queueing each handleAsyncQuery call
+  // keeps a logical unit — e.g. a DoltLite branch checkout plus the queries
+  // that depend on it — from overlapping with another.
   async handleAsyncQuery<T>(work: (qr: QueryRunner) => Promise<T>): Promise<T> {
     const run = async () => super.handleAsyncQuery(work);
     const res = this.queue.then(run, run);
