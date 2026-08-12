@@ -10,7 +10,7 @@ import { encodeCommitDiff } from "@lib/commitDiffUrl";
 import { RequiredRefsParams } from "@lib/params";
 import { getPostgresSchemaName, getPostgresTableName } from "@lib/postgres";
 import { query as queryRoute } from "@lib/urls";
-import { AiOutlineConsoleSql } from "@react-icons/all-files/ai/AiOutlineConsoleSql";
+import { AiOutlineConsoleSql } from "react-icons/ai";
 import { HiddenColIndexes, isHiddenColumn } from "../utils";
 import css from "./index.module.css";
 

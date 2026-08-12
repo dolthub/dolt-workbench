@@ -5,7 +5,7 @@ import {
 } from "@gen/graphql-types";
 import { PullParams } from "@lib/params";
 import { pulls } from "@lib/urls";
-import { BsArrowLeft } from "@react-icons/all-files/bs/BsArrowLeft";
+import { BsArrowLeft } from "react-icons/bs";
 import { useRouter } from "next/router";
 import BranchSelect from "./BranchSelect";
 import css from "./index.module.css";

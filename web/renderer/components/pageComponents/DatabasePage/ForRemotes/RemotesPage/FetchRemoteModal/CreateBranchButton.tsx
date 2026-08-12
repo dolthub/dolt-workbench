@@ -6,7 +6,7 @@ import {
 import useMutation from "@hooks/useMutation";
 import { OptionalRefParams } from "@lib/params";
 import { refetchRemoteBranchesQueries } from "@lib/refetchQueries";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
+import { AiOutlinePlus } from "react-icons/ai";
 import css from "./index.module.css";
 
 type Props = {

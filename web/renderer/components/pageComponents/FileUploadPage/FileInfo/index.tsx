@@ -1,6 +1,6 @@
 import { Button } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
-import { FiFile } from "@react-icons/all-files/fi/FiFile";
+import { FiFile } from "react-icons/fi";
 import cx from "classnames";
 import { ReactNode } from "react";
 import { useFileUploadContext } from "../contexts/fileUploadLocalForage";

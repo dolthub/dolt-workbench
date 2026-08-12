@@ -1,6 +1,6 @@
 import { Btn, Button, CopyButton } from "@dolthub/react-components";
 import { DatabasePageParams } from "@lib/params";
-import { BsPencil } from "@react-icons/all-files/bs/BsPencil";
+import { BsPencil } from "react-icons/bs";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import MobileSqlEditor from "../MobileSqlEditor";

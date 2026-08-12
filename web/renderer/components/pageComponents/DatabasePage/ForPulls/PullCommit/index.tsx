@@ -3,7 +3,7 @@ import { getLongDateTimeString } from "@dolthub/web-utils";
 import { PullDetailCommitFragment } from "@gen/graphql-types";
 import { PullDiffParams } from "@lib/params";
 import { diff } from "@lib/urls";
-import { IoGitCommitOutline } from "@react-icons/all-files/io5/IoGitCommitOutline";
+import { IoGitCommitOutline } from "react-icons/io5";
 import cx from "classnames";
 import css from "./index.module.css";
 

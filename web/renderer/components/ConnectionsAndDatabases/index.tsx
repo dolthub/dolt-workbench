@@ -7,7 +7,7 @@ import {
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
 import Link from "@components/links/Link";
-import { FiDatabase } from "@react-icons/all-files/fi/FiDatabase";
+import { FiDatabase } from "react-icons/fi";
 import { excerpt } from "@dolthub/web-utils";
 import { connections } from "@lib/urls";
 import cx from "classnames";

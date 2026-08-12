@@ -2,7 +2,7 @@ import Link from "@components/links/Link";
 import { Tooltip } from "@dolthub/react-components";
 import { OptionalRefParams } from "@lib/params";
 import { newBranch } from "@lib/urls";
-import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
+import { IoAddOutline } from "react-icons/io5";
 import cx from "classnames";
 import css from "./index.module.css";
 

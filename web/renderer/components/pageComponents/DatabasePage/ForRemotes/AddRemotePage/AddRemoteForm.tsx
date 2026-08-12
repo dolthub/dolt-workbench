@@ -101,7 +101,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             A remote is a {dbLink} database in another location, usually on a
             different, network accessible host. To learn more about configuring
             a remote for your database, see our{" "}
-            <Link href="https://docs.dolthub.com/concepts/dolt/git/remotes">
+            <Link href="https://dolthub.com/docs/concepts/dolt/git/remotes">
               documentation
             </Link>
           </p>

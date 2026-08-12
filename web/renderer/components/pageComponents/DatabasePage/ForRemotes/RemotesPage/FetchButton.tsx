@@ -5,7 +5,7 @@ import { RemoteFragment, useFetchRemoteMutation } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
 import { SetApolloErrorType } from "@lib/errors/types";
 import { OptionalRefParams } from "@lib/params";
-import { HiRefresh } from "@react-icons/all-files/hi/HiRefresh";
+import { HiRefresh } from "react-icons/hi";
 
 type Props = {
   setFetchModalOpen: (f: boolean) => void;

@@ -1,5 +1,5 @@
 import { Tooltip } from "@dolthub/react-components";
-import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
 import cx from "classnames";
 import css from "./index.module.css";
 

@@ -14,7 +14,14 @@ import useApolloError from "@hooks/useApolloError";
 import { handleCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
 import { SqlQueryParams } from "@lib/params";
-import { useEffect, useState } from "react";
+import {
+  PendingSqlResult,
+  clearPendingSqlResult,
+  peekPendingSqlResult,
+  pendingSqlResultMatches,
+  subscribePendingSqlResult,
+} from "@lib/pendingSqlResult";
+import { useEffect, useReducer, useState } from "react";
 
 export const defaultState = {
   offset: undefined as Maybe<number>,
@@ -51,28 +58,55 @@ type ReturnType = {
   client: ApolloClient<any>;
 };
 
-export default function useSqlSelectRows(
-  params: SqlQueryParams,
-  forceNetworkRun?: boolean,
-): ReturnType {
+export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
+  const [adopted, setAdopted] = useState<PendingSqlResult | undefined>(
+    undefined,
+  );
+  const [, rerenderOnSet] = useReducer((x: number) => x + 1, 0);
+  useEffect(() => subscribePendingSqlResult(rerenderOnSet), []);
+
+  const mailboxed = peekPendingSqlResult();
+  const incoming =
+    mailboxed && pendingSqlResultMatches(mailboxed, params)
+      ? mailboxed
+      : undefined;
+  const retained =
+    adopted && pendingSqlResultMatches(adopted, params) ? adopted : undefined;
+  const handoffData = (incoming ?? retained)?.data;
+
+  useEffect(() => {
+    if (!incoming) return;
+    setAdopted(incoming);
+    if (peekPendingSqlResult() === incoming) {
+      clearPendingSqlResult();
+    }
+  }, [incoming]);
+
+  const variables = {
+    databaseName: params.databaseName,
+    refName: params.refName,
+    queryString: params.q,
+    schemaName: params.schemaName || undefined,
+  };
+
   const { data, loading, error, client } = useSqlSelectForSqlDataTableQuery({
-    variables: {
-      databaseName: params.databaseName,
-      refName: params.refName,
-      queryString: params.q,
-      schemaName: params.schemaName,
-    },
-    fetchPolicy: forceNetworkRun ? "network-only" : "cache-first",
+    variables,
+    fetchPolicy: "cache-and-network",
+    skip: !!handoffData,
   });
 
-  const [state, setState] = useSetState(getDefaultState(data));
+  const [state, setState] = useSetState(getDefaultState(handoffData ?? data));
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
   const [err, setErr] = useApolloError(error);
 
   useEffect(() => {
+    if (handoffData) {
+      setState(getDefaultState(handoffData));
+      return;
+    }
     if (loading || error || !data) return;
     setState(getDefaultState(data));
-  }, [loading, error, data, setState]);
+  }, [loading, error, data, handoffData, setState]);
 
   const handleQuery = async (
     setRows: (rows: RowForDataTableFragment[]) => void,
@@ -89,7 +123,7 @@ export default function useSqlSelectRows(
         SqlSelectForSqlDataTableQueryVariables
       >({
         query: SqlSelectForSqlDataTableDocument,
-        variables: { ...params, queryString: params.q, offset },
+        variables: { ...variables, offset },
       });
       setRows(res.data.sqlSelect.rows.list);
       setState({ offset: res.data.sqlSelect.rows.nextOffset });

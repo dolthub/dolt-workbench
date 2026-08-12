@@ -2,8 +2,8 @@ import Link from "@components/links/Link";
 import { Button } from "@dolthub/react-components";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { ref, schemaDiagram } from "@lib/urls";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-import { FaProjectDiagram } from "@react-icons/all-files/fa/FaProjectDiagram";
+import { AiOutlineClose } from "react-icons/ai";
+import { FaProjectDiagram } from "react-icons/fa";
 import { useRouter } from "next/router";
 import css from "./index.module.css";
 

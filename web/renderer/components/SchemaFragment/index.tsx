@@ -10,8 +10,8 @@ import {
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { parseDefinition } from "@lib/definitionUrl";
 import { SqlQueryParams } from "@lib/params";
+import { MdPlayCircleOutline } from "react-icons/md";
 import { table } from "@lib/urls";
-import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";

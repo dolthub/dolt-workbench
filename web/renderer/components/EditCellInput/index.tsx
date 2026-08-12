@@ -14,10 +14,9 @@ import useMutation from "@hooks/useMutation";
 import { getBitDisplayValue } from "@lib/dataTable";
 import { rewriteWhereColumn } from "@lib/dataTableParams";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
-import { AiOutlineCheck } from "@react-icons/all-files/ai/AiOutlineCheck";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
-import { BiText } from "@react-icons/all-files/bi/BiText";
-import { VscCircleSlash } from "@react-icons/all-files/vsc/VscCircleSlash";
+import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
+import { BiText } from "react-icons/bi";
+import { VscCircleSlash } from "react-icons/vsc";
 import cx from "classnames";
 import { HTMLInputTypeAttribute, SyntheticEvent, useState } from "react";
 import Input from "./Input";
@@ -35,7 +34,7 @@ type Props = {
 };
 
 export default function EditCellInput(props: Props) {
-  const { setExecutedQuery, setError, setExecutionMessage } =
+  const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
@@ -88,7 +87,7 @@ export default function EditCellInput(props: Props) {
         .catch(console.error);
       props.cancelEditing();
     } else if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
   };
 

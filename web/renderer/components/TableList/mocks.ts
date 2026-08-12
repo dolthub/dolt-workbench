@@ -1,6 +1,7 @@
 import { MockedResponse } from "@apollo/client/testing";
 import {
   GetStatusDocument,
+  TableForBranchDocument,
   TableWithColumnsFragment,
 } from "@gen/graphql-types";
 import { tableNamesMock } from "@hooks/useTableNames/mocks";
@@ -81,6 +82,23 @@ const getStatusMock = (
   };
 };
 
+const tableForBranchMock = (
+  params: RefParams,
+  table: TableWithColumnsFragment,
+): MockedResponse => {
+  return {
+    request: {
+      query: TableForBranchDocument,
+      variables: {
+        databaseName: params.databaseName,
+        refName: params.refName,
+        tableName: table.tableName,
+      },
+    },
+    result: { data: { table } },
+  };
+};
+
 export const mocks = (
   params: RefParams,
   tables: TableWithColumnsFragment[] = [tableOne],
@@ -90,4 +108,5 @@ export const mocks = (
     tables.map(t => t.tableName),
   ),
   getStatusMock(params, tables),
+  ...tables.map(t => tableForBranchMock(params, t)),
 ];

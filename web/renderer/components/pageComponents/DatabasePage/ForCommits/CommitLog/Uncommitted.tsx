@@ -11,7 +11,7 @@ import {
 import { useCommitOverview } from "@hooks/useCommitListForCommitGraph/useCommitOverview";
 import { RefParams, RequiredCommitsParams } from "@lib/params";
 import { diff } from "@lib/urls";
-import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
+import { FaCaretDown } from "react-icons/fa";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { useState } from "react";

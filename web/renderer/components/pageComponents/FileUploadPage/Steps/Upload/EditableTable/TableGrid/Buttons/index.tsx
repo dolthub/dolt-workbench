@@ -1,8 +1,7 @@
 import { Button } from "@dolthub/react-components";
 import { useOnClickOutside } from "@dolthub/react-hooks";
 import { handleCaughtError } from "@lib/errors/helpers";
-import { FaChevronDown } from "@react-icons/all-files/fa/FaChevronDown";
-import { FaChevronUp } from "@react-icons/all-files/fa/FaChevronUp";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { useRef, useState } from "react";
 import useUploadContext, { UploadDispatch } from "../../../contexts/upload";
 import { GridDispatch, GridFunctions, GridState } from "../types";

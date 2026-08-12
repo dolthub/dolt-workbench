@@ -55,10 +55,7 @@
 .message {
   @apply font-mono text-xs mt-2 lg:mt-0;
   /* break long line such as urls without breaking words*/
-  -ms-word-break: break-all;
-  word-break: break-all;
-  /* Non standard for webkit */
-  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 
 .date {

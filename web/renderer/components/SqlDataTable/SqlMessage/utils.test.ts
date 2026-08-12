@@ -54,6 +54,14 @@ const tests = [
     expected: { databaseName: undefined, branchName: "testbranch" },
   },
   {
+    q: "select * from dolt_checkout('testbranch')",
+    expected: { databaseName: undefined, branchName: "testbranch" },
+  },
+  {
+    q: "SELECT * FROM dolt_checkout('-b', 'testbranch')",
+    expected: { databaseName: undefined, branchName: "testbranch" },
+  },
+  {
     q: `call dolt_checkout("-b", "testbranch")`,
     expected: { databaseName: undefined, branchName: "testbranch" },
   },

@@ -5,7 +5,7 @@ import { SchemaType } from "@gen/graphql-types";
 import { encodeDefinition } from "@lib/definitionUrl";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { query as queryRoute } from "@lib/urls";
-import { RiBookOpenLine } from "@react-icons/all-files/ri/RiBookOpenLine";
+import { RiBookOpenLine } from "react-icons/ri";
 import cx from "classnames";
 import css from "./index.module.css";
 

@@ -1,5 +1,5 @@
 export const discordLink = "https://discord.gg/gqr7K4VNKe";
-export const docsLink = "https://docs.dolthub.com";
+export const docsLink = "https://dolthub.com/docs";
 export const doltGithubRepo = "https://github.com/dolthub/dolt";
 export const doltgresGithubRepo = "https://github.com/dolthub/doltgresql";
 export const workbenchGithubRepo = "https://github.com/dolthub/dolt-workbench";

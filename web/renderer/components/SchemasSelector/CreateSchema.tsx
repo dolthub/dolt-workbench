@@ -7,7 +7,7 @@ import {
 import useMutation from "@hooks/useMutation";
 import { RefParams } from "@lib/params";
 import { ref } from "@lib/urls";
-import { IoAddOutline } from "@react-icons/all-files/io5/IoAddOutline";
+import { IoAddOutline } from "react-icons/io5";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import css from "./index.module.css";
