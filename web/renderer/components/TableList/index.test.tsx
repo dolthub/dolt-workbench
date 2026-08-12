@@ -59,23 +59,19 @@ describe("test TableList", () => {
       if (tables.length === 0) {
         expect(await screen.findByText(/no tables found for/i)).toBeVisible();
       } else {
-        tables.forEach(async table => {
+        for (const table of tables) {
           expect(
             await screen.findByRole("button", { name: table.tableName }),
           ).toBeVisible();
           await user.click(
             screen.getByRole("button", { name: table.tableName }),
           );
-          // TODO: Fix test
           expect(await screen.findByText(table.columns[0].name)).toBeVisible();
           await user.click(
             screen.getByRole("button", { name: table.tableName }),
           );
-          // TODO: Fix test
-          // expect(
-          //   await screen.findByText(table.columns[0].name),
-          // ).not.toBeInTheDocument();
-        });
+          expect(screen.queryByText(table.columns[0].name)).toBeNull();
+        }
       }
 
       expect(

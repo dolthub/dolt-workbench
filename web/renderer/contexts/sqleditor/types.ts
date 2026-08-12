@@ -24,6 +24,8 @@ export type SqlEditorContextType = {
   setError: (e: ApolloErrorType) => void;
   executionMessage?: string;
   setExecutionMessage: (m: string | undefined) => void;
+  executionError?: string;
+  setExecutionError: (m: string | undefined) => void;
   loading: boolean;
   modalState: ModalState;
   setModalState: Dispatch<Partial<ModalState>>;

@@ -6,7 +6,7 @@ import { ErrorMsg, Loader } from "@dolthub/react-components";
 import { useDatabasesQuery } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { database } from "@lib/urls";
-import { FaDatabase } from "@react-icons/all-files/fa/FaDatabase";
+import { FaDatabase } from "react-icons/fa";
 import cx from "classnames";
 import { useRouter } from "next/router";
 import { useEffect } from "react";

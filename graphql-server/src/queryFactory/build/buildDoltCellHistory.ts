@@ -3,6 +3,7 @@ import { RawRows } from "../types";
 import { DoltCellLookupBuildArgs } from "./buildDoltCellDiff";
 import {
   Built,
+  Page,
   SENTINEL_ALIAS,
   buildWhereConditions,
   builtSelect,
@@ -13,6 +14,7 @@ export function buildDoltCellHistory(
   em: EntityManager,
   target: string,
   args: DoltCellLookupBuildArgs,
+  page?: Page,
 ): Built<RawRows> {
   const escape = em.connection.driver.escape.bind(em.connection.driver);
   const acc = newParamAccumulator();
@@ -35,5 +37,5 @@ export function buildDoltCellHistory(
     .where(buildWhereConditions(args.pkValues, escape, acc), acc.namedParams)
     .orderBy(escape("commit_date"), "DESC");
 
-  return builtSelect(qb, acc, escape);
+  return builtSelect(qb, acc, escape, page);
 }

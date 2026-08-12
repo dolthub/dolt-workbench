@@ -230,7 +230,7 @@ http {
 
 The `X-Forwarded-User` and `X-Forwarded-Email` headers are passed through to the workbench
 and can used as the
-[author](https://docs.dolthub.com/sql-reference/version-control/dolt-sql-procedures#options-6)
+[author](https://dolthub.com/docs/sql-reference/version-control/dolt-sql-procedures#options-6)
 when creating a commit. Simply check the "Use name and email from headers as commit
 author" checkbox. The commit will be created with the user and email.
 

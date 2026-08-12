@@ -12,8 +12,8 @@ import {
 } from "@gen/graphql-types";
 import { splitEnumOptions } from "@lib/dataTable";
 import { TableParams } from "@lib/params";
-import { FiKey } from "@react-icons/all-files/fi/FiKey";
-import { HiOutlineDotsHorizontal } from "@react-icons/all-files/hi/HiOutlineDotsHorizontal";
+import { FiKey } from "react-icons/fi";
+import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import cx from "classnames";
 import css from "./index.module.css";
 

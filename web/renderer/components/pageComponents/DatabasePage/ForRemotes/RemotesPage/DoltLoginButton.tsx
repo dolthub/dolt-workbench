@@ -10,7 +10,7 @@ import {
   DatabaseConnectionFragment,
   useCurrentConnectionQuery,
 } from "@gen/graphql-types";
-import { BsFillQuestionCircleFill } from "@react-icons/all-files/bs/BsFillQuestionCircleFill";
+import { BsFillQuestionCircleFill } from "react-icons/bs";
 import { useState } from "react";
 import css from "./index.module.css";
 
@@ -120,7 +120,7 @@ function Inner({ connection }: InnerProps) {
                 dolt login authenticates your local dolt client to DoltHub.com,
                 associates your client with your DoltHub identity. To learn more
                 about dolt login, see our{" "}
-                <Link href="https://docs.dolthub.com/cli-reference/cli#dolt-login">
+                <Link href="https://dolthub.com/docs/cli-reference/cli#dolt-login">
                   documentation
                 </Link>
                 .

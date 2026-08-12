@@ -9,7 +9,7 @@ import {
 } from "@gen/graphql-types";
 import { PullDiffParams, PullParams } from "@lib/params";
 import { pullDiff, pulls } from "@lib/urls";
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
+import { FaChevronRight } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import ForDefaultBranch from "../ForDefaultBranch";
 import BranchSelectForm from "./BranchSelectForm";

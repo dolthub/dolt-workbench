@@ -85,6 +85,7 @@ export const DOLT_LOOKUP_FRAGMENT = gql`
       ...ColumnForDoltLookup
     }
     rows {
+      nextOffset
       list {
         ...RowForDoltLookup
       }
@@ -101,6 +102,7 @@ export const DOLT_CELL_DIFF = gql`
     $tableName: String!
     $pkValues: [ColumnValueInput!]!
     $columnName: String
+    $offset: Int
   ) {
     doltCellDiff(
       databaseName: $databaseName
@@ -109,6 +111,7 @@ export const DOLT_CELL_DIFF = gql`
       tableName: $tableName
       pkValues: $pkValues
       columnName: $columnName
+      offset: $offset
     ) {
       ...SqlSelectForDoltLookup
     }
@@ -116,7 +119,6 @@ export const DOLT_CELL_DIFF = gql`
 `;
 
 export const DOLT_CELL_HISTORY = gql`
-  ${DOLT_LOOKUP_FRAGMENT}
   query DoltCellHistory(
     $databaseName: String!
     $refName: String!
@@ -124,6 +126,7 @@ export const DOLT_CELL_HISTORY = gql`
     $tableName: String!
     $pkValues: [ColumnValueInput!]!
     $columnName: String
+    $offset: Int
   ) {
     doltCellHistory(
       databaseName: $databaseName
@@ -132,6 +135,7 @@ export const DOLT_CELL_HISTORY = gql`
       tableName: $tableName
       pkValues: $pkValues
       columnName: $columnName
+      offset: $offset
     ) {
       ...SqlSelectForDoltLookup
     }

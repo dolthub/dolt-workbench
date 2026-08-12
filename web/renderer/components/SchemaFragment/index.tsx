@@ -10,8 +10,8 @@ import {
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { parseDefinition } from "@lib/definitionUrl";
 import { SqlQueryParams } from "@lib/params";
+import { MdPlayCircleOutline } from "react-icons/md";
 import { table } from "@lib/urls";
-import { MdPlayCircleOutline } from "@react-icons/all-files/md/MdPlayCircleOutline";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
@@ -115,9 +115,18 @@ export default function SchemaFragment(props: Props) {
   );
 }
 
-function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
+export function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
   if (isPostgres) return 0;
-  if (kind === SchemaType.Table || kind === SchemaType.View) return 1;
-  if (kind === SchemaType.Trigger || kind === SchemaType.Procedure) return 2;
-  return 3;
+  switch (kind) {
+    case SchemaType.Table:
+    case SchemaType.View:
+      return 1;
+    case SchemaType.Trigger:
+    case SchemaType.Procedure:
+      return 2;
+    case SchemaType.Event:
+      return 3;
+    default:
+      return 0;
+  }
 }

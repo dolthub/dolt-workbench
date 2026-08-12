@@ -671,6 +671,7 @@ export class DoltQueryFactory
             columnNames,
             type: args.type,
           },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
         );
         return {
           rows: await built.execute(),
@@ -691,11 +692,16 @@ export class DoltQueryFactory
     );
     return this.queryForBuilder(
       async em => {
-        const built = buildDoltCellDiff(em, `dolt_diff_${args.tableName}`, {
-          pkValues: pkValuesWithTypes(args.pkValues, columns),
-          columnNames: columns.map(c => c.name),
-          columnName: args.columnName,
-        });
+        const built = buildDoltCellDiff(
+          em,
+          `dolt_diff_${args.tableName}`,
+          {
+            pkValues: pkValuesWithTypes(args.pkValues, columns),
+            columnNames: columns.map(c => c.name),
+            columnName: args.columnName,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,
@@ -725,6 +731,7 @@ export class DoltQueryFactory
             columnNames: columns.map(c => c.name),
             columnName: args.columnName,
           },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
         );
         return {
           rows: await built.execute(),

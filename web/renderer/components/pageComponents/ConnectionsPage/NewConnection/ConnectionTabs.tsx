@@ -6,7 +6,7 @@ import {
   useTabsContext,
 } from "@dolthub/react-components";
 import cx from "classnames";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import { FiCheck } from "react-icons/fi";
 import { ReactNode } from "react";
 import About from "./About";
 import Connection from "./Connection";

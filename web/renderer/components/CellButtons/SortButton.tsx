@@ -4,7 +4,7 @@ import { Button } from "@dolthub/react-components";
 import { ColumnForDataTableFragment, SortDirection } from "@gen/graphql-types";
 import useDataTableStack from "@hooks/useDataTableStack";
 import { getColumnSort, setColumnSort } from "@lib/dataTableParams";
-import { FiCheck } from "@react-icons/all-files/fi/FiCheck";
+import { FiCheck } from "react-icons/fi";
 import css from "./index.module.css";
 
 type Direction = "ASC" | "DESC" | undefined;

@@ -2,7 +2,7 @@ import { QueryHandler } from "@dolthub/react-components";
 import { TableForSchemaListFragment } from "@gen/graphql-types";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { ref } from "@lib/urls";
-import { AiOutlineClose } from "@react-icons/all-files/ai/AiOutlineClose";
+import { AiOutlineClose } from "react-icons/ai";
 import Image from "next/legacy/image"; // TODO: Migrate to current next/image
 import { useRouter } from "next/router";
 import ReactFlow, {

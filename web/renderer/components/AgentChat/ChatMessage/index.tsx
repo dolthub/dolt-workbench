@@ -1,6 +1,6 @@
 import { AgentMessage, ContentBlock, ImageContentBlock } from "@contexts/agent";
 import { Markdown } from "@dolthub/react-components";
-import { HiDownload } from "@react-icons/all-files/hi/HiDownload";
+import { HiDownload } from "react-icons/hi";
 import cx from "classnames";
 import { useCallback } from "react";
 import InlineToolCall from "../InlineToolCall";
