@@ -7,6 +7,7 @@ import {
   useDeleteDocMutation,
   useSaveDocMutation,
 } from "@gen/graphql-types";
+import { ApolloErrorType } from "@lib/errors/types";
 import { RefParams } from "@lib/params";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { SyntheticEvent } from "react";
@@ -53,13 +54,13 @@ export default function useEditDoc(
     e: SyntheticEvent,
     mutate: (docType: DocType) => Promise<{
       success: boolean;
-      error?: Parameters<typeof setError>[0];
+      error?: ApolloErrorType;
       result?: Maybe<DocMutationResult>;
     }>,
   ): Promise<SaveResult> => {
     e.preventDefault();
     if (!state.docType || state.docType === DocType.Unspecified) {
-      setError(new Error("A doc type must be selected"));
+      setExecutionError("A doc type must be selected");
       return { success: false };
     }
     setState({ loading: true });
