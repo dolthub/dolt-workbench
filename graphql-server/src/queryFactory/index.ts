@@ -13,6 +13,8 @@ export declare class QueryFactory {
 
   constructor(ds: DataSource | undefined);
 
+  destroy?(): Promise<void>;
+
   // UTILS
 
   getDS(): DataSource;
@@ -220,7 +222,7 @@ export declare class QueryFactory {
 
   callFetchRemote(args: t.RemoteArgs): t.PR;
 
-  callCreateBranchFromRemote(args: t.RemoteArgs): t.PR;
+  callCreateBranchFromRemote(args: t.RemoteBranchArgs): t.PR;
 
   getMergeBase(args: t.RefsArgs): Promise<string>;
 

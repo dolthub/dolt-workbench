@@ -34,15 +34,17 @@ type RevisionSource = {
   ds: Promise<DataSource>;
   activeRunners: number;
   retired: boolean;
+  destroyPromise?: Promise<void>;
 };
 
-function destroyIfRetired(source: RevisionSource): void {
+async function destroyIfRetired(source: RevisionSource): Promise<void> {
   if (!source.retired || source.activeRunners > 0) return;
-  void source.ds
+  source.destroyPromise ??= source.ds
     .then(async ds => {
       if (ds.isInitialized) await ds.destroy();
     })
     .catch(() => undefined);
+  await source.destroyPromise;
 }
 
 export class DoltLiteQueryFactory
@@ -80,6 +82,7 @@ export class DoltLiteQueryFactory
   ): Promise<T> {
     return this.withDetachedFallback(
       refName,
+      dbName,
       async () => super.query(q, p, dbName, refName),
       async qr => qr.query(q, p) as Promise<T>,
     );
@@ -92,6 +95,7 @@ export class DoltLiteQueryFactory
   ): Promise<T> {
     return this.withDetachedFallback(
       refName,
+      dbName,
       async () => super.queryMultiple(executeQuery, dbName, refName),
       async qr => executeQuery(async (q, p) => qr.query(q, p)),
     );
@@ -104,6 +108,7 @@ export class DoltLiteQueryFactory
   ): Promise<T> {
     return this.withDetachedFallback(
       refName,
+      dbName,
       async () => super.queryForBuilder(executeQuery, dbName, refName),
       async qr => executeQuery(qr.manager),
     );
@@ -116,6 +121,7 @@ export class DoltLiteQueryFactory
   ): Promise<T> {
     return this.withDetachedFallback(
       refName,
+      dbName,
       async () => super.queryQR(executeQuery, dbName, refName),
       async qr => executeQuery(qr),
     );
@@ -125,6 +131,7 @@ export class DoltLiteQueryFactory
   // failure means the work has not started and can safely run detached.
   private async withDetachedFallback<T>(
     refName: string | undefined,
+    dbName: string | undefined,
     attempt: () => Promise<T>,
     detached: (qr: QueryRunner) => Promise<T>,
   ): Promise<T> {
@@ -137,7 +144,15 @@ export class DoltLiteQueryFactory
       ) {
         throw err;
       }
-      const source = this.acquireRevisionSource(refName);
+      // Resolve symbolic refs before caching so a moved/recreated tag or
+      // relative ref opens its current commit instead of a stale session.
+      const hashRows = await super.query<t.RawRows>(
+        qh.hashOf,
+        [refName],
+        dbName,
+      );
+      const revision = Object.values(hashRows[0])[0] as string;
+      const source = this.acquireRevisionSource(revision);
       try {
         const ds = await source.ds;
         const qr = ds.createQueryRunner();
@@ -149,9 +164,17 @@ export class DoltLiteQueryFactory
         }
       } finally {
         source.activeRunners -= 1;
-        destroyIfRetired(source);
+        void destroyIfRetired(source);
       }
     }
+  }
+
+  async destroy(): Promise<void> {
+    const source = this.revisionSource;
+    this.revisionSource = undefined;
+    if (!source) return;
+    source.retired = true;
+    await destroyIfRetired(source);
   }
 
   private acquireRevisionSource(revision: string): RevisionSource {
@@ -185,7 +208,7 @@ export class DoltLiteQueryFactory
     this.revisionSource = source;
     if (current) {
       current.retired = true;
-      destroyIfRetired(current);
+      void destroyIfRetired(current);
     }
     return source;
   }
@@ -795,7 +818,7 @@ export class DoltLiteQueryFactory
         const res = await qr.query(qh.callResetHard);
         // Handles any new tables that weren't restored by dolt_reset(--hard)
         const status = await dem.getDoltStatus(qr.manager);
-        for (const r of status) {
+        for (const r of status.filter(r => r.status === "new table")) {
           await qr.query(qh.callCheckout, [r.table_name]);
         }
         return res;
@@ -916,11 +939,13 @@ export class DoltLiteQueryFactory
   }
 
   async callCreateBranchFromRemote(args: t.RemoteBranchArgs): t.PR {
-    return this.query(
-      qh.callNewBranch,
-      [args.branchName, `${args.remoteName}/${args.branchName}`],
-      args.databaseName,
-    );
+    return this.queryMultiple(async query => {
+      await query(qh.callNewBranch, [
+        args.branchName,
+        `${args.remoteName}/${args.branchName}`,
+      ]);
+      return [{ status: "0" }];
+    }, args.databaseName);
   }
 
   // Clones into the current database file, which the engine requires to be
@@ -977,11 +1002,12 @@ async function resolveThreeDotRefs(
 function bindableSystemTablePks(pkValues: t.ColumnValue[]): t.ColumnValue[] {
   return pkValues.map(pk => {
     if (!pk.type || pk.value == null) return pk;
-    if (/int/i.test(pk.type)) {
+    const value = String(pk.value).trim();
+    if (/int|numeric|decimal/i.test(pk.type) && /^[+-]?\d+$/.test(value)) {
       try {
-        return { ...pk, value: BigInt(pk.value) as unknown as string };
+        return { ...pk, value: BigInt(value) as unknown as string };
       } catch {
-        return { ...pk, value: Number(pk.value) as unknown as string };
+        return { ...pk, value: Number(value) as unknown as string };
       }
     }
     if (/real|double|float|numeric|decimal/i.test(pk.type)) {

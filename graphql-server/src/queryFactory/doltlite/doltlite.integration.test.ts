@@ -46,6 +46,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
+  await qf.destroy();
   await ds.destroy();
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
@@ -406,6 +407,29 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     await commitAll("drop big");
   });
 
+  it("finds cell history for exact decimal pks beyond Number precision", async () => {
+    await ds.query("SELECT dolt_checkout('main')");
+    await ds.query(
+      "CREATE TABLE big_decimal (id DECIMAL(20,0) PRIMARY KEY, v TEXT)",
+    );
+    await ds.query(
+      "INSERT INTO big_decimal VALUES (9007199254740993, 'exact')",
+    );
+    await commitAll("add exact decimal pk row");
+    const res = await qf.doltCellHistory({
+      ...dbArgs,
+      tableName: "big_decimal",
+      pkValues: [
+        { column: "id", value: "9007199254740993", type: "DECIMAL(20,0)" },
+      ],
+      columnName: "v",
+    });
+    expect(res.rows.length).toEqual(1);
+    expect(res.rows[0].v).toEqual("exact");
+    await ds.query("DROP TABLE big_decimal");
+    await commitAll("drop big decimal");
+  });
+
   it("creates, lists, and deletes tags", async () => {
     await qf.createNewTag({
       ...dbArgs,
@@ -613,6 +637,31 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     await ds.query("SELECT dolt_tag('-d', 'detached-tag')");
   });
 
+  it("reopens a detached session when a tag moves", async () => {
+    await ds.query("SELECT dolt_tag('moving-tag', 'main')");
+    const before = await qf.getSqlSelect({
+      ...dbArgs,
+      refName: "moving-tag",
+      queryString: "SELECT id FROM users WHERE id = 21",
+    });
+    expect(before.rows).toEqual([]);
+
+    await ds.query(
+      "INSERT INTO users (id, name) VALUES (21, 'after-moving-tag')",
+    );
+    await commitAll("move tag target");
+    await ds.query("SELECT dolt_tag('-d', 'moving-tag')");
+    await ds.query("SELECT dolt_tag('moving-tag', 'main')");
+
+    const after = await qf.getSqlSelect({
+      ...dbArgs,
+      refName: "moving-tag",
+      queryString: "SELECT id FROM users WHERE id = 21",
+    });
+    expect(after.rows).toEqual([{ id: 21 }]);
+    await ds.query("SELECT dolt_tag('-d', 'moving-tag')");
+  });
+
   it("keeps a detached source alive while another revision replaces it", async () => {
     await ds.query("SELECT dolt_tag('race-tag', 'main')");
     const head = await ds.query("SELECT dolt_hashof('main') AS h");
@@ -673,6 +722,25 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     });
     expect(push).toEqual([{ status: "0", message: "" }]);
 
+    await qf.createNewBranch({
+      ...dbArgs,
+      branchName: "publish-source",
+      fromRefName: "main",
+    });
+    await qf.getSqlSelect({
+      ...dbArgs,
+      refName: "publish-source",
+      queryString:
+        "INSERT INTO users (id, name) VALUES (30, 'remote branch row')",
+    });
+    await commitAll("add remote branch row");
+    await ds.query("SELECT dolt_checkout('main')");
+    await qf.callPushRemote({
+      ...dbArgs,
+      remoteName: "origin",
+      branchName: "publish-source",
+    });
+
     const fetch = await qf.callFetchRemote({ ...dbArgs, remoteName: "origin" });
     expect(fetch).toEqual([{ status: "0" }]);
 
@@ -681,10 +749,24 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       remoteName: "origin",
       offset: 0,
     });
-    expect(remoteBranches.map(b => b.name)).toEqual(["remotes/origin/main"]);
+    expect(remoteBranches.map(b => b.name).sort()).toEqual([
+      "remotes/origin/main",
+      "remotes/origin/publish-source",
+    ]);
     expect(
       convertRowDate(remoteBranches[0].latest_commit_date).getTime(),
     ).not.toBeNaN();
+
+    await qf.callDeleteBranch({ ...dbArgs, branchName: "publish-source" });
+    const createBranch = await qf.callCreateBranchFromRemote({
+      ...dbArgs,
+      remoteName: "origin",
+      branchName: "publish-source",
+    });
+    expect(createBranch).toEqual([{ status: "0" }]);
+    expect((await qf.getAllBranches(dbArgs)).map(b => b.name)).toContain(
+      "publish-source",
+    );
 
     const pull = await qf.callPullRemote({
       ...dbArgs,
@@ -694,6 +776,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     });
     expect(pull).toEqual([{ fast_forward: "0", conflicts: "0", message: "" }]);
 
+    await qf.callDeleteBranch({ ...dbArgs, branchName: "publish-source" });
     await qf.callDeleteRemote({ ...dbArgs, remoteName: "origin" });
     expect(await qf.getRemotes({ ...dbArgs, offset: 0 })).toEqual([]);
   });
@@ -710,8 +793,8 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       synchronize: false,
     });
     await cloneDs.initialize();
+    const cloneQf = new DoltLiteQueryFactory(cloneDs);
     try {
-      const cloneQf = new DoltLiteQueryFactory(cloneDs);
       await cloneQf.callDoltClone({
         databaseName: "clone-target",
         remoteDbPath: `file://${path.join(tmpDir, "file-remote")}`,
@@ -722,8 +805,12 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
         remoteName: "origin",
         offset: 0,
       });
-      expect(remoteBranches.map(b => b.name)).toEqual(["remotes/origin/main"]);
+      expect(remoteBranches.map(b => b.name).sort()).toEqual([
+        "remotes/origin/main",
+        "remotes/origin/publish-source",
+      ]);
     } finally {
+      await cloneQf.destroy();
       await cloneDs.destroy();
     }
   });
