@@ -682,7 +682,9 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       offset: 0,
     });
     expect(remoteBranches.map(b => b.name)).toEqual(["remotes/origin/main"]);
-    expect(convertRowDate(remoteBranches[0].latest_commit_date).getTime()).not.toBeNaN();
+    expect(
+      convertRowDate(remoteBranches[0].latest_commit_date).getTime(),
+    ).not.toBeNaN();
 
     const pull = await qf.callPullRemote({
       ...dbArgs,
@@ -690,9 +692,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       branchName: "main",
       refName: "main",
     });
-    expect(pull).toEqual([
-      { fast_forward: "0", conflicts: "0", message: "" },
-    ]);
+    expect(pull).toEqual([{ fast_forward: "0", conflicts: "0", message: "" }]);
 
     await qf.callDeleteRemote({ ...dbArgs, remoteName: "origin" });
     expect(await qf.getRemotes({ ...dbArgs, offset: 0 })).toEqual([]);
