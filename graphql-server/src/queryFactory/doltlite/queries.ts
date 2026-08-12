@@ -123,6 +123,8 @@ export const callMergeQuery = `SELECT dolt_merge(?, '--no-ff', '-m', ?)`;
 
 export const callConfig = `SELECT dolt_config(?, ?)`;
 
+export const getConfig = `SELECT dolt_config(?) AS value`;
+
 // dolt_conflicts reports a single conflict count per table; the workbench
 // model treats them all as data conflicts.
 export const conflictsSummaryQuery = `SELECT "table", num_conflicts AS num_data_conflicts FROM dolt_conflicts`;
@@ -165,10 +167,6 @@ export const getCallNewTag = (hasMessage = false, hasAuthor = false) =>
   `SELECT dolt_tag(?, ?${hasMessage ? `, '-m', ?` : ""}${
     hasAuthor ? `, '--author', ?` : ""
   })`;
-
-// DOCS
-
-export const createDocsTableQuery = `CREATE TABLE IF NOT EXISTS dolt_docs (doc_name TEXT PRIMARY KEY, doc_text TEXT)`;
 
 // UTILS
 

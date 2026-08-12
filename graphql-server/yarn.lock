@@ -840,7 +840,7 @@ __metadata:
   dependencies:
     "@apollo/server": "npm:^5.5.0"
     "@as-integrations/express5": "npm:^1.1.2"
-    "@dolthub/doltlite": "npm:^0.11.44"
+    "@dolthub/doltlite": "npm:^0.11.45"
     "@dolthub/web-utils": "npm:^0.3.1"
     "@nestjs/apollo": "npm:^13.1.0"
     "@nestjs/cli": "npm:^11.0.10"
@@ -887,13 +887,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@dolthub/doltlite@npm:^0.11.44":
-  version: 0.11.44
-  resolution: "@dolthub/doltlite@npm:0.11.44"
+"@dolthub/doltlite@npm:^0.11.45":
+  version: 0.11.45
+  resolution: "@dolthub/doltlite@npm:0.11.45"
   dependencies:
     node-addon-api: "npm:^8.0.0"
     node-gyp: "npm:latest"
-  checksum: 10c0/5ad46b985c81da6c3eba9c6df129ff4f991dcd543b2f76c0f3d3f159b70a67855e9a30a3cc74d22afe5ae86138ab22f0ee73735557a7828a65e2bd19e9584938
+  checksum: 10c0/9323e84c8778b2e6fae19a9a701e408fb7091cb5ff992aa3d705e52cdb975194f92e7655690638bc759928373abcd691d27011a646708807d8452ec171a13c75
   languageName: node
   linkType: hard
 

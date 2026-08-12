@@ -1,3 +1,4 @@
+import { randomUUID } from "crypto";
 import { DataSource, EntityManager, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { doltliteDriver } from "../../connections/doltliteDriver";
@@ -26,7 +27,7 @@ import { SqliteQueryFactory } from "../sqlite";
 import * as t from "../types";
 import * as qh from "./queries";
 
-const PREVIEW_BRANCH = "__workbench_merge_preview";
+const PREVIEW_BRANCH_PREFIX = "__workbench_merge_preview_";
 
 type RevisionSource = {
   revision: string;
@@ -440,13 +441,19 @@ export class DoltLiteQueryFactory
   }
 
   async getRowDiffs(args: t.RowDiffArgs): t.DiffRes {
+    const oldCols = await this.describeAtRef(
+      args,
+      args.fromTableName,
+      args.fromCommitId,
+    );
+    const newCols = await this.describeAtRef(
+      args,
+      args.toTableName,
+      args.toCommitId,
+    );
+    const colsUnion = unionCols(oldCols, newCols);
     return this.queryMultiple(
       async query => {
-        const oldCols = await query(qh.describeTableQuery, [
-          args.fromTableName,
-        ]);
-        const newCols = await query(qh.describeTableQuery, [args.toTableName]);
-        const colsUnion = unionCols(oldCols, newCols);
         const diffType = convertToStringForQuery(args.filterByRowType);
         const refArgs = [args.fromCommitId, args.toCommitId];
         const pageArgs = [ROW_LIMIT + 1, args.offset];
@@ -460,6 +467,23 @@ export class DoltLiteQueryFactory
       },
       args.databaseName,
       args.refName,
+    );
+  }
+
+  // Introspects a table's columns at a specific commit so diffs across
+  // schema changes see both sides' historical columns. pragma introspection
+  // follows the session's ref; WORKING has no revision database, so it reads
+  // at the session branch.
+  private async describeAtRef(
+    args: t.RowDiffArgs,
+    tableName: string,
+    commitId: string,
+  ): Promise<t.RawRows> {
+    return this.query(
+      qh.describeTableQuery,
+      [tableName],
+      args.databaseName,
+      commitId === "WORKING" ? args.refName : commitId,
     );
   }
 
@@ -506,7 +530,12 @@ export class DoltLiteQueryFactory
           args.toCommitId,
           args.type === CommitDiffType.ThreeDot,
         );
-        const rows: t.RawRows = await qr.query(sql);
+        // Like builtSelect, the display query omits the pagination applied
+        // to the executed one.
+        const rows: t.RawRows = await qr.query(`${sql} LIMIT ? OFFSET ?`, [
+          ROW_LIMIT + 1,
+          args.offset ?? 0,
+        ]);
         return {
           rows,
           isMutation: false,
@@ -526,13 +555,18 @@ export class DoltLiteQueryFactory
     );
     return this.queryForBuilder(
       async em => {
-        const built = buildDoltCellDiff(em, `dolt_diff_${args.tableName}`, {
-          pkValues: bindableSystemTablePks(
-            pkValuesWithTypes(args.pkValues, columns),
-          ),
-          columnNames: columns.map(c => c.name),
-          columnName: args.columnName,
-        });
+        const built = buildDoltCellDiff(
+          em,
+          `dolt_diff_${args.tableName}`,
+          {
+            pkValues: bindableSystemTablePks(
+              pkValuesWithTypes(args.pkValues, columns),
+            ),
+            columnNames: columns.map(c => c.name),
+            columnName: args.columnName,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,
@@ -564,6 +598,7 @@ export class DoltLiteQueryFactory
             columnNames: columns.map(c => c.name),
             columnName: args.columnName,
           },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
         );
         return {
           rows: await built.execute(),
@@ -627,14 +662,14 @@ export class DoltLiteQueryFactory
     args: t.BranchesArgs & { author?: t.CommitAuthor },
   ): Promise<boolean> {
     return this.queryMultiple(
-      async query => {
-        await applyAuthorConfig(query, args.author);
-        await query(qh.callMergeQuery, [
-          args.fromBranchName,
-          `Merge branch ${args.fromBranchName}`,
-        ]);
-        return true;
-      },
+      async query =>
+        withAuthorConfig(query, args.author, async () => {
+          await query(qh.callMergeQuery, [
+            args.fromBranchName,
+            `Merge branch ${args.fromBranchName}`,
+          ]);
+          return true;
+        }),
       args.databaseName,
       args.toBranchName,
     );
@@ -648,45 +683,45 @@ export class DoltLiteQueryFactory
     },
   ): Promise<boolean> {
     return this.queryMultiple(
-      async query => {
+      async query =>
         // A conflicted merge only leaves dolt_conflicts inspectable inside an
         // explicit transaction; the closing dolt_commit finalizes that
         // transaction itself, so there is no COMMIT here.
-        await applyAuthorConfig(query, args.author);
-        await query("BEGIN");
-        try {
-          const msg = `Merge branch ${args.fromBranchName}`;
+        withAuthorConfig(query, args.author, async () => {
+          await query("BEGIN");
           try {
-            await query(qh.callMergeQuery, [args.fromBranchName, msg]);
-            // The merge succeeded without the expected conflicts and has
-            // already been committed.
-            return true;
+            const msg = `Merge branch ${args.fromBranchName}`;
+            try {
+              await query(qh.callMergeQuery, [args.fromBranchName, msg]);
+              // The merge succeeded without the expected conflicts and has
+              // already been committed.
+              return true;
+            } catch (err) {
+              if (!err.message.includes("conflict")) throw err;
+            }
+            if (args.oursTables.length) {
+              await query(qh.getResolveConflicts(args.oursTables.length), [
+                "--ours",
+                ...args.oursTables,
+              ]);
+            }
+            if (args.theirsTables.length) {
+              await query(qh.getResolveConflicts(args.theirsTables.length), [
+                "--theirs",
+                ...args.theirsTables,
+              ]);
+            }
+            const commitParams = [msg];
+            if (args.author) {
+              commitParams.push(getAuthorString(args.author));
+            }
+            await query(qh.getCommitMerge(!!args.author), commitParams);
           } catch (err) {
-            if (!err.message.includes("conflict")) throw err;
+            await rollbackIfActive(query);
+            throw err;
           }
-          if (args.oursTables.length) {
-            await query(qh.getResolveConflicts(args.oursTables.length), [
-              "--ours",
-              ...args.oursTables,
-            ]);
-          }
-          if (args.theirsTables.length) {
-            await query(qh.getResolveConflicts(args.theirsTables.length), [
-              "--theirs",
-              ...args.theirsTables,
-            ]);
-          }
-          const commitParams = [msg];
-          if (args.author) {
-            commitParams.push(getAuthorString(args.author));
-          }
-          await query(qh.getCommitMerge(!!args.author), commitParams);
-        } catch (err) {
-          await rollbackIfActive(query);
-          throw err;
-        }
-        return true;
-      },
+          return true;
+        }),
       args.databaseName,
       args.toBranchName,
     );
@@ -719,13 +754,9 @@ export class DoltLiteQueryFactory
     read: (query: t.ParQuery) => t.PR,
   ): t.PR {
     return this.queryMultiple(async query => {
-      try {
-        await query(qh.callDeleteBranch, [PREVIEW_BRANCH]);
-      } catch {
-        // no stale preview branch to clean up
-      }
-      await query(qh.callNewBranch, [PREVIEW_BRANCH, args.toBranchName]);
-      await query(qh.callCheckout, [PREVIEW_BRANCH]);
+      const previewBranch = `${PREVIEW_BRANCH_PREFIX}${randomUUID()}`;
+      await query(qh.callNewBranch, [previewBranch, args.toBranchName]);
+      await query(qh.callCheckout, [previewBranch]);
       try {
         let conflicted = false;
         await query("BEGIN");
@@ -738,12 +769,15 @@ export class DoltLiteQueryFactory
           if (!err.message.includes("conflict")) throw err;
           conflicted = true;
         }
-        const rows = conflicted ? await read(query) : [];
-        await rollbackIfActive(query);
-        return rows;
+        return conflicted ? await read(query) : [];
       } finally {
-        await query(qh.callCheckout, [args.toBranchName]);
-        await query(qh.callDeleteBranch, [PREVIEW_BRANCH]);
+        await rollbackIfActive(query);
+        try {
+          await query(qh.callCheckout, [args.toBranchName]);
+          await query(qh.callDeleteBranch, [previewBranch]);
+        } catch {
+          // cleanup is best-effort; surface the original error instead
+        }
       }
     }, args.databaseName);
   }
@@ -774,14 +808,14 @@ export class DoltLiteQueryFactory
     );
   }
 
+  // Matches the dolt factory; requires the dolt_docs system table, which
+  // DoltLite does not provide yet, so saves fail with "no such table" until
+  // engine support lands.
   async saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult> {
-    return this.queryQR(
-      async qr => {
-        // DoltLite has no built-in dolt_docs table; it is materialized as a
-        // plain versioned table on first save.
-        await qr.query(qh.createDocsTableQuery);
+    return this.queryForBuilder(
+      async em => {
         const built = buildSaveDoc(
-          qr.manager,
+          em,
           DoltSystemTable.DOCS,
           args.docName,
           args.markdown,
@@ -920,12 +954,20 @@ async function resolveThreeDotRefs(
   };
 }
 
-
 // DoltLite's dolt_diff_/dolt_history_ system tables declare no column
-// affinity, so numeric pk values must be bound as numbers to match.
+// affinity, so numeric pk values must be bound as numbers to match. Integer
+// pks bind as bigints to stay exact beyond Number's 2^53 precision.
 function bindableSystemTablePks(pkValues: t.ColumnValue[]): t.ColumnValue[] {
   return pkValues.map(pk => {
-    if (pk.type && /int|real|double|float|numeric|decimal/i.test(pk.type)) {
+    if (!pk.type || pk.value == null) return pk;
+    if (/int/i.test(pk.type)) {
+      try {
+        return { ...pk, value: BigInt(pk.value) as unknown as string };
+      } catch {
+        return { ...pk, value: Number(pk.value) as unknown as string };
+      }
+    }
+    if (/real|double|float|numeric|decimal/i.test(pk.type)) {
       return { ...pk, value: Number(pk.value) as unknown as string };
     }
     return pk;
@@ -941,12 +983,27 @@ async function rollbackIfActive(query: t.ParQuery): Promise<void> {
 }
 
 // dolt_merge has no --author flag, so merge authorship is applied through
-// the session-scoped user config instead.
-async function applyAuthorConfig(
+// the session-scoped user config, restored afterward so one request's
+// identity never leaks into later ones on the shared connection.
+async function withAuthorConfig<T>(
   query: t.ParQuery,
-  author?: t.CommitAuthor,
-): Promise<void> {
-  if (!author) return;
+  author: t.CommitAuthor | undefined,
+  work: () => Promise<T>,
+): Promise<T> {
+  if (!author) return work();
+  const priorName = await configValue(query, "user.name");
+  const priorEmail = await configValue(query, "user.email");
   await query(qh.callConfig, ["user.name", author.name]);
   await query(qh.callConfig, ["user.email", author.email]);
+  try {
+    return await work();
+  } finally {
+    await query(qh.callConfig, ["user.name", priorName]);
+    await query(qh.callConfig, ["user.email", priorEmail]);
+  }
+}
+
+async function configValue(query: t.ParQuery, key: string): Promise<string> {
+  const res = await query(qh.getConfig, [key]);
+  return res[0].value;
 }

@@ -112,9 +112,10 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       refName: "feature",
       queryString: "CREATE TABLE feature_only (id INTEGER PRIMARY KEY)",
     });
-    expect(
-      await qf.getTableNames({ ...dbArgs, refName: "feature" }),
-    ).toEqual(["feature_only", "users"]);
+    expect(await qf.getTableNames({ ...dbArgs, refName: "feature" })).toEqual([
+      "feature_only",
+      "users",
+    ]);
     expect(await qf.getTableNames(dbArgs)).toEqual(["users"]);
   });
 
@@ -252,7 +253,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
   });
 
   it("returns row diffs between arbitrary branches", async () => {
-    const { diff } = await qf.getRowDiffs({
+    const { colsUnion, diff } = await qf.getRowDiffs({
       ...dbArgs,
       tableName: "users",
       fromTableName: "users",
@@ -262,6 +263,9 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       offset: 0,
     });
     expect(diff.map(d => d.diff_type).sort()).toEqual(["added", "removed"]);
+    // The to side is introspected at its own commit, so feature's age
+    // column appears even though main (the current checkout) lacks it.
+    expect(colsUnion.map(c => c.Field)).toContain("age");
   });
 
   it("returns row diffs against the working set using a branch ref", async () => {
@@ -333,11 +337,18 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       fromCommitId: "main",
       toCommitId: "feature",
     });
-    expect(res.rows.map(r => r.diff_type).sort()).toEqual([
-      "added",
-      "removed",
-    ]);
+    expect(res.rows.map(r => r.diff_type).sort()).toEqual(["added", "removed"]);
     expect(res.queryString).toContain("dolt_diff_users");
+    // Pagination applies to execution but stays out of the display query.
+    expect(res.queryString).not.toContain("LIMIT");
+    const pastTheEnd = await qf.doltCommitDiff({
+      ...dbArgs,
+      tableName: "users",
+      fromCommitId: "main",
+      toCommitId: "feature",
+      offset: 50,
+    });
+    expect(pastTheEnd.rows).toEqual([]);
   });
 
   it("returns a three dot commit diff via range specs", async () => {
@@ -373,6 +384,23 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(res.rows.length).toBeGreaterThan(0);
   });
 
+  it("finds cell history for pks beyond Number precision", async () => {
+    await ds.query("SELECT dolt_checkout('main')");
+    await ds.query("CREATE TABLE big (id INTEGER PRIMARY KEY, v TEXT)");
+    await ds.query("INSERT INTO big VALUES (9007199254740993, 'exact')");
+    await commitAll("add big pk row");
+    const res = await qf.doltCellHistory({
+      ...dbArgs,
+      tableName: "big",
+      pkValues: [{ column: "id", value: "9007199254740993" }],
+      columnName: "v",
+    });
+    expect(res.rows.length).toEqual(1);
+    expect(res.rows[0].v).toEqual("exact");
+    await ds.query("DROP TABLE big");
+    await commitAll("drop big");
+  });
+
   it("creates, lists, and deletes tags", async () => {
     await qf.createNewTag({
       ...dbArgs,
@@ -404,6 +432,9 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(logs[0].message).toEqual("Merge branch feature");
     expect(logs[0].committer).toEqual("Eric");
     expect(logs[0].parents.split(", ").length).toEqual(2);
+    // The author config is session-scoped and must not leak past the merge.
+    const cfg = await ds.query("SELECT dolt_config('user.name') AS v");
+    expect(cfg[0].v).toEqual("doltlite");
   });
 
   it("surfaces conflicts from callMerge and resolves them via callMergeWithResolveConflicts", async () => {
@@ -439,10 +470,23 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(conflictRows[0].our_name).toEqual("main-name");
     expect(conflictRows[0].their_name).toEqual("other-name");
 
-    // The preview must leave no trace: no leftover branch, data untouched.
+    // The preview must leave no trace: no leftover branch, data untouched,
+    // and a user branch that happens to share the preview prefix survives.
+    await ds.query(
+      "SELECT dolt_branch('__workbench_merge_preview_mine', 'main')",
+    );
+    await qf.getPullConflictsSummary({
+      ...dbArgs,
+      fromBranchName: "conflicting",
+      toBranchName: "main",
+    });
     const branches = await qf.getAllBranches(dbArgs);
-    expect(branches.map(b => b.name)).not.toContain(
-      "__workbench_merge_preview",
+    const previewLike = branches
+      .map(b => b.name)
+      .filter(n => n.startsWith("__workbench_merge_preview"));
+    expect(previewLike).toEqual(["__workbench_merge_preview_mine"]);
+    await ds.query(
+      "SELECT dolt_branch('-D', '__workbench_merge_preview_mine')",
     );
     const mainRows = await ds.query("SELECT name FROM users WHERE id=1");
     expect(mainRows[0].name).toEqual("main-name");
@@ -476,28 +520,15 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(rows).toEqual([]);
   });
 
-  it("saves, lists, and deletes docs", async () => {
-    const save = await qf.saveDoc({
-      ...dbArgs,
-      docName: "README.md",
-      markdown: "# hello",
-    });
-    expect(save.rowsAffected).toEqual(1);
-    let docs = await qf.getDocs(dbArgs);
-    expect(docs).toEqual([{ doc_name: "README.md", doc_text: "# hello" }]);
-
-    await qf.saveDoc({
-      ...dbArgs,
-      docName: "README.md",
-      markdown: "# updated",
-    });
-    docs = await qf.getDocs(dbArgs);
-    expect(docs).toEqual([{ doc_name: "README.md", doc_text: "# updated" }]);
-
-    const del = await qf.deleteDoc({ ...dbArgs, docName: "README.md" });
-    expect(del.rowsAffected).toEqual(1);
-    expect(await qf.getDocs(dbArgs)).toEqual([]);
-    await qf.restoreAllTables(dbArgs);
+  // DoltLite has no dolt_docs system table yet. getDocs maps the missing
+  // table to "no docs" like the dolt factory, and saves surface the engine
+  // error. Expand this to full save/list/delete coverage once the engine
+  // ships dolt_docs.
+  it("treats missing dolt_docs as no docs and surfaces save errors", async () => {
+    expect(await qf.getDocs(dbArgs)).toBeUndefined();
+    await expect(
+      qf.saveDoc({ ...dbArgs, docName: "README.md", markdown: "# hello" }),
+    ).rejects.toThrow(/no such table: dolt_docs/);
   });
 
   it("calls dolt procedures through the SELECT verb", async () => {
@@ -516,9 +547,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       queryString: "CREATE VIEW feature_view AS SELECT name FROM users",
     });
     const schemas = await qf.getSchemas({ ...dbArgs, refName: "feature" });
-    expect(schemas).toEqual([
-      { name: "feature_view", type: SchemaType.View },
-    ]);
+    expect(schemas).toEqual([{ name: "feature_view", type: SchemaType.View }]);
     expect(await qf.getSchemas(dbArgs)).toEqual([]);
   });
 
@@ -612,7 +641,11 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     // Tracking refs require clone/fetch, which this build lacks; this covers
     // the query path and empty-list shape.
     expect(
-      await qf.getRemoteBranches({ ...dbArgs, remoteName: "origin", offset: 0 }),
+      await qf.getRemoteBranches({
+        ...dbArgs,
+        remoteName: "origin",
+        offset: 0,
+      }),
     ).toEqual([]);
   });
 
