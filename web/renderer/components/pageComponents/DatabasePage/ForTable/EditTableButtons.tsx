@@ -19,10 +19,9 @@ import {
 } from "@lib/params";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { ref, table } from "@lib/urls";
-import { AiOutlineCode } from "@react-icons/all-files/ai/AiOutlineCode";
-import { AiOutlineDelete } from "@react-icons/all-files/ai/AiOutlineDelete";
-import { FiUpload } from "@react-icons/all-files/fi/FiUpload";
-import { ImTable2 } from "@react-icons/all-files/im/ImTable2";
+import { AiOutlineCode, AiOutlineDelete } from "react-icons/ai";
+import { FiUpload } from "react-icons/fi";
+import { ImTable2 } from "react-icons/im";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import OptionSquare from "./OptionSquare";
@@ -41,7 +40,7 @@ function Inner(props: InnerProps) {
   const {
     setEditorString,
     setExecutedQuery,
-    setError,
+    setExecutionError,
     setExecutionMessage,
     toggleSqlEditor,
   } = useSqlEditorContext();
@@ -73,11 +72,11 @@ function Inner(props: InnerProps) {
       setEditorString(res.data.previewInsertRow);
       toggleSqlEditor(true);
     } else if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
   };
 
-  const onDropped = (data: DropTableMutation): undefined => {
+  const onDropped = (data: DropTableMutation): Error | undefined => {
     setExecutedQuery(data.dropTable.queryString, { isMutation: true });
     client
       .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)

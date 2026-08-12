@@ -1,10 +1,7 @@
 import { Popup } from "@dolthub/react-components";
 import { fakeEscapePress } from "@dolthub/web-utils";
-import { FaCaretDown } from "@react-icons/all-files/fa/FaCaretDown";
-import { FaCaretUp } from "@react-icons/all-files/fa/FaCaretUp";
-import { FaFile } from "@react-icons/all-files/fa/FaFile";
-import { FaFolder } from "@react-icons/all-files/fa/FaFolder";
-import { FiPlus } from "@react-icons/all-files/fi/FiPlus";
+import { FaCaretDown, FaCaretUp, FaFile, FaFolder } from "react-icons/fa";
+import { FiPlus } from "react-icons/fi";
 import css from "./index.module.css";
 import { useTestContext } from "../context";
 

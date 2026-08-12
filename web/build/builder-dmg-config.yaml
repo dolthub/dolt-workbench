@@ -17,7 +17,6 @@ files:
       - node_modules/debounce-fn
       - node_modules/dot-prop
       - node_modules/electron-store
-      - node_modules/electron-serve
       - node_modules/env-paths
       - node_modules/fast-deep-equal
       - node_modules/fast-uri

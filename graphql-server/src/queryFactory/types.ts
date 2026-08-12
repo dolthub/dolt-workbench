@@ -117,11 +117,13 @@ export type DoltCommitDiffArgs = TableMaybeSchemaArgs & {
   toCommitId: string;
   excludedColumns?: string[];
   type?: CommitDiffType;
+  offset?: number;
 };
 
 export type DoltCellLookupArgs = TableMaybeSchemaArgs & {
   pkValues: ColumnValue[];
   columnName?: string;
+  offset?: number;
 };
 
 export type SchemaDefinitionArgs = RefMaybeSchemaArgs & {

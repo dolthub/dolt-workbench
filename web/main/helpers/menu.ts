@@ -174,7 +174,7 @@ export function initMenu(
         {
           label: "Documentation",
           async click() {
-            await shell.openExternal("https://docs.dolthub.com/");
+            await shell.openExternal("https://dolthub.com/docs/");
           },
         },
         {

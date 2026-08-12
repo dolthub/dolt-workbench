@@ -17,10 +17,11 @@ import {
 import useApolloError from "@hooks/useApolloError";
 import { getCaughtApolloError } from "@lib/errors/helpers";
 import { ApolloErrorType } from "@lib/errors/types";
+import { setPendingSqlResult } from "@lib/pendingSqlResult";
 import { recordMutation, recordQuery } from "@lib/sessionQueryHistory";
 import { sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ExecuteProps, Props, SqlEditorContextType } from "./types";
 
 // This context handles the SQL console on the database page and executing queries
@@ -35,14 +36,28 @@ export function SqlEditorProvider(props: Props) {
   const [showSqlEditor, setShowSqlEditor] = useState(isMobile);
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useApolloError(undefined);
-  const [executionMessage, setExecutionMessage] = useState<string | undefined>(
+  const [executionMessage, setExecutionMessageState] = useState<
+    string | undefined
+  >(undefined);
+  const [executionError, setExecutionErrorState] = useState<string | undefined>(
     undefined,
   );
+
+  const setExecutionMessage = useCallback((m: string | undefined) => {
+    setExecutionMessageState(m);
+    if (m) setExecutionErrorState(undefined);
+  }, []);
+
+  const setExecutionError = useCallback((m: string | undefined) => {
+    setExecutionErrorState(m);
+    if (m) setExecutionMessageState(undefined);
+  }, []);
   const [modalState, setModalState] = useSetState({
     errorIsOpen: false,
   });
   const router = useRouter();
   const client = useApolloClient();
+  const executing = useRef(false);
   const { queryIsRecentMutation } = useSessionQueryHistory(
     props.params.databaseName,
   );
@@ -52,10 +67,13 @@ export function SqlEditorProvider(props: Props) {
   }, [isMobile]);
 
   useEffect(() => {
-    const clearExecutionMessage = () => setExecutionMessage(undefined);
-    router.events.on("routeChangeStart", clearExecutionMessage);
+    const clearMessages = () => {
+      setExecutionMessageState(undefined);
+      setExecutionErrorState(undefined);
+    };
+    router.events.on("routeChangeStart", clearMessages);
     return () => {
-      router.events.off("routeChangeStart", clearExecutionMessage);
+      router.events.off("routeChangeStart", clearMessages);
     };
   }, [router.events]);
 
@@ -96,6 +114,10 @@ export function SqlEditorProvider(props: Props) {
         handleQuery(executeProps);
         return;
       }
+      if (executing.current) {
+        return;
+      }
+      executing.current = true;
       setLoading(true);
       try {
         const res = await client.query<
@@ -114,18 +136,30 @@ export function SqlEditorProvider(props: Props) {
         const status = res.data.sqlSelect.queryExecutionStatus;
         const message = res.data.sqlSelect.queryExecutionMessage || "";
         if (status === QueryExecutionStatus.Error && !isTimeoutError(message)) {
-          setErr(new Error(message || "Query execution failed"));
+          setExecutionError(message || "Query execution failed");
           return;
         }
+        setPendingSqlResult({
+          variables: {
+            databaseName: executeProps.databaseName,
+            refName: executeProps.refName,
+            queryString: executeProps.query,
+            schemaName: executeProps.schemaName || undefined,
+          },
+          data: res.data,
+        });
         handleQuery(executeProps);
       } catch (e) {
         const apolloErr = getCaughtApolloError(e);
         if (apolloErr && isTimeoutError(apolloErr.message)) {
           handleQuery(executeProps);
         } else {
-          setErr(improveGqlError(apolloErr));
+          setExecutionError(
+            improveGqlError(apolloErr)?.message ?? "Query execution failed",
+          );
         }
       } finally {
+        executing.current = false;
         setLoading(false);
       }
     },
@@ -134,6 +168,7 @@ export function SqlEditorProvider(props: Props) {
       handleQuery,
       queryIsRecentMutation,
       setErr,
+      setExecutionError,
       props.params.databaseName,
     ],
   );
@@ -190,6 +225,8 @@ export function SqlEditorProvider(props: Props) {
       setError,
       executionMessage,
       setExecutionMessage,
+      executionError,
+      setExecutionError,
       loading,
       modalState,
       setModalState,
@@ -205,6 +242,9 @@ export function SqlEditorProvider(props: Props) {
     err,
     setError,
     executionMessage,
+    setExecutionMessage,
+    executionError,
+    setExecutionError,
     loading,
     modalState,
     setModalState,

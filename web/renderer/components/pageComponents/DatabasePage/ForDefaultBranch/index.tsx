@@ -1,7 +1,7 @@
 import { NetworkStatus } from "@apollo/client";
 import { Loader } from "@dolthub/react-components";
 import { useDefaultBranchPageQuery } from "@gen/graphql-types";
-import { OptionalRefParams, RefParams } from "@lib/params";
+import { OptionalRefAndSchemaParams, RefParams } from "@lib/params";
 import { RefUrl } from "@lib/urls";
 import { ReactNode, cloneElement } from "react";
 import ForEmpty from "../ForEmpty";
@@ -10,7 +10,7 @@ import ForTable from "../ForTable";
 import DatabasePage from "../component";
 
 type Props = {
-  params: OptionalRefParams & { schemaName?: string };
+  params: OptionalRefAndSchemaParams;
   title?: string;
   hideDefaultTable?: boolean;
   initialTabIndex?: number;

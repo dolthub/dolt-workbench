@@ -4,7 +4,7 @@
   "description": "",
   "author": "DoltHub",
   "private": true,
-  "packageManager": "yarn@4.13.0",
+  "packageManager": "yarn@4.18.0",
   "scripts": {
     "ci": "yarn prettier && yarn compile && yarn lint && yarn test && yarn build && yarn check-server",
     "build": "nest build",
@@ -28,9 +28,10 @@
     "node": ">=10.3.0"
   },
   "dependencies": {
-    "@apollo/server": "^4.12.0",
+    "@apollo/server": "^5.5.0",
+    "@as-integrations/express5": "^1.1.2",
     "@dolthub/doltlite": "^0.11.43",
-    "@dolthub/web-utils": "^0.3.0",
+    "@dolthub/web-utils": "^0.3.1",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/cli": "^11.0.10",
     "@nestjs/common": "^11.1.6",
@@ -42,7 +43,7 @@
     "@nestjs/terminus": "^11.0.0",
     "@nestjs/typeorm": "^11.0.0",
     "cookie-parser": "^1.4.7",
-    "cors": "^2.8.5",
+    "cors": "^2.8.6",
     "graphql": "^16.11.0",
     "graphql-upload": "15.0.0",
     "mysql2": "^3.11.0",
@@ -91,21 +92,22 @@
     "testEnvironment": "node"
   },
   "resolutions": {
-    "multer": "2.1.1",
-    "qs": "6.14.1",
+    "multer": "2.2.0",
+    "qs": "6.15.3",
     "sha.js": "2.4.12",
-    "tmp": "0.2.4",
-    "tar": "7.5.11",
+    "tmp": "0.2.7",
+    "tar": "7.5.22",
     "lodash": "4.18.0",
     "glob": "10.5.0",
-    "js-yaml": "4.1.1",
-    "minimatch@npm:^5.0.1": "5.1.8",
-    "minimatch@npm:^9.0.4": "9.0.7",
+    "js-yaml": "4.3.1",
+    "minimatch@npm:^5.0.1": "5.1.9",
+    "minimatch@npm:^9.0.4": "9.0.9",
     "picomatch@npm:^2.0.4": "2.3.2",
     "picomatch@npm:^2.3.1": "2.3.2",
     "picomatch@npm:4.0.2": "4.0.4",
     "picomatch@npm:^4.0.2": "4.0.4",
     "picomatch@npm:^4.0.3": "4.0.4",
-    "serialize-javascript": "7.0.5"
+    "serialize-javascript": "7.0.5",
+    "ws@npm:8.20.1": "8.21.3"
   }
 }

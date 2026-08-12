@@ -48,6 +48,21 @@ class DoltLiteConnection {
     return new DoltLiteStatement(this.db.prepare(sql));
   }
 
+  // better-sqlite3 API used by TypeORM for connection setup (foreign_keys)
+  // and table introspection (table_info, index_list, ...).
+  pragma(source: string, options?: { simple?: boolean }): unknown {
+    const stmt = new DoltLiteStatement(this.db.prepare(`PRAGMA ${source}`));
+    if (!stmt.reader) {
+      stmt.run();
+      return options?.simple ? undefined : [];
+    }
+    const rows = stmt.all() as Array<Record<string, unknown>>;
+    if (options?.simple) {
+      return rows.length ? Object.values(rows[0])[0] : undefined;
+    }
+    return rows;
+  }
+
   exec(sql: string): void {
     this.db.exec(sql);
   }

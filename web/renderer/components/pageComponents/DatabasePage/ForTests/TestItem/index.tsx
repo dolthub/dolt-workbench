@@ -1,9 +1,11 @@
 import { Button, FormSelect, FormInput } from "@dolthub/react-components";
-import { FaChevronRight } from "@react-icons/all-files/fa/FaChevronRight";
-import { FaPlay } from "@react-icons/all-files/fa/FaPlay";
-import { FaTrash } from "@react-icons/all-files/fa/FaTrash";
-import { FaCheck } from "@react-icons/all-files/fa/FaCheck";
-import { FaTimes } from "@react-icons/all-files/fa/FaTimes";
+import {
+  FaCheck,
+  FaChevronRight,
+  FaPlay,
+  FaTimes,
+  FaTrash,
+} from "react-icons/fa";
 import cx from "classnames";
 import css from "./index.module.css";
 import QueryEditor from "../QueryEditor";

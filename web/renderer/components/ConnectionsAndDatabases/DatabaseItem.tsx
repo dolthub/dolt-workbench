@@ -1,5 +1,5 @@
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
-import { MdRemoveRedEye } from "@react-icons/all-files/md/MdRemoveRedEye";
+import { MdRemoveRedEye } from "react-icons/md";
 import {
   DatabaseConnectionFragment,
   DatabaseType,

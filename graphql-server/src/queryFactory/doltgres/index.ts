@@ -10,7 +10,7 @@ import {
   systemTableValues,
 } from "../../systemTables/systemTable.enums";
 import { TableDetails } from "../../tables/table.model";
-import { handleTableNotFound } from "../../utils";
+import { ROW_LIMIT, handleTableNotFound } from "../../utils";
 import { buildDeleteRow } from "../build/buildDeleteRow";
 import { buildDoltCellDiff } from "../build/buildDoltCellDiff";
 import { buildDoltCellHistory } from "../build/buildDoltCellHistory";
@@ -375,9 +375,9 @@ export class DoltgresQueryFactory
         }
         const res = await query(qh.getCallMerge(!!args.author), params);
 
-        if (res.length && res[0].dolt_merge[2] !== "0") {
+        if (res.length && res[0].conflicts !== "0") {
           await query("ROLLBACK");
-          const msg = res[0].dolt_merge[3] ?? "Merge conflict detected";
+          const msg = res[0].message ?? "Merge conflict detected";
           throw new Error(msg);
         }
 
@@ -525,7 +525,7 @@ export class DoltgresQueryFactory
 
         console.log("[restore_all]: calling");
         const res = await qr.query(qh.callResetHard);
-        if (res.length && res[0].dolt_reset[0] !== "0") {
+        if (res.length && res[0].status !== "0") {
           console.log("[restore_all]: reset not successful, rolling back");
           await qr.query("ROLLBACK");
           throw new Error("Reset --hard not successful");
@@ -539,7 +539,7 @@ export class DoltgresQueryFactory
             const checkRes = await qr.query(qh.callCheckoutTable, [
               tableWithoutSchema(r.table_name),
             ]);
-            if (checkRes.length && checkRes[0].dolt_checkout[0] !== "0") {
+            if (checkRes.length && checkRes[0].status !== "0") {
               console.log(
                 "[restore_all]: checkout not successful, rolling back",
               );
@@ -664,12 +664,17 @@ export class DoltgresQueryFactory
           tableName: `dolt_commit_diff_${baseTableName}`,
           schemaName,
         });
-        const built = buildDoltCommitDiff(qr.manager, target, {
-          fromCommitId: args.fromCommitId,
-          toCommitId: args.toCommitId,
-          columnNames,
-          type: args.type,
-        });
+        const built = buildDoltCommitDiff(
+          qr.manager,
+          target,
+          {
+            fromCommitId: args.fromCommitId,
+            toCommitId: args.toCommitId,
+            columnNames,
+            type: args.type,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,
@@ -702,11 +707,16 @@ export class DoltgresQueryFactory
           tableName: `dolt_diff_${baseTableName}`,
           schemaName,
         });
-        const built = buildDoltCellDiff(qr.manager, target, {
-          pkValues: pkValuesWithTypes(args.pkValues, columns),
-          columnNames: columns.map(c => c.name),
-          columnName: args.columnName,
-        });
+        const built = buildDoltCellDiff(
+          qr.manager,
+          target,
+          {
+            pkValues: pkValuesWithTypes(args.pkValues, columns),
+            columnNames: columns.map(c => c.name),
+            columnName: args.columnName,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,
@@ -741,11 +751,16 @@ export class DoltgresQueryFactory
           tableName: `dolt_history_${baseTableName}`,
           schemaName,
         });
-        const built = buildDoltCellHistory(qr.manager, target, {
-          pkValues: pkValuesWithTypes(args.pkValues, columns),
-          columnNames: columns.map(c => c.name),
-          columnName: args.columnName,
-        });
+        const built = buildDoltCellHistory(
+          qr.manager,
+          target,
+          {
+            pkValues: pkValuesWithTypes(args.pkValues, columns),
+            columnNames: columns.map(c => c.name),
+            columnName: args.columnName,
+          },
+          { limit: ROW_LIMIT + 1, offset: args.offset },
+        );
         return {
           rows: await built.execute(),
           isMutation: false,

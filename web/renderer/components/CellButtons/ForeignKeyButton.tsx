@@ -6,7 +6,7 @@ import { RowForDataTableFragment } from "@gen/graphql-types";
 import { stackingParamsToQuery } from "@lib/dataTableParams";
 import { RefOptionalSchemaParams } from "@lib/params";
 import { table } from "@lib/urls";
-import { BiCaretRight } from "@react-icons/all-files/bi/BiCaretRight";
+import { BiCaretRight } from "react-icons/bi";
 import cx from "classnames";
 import { useRef, useState } from "react";
 import css from "./index.module.css";

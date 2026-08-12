@@ -26,13 +26,13 @@ function renderComponent(props: {
 }
 
 describe("test SqlMessage", () => {
-  it("renders nothing for error, which surfaces in the error modal", () => {
+  it("renders nothing for error, which surfaces in the error banner", () => {
     const errorMessage = "this is an error";
     renderComponent({ gqlError: new ApolloError({ errorMessage }) });
     expect(screen.queryByText(errorMessage)).not.toBeInTheDocument();
   });
 
-  it("renders nothing for error from execution status, which surfaces in the error modal", () => {
+  it("renders nothing for error from execution status, which surfaces in the error banner", () => {
     const errorMessage = "query error: there was an error";
     renderComponent({
       executionStatus: QueryExecutionStatus.Error,

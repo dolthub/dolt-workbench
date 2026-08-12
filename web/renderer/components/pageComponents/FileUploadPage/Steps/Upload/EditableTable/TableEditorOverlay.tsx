@@ -1,7 +1,7 @@
 import { Button, ErrorMsg } from "@dolthub/react-components";
 import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import { ErrorType } from "@lib/errors/types";
-import { IoMdClose } from "@react-icons/all-files/io/IoMdClose";
+import { IoMdClose } from "react-icons/io";
 import UpdateQueryInfo from "../../../UploadQueryInfo";
 import { useFileUploadContext } from "../../../contexts/fileUploadLocalForage";
 import { FileUploadState } from "../../../contexts/fileUploadLocalForage/state";

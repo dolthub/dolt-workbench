@@ -1,5 +1,5 @@
 import { Btn } from "@dolthub/react-components";
-import { GiHamburgerMenu } from "@react-icons/all-files/gi/GiHamburgerMenu";
+import { GiHamburgerMenu } from "react-icons/gi";
 import css from "./index.module.css";
 
 type Props = {

@@ -161,19 +161,6 @@ function ProviderForTableName(props: TableProps) {
   );
   const [lastOffset, setLastOffset] = useState<Maybe<number>>(undefined);
 
-  const tableKey = `${databaseName}/${refName}/${schemaName ?? ""}/${tableName}`;
-  const [lastTableKey, setLastTableKey] = useState(tableKey);
-  if (lastTableKey !== tableKey) {
-    setLastTableKey(tableKey);
-    setTable(undefined);
-    setRows(undefined);
-    setOffset(undefined);
-    setLastOffset(undefined);
-    setWorkingDiffRows(undefined);
-    setDiffQueryOffset(undefined);
-    setLastDiffQueryOffset(undefined);
-  }
-
   useEffect(() => {
     if (!tableRes.data?.table) return;
     setTable(tableRes.data.table);
@@ -407,6 +394,7 @@ export function DataTableProvider({ params, children }: Props) {
 
   return (
     <ProviderForTableName
+      key={`${params.databaseName}/${params.refName}/${params.schemaName ?? ""}/${params.tableName}`}
       params={params}
       tableNames={tableNames}
       tableShape={tableShape}

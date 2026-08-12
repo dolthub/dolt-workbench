@@ -8,7 +8,9 @@ import {
   RowForDataTableFragment,
   useUpdateRowMutation,
 } from "@gen/graphql-types";
+import useDataTableStack from "@hooks/useDataTableStack";
 import useMutation from "@hooks/useMutation";
+import { rewriteWhereColumn } from "@lib/dataTableParams";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import css from "./index.module.css";
@@ -23,11 +25,12 @@ type Props = {
 };
 
 export default function MakeNullButton(props: Props): JSX.Element | null {
-  const { setExecutedQuery, setError, setExecutionMessage } =
+  const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
   const refName = props.refName ?? params.refName;
+  const { stack, update: updateStack } = useDataTableStack();
   const client = useApolloClient();
   const { mutateFn: updateRow } = useMutation({ hook: useUpdateRowMutation });
   const notNullConstraint = !!props.currCol.constraints?.some(
@@ -53,11 +56,19 @@ export default function MakeNullButton(props: Props): JSX.Element | null {
     if (res.success && res.data?.updateRow) {
       setExecutedQuery(res.data.updateRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.updateRow.executionMessage);
+      const nextWhere = rewriteWhereColumn(
+        stack.where,
+        props.currCol.name,
+        null,
+      );
+      if (nextWhere !== stack.where) {
+        updateStack({ ...stack, where: nextWhere });
+      }
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
     } else if (res.error) {
-      setError(res.error);
+      setExecutionError(res.error.message);
     }
   };
 

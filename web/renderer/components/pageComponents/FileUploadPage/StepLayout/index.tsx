@@ -1,7 +1,7 @@
 import Link from "@components/links/Link";
 import { Button } from "@dolthub/react-components";
 import { Route } from "@dolthub/web-utils";
-import { BsChevronLeft } from "@react-icons/all-files/bs/BsChevronLeft";
+import { BsChevronLeft } from "react-icons/bs";
 import { ReactNode, useState } from "react";
 import { UploadStage } from "../enums";
 import WrongStageModal from "./WrongStageModal";

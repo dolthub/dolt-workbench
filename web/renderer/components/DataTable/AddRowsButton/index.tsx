@@ -2,8 +2,7 @@ import Link from "@components/links/Link";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { TableParams } from "@lib/params";
 import { editTable } from "@lib/urls";
-import { AiOutlinePlus } from "@react-icons/all-files/ai/AiOutlinePlus";
-import { AiOutlinePlusCircle } from "@react-icons/all-files/ai/AiOutlinePlusCircle";
+import { AiOutlinePlus, AiOutlinePlusCircle } from "react-icons/ai";
 import css from "./index.module.css";
 
 export default function AddRowsButton(props: { params: TableParams }) {

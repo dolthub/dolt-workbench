@@ -1,8 +1,6 @@
 import { gql } from "@apollo/client";
-import { DOLT_LOOKUP_FRAGMENT } from "@components/CellButtons/queries";
 
 export const DOLT_COMMIT_DIFF = gql`
-  ${DOLT_LOOKUP_FRAGMENT}
   query DoltCommitDiff(
     $databaseName: String!
     $refName: String!
@@ -12,6 +10,7 @@ export const DOLT_COMMIT_DIFF = gql`
     $toCommitId: String!
     $excludedColumns: [String!]
     $type: CommitDiffType
+    $offset: Int
   ) {
     doltCommitDiff(
       databaseName: $databaseName
@@ -22,6 +21,7 @@ export const DOLT_COMMIT_DIFF = gql`
       toCommitId: $toCommitId
       excludedColumns: $excludedColumns
       type: $type
+      offset: $offset
     ) {
       ...SqlSelectForDoltLookup
     }
