@@ -1,4 +1,4 @@
-import { toPKWhereClauses } from "@components/CellButtons/utils";
+import { toWhereClauses } from "@components/CellButtons/utils";
 import { useApolloClient } from "@apollo/client";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
@@ -57,7 +57,7 @@ export default function EditCellInput(props: Props) {
       return;
     }
 
-    const where = toPKWhereClauses(props.row, props.queryCols, columns);
+    const where = toWhereClauses(props.row, props.queryCols, columns);
     const set = [
       {
         column: props.currentCol.name,
