@@ -4,7 +4,7 @@ import { ColumnForDataTableFragment } from "@gen/graphql-types";
 import useDataTableStack from "@hooks/useDataTableStack";
 import { appendWhere } from "@lib/dataTableParams";
 import css from "./index.module.css";
-import { convertTimestamp } from "./utils";
+import { toFilterValue } from "./utils";
 
 type Props = {
   col?: ColumnForDataTableFragment;
@@ -21,13 +21,12 @@ export default function FilterButton({ col, value, dataCy }: Props) {
 
   const onClick = () => {
     if (!col) return;
-    // TODO: timestamp not working for postgres
-    const val = col.type.toLowerCase().includes("timestamp")
-      ? convertTimestamp(value)
-      : value;
     update({
       ...stack,
-      where: appendWhere(stack.where, { column: col.name, value: val }),
+      where: appendWhere(stack.where, {
+        column: col.name,
+        value: toFilterValue(col.type, value),
+      }),
     });
   };
 

@@ -2,7 +2,12 @@ import { useApolloClient } from "@apollo/client";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { useSetState } from "@dolthub/react-hooks";
 import { Maybe } from "@dolthub/web-utils";
-import { DocType, useSaveDocMutation } from "@gen/graphql-types";
+import {
+  DocType,
+  useDeleteDocMutation,
+  useSaveDocMutation,
+} from "@gen/graphql-types";
+import { ApolloErrorType } from "@lib/errors/types";
 import { RefParams } from "@lib/params";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { SyntheticEvent } from "react";
@@ -20,6 +25,13 @@ type ReturnType = {
   state: DocState;
   setState: React.Dispatch<Partial<DocState>>;
   onSubmit: (e: SyntheticEvent) => Promise<SaveResult>;
+  onDelete: (e: SyntheticEvent) => Promise<SaveResult>;
+};
+
+type DocMutationResult = {
+  rowsAffected: Maybe<number>;
+  queryString: string;
+  executionMessage: string;
 };
 
 export default function useEditDoc(
@@ -34,28 +46,30 @@ export default function useEditDoc(
   });
   const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
-  const { mutateFn } = useMutation({ hook: useSaveDocMutation });
+  const { mutateFn: saveFn } = useMutation({ hook: useSaveDocMutation });
+  const { mutateFn: deleteFn } = useMutation({ hook: useDeleteDocMutation });
   const client = useApolloClient();
 
-  const onSubmit = async (e: SyntheticEvent): Promise<SaveResult> => {
+  const runDocMutation = async (
+    e: SyntheticEvent,
+    mutate: (docType: DocType) => Promise<{
+      success: boolean;
+      error?: ApolloErrorType;
+      result?: Maybe<DocMutationResult>;
+    }>,
+  ): Promise<SaveResult> => {
     e.preventDefault();
     if (!state.docType || state.docType === DocType.Unspecified) {
+      setExecutionError("A doc type must be selected");
       return { success: false };
     }
     setState({ loading: true });
 
-    const res = await mutateFn({
-      variables: {
-        databaseName: params.databaseName,
-        refName: params.refName,
-        docType: state.docType,
-        markdown: state.markdown,
-      },
-    });
+    const res = await mutate(state.docType);
 
-    if (res.success && res.data?.saveDoc) {
-      setExecutedQuery(res.data.saveDoc.queryString, { isMutation: true });
-      setExecutionMessage(res.data.saveDoc.executionMessage);
+    if (res.success && res.result) {
+      setExecutedQuery(res.result.queryString, { isMutation: true });
+      setExecutionMessage(res.result.executionMessage);
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
@@ -70,5 +84,30 @@ export default function useEditDoc(
     return { success: false };
   };
 
-  return { state, setState, onSubmit };
+  const onSubmit = async (e: SyntheticEvent): Promise<SaveResult> =>
+    runDocMutation(e, async docType => {
+      const res = await saveFn({
+        variables: {
+          databaseName: params.databaseName,
+          refName: params.refName,
+          docType,
+          markdown: state.markdown,
+        },
+      });
+      return { ...res, result: res.data?.saveDoc };
+    });
+
+  const onDelete = async (e: SyntheticEvent): Promise<SaveResult> =>
+    runDocMutation(e, async docType => {
+      const res = await deleteFn({
+        variables: {
+          databaseName: params.databaseName,
+          refName: params.refName,
+          docType,
+        },
+      });
+      return { ...res, result: res.data?.deleteDoc };
+    });
+
+  return { state, setState, onSubmit, onDelete };
 }

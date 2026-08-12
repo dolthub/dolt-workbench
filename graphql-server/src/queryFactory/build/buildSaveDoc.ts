@@ -1,6 +1,7 @@
 import { EntityManager } from "typeorm";
 import {
   Built,
+  bindParam,
   interpolateForDisplay,
   newParamAccumulator,
 } from "./buildUtils";
@@ -17,8 +18,8 @@ export function buildSaveDoc(
   const driver = em.connection.driver;
   const escape = driver.escape.bind(driver);
   const acc = newParamAccumulator();
-  const pName = bind(acc, docName);
-  const pText = bind(acc, markdown);
+  const pName = bindParam(acc, docName, "varchar");
+  const pText = bindParam(acc, markdown, "varchar");
 
   const escapedTarget = escape(target);
   const escapedDocName = escape(DOC_NAME);
@@ -26,7 +27,7 @@ export function buildSaveDoc(
 
   const isPostgres = em.connection.options.type === "postgres";
   const upsertClause = isPostgres
-    ? `ON CONFLICT (${escapedDocName}) DO UPDATE SET ${escapedDocText} = EXCLUDED.${escapedDocText}`
+    ? `ON CONFLICT (${escapedDocName}) DO UPDATE SET ${escapedDocText} = :${pText}`
     : `ON DUPLICATE KEY UPDATE ${escapedDocText} = VALUES(${escapedDocText})`;
   const namedSql = `INSERT INTO ${escapedTarget} (${escapedDocName}, ${escapedDocText}) VALUES (:${pName}, :${pText}) ${upsertClause}`;
 
@@ -44,19 +45,4 @@ export function buildSaveDoc(
     displaySql,
     execute: async () => em.query(sql, rawParams),
   };
-}
-
-function bind(
-  acc: {
-    namedParams: Record<string, string>;
-    paramTypes: Array<{ type?: string }>;
-    idx: number;
-  },
-  value: string,
-): string {
-  const key = `p${acc.idx}`;
-  acc.idx += 1;
-  acc.namedParams[key] = value;
-  acc.paramTypes.push({ type: "varchar" });
-  return key;
 }

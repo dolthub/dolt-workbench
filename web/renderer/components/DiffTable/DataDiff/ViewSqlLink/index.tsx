@@ -8,6 +8,7 @@ import {
 } from "@gen/graphql-types";
 import { encodeCommitDiff } from "@lib/commitDiffUrl";
 import { RequiredRefsParams } from "@lib/params";
+import { getPostgresSchemaName, getPostgresTableName } from "@lib/postgres";
 import { query as queryRoute } from "@lib/urls";
 import { AiOutlineConsoleSql } from "react-icons/ai";
 import { HiddenColIndexes, isHiddenColumn } from "../utils";
@@ -31,7 +32,8 @@ function Inner(props: InnerProps) {
     .filter((_, i) => isHiddenColumn(i, props.hiddenColIndexes))
     .map(c => c.name);
   const commitDiffParams = encodeCommitDiff({
-    tableName: props.params.tableName,
+    tableName: getPostgresTableName(props.params.tableName),
+    schemaName: getPostgresSchemaName(props.params.tableName),
     fromCommitId: props.params.fromRefName,
     toCommitId: props.params.toRefName,
     excludedColumns,

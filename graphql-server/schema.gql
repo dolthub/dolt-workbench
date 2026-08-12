@@ -420,9 +420,9 @@ type Query {
   views(refName: String!, databaseName: String!, schemaName: String): [SchemaItem!]!
   doltProcedures(databaseName: String!, refName: String!): [SchemaItem!]!
   schemaDefinition(schemaName: String, refName: String!, databaseName: String!, name: String!, kind: SchemaType!): SqlSelect!
-  doltCommitDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, fromCommitId: String!, toCommitId: String!, excludedColumns: [String!], type: CommitDiffType): SqlSelect!
-  doltCellDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): SqlSelect!
-  doltCellHistory(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String): SqlSelect!
+  doltCommitDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, fromCommitId: String!, toCommitId: String!, excludedColumns: [String!], type: CommitDiffType, offset: Int): SqlSelect!
+  doltCellDiff(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String, offset: Int): SqlSelect!
+  doltCellHistory(schemaName: String, tableName: String!, refName: String!, databaseName: String!, pkValues: [ColumnValueInput!]!, columnName: String, offset: Int): SqlSelect!
   selectTableRows(schemaName: String, tableName: String!, refName: String!, databaseName: String!, orderBy: [OrderByClause!], where: [ColumnValueInput!], excludePks: [PkRow!], projection: [String!], offset: Int): SqlSelect!
   sqlSelect(schemaName: String, refName: String!, databaseName: String!, queryString: String!, offset: Int): SqlSelect!
   sqlSelectForCsvDownload(schemaName: String, refName: String!, databaseName: String!, queryString: String!, offset: Int): String!
@@ -496,6 +496,7 @@ type Mutation {
   resetDatabase(newDatabase: String): Boolean!
   doltClone(databaseName: String!, ownerName: String!, remoteDbName: String!): Boolean!
   saveDoc(refName: String!, databaseName: String!, docType: DocType!, markdown: String!): MutationResult!
+  deleteDoc(refName: String!, databaseName: String!, docType: DocType!): MutationResult!
   loadDataFile(schemaName: String, tableName: String!, refName: String!, databaseName: String!, importOp: ImportOperation!, fileType: FileType!, file: Upload!, modifier: LoadDataModifier): Boolean!
   mergePull(fromBranchName: String!, toBranchName: String!, databaseName: String!, author: AuthorInfo): Boolean!
   mergeAndResolveConflicts(author: AuthorInfo, fromBranchName: String!, toBranchName: String!, databaseName: String!, resolveOursTables: [String!]!, resolveTheirsTables: [String!]!): Boolean!

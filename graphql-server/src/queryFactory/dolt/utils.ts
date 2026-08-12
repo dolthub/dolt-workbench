@@ -18,6 +18,15 @@ export function pkValuesWithTypes(
   pkValues: ColumnValue[],
   columns: Column[],
 ): ColumnValue[] {
+  const pkCols = columns.filter(c => c.isPrimaryKey).map(c => c.name);
+  const given = new Set(pkValues.map(pk => pk.column));
+  if (pkValues.length !== pkCols.length || !pkCols.every(c => given.has(c))) {
+    throw new Error(
+      `expected values for primary keys (${pkCols.join(", ")}), got (${pkValues
+        .map(pk => pk.column)
+        .join(", ")})`,
+    );
+  }
   const typeMap = new Map(columns.map(c => [c.name, c.type]));
   return pkValues.map(pk =>
     pk.type ? pk : { ...pk, type: typeMap.get(pk.column) },

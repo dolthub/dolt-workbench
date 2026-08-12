@@ -29,26 +29,6 @@ export const ROWS_FOR_PROCEDURES = gql`
 `;
 
 export const SCHEMA_DEFINITION = gql`
-  fragment RowForSchemaDefinition on Row {
-    columnValues {
-      displayValue
-    }
-    diff {
-      diffColumnNames
-      diffColumnValues {
-        displayValue
-      }
-    }
-  }
-  fragment ColumnForSchemaDefinition on Column {
-    name
-    isPrimaryKey
-    type
-    sourceTable
-    constraints {
-      notNull
-    }
-  }
   query SchemaDefinition(
     $databaseName: String!
     $refName: String!
@@ -63,15 +43,7 @@ export const SCHEMA_DEFINITION = gql`
       name: $name
       kind: $kind
     ) {
-      queryString
-      columns {
-        ...ColumnForSchemaDefinition
-      }
-      rows {
-        list {
-          ...RowForSchemaDefinition
-        }
-      }
+      ...SqlSelectForDoltLookup
     }
   }
 `;

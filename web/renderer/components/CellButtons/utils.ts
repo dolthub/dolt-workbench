@@ -133,6 +133,12 @@ function mapQueryColsToAllCols(
   });
 }
 
+export function toFilterValue(colType: string, value: string): string {
+  return colType.toLowerCase().includes("timestamp")
+    ? convertTimestamp(value)
+    : value;
+}
+
 // Gets timestamp format "YYYY-MM-DD HH:MM:SS"
 export function convertTimestamp(ts: string): string {
   const date = new Date(ts);

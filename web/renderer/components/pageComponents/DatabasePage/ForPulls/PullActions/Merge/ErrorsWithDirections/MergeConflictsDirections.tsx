@@ -1,24 +1,13 @@
 import DocsLink from "@components/links/DocsLink";
 import { CodeBlock } from "@dolthub/react-components";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
+import { callProcedure } from "@lib/callProcedure";
 import { PullDiffParams } from "@lib/params";
 import css from "./index.module.css";
 
 type Props = {
   params: PullDiffParams;
 };
-
-function callProcedure(
-  isPostgres: boolean,
-  name: string,
-  args: string[],
-): string {
-  const quote = isPostgres
-    ? (s: string) => s.replace(/'/g, "''")
-    : (s: string) => s.replace(/'/g, "\\'");
-  const quotedArgs = args.map(a => `'${quote(a)}'`).join(", ");
-  return `${isPostgres ? "SELECT" : "CALL"} ${name}(${quotedArgs});`;
-}
 
 export default function MergeConflictsDirections({ params }: Props) {
   const { isPostgres } = useDatabaseDetails();

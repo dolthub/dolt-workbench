@@ -426,6 +426,10 @@ export class MySQLQueryFactory
     throw notDoltError("save doc");
   }
 
+  async deleteDoc(_args: t.DeleteDocArgs): Promise<t.MutationResult> {
+    throw notDoltError("delete doc");
+  }
+
   // Returns static branch
   async getBranch(args: t.BranchArgs): t.USPR {
     return {

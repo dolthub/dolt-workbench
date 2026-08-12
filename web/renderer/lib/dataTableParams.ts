@@ -162,6 +162,18 @@ export function appendWhere(
   return [...(current ?? []), condition];
 }
 
+export function rewriteWhereColumn(
+  current: ColumnValueInput[] | undefined,
+  column: string,
+  value: string | null,
+): ColumnValueInput[] | undefined {
+  if (!current?.some(w => w.column === column)) return current;
+  if (value === null) {
+    return dropEmpty(current.filter(w => w.column !== column));
+  }
+  return current.map(w => (w.column === column ? { ...w, value } : w));
+}
+
 export function appendExcludePk(
   current: PkRow[] | undefined,
   pkRow: PkRow,

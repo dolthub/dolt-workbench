@@ -23,9 +23,12 @@ describe("buildSaveDoc", () => {
   it("emits Postgres upsert via ON CONFLICT DO UPDATE", () => {
     const out = buildSaveDoc(pgEm, "dolt_docs", "README.md", "hello");
     expect(out.sql).toBe(
-      'INSERT INTO "dolt_docs" ("doc_name", "doc_text") VALUES ($1, $2) ON CONFLICT ("doc_name") DO UPDATE SET "doc_text" = EXCLUDED."doc_text"',
+      'INSERT INTO "dolt_docs" ("doc_name", "doc_text") VALUES ($1, $2) ON CONFLICT ("doc_name") DO UPDATE SET "doc_text" = $2',
     );
     expect(out.params).toEqual(["README.md", "hello"]);
+    expect(out.displaySql).toBe(
+      'INSERT INTO "dolt_docs" ("doc_name", "doc_text") VALUES (\'README.md\', \'hello\') ON CONFLICT ("doc_name") DO UPDATE SET "doc_text" = \'hello\'',
+    );
   });
 
   it("escapes single quotes in markdown for displaySql", () => {

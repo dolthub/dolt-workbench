@@ -1,11 +1,19 @@
+import { useApolloClient } from "@apollo/client";
 import { Inner as InnerDataTable } from "@components/DataTable";
 import DataTableLayout from "@components/layouts/DataTableLayout";
 import { useSqlEditorContext } from "@contexts/sqleditor";
 import { Button, ErrorMsg, Loader } from "@dolthub/react-components";
 import {
+  DoltCellDiffDocument,
+  DoltCellDiffQuery,
+  DoltCellDiffQueryVariables,
+  DoltCellHistoryDocument,
+  DoltCellHistoryQuery,
+  DoltCellHistoryQueryVariables,
   useDoltCellDiffQuery,
   useDoltCellHistoryQuery,
 } from "@gen/graphql-types";
+import useDoltLookupRows from "@hooks/useDoltLookupRows";
 import { parseCellHistory } from "@lib/cellHistoryUrl";
 import { SqlQueryParams } from "@lib/params";
 import { useRouter } from "next/router";
@@ -16,12 +24,10 @@ type Props = {
   params: SqlQueryParams;
 };
 
-const ALL_COMMITS = "allCommits";
-
 export default function HistoryTable(props: Props) {
   const router = useRouter();
   const { setExecutedQuery } = useSqlEditorContext();
-  const allCommits = router.query.historyMode === ALL_COMMITS;
+  const allCommits = router.query.historyAll === "1";
 
   const ctx = useMemo(
     () => parseCellHistory(router.query),
@@ -56,6 +62,31 @@ export default function HistoryTable(props: Props) {
     ? historyRes.data?.doltCellHistory
     : diffRes.data?.doltCellDiff;
 
+  const client = useApolloClient();
+  const { rows, loadMore, hasMore, err } = useDoltLookupRows(
+    data,
+    async offset => {
+      if (allCommits) {
+        const page = await client.query<
+          DoltCellHistoryQuery,
+          DoltCellHistoryQueryVariables
+        >({
+          query: DoltCellHistoryDocument,
+          variables: { ...variables, offset },
+        });
+        return page.data.doltCellHistory;
+      }
+      const page = await client.query<
+        DoltCellDiffQuery,
+        DoltCellDiffQueryVariables
+      >({
+        query: DoltCellDiffDocument,
+        variables: { ...variables, offset },
+      });
+      return page.data.doltCellDiff;
+    },
+  );
+
   useEffect(() => {
     if (data?.queryString) setExecutedQuery(data.queryString);
   }, [data?.queryString, setExecutedQuery]);
@@ -73,20 +104,19 @@ export default function HistoryTable(props: Props) {
 
   const forRow = !ctx.columnName;
   const onSeeAllClick = async () => {
-    const nextQuery = { ...router.query, historyMode: ALL_COMMITS };
+    const nextQuery = { ...router.query, historyAll: "1" };
     await router.push({ pathname: router.pathname, query: nextQuery });
   };
 
   return (
     <>
-      <DataTableLayout params={props.params}>
+      <DataTableLayout params={{ ...props.params, q: data?.queryString ?? "" }}>
         <InnerDataTable
-          params={props.params}
-          rows={data?.rows.list}
+          rows={rows}
           columns={data?.columns}
-          loadMore={async () => {}}
-          hasMore={false}
-          error={res.error}
+          loadMore={loadMore}
+          hasMore={hasMore}
+          error={res.error ?? err}
         />
       </DataTableLayout>
       {!allCommits && (
