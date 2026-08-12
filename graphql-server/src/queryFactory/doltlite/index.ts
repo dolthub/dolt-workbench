@@ -187,37 +187,31 @@ export class DoltLiteQueryFactory
   // BRANCHES
 
   async getBranch(args: t.BranchArgs): t.USPR {
-    const branch = await this.queryForBuilder(
+    return this.queryForBuilder(
       async em => dem.getDoltBranch(em, args),
       args.databaseName,
     );
-    return branch
-      ? withUTCDates([branch], ["latest_commit_date"])[0]
-      : branch;
   }
 
   async getBranches(args: t.ListBranchesArgs): t.PR {
-    const branches = await this.queryForBuilder(
+    return this.queryForBuilder(
       async em => dem.getDoltBranchesPaginated(em, args),
       args.databaseName,
     );
-    return withUTCDates(branches, ["latest_commit_date"]);
   }
 
   async getAllBranches(args: t.DBArgs): t.PR {
-    const branches = await this.queryForBuilder(
+    return this.queryForBuilder(
       async em => dem.getAllDoltBranches(em),
       args.databaseName,
     );
-    return withUTCDates(branches, ["latest_commit_date"]);
   }
 
   async getRemoteBranches(args: t.RemoteBranchesArgs): t.PR {
-    const branches = await this.queryForBuilder(
+    return this.queryForBuilder(
       async em => dem.getDoltRemoteBranchesPaginated(em, args),
       args.databaseName,
     );
-    return withUTCDates(branches, ["latest_commit_date"]);
   }
 
   async createNewBranch(args: t.BranchArgs & { fromRefName: string }): t.PR {
@@ -239,25 +233,23 @@ export class DoltLiteQueryFactory
   // COMMITS
 
   async getLogs(args: t.RefArgs, offset: number): t.PR {
-    return handleRefNotFound(async () => {
-      const logs: t.RawRows = await this.query(
+    return handleRefNotFound(async () =>
+      this.query(
         qh.doltLogsQuery,
         [args.refName, ROW_LIMIT + 1, offset],
         args.databaseName,
-      );
-      return withUTCDates(logs, ["date"]);
-    });
+      ),
+    );
   }
 
   async getTwoDotLogs(args: t.RefsArgs): t.PR {
-    return handleRefNotFound(async () => {
-      const logs: t.RawRows = await this.query(
+    return handleRefNotFound(async () =>
+      this.query(
         qh.twoDotDoltLogsQuery,
         [`${args.toRefName}..${args.fromRefName}`],
         args.databaseName,
-      );
-      return withUTCDates(logs, ["date"]);
-    });
+      ),
+    );
   }
 
   // DIFFS
@@ -558,23 +550,18 @@ export class DoltLiteQueryFactory
 
   // TAGS
 
-  // getDoltTag returns a single row despite the t.UPR list typing, matching
-  // the dolt factory's behavior.
   async getTag(args: t.TagArgs): t.UPR {
-    const tag = (await this.queryForBuilder(
+    return this.queryForBuilder(
       async em => dem.getDoltTag(em, args),
       args.databaseName,
-    )) as t.RawRow | undefined;
-    if (!tag) return undefined;
-    return withUTCDates([tag], ["date"])[0] as unknown as t.RawRows;
+    );
   }
 
   async getTags(args: t.DBArgs): t.PR {
-    const tags = await this.queryForBuilder(
+    return this.queryForBuilder(
       async em => dem.getDoltTags(em),
       args.databaseName,
     );
-    return withUTCDates(tags, ["date"]);
   }
 
   async createNewTag(
@@ -904,19 +891,6 @@ async function resolveThreeDotRefs(
   };
 }
 
-// DoltLite returns datetime columns as UTC strings, but the shared models
-// expect JS Date objects like the MySQL driver produces.
-function withUTCDates(rows: t.RawRows, dateCols: string[]): t.RawRows {
-  return rows.map(row => {
-    const converted = { ...row };
-    dateCols.forEach(col => {
-      if (typeof converted[col] === "string") {
-        converted[col] = new Date(`${converted[col].replace(" ", "T")}Z`);
-      }
-    });
-    return converted;
-  });
-}
 
 // DoltLite's dolt_diff_/dolt_history_ system tables declare no column
 // affinity, so numeric pk values must be bound as numbers to match.

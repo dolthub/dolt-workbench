@@ -5,6 +5,7 @@ import { DataSource } from "typeorm";
 import { doltliteDriver } from "../../connections/doltliteDriver";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import { SchemaType } from "../../schemas/schema.enums";
+import { convertRowDate } from "../../utils";
 import * as t from "../types";
 import { DoltLiteQueryFactory } from ".";
 
@@ -70,8 +71,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     const branch = await qf.getBranch({ ...dbArgs, branchName: "main" });
     expect(branch?.name).toEqual("main");
     expect(branch?.latest_commit_message).toEqual("add bob");
-    expect(branch?.latest_commit_date).toBeInstanceOf(Date);
-    expect(branches[0].latest_commit_date).toBeInstanceOf(Date);
+    expect(convertRowDate(branch?.latest_commit_date).getTime()).not.toBeNaN();
   });
 
   it("creates and deletes a branch", async () => {
@@ -94,7 +94,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       "add users table",
       "Initialize data repository",
     ]);
-    expect(logs[0].date).toBeInstanceOf(Date);
+    expect(convertRowDate(logs[0].date).getTime()).not.toBeNaN();
     expect(logs[0].parents).toEqual(logs[1].commit_hash);
     await expect(qf.getLogs({ ...dbArgs, refName: "nope" }, 0)).rejects.toThrow(
       "no such ref in database",
@@ -385,7 +385,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(tags.map(tag => tag.tag_name)).toEqual(["v1"]);
     expect(tags[0].message).toEqual("first release");
     expect(tags[0].tagger).toEqual("Eric");
-    expect(tags[0].date).toBeInstanceOf(Date);
+    expect(convertRowDate(tags[0].date).getTime()).not.toBeNaN();
     const tag = await qf.getTag({ ...dbArgs, tagName: "v1" });
     expect(tag).toMatchObject({ tag_name: "v1" });
     await qf.callDeleteTag({ ...dbArgs, tagName: "v1" });
