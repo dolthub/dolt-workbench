@@ -287,14 +287,19 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
   it("returns one sided rows for an added working table", async () => {
     await ds.query("CREATE TABLE added_tbl (a INTEGER PRIMARY KEY, b TEXT)");
     await ds.query("INSERT INTO added_tbl VALUES (1, 'x')");
+    // Leave a different branch checked out: the WORKING read must pin the
+    // session to branchRefName rather than rely on leftover connection state.
+    await ds.query("SELECT dolt_checkout('feature')");
     const { rows, columns } = await qf.getOneSidedRowDiff({
       ...dbArgs,
       tableName: "added_tbl",
       refName: "WORKING",
+      branchRefName: "main",
       offset: 0,
     });
     expect(columns.map(c => c.Field)).toEqual(["a", "b"]);
     expect(rows).toEqual([{ a: 1, b: "x" }]);
+    await ds.query("SELECT dolt_checkout('main')");
     await ds.query("DROP TABLE added_tbl");
   });
 
@@ -655,15 +660,71 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     ).rejects.toThrow(/fresh database/);
   });
 
-  it("manages remotes", async () => {
-    await qf.addRemote({
-      ...dbArgs,
-      remoteName: "origin",
-      remoteUrl: "https://doltremoteapi.dolthub.com/org/db",
-    });
+  it("pushes, fetches, pulls, and lists remote branches over a file remote", async () => {
+    const remoteUrl = `file://${path.join(tmpDir, "file-remote")}`;
+    await qf.addRemote({ ...dbArgs, remoteName: "origin", remoteUrl });
     const remotes = await qf.getRemotes({ ...dbArgs, offset: 0 });
     expect(remotes.map(r => r.name)).toEqual(["origin"]);
+
+    const push = await qf.callPushRemote({
+      ...dbArgs,
+      remoteName: "origin",
+      branchName: "main",
+    });
+    expect(push).toEqual([{ status: "0", message: "" }]);
+
+    const fetch = await qf.callFetchRemote({ ...dbArgs, remoteName: "origin" });
+    expect(fetch).toEqual([{ status: "0" }]);
+
+    const remoteBranches = await qf.getRemoteBranches({
+      ...dbArgs,
+      remoteName: "origin",
+      offset: 0,
+    });
+    expect(remoteBranches.map(b => b.name)).toEqual(["remotes/origin/main"]);
+    expect(convertRowDate(remoteBranches[0].latest_commit_date).getTime()).not.toBeNaN();
+
+    const pull = await qf.callPullRemote({
+      ...dbArgs,
+      remoteName: "origin",
+      branchName: "main",
+      refName: "main",
+    });
+    expect(pull).toEqual([
+      { fast_forward: "0", conflicts: "0", message: "" },
+    ]);
+
     await qf.callDeleteRemote({ ...dbArgs, remoteName: "origin" });
     expect(await qf.getRemotes({ ...dbArgs, offset: 0 })).toEqual([]);
+  });
+
+  it("clones a file remote into an empty database", async () => {
+    const cloneFile = path.join(tmpDir, "clone-target.db");
+    fs.writeFileSync(cloneFile, "");
+    const cloneDs = new DataSource({
+      type: "better-sqlite3",
+      database: cloneFile,
+      driver: doltliteDriver,
+      fileMustExist: true,
+      statementCacheSize: 0,
+      synchronize: false,
+    });
+    await cloneDs.initialize();
+    try {
+      const cloneQf = new DoltLiteQueryFactory(cloneDs);
+      await cloneQf.callDoltClone({
+        databaseName: "clone-target",
+        remoteDbPath: `file://${path.join(tmpDir, "file-remote")}`,
+      });
+      expect(await cloneQf.getTableNames({ ...dbArgs })).toContain("users");
+      const remoteBranches = await cloneQf.getRemoteBranches({
+        ...dbArgs,
+        remoteName: "origin",
+        offset: 0,
+      });
+      expect(remoteBranches.map(b => b.name)).toEqual(["remotes/origin/main"]);
+    } finally {
+      await cloneDs.destroy();
+    }
   });
 });

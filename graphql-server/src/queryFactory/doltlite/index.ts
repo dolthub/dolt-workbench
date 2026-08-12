@@ -491,27 +491,34 @@ export class DoltLiteQueryFactory
   // dolt_at_ tables don't cover) or from dolt_at_<table>(ref) — DoltLite's
   // AS OF equivalent, which accepts branches, tags, and commit hashes.
   async getOneSidedRowDiff(
-    args: t.TableArgs & { offset: number },
+    args: t.TableArgs & { offset: number; branchRefName?: string },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
-    return this.queryMultiple(async query => {
-      if (args.refName === "WORKING") {
-        const columns = await query(qh.describeTableQuery, [args.tableName]);
-        const rows = await query(
-          qh.getOneSidedTableRowsQuery(args.tableName, columns),
-          [ROW_LIMIT + 1, args.offset],
-        );
+    return this.queryMultiple(
+      async query => {
+        if (args.refName === "WORKING") {
+          const columns = await query(qh.describeTableQuery, [args.tableName]);
+          const rows = await query(
+            qh.getOneSidedTableRowsQuery(args.tableName, columns),
+            [ROW_LIMIT + 1, args.offset],
+          );
+          return { rows, columns };
+        }
+        const columns = await query(qh.describeTableQuery, [
+          `dolt_at_${args.tableName}`,
+        ]);
+        const rows = await query(qh.getAtTableRowsQuery(args.tableName), [
+          args.refName,
+          ROW_LIMIT + 1,
+          args.offset,
+        ]);
         return { rows, columns };
-      }
-      const columns = await query(qh.describeTableQuery, [
-        `dolt_at_${args.tableName}`,
-      ]);
-      const rows = await query(qh.getAtTableRowsQuery(args.tableName), [
-        args.refName,
-        ROW_LIMIT + 1,
-        args.offset,
-      ]);
-      return { rows, columns };
-    }, args.databaseName);
+      },
+      args.databaseName,
+      // The WORKING path reads the live table, which is only correct with
+      // the diff's branch checked out; dolt_at_ reads are pinned explicitly
+      // but harmlessly share the checkout.
+      args.branchRefName,
+    );
   }
 
   async doltCommitDiff(args: t.DoltCommitDiffArgs): Promise<t.SqlSelectResult> {
@@ -876,26 +883,36 @@ export class DoltLiteQueryFactory
     );
   }
 
+  // DoltLite's remote functions return a bare scalar and report failure by
+  // throwing, so success is mapped into the row shape fromPullRes,
+  // fromPushRes, and fromFetchRes consume.
   async callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR {
-    return this.query(
-      qh.callPullRemote,
-      [args.remoteName, args.branchName],
+    return this.queryMultiple(
+      async query => {
+        await query(qh.callPullRemote, [args.remoteName, args.branchName]);
+        return [{ fast_forward: "0", conflicts: "0", message: "" }];
+      },
       args.databaseName,
       args.refName,
     );
   }
 
   async callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR {
-    return this.query(
-      qh.callPushRemote,
-      [args.remoteName, args.branchName],
+    return this.queryMultiple(
+      async query => {
+        await query(qh.callPushRemote, [args.remoteName, args.branchName]);
+        return [{ status: "0", message: "" }];
+      },
       args.databaseName,
       args.refName,
     );
   }
 
   async callFetchRemote(args: t.RemoteArgs): t.PR {
-    return this.query(qh.callFetchRemote, [args.remoteName], args.databaseName);
+    return this.queryMultiple(async query => {
+      await query(qh.callFetchRemote, [args.remoteName]);
+      return [{ status: "0" }];
+    }, args.databaseName);
   }
 
   async callCreateBranchFromRemote(args: t.RemoteBranchArgs): t.PR {

@@ -193,7 +193,9 @@ export declare class QueryFactory {
   ): Promise<{ fromCommitId: string; toCommitId: string }>;
 
   getOneSidedRowDiff(
-    args: t.TableArgs & { offset: number },
+    // refName is the resolved commit id of the existing side; branchRefName
+    // is the branch the diff is scoped to, so WORKING resolves against it.
+    args: t.TableArgs & { offset: number; branchRefName?: string },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }>;
 
   getRowDiffs(args: t.RowDiffArgs): t.DiffRes;
