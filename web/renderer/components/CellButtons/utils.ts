@@ -78,7 +78,7 @@ export function getTableColsFromQueryCols(
 
 export type WhereClauseInput = {
   column: string;
-  value: string;
+  value: string | null;
   type: string;
 };
 
@@ -109,10 +109,10 @@ export function toWhereClauses(
   const hasPrimaryKey = mappedCols.some(col => col.isPrimaryKey);
 
   return mappedCols
-    .map((col, index) => ({ col, index })) // Preserve original index for row.columnValues
+    .map((col, idx) => {return { col, idx }}) // Preserve original index for row.columnValues
     .filter(({ col }) => !hasPrimaryKey || col.isPrimaryKey)
-    .map(({ col, index }) => {
-      const displayVal = row.columnValues[index]?.displayValue;
+    .map(({ col, idx }) => {
+      const displayVal = row.columnValues[idx]?.displayValue;
       return {
         column: col.name,
         value: isNullValue(displayVal) ? null : displayVal,
