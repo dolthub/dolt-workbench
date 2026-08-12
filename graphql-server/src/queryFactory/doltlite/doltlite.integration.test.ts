@@ -579,6 +579,25 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     await ds.query("SELECT dolt_tag('-d', 'detached-tag')");
   });
 
+  it("keeps a detached source alive while another revision replaces it", async () => {
+    await ds.query("SELECT dolt_tag('race-tag', 'main')");
+    const head = await ds.query("SELECT dolt_hashof('main') AS h");
+    const result = await qf.queryMultiple(
+      async query => {
+        const first = await query("SELECT id FROM users ORDER BY id");
+        // Requesting a different revision mid-unit retires race-tag's
+        // source; it must survive until this unit finishes.
+        await qf.getTableNames({ ...dbArgs, refName: head[0].h });
+        const second = await query("SELECT id FROM users ORDER BY id");
+        return { first, second };
+      },
+      dbArgs.databaseName,
+      "race-tag",
+    );
+    expect(result.second).toEqual(result.first);
+    await ds.query("SELECT dolt_tag('-d', 'race-tag')");
+  });
+
   it("still maps unknown refs to a clear error", async () => {
     await expect(
       qf.getTableNames({ ...dbArgs, refName: "not-a-ref" }),

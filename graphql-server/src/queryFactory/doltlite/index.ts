@@ -28,6 +28,22 @@ import * as qh from "./queries";
 
 const PREVIEW_BRANCH = "__workbench_merge_preview";
 
+type RevisionSource = {
+  revision: string;
+  ds: Promise<DataSource>;
+  activeRunners: number;
+  retired: boolean;
+};
+
+function destroyIfRetired(source: RevisionSource): void {
+  if (!source.retired || source.activeRunners > 0) return;
+  void source.ds
+    .then(async ds => {
+      if (ds.isInitialized) await ds.destroy();
+    })
+    .catch(() => undefined);
+}
+
 export class DoltLiteQueryFactory
   extends SqliteQueryFactory
   implements QueryFactory
@@ -51,8 +67,9 @@ export class DoltLiteQueryFactory
   // engine's `file@revision` syntax, so the four query entry points fall
   // back to it when checkout rejects the ref. One page view fans out into
   // many resolver calls for the same revision, so the connection is cached
-  // until a different revision is requested.
-  private revisionSource?: { revision: string; ds: Promise<DataSource> };
+  // until a different revision is requested; the replaced source is only
+  // destroyed once its in-flight runners finish.
+  private revisionSource?: RevisionSource;
 
   async query<T>(
     q: string,
@@ -119,22 +136,29 @@ export class DoltLiteQueryFactory
       ) {
         throw err;
       }
-      const ds = await this.getRevisionDS(refName);
-      const qr = ds.createQueryRunner();
+      const source = this.acquireRevisionSource(refName);
       try {
-        await qr.connect();
-        return await detached(qr);
+        const ds = await source.ds;
+        const qr = ds.createQueryRunner();
+        try {
+          await qr.connect();
+          return await detached(qr);
+        } finally {
+          await qr.release();
+        }
       } finally {
-        await qr.release();
+        source.activeRunners -= 1;
+        destroyIfRetired(source);
       }
     }
   }
 
-  private async getRevisionDS(revision: string): Promise<DataSource> {
-    if (this.revisionSource?.revision === revision) {
-      return this.revisionSource.ds;
+  private acquireRevisionSource(revision: string): RevisionSource {
+    const current = this.revisionSource;
+    if (current?.revision === revision) {
+      current.activeRunners += 1;
+      return current;
     }
-    const previous = this.revisionSource;
     const dsPromise = (async () => {
       const ds = new DataSource({
         type: "better-sqlite3",
@@ -143,21 +167,26 @@ export class DoltLiteQueryFactory
         statementCacheSize: 0,
         synchronize: false,
       });
-      try {
-        await ds.initialize();
-      } catch (err) {
-        if (this.revisionSource?.revision === revision) {
-          this.revisionSource = undefined;
-        }
-        throw err;
-      }
+      await ds.initialize();
       return ds;
     })();
-    this.revisionSource = { revision, ds: dsPromise };
-    void previous?.ds
-      .then(async previousDs => previousDs.destroy())
-      .catch(() => undefined);
-    return dsPromise;
+    const source: RevisionSource = {
+      revision,
+      ds: dsPromise,
+      activeRunners: 1,
+      retired: false,
+    };
+    dsPromise.catch(() => {
+      if (this.revisionSource === source) {
+        this.revisionSource = undefined;
+      }
+    });
+    this.revisionSource = source;
+    if (current) {
+      current.retired = true;
+      destroyIfRetired(current);
+    }
+    return source;
   }
 
   async callProcedure(args: t.CallProcedureArgs): Promise<t.MutationResult> {
