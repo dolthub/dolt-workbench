@@ -495,8 +495,8 @@ export class DoltLiteQueryFactory
 
   // Introspects a table's columns at a specific commit so diffs across
   // schema changes see both sides' historical columns. pragma introspection
-  // follows the session's ref; WORKING has no revision database, so it reads
-  // at the session branch.
+  // follows the session's ref; the working-set pseudo-refs have no revision
+  // database, so they read at the session branch.
   private async describeAtRef(
     args: t.RowDiffArgs,
     tableName: string,
@@ -506,7 +506,7 @@ export class DoltLiteQueryFactory
       qh.describeTableQuery,
       [tableName],
       args.databaseName,
-      commitId === "WORKING" ? args.refName : commitId,
+      isWorkingSetRef(commitId) ? args.refName : commitId,
     );
   }
 
@@ -518,7 +518,7 @@ export class DoltLiteQueryFactory
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
     return this.queryMultiple(
       async query => {
-        if (args.refName === "WORKING") {
+        if (isWorkingSetRef(args.refName)) {
           const columns = await query(qh.describeTableQuery, [args.tableName]);
           const rows = await query(
             qh.getOneSidedTableRowsQuery(args.tableName, columns),
@@ -1015,6 +1015,13 @@ function bindableSystemTablePks(pkValues: t.ColumnValue[]): t.ColumnValue[] {
     }
     return pk;
   });
+}
+
+// The working-set pseudo-refs are not revision databases: they resolve
+// against the session branch's working set instead. The workbench never
+// stages tables, so STAGED and WORKING read the same live state.
+function isWorkingSetRef(ref?: string): boolean {
+  return ref === "WORKING" || ref === "STAGED";
 }
 
 async function rollbackIfActive(query: t.ParQuery): Promise<void> {

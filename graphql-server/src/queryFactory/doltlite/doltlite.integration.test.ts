@@ -282,6 +282,20 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     });
     expect(diff.length).toEqual(1);
     expect(diff[0].diff_type).toEqual("modified");
+
+    // The working-diff page requests the STAGED..WORKING range; STAGED must
+    // resolve like WORKING and keep pk flags so tables aren't "keyless".
+    const staged = await qf.getRowDiffs({
+      ...dbArgs,
+      tableName: "users",
+      fromTableName: "users",
+      toTableName: "users",
+      fromCommitId: "STAGED",
+      toCommitId: "WORKING",
+      offset: 0,
+    });
+    expect(staged.diff.length).toEqual(1);
+    expect(staged.colsUnion.find(c => c.Field === "id")?.Key).toEqual("PRI");
     await ds.query("SELECT dolt_reset('--hard')");
   });
 
