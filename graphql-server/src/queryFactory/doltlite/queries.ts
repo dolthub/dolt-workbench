@@ -159,6 +159,13 @@ export const callFetchRemote = `SELECT dolt_fetch(?)`;
 // Single-arg clone into the current (required to be empty) database file.
 export const callDoltClone = `SELECT dolt_clone(?)`;
 
+// DoltLite requires dolt_test_run arguments to be SQL literals so its
+// virtual table can resolve them during planning.
+export const doltTestRun = (testIdentifier?: string): string =>
+  `SELECT * FROM dolt_test_run(${
+    testIdentifier ? escapeStringLiteral(testIdentifier) : ""
+  })`;
+
 // TAGS
 
 export const callDeleteTag = `SELECT dolt_tag('-d', ?)`;

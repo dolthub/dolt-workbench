@@ -1,10 +1,13 @@
 import { randomUUID } from "crypto";
-import { DataSource, EntityManager, QueryRunner } from "typeorm";
+import { DataSource, EntityManager, InsertResult, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { doltliteDriver } from "../../connections/doltliteDriver";
 import { CommitDiffType } from "../../diffSummaries/diffSummary.enums";
 import { convertToStringForQuery } from "../../rowDiffs/rowDiff.enums";
-import { DoltSystemTable } from "../../systemTables/systemTable.enums";
+import {
+  DoltSystemTable,
+  systemTableValues,
+} from "../../systemTables/systemTable.enums";
 import { ROW_LIMIT } from "../../utils";
 import { buildCallProcedure } from "../build/buildCallProcedure";
 import { buildDeleteRow } from "../build/buildDeleteRow";
@@ -18,6 +21,7 @@ import {
 import * as dem from "../dolt/doltEntityManager";
 import {
   getAuthorString,
+  getTestIdentifierArg,
   handleRefNotFound,
   introspectColumns,
   pkValuesWithTypes,
@@ -28,6 +32,7 @@ import * as t from "../types";
 import * as qh from "./queries";
 
 const PREVIEW_BRANCH_PREFIX = "__workbench_merge_preview_";
+const DOLT_SYSTEM_TABLES = new Set<string>(systemTableValues);
 
 type RevisionSource = {
   revision: string;
@@ -52,6 +57,15 @@ export class DoltLiteQueryFactory
   implements QueryFactory
 {
   isDolt = true;
+
+  async getTableNames(
+    args: t.RefArgs,
+    filterSystemTables?: boolean,
+  ): Promise<string[]> {
+    const tables = await super.getTableNames(args);
+    if (!filterSystemTables) return tables;
+    return tables.filter(table => !DOLT_SYSTEM_TABLES.has(table));
+  }
 
   // DoltLite has no `USE db/branch`; branch scoping is done by checking out
   // the ref inside the serialized query unit.
@@ -838,9 +852,6 @@ export class DoltLiteQueryFactory
     );
   }
 
-  // Matches the dolt factory; requires the dolt_docs system table, which
-  // DoltLite does not provide yet, so saves fail with "no such table" until
-  // engine support lands.
   async saveDoc(args: t.SaveDocArgs): Promise<t.MutationResult> {
     return this.queryForBuilder(
       async em => {
@@ -958,16 +969,47 @@ export class DoltLiteQueryFactory
 
   // TESTS
 
-  async getTests(_args: t.RefArgs): t.PR {
-    return [];
+  async getTests(args: t.RefArgs): t.PR {
+    return this.queryForBuilder(
+      async em => dem.getDoltTests(em),
+      args.databaseName,
+      args.refName,
+    );
   }
 
-  async runTests(_args: t.RunTestsArgs): t.PR {
-    throw new Error("Dolt tests are not supported for DoltLite databases");
+  async runTests(args: t.RunTestsArgs): t.PR {
+    const testIdentifier = getTestIdentifierArg(args.testIdentifier);
+    return this.query(
+      qh.doltTestRun(testIdentifier),
+      undefined,
+      args.databaseName,
+      args.refName,
+    );
   }
 
-  async saveTests(_args: t.SaveTestsArgs): Promise<never> {
-    throw new Error("Dolt tests are not supported for DoltLite databases");
+  async saveTests(args: t.SaveTestsArgs): Promise<InsertResult> {
+    return this.queryForBuilder(
+      async em => {
+        const result = await dem.saveDoltTests(em, args.tests.list);
+        // better-sqlite3 does not populate generatedMaps for virtual-table
+        // inserts, but the resolver returns those maps as the saved list.
+        if (result.generatedMaps.length === 0) {
+          result.generatedMaps = args.tests.list.map(test => {
+            return {
+              test_name: test.testName,
+              test_group: test.testGroup,
+              test_query: test.testQuery,
+              assertion_type: test.assertionType,
+              assertion_comparator: test.assertionComparator,
+              assertion_value: test.assertionValue,
+            };
+          });
+        }
+        return result;
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 }
 

@@ -25,13 +25,18 @@ export function buildSaveDoc(
   const escapedDocName = escape(DOC_NAME);
   const escapedDocText = escape(DOC_TEXT);
 
-  const usesOnConflict = ["postgres", "better-sqlite3"].includes(
-    em.connection.options.type,
-  );
-  const upsertClause = usesOnConflict
-    ? `ON CONFLICT (${escapedDocName}) DO UPDATE SET ${escapedDocText} = :${pText}`
-    : `ON DUPLICATE KEY UPDATE ${escapedDocText} = VALUES(${escapedDocText})`;
-  const namedSql = `INSERT INTO ${escapedTarget} (${escapedDocName}, ${escapedDocText}) VALUES (:${pName}, :${pText}) ${upsertClause}`;
+  let namedSql: string;
+  if (em.connection.options.type === "better-sqlite3") {
+    // SQLite does not allow ON CONFLICT upserts against virtual tables, but
+    // INSERT OR REPLACE is supported by DoltLite's dolt_docs module.
+    namedSql = `INSERT OR REPLACE INTO ${escapedTarget} (${escapedDocName}, ${escapedDocText}) VALUES (:${pName}, :${pText})`;
+  } else {
+    const upsertClause =
+      em.connection.options.type === "postgres"
+        ? `ON CONFLICT (${escapedDocName}) DO UPDATE SET ${escapedDocText} = :${pText}`
+        : `ON DUPLICATE KEY UPDATE ${escapedDocText} = VALUES(${escapedDocText})`;
+    namedSql = `INSERT INTO ${escapedTarget} (${escapedDocName}, ${escapedDocText}) VALUES (:${pName}, :${pText}) ${upsertClause}`;
+  }
 
   const [sql, rawParams] = driver.escapeQueryWithParameters(
     namedSql,

@@ -563,15 +563,44 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(rows).toEqual([]);
   });
 
-  // DoltLite has no dolt_docs system table yet. getDocs maps the missing
-  // table to "no docs" like the dolt factory, and saves surface the engine
-  // error. Expand this to full save/list/delete coverage once the engine
-  // ships dolt_docs.
-  it("treats missing dolt_docs as no docs and surfaces save errors", async () => {
-    expect(await qf.getDocs(dbArgs)).toBeUndefined();
-    await expect(
-      qf.saveDoc({ ...dbArgs, docName: "README.md", markdown: "# hello" }),
-    ).rejects.toThrow(/no such table: dolt_docs/);
+  it("lists, saves, updates, and deletes docs", async () => {
+    const initialDocs = await qf.getDocs(dbArgs);
+    expect(initialDocs?.map(d => d.doc_name)).toEqual(["AGENT.md"]);
+
+    const saved = await qf.saveDoc({
+      ...dbArgs,
+      docName: "README.md",
+      markdown: "# hello",
+    });
+    expect(saved.rowsAffected).toEqual(1);
+    expect(saved.queryString).toContain('INSERT OR REPLACE INTO "dolt_docs"');
+    let docs = await qf.getDocs(dbArgs);
+    expect(docs?.map(d => d.doc_name)).toEqual(["README.md", "AGENT.md"]);
+    expect(docs?.find(d => d.doc_name === "README.md")?.doc_text).toEqual(
+      "# hello",
+    );
+    expect(await qf.getTableNames(dbArgs, true)).not.toContain("dolt_docs");
+    expect(await qf.getTableNames(dbArgs)).toContain("dolt_docs");
+
+    await qf.saveDoc({
+      ...dbArgs,
+      docName: "README.md",
+      markdown: "# updated",
+    });
+    docs = await qf.getDocs(dbArgs);
+    expect(docs?.find(d => d.doc_name === "README.md")?.doc_text).toEqual(
+      "# updated",
+    );
+
+    const deleted = await qf.deleteDoc({
+      ...dbArgs,
+      docName: "README.md",
+    });
+    expect(deleted.rowsAffected).toEqual(1);
+    expect((await qf.getDocs(dbArgs))?.map(d => d.doc_name)).toEqual([
+      "AGENT.md",
+    ]);
+    await qf.restoreAllTables(dbArgs);
   });
 
   it("calls dolt procedures through the SELECT verb", async () => {
@@ -701,8 +730,72 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     ).rejects.toThrow();
   });
 
-  it("stubs unsupported features with clear errors", async () => {
+  it("saves, lists, and runs tests", async () => {
     expect(await qf.getTests(dbArgs)).toEqual([]);
+    const saved = await qf.saveTests({
+      ...dbArgs,
+      tests: {
+        list: [
+          {
+            testName: "count's rows",
+            testGroup: "basic",
+            testQuery: "SELECT * FROM users WHERE id = 1",
+            assertionType: "expected_rows",
+            assertionComparator: "==",
+            assertionValue: "1",
+          },
+          {
+            testName: "single value",
+            testGroup: "basic",
+            testQuery: "SELECT count(*) FROM users",
+            assertionType: "expected_single_value",
+            assertionComparator: ">=",
+            assertionValue: "1",
+          },
+        ],
+      },
+    });
+    expect(saved.generatedMaps.map(t => t.test_name)).toEqual([
+      "count's rows",
+      "single value",
+    ]);
+    expect((await qf.getTests(dbArgs)).map(t => t.test_name)).toEqual([
+      "count's rows",
+      "single value",
+    ]);
+    expect(await qf.getTableNames(dbArgs, true)).not.toContain("dolt_tests");
+    expect(await qf.getTableNames(dbArgs)).toContain("dolt_tests");
+
+    const all = await qf.runTests(dbArgs);
+    expect(all.map(t => t.status)).toEqual(["PASS", "PASS"]);
+    const byName = await qf.runTests({
+      ...dbArgs,
+      testIdentifier: { testName: "count's rows" },
+    });
+    expect(byName).toEqual([
+      {
+        test_name: "count's rows",
+        test_group_name: "basic",
+        query: "SELECT * FROM users WHERE id = 1",
+        status: "PASS",
+        message: "",
+      },
+    ]);
+    const byGroup = await qf.runTests({
+      ...dbArgs,
+      testIdentifier: { groupName: "basic" },
+    });
+    expect(byGroup.map(t => t.test_name)).toEqual([
+      "count's rows",
+      "single value",
+    ]);
+    const cleared = await qf.saveTests({
+      ...dbArgs,
+      tests: { list: [] },
+    });
+    expect(cleared.generatedMaps).toEqual([]);
+    expect(await qf.getTests(dbArgs)).toEqual([]);
+    await qf.restoreAllTables(dbArgs);
   });
 
   it("returns remote branches from dolt_remote_branches", async () => {
