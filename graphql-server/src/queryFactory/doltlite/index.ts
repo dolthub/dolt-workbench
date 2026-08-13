@@ -1,4 +1,3 @@
-import { randomUUID } from "crypto";
 import { DataSource, EntityManager, InsertResult, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import { doltliteDriver } from "../../connections/doltliteDriver";
@@ -31,8 +30,9 @@ import { SqliteQueryFactory } from "../sqlite";
 import * as t from "../types";
 import * as qh from "./queries";
 
-const PREVIEW_BRANCH_PREFIX = "__workbench_merge_preview_";
 const DOLT_SYSTEM_TABLES = new Set<string>(systemTableValues);
+const MERGE_PREVIEW_UNSUPPORTED =
+  "Merge conflict previews are not supported for DoltLite";
 
 type RevisionSource = {
   revision: string;
@@ -771,59 +771,14 @@ export class DoltLiteQueryFactory
     );
   }
 
-  async getPullConflictsSummary(args: t.BranchesArgs): t.PR {
-    return this.previewMergeConflicts(args, async query =>
-      query(qh.conflictsSummaryQuery),
-    );
+  async getPullConflictsSummary(_args: t.BranchesArgs): t.PR {
+    throw new Error(MERGE_PREVIEW_UNSUPPORTED);
   }
 
   async getPullRowConflicts(
-    args: t.BranchesArgs & { tableName: string; offset: number },
+    _args: t.BranchesArgs & { tableName: string; offset: number },
   ): t.PR {
-    return this.previewMergeConflicts(args, async query =>
-      query(qh.getConflictRowsQuery(args.tableName), [
-        ROW_LIMIT + 1,
-        args.offset,
-      ]),
-    );
-  }
-
-  // DoltLite has no preview_merge_conflicts functions, but a conflicted
-  // merge inside an explicit transaction materializes dolt_conflicts for
-  // inspection. The merge runs on a throwaway branch so that the clean-merge
-  // case (which auto-commits) never touches the real branch, then everything
-  // is rolled back and the branch deleted.
-  private async previewMergeConflicts(
-    args: t.BranchesArgs,
-    read: (query: t.ParQuery) => t.PR,
-  ): t.PR {
-    return this.queryMultiple(async query => {
-      const previewBranch = `${PREVIEW_BRANCH_PREFIX}${randomUUID()}`;
-      await query(qh.callNewBranch, [previewBranch, args.toBranchName]);
-      await query(qh.callCheckout, [previewBranch]);
-      try {
-        let conflicted = false;
-        await query("BEGIN");
-        try {
-          await query(qh.callMergeQuery, [
-            args.fromBranchName,
-            "merge conflict preview",
-          ]);
-        } catch (err) {
-          if (!err.message.includes("conflict")) throw err;
-          conflicted = true;
-        }
-        return conflicted ? await read(query) : [];
-      } finally {
-        await rollbackIfActive(query);
-        try {
-          await query(qh.callCheckout, [args.toBranchName]);
-          await query(qh.callDeleteBranch, [previewBranch]);
-        } catch {
-          // cleanup is best-effort; surface the original error instead
-        }
-      }
-    }, args.databaseName);
+    throw new Error(MERGE_PREVIEW_UNSUPPORTED);
   }
 
   async restoreAllTables(args: t.RefArgs): t.PR {

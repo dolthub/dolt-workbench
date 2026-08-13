@@ -480,7 +480,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(cfg[0].v).toEqual("doltlite");
   });
 
-  it("surfaces conflicts from callMerge and resolves them via callMergeWithResolveConflicts", async () => {
+  it("rejects unsupported conflict previews and resolves conflicts during merge", async () => {
     await qf.createNewBranch({
       ...dbArgs,
       branchName: "conflicting",
@@ -494,43 +494,20 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
       queryString: "UPDATE users SET name='other-name' WHERE id=1",
     });
     await ds.query("SELECT dolt_commit('-Am', 'conflicting name')");
+    await ds.query("SELECT dolt_checkout('main')");
 
-    const summary = await qf.getPullConflictsSummary({
+    const branches = {
       ...dbArgs,
       fromBranchName: "conflicting",
       toBranchName: "main",
-    });
-    expect(summary).toEqual([{ table: "users", num_data_conflicts: 1 }]);
-
-    const conflictRows = await qf.getPullRowConflicts({
-      ...dbArgs,
-      fromBranchName: "conflicting",
-      toBranchName: "main",
-      tableName: "users",
-      offset: 0,
-    });
-    expect(conflictRows.length).toEqual(1);
-    expect(conflictRows[0].our_name).toEqual("main-name");
-    expect(conflictRows[0].their_name).toEqual("other-name");
-
-    // The preview must leave no trace: no leftover branch, data untouched,
-    // and a user branch that happens to share the preview prefix survives.
-    await ds.query(
-      "SELECT dolt_branch('__workbench_merge_preview_mine', 'main')",
+    };
+    await expect(qf.getPullConflictsSummary(branches)).rejects.toThrow(
+      "Merge conflict previews are not supported for DoltLite",
     );
-    await qf.getPullConflictsSummary({
-      ...dbArgs,
-      fromBranchName: "conflicting",
-      toBranchName: "main",
-    });
-    const branches = await qf.getAllBranches(dbArgs);
-    const previewLike = branches
-      .map(b => b.name)
-      .filter(n => n.startsWith("__workbench_merge_preview"));
-    expect(previewLike).toEqual(["__workbench_merge_preview_mine"]);
-    await ds.query(
-      "SELECT dolt_branch('-D', '__workbench_merge_preview_mine')",
-    );
+    await expect(
+      qf.getPullRowConflicts({ ...branches, tableName: "users", offset: 0 }),
+    ).rejects.toThrow("Merge conflict previews are not supported for DoltLite");
+
     const mainRows = await ds.query("SELECT name FROM users WHERE id=1");
     expect(mainRows[0].name).toEqual("main-name");
 

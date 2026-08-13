@@ -1,4 +1,8 @@
-import { diffSelectClause, escapeStringLiteral } from "../build/buildUtils";
+import {
+  diffSelectClause,
+  escapeIdentifier,
+  escapeStringLiteral,
+} from "../build/buildUtils";
 import { RawRows } from "../types";
 
 // TABLE
@@ -13,6 +17,8 @@ export const describeTableQuery = `SELECT
 FROM pragma_table_info(?) ORDER BY cid`;
 
 export const listTableColumnsQuery = `SELECT name FROM pragma_table_info(?) ORDER BY cid`;
+
+export const callResetHard = `SELECT dolt_reset('--hard')`;
 
 // BRANCHES
 
@@ -125,16 +131,7 @@ export const callConfig = `SELECT dolt_config(?, ?)`;
 
 export const getConfig = `SELECT dolt_config(?) AS value`;
 
-// dolt_conflicts reports a single conflict count per table; the workbench
-// model treats them all as data conflicts.
-export const conflictsSummaryQuery = `SELECT "table", num_conflicts AS num_data_conflicts FROM dolt_conflicts`;
-
-export function getConflictRowsQuery(tableName: string): string {
-  return `SELECT * FROM ${escapeIdentifier(
-    `dolt_conflicts_${tableName}`,
-  )} LIMIT ? OFFSET ?`;
-}
-
+// Resolves conflicts materialized by an actual merge before it is committed.
 export const getResolveConflicts = (numTables: number) =>
   `SELECT dolt_conflicts_resolve(?, ${Array.from(
     { length: numTables },
@@ -174,11 +171,3 @@ export const getCallNewTag = (hasMessage = false, hasAuthor = false) =>
   `SELECT dolt_tag(?, ?${hasMessage ? `, '-m', ?` : ""}${
     hasAuthor ? `, '--author', ?` : ""
   })`;
-
-// UTILS
-
-export const callResetHard = `SELECT dolt_reset('--hard')`;
-
-function escapeIdentifier(name: string): string {
-  return `"${name.replace(/"/g, '""')}"`;
-}
