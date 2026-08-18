@@ -166,10 +166,7 @@ describe("ConnectionSetup", () => {
     const onSubmit = jest.fn(async () => undefined);
     Object.defineProperty(window, "ipc", {
       configurable: true,
-      value: {
-        invoke,
-        getDoltLiteDatabaseDestination,
-      },
+      value: { invoke },
     });
 
     const { user } = renderSetup({ onSubmit });
@@ -205,14 +202,17 @@ describe("ConnectionSetup", () => {
   it("creates a new DoltLite database only when the form is submitted", async () => {
     const directory = path.resolve("My Databases");
     const filePath = path.join(directory, "payroll.db");
-    const invoke = jest.fn(async (channel: string) => {
+    const invoke = jest.fn(async (channel: string, ...args: string[]) => {
       if (channel === "select-sqlite-database-directory") return directory;
+      if (channel === "get-doltlite-database-destination") {
+        return getDoltLiteDatabaseDestination(args[0], args[1]);
+      }
       return undefined;
     });
     const onSubmit = jest.fn(async () => undefined);
     Object.defineProperty(window, "ipc", {
       configurable: true,
-      value: { invoke, getDoltLiteDatabaseDestination },
+      value: { invoke },
     });
 
     const { user } = renderSetup({ onSubmit });
@@ -225,9 +225,11 @@ describe("ConnectionSetup", () => {
     await user.click(screen.getByRole("button", { name: "Choose Folder" }));
     await user.type(screen.getByPlaceholderText("my-database"), "payroll");
 
-    expect(screen.getByText(/This will create/)).toHaveTextContent(
-      `This will create payroll.db in ${directory}.`,
-    );
+    await waitFor(() => {
+      expect(screen.getByText(/This will create/)).toHaveTextContent(
+        `This will create payroll.db in ${directory}.`,
+      );
+    });
     expect(invoke).not.toHaveBeenCalledWith(
       "create-doltlite-database-file",
       expect.anything(),
@@ -260,13 +262,16 @@ describe("ConnectionSetup", () => {
   it("configures a DoltLite clone destination and preserves a custom name", async () => {
     const directory = path.resolve("My Databases");
     const onCloneDoltLiteDatabase = jest.fn(async () => undefined);
-    const invoke = jest.fn(async (channel: string) => {
+    const invoke = jest.fn(async (channel: string, ...args: string[]) => {
       if (channel === "select-sqlite-database-directory") return directory;
+      if (channel === "get-doltlite-database-destination") {
+        return getDoltLiteDatabaseDestination(args[0], args[1]);
+      }
       return undefined;
     });
     Object.defineProperty(window, "ipc", {
       configurable: true,
-      value: { invoke, getDoltLiteDatabaseDestination },
+      value: { invoke },
     });
 
     const { user } = renderSetup({
@@ -294,9 +299,11 @@ describe("ConnectionSetup", () => {
     await user.type(newInput, "employees-copy");
 
     expect(remoteInput).toHaveValue("employees");
-    expect(screen.getByText(/This will create/)).toHaveTextContent(
-      `This will create employees-copy.db in ${directory}.`,
-    );
+    await waitFor(() => {
+      expect(screen.getByText(/This will create/)).toHaveTextContent(
+        `This will create employees-copy.db in ${directory}.`,
+      );
+    });
 
     fireEvent.submit(screen.getByTestId("connection-tab-form"));
 
