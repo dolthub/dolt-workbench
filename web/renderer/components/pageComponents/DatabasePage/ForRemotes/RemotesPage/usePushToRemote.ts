@@ -25,7 +25,7 @@ export default function usePushToRemote(
     getDefaultState(params.refName || defaultBranchName),
   );
 
-  const { mutateFn: push, ...res } = useMutation({
+  const { mutateFn: push } = useMutation({
     hook: usePushToRemoteMutation,
     refetchQueries: remoteBranch
       ? refetchRemoteBranchesQueries({
@@ -45,7 +45,7 @@ export default function usePushToRemote(
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
-    setState({ loading: true });
+    setState({ loading: true, err: undefined, message: "" });
     const pushRes = await push({
       variables: {
         databaseName: params.databaseName,
@@ -58,7 +58,7 @@ export default function usePushToRemote(
     });
     setState({ loading: false });
     if (!pushRes.data) {
-      setState({ err: res.err });
+      setState({ err: pushRes.error ?? new Error("Push failed") });
       return;
     }
     const msg = pushRes.data.pushToRemote.message;

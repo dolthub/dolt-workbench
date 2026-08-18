@@ -887,9 +887,11 @@ export class DoltLiteQueryFactory
   }
 
   async callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR {
+    const branchName = args.branchName?.split(":", 1)[0];
     return this.queryMultiple(
       async query => {
-        await query(qh.callPushRemote, [args.remoteName, args.branchName]);
+        await query(qh.callPushRemote, [args.remoteName, branchName]);
+        await query(qh.callFetchRemote, [args.remoteName]);
         return [{ status: "0", message: "" }];
       },
       args.databaseName,
