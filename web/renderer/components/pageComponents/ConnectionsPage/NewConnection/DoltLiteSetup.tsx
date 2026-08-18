@@ -9,12 +9,7 @@ import {
 } from "@dolthub/react-components";
 import { ReactNode, SyntheticEvent, useState } from "react";
 import { useConfigContext } from "./context/config";
-import {
-  getCanSubmit,
-  getDoltLiteDatabaseFileName,
-  getDoltLiteDatabaseFilePath,
-  getSqliteConnectionUrl,
-} from "./context/utils";
+import { getCanSubmit, getSqliteConnectionUrl } from "./context/utils";
 import css from "./index.module.css";
 
 enum SetupOption {
@@ -45,14 +40,17 @@ export default function DoltLiteSetup({
   const [option, setOption] = useState(SetupOption.Existing);
   const [directory, setDirectory] = useState("");
   const isExisting = option === SetupOption.Existing;
-  const fileName = getDoltLiteDatabaseFileName(state.database);
+  const destination = window.ipc?.getDoltLiteDatabaseDestination(
+    directory,
+    state.database,
+  );
 
   const setDestination = (dir: string, database: string) => {
-    const filePath = getDoltLiteDatabaseFilePath(dir, database);
+    const next = window.ipc?.getDoltLiteDatabaseDestination(dir, database);
     setState({
       database,
-      name: filePath,
-      connectionUrl: filePath ? getSqliteConnectionUrl(filePath) : "",
+      name: next?.filePath ?? "",
+      connectionUrl: next ? getSqliteConnectionUrl(next.filePath) : "",
     });
   };
 
@@ -94,7 +92,7 @@ export default function DoltLiteSetup({
   };
 
   const { canSubmit, message } = getCanSubmit(state);
-  const showSummary = directory && fileName;
+  const showSummary = directory && destination;
   const textField = (
     value: string,
     setValue: (value: string) => void,
@@ -181,7 +179,7 @@ export default function DoltLiteSetup({
             )}
             {showSummary && (
               <p className={css.createSqliteSummary}>
-                This will create <strong>{fileName}</strong> in{" "}
+                This will create <strong>{destination.fileName}</strong> in{" "}
                 <strong>{directory}</strong>.
               </p>
             )}

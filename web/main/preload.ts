@@ -1,4 +1,5 @@
 import { contextBridge, ipcRenderer } from "electron";
+import { getDoltLiteDatabaseDestination } from "./doltliteDatabase";
 
 export type McpServerConfig = {
   host: string;
@@ -67,6 +68,7 @@ export type SessionInfo = {
 };
 
 const handler = {
+  getDoltLiteDatabaseDestination,
   async invoke(channel: string, ...args: unknown[]) {
     return ipcRenderer.invoke(channel, ...args);
   },

@@ -31,6 +31,7 @@ import {
   getErrorMessage,
   removeDoltServerFolder,
 } from "./helpers/removeDoltServerFolder";
+import { isDoltLiteDatabaseFilePath } from "./doltliteDatabase";
 
 const { updateElectronApp } = require("update-electron-app");
 updateElectronApp();
@@ -305,7 +306,7 @@ ipcMain.handle("select-sqlite-database-directory", async () => {
 });
 
 ipcMain.handle("create-doltlite-database-file", async (_, filePath: string) => {
-  if (!path.isAbsolute(filePath) || path.extname(filePath) !== ".db") {
+  if (!isDoltLiteDatabaseFilePath(filePath)) {
     throw new Error("DoltLite database path must be an absolute .db path");
   }
 

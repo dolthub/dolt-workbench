@@ -1,13 +1,12 @@
 import { fireEvent, screen, waitFor } from "@testing-library/react";
+import path from "path";
 import { ReactNode, useState } from "react";
 import { setup } from "@lib/testUtils.test";
+import { getDoltLiteDatabaseDestination } from "../../../../../main/doltliteDatabase";
 import ConnectionTabs from "./ConnectionTabs";
 import { ConfigContext } from "./context/config";
 import { ConfigContextType, ConfigState, defaultState } from "./context/state";
-import {
-  getDoltLiteDatabaseFilePath,
-  getSqliteConnectionUrl,
-} from "./context/utils";
+import { getSqliteConnectionUrl } from "./context/utils";
 
 const originalForElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON;
 
@@ -153,7 +152,10 @@ describe("ConnectionSetup", () => {
     const onSubmit = jest.fn(async () => undefined);
     Object.defineProperty(window, "ipc", {
       configurable: true,
-      value: { invoke },
+      value: {
+        invoke,
+        getDoltLiteDatabaseDestination,
+      },
     });
 
     const { user } = renderSetup({ onSubmit });
@@ -187,8 +189,8 @@ describe("ConnectionSetup", () => {
   });
 
   it("creates a new DoltLite database only when the form is submitted", async () => {
-    const directory = "/Users/me/My Databases";
-    const filePath = `${directory}/payroll.db`;
+    const directory = path.resolve("My Databases");
+    const filePath = path.join(directory, "payroll.db");
     const invoke = jest.fn(async (channel: string) => {
       if (channel === "select-sqlite-database-directory") return directory;
       return undefined;
@@ -196,7 +198,7 @@ describe("ConnectionSetup", () => {
     const onSubmit = jest.fn(async () => undefined);
     Object.defineProperty(window, "ipc", {
       configurable: true,
-      value: { invoke },
+      value: { invoke, getDoltLiteDatabaseDestination },
     });
 
     const { user } = renderSetup({ onSubmit });
@@ -228,12 +230,15 @@ describe("ConnectionSetup", () => {
     });
   });
 
-  it("builds DoltLite database paths for macOS and Windows", () => {
-    expect(getDoltLiteDatabaseFilePath("/Users/me/data/", "payroll")).toBe(
-      "/Users/me/data/payroll.db",
-    );
+  it("builds DoltLite destinations with the platform path implementation", () => {
+    const directory = path.resolve("databases");
+
+    expect(getDoltLiteDatabaseDestination(directory, "payroll.db")).toEqual({
+      fileName: "payroll.db",
+      filePath: path.join(directory, "payroll.db"),
+    });
     expect(
-      getDoltLiteDatabaseFilePath("C:\\Users\\me\\data", "payroll.db"),
-    ).toBe("C:\\Users\\me\\data\\payroll.db");
+      getDoltLiteDatabaseDestination(directory, path.join("nested", "payroll")),
+    ).toBeUndefined();
   });
 });
