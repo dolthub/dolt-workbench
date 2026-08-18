@@ -29,11 +29,10 @@ export function ConfigProvider({ children }: Props) {
   const router = useRouter();
 
   const [state, setState] = useSetState(defaultState);
-  const { mutateFn, ...res } = useMutation({
+  const { mutateFn: addDatabaseConnection, ...res } = useMutation({
     hook: useAddDatabaseConnectionMutation,
     refetchQueries: [{ query: DatabasesByConnectionDocument }],
   });
-
   const connectionsRes = useStoredConnectionsQuery();
   const [err, setErr] = useState<Error | undefined>(
     res.err || connectionsRes.error,
@@ -65,30 +64,33 @@ export function ConfigProvider({ children }: Props) {
     setState(defaultState);
   };
 
+  const addCurrentDatabaseConnection = async () =>
+    addDatabaseConnection({
+      variables: {
+        name: state.name,
+        connectionUrl: getConnectionUrl(state),
+        hideDoltFeatures: state.hideDoltFeatures,
+        useSSL: state.useSSL,
+        type: state.type,
+        isLocalDolt: state.isLocalDolt,
+        port: state.port,
+      },
+    });
+
+  const openDatabase = async (currentDatabase?: string | null) => {
+    await res.client.clearStore();
+    const { href, as } = maybeDatabase(currentDatabase);
+    await router.push(href, as);
+  };
+
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true });
 
     try {
-      const db = await mutateFn({
-        variables: {
-          name: state.name,
-          connectionUrl: getConnectionUrl(state),
-          hideDoltFeatures: state.hideDoltFeatures,
-          useSSL: state.useSSL,
-          type: state.type,
-          isLocalDolt: state.isLocalDolt,
-          port: state.port,
-        },
-      });
-      await res.client.clearStore();
-      if (!db.data) {
-        return;
-      }
-      const { href, as } = maybeDatabase(
-        db.data.addDatabaseConnection.currentDatabase,
-      );
-      await router.push(href, as);
+      const db = await addCurrentDatabaseConnection();
+      if (!db.data) return;
+      await openDatabase(db.data.addDatabaseConnection.currentDatabase);
     } catch {
       // Handled by res.error
     } finally {

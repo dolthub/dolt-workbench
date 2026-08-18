@@ -1,8 +1,10 @@
 import { ChildProcess } from "child_process";
+import { promises as fs } from "fs";
 import {
   app,
   BrowserWindow,
   crashReporter,
+  dialog,
   ipcMain,
   IpcMainEvent,
   Menu,
@@ -277,6 +279,51 @@ ipcMain.handle("get-headers", (event, arg) => {
 });
 
 ipcMain.handle("get-commit-author", () => getStoredAuthor());
+
+ipcMain.handle("select-sqlite-database-file", async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: "Choose a SQLite or DoltLite database",
+    properties: ["openFile"],
+    filters: [
+      {
+        name: "SQLite databases",
+        extensions: ["db"],
+      },
+    ],
+  });
+
+  return result.canceled ? undefined : result.filePaths[0];
+});
+
+ipcMain.handle("select-sqlite-database-directory", async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: "Choose where to create the DoltLite database",
+    properties: ["openDirectory", "createDirectory"],
+  });
+
+  return result.canceled ? undefined : result.filePaths[0];
+});
+
+ipcMain.handle("create-doltlite-database-file", async (_, filePath: string) => {
+  if (!path.isAbsolute(filePath) || path.extname(filePath) !== ".db") {
+    throw new Error("DoltLite database path must be an absolute .db path");
+  }
+
+  try {
+    const file = await fs.open(filePath, "wx");
+    await file.close();
+  } catch (err) {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      err.code === "EEXIST"
+    ) {
+      throw new Error(`A database already exists at ${filePath}`);
+    }
+    throw err;
+  }
+});
 
 ipcMain.handle("set-commit-author", (_, author: StoredAuthor) =>
   setStoredAuthor(author),

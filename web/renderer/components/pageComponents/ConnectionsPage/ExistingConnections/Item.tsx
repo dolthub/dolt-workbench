@@ -6,6 +6,10 @@ import { IoMdClose } from "react-icons/io";
 import cx from "classnames";
 import Image from "next/legacy/image";
 import { SyntheticEvent, useState } from "react";
+import {
+  getConnectionDisplayName,
+  isSqliteConnection,
+} from "@lib/databaseConnection";
 import css from "./index.module.css";
 import useAddConnection from "./useAddConnection";
 
@@ -29,6 +33,7 @@ export default function Item({
     Error | undefined
   >(undefined);
   const type = getDatabaseType(conn.type ?? undefined, !!conn.isDolt);
+  const sqlite = isSqliteConnection(conn);
 
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
@@ -81,8 +86,13 @@ export default function Item({
             <div className={css.typeAndName}>
               <DatabaseTypeLabel conn={conn} />
               <Button.Link onClick={onSubmit} className={css.name}>
-                {conn.name}
+                {getConnectionDisplayName(conn)}
               </Button.Link>
+              {sqlite && (
+                <span className={css.filePath} title={conn.name}>
+                  {conn.name}
+                </span>
+              )}
             </div>
             <ErrorMsg err={err ?? startDoltServerError} className={css.err} />
           </div>

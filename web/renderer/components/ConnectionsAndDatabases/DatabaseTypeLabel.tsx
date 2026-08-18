@@ -37,6 +37,22 @@ export function DatabaseTypeLabel({ conn }: Props) {
           <img src="/images/doltgres-logo.png" alt="DoltgreSQL" />
         </span>
       );
+    case "DoltLite":
+      return (
+        <span className={css.label}>
+          <img src="/images/doltlite-logo.png" alt="DoltLite" />
+        </span>
+      );
+    case "SQLite":
+      return (
+        <span className={css.label}>
+          <img
+            src="/images/sqlite-logo.png"
+            alt="SQLite"
+            className={css.sqliteLogo}
+          />
+        </span>
+      );
     default:
       return <span className={css.label}>{type}</span>;
   }
