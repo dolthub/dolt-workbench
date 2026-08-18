@@ -11,6 +11,10 @@ import { FiDatabase } from "react-icons/fi";
 import { excerpt } from "@dolthub/web-utils";
 import { connections } from "@lib/urls";
 import cx from "classnames";
+import {
+  getConnectionDisplayName,
+  isSqliteConnection,
+} from "@lib/databaseConnection";
 import useSelectedConnection from "./useSelectedConnection";
 import Popup from "./Popup";
 import css from "./index.module.css";
@@ -34,7 +38,10 @@ function Inner({ connection, params, setNoDrag, className }: InnerProps) {
   useOnClickOutside(connectionsRef, () => {
     setIsOpen(false);
   });
-  const triggerText = `${excerpt(connection.name, 12)} / ${excerpt(params.databaseName, 12)}`;
+  const connectionName = getConnectionDisplayName(connection);
+  const triggerText = isSqliteConnection(connection)
+    ? excerpt(connectionName, 24)
+    : `${excerpt(connectionName, 12)} / ${excerpt(params.databaseName, 12)}`;
 
   return (
     <div className={cx(css.iconAndSelector, className)}>

@@ -51,4 +51,10 @@ export type ConfigContextType = {
     remoteDbName: string,
     newDbName: string,
   ) => Promise<void>;
+  onCloneDoltLiteDatabase: (
+    e: SyntheticEvent,
+    owner: string,
+    remoteDbName: string,
+    newDbName: string,
+  ) => Promise<void>;
 };

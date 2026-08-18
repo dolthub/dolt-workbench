@@ -10,6 +10,44 @@ export function getConnectionUrl(state: ConfigState): string {
   return `${prefix}://${state.username}${password}@${state.host}:${state.port}/${state.database}`;
 }
 
+export function getSqliteConnectionUrl(filePath: string): string {
+  return `sqlite:${encodeURIComponent(filePath)}`;
+}
+
+export function getDoltLiteDatabaseFileName(databaseName: string): string {
+  const trimmed = databaseName.trim();
+  if (
+    !trimmed ||
+    trimmed === "." ||
+    trimmed === ".." ||
+    /[\\/]/.test(trimmed)
+  ) {
+    return "";
+  }
+
+  const name = trimmed.replace(/\.db$/i, "");
+  return name ? `${name}.db` : "";
+}
+
+export function getDoltLiteDatabaseFilePath(
+  directory: string,
+  databaseName: string,
+): string {
+  const trimmedDirectory = directory.trim();
+  const fileName = getDoltLiteDatabaseFileName(databaseName);
+  if (!trimmedDirectory || !fileName) return "";
+
+  const separator =
+    trimmedDirectory.includes("\\") && !trimmedDirectory.includes("/")
+      ? "\\"
+      : "/";
+  const directoryWithoutTrailingSeparators = trimmedDirectory.replace(
+    /[\\/]+$/,
+    "",
+  );
+  return `${directoryWithoutTrailingSeparators}${separator}${fileName}`;
+}
+
 type GetCanSubmitReturnType = {
   canSubmit: boolean;
   message?: string;

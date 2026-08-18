@@ -6,6 +6,7 @@ import {
 } from "@dolthub/react-components";
 import { useReactiveWidth } from "@dolthub/react-hooks";
 import {
+  DatabaseType,
   DoltDatabaseDetails,
   useAddRemoteMutation,
   useDoltDatabaseDetailsQuery,
@@ -28,11 +29,18 @@ type Props = {
   params: DatabaseParams;
 };
 
+const DOLT_REMOTE_HOST = "https://doltremoteapi.dolthub.com";
+const DOLTLITE_REMOTE_HOST = "https://doltliteremoteapi.dolthub.com";
+
 export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
     useDoltDatabaseDetailsQuery();
   const dbLink = getDbLink(databaseDetails?.doltDatabaseDetails);
+  const dolthubHost =
+    databaseDetails?.doltDatabaseDetails.type === DatabaseType.Sqlite
+      ? DOLTLITE_REMOTE_HOST
+      : DOLT_REMOTE_HOST;
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");
   const [type, setType] = useState(RemoteType.DoltHub);
@@ -82,6 +90,7 @@ export default function AddRemoteForm(props: Props): JSX.Element {
             remoteUrl={remoteUrl}
             setRemoteUrl={setRemoteUrl}
             currentDbName={props.params.databaseName}
+            dolthubHost={dolthubHost}
           />
           <ButtonsWithError
             onCancel={goToRemotesPage}

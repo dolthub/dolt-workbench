@@ -7,6 +7,7 @@ import {
 import {
   DatabasesByConnectionDocument,
   useAddDatabaseConnectionMutation,
+  useDoltCloneMutation,
   useStoredConnectionsQuery,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
@@ -29,9 +30,12 @@ export function ConfigProvider({ children }: Props) {
   const router = useRouter();
 
   const [state, setState] = useSetState(defaultState);
-  const { mutateFn, ...res } = useMutation({
+  const { mutateFn: addDatabaseConnection, ...res } = useMutation({
     hook: useAddDatabaseConnectionMutation,
     refetchQueries: [{ query: DatabasesByConnectionDocument }],
+  });
+  const { mutateFn: doltClone, ...cloneRes } = useMutation({
+    hook: useDoltCloneMutation,
   });
 
   const connectionsRes = useStoredConnectionsQuery();
@@ -54,6 +58,11 @@ export function ConfigProvider({ children }: Props) {
     }
   }, [res.err]);
 
+  useEffect(() => {
+    if (!cloneRes.err) return;
+    setErr(cloneRes.err);
+  }, [cloneRes.err]);
+
   useEffectOnMount(() => {
     if (!forElectron) return;
     window.ipc.getDoltServerError(async (msg: string) => {
@@ -65,30 +74,33 @@ export function ConfigProvider({ children }: Props) {
     setState(defaultState);
   };
 
+  const addCurrentDatabaseConnection = async () =>
+    addDatabaseConnection({
+      variables: {
+        name: state.name,
+        connectionUrl: getConnectionUrl(state),
+        hideDoltFeatures: state.hideDoltFeatures,
+        useSSL: state.useSSL,
+        type: state.type,
+        isLocalDolt: state.isLocalDolt,
+        port: state.port,
+      },
+    });
+
+  const openDatabase = async (currentDatabase?: string | null) => {
+    await res.client.clearStore();
+    const { href, as } = maybeDatabase(currentDatabase);
+    await router.push(href, as);
+  };
+
   const onSubmit = async (e: SyntheticEvent) => {
     e.preventDefault();
     setState({ loading: true });
 
     try {
-      const db = await mutateFn({
-        variables: {
-          name: state.name,
-          connectionUrl: getConnectionUrl(state),
-          hideDoltFeatures: state.hideDoltFeatures,
-          useSSL: state.useSSL,
-          type: state.type,
-          isLocalDolt: state.isLocalDolt,
-          port: state.port,
-        },
-      });
-      await res.client.clearStore();
-      if (!db.data) {
-        return;
-      }
-      const { href, as } = maybeDatabase(
-        db.data.addDatabaseConnection.currentDatabase,
-      );
-      await router.push(href, as);
+      const db = await addCurrentDatabaseConnection();
+      if (!db.data) return;
+      await openDatabase(db.data.addDatabaseConnection.currentDatabase);
     } catch {
       // Handled by res.error
     } finally {
@@ -169,6 +181,48 @@ export function ConfigProvider({ children }: Props) {
     }
   };
 
+  const onCloneDoltLiteDatabase = async (
+    e: SyntheticEvent,
+    owner: string,
+    remoteDbName: string,
+    newDbName: string,
+  ) => {
+    e.preventDefault();
+    setErr(undefined);
+    setState({ loading: true, progress: 0, owner });
+    let interval;
+    let progress = 0;
+
+    try {
+      interval = setInterval(() => {
+        progress += 0.05;
+        setState({ progress: Math.min(progress, 95) });
+      }, 10);
+
+      await window.ipc.invoke("create-doltlite-database-file", state.name);
+
+      const db = await addCurrentDatabaseConnection();
+      if (!db.data) return;
+
+      const clone = await doltClone({
+        variables: {
+          ownerName: owner.trim(),
+          remoteDbName: remoteDbName.trim(),
+          databaseName: newDbName.trim().replace(/\.db$/i, ""),
+        },
+      });
+      if (!clone.success || !clone.data?.doltClone) return;
+
+      setState({ progress: 100 });
+      await openDatabase(db.data.addDatabaseConnection.currentDatabase);
+    } catch (error) {
+      setErr(error instanceof Error ? error : Error(String(error)));
+    } finally {
+      if (interval) clearInterval(interval);
+      setState({ loading: false, progress: 0 });
+    }
+  };
+
   const value = useMemo(() => {
     return {
       state,
@@ -180,6 +234,7 @@ export function ConfigProvider({ children }: Props) {
       storedConnections: connectionsRes.data?.storedConnections,
       onStartDoltServer,
       onCloneDoltHubDatabase,
+      onCloneDoltLiteDatabase,
     };
   }, [
     state,
@@ -190,6 +245,7 @@ export function ConfigProvider({ children }: Props) {
     connectionsRes,
     onStartDoltServer,
     onCloneDoltHubDatabase,
+    onCloneDoltLiteDatabase,
   ]);
 
   return (

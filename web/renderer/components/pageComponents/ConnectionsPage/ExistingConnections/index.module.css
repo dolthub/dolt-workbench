@@ -90,6 +90,14 @@
   background: linear-gradient(#0dc1a0 0%, #29e3c1 100%);
 }
 
+.doltlite {
+  background: linear-gradient(#82b7f0 0%, #b7d9ff 100%);
+}
+
+.sqlite {
+  background: linear-gradient(#003b57 0%, #0f80cc 100%);
+}
+
 .mysql {
   background: linear-gradient(#084550 0%, #00758f 100%);
 }
@@ -138,7 +146,11 @@
 }
 
 .name {
-  @apply pl-4 pt-2 text-sky-400;
+  @apply pl-4 pt-1 text-sky-400;
+}
+
+.filePath {
+  @apply pl-4 pr-7 text-xs leading-4 text-storm-200 break-all;
 }
 .label {
   @apply text-sm;
