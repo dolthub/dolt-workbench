@@ -31,7 +31,10 @@ import {
   getErrorMessage,
   removeDoltServerFolder,
 } from "./helpers/removeDoltServerFolder";
-import { isDoltLiteDatabaseFilePath } from "./doltliteDatabase";
+import {
+  getDoltLiteDatabaseDestination,
+  isDoltLiteDatabaseFilePath,
+} from "./doltliteDatabase";
 
 const { updateElectronApp } = require("update-electron-app");
 updateElectronApp();
@@ -304,6 +307,12 @@ ipcMain.handle("select-sqlite-database-directory", async () => {
 
   return result.canceled ? undefined : result.filePaths[0];
 });
+
+ipcMain.handle(
+  "get-doltlite-database-destination",
+  (_, directory: string, databaseName: string) =>
+    getDoltLiteDatabaseDestination(directory, databaseName),
+);
 
 ipcMain.handle("create-doltlite-database-file", async (_, filePath: string) => {
   if (!isDoltLiteDatabaseFilePath(filePath)) {

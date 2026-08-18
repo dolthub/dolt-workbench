@@ -39,24 +39,41 @@ export default function DoltLiteSetup({
   const { state, setState, error, setErr } = context;
   const [option, setOption] = useState(SetupOption.Existing);
   const [directory, setDirectory] = useState("");
+  const [destination, setDestinationDetails] = useState<{
+    fileName: string;
+    filePath: string;
+  }>();
   const isExisting = option === SetupOption.Existing;
-  const destination = window.ipc?.getDoltLiteDatabaseDestination(
-    directory,
-    state.database,
-  );
 
-  const setDestination = (dir: string, database: string) => {
-    const next = window.ipc?.getDoltLiteDatabaseDestination(dir, database);
+  const setDestination = async (dir: string, database: string) => {
+    setDestinationDetails(undefined);
     setState({
       database,
-      name: next?.filePath ?? "",
-      connectionUrl: next ? getSqliteConnectionUrl(next.filePath) : "",
+      name: "",
+      connectionUrl: "",
     });
+
+    try {
+      const next = (await window.ipc.invoke(
+        "get-doltlite-database-destination",
+        dir,
+        database,
+      )) as { fileName: string; filePath: string } | undefined;
+
+      setDestinationDetails(next);
+      setState({
+        name: next?.filePath ?? "",
+        connectionUrl: next ? getSqliteConnectionUrl(next.filePath) : "",
+      });
+    } catch (err) {
+      setErr(err instanceof Error ? err : Error(String(err)));
+    }
   };
 
   const selectOption = (next: SetupOption) => {
     setOption(next);
     setDirectory("");
+    setDestinationDetails(undefined);
     setErr(undefined);
     setState({
       name: "",
@@ -165,14 +182,14 @@ export default function DoltLiteSetup({
               onClick={async () =>
                 choose("select-sqlite-database-directory", selected => {
                   setDirectory(selected);
-                  setDestination(selected, state.database);
+                  void setDestination(selected, state.database);
                 })
               }
               dataCy="sqlite-database-directory"
             />
             {textField(
               state.database,
-              database => setDestination(directory, database),
+              database => void setDestination(directory, database),
               "Database Name",
               "my-database",
               "sqlite-database-name",
