@@ -25,6 +25,7 @@ function getSystemPrompt(
   database: string,
   dbType?: string,
   isDolt?: boolean,
+  databaseFile?: string,
 ): string {
   const normalizedType = dbType?.toLowerCase();
   const databaseType = isDolt
@@ -35,11 +36,15 @@ function getSystemPrompt(
         : "Dolt"
     : dbType;
   const typeInfo = databaseType ? `The database type is ${databaseType}.` : "";
+  const sqliteFileInfo =
+    normalizedType === "sqlite" && !isDolt && databaseFile
+      ? `The SQLite database file is located at ${JSON.stringify(databaseFile)}. When using SQLite CLI tools, connect to this exact file.`
+      : "";
   return `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with Dolt, Doltgres, DoltLite, MySQL, Postgres, and SQLite databases.
 
 If interacting with a Dolt, Doltgres, or DoltLite database, use Dolt MCP tools. For MySQL, Postgres, and SQLite, use CLI tools in Bash.
 
-You are currently connected to the database: "${database}". ${typeInfo}
+You are currently connected to the database: "${database}". ${typeInfo} ${sqliteFileInfo}
 
 When users ask questions about their database, use the available tools to:
 - List tables and their schemas
@@ -340,6 +345,7 @@ export class ClaudeAgent {
       mcpConfig.database,
       mcpConfig.type,
       mcpConfig.isDolt,
+      mcpConfig.databaseFile,
     );
 
     const workbenchMcpServer = this.createWorkbenchMcpServer();
