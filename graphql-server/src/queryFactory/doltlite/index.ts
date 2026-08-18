@@ -918,7 +918,7 @@ export class DoltLiteQueryFactory
   // empty.
   async callDoltClone(args: t.CloneArgs): Promise<void> {
     return this.handleAsyncQuery(async qr =>
-      qr.query(qh.callDoltClone, [args.remoteDbPath]),
+      qr.query(qh.callDoltClone, [qh.getCloneRemoteUrl(args.remoteDbPath)]),
     );
   }
 

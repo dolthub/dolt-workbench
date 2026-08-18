@@ -15,6 +15,7 @@ import css from "./index.module.css";
 enum SetupOption {
   Existing,
   Create,
+  Clone,
 }
 
 const options = [
@@ -28,6 +29,11 @@ const options = [
     "Create a new DoltLite database",
     "create-doltlite-database",
   ],
+  [
+    SetupOption.Clone,
+    "Clone a remote DoltLite database from DoltHub",
+    "clone-doltlite-database",
+  ],
 ] as const;
 
 export default function DoltLiteSetup({
@@ -39,7 +45,10 @@ export default function DoltLiteSetup({
   const { state, setState, error, setErr } = context;
   const [option, setOption] = useState(SetupOption.Existing);
   const [directory, setDirectory] = useState("");
+  const [owner, setOwner] = useState("");
+  const [remoteDatabase, setRemoteDatabase] = useState("");
   const isExisting = option === SetupOption.Existing;
+  const isClone = option === SetupOption.Clone;
   const destination = window.ipc?.getDoltLiteDatabaseDestination(
     directory,
     state.database,
@@ -57,6 +66,8 @@ export default function DoltLiteSetup({
   const selectOption = (next: SetupOption) => {
     setOption(next);
     setDirectory("");
+    setOwner("");
+    setRemoteDatabase("");
     setErr(undefined);
     setState({
       name: "",
@@ -83,6 +94,14 @@ export default function DoltLiteSetup({
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (isExisting) return context.onSubmit(e);
+    if (isClone) {
+      return context.onCloneDoltLiteDatabase(
+        e,
+        owner,
+        remoteDatabase,
+        state.database,
+      );
+    }
     try {
       await window.ipc.invoke("create-doltlite-database-file", state.name);
       await context.onSubmit(e);
@@ -92,7 +111,19 @@ export default function DoltLiteSetup({
   };
 
   const { canSubmit, message } = getCanSubmit(state);
-  const showSummary = directory && destination;
+  const enabled =
+    canSubmit && (!isClone || (!!owner.trim() && !!remoteDatabase.trim()));
+  const submitMessage =
+    message ||
+    (isClone && !remoteDatabase.trim()
+      ? "Remote database name is required"
+      : isClone && !owner.trim()
+        ? "Owner name is required"
+        : undefined);
+  const showSummary =
+    directory &&
+    destination &&
+    (!isClone || (owner.trim() && remoteDatabase.trim()));
   const textField = (
     value: string,
     setValue: (value: string) => void,
@@ -168,14 +199,41 @@ export default function DoltLiteSetup({
                   setDestination(selected, state.database);
                 })
               }
-              dataCy="sqlite-database-directory"
+              dataCy={
+                isClone
+                  ? "sqlite-clone-database-directory"
+                  : "sqlite-database-directory"
+              }
             />
+            {isClone && (
+              <>
+                {textField(
+                  owner,
+                  setOwner,
+                  "Owner Name",
+                  "e.g. dolthub (required)",
+                  "sqlite-clone-owner-name",
+                )}
+                {textField(
+                  remoteDatabase,
+                  database => {
+                    setRemoteDatabase(database);
+                    setDestination(directory, database);
+                  },
+                  "Remote Database Name",
+                  "e.g. my-database (required)",
+                  "sqlite-clone-remote-database-name",
+                )}
+              </>
+            )}
             {textField(
               state.database,
               database => setDestination(directory, database),
-              "Database Name",
-              "my-database",
-              "sqlite-database-name",
+              isClone ? "New Database Name" : "Database Name",
+              isClone ? "e.g. my-database (required)" : "my-database",
+              isClone
+                ? "sqlite-clone-new-database-name"
+                : "sqlite-database-name",
             )}
             {showSummary && (
               <p className={css.createSqliteSummary}>
@@ -205,11 +263,11 @@ export default function DoltLiteSetup({
           )}
           <Button
             type="submit"
-            disabled={!canSubmit || state.loading}
+            disabled={!enabled || state.loading}
             className={css.button}
             data-tooltip-id="submit-message"
-            data-tooltip-content={message}
-            data-tooltip-hidden={canSubmit}
+            data-tooltip-content={submitMessage}
+            data-tooltip-hidden={enabled}
             data-cy="launch-workbench-button"
           >
             Launch Workbench

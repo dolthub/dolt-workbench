@@ -8,15 +8,15 @@ type Props = {
   remoteUrl: string;
   setRemoteUrl: (t: string) => void;
   currentDbName: string;
+  dolthubHost: string;
 };
-
-const dolthubHost = "https://doltremoteapi.dolthub.com";
 
 export default function RemoteUrl({
   type,
   remoteUrl,
   setRemoteUrl,
   currentDbName,
+  dolthubHost,
 }: Props) {
   const [ownerName, setOwnerName] = useState("");
   const [dbName, setDbName] = useState(currentDbName);

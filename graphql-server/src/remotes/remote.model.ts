@@ -61,12 +61,27 @@ export class RemoteBranchDiffCounts {
   behind?: number;
 }
 
+function fromFetchSpecs(value: unknown): string[] | undefined {
+  if (Array.isArray(value)) {
+    return value.filter((spec): spec is string => typeof spec === "string");
+  }
+  if (typeof value !== "string") return undefined;
+
+  try {
+    const parsed: unknown = JSON.parse(value);
+    if (!Array.isArray(parsed)) return undefined;
+    return parsed.filter((spec): spec is string => typeof spec === "string");
+  } catch {
+    return undefined;
+  }
+}
+
 export function fromDoltRemotesRow(databaseName: string, r: RawRow): Remote {
   return {
     _id: `databases/${databaseName}/remotes/${r.name}`,
     name: r.name,
     url: r.url,
-    fetchSpecs: r.fetch_specs,
+    fetchSpecs: fromFetchSpecs(r.fetch_specs),
   };
 }
 
