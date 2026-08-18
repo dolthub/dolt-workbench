@@ -10,7 +10,9 @@ import { BrowserWindow, ipcMain } from "electron";
 import { copyFileSync, mkdirSync, readFileSync } from "fs";
 import path from "path";
 import { z } from "zod";
+import { getStoredAuthor } from "../authorStorage";
 import { getClaudeCliPaths, getMcpServerPath } from "../helpers/filePath";
+import { getMcpServerArgs } from "./mcpServerArgs";
 import { IMAGE_MIME_TYPES, IMAGES_DIR } from "./sessionStorage";
 import {
   AgentConfig,
@@ -24,12 +26,18 @@ function getSystemPrompt(
   dbType?: string,
   isDolt?: boolean,
 ): string {
-  const typeInfo = dbType
-    ? `The database type is ${isDolt ? "Dolt" : dbType}.`
-    : "";
-  return `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with Dolt, Doltgres, MySQL, and Postgres databases.
+  const normalizedType = dbType?.toLowerCase();
+  const databaseType = isDolt
+    ? normalizedType === "sqlite"
+      ? "DoltLite"
+      : normalizedType === "postgres"
+        ? "Doltgres"
+        : "Dolt"
+    : dbType;
+  const typeInfo = databaseType ? `The database type is ${databaseType}.` : "";
+  return `You are a helpful database assistant for a database workbench application. You have access to tools that allow you to interact with Dolt, Doltgres, DoltLite, MySQL, Postgres, and SQLite databases.
 
-If interacting with a Dolt or Doltgres database, use Dolt MCP tools. For MySQL and Postgres, use 'mysql' and 'psql' CLI tools in Bash.
+If interacting with a Dolt, Doltgres, or DoltLite database, use Dolt MCP tools. For MySQL, Postgres, and SQLite, use CLI tools in Bash.
 
 You are currently connected to the database: "${database}". ${typeInfo}
 
@@ -311,29 +319,7 @@ export class ClaudeAgent {
   private getMcpServerArgs(): string[] {
     const { mcpConfig } = this.config;
     console.log("MCP CONFIG: ", mcpConfig);
-    const args = [
-      "--stdio",
-      "--host",
-      mcpConfig.host,
-      "--port",
-      String(mcpConfig.port),
-      "--user",
-      mcpConfig.user,
-      "--database",
-      mcpConfig.database,
-      "--password",
-      mcpConfig.password ?? "",
-    ];
-
-    if (mcpConfig.useSSL) {
-      args.push("--tls", "skip-verify");
-    }
-
-    if (mcpConfig.type?.toLowerCase() === "postgres") {
-      args.push("--doltgres");
-    }
-
-    return args;
+    return getMcpServerArgs(mcpConfig, getStoredAuthor() ?? undefined);
   }
 
   private startQuery(userMessage: string, preserveContent = false): void {

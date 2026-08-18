@@ -62,10 +62,7 @@ export default function Merge(props: Props) {
                 setState={setState}
               />
               {mergeState.err && (
-                <ErrorsWithDirections
-                  mergeErr={mergeState.err}
-                  setShowDirections={s => setState({ showDirections: s })}
-                />
+                <ErrorsWithDirections mergeErr={mergeState.err} />
               )}
             </div>
 
@@ -99,7 +96,9 @@ export default function Merge(props: Props) {
                 </Button.Link>
                 .
               </span>
-              {state.showDirections && <MergeConflictsDirections {...props} />}
+              {(state.showDirections || !!mergeState.err) && (
+                <MergeConflictsDirections {...props} />
+              )}
             </div>
           </div>
         </div>
@@ -121,11 +120,11 @@ type MergeButtonProps = {
 
 function MergeButton(props: MergeButtonProps) {
   const [modalOpen, setModalOpen] = useState(false);
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres, isSqlite } = useDatabaseDetails();
 
   return (
     <div aria-label="merge-button-container">
-      {props.disabled && !isPostgres ? (
+      {props.disabled && !isPostgres && !isSqlite ? (
         <>
           <Button
             className={css.merge}

@@ -1,11 +1,12 @@
 export type McpServerConfig = {
-  host: string;
-  port: number;
-  user: string;
+  host?: string;
+  port?: number;
+  user?: string;
   database: string;
+  databaseFile?: string;
   password?: string;
   useSSL?: boolean;
-  type?: string; // DatabaseType: "Mysql" | "Postgres"
+  type?: string; // DatabaseType: "Mysql" | "Postgres" | "Sqlite"
   isDolt?: boolean;
 };
 

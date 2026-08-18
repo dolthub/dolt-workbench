@@ -1,13 +1,15 @@
 import { contextBridge, ipcRenderer } from "electron";
 
 export type McpServerConfig = {
-  host: string;
-  port: number;
-  user: string;
+  host?: string;
+  port?: number;
+  user?: string;
   password?: string;
   database: string;
+  databaseFile?: string;
   useSSL?: boolean;
-  type?: string; // DatabaseType: "Mysql" | "Postgres"
+  type?: string; // DatabaseType: "Mysql" | "Postgres" | "Sqlite"
+  isDolt?: boolean;
 };
 
 export type AgentConfig = {

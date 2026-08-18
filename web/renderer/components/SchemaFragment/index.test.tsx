@@ -8,6 +8,12 @@ describe("fragIdxFor", () => {
     });
   });
 
+  it("returns 0 for every kind on sqlite", () => {
+    Object.values(SchemaType).forEach(kind => {
+      expect(fragIdxFor(kind, false, true)).toBe(0);
+    });
+  });
+
   it("returns the SHOW CREATE statement index for each kind on mysql", () => {
     expect(fragIdxFor(SchemaType.Table, false)).toBe(1);
     expect(fragIdxFor(SchemaType.View, false)).toBe(1);

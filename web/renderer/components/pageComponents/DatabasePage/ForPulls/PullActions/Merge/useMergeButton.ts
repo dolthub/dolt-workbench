@@ -5,6 +5,7 @@ import {
   usePullConflictsSummaryQuery,
 } from "@gen/graphql-types";
 import useMutation from "@hooks/useMutation";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { useUserHeaders } from "@hooks/useUserHeaders";
 import { gqlPullHasConflicts } from "@lib/errors/graphql";
 import { errorMatches } from "@lib/errors/helpers";
@@ -26,6 +27,7 @@ const defaultState = {
 export type MergeButtonState = typeof defaultState;
 
 export default function useMergeButton(params: PullDiffParams) {
+  const { isSqlite, loading: databaseDetailsLoading } = useDatabaseDetails();
   const userHeaders = useUserHeaders();
   const [state, setState] = useSetState({
     ...defaultState,
@@ -41,6 +43,7 @@ export default function useMergeButton(params: PullDiffParams) {
   });
   const conflictsRes = usePullConflictsSummaryQuery({
     variables,
+    skip: databaseDetailsLoading || isSqlite,
   });
 
   const hasConflicts =
@@ -119,7 +122,7 @@ export default function useMergeButton(params: PullDiffParams) {
     hasConflicts,
     userHeaders,
     pullConflictsSummary: conflictsRes.data?.pullConflictsSummary,
-    conflictsLoading: conflictsRes.loading,
+    conflictsLoading: databaseDetailsLoading || conflictsRes.loading,
     state,
     setState,
     mergeState: {

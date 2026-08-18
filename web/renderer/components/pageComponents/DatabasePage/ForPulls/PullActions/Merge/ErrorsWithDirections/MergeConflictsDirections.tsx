@@ -10,16 +10,19 @@ type Props = {
 };
 
 export default function MergeConflictsDirections({ params }: Props) {
-  const { isPostgres } = useDatabaseDetails();
-  const checkout = callProcedure(isPostgres, "DOLT_CHECKOUT", [params.refName]);
-  const merge = callProcedure(isPostgres, "DOLT_MERGE", [
+  const { databaseType } = useDatabaseDetails();
+  const checkout = callProcedure(databaseType, "DOLT_CHECKOUT", [
+    params.refName,
+  ]);
+  const merge = callProcedure(databaseType, "DOLT_MERGE", [
     params.fromBranchName,
   ]);
-  const conflictsResolve = callProcedure(isPostgres, "DOLT_CONFLICTS_RESOLVE", [
-    "--[ours|theirs]",
-    "[tablename]",
-  ]);
-  const commit = callProcedure(isPostgres, "DOLT_COMMIT", [
+  const conflictsResolve = callProcedure(
+    databaseType,
+    "DOLT_CONFLICTS_RESOLVE",
+    ["--[ours|theirs]", "[tablename]"],
+  );
+  const commit = callProcedure(databaseType, "DOLT_COMMIT", [
     "-Am",
     `Merge branch ${params.fromBranchName}`,
   ]);

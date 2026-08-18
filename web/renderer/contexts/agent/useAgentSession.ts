@@ -12,6 +12,8 @@ import {
 
 function getDbIdentifier(config: McpServerConfig | null): string | null {
   if (!config) return null;
+  if (config.databaseFile) return `doltlite:${config.databaseFile}`;
+  if (!config.host || !config.port || !config.user) return null;
   return `${config.host}:${config.port}/${config.database}@${config.user}`;
 }
 

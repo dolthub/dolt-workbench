@@ -1,6 +1,7 @@
 import { useApolloClient } from "@apollo/client";
 import { McpServerConfig, useAgentContext } from "@contexts/agent";
-import { useCurrentConnectionQuery } from "@gen/graphql-types";
+import { DatabaseType, useCurrentConnectionQuery } from "@gen/graphql-types";
+import { getSqliteFilePath } from "@lib/databaseConnection";
 import { ref } from "@lib/urls";
 import { useRouter } from "next/router";
 import { CSSProperties, useEffect } from "react";
@@ -23,13 +24,17 @@ export default function useAgentLayout(
   // Update MCP config in global agent context when connection changes
   useEffect(() => {
     const conn = connectionData?.currentConnection;
-    if (conn?.host) {
+    const isSqlite = conn?.type === DatabaseType.Sqlite;
+    if (conn && (conn.host || isSqlite)) {
       const config: McpServerConfig = {
-        host: conn.host,
-        port: conn.port ? parseInt(conn.port, 10) : 3306,
-        user: conn.user ?? "root",
+        host: conn.host ?? undefined,
+        port: conn.port ? parseInt(conn.port, 10) : undefined,
+        user: conn.user ?? undefined,
         password: conn.password ?? undefined,
         database: databaseName,
+        databaseFile: isSqlite
+          ? getSqliteFilePath(conn.connectionUrl)
+          : undefined,
         useSSL: conn.useSSL ?? false,
         type: conn.type ?? undefined,
         isDolt: conn.isDolt ?? false,
@@ -47,6 +52,7 @@ export default function useAgentLayout(
     connectionData?.currentConnection?.user,
     connectionData?.currentConnection?.password,
     connectionData?.currentConnection?.port,
+    connectionData?.currentConnection?.connectionUrl,
     connectionData?.currentConnection?.useSSL,
     connectionData?.currentConnection?.type,
     connectionData?.currentConnection?.isDolt,

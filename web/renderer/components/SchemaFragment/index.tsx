@@ -70,7 +70,7 @@ function Inner({ rows, params, fragIdx, isView, name }: InnerProps) {
 
 export default function SchemaFragment(props: Props) {
   const router = useRouter();
-  const { isPostgres } = useDatabaseDetails();
+  const { isPostgres, isSqlite } = useDatabaseDetails();
   const { setEditorString } = useSqlEditorContext();
 
   const ctx = useMemo(
@@ -108,15 +108,19 @@ export default function SchemaFragment(props: Props) {
     <Inner
       {...props}
       rows={data.rows.list}
-      fragIdx={fragIdxFor(ctx.kind, isPostgres)}
+      fragIdx={fragIdxFor(ctx.kind, isPostgres, isSqlite)}
       isView={ctx.kind === SchemaType.View}
       name={ctx.name}
     />
   );
 }
 
-export function fragIdxFor(kind: SchemaType, isPostgres: boolean): number {
-  if (isPostgres) return 0;
+export function fragIdxFor(
+  kind: SchemaType,
+  isPostgres: boolean,
+  isSqlite = false,
+): number {
+  if (isPostgres || isSqlite) return 0;
   switch (kind) {
     case SchemaType.Table:
     case SchemaType.View:
