@@ -10,6 +10,10 @@ export function getConnectionUrl(state: ConfigState): string {
   return `${prefix}://${state.username}${password}@${state.host}:${state.port}/${state.database}`;
 }
 
+export function getSqliteConnectionUrl(filePath: string): string {
+  return `sqlite:${encodeURIComponent(filePath)}`;
+}
+
 type GetCanSubmitReturnType = {
   canSubmit: boolean;
   message?: string;

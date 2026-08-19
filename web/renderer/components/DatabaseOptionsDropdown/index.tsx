@@ -1,12 +1,11 @@
 import { Btn, ButtonWithPopup } from "@dolthub/react-components";
-import { useEffectOnMount } from "@dolthub/react-hooks";
 import { fakeEscapePress } from "@dolthub/web-utils";
 import { SqlQueryParams } from "@lib/params";
 import { CgArrowsH, CgCompress } from "react-icons/cg";
 import { AiOutlinePlus } from "react-icons/ai";
 import { RiFileDownloadLine } from "react-icons/ri";
 import cx from "classnames";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import HideForNoWritesWrapper from "@components/util/HideForNoWritesWrapper";
 import { useDataTableContext } from "@contexts/dataTable";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
@@ -30,10 +29,13 @@ export default function DatabaseOptionsDropdown({
   const [open, setOpen] = useState(false);
   const { onAddEmptyRow, pendingRow, isMutation } = useDataTableContext();
 
-  useEffectOnMount(() => {
-    document.addEventListener("wheel", fakeEscapePress);
-    return () => document.removeEventListener("wheel", fakeEscapePress);
-  });
+  useEffect(() => {
+    if (!open) return;
+
+    const closeOnWheel = () => setOpen(false);
+    document.addEventListener("wheel", closeOnWheel, { once: true });
+    return () => document.removeEventListener("wheel", closeOnWheel);
+  }, [open]);
 
   if (!onClickHideUnchangedCol && !props.children && !props.params) return null;
   if (props.params && isMutation) return null;

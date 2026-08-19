@@ -33,6 +33,8 @@ export function getDatabaseType(t?: DatabaseType, isDolt?: boolean): string {
       return isDolt ? "Dolt" : "MySQL";
     case DatabaseType.Postgres:
       return isDolt ? "DoltgreSQL" : "PostgreSQL";
+    case DatabaseType.Sqlite:
+      return isDolt ? "DoltLite" : "SQLite";
     default:
       return isDolt ? "Dolt" : "MySQL";
   }
