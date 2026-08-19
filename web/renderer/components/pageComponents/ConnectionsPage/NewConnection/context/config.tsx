@@ -93,16 +93,20 @@ export function ConfigProvider({ children }: Props) {
     await router.push(href, as);
   };
 
-  const onSubmit = async (e: SyntheticEvent) => {
+  const onSubmit = async (e: SyntheticEvent): Promise<boolean> => {
     e.preventDefault();
     setState({ loading: true });
+    let connectionAdded = false;
 
     try {
       const db = await addCurrentDatabaseConnection();
-      if (!db.data) return;
+      if (!db.success || !db.data) return false;
+      connectionAdded = true;
       await openDatabase(db.data.addDatabaseConnection.currentDatabase);
+      return true;
     } catch {
       // Handled by res.error
+      return connectionAdded;
     } finally {
       setState({ loading: false });
     }
@@ -192,6 +196,8 @@ export function ConfigProvider({ children }: Props) {
     setState({ loading: true, progress: 0, owner });
     let interval;
     let progress = 0;
+    let fileCreated = false;
+    let connectionAdded = false;
 
     try {
       interval = setInterval(() => {
@@ -200,9 +206,11 @@ export function ConfigProvider({ children }: Props) {
       }, 10);
 
       await window.ipc.invoke("create-doltlite-database-file", state.name);
+      fileCreated = true;
 
       const db = await addCurrentDatabaseConnection();
-      if (!db.data) return;
+      if (!db.success || !db.data) return;
+      connectionAdded = true;
 
       const clone = await doltClone({
         variables: {
@@ -218,6 +226,16 @@ export function ConfigProvider({ children }: Props) {
     } catch (error) {
       setErr(error instanceof Error ? error : Error(String(error)));
     } finally {
+      if (fileCreated) {
+        await window.ipc
+          .invoke(
+            connectionAdded
+              ? "retain-created-doltlite-database-file"
+              : "discard-created-doltlite-database-file",
+            state.name,
+          )
+          .catch(() => undefined);
+      }
       if (interval) clearInterval(interval);
       setState({ loading: false, progress: 0 });
     }
