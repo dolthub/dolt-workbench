@@ -59,7 +59,7 @@ export const twoDotDoltLogsQuery = (args: t.RefsArgs): string =>
 // DIFFS
 
 export const hashOf = `SELECT HASHOF($1::text)`;
-export const mergeBase = `SELECT DOLT_MERGE_BASE($1::text, $2::text)`;
+export const mergeBase = `SELECT * FROM DOLT_MERGE_BASE($1::text, $2::text)`;
 
 export const getThreeDotDiffStatQuery = (args: t.RefsMaybeTableArgs): string =>
   `SELECT * FROM DOLT_DIFF_STAT('${args.toRefName}...${args.fromRefName}'${args.tableName ? `, '${tableWithoutSchema(args.tableName)}'` : ""})`;

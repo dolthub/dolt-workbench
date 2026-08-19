@@ -1,3 +1,4 @@
+import { isNullValue } from "@dolthub/web-utils";
 import {
   ColumnForDataTableFragment,
   ForeignKeyColumnForDataTableFragment,
@@ -77,7 +78,7 @@ export function getTableColsFromQueryCols(
 
 export type WhereClauseInput = {
   column: string;
-  value: string;
+  value: string | null;
   type: string;
 };
 
@@ -97,6 +98,30 @@ export function toPKWhereClauses(
     });
 }
 
+export function toWhereClauses(
+  row: RowForDataTableFragment,
+  queryCols: ColumnForDataTableFragment[],
+  tableCols?: ColumnForDataTableFragment[],
+): WhereClauseInput[] {
+  const mappedCols = mapQueryColsToAllCols(queryCols, tableCols);
+
+  // Check if table schema contains any primary key columns
+  const hasPrimaryKey = mappedCols.some(col => col.isPrimaryKey);
+
+  return mappedCols
+    .map((col, idx) => {
+      return { col, idx };
+    }) // Preserve original index for row.columnValues
+    .filter(({ col }) => !hasPrimaryKey || col.isPrimaryKey)
+    .map(({ col, idx }) => {
+      const displayVal = row.columnValues[idx]?.displayValue;
+      return {
+        column: col.name,
+        value: isNullValue(displayVal) ? null : displayVal,
+        type: col.type,
+      };
+    });
+}
 function mapQueryColsToAllCols(
   queryCols: ColumnForDataTableFragment[],
   allCols?: ColumnForDataTableFragment[],

@@ -13,7 +13,7 @@ import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { useApolloClient } from "@apollo/client";
 import css from "./index.module.css";
-import { toPKWhereClauses } from "./utils";
+import { toWhereClauses } from "./utils";
 
 type Props = {
   row: RowForDataTableFragment;
@@ -37,7 +37,7 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
   if (!tableName || isUneditableDoltSystemTable(tableName)) return null;
 
   const onClick = async () => {
-    const where = toPKWhereClauses(props.row, props.columns, columns);
+    const where = toWhereClauses(props.row, props.columns, columns);
     const res = await deleteRow({
       variables: { databaseName, refName, schemaName, tableName, where },
     });

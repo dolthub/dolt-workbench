@@ -2,3 +2,6 @@
 web/build/mac/dolt
 web/build/appx/dolt.exe
 .DS_Store
+**/.idea/
+node_modules/
+yarn.lock
