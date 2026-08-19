@@ -37,7 +37,7 @@ export function getDefaultState(isDocker = false): ConfigState {
 }
 
 export type ConfigContextType = {
-  onSubmit: (e: SyntheticEvent) => Promise<void>;
+  onSubmit: (e: SyntheticEvent) => Promise<boolean>;
   state: ConfigState;
   setState: ConfigDispatch;
   error?: Error | undefined;

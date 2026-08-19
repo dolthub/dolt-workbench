@@ -83,16 +83,20 @@ export function ConfigProvider({ children }: Props) {
     await router.push(href, as);
   };
 
-  const onSubmit = async (e: SyntheticEvent) => {
+  const onSubmit = async (e: SyntheticEvent): Promise<boolean> => {
     e.preventDefault();
     setState({ loading: true });
+    let connectionAdded = false;
 
     try {
       const db = await addCurrentDatabaseConnection();
-      if (!db.data) return;
+      if (!db.success || !db.data) return false;
+      connectionAdded = true;
       await openDatabase(db.data.addDatabaseConnection.currentDatabase);
+      return true;
     } catch {
       // Handled by res.error
+      return connectionAdded;
     } finally {
       setState({ loading: false });
     }

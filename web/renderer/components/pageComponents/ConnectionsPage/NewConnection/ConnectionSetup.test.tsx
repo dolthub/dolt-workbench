@@ -44,7 +44,7 @@ function ConfigHarness({ children, onSubmit }: ConfigHarnessProps) {
         setErr: jest.fn(),
         clearState: jest.fn(),
         storedConnections: [],
-        onSubmit: onSubmit ?? jest.fn(async () => undefined),
+        onSubmit: onSubmit ?? jest.fn(async () => true),
         onStartDoltServer: jest.fn(async () => undefined),
         onCloneDoltHubDatabase: jest.fn(async () => undefined),
       }}
@@ -149,7 +149,7 @@ describe("ConnectionSetup", () => {
   it("uses the selected SQLite file path as the connection name", async () => {
     const filePath = "/Users/me/My Databases/payroll.db";
     const invoke = jest.fn(async () => filePath);
-    const onSubmit = jest.fn(async () => undefined);
+    const onSubmit = jest.fn(async () => true);
     Object.defineProperty(window, "ipc", {
       configurable: true,
       value: { invoke },
@@ -195,7 +195,7 @@ describe("ConnectionSetup", () => {
       }
       return undefined;
     });
-    const onSubmit = jest.fn(async () => undefined);
+    const onSubmit = jest.fn(async () => true);
     Object.defineProperty(window, "ipc", {
       configurable: true,
       value: { invoke },
@@ -229,6 +229,44 @@ describe("ConnectionSetup", () => {
         filePath,
       );
       expect(onSubmit).toHaveBeenCalledTimes(1);
+      expect(invoke).toHaveBeenCalledWith(
+        "retain-created-doltlite-database-file",
+        filePath,
+      );
+    });
+  });
+
+  it("removes a newly created DoltLite file when the connection fails", async () => {
+    const directory = path.resolve("My Databases");
+    const filePath = path.join(directory, "payroll.db");
+    const invoke = jest.fn(async (channel: string, ...args: string[]) => {
+      if (channel === "select-sqlite-database-directory") return directory;
+      if (channel === "get-doltlite-database-destination") {
+        return getDoltLiteDatabaseDestination(args[0], args[1]);
+      }
+      return undefined;
+    });
+    const onSubmit = jest.fn(async () => false);
+    Object.defineProperty(window, "ipc", {
+      configurable: true,
+      value: { invoke },
+    });
+
+    const { user } = renderSetup({ onSubmit });
+
+    await selectType(user, "SQLite/DoltLite");
+    await user.click(
+      screen.getByRole("radio", { name: "Create a new DoltLite database" }),
+    );
+    await user.click(screen.getByRole("button", { name: "Choose Folder" }));
+    await user.type(screen.getByPlaceholderText("my-database"), "payroll");
+    fireEvent.submit(screen.getByTestId("connection-tab-form"));
+
+    await waitFor(() => {
+      expect(invoke).toHaveBeenCalledWith(
+        "discard-created-doltlite-database-file",
+        filePath,
+      );
     });
   });
 
