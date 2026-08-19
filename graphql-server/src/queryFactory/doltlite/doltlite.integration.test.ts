@@ -802,9 +802,20 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     const push = await qf.callPushRemote({
       ...dbArgs,
       remoteName: "origin",
-      branchName: "main",
+      branchName: "main:main",
     });
     expect(push).toEqual([{ status: "0", message: "" }]);
+    const localMain = (await qf.getAllBranches(dbArgs)).find(
+      branch => branch.name === "main",
+    );
+    const trackingMain = (
+      await qf.getRemoteBranches({
+        ...dbArgs,
+        remoteName: "origin",
+        offset: 0,
+      })
+    ).find(branch => branch.name === "remotes/origin/main");
+    expect(trackingMain?.hash).toEqual(localMain?.hash);
 
     await qf.createNewBranch({
       ...dbArgs,

@@ -15,6 +15,7 @@ import css from "./index.module.css";
 enum SetupOption {
   Existing,
   Create,
+  Clone,
 }
 
 const options = [
@@ -27,6 +28,11 @@ const options = [
     SetupOption.Create,
     "Create a new DoltLite database",
     "create-doltlite-database",
+  ],
+  [
+    SetupOption.Clone,
+    "Clone a remote DoltLite database from DoltHub",
+    "clone-doltlite-database",
   ],
 ] as const;
 
@@ -53,8 +59,11 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
   const { state, setState, error, setErr } = context;
   const [option, setOption] = useState(SetupOption.Existing);
   const [directory, setDirectory] = useState("");
+  const [owner, setOwner] = useState("");
+  const [remoteDatabase, setRemoteDatabase] = useState("");
   const [destination, setDestinationDetails] = useState<Destination>();
   const isExisting = option === SetupOption.Existing;
+  const isClone = option === SetupOption.Clone;
 
   const setDestination = async (dir: string, database: string) => {
     setDestinationDetails(undefined);
@@ -84,6 +93,8 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
   const selectOption = (next: SetupOption) => {
     setOption(next);
     setDirectory("");
+    setOwner("");
+    setRemoteDatabase("");
     setDestinationDetails(undefined);
     setErr(undefined);
     setState({
@@ -111,6 +122,14 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
   const submit = async (e: SyntheticEvent) => {
     e.preventDefault();
     if (isExisting) return context.onSubmit(e);
+    if (isClone) {
+      return context.onCloneDoltLiteDatabase(
+        e,
+        owner,
+        remoteDatabase,
+        state.database,
+      );
+    }
     let created = false;
     try {
       await window.ipc.invoke("create-doltlite-database-file", state.name);
@@ -133,7 +152,18 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
   };
 
   const { canSubmit, message } = getCanSubmit(state);
-  const showSummary = directory && destination;
+  const enabled =
+    canSubmit && (!isClone || (!!owner.trim() && !!remoteDatabase.trim()));
+  const submitMessage = getSubmitMessage(
+    message,
+    isClone,
+    owner,
+    remoteDatabase,
+  );
+  const showSummary =
+    directory &&
+    destination &&
+    (!isClone || (owner.trim() && remoteDatabase.trim()));
   const textField = (
     value: string,
     setValue: (value: string) => void,
@@ -209,14 +239,41 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
                   void setDestination(selected, state.database);
                 })
               }
-              dataCy="sqlite-database-directory"
+              dataCy={
+                isClone
+                  ? "sqlite-clone-database-directory"
+                  : "sqlite-database-directory"
+              }
             />
+            {isClone && (
+              <>
+                {textField(
+                  owner,
+                  setOwner,
+                  "Owner Name",
+                  "e.g. dolthub (required)",
+                  "sqlite-clone-owner-name",
+                )}
+                {textField(
+                  remoteDatabase,
+                  database => {
+                    setRemoteDatabase(database);
+                    void setDestination(directory, database);
+                  },
+                  "Remote Database Name",
+                  "e.g. my-database (required)",
+                  "sqlite-clone-remote-database-name",
+                )}
+              </>
+            )}
             {textField(
               state.database,
               database => void setDestination(directory, database),
-              "Database Name",
-              "my-database",
-              "sqlite-database-name",
+              isClone ? "New Database Name" : "Database Name",
+              isClone ? "e.g. my-database (required)" : "my-database",
+              isClone
+                ? "sqlite-clone-new-database-name"
+                : "sqlite-database-name",
             )}
             {showSummary && (
               <p className={css.createSqliteSummary}>
@@ -246,11 +303,11 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
           )}
           <Button
             type="submit"
-            disabled={!canSubmit || state.loading}
+            disabled={!enabled || state.loading}
             className={css.button}
             data-tooltip-id="submit-message"
-            data-tooltip-content={message}
-            data-tooltip-hidden={canSubmit}
+            data-tooltip-content={submitMessage}
+            data-tooltip-hidden={enabled}
             data-cy="launch-workbench-button"
           >
             Launch Workbench
@@ -262,6 +319,18 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
       </div>
     </form>
   );
+}
+
+function getSubmitMessage(
+  message: string | undefined,
+  isClone: boolean,
+  owner: string,
+  remoteDatabase: string,
+): string | undefined {
+  if (message || !isClone) return message;
+  if (!remoteDatabase.trim()) return "Remote database name is required";
+  if (!owner.trim()) return "Owner name is required";
+  return undefined;
 }
 
 function FilePicker(props: FilePickerProps) {

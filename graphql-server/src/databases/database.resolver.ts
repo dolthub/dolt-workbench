@@ -232,10 +232,15 @@ export class DatabaseResolver {
   async removeDatabaseConnection(
     @Args() args: RemoveDatabaseConnectionArgs,
   ): Promise<boolean> {
+    const isCurrentConnection =
+      this.conn.getWorkbenchConfig()?.name === args.name;
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.removeStoredConnection(args.name);
     } else {
       this.fileStoreService.removeItemFromStore(args.name);
+    }
+    if (isCurrentConnection) {
+      await this.conn.closeConnection();
     }
     return true;
   }
@@ -263,11 +268,6 @@ export class DatabaseResolver {
 
   @Mutation(_returns => Boolean)
   async doltClone(@Args() args: CloneArgs): Promise<boolean> {
-    if (this.conn.getWorkbenchConfig()?.type === DatabaseType.Sqlite) {
-      throw new Error(
-        "Cloning into a DoltLite connection is not supported by this Workbench flow yet",
-      );
-    }
     const conn = this.conn.connection();
     const remoteDbPath = `${args.ownerName}/${args.remoteDbName}`;
     await conn.callDoltClone({ remoteDbPath, databaseName: args.databaseName });

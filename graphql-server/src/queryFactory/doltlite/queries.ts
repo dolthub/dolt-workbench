@@ -153,8 +153,20 @@ export const callPushRemote = `SELECT dolt_push(?, ?)`;
 
 export const callFetchRemote = `SELECT dolt_fetch(?)`;
 
+export function getPushSourceBranch(branchName?: string): string | undefined {
+  return branchName?.split(":", 1)[0];
+}
+
 // Single-arg clone into the current (required to be empty) database file.
 export const callDoltClone = `SELECT dolt_clone(?)`;
+
+const DOLTHUB_REMOTE_BASE = "https://doltliteremoteapi.dolthub.com";
+
+export function getCloneRemoteUrl(remoteDbPath: string): string {
+  const remote = remoteDbPath.trim();
+  if (/^(?:file|https?):\/\//i.test(remote)) return remote;
+  return `${DOLTHUB_REMOTE_BASE}/${remote}`;
+}
 
 // DoltLite requires dolt_test_run arguments to be SQL literals so its
 // virtual table can resolve them during planning.

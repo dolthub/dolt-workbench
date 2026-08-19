@@ -25,9 +25,14 @@ afterAll(() => {
 type ConfigHarnessProps = {
   children?: ReactNode;
   onSubmit?: ConfigContextType["onSubmit"];
+  onCloneDoltLiteDatabase?: ConfigContextType["onCloneDoltLiteDatabase"];
 };
 
-function ConfigHarness({ children, onSubmit }: ConfigHarnessProps) {
+function ConfigHarness({
+  children,
+  onSubmit,
+  onCloneDoltLiteDatabase,
+}: ConfigHarnessProps) {
   const [state, setConfigState] = useState<ConfigState>(defaultState);
   const setState: ConfigContextType["setState"] = nextState => {
     setConfigState(currentState => {
@@ -47,6 +52,8 @@ function ConfigHarness({ children, onSubmit }: ConfigHarnessProps) {
         onSubmit: onSubmit ?? jest.fn(async () => true),
         onStartDoltServer: jest.fn(async () => undefined),
         onCloneDoltHubDatabase: jest.fn(async () => undefined),
+        onCloneDoltLiteDatabase:
+          onCloneDoltLiteDatabase ?? jest.fn(async () => undefined),
       }}
     >
       {children}
@@ -128,6 +135,9 @@ describe("ConnectionSetup", () => {
     expect(
       screen.getByText("Create a new DoltLite database"),
     ).toBeInTheDocument();
+    expect(
+      screen.getByText("Clone a remote DoltLite database from DoltHub"),
+    ).toBeInTheDocument();
     expectToAppearBefore(
       screen.getByText("Type"),
       screen.getByText("Choose an existing database"),
@@ -135,6 +145,10 @@ describe("ConnectionSetup", () => {
     expectToAppearBefore(
       screen.getByText("Choose an existing database"),
       screen.getByText("Create a new DoltLite database"),
+    );
+    expectToAppearBefore(
+      screen.getByText("Create a new DoltLite database"),
+      screen.getByText("Clone a remote DoltLite database from DoltHub"),
     );
     expect(screen.getByText("About")).toBeInTheDocument();
     expect(screen.queryByText("Connection")).not.toBeInTheDocument();
@@ -266,6 +280,77 @@ describe("ConnectionSetup", () => {
       expect(invoke).toHaveBeenCalledWith(
         "discard-created-doltlite-database-file",
         filePath,
+      );
+    });
+  });
+
+  it("hides the Dolt feature setting for the DoltLite clone flow", async () => {
+    const { user } = renderSetup();
+
+    await selectType(user, "SQLite/DoltLite");
+    await user.click(
+      screen.getByRole("radio", {
+        name: "Clone a remote DoltLite database from DoltHub",
+      }),
+    );
+
+    expect(screen.queryByText("Hide Dolt features")).not.toBeInTheDocument();
+  });
+
+  it("configures a DoltLite clone destination and preserves a custom name", async () => {
+    const directory = path.resolve("My Databases");
+    const onCloneDoltLiteDatabase = jest.fn(async () => undefined);
+    const invoke = jest.fn(async (channel: string, ...args: string[]) => {
+      if (channel === "select-sqlite-database-directory") return directory;
+      if (channel === "get-doltlite-database-destination") {
+        return getDoltLiteDatabaseDestination(args[0], args[1]);
+      }
+      return undefined;
+    });
+    Object.defineProperty(window, "ipc", {
+      configurable: true,
+      value: { invoke },
+    });
+
+    const { user } = renderSetup({
+      onCloneDoltLiteDatabase,
+    });
+
+    await selectType(user, "SQLite/DoltLite");
+    await user.click(
+      screen.getByRole("radio", {
+        name: "Clone a remote DoltLite database from DoltHub",
+      }),
+    );
+    await user.click(screen.getByRole("button", { name: "Choose Folder" }));
+
+    const ownerInput = screen.getByPlaceholderText("e.g. dolthub (required)");
+    const [remoteInput, newInput] = screen.getAllByPlaceholderText(
+      "e.g. my-database (required)",
+    );
+    await user.type(ownerInput, "dolthub");
+    await user.type(remoteInput, "employees");
+
+    expect(newInput).toHaveValue("employees");
+
+    await user.clear(newInput);
+    await user.type(newInput, "employees-copy");
+
+    expect(remoteInput).toHaveValue("employees");
+    await waitFor(() => {
+      expect(screen.getByText(/This will create/)).toHaveTextContent(
+        `This will create employees-copy.db in ${directory}.`,
+      );
+    });
+
+    fireEvent.submit(screen.getByTestId("connection-tab-form"));
+
+    await waitFor(() => {
+      expect(onCloneDoltLiteDatabase).toHaveBeenCalledWith(
+        expect.anything(),
+        "dolthub",
+        "employees",
+        "employees-copy",
       );
     });
   });

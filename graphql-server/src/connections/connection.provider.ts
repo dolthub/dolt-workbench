@@ -70,20 +70,21 @@ export class ConnectionProvider {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
-    await this.qf?.destroy?.();
-    if (this.ds?.isInitialized) {
-      await this.ds.destroy();
-    }
+    await this.closeConnection();
 
     this.workbenchConfig = config;
 
     this.ds = getDataSource(config);
 
-    await this.ds.initialize();
-
-    const res = await newQueryFactory(config.type, this.ds);
-    this.qf = res.qf;
-    return { isDolt: res.isDolt };
+    try {
+      await this.ds.initialize();
+      const res = await newQueryFactory(config.type, this.ds);
+      this.qf = res.qf;
+      return { isDolt: res.isDolt };
+    } catch (error) {
+      await this.closeConnection();
+      throw error;
+    }
   }
 
   getWorkbenchConfig(): WorkbenchConfig | undefined {
@@ -92,6 +93,16 @@ export class ConnectionProvider {
 
   getIsDolt(): boolean | undefined {
     return this.qf?.isDolt;
+  }
+
+  async closeConnection(): Promise<void> {
+    await this.qf?.destroy?.();
+    if (this.ds?.isInitialized) {
+      await this.ds.destroy();
+    }
+    this.qf = undefined;
+    this.ds = undefined;
+    this.workbenchConfig = undefined;
   }
 
   async resetDS(newDatabase?: string): Promise<void> {
