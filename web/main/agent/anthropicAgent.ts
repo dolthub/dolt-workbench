@@ -28,13 +28,7 @@ function getSystemPrompt(
   databaseFile?: string,
 ): string {
   const normalizedType = dbType?.toLowerCase();
-  const databaseType = isDolt
-    ? normalizedType === "sqlite"
-      ? "DoltLite"
-      : normalizedType === "postgres"
-        ? "Doltgres"
-        : "Dolt"
-    : dbType;
+  const databaseType = getDatabaseType(dbType, normalizedType, isDolt);
   const typeInfo = databaseType ? `The database type is ${databaseType}.` : "";
   const sqliteFileInfo =
     normalizedType === "sqlite" && !isDolt && databaseFile
@@ -60,6 +54,17 @@ IMPORTANT:
 Always be helpful and explain what you're doing. Do not use emojis in your responses.
 
 When presenting query results, format them in a readable way. For large result sets, summarize the key findings.`;
+}
+
+function getDatabaseType(
+  dbType: string | undefined,
+  normalizedType: string | undefined,
+  isDolt: boolean | undefined,
+): string | undefined {
+  if (!isDolt) return dbType;
+  if (normalizedType === "sqlite") return "DoltLite";
+  if (normalizedType === "postgres") return "Doltgres";
+  return "Dolt";
 }
 
 const TOOLS_REQUIRING_CONFIRMATION = [
@@ -323,7 +328,6 @@ export class ClaudeAgent {
 
   private getMcpServerArgs(): string[] {
     const { mcpConfig } = this.config;
-    console.log("MCP CONFIG: ", mcpConfig);
     return getMcpServerArgs(mcpConfig, getStoredAuthor() ?? undefined);
   }
 
@@ -338,7 +342,6 @@ export class ClaudeAgent {
     const mcpArgs = this.getMcpServerArgs();
 
     console.log("MCP server:", mcpServerPath);
-    console.log("MCP args:", mcpArgs);
 
     const { mcpConfig } = this.config;
     const systemPrompt = getSystemPrompt(

@@ -3,5 +3,7 @@ export const docsLink = "https://dolthub.com/docs";
 export const doltGithubRepo = "https://github.com/dolthub/dolt";
 export const doltgresGithubRepo = "https://github.com/dolthub/doltgresql";
 export const doltliteGithubRepo = "https://github.com/dolthub/doltlite";
+export const doltRemoteHost = "https://doltremoteapi.dolthub.com";
+export const doltLiteRemoteHost = "https://doltliteremoteapi.dolthub.com";
 export const workbenchGithubRepo = "https://github.com/dolthub/dolt-workbench";
 export const dockerHubRepo = "https://hub.docker.com/r/dolthub/dolt-workbench";

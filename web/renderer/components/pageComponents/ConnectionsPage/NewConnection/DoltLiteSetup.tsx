@@ -36,21 +36,32 @@ const options = [
   ],
 ] as const;
 
-export default function DoltLiteSetup({
-  typeSelect,
-}: {
+type Props = {
   typeSelect: ReactNode;
-}) {
+};
+
+type Destination = {
+  fileName: string;
+  filePath: string;
+};
+
+type FilePickerProps = {
+  value: string;
+  label: string;
+  placeholder: string;
+  buttonLabel: string;
+  onClick: () => Promise<void>;
+  dataCy: string;
+};
+
+export default function DoltLiteSetup({ typeSelect }: Props) {
   const context = useConfigContext();
   const { state, setState, error, setErr } = context;
   const [option, setOption] = useState(SetupOption.Existing);
   const [directory, setDirectory] = useState("");
   const [owner, setOwner] = useState("");
   const [remoteDatabase, setRemoteDatabase] = useState("");
-  const [destination, setDestinationDetails] = useState<{
-    fileName: string;
-    filePath: string;
-  }>();
+  const [destination, setDestinationDetails] = useState<Destination>();
   const isExisting = option === SetupOption.Existing;
   const isClone = option === SetupOption.Clone;
 
@@ -66,7 +77,7 @@ export default function DoltLiteSetup({
         "get-doltlite-database-destination",
         dir,
         database,
-      )) as { fileName: string; filePath: string } | undefined;
+      )) as Destination | undefined;
 
       setDestinationDetails(next);
       setState({
@@ -118,10 +129,23 @@ export default function DoltLiteSetup({
         state.database,
       );
     }
+    let created = false;
     try {
       await window.ipc.invoke("create-doltlite-database-file", state.name);
-      await context.onSubmit(e);
+      created = true;
+      const connected = await context.onSubmit(e);
+      await window.ipc.invoke(
+        connected
+          ? "retain-created-doltlite-database-file"
+          : "discard-created-doltlite-database-file",
+        state.name,
+      );
     } catch (err) {
+      if (created) {
+        await window.ipc
+          .invoke("discard-created-doltlite-database-file", state.name)
+          .catch(() => undefined);
+      }
       setErr(err instanceof Error ? err : Error(String(err)));
     }
   };
@@ -129,13 +153,12 @@ export default function DoltLiteSetup({
   const { canSubmit, message } = getCanSubmit(state);
   const enabled =
     canSubmit && (!isClone || (!!owner.trim() && !!remoteDatabase.trim()));
-  const submitMessage =
-    message ||
-    (isClone && !remoteDatabase.trim()
-      ? "Remote database name is required"
-      : isClone && !owner.trim()
-        ? "Owner name is required"
-        : undefined);
+  const submitMessage = getSubmitMessage(
+    message,
+    isClone,
+    owner,
+    remoteDatabase,
+  );
   const showSummary =
     directory &&
     destination &&
@@ -301,14 +324,19 @@ export default function DoltLiteSetup({
   );
 }
 
-function FilePicker(props: {
-  value: string;
-  label: string;
-  placeholder: string;
-  buttonLabel: string;
-  onClick: () => Promise<void>;
-  dataCy: string;
-}) {
+function getSubmitMessage(
+  message: string | undefined,
+  isClone: boolean,
+  owner: string,
+  remoteDatabase: string,
+): string | undefined {
+  if (message || !isClone) return message;
+  if (!remoteDatabase.trim()) return "Remote database name is required";
+  if (!owner.trim()) return "Owner name is required";
+  return undefined;
+}
+
+function FilePicker(props: FilePickerProps) {
   return (
     <div className={css.fileSelector}>
       <FormInput

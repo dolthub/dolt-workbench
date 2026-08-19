@@ -21,6 +21,27 @@ enum ConnectionOption {
   Clone,
 }
 
+type ConnectionNameInputProps = {
+  dataCy?: string;
+};
+
+type DoltConnectionOptionsProps = {
+  option: ConnectionOption;
+  select: (option: ConnectionOption) => void;
+};
+
+function getDefaultPort(type: DatabaseType): string {
+  if (type === DatabaseType.Mysql) return "3306";
+  if (type === DatabaseType.Postgres) return "5432";
+  return "";
+}
+
+function getDefaultUsername(type: DatabaseType): string {
+  if (type === DatabaseType.Mysql) return "root";
+  if (type === DatabaseType.Postgres) return "postgres";
+  return "";
+}
+
 export default function About() {
   const forElectron = process.env.NEXT_PUBLIC_FOR_ELECTRON === "true";
   const {
@@ -48,18 +69,8 @@ export default function About() {
       name: "",
       database: "",
       connectionUrl: "",
-      port:
-        type === DatabaseType.Mysql
-          ? "3306"
-          : type === DatabaseType.Postgres
-            ? "5432"
-            : "",
-      username:
-        type === DatabaseType.Mysql
-          ? "root"
-          : type === DatabaseType.Postgres
-            ? "postgres"
-            : "",
+      port: getDefaultPort(type),
+      username: getDefaultUsername(type),
       useSSL: type !== DatabaseType.Sqlite,
       isLocalDolt: false,
       cloneDolt: false,
@@ -169,7 +180,7 @@ export default function About() {
   );
 }
 
-function ConnectionNameInput({ dataCy }: { dataCy?: string }) {
+function ConnectionNameInput({ dataCy }: ConnectionNameInputProps) {
   const { state, setState, setErr } = useConfigContext();
   return (
     <FormInput
@@ -189,13 +200,7 @@ function ConnectionNameInput({ dataCy }: { dataCy?: string }) {
   );
 }
 
-function DoltConnectionOptions({
-  option,
-  select,
-}: {
-  option: ConnectionOption;
-  select: (option: ConnectionOption) => void;
-}) {
+function DoltConnectionOptions({ option, select }: DoltConnectionOptionsProps) {
   return (
     <>
       <Radio

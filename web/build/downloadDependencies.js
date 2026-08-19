@@ -7,14 +7,11 @@ const tar = require("tar");
 const AdmZip = require("adm-zip");
 
 // Get the latest version from GitHub API
-async function getLatestVersion(gitRepo, includePrereleases = false) {
+async function getLatestVersion(gitRepo) {
   return new Promise((resolve, reject) => {
-    const releasesPath = includePrereleases
-      ? "releases?per_page=10"
-      : "releases/latest";
     https
       .get(
-        `https://api.github.com/repos/dolthub/${gitRepo}/${releasesPath}`,
+        `https://api.github.com/repos/dolthub/${gitRepo}/releases/latest`,
         {
           headers: {
             "User-Agent": "Node.js",
@@ -34,10 +31,7 @@ async function getLatestVersion(gitRepo, includePrereleases = false) {
           response.on("data", chunk => (data += chunk));
           response.on("end", () => {
             try {
-              const parsed = JSON.parse(data);
-              const release = Array.isArray(parsed)
-                ? parsed.find(candidate => !candidate.draft)
-                : parsed;
+              const release = JSON.parse(data);
               if (!release?.tag_name) {
                 throw new Error("No GitHub release found");
               }
@@ -208,7 +202,7 @@ async function downloadAllDoltBinaries() {
 
 async function downloadAllDoltMcpBinaries() {
   console.log("Getting latest Dolt MCP version...");
-  const version = await getLatestVersion("dolt-mcp", true);
+  const version = await getLatestVersion("dolt-mcp");
   console.log(`Using Dolt MCP version: ${version}\n`);
 
   const configs = getDownloadConfigs(
@@ -232,5 +226,3 @@ if (require.main === module) {
     },
   );
 }
-
-module.exports = { downloadAllDoltMcpBinaries };

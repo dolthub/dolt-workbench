@@ -80,6 +80,7 @@ let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
 const activeExecutions = new Map<string, ChildProcess>();
+const pendingDoltLiteDatabaseFiles = new Set<string>();
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -322,6 +323,7 @@ ipcMain.handle("create-doltlite-database-file", async (_, filePath: string) => {
   try {
     const file = await fs.open(filePath, "wx");
     await file.close();
+    pendingDoltLiteDatabaseFiles.add(filePath);
   } catch (err) {
     if (
       typeof err === "object" &&
@@ -334,6 +336,20 @@ ipcMain.handle("create-doltlite-database-file", async (_, filePath: string) => {
     throw err;
   }
 });
+
+ipcMain.handle(
+  "discard-created-doltlite-database-file",
+  async (_, filePath: string) => {
+    if (!pendingDoltLiteDatabaseFiles.has(filePath)) return false;
+    await fs.unlink(filePath);
+    pendingDoltLiteDatabaseFiles.delete(filePath);
+    return true;
+  },
+);
+
+ipcMain.handle("retain-created-doltlite-database-file", (_, filePath: string) =>
+  pendingDoltLiteDatabaseFiles.delete(filePath),
+);
 
 ipcMain.handle("set-commit-author", (_, author: StoredAuthor) =>
   setStoredAuthor(author),

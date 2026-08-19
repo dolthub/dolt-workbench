@@ -1,4 +1,4 @@
-import { getCloneRemoteUrl } from "./queries";
+import { getCloneRemoteUrl, getPushSourceBranch } from "./queries";
 
 describe("getCloneRemoteUrl", () => {
   it("expands a DoltHub owner/database path to the DoltLite remote URL", () => {
@@ -13,5 +13,15 @@ describe("getCloneRemoteUrl", () => {
     "https://example.com/remote.db",
   ])("preserves an explicit remote URL: %s", remote => {
     expect(getCloneRemoteUrl(remote)).toBe(remote);
+  });
+});
+
+describe("getPushSourceBranch", () => {
+  it("uses the source side of a push refspec", () => {
+    expect(getPushSourceBranch("feature:production")).toBe("feature");
+  });
+
+  it("leaves a branch name unchanged", () => {
+    expect(getPushSourceBranch("main")).toBe("main");
   });
 });
