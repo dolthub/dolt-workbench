@@ -5,9 +5,12 @@ import { DatabaseType } from "../databases/database.enum";
 import { QueryFactory } from "../queryFactory";
 import { DoltQueryFactory } from "../queryFactory/dolt";
 import { DoltgresQueryFactory } from "../queryFactory/doltgres";
+import { DoltLiteQueryFactory } from "../queryFactory/doltlite";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
 import { PostgresQueryFactory } from "../queryFactory/postgres";
-import { replaceDatabaseInConnectionUrl } from "./util";
+import { SqliteQueryFactory } from "../queryFactory/sqlite";
+import { doltliteDriver } from "./doltliteDriver";
+import { getSqliteFilePath, replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
   name: string;
@@ -98,17 +101,30 @@ export class ConnectionProvider {
     }
     await this.addConnection({
       ...this.workbenchConfig,
-      connectionUrl: newDatabase
-        ? replaceDatabaseInConnectionUrl(
-            this.workbenchConfig.connectionUrl,
-            newDatabase,
-          )
-        : this.workbenchConfig.connectionUrl,
+      connectionUrl:
+        newDatabase && this.workbenchConfig.type !== DatabaseType.Sqlite
+          ? replaceDatabaseInConnectionUrl(
+              this.workbenchConfig.connectionUrl,
+              newDatabase,
+            )
+          : this.workbenchConfig.connectionUrl,
     });
   }
 }
 
 export function getDataSource(config: WorkbenchConfig): DataSource {
+  if (config.type === DatabaseType.Sqlite) {
+    return new DataSource({
+      type: "better-sqlite3",
+      database: getSqliteFilePath(config.connectionUrl),
+      driver: doltliteDriver,
+      fileMustExist: true,
+      statementCacheSize: 0,
+      synchronize: false,
+      logging: "all",
+    });
+  }
+
   const ds = new DataSource({
     applicationName: "Dolt Workbench",
     type: config.type,
@@ -146,6 +162,18 @@ export async function newQueryFactory(
       // do nothing
     }
     return { qf: new PostgresQueryFactory(ds), isDolt: false };
+  }
+
+  if (type === DatabaseType.Sqlite) {
+    try {
+      const res = await ds?.query("SELECT doltlite_engine() AS engine");
+      if (res && res[0]?.engine === "prolly") {
+        return { qf: new DoltLiteQueryFactory(ds), isDolt: true };
+      }
+    } catch {
+      // do nothing
+    }
+    return { qf: new SqliteQueryFactory(ds), isDolt: false };
   }
 
   try {

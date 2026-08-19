@@ -7,6 +7,9 @@ const mysqlEm = new EntityManager(
 const pgEm = new EntityManager(
   new DataSource({ type: "postgres", host: "", database: "" }),
 );
+const sqliteEm = new EntityManager(
+  new DataSource({ type: "better-sqlite3", database: ":memory:", driver: {} }),
+);
 
 describe("buildInsertRow", () => {
   describe("mysql", () => {
@@ -173,6 +176,20 @@ describe("buildInsertRow", () => {
     it("throws when no values are provided", () => {
       expect(() => buildInsertRow(pgEm, "public.users", [])).toThrow(
         /at least one column value/,
+      );
+    });
+  });
+
+  describe("sqlite", () => {
+    it("emits double-quoted identifiers with ? placeholders", () => {
+      const out = buildInsertRow(sqliteEm, "users", [
+        { column: "id", value: "1", type: "int" },
+        { column: "name", value: "alice" },
+      ]);
+      expect(out.sql).toBe(`INSERT INTO "users"("id", "name") VALUES (?, ?)`);
+      expect(out.params).toEqual(["1", "alice"]);
+      expect(out.displaySql).toBe(
+        `INSERT INTO "users"("id", "name") VALUES (1, 'alice')`,
       );
     });
   });
