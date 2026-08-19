@@ -38,7 +38,11 @@ export async function handleRefNotFound<T>(q: () => Promise<T>): Promise<T> {
     const res = await q();
     return res;
   } catch (err) {
-    if (err.message.includes("invalid ref spec")) {
+    if (
+      err.message.includes("invalid ref spec") ||
+      err.message.includes("invalid dolt_log revision") ||
+      err.message.includes("no such branch")
+    ) {
       throw new Error("no such ref in database");
     }
     throw err;

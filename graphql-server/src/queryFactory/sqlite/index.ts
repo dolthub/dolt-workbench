@@ -3,7 +3,9 @@ import { QueryFactory } from "..";
 import { dbNameFromFilePath } from "../../connections/util";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
+import { TableDetails } from "../../tables/table.model";
 import { MySQLQueryFactory } from "../mysql";
+import { getTableInfo, getTablePKColumns, getTables } from "../mysql/utils";
 import * as t from "../types";
 import { classifySqliteResult } from "./classifyResult";
 import * as qh from "./queries";
@@ -64,6 +66,55 @@ export class SqliteQueryFactory
     return res.map(r => r.name);
   }
 
+  // The MySQL implementations of these drop refName; it must reach
+  // checkoutDatabase so DoltLite can scope introspection to a branch.
+  async getTableInfo(args: t.TableArgs): Promise<TableDetails | undefined> {
+    return this.queryQR(
+      async qr => {
+        const table = await getTableInfo(qr, args.tableName);
+        if (table) return table;
+        // TypeORM's sqlite getTable only reads tables; views are
+        // introspected through pragma_table_info instead.
+        const cols: t.RawRows = await qr.query(qh.tableColumnsQuery, [
+          args.tableName,
+        ]);
+        if (!cols.length) return undefined;
+        return {
+          tableName: args.tableName,
+          columns: cols.map(c => {
+            return {
+              name: c.name,
+              isPrimaryKey: c.pk > 0,
+              type: c.type,
+              constraints: [{ notNull: c.notnull === 1 }],
+              sourceTable: args.tableName,
+            };
+          }),
+          foreignKeys: [],
+          indexes: [],
+        };
+      },
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
+    return this.queryQR(
+      async qr => getTables(qr, tns),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
+  async getTablePKColumns(args: t.TableArgs): Promise<string[]> {
+    return this.queryQR(
+      async qr => getTablePKColumns(qr, args.tableName),
+      args.databaseName,
+      args.refName,
+    );
+  }
+
   async getSqlSelect(
     args: t.RefArgs & { queryString: string },
   ): Promise<t.SqlSelectResult> {
@@ -77,23 +128,30 @@ export class SqliteQueryFactory
     );
   }
 
-  async getSchemas(args: t.DBArgs, type?: SchemaType): Promise<SchemaItem[]> {
-    return this.queryMultiple(async query => {
-      const vRes = await query(qh.viewsQuery);
-      const views = vRes.map(v => {
-        return { name: v.name, type: SchemaType.View };
-      });
-      if (type === SchemaType.View) {
-        return views;
-      }
+  async getSchemas(
+    args: t.RefMaybeSchemaArgs,
+    type?: SchemaType,
+  ): Promise<SchemaItem[]> {
+    return this.queryMultiple(
+      async query => {
+        const vRes = await query(qh.viewsQuery);
+        const views = vRes.map(v => {
+          return { name: v.name, type: SchemaType.View };
+        });
+        if (type === SchemaType.View) {
+          return views;
+        }
 
-      const tRes = await query(qh.triggersQuery);
-      const triggers = tRes.map(tr => {
-        return { name: tr.name, type: SchemaType.Trigger };
-      });
+        const tRes = await query(qh.triggersQuery);
+        const triggers = tRes.map(tr => {
+          return { name: tr.name, type: SchemaType.Trigger };
+        });
 
-      return [...views, ...triggers];
-    }, args.databaseName);
+        return [...views, ...triggers];
+      },
+      args.databaseName,
+      args.refName,
+    );
   }
 
   async getProcedures(_args: t.DBArgs): Promise<SchemaItem[]> {

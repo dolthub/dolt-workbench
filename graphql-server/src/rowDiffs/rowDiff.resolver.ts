@@ -71,6 +71,7 @@ export class RowDiffResolver {
         ...dbArgs,
         tableName,
         refName: fromCommitId,
+        branchRefName: refName,
         offset,
       });
       return fromOneSidedTable(
@@ -85,6 +86,7 @@ export class RowDiffResolver {
         ...dbArgs,
         tableName,
         refName: toCommitId,
+        branchRefName: refName,
         offset,
       });
       return fromOneSidedTable(

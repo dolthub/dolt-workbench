@@ -70,6 +70,7 @@ export class ConnectionProvider {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
+    await this.qf?.destroy?.();
     if (this.ds?.isInitialized) {
       await this.ds.destroy();
     }

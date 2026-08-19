@@ -62,6 +62,16 @@ describe("SqliteQueryFactory against a real doltlite database", () => {
     expect(pk?.isPrimaryKey).toBe(true);
   });
 
+  it("introspects view columns via the pragma fallback", async () => {
+    const info = await qf.getTableInfo({ ...dbArgs, tableName: "user_names" });
+    expect(info?.tableName).toEqual("user_names");
+    expect(info?.columns.map(c => c.name)).toEqual(["name"]);
+    expect(info?.columns[0].isPrimaryKey).toBe(false);
+    expect(
+      await qf.getTableInfo({ ...dbArgs, tableName: "missing_tbl" }),
+    ).toBeUndefined();
+  });
+
   it("gets primary key columns", async () => {
     expect(
       await qf.getTablePKColumns({ ...dbArgs, tableName: "users" }),
@@ -112,7 +122,7 @@ describe("SqliteQueryFactory against a real doltlite database", () => {
   });
 
   it("returns views and triggers from getSchemas", async () => {
-    const schemas = await qf.getSchemas({ databaseName: "testdb" });
+    const schemas = await qf.getSchemas(dbArgs);
     expect(schemas).toEqual([{ name: "user_names", type: SchemaType.View }]);
   });
 

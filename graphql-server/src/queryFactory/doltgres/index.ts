@@ -463,15 +463,19 @@ export class DoltgresQueryFactory
   }
 
   async getOneSidedRowDiff(
-    args: t.TableMaybeSchemaArgs & { offset: number },
+    args: t.TableMaybeSchemaArgs & { offset: number; branchRefName?: string },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
-    return this.queryMultiple(async query => {
-      const columns = await query(
-        qh.tableColsQueryAsOf(args.tableName, args.refName),
-      );
-      const rows = await query(qh.getRowsQueryAsOf(columns, args));
-      return { rows, columns };
-    }, args.databaseName);
+    return this.queryMultiple(
+      async query => {
+        const columns = await query(
+          qh.tableColsQueryAsOf(args.tableName, args.refName),
+        );
+        const rows = await query(qh.getRowsQueryAsOf(columns, args));
+        return { rows, columns };
+      },
+      args.databaseName,
+      args.branchRefName,
+    );
   }
 
   async getRowDiffs(args: t.RowDiffArgs): t.DiffRes {

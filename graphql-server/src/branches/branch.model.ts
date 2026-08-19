@@ -1,6 +1,6 @@
-import { convertToUTCDate } from "@dolthub/web-utils";
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
+import { convertRowDate } from "../utils";
 import * as table from "../tables/table.model";
 import { ListOffsetRes } from "../utils/commonTypes";
 
@@ -53,7 +53,7 @@ export function fromDoltBranchesRow(
     databaseName,
     branchName: b.name,
     head: b.hash,
-    lastUpdated: convertToUTCDate(b.latest_commit_date),
+    lastUpdated: convertRowDate(b.latest_commit_date),
     lastCommitter: b.latest_committer,
     tableNames: tns,
     remote: b.remote,

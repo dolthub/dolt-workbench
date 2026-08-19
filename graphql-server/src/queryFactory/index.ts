@@ -13,6 +13,8 @@ export declare class QueryFactory {
 
   constructor(ds: DataSource | undefined);
 
+  destroy?(): Promise<void>;
+
   // UTILS
 
   getDS(): DataSource;
@@ -193,7 +195,9 @@ export declare class QueryFactory {
   ): Promise<{ fromCommitId: string; toCommitId: string }>;
 
   getOneSidedRowDiff(
-    args: t.TableArgs & { offset: number },
+    // refName is the resolved commit id of the existing side; branchRefName
+    // is the branch the diff is scoped to, so WORKING resolves against it.
+    args: t.TableArgs & { offset: number; branchRefName?: string },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }>;
 
   getRowDiffs(args: t.RowDiffArgs): t.DiffRes;
@@ -218,7 +222,7 @@ export declare class QueryFactory {
 
   callFetchRemote(args: t.RemoteArgs): t.PR;
 
-  callCreateBranchFromRemote(args: t.RemoteArgs): t.PR;
+  callCreateBranchFromRemote(args: t.RemoteBranchArgs): t.PR;
 
   getMergeBase(args: t.RefsArgs): Promise<string>;
 

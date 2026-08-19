@@ -440,23 +440,29 @@ export class DoltQueryFactory
   }
 
   async getOneSidedRowDiff(
-    args: t.TableArgs & { offset: number },
+    args: t.TableArgs & { offset: number; branchRefName?: string },
   ): Promise<{ rows: t.RawRows; columns: t.RawRows }> {
-    return this.queryMultiple(async query => {
-      const columns = await query(qh.tableColsQueryAsOf, [
-        args.tableName,
-        args.refName,
-      ]);
-      const { q, cols } = qh.getRowsQueryAsOf(columns);
-      const rows = await query(q, [
-        args.tableName,
-        args.refName,
-        ...cols,
-        ROW_LIMIT + 1,
-        args.offset,
-      ]);
-      return { rows, columns };
-    }, args.databaseName);
+    return this.queryMultiple(
+      async query => {
+        const columns = await query(qh.tableColsQueryAsOf, [
+          args.tableName,
+          args.refName,
+        ]);
+        const { q, cols } = qh.getRowsQueryAsOf(columns);
+        const rows = await query(q, [
+          args.tableName,
+          args.refName,
+          ...cols,
+          ROW_LIMIT + 1,
+          args.offset,
+        ]);
+        return { rows, columns };
+      },
+      args.databaseName,
+      // Pins the session branch so AS OF 'WORKING' reads the right working
+      // set instead of the connection's default branch.
+      args.branchRefName,
+    );
   }
 
   async getRowDiffs(args: t.RowDiffArgs): t.DiffRes {
