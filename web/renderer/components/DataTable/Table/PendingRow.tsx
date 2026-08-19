@@ -8,6 +8,7 @@ import {
   RowForDataTableFragment,
   useInsertRowMutation,
 } from "@gen/graphql-types";
+import useDataTableStack from "@hooks/useDataTableStack";
 import useMutation from "@hooks/useMutation";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import cx from "classnames";
@@ -26,6 +27,7 @@ export default function PendingRow(props: Props) {
   const { setExecutedQuery, setExecutionError, setExecutionMessage } =
     useSqlEditorContext();
   const client = useApolloClient();
+  const { reset: resetStack } = useDataTableStack();
   const { mutateFn: insertRow } = useMutation({ hook: useInsertRowMutation });
 
   const { tableName, schemaName, databaseName, refName } = params;
@@ -51,6 +53,7 @@ export default function PendingRow(props: Props) {
     if (res.success && res.data?.insertRow) {
       setExecutedQuery(res.data.insertRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.insertRow.executionMessage);
+      resetStack();
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);

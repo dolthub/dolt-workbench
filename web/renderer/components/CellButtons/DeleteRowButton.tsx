@@ -7,6 +7,7 @@ import {
   RowForDataTableFragment,
   useDeleteRowMutation,
 } from "@gen/graphql-types";
+import useDataTableStack from "@hooks/useDataTableStack";
 import useMutation from "@hooks/useMutation";
 import { isUneditableDoltSystemTable } from "@lib/doltSystemTables";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
@@ -28,6 +29,7 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
   const { tableName, schemaName, databaseName } = params;
   const refName = props.refName ?? params.refName;
   const client = useApolloClient();
+  const { reset: resetStack } = useDataTableStack();
   const { mutateFn: deleteRow } = useMutation({
     hook: useDeleteRowMutation,
   });
@@ -42,6 +44,7 @@ export default function DeleteRowButton(props: Props): JSX.Element | null {
     if (res.success && res.data?.deleteRow) {
       setExecutedQuery(res.data.deleteRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.deleteRow.executionMessage);
+      resetStack();
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);
