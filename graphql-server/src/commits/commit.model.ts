@@ -1,6 +1,6 @@
-import { convertToUTCDate } from "@dolthub/web-utils";
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import { RawRow } from "../queryFactory/types";
+import { convertRowDate } from "../utils";
 import { ListOffsetRes } from "../utils/commonTypes";
 import * as doltWriter from "./doltWriter.model";
 
@@ -41,7 +41,7 @@ export function fromDoltLogRow(databaseName: string, l: RawRow): Commit {
     databaseName,
     message: l.message,
     commitId: l.commit_hash,
-    committedAt: convertToUTCDate(l.date),
+    committedAt: convertRowDate(l.date),
     committer: doltWriter.fromDoltLogRow(l),
     parents: getParents(l),
   };

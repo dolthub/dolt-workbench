@@ -7,6 +7,9 @@ const mysqlEm = new EntityManager(
 const pgEm = new EntityManager(
   new DataSource({ type: "postgres", host: "", database: "" }),
 );
+const sqliteEm = new EntityManager(
+  new DataSource({ type: "better-sqlite3", database: ":memory:", driver: {} }),
+);
 
 describe("buildCallProcedure", () => {
   it("emits CALL for mysql", () => {
@@ -19,6 +22,11 @@ describe("buildCallProcedure", () => {
   it("emits SELECT for postgres", () => {
     const out = buildCallProcedure(pgEm, "DOLT_REVERT", ["abc123"]);
     expect(out.sql).toBe("SELECT DOLT_REVERT('abc123')");
+  });
+
+  it("emits SELECT for sqlite", () => {
+    const out = buildCallProcedure(sqliteEm, "dolt_commit", ["-m", "msg"]);
+    expect(out.sql).toBe("SELECT dolt_commit('-m', 'msg')");
   });
 
   it("emits no args", () => {

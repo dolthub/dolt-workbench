@@ -840,6 +840,7 @@ __metadata:
   dependencies:
     "@apollo/server": "npm:^5.5.0"
     "@as-integrations/express5": "npm:^1.1.2"
+    "@dolthub/doltlite": "npm:^0.11.51"
     "@dolthub/web-utils": "npm:^0.3.1"
     "@nestjs/apollo": "npm:^13.1.0"
     "@nestjs/cli": "npm:^11.0.10"
@@ -885,6 +886,16 @@ __metadata:
     yalc: "npm:^1.0.0-pre.53"
   languageName: unknown
   linkType: soft
+
+"@dolthub/doltlite@npm:^0.11.51":
+  version: 0.11.51
+  resolution: "@dolthub/doltlite@npm:0.11.51"
+  dependencies:
+    node-addon-api: "npm:^8.0.0"
+    node-gyp: "npm:latest"
+  checksum: 10c0/e110354f1f3c3b3036ebf027da1a4058e0ce11df8dfb59b6e634cdf8b143012a5d3d4463fc2db429d9fd622d5215ca2f26bc9ee83f27f6942ca796e95a197140
+  languageName: node
+  linkType: hard
 
 "@dolthub/web-utils@npm:^0.3.1":
   version: 0.3.1
@@ -8283,6 +8294,15 @@ __metadata:
   version: 3.1.1
   resolution: "node-abort-controller@npm:3.1.1"
   checksum: 10c0/f7ad0e7a8e33809d4f3a0d1d65036a711c39e9d23e0319d80ebe076b9a3b4432b4d6b86a7fab65521de3f6872ffed36fc35d1327487c48eb88c517803403eda3
+  languageName: node
+  linkType: hard
+
+"node-addon-api@npm:^8.0.0":
+  version: 8.9.1
+  resolution: "node-addon-api@npm:8.9.1"
+  dependencies:
+    node-gyp: "npm:latest"
+  checksum: 10c0/189160497de690479030b7b2f5641c38ffab8601c2ada6fcb8fe3718baf14af51d651528a49ec58de5dd602ff7858459d13facb71914669106f2c6cc6d9d50a5
   languageName: node
   linkType: hard
 

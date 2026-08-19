@@ -1,11 +1,16 @@
+import { DatabaseType } from "@gen/graphql-types";
+
 export function callProcedure(
-  isPostgres: boolean,
+  databaseType: DatabaseType | undefined,
   name: string,
   args: string[],
 ): string {
-  const quote = isPostgres
+  const usesFunctionSyntax =
+    databaseType === DatabaseType.Postgres ||
+    databaseType === DatabaseType.Sqlite;
+  const quote = usesFunctionSyntax
     ? (s: string) => s.replace(/'/g, "''")
     : (s: string) => s.replace(/'/g, "\\'");
   const quotedArgs = args.map(a => `'${quote(a)}'`).join(", ");
-  return `${isPostgres ? "SELECT" : "CALL"} ${name}(${quotedArgs});`;
+  return `${usesFunctionSyntax ? "SELECT" : "CALL"} ${name}(${quotedArgs});`;
 }

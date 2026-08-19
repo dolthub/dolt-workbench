@@ -1,7 +1,7 @@
-import { convertToUTCDate } from "@dolthub/web-utils";
 import { Field, GraphQLTimestamp, ID, ObjectType } from "@nestjs/graphql";
 import * as doltWriter from "../commits/doltWriter.model";
 import { RawRow } from "../queryFactory/types";
+import { convertRowDate } from "../utils";
 
 @ObjectType()
 export class Tag {
@@ -39,7 +39,7 @@ export function fromDoltRowRes(databaseName: string, tag: RawRow): Tag {
     databaseName,
     tagName: tag.tag_name,
     message: tag.message,
-    taggedAt: convertToUTCDate(tag.date),
+    taggedAt: convertRowDate(tag.date),
     commitId: tag.tag_hash,
     tagger: {
       _id: tag.email,

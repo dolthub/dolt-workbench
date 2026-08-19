@@ -5,6 +5,7 @@ import SchemaFragment from "@components/SchemaFragment";
 import SqlDataTable from "@components/SqlDataTable";
 import QueryBreadcrumbs from "@components/breadcrumbs/QueryBreadcrumbs";
 import { DataTableProvider, useDataTableContext } from "@contexts/dataTable";
+import { Loader } from "@dolthub/react-components";
 import { SchemaType } from "@gen/graphql-types";
 import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { parseDefinition } from "@lib/definitionUrl";
@@ -73,9 +74,23 @@ function Inner({ params }: Props) {
 }
 
 export default function ForQuery(props: Props) {
+  const { isSqlite, loading } = useDatabaseDetails();
+  if (!props.params.q && loading) return <Loader loaded={false} />;
+  const params = {
+    ...props.params,
+    q: props.params.q || defaultQuery(isSqlite),
+  };
   return (
-    <DataTableProvider {...props}>
-      <Inner {...props} />
+    <DataTableProvider params={params}>
+      <Inner params={params} />
     </DataTableProvider>
   );
+}
+
+export function defaultQuery(isSqlite: boolean): string {
+  if (!isSqlite) return "SHOW TABLES";
+  return `SELECT name
+FROM sqlite_master
+WHERE type IN ('table', 'view') AND name NOT LIKE 'sqlite_%'
+ORDER BY name;`;
 }

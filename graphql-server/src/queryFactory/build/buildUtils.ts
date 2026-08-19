@@ -30,6 +30,10 @@ export function mutationExecutionMessage(rowsAffected: number): string {
 
 export const DDL_EXECUTION_MESSAGE = "Query OK.";
 
+export function escapeIdentifier(name: string): string {
+  return `"${name.replace(/"/g, '""')}"`;
+}
+
 export function escapeQualifiedIdentifier(
   escape: (name: string) => string,
   qualified: string,

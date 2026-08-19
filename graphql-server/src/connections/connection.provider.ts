@@ -5,9 +5,12 @@ import { DatabaseType } from "../databases/database.enum";
 import { QueryFactory } from "../queryFactory";
 import { DoltQueryFactory } from "../queryFactory/dolt";
 import { DoltgresQueryFactory } from "../queryFactory/doltgres";
+import { DoltLiteQueryFactory } from "../queryFactory/doltlite";
 import { MySQLQueryFactory } from "../queryFactory/mysql";
 import { PostgresQueryFactory } from "../queryFactory/postgres";
-import { replaceDatabaseInConnectionUrl } from "./util";
+import { SqliteQueryFactory } from "../queryFactory/sqlite";
+import { doltliteDriver } from "./doltliteDriver";
+import { getSqliteFilePath, replaceDatabaseInConnectionUrl } from "./util";
 
 export class WorkbenchConfig {
   name: string;
@@ -67,19 +70,21 @@ export class ConnectionProvider {
   }
 
   async addConnection(config: WorkbenchConfig): Promise<{ isDolt: boolean }> {
-    if (this.ds?.isInitialized) {
-      await this.ds.destroy();
-    }
+    await this.closeConnection();
 
     this.workbenchConfig = config;
 
     this.ds = getDataSource(config);
 
-    await this.ds.initialize();
-
-    const res = await newQueryFactory(config.type, this.ds);
-    this.qf = res.qf;
-    return { isDolt: res.isDolt };
+    try {
+      await this.ds.initialize();
+      const res = await newQueryFactory(config.type, this.ds);
+      this.qf = res.qf;
+      return { isDolt: res.isDolt };
+    } catch (error) {
+      await this.closeConnection();
+      throw error;
+    }
   }
 
   getWorkbenchConfig(): WorkbenchConfig | undefined {
@@ -90,6 +95,16 @@ export class ConnectionProvider {
     return this.qf?.isDolt;
   }
 
+  async closeConnection(): Promise<void> {
+    await this.qf?.destroy?.();
+    if (this.ds?.isInitialized) {
+      await this.ds.destroy();
+    }
+    this.qf = undefined;
+    this.ds = undefined;
+    this.workbenchConfig = undefined;
+  }
+
   async resetDS(newDatabase?: string): Promise<void> {
     if (!this.workbenchConfig) {
       throw new Error(
@@ -98,17 +113,30 @@ export class ConnectionProvider {
     }
     await this.addConnection({
       ...this.workbenchConfig,
-      connectionUrl: newDatabase
-        ? replaceDatabaseInConnectionUrl(
-            this.workbenchConfig.connectionUrl,
-            newDatabase,
-          )
-        : this.workbenchConfig.connectionUrl,
+      connectionUrl:
+        newDatabase && this.workbenchConfig.type !== DatabaseType.Sqlite
+          ? replaceDatabaseInConnectionUrl(
+              this.workbenchConfig.connectionUrl,
+              newDatabase,
+            )
+          : this.workbenchConfig.connectionUrl,
     });
   }
 }
 
 export function getDataSource(config: WorkbenchConfig): DataSource {
+  if (config.type === DatabaseType.Sqlite) {
+    return new DataSource({
+      type: "better-sqlite3",
+      database: getSqliteFilePath(config.connectionUrl),
+      driver: doltliteDriver,
+      fileMustExist: true,
+      statementCacheSize: 0,
+      synchronize: false,
+      logging: "all",
+    });
+  }
+
   const ds = new DataSource({
     applicationName: "Dolt Workbench",
     type: config.type,
@@ -146,6 +174,18 @@ export async function newQueryFactory(
       // do nothing
     }
     return { qf: new PostgresQueryFactory(ds), isDolt: false };
+  }
+
+  if (type === DatabaseType.Sqlite) {
+    try {
+      const res = await ds?.query("SELECT doltlite_engine() AS engine");
+      if (res && res[0]?.engine === "prolly") {
+        return { qf: new DoltLiteQueryFactory(ds), isDolt: true };
+      }
+    } catch {
+      // do nothing
+    }
+    return { qf: new SqliteQueryFactory(ds), isDolt: false };
   }
 
   try {

@@ -8,6 +8,7 @@ import {
 import cx from "classnames";
 import { FiCheck } from "react-icons/fi";
 import { ReactNode } from "react";
+import { DatabaseType } from "@gen/graphql-types";
 import About from "./About";
 import Connection from "./Connection";
 import Advanced from "./Advanced";
@@ -18,11 +19,12 @@ import { ConfigState } from "./context/state";
 export default function ConnectionTabs() {
   const { setErr, state } = useConfigContext();
   const clearErr = () => setErr(undefined);
+  const showAboutOnly = state.isLocalDolt || state.type === DatabaseType.Sqlite;
 
   return (
     <Tabs initialActiveIndex={0} afterSetTabIndex={clearErr}>
       <TabList className={css.tabList}>
-        {state.isLocalDolt
+        {showAboutOnly
           ? [
               <CustomTab key="About" index={0} data-cy="connection-tabs-about">
                 About
@@ -58,7 +60,12 @@ type PanelProps = {
 
 function CustomTabPanel(props: PanelProps) {
   return (
-    <TabPanel index={props.index} className={css.panel}>
+    <TabPanel
+      index={props.index}
+      className={cx(css.panel, {
+        [css.aboutPanel]: props.index === 0,
+      })}
+    >
       {props.children}
     </TabPanel>
   );

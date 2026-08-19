@@ -29,6 +29,12 @@
 
 .middle {
   @apply min-h-32;
+  max-height: min(28rem, calc(100vh - 8rem));
+}
+
+.middle > .left,
+.middle > .right {
+  @apply min-h-0 overflow-y-auto overscroll-contain;
 }
 
 .left {
@@ -47,7 +53,7 @@
 }
 
 .connection {
-  @apply h-16 flex-col items-start w-full px-4 border-b border-storm-50 border-opacity-40;
+  @apply min-h-16 flex-col items-start w-full px-4 py-2 border-b border-storm-50 border-opacity-40;
 }
 
 .connection:last-child {
@@ -88,6 +94,9 @@
   img {
     @apply h-[0.65rem];
   }
+  .sqliteLogo {
+    @apply h-[1.1rem] w-auto;
+  }
 }
 
 .local {
@@ -96,6 +105,10 @@
 
 .connectionUrl {
   @apply text-storm-200 text-xs font-normal text-left py-1;
+}
+
+.filePath {
+  @apply break-all leading-4;
 }
 
 .dbItem {

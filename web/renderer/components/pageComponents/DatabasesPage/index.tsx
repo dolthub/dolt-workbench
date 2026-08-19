@@ -13,7 +13,7 @@ import { useEffect } from "react";
 import css from "./index.module.css";
 
 export default function DatabasesPage() {
-  const { isPostgres, isDolt } = useDatabaseDetails();
+  const { isPostgres, isSqlite, isDolt } = useDatabaseDetails();
   const res = useDatabasesQuery();
   const router = useRouter();
 
@@ -51,12 +51,14 @@ export default function DatabasesPage() {
               No databases found. Create a database to get started.
             </p>
           )}
-          <CreateDatabase
-            buttonClassName={css.button}
-            isPostgres={isPostgres}
-            isDolt={isDolt}
-            showText
-          />
+          {!isSqlite && (
+            <CreateDatabase
+              buttonClassName={css.button}
+              isPostgres={isPostgres}
+              isDolt={isDolt}
+              showText
+            />
+          )}
           <ErrorMsg err={res.error} />
         </div>
       </Loader>

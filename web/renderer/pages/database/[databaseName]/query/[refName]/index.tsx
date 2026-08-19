@@ -12,18 +12,13 @@ type Props = {
   params: QueryPageQueryParams;
 };
 
-const QueryPage: NextPage<Props> = props => {
-  const defaultQuery = "SHOW TABLES";
-  const params = {
-    ...props.params,
-    q: props.params.q ?? defaultQuery,
-  };
-  return (
-    <Page title={`${props.params.databaseName} - Query`} noIndex>
-      <DatabasePage.ForQuery params={params} />
-    </Page>
-  );
-};
+const QueryPage: NextPage<Props> = props => (
+  <Page title={`${props.params.databaseName} - Query`} noIndex>
+    <DatabasePage.ForQuery
+      params={{ ...props.params, q: props.params.q ?? "" }}
+    />
+  </Page>
+);
 
 // #!if !isElectron
 export const getServerSideProps: GetServerSideProps<Props> = async ({

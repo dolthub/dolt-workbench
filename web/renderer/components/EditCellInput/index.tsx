@@ -1,4 +1,4 @@
-import { toFilterValue, toWhereClauses } from "@components/CellButtons/utils";
+import { toWhereClauses } from "@components/CellButtons/utils";
 import { useApolloClient } from "@apollo/client";
 import { useDataTableContext } from "@contexts/dataTable";
 import { useSqlEditorContext } from "@contexts/sqleditor";
@@ -12,7 +12,6 @@ import {
 import useDataTableStack from "@hooks/useDataTableStack";
 import useMutation from "@hooks/useMutation";
 import { getBitDisplayValue } from "@lib/dataTable";
-import { rewriteWhereColumn } from "@lib/dataTableParams";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
 import { AiOutlineCheck, AiOutlineClose } from "react-icons/ai";
 import { BiText } from "react-icons/bi";
@@ -39,7 +38,7 @@ export default function EditCellInput(props: Props) {
   const { params, columns } = useDataTableContext();
   const { tableName, schemaName, databaseName } = params;
   const refName = props.refName ?? params.refName;
-  const { stack, update: updateStack } = useDataTableStack();
+  const { reset: resetStack } = useDataTableStack();
   const client = useApolloClient();
   const { mutateFn: updateRow, loading } = useMutation({
     hook: useUpdateRowMutation,
@@ -74,14 +73,7 @@ export default function EditCellInput(props: Props) {
     if (res.success && res.data?.updateRow) {
       setExecutedQuery(res.data.updateRow.queryString, { isMutation: true });
       setExecutionMessage(res.data.updateRow.executionMessage);
-      const nextWhere = rewriteWhereColumn(
-        stack.where,
-        props.currentCol.name,
-        toFilterValue(props.currentCol.type, newValue),
-      );
-      if (nextWhere !== stack.where) {
-        updateStack({ ...stack, where: nextWhere });
-      }
+      resetStack();
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);

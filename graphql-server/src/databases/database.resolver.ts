@@ -232,10 +232,15 @@ export class DatabaseResolver {
   async removeDatabaseConnection(
     @Args() args: RemoveDatabaseConnectionArgs,
   ): Promise<boolean> {
+    const isCurrentConnection =
+      this.conn.getWorkbenchConfig()?.name === args.name;
     if (this.dataStoreService.hasDataStoreConfig()) {
       await this.dataStoreService.removeStoredConnection(args.name);
     } else {
       this.fileStoreService.removeItemFromStore(args.name);
+    }
+    if (isCurrentConnection) {
+      await this.conn.closeConnection();
     }
     return true;
   }

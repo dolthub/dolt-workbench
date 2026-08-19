@@ -43,6 +43,9 @@ export class FileUploadResolver {
   async loadDataFile(@Args() args: TableImportArgs): Promise<boolean> {
     const config = this.connResolver.getWorkbenchConfig();
     if (!config) throw new Error("Workbench config not found");
+    if (config.type === DatabaseType.Sqlite) {
+      throw new Error("File upload is not supported for SQLite connections");
+    }
 
     const { createReadStream, filename } = await args.file;
 

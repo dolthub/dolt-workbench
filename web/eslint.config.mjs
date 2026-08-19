@@ -223,5 +223,11 @@ export default [
       "@typescript-eslint/no-var-requires": "off",
     },
   },
+  {
+    files: ["main/**/*.{js,jsx,ts,tsx}"],
+    rules: {
+      "no-nested-ternary": "error",
+    },
+  },
   prettierConfig,
 ];

@@ -1,6 +1,7 @@
 import NotDoltWrapper from "@components/util/NotDoltWrapper";
 import { Popup } from "@dolthub/react-components";
 import useRole from "@hooks/useRole";
+import useDatabaseDetails from "@hooks/useDatabaseDetails";
 import { OptionalRefParams } from "@lib/params";
 import { newRelease, upload } from "@lib/urls";
 import { AiOutlineTag, AiOutlineUpload } from "react-icons/ai";
@@ -16,6 +17,7 @@ type Props = {
 
 export default function AddItemDropdown(props: Props) {
   const { userHasWritePerms, canWriteToDB } = useRole();
+  const { isSqlite } = useDatabaseDetails();
 
   if (!canWriteToDB) return null;
 
@@ -33,7 +35,7 @@ export default function AddItemDropdown(props: Props) {
             <DropdownItem
               url={upload(props.params)}
               icon={<AiOutlineUpload />}
-              hide={!userHasWritePerms}
+              hide={!userHasWritePerms || isSqlite}
               data-cy="add-dropdown-upload-a-file-link"
             >
               Upload a file

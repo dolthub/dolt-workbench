@@ -8,6 +8,10 @@ import { MdRemoveRedEye } from "react-icons/md";
 import { Button } from "@dolthub/react-components";
 import { excerpt } from "@dolthub/web-utils";
 import cx from "classnames";
+import {
+  getConnectionDisplayName,
+  isSqliteConnection,
+} from "@lib/databaseConnection";
 import { DatabaseTypeLabel } from "./DatabaseTypeLabel";
 import css from "./index.module.css";
 
@@ -23,6 +27,8 @@ export default function ConnectionItem({
   onSelected,
   currentConnection,
 }: Props) {
+  const sqlite = isSqliteConnection(conn);
+
   return (
     <Button.Link
       key={conn.name}
@@ -34,7 +40,9 @@ export default function ConnectionItem({
     >
       <div className={css.connectionTop}>
         <div className={css.nameAndLabel}>
-          <span className={css.connectionName}>{excerpt(conn.name, 16)}</span>
+          <span className={css.connectionName}>
+            {excerpt(getConnectionDisplayName(conn), 16)}
+          </span>
           <DatabaseTypeLabel conn={conn} />
           {conn.name === currentConnection.name && (
             <MdRemoveRedEye className={css.viewing} />
@@ -42,8 +50,13 @@ export default function ConnectionItem({
         </div>
         <FaChevronRight className={css.arrow} />
       </div>
-      <div className={css.connectionUrl}>
-        {excerpt(getHostAndPort(conn.connectionUrl), 42)}
+      <div
+        className={cx(css.connectionUrl, {
+          [css.filePath]: sqlite,
+        })}
+        title={sqlite ? conn.name : undefined}
+      >
+        {sqlite ? conn.name : excerpt(getHostAndPort(conn.connectionUrl), 42)}
       </div>
     </Button.Link>
   );

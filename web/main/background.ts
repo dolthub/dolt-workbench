@@ -1,8 +1,10 @@
 import { ChildProcess } from "child_process";
+import { promises as fs } from "fs";
 import {
   app,
   BrowserWindow,
   crashReporter,
+  dialog,
   ipcMain,
   IpcMainEvent,
   Menu,
@@ -29,6 +31,10 @@ import {
   getErrorMessage,
   removeDoltServerFolder,
 } from "./helpers/removeDoltServerFolder";
+import {
+  getDoltLiteDatabaseDestination,
+  isDoltLiteDatabaseFilePath,
+} from "./doltliteDatabase";
 
 const { updateElectronApp } = require("update-electron-app");
 updateElectronApp();
@@ -74,6 +80,7 @@ let graphqlServerProcess: UtilityProcess | null;
 let mainWindow: BrowserWindow;
 let doltServerProcess: ChildProcess | null;
 const activeExecutions = new Map<string, ChildProcess>();
+const pendingDoltLiteDatabaseFiles = new Set<string>();
 
 function isExternalUrl(url: string) {
   return !url.includes("localhost:") && !url.includes("app://");
@@ -277,6 +284,72 @@ ipcMain.handle("get-headers", (event, arg) => {
 });
 
 ipcMain.handle("get-commit-author", () => getStoredAuthor());
+
+ipcMain.handle("select-sqlite-database-file", async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: "Choose a SQLite or DoltLite database",
+    properties: ["openFile"],
+    filters: [
+      {
+        name: "SQLite databases",
+        extensions: ["db"],
+      },
+    ],
+  });
+
+  return result.canceled ? undefined : result.filePaths[0];
+});
+
+ipcMain.handle("select-sqlite-database-directory", async () => {
+  const result = await dialog.showOpenDialog(mainWindow, {
+    title: "Choose where to create the DoltLite database",
+    properties: ["openDirectory", "createDirectory"],
+  });
+
+  return result.canceled ? undefined : result.filePaths[0];
+});
+
+ipcMain.handle(
+  "get-doltlite-database-destination",
+  (_, directory: string, databaseName: string) =>
+    getDoltLiteDatabaseDestination(directory, databaseName),
+);
+
+ipcMain.handle("create-doltlite-database-file", async (_, filePath: string) => {
+  if (!isDoltLiteDatabaseFilePath(filePath)) {
+    throw new Error("DoltLite database path must be an absolute .db path");
+  }
+
+  try {
+    const file = await fs.open(filePath, "wx");
+    await file.close();
+    pendingDoltLiteDatabaseFiles.add(filePath);
+  } catch (err) {
+    if (
+      typeof err === "object" &&
+      err !== null &&
+      "code" in err &&
+      err.code === "EEXIST"
+    ) {
+      throw new Error(`A database already exists at ${filePath}`);
+    }
+    throw err;
+  }
+});
+
+ipcMain.handle(
+  "discard-created-doltlite-database-file",
+  async (_, filePath: string) => {
+    if (!pendingDoltLiteDatabaseFiles.has(filePath)) return false;
+    await fs.unlink(filePath);
+    pendingDoltLiteDatabaseFiles.delete(filePath);
+    return true;
+  },
+);
+
+ipcMain.handle("retain-created-doltlite-database-file", (_, filePath: string) =>
+  pendingDoltLiteDatabaseFiles.delete(filePath),
+);
 
 ipcMain.handle("set-commit-author", (_, author: StoredAuthor) =>
   setStoredAuthor(author),

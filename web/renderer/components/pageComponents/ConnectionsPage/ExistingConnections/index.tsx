@@ -1,6 +1,7 @@
 import DeleteModal from "@components/DeleteModal";
 import DoltLink from "@components/links/DoltLink";
 import DoltgresLink from "@components/links/DoltgresLink";
+import DoltLiteLink from "@components/links/DoltLiteLink";
 import { Button } from "@dolthub/react-components";
 import {
   DatabaseConnectionFragment,
@@ -51,9 +52,9 @@ export default function ExistingConnections(props: Props) {
       <div className={css.text}>
         <h1 data-cy="connections-title">Connections</h1>
         <p data-cy="welcome-message">
-          Connect the workbench to any MySQL or PostgreSQL compatible database.
-          Use <DoltLink /> or <DoltgresLink /> to unlock version control
-          features.
+          Connect the workbench to any MySQL, PostgreSQL, or SQLite compatible
+          database. Use <DoltLink />, <DoltgresLink />, or <DoltLiteLink /> to
+          unlock version control features.
         </p>
       </div>
       <div className={css.connections} style={{ marginTop }}>

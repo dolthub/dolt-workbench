@@ -20,11 +20,9 @@ export default function FetchButton({
   params,
   remote,
 }: Props) {
-  const {
-    mutateFn: fetch,
-    err,
-    loading,
-  } = useMutation({ hook: useFetchRemoteMutation });
+  const { mutateFn: fetch, loading } = useMutation({
+    hook: useFetchRemoteMutation,
+  });
 
   const onClick = async () => {
     const fetchRes = await fetch({
@@ -35,7 +33,7 @@ export default function FetchButton({
       fetchPolicy: "network-only",
     });
     if (!fetchRes.data?.fetchRemote.success) {
-      setErr(err ?? new Error("Fetch failed"));
+      setErr(fetchRes.error ?? new Error("Fetch failed"));
       setFetchModalOpen(true);
       return;
     }
