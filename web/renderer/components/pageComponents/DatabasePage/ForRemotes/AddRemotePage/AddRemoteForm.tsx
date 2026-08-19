@@ -15,6 +15,7 @@ import useMutation from "@hooks/useMutation";
 import { DatabaseParams } from "@lib/params";
 import { refetchRemoteQueries } from "@lib/refetchQueries";
 import { remotes } from "@lib/urls";
+import { doltLiteRemoteHost, doltRemoteHost } from "@lib/constants";
 import { useRouter } from "next/router";
 import { SyntheticEvent, useState } from "react";
 import Link from "@components/links/Link";
@@ -29,9 +30,6 @@ type Props = {
   params: DatabaseParams;
 };
 
-const DOLT_REMOTE_HOST = "https://doltremoteapi.dolthub.com";
-const DOLTLITE_REMOTE_HOST = "https://doltliteremoteapi.dolthub.com";
-
 export default function AddRemoteForm(props: Props): JSX.Element {
   const router = useRouter();
   const { data: databaseDetails, loading: databaseDetailsLoading } =
@@ -39,8 +37,8 @@ export default function AddRemoteForm(props: Props): JSX.Element {
   const dbLink = getDbLink(databaseDetails?.doltDatabaseDetails);
   const dolthubHost =
     databaseDetails?.doltDatabaseDetails.type === DatabaseType.Sqlite
-      ? DOLTLITE_REMOTE_HOST
-      : DOLT_REMOTE_HOST;
+      ? doltLiteRemoteHost
+      : doltRemoteHost;
   const [remoteName, setRemoteName] = useState("");
   const [remoteUrl, setRemoteUrl] = useState("");
   const [type, setType] = useState(RemoteType.DoltHub);

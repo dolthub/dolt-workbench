@@ -876,18 +876,17 @@ export class DoltLiteQueryFactory
   // throwing, so success is mapped into the row shape fromPullRes,
   // fromPushRes, and fromFetchRes consume.
   async callPullRemote(args: t.RemoteMaybeBranchArgs): t.PR {
-    return this.queryMultiple(
-      async query => {
-        await query(qh.callPullRemote, [args.remoteName, args.branchName]);
-        return [{ fast_forward: "0", conflicts: "0", message: "" }];
-      },
+    await this.query(
+      qh.callPullRemote,
+      [args.remoteName, args.branchName],
       args.databaseName,
       args.refName,
     );
+    return [{ fast_forward: "0", conflicts: "0", message: "" }];
   }
 
   async callPushRemote(args: t.RemoteMaybeBranchArgs): t.PR {
-    const branchName = args.branchName?.split(":", 1)[0];
+    const branchName = qh.getPushSourceBranch(args.branchName);
     return this.queryMultiple(
       async query => {
         await query(qh.callPushRemote, [args.remoteName, branchName]);
@@ -900,20 +899,17 @@ export class DoltLiteQueryFactory
   }
 
   async callFetchRemote(args: t.RemoteArgs): t.PR {
-    return this.queryMultiple(async query => {
-      await query(qh.callFetchRemote, [args.remoteName]);
-      return [{ status: "0" }];
-    }, args.databaseName);
+    await this.query(qh.callFetchRemote, [args.remoteName], args.databaseName);
+    return [{ status: "0" }];
   }
 
   async callCreateBranchFromRemote(args: t.RemoteBranchArgs): t.PR {
-    return this.queryMultiple(async query => {
-      await query(qh.callNewBranch, [
-        args.branchName,
-        `${args.remoteName}/${args.branchName}`,
-      ]);
-      return [{ status: "0" }];
-    }, args.databaseName);
+    await this.query(
+      qh.callNewBranch,
+      [args.branchName, `${args.remoteName}/${args.branchName}`],
+      args.databaseName,
+    );
+    return [{ status: "0" }];
   }
 
   // Clones into the current database file, which the engine requires to be

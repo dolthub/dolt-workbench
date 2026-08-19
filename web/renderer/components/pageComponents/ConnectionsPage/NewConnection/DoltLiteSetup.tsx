@@ -154,13 +154,12 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
   const { canSubmit, message } = getCanSubmit(state);
   const enabled =
     canSubmit && (!isClone || (!!owner.trim() && !!remoteDatabase.trim()));
-  const submitMessage =
-    message ||
-    (isClone && !remoteDatabase.trim()
-      ? "Remote database name is required"
-      : isClone && !owner.trim()
-        ? "Owner name is required"
-        : undefined);
+  const submitMessage = getSubmitMessage(
+    message,
+    isClone,
+    owner,
+    remoteDatabase,
+  );
   const showSummary =
     directory &&
     destination &&
@@ -320,6 +319,18 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
       </div>
     </form>
   );
+}
+
+function getSubmitMessage(
+  message: string | undefined,
+  isClone: boolean,
+  owner: string,
+  remoteDatabase: string,
+): string | undefined {
+  if (message || !isClone) return message;
+  if (!remoteDatabase.trim()) return "Remote database name is required";
+  if (!owner.trim()) return "Owner name is required";
+  return undefined;
 }
 
 function FilePicker(props: FilePickerProps) {

@@ -153,6 +153,10 @@ export const callPushRemote = `SELECT dolt_push(?, ?)`;
 
 export const callFetchRemote = `SELECT dolt_fetch(?)`;
 
+export function getPushSourceBranch(branchName?: string): string | undefined {
+  return branchName?.split(":", 1)[0];
+}
+
 // Single-arg clone into the current (required to be empty) database file.
 export const callDoltClone = `SELECT dolt_clone(?)`;
 
