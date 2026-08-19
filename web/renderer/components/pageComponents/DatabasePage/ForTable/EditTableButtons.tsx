@@ -37,6 +37,7 @@ type InnerProps = Props & {
 };
 
 function Inner(props: InnerProps) {
+  const { isSqlite } = useDatabaseDetails();
   const {
     setEditorString,
     setExecutedQuery,
@@ -112,32 +113,36 @@ function Inner(props: InnerProps) {
             </Button.Link>
           }
         />
-        <OptionSquare
-          icon={<ImTable2 />}
-          disabled={props.refIsTag}
-          link={
-            <DatabaseUploadStageLink
-              params={{ ...uploadParams, spreadsheet: true }}
-              stage="upload"
-              data-cy="spreadsheet-edit-button"
-            >
-              Spreadsheet Editor
-            </DatabaseUploadStageLink>
-          }
-        />
-        <OptionSquare
-          icon={<FiUpload />}
-          disabled={props.refIsTag}
-          link={
-            <DatabaseUploadStageLink
-              params={uploadParams}
-              stage="upload"
-              data-cy="file-upload-edit-button"
-            >
-              File Upload
-            </DatabaseUploadStageLink>
-          }
-        />
+        {!isSqlite && (
+          <>
+            <OptionSquare
+              icon={<ImTable2 />}
+              disabled={props.refIsTag}
+              link={
+                <DatabaseUploadStageLink
+                  params={{ ...uploadParams, spreadsheet: true }}
+                  stage="upload"
+                  data-cy="spreadsheet-edit-button"
+                >
+                  Spreadsheet Editor
+                </DatabaseUploadStageLink>
+              }
+            />
+            <OptionSquare
+              icon={<FiUpload />}
+              disabled={props.refIsTag}
+              link={
+                <DatabaseUploadStageLink
+                  params={uploadParams}
+                  stage="upload"
+                  data-cy="file-upload-edit-button"
+                >
+                  File Upload
+                </DatabaseUploadStageLink>
+              }
+            />
+          </>
+        )}
       </div>
       <Button.Link
         onClick={() => setDropModalOpen(true)}

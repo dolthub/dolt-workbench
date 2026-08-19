@@ -1,20 +1,7 @@
 import { contextBridge, ipcRenderer } from "electron";
+import type { AgentConfig, McpServerConfig } from "./agent/types";
 
-export type McpServerConfig = {
-  host: string;
-  port: number;
-  user: string;
-  password?: string;
-  database: string;
-  useSSL?: boolean;
-  type?: string; // DatabaseType: "Mysql" | "Postgres"
-};
-
-export type AgentConfig = {
-  apiKey: string;
-  mcpConfig: McpServerConfig;
-  model: string;
-};
+export type { AgentConfig, McpServerConfig } from "./agent/types";
 
 export type ToolCallEvent = {
   id: string;

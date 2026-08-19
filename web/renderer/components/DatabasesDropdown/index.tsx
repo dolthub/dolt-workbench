@@ -89,6 +89,7 @@ export default function DatabasesDropdown(props: Props) {
   const res = useDatabasesQuery();
   const dbDetails = useDatabaseDetails();
   if (res.loading || dbDetails.loading || res.error || !res.data) return null;
+  if (dbDetails.isSqlite) return null;
   return (
     <Inner
       {...props}

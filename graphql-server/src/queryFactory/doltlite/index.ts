@@ -890,6 +890,7 @@ export class DoltLiteQueryFactory
     return this.queryMultiple(
       async query => {
         await query(qh.callPushRemote, [args.remoteName, branchName]);
+        // DoltLite does not yet update its local remote-tracking ref on push.
         await query(qh.callFetchRemote, [args.remoteName]);
         return [{ status: "0", message: "" }];
       },

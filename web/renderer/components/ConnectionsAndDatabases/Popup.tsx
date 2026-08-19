@@ -43,10 +43,12 @@ export default function Popup({
         </div>
         <div className={cx(css.header, css.right)}>
           <span>DATABASES</span>
-          <CreateDatabase
-            isPostgres={currentConnection.type === DatabaseType.Postgres}
-            isDolt={!!state.connection.isDolt}
-          />
+          {state.connection.type !== DatabaseType.Sqlite && (
+            <CreateDatabase
+              isPostgres={state.connection.type === DatabaseType.Postgres}
+              isDolt={!!state.connection.isDolt}
+            />
+          )}
         </div>
       </div>
       <div className={css.middle}>

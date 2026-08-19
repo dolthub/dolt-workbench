@@ -13,7 +13,7 @@ describe(pageName, () => {
     shouldFindAndContain("connections-title", "Connections"),
     shouldFindAndContain(
       "welcome-message",
-      "Connect the workbench to any MySQL or PostgreSQL compatible database. ",
+      "Connect the workbench to any MySQL, PostgreSQL, or SQLite compatible database. ",
     ),
     shouldFindButton("add-connection-button"),
     newExpectation(

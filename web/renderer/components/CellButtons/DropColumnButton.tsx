@@ -7,6 +7,7 @@ import {
   ColumnForDataTableFragment,
   useDropColumnMutation,
 } from "@gen/graphql-types";
+import useDataTableStack from "@hooks/useDataTableStack";
 import useMutation from "@hooks/useMutation";
 import { isDoltSystemTable } from "@lib/doltSystemTables";
 import { refetchUpdateDatabaseQueriesCacheEvict } from "@lib/refetchQueries";
@@ -24,6 +25,7 @@ export default function DropColumnButton({ col, refName }: Props) {
   const { tableName, schemaName, databaseName } = params;
   const effectiveRefName = refName ?? params.refName;
   const client = useApolloClient();
+  const { reset: resetStack } = useDataTableStack();
   const { mutateFn: dropColumn } = useMutation({ hook: useDropColumnMutation });
 
   if (!tableName || !col.sourceTable || isDoltSystemTable(tableName)) {
@@ -43,6 +45,7 @@ export default function DropColumnButton({ col, refName }: Props) {
     if (res.success && res.data?.dropColumn) {
       setExecutedQuery(res.data.dropColumn.queryString, { isMutation: true });
       setExecutionMessage(res.data.dropColumn.executionMessage);
+      resetStack();
       client
         .refetchQueries(refetchUpdateDatabaseQueriesCacheEvict)
         .catch(console.error);

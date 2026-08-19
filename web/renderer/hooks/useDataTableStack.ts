@@ -10,6 +10,7 @@ import { useCallback, useMemo } from "react";
 type Result = {
   stack: StackingParams;
   update: (next: StackingParams) => void;
+  reset: () => void;
 };
 
 export default function useDataTableStack(): Result {
@@ -30,6 +31,17 @@ export default function useDataTableStack(): Result {
     (next: StackingParams) => pushStack(router, next),
     [router],
   );
+  const reset = useCallback(() => {
+    if (
+      orderByParam === undefined &&
+      whereParam === undefined &&
+      hideParam === undefined &&
+      projectionParam === undefined
+    ) {
+      return;
+    }
+    pushStack(router, {});
+  }, [router, orderByParam, whereParam, hideParam, projectionParam]);
 
-  return { stack, update };
+  return { stack, update, reset };
 }

@@ -1,6 +1,7 @@
 import { DatabaseType } from "@gen/graphql-types";
 import {
   getConnectionDisplayName,
+  getSqliteFilePath,
   isSqliteConnection,
 } from "./databaseConnection";
 
@@ -32,5 +33,11 @@ describe("database connection display", () => {
 
     expect(isSqliteConnection(conn)).toBe(false);
     expect(getConnectionDisplayName(conn)).toBe("local-dolt");
+  });
+
+  it("gets the database file from a SQLite connection URL", () => {
+    expect(
+      getSqliteFilePath("sqlite:%2FUsers%2Fme%2FMy%20Databases%2Fpayroll.db"),
+    ).toBe("/Users/me/My Databases/payroll.db");
   });
 });

@@ -1,23 +1,26 @@
 export type McpServerConfig = {
-  host: string;
-  port: number;
-  user: string;
+  host?: string;
+  port?: number;
+  user?: string;
   password?: string;
   database: string;
+  databaseFile?: string;
   useSSL?: boolean;
   type?: string;
   isDolt?: boolean;
 };
 
 export const MODELS = {
-  SONNET: "claude-sonnet-4-5-20250929",
-  OPUS: "claude-opus-4-6",
+  FABLE: "claude-fable-5",
+  OPUS: "claude-opus-5",
+  SONNET: "claude-sonnet-5",
   HAIKU: "claude-haiku-4-5-20251001",
 } as const;
 
 export const MODEL_OPTIONS = [
-  { label: "Sonnet 4.5", value: MODELS.SONNET },
-  { label: "Opus 4.6", value: MODELS.OPUS },
+  { label: "Fable 5", value: MODELS.FABLE },
+  { label: "Opus 5", value: MODELS.OPUS },
+  { label: "Sonnet 5", value: MODELS.SONNET },
   { label: "Haiku 4.5", value: MODELS.HAIKU },
 ];
 

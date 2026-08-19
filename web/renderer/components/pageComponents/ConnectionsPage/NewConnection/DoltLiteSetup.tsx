@@ -66,7 +66,6 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
   const isClone = option === SetupOption.Clone;
 
   const setDestination = async (dir: string, database: string) => {
-    setDestinationDetails(undefined);
     setState({
       database,
       name: "",
@@ -275,12 +274,16 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
                 ? "sqlite-clone-new-database-name"
                 : "sqlite-database-name",
             )}
-            {showSummary && (
-              <p className={css.createSqliteSummary}>
-                This will create <strong>{destination.fileName}</strong> in{" "}
-                <strong>{directory}</strong>.
-              </p>
-            )}
+            <p className={css.createSqliteSummary}>
+              {showSummary ? (
+                <>
+                  This will create <strong>{destination.fileName}</strong> in{" "}
+                  <strong>{directory}</strong>.
+                </>
+              ) : (
+                <>&nbsp;</>
+              )}
+            </p>
           </div>
         )}
 

@@ -59,8 +59,8 @@ function AddFromWorkbench(props: Props) {
 }
 
 function AddFromSQL() {
-  const { isPostgres } = useDatabaseDetails();
-  const commitExample = callProcedure(isPostgres, "DOLT_COMMIT", [
+  const { databaseType } = useDatabaseDetails();
+  const commitExample = callProcedure(databaseType, "DOLT_COMMIT", [
     "-am",
     "Add docs",
   ]);
