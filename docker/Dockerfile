@@ -1,7 +1,7 @@
 ###################
 # BUILD GRAPHQL SERVER
 ###################
-FROM --platform=$BUILDPLATFORM node:18.19.0-alpine3.19 as graphql-base
+FROM node:24-trixie-slim AS graphql-base
 
 FROM graphql-base AS graphql-deps
 WORKDIR /app/graphql-server
@@ -19,7 +19,8 @@ RUN yarn install --immutable
 FROM graphql-base AS graphql-build
 WORKDIR /app/graphql-server
 RUN corepack enable
-RUN apk update && apk add curl
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 COPY --chown=node:node --from=graphql-deps /app/graphql-server/node_modules ./node_modules
 COPY --chown=node:node ./graphql-server .
 
@@ -40,13 +41,10 @@ USER node
 ###################
 # BUILD NEXT.JS SERVER
 ###################
-FROM --platform=$BUILDPLATFORM node:18.19.0-alpine3.19 as web-base
+FROM node:24-trixie-slim AS web-base
 
-# Install dependencies only when needed
 FROM web-base AS web-deps
 
-# Set the working directory
-RUN apk add --no-cache libc6-compat
 WORKDIR /app/web
 
 # Copy the package.json and yarn.lock files
@@ -55,11 +53,12 @@ COPY web/.yarn/patches ./.yarn/patches
 
 # Install dependencies
 RUN corepack enable
-RUN yarn install --immutable
+RUN yarn install --immutable --mode=skip-build
 
 # Copy the Next.js web server source code
 FROM web-base AS web-build
 WORKDIR /app/web
+RUN corepack enable
 COPY --from=web-deps /app/web/node_modules ./node_modules
 COPY ./web .
 
@@ -70,7 +69,7 @@ RUN yarn run build
 ###################
 # COMBINE
 ###################
-FROM --platform=$BUILDPLATFORM node:18.19.0-alpine3.19 AS production
+FROM node:24-trixie-slim AS production
 
 # Set the working directory
 WORKDIR /app

@@ -3,6 +3,8 @@
 **/yarn-error.log
 **/renderer/.next
 **/build
+!graphql-server/src/queryFactory/build
+!graphql-server/src/queryFactory/build/**
 **/main
 **/app
 **/.cache
