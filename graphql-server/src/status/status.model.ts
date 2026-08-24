@@ -25,11 +25,12 @@ export function fromStatusRows(
   refName: string,
 ): Status[] {
   return rows.map(r => {
+    const staged = !!r.staged;
     return {
-      _id: `databases/${databaseName}/refs/${refName}/status/${r.table_name}`,
+      _id: `databases/${databaseName}/refs/${refName}/status/${r.table_name}/${staged ? "staged" : "working"}`,
       refName,
       tableName: r.table_name,
-      staged: !!r.staged,
+      staged,
       status: r.status,
     };
   });
