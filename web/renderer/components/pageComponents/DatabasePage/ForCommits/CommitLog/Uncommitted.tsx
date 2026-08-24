@@ -16,6 +16,7 @@ import cx from "classnames";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import css from "./index.module.css";
+import { getStatusForUncommittedRef } from "./utils";
 
 type Props = {
   params: RefParams;
@@ -99,6 +100,7 @@ function Item(props: ItemProps) {
         </div>
         <ResetModal
           {...props}
+          mode={props.params.toCommitId === "STAGED" ? "staged" : "working"}
           isOpen={resetIsOpen}
           setIsOpen={setResetIsOpen}
         />
@@ -128,7 +130,7 @@ function Inner(props: InnerProps) {
       </li>
       {hasWorkingChanges && (
         <Item
-          status={props.status}
+          status={getStatusForUncommittedRef(props.status, "WORKING")}
           params={{
             ...props.params,
             toCommitId: "WORKING",
@@ -138,7 +140,7 @@ function Inner(props: InnerProps) {
       )}
       {hasStagedChanges && (
         <Item
-          status={props.status}
+          status={getStatusForUncommittedRef(props.status, "STAGED")}
           params={{
             ...props.params,
             toCommitId: "STAGED",

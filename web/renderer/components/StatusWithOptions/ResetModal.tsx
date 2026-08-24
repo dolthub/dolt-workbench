@@ -12,6 +12,7 @@ import css from "./index.module.css";
 type Props = ModalProps & {
   params: RefParams;
   status: StatusFragment[];
+  mode?: "all" | "staged" | "working";
 };
 
 export default function ResetModal(props: Props) {
@@ -23,7 +24,21 @@ export default function ResetModal(props: Props) {
     hook: useRestoreAllMutation,
   });
 
-  const onRestoreAll = async () => {
+  const getTableName = (tn: string): string =>
+    isPostgres ? getPostgresTableName(tn) : tn;
+
+  const onResetAll = async () => {
+    if (props.mode && props.mode !== "all") {
+      const procedure =
+        props.mode === "staged" ? "DOLT_RESET" : "DOLT_CHECKOUT";
+      const tableNames = [
+        ...new Set(props.status.map(st => getTableName(st.tableName))),
+      ];
+      const { success } = await callProcedure(procedure, tableNames);
+      if (success) props.setIsOpen(false);
+      return;
+    }
+
     try {
       await mutateFn({ variables: props.params });
       props.setIsOpen(false);
@@ -35,32 +50,54 @@ export default function ResetModal(props: Props) {
     }
   };
 
-  const getTableName = (tn: string): string =>
-    isPostgres ? getPostgresTableName(tn) : tn;
-
   const onPerRow = async (proc: "DOLT_RESET" | "DOLT_CHECKOUT", tn: string) => {
     const { success } = await callProcedure(proc, [getTableName(tn)]);
     if (success) props.setIsOpen(false);
   };
 
+  const renderInstructions = () => {
+    if (props.mode === "working") {
+      return (
+        <p>
+          Choose tables whose unstaged changes you want to discard. Staged
+          changes will be preserved.
+        </p>
+      );
+    }
+    if (props.mode === "staged") {
+      return (
+        <p>Choose staged tables to move their changes to the working set.</p>
+      );
+    }
+    return (
+      <p>
+        Choose to unstage staged tables or restore tables to their current
+        contents in the current <code>HEAD</code>.
+      </p>
+    );
+  };
+
   return (
     <Modal
-      title="Reset uncommitted changes"
+      title={
+        props.mode === "staged"
+          ? "Reset staged changes"
+          : "Reset uncommitted changes"
+      }
       isOpen={props.isOpen}
       onRequestClose={() => props.setIsOpen(false)}
       button={
-        <Button onClick={onRestoreAll} pill>
-          Restore all tables
+        <Button onClick={onResetAll} pill>
+          {props.mode === "staged"
+            ? "Unstage all tables"
+            : "Restore all tables"}
         </Button>
       }
       err={err}
     >
       <div>
         <Loader loaded={!loading && !callLoading} />
-        <p>
-          Choose to unstage staged tables or restore tables to their current
-          contents in the current <code>HEAD</code>.
-        </p>
+        {renderInstructions()}
         <table className={css.resetTable}>
           <thead>
             <tr>
