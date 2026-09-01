@@ -851,7 +851,7 @@ __metadata:
     "@nestjs/platform-express": "npm:^11.1.11"
     "@nestjs/schematics": "npm:^11.0.7"
     "@nestjs/terminus": "npm:^11.0.0"
-    "@nestjs/typeorm": "npm:^11.0.0"
+    "@nestjs/typeorm": "npm:^12.0.1"
     "@types/cookie-parser": "npm:^1"
     "@types/cors": "npm:^2"
     "@types/jest": "npm:^30.0.0"
@@ -2337,16 +2337,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@nestjs/typeorm@npm:^11.0.0":
-  version: 11.0.3
-  resolution: "@nestjs/typeorm@npm:11.0.3"
+"@nestjs/typeorm@npm:^12.0.1":
+  version: 12.0.1
+  resolution: "@nestjs/typeorm@npm:12.0.1"
   peerDependencies:
-    "@nestjs/common": ^10.0.0 || ^11.0.0
-    "@nestjs/core": ^10.0.0 || ^11.0.0
+    "@nestjs/common": ^10.0.0 || ^11.0.0 || ^12.0.0
+    "@nestjs/core": ^10.0.0 || ^11.0.0 || ^12.0.0
     reflect-metadata: ^0.1.13 || ^0.2.0
     rxjs: ^7.2.0
     typeorm: ^0.3.0 || ^1.0.0-dev
-  checksum: 10c0/afa01e6c8e7761b179971765048b47ea8c5c1fb7ec7abcea00d5cd0fbeaeda3f356640545329639cff52926e3b94817c17865d84437bcc144b02b9a3629ebd58
+  checksum: 10c0/18dfb0847e4fbb9ac6382552ee9e90750c761f325a4fdd8084306865c9b129370a47de93d0f1d40e40ba0feba93987279258683036c8cb385210caad549ff42e
   languageName: node
   linkType: hard
 
