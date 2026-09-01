@@ -10263,7 +10263,7 @@ __metadata:
     uuid: "npm:^11.1.0"
     webpack-preprocessor-loader: "npm:^1.3.0"
     yalc: "npm:^1.0.0-pre.53"
-    zod: "npm:^4.0.0"
+    zod: "npm:^4.5.2"
   languageName: unknown
   linkType: soft
 
@@ -21533,10 +21533,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^4.0.0":
-  version: 4.3.6
-  resolution: "zod@npm:4.3.6"
-  checksum: 10c0/860d25a81ab41d33aa25f8d0d07b091a04acb426e605f396227a796e9e800c44723ed96d0f53a512b57be3d1520f45bf69c0cb3b378a232a00787a2609625307
+"zod@npm:^4.5.2":
+  version: 4.5.2
+  resolution: "zod@npm:4.5.2"
+  checksum: 10c0/e54a27401dc7993f96232b5a4e889017bb6a00d8d23a2258f40704076243ed9659d09ea3ae074538fb548e960c4d6380301f879fca6bd31547b7b69745abf0f5
   languageName: node
   linkType: hard
 
