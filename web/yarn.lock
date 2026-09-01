@@ -7651,15 +7651,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apollo-upload-client@npm:^17.0.0":
-  version: 17.0.0
-  resolution: "apollo-upload-client@npm:17.0.0"
+"apollo-upload-client@npm:^20.0.0":
+  version: 20.0.0
+  resolution: "apollo-upload-client@npm:20.0.0"
   dependencies:
-    extract-files: "npm:^11.0.0"
+    extract-files: "npm:^14.0.0"
   peerDependencies:
-    "@apollo/client": ^3.0.0
-    graphql: 14 - 16
-  checksum: 10c0/bddc4c26b7e81ec0b01885d969e007d1d0f44466d126594b91e0a3e375813b81f0e0b76ffedb4c78414ceddb126cb13428ca9715783ce5b6c4e299f482150bd7
+    "@apollo/client": ^4.0.0
+    graphql: ^16.0.0 || ^17.0.0
+    rxjs: ^7.3.0
+  checksum: 10c0/23fb2dc4b4ebc71903c4abd31ba598ee6a7d145a6c1ff0c3edf7c7ffc7a3b54ff22d8af7b4948efef60dba23995239e49f5ca834798f5bd1f3371ed6fa042b57
   languageName: node
   linkType: hard
 
@@ -10192,7 +10193,7 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.66.0"
     ace-builds: "npm:^1.37.5"
     adm-zip: "npm:^0.6.0"
-    apollo-upload-client: "npm:^17.0.0"
+    apollo-upload-client: "npm:^20.0.0"
     autoprefixer: "npm:^10.4.24"
     babel-jest: "npm:^29.7.0"
     chance: "npm:^1.1.13"
@@ -11604,6 +11605,15 @@ __metadata:
   version: 11.0.0
   resolution: "extract-files@npm:11.0.0"
   checksum: 10c0/7ac1cd693d081099d7c29f2b36aad199f92c5ea234c2016eb37ba213dddaefe74d54566f0675de5917d35cf98670183c2c9a0d96094727eb2c6dae02be7fc308
+  languageName: node
+  linkType: hard
+
+"extract-files@npm:^14.0.0":
+  version: 14.0.0
+  resolution: "extract-files@npm:14.0.0"
+  dependencies:
+    is-plain-obj: "npm:^4.1.0"
+  checksum: 10c0/8aae5b7daef4e1fb80b2c289d1702cdf350e7c12f4b60889f5120f0dfeee7bec9be7c1db049606947a6f03b06a11c2476dda117225f6766c09e56e46581d5c4f
   languageName: node
   linkType: hard
 
@@ -13414,7 +13424,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-plain-obj@npm:^4.0.0":
+"is-plain-obj@npm:^4.0.0, is-plain-obj@npm:^4.1.0":
   version: 4.1.0
   resolution: "is-plain-obj@npm:4.1.0"
   checksum: 10c0/32130d651d71d9564dc88ba7e6fda0e91a1010a3694648e9f4f47bb6080438140696d3e3e15c741411d712e47ac9edc1a8a9de1fe76f3487b0d90be06ac9975e

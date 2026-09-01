@@ -46,7 +46,7 @@
     "@improbable-eng/grpc-web": "^0.15.0",
     "@improbable-eng/grpc-web-node-http-transport": "^0.15.0",
     "ace-builds": "^1.37.5",
-    "apollo-upload-client": "^17.0.0",
+    "apollo-upload-client": "^20.0.0",
     "chance": "^1.1.13",
     "classnames": "^2.3.2",
     "diff": "^5.2.2",
