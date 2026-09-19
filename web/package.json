@@ -110,7 +110,7 @@
     "@types/url-parse": "^1",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.66.0",
-    "adm-zip": "^0.6.0",
+    "adm-zip": "^0.6.1",
     "autoprefixer": "^10.4.24",
     "babel-jest": "^29.7.0",
     "cssnano": "^7.0.7",
