@@ -93,10 +93,14 @@ describe("tests NewBranchForm", () => {
     });
   });
 
-  it.skip("disables button when not filled out", async () => {
+  it("disables button when not filled out", async () => {
     const { user } = await setupAndWait(
       <MockedProvider
-        mocks={[mocks.createBranchMutationMock, mocks.branchSelectorQueryMock]}
+        mocks={[
+          mocks.createBranchMutationMock,
+          mocks.branchSelectorQueryMock,
+          mocks.defaultBranchQueryMock,
+        ]}
       >
         <NewBranchForm params={mocks.dbParams} />
       </MockedProvider>,
@@ -108,7 +112,10 @@ describe("tests NewBranchForm", () => {
     expect(btn).toBeDisabled();
 
     await user.click(await screen.findByRole("combobox"));
-    await user.click(screen.getAllByText(mocks.fromBranch.branchName)[1]);
+    await selectEvent.select(
+      screen.getByRole("combobox"),
+      mocks.fromBranch.branchName,
+    );
 
     expect(btn).toBeDisabled();
 

@@ -82,4 +82,4 @@ appx:
   identityName: DoltHub.Dolt-Workbench
   publisher: CN=C600C43B-92F1-4B20-B436-BB19EA5A35EA
 npmRebuild: false
-electronVersion: 36.3.2
+electronVersion: 42.11.10

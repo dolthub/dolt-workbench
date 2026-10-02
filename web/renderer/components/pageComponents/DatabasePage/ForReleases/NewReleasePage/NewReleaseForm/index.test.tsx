@@ -17,8 +17,7 @@ jest.mock("next/router", () => {
   };
 });
 
-// skip this test for now, it fails on timeout issue
-it.skip("tests NewTagForm", () => {
+describe("tests NewTagForm", () => {
   beforeEach(() => {
     mocks.createNewTagData.mockClear();
   });
@@ -107,10 +106,14 @@ it.skip("tests NewTagForm", () => {
     });
   });
 
-  it.skip("disables button when not filled out", async () => {
+  it("disables button when not filled out", async () => {
     const { user } = await setupAndWait(
       <MockedProvider
-        mocks={[mocks.createTagMutationMock, mocks.branchSelectorQueryMock]}
+        mocks={[
+          mocks.createTagMutationMock,
+          mocks.branchSelectorQueryMock,
+          mocks.defaultBranchQueryMock,
+        ]}
       >
         <NewTagForm params={mocks.dbParams} />
       </MockedProvider>,
@@ -122,7 +125,10 @@ it.skip("tests NewTagForm", () => {
     expect(btn).toBeDisabled();
 
     await user.click(await screen.findByRole("combobox"));
-    await user.click(screen.getAllByText("main")[1]);
+    await selectEvent.select(
+      screen.getByRole("combobox"),
+      mocks.fromBranch.branchName,
+    );
 
     expect(btn).toBeDisabled();
 

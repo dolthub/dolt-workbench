@@ -62,7 +62,7 @@ function TestListInner({ params }: Props) {
     testItems.map(test => <TestItem key={test.testName} test={test} />);
 
   return (
-    <div className={css.container}>
+    <div className={css.container} data-cy="tests-list">
       <div className={css.top}>
         <h1>Tests</h1>
         <div className={css.actionArea}>
