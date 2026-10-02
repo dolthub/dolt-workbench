@@ -16,7 +16,7 @@
     "prettier:fix": "prettier --write 'cypress/**/*.{ts,js}'"
   },
   "dependencies": {
-    "cypress": "^15.9.0",
+    "cypress": "^15.21.1",
     "typescript": "^5.9.2"
   },
   "devDependencies": {
@@ -44,7 +44,10 @@
     "picomatch@npm:^4.0.2": "4.0.4",
     "picomatch@npm:^4.0.3": "4.0.4",
     "lodash": "4.18.0",
-    "qs": "6.15.3",
+    "qs": "6.16.0",
     "uuid": "11.1.1"
+  },
+  "engines": {
+    "node": ">=24.0.0"
   }
 }

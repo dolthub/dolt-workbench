@@ -91,4 +91,4 @@ mac:
   provisioningProfile: build/mac/MacAppStore.provisionprofile
   entitlements: build/mac/entitlements.mas.plist
   entitlementsInherit: build/mac/entitlements.mas.inherit.plist
-electronVersion: 36.3.2
+electronVersion: 42.11.10

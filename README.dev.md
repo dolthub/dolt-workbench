@@ -1,5 +1,8 @@
 # Developer Guide
 
+Use Node.js 24 or newer and the Yarn version declared in each package's
+`packageManager` field (`corepack yarn`). CI and Docker builds use Node.js 24.
+
 ## Releasing dolt-workbench (manual)
 NOTE: This method of releasing the workbench has now been automated. See "Releasing dolt-workbench (automated)" below.
 
