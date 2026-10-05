@@ -17,10 +17,12 @@ type Props = {
 
 export default function Inner(props: Props) {
   const router = useRouter();
+  const doltGraphOptions = { forDolt: true };
 
   return (
     <div className={css.graphContainer}>
       <Graph.WithInfiniteScroll
+        {...doltGraphOptions}
         commits={getCommits(props.commits, props.params, router)}
         branchHeads={props.branchHeads}
         currentBranch={props.params.refName}
