@@ -9,6 +9,45 @@ updates:
   open-pull-requests-limit: 6
   labels:
   - dependencies
+  groups:
+    react:
+      patterns:
+      - "react"
+      - "react-dom"
+      - "@types/react"
+      - "@types/react-dom"
+    next:
+      patterns:
+      - "next"
+      - "eslint-config-next"
+    dolthub-ui:
+      patterns:
+      - "@dolthub/*"
+    graphql-codegen:
+      patterns:
+      - "@graphql-codegen/*"
+    eslint:
+      patterns:
+      - "eslint"
+      - "eslint-*"
+      - "@typescript-eslint/*"
+      exclude-patterns:
+      - "eslint-config-next"
+    jest:
+      patterns:
+      - "jest"
+      - "jest-*"
+      - "babel-jest"
+      - "@types/jest"
+    stylelint:
+      patterns:
+      - "stylelint"
+      - "stylelint-*"
+    electron-builder:
+      patterns:
+      - "electron-builder"
+      - "electron-builder-*"
+      - "@electron/osx-sign"
 - package-ecosystem: npm
   directory: "/graphql-server"
   schedule:
@@ -18,6 +57,20 @@ updates:
   open-pull-requests-limit: 4
   labels:
   - dependencies
+  groups:
+    nestjs:
+      patterns:
+      - "@nestjs/*"
+    eslint:
+      patterns:
+      - "eslint"
+      - "eslint-*"
+      - "@typescript-eslint/*"
+    jest:
+      patterns:
+      - "jest"
+      - "jest-*"
+      - "@types/jest"
 - package-ecosystem: npm
   directory: "/workbench-cypress"
   schedule:
@@ -27,3 +80,13 @@ updates:
   open-pull-requests-limit: 4
   labels:
   - dependencies
+  groups:
+    babel:
+      patterns:
+      - "@babel/*"
+    eslint:
+      patterns:
+      - "eslint"
+      - "eslint-*"
+      - "@eslint/*"
+      - "@typescript-eslint/*"
