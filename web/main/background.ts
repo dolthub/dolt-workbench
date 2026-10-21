@@ -289,12 +289,6 @@ ipcMain.handle("select-sqlite-database-file", async () => {
   const result = await dialog.showOpenDialog(mainWindow, {
     title: "Choose a SQLite or DoltLite database",
     properties: ["openFile"],
-    filters: [
-      {
-        name: "SQLite databases",
-        extensions: ["db"],
-      },
-    ],
   });
 
   return result.canceled ? undefined : result.filePaths[0];

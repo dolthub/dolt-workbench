@@ -212,7 +212,7 @@ export default function DoltLiteSetup({ typeSelect }: Props) {
             <FilePicker
               value={state.name}
               label="Database File"
-              placeholder="Choose an existing .db file"
+              placeholder="Choose an existing database file"
               buttonLabel="Choose File"
               onClick={async () =>
                 choose("select-sqlite-database-file", filePath =>
