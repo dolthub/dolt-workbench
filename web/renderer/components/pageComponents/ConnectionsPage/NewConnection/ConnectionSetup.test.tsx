@@ -182,7 +182,7 @@ describe("ConnectionSetup", () => {
 
     expect(invoke).toHaveBeenCalledWith("select-sqlite-database-file");
     expect(
-      screen.getByPlaceholderText("Choose an existing .db file"),
+      screen.getByPlaceholderText("Choose an existing database file"),
     ).toHaveValue(filePath);
     expect(
       screen.getByRole("button", { name: "Launch Workbench" }),
