@@ -10,12 +10,14 @@ updates:
   labels:
   - dependencies
   groups:
-    react-and-next:
+    react:
       patterns:
       - "react"
       - "react-dom"
       - "@types/react"
       - "@types/react-dom"
+    next:
+      patterns:
       - "next"
       - "eslint-config-next"
     dolthub-ui:
@@ -31,24 +33,16 @@ updates:
       - "@typescript-eslint/*"
       exclude-patterns:
       - "eslint-config-next"
-    jest-and-testing-library:
+    jest:
       patterns:
       - "jest"
       - "jest-*"
       - "babel-jest"
-      - "ts-jest"
       - "@types/jest"
-      - "@testing-library/*"
-      - "react-select-event"
-    css-tooling:
+    stylelint:
       patterns:
       - "stylelint"
       - "stylelint-*"
-      - "postcss"
-      - "postcss-*"
-      - "autoprefixer"
-      - "cssnano"
-      - "tailwindcss"
     electron-builder:
       patterns:
       - "electron-builder"
@@ -76,7 +70,6 @@ updates:
       patterns:
       - "jest"
       - "jest-*"
-      - "ts-jest"
       - "@types/jest"
 - package-ecosystem: npm
   directory: "/workbench-cypress"
