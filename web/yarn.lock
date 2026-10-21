@@ -7408,10 +7408,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ace-builds@npm:^1.37.5":
-  version: 1.37.5
-  resolution: "ace-builds@npm:1.37.5"
-  checksum: 10c0/6279b4e41088d7fca39f8c1764358ea0910af88c7a78027ba51fd9e8699bdc9b4108684638adf86d3b0eaa917eec8cefde1530f2c1a0f0a63119d88ae21ce4e5
+"ace-builds@npm:^1.45.0":
+  version: 1.45.0
+  resolution: "ace-builds@npm:1.45.0"
+  checksum: 10c0/0e03baac1249c404fc252583561b631ad90a8b13eb48850ae75067b07d1130ec8a664f1ed3f8123b6473aa17e2a10419c67211705bd00f0b323e70fb12e17b2f
   languageName: node
   linkType: hard
 
@@ -10103,7 +10103,7 @@ __metadata:
     "@types/url-parse": "npm:^1"
     "@typescript-eslint/eslint-plugin": "npm:^8.0.0"
     "@typescript-eslint/parser": "npm:^8.66.0"
-    ace-builds: "npm:^1.37.5"
+    ace-builds: "npm:^1.45.0"
     adm-zip: "npm:^0.6.1"
     apollo-upload-client: "npm:^17.0.0"
     autoprefixer: "npm:^10.4.24"
