@@ -53,6 +53,16 @@ export class DoltgresQueryFactory
     await qr.query(qh.useDB(dbName, refName, this.isDolt));
   }
 
+  protected cursorSetup(args: t.RefMaybeSchemaArgs): string[] {
+    return [
+      qh.useDB(args.databaseName, args.refName, this.isDolt),
+      ...super.cursorSetup(args),
+    ];
+  }
+
+  // Doltgres doesn't support read-only sessions or cancellation.
+  protected cursorReadOnly = false;
+
   async getTableNames(
     args: t.RefMaybeSchemaArgs,
     filterSystemTables?: boolean,

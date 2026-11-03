@@ -12,6 +12,7 @@ import { parseDefinition } from "@lib/definitionUrl";
 import { RefParams, SqlQueryParams } from "@lib/params";
 import { ref, sqlQuery } from "@lib/urls";
 import { useRouter } from "next/router";
+import { useMemo } from "react";
 import DatabasePage from "./component";
 
 type Props = {
@@ -75,11 +76,14 @@ function Inner({ params }: Props) {
 
 export default function ForQuery(props: Props) {
   const { isSqlite, loading } = useDatabaseDetails();
+  const { databaseName, refName, schemaName, active } = props.params;
+  const q = props.params.q || defaultQuery(isSqlite);
+  // _app rebuilds params on every render; keep the object stable so the
+  // DataTable context (read by every cell) only changes when values do.
+  const params = useMemo(() => {
+    return { databaseName, refName, schemaName, active, q };
+  }, [databaseName, refName, schemaName, active, q]);
   if (!props.params.q && loading) return <Loader loaded={false} />;
-  const params = {
-    ...props.params,
-    q: props.params.q || defaultQuery(isSqlite),
-  };
   return (
     <DataTableProvider params={params}>
       <Inner params={params} />

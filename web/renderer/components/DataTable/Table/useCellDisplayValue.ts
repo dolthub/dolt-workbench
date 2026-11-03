@@ -6,13 +6,12 @@ import {
   ColumnStatus,
   SetCellStatusAction,
 } from "@lib/tableTypes";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const excerptLength = 40;
 
 type ReturnType = {
   displayCellVal: string;
-  setDisplayCellVal: (v: string) => void;
   cellStatus: CellStatusActionType;
   setCellStatus: SetCellStatusAction;
 };
@@ -24,20 +23,16 @@ export default function useCellDisplayValue(
   currCol: ColumnForDataTableFragment,
 ): ReturnType {
   const [cellStatus, setCellStatus] = useState(columnStatus[cidx]);
-  const [displayCellVal, setDisplayCellVal] = useState(
-    getCellValue(value, currCol, columnStatus[cidx]),
+  const displayCellVal = useMemo(
+    () => getCellValue(value, currCol, cellStatus),
+    [value, currCol, cellStatus],
   );
 
   useEffect(() => {
     setCellStatus(columnStatus[cidx]);
   }, [cidx, columnStatus]);
 
-  useEffect(() => {
-    const val = getCellValue(value, currCol, cellStatus);
-    setDisplayCellVal(val);
-  }, [cellStatus, currCol, value]);
-
-  return { displayCellVal, setDisplayCellVal, cellStatus, setCellStatus };
+  return { displayCellVal, cellStatus, setCellStatus };
 }
 
 function getCellValue(

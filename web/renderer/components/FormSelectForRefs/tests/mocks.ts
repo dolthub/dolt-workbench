@@ -54,7 +54,7 @@ export const branchSelectorMock = (
   return {
     request: {
       query: BranchesForSelectorDocument,
-      variables: params,
+      variables: { databaseName: params.databaseName },
     },
     result: {
       data: {
@@ -70,7 +70,7 @@ export const mockBranchError = (params: DatabaseParams): MockedResponse => {
   return {
     request: {
       query: BranchesForSelectorDocument,
-      variables: params,
+      variables: { databaseName: params.databaseName },
     },
     error: new Error(branchError),
   };
@@ -105,14 +105,20 @@ export const getBranchAndTagMocks = (
   empty = false,
 ): MockedResponse[] => {
   if (error) {
-    return [mockBranchError(params), tagsListErrorMock(params)];
+    return [
+      mockBranchError(params),
+      tagsListErrorMock({ databaseName: params.databaseName }),
+    ];
   }
   if (empty) {
-    return [branchSelectorMock(params, true), getTagsListQueryMock(params, [])];
+    return [
+      branchSelectorMock(params, true),
+      getTagsListQueryMock({ databaseName: params.databaseName }, []),
+    ];
   }
   return [
     branchSelectorMock(params),
-    getTagsListQueryMock(params, [tag1, tag2]),
+    getTagsListQueryMock({ databaseName: params.databaseName }, [tag1, tag2]),
   ];
 };
 

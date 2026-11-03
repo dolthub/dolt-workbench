@@ -1,4 +1,5 @@
 import { EntityManager, InsertResult, QueryRunner } from "typeorm";
+import { MysqlDriver } from "typeorm/driver/mysql/MysqlDriver";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
@@ -20,6 +21,8 @@ import {
 } from "../build/buildUtils";
 import { classifyMysqlResult } from "./classifyResult";
 import * as qh from "./queries";
+import { CursorPage, CursorSource, SqlCursorStore } from "../cursor";
+import { createMysqlCursorSource } from "./cursorSource";
 import {
   getTableInfo,
   getTablePKColumns,
@@ -34,6 +37,12 @@ export class MySQLQueryFactory
   implements QueryFactory
 {
   isDolt = false;
+
+  protected cursors = new SqlCursorStore();
+
+  async destroy(): Promise<void> {
+    this.cursors.closeAll();
+  }
 
   async checkoutDatabase(
     qr: QueryRunner,
@@ -329,6 +338,39 @@ export class MySQLQueryFactory
       },
       args.databaseName,
       args.refName,
+    );
+  }
+
+  // Pages through a result by reading further rows from a statement held open
+  // on a dedicated resource. Returns undefined when the query can't be paged
+  // this way, so the caller falls back to re-executing it.
+  async getSqlSelectPage(
+    args: t.RefMaybeSchemaArgs & { queryString: string },
+    offset: number,
+    pageSize: number,
+  ): Promise<CursorPage | undefined> {
+    return this.cursors.page(
+      SqlCursorStore.key(args),
+      offset,
+      pageSize,
+      async () => this.createCursorSource(args),
+    );
+  }
+
+  protected async createCursorSource(
+    args: t.RefMaybeSchemaArgs & { queryString: string },
+  ): Promise<CursorSource | undefined> {
+    const driver = this.getDS().driver as MysqlDriver;
+    return createMysqlCursorSource(
+      async () => driver.obtainMasterConnection(),
+      args.queryString,
+      [args.databaseName, args.refName],
+      {
+        setup: args.databaseName
+          ? [qh.useDB(args.databaseName, args.refName, this.isDolt)]
+          : [],
+        writesCompleteBeforeRows: this.isDolt,
+      },
     );
   }
 

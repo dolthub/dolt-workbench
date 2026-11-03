@@ -357,7 +357,11 @@ function ProviderForTableName(props: TableProps) {
 export function DataTableProvider({ params, children }: Props) {
   const router = useRouter();
   const tableShape = "tableName" in params;
-  const tableNames = tableShape ? [params.tableName] : [];
+  const tableName = tableShape ? params.tableName : undefined;
+  const tableNames = useMemo(
+    () => (tableName === undefined ? [] : [tableName]),
+    [tableName],
+  );
   const executedQueryString = executedSqlFromRouter(router.query.executedSql);
   const [isMutation, setIsMutation] = useState(false);
 

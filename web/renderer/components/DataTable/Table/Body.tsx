@@ -9,6 +9,8 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { ColumnStatus } from "@lib/tableTypes";
+import { useRouter } from "next/router";
+import { useMemo } from "react";
 import Row from "./Row";
 import PendingRow from "./PendingRow";
 
@@ -21,9 +23,13 @@ type Props = {
 
 export default function Body(props: Props) {
   const { columns, pendingRow } = useDataTableContext();
+  const { q } = useRouter().query;
   const showRowDropdown =
     !isKeyless(columns) && queryShowingPKs(props.columns, columns);
-  const cols = getTableColsFromQueryCols(props.columns, columns);
+  const cols = useMemo(
+    () => getTableColsFromQueryCols(props.columns, columns),
+    [props.columns, columns],
+  );
 
   return (
     <tbody
@@ -33,12 +39,16 @@ export default function Body(props: Props) {
     >
       {pendingRow && <PendingRow {...props} columns={cols} row={pendingRow} />}
       {props.rows.map((r, ridx) => (
-        // eslint-disable-next-line react/jsx-key
         <Row
-          {...props}
+          // Rows only append, so the index is a stable identity.
+          // eslint-disable-next-line react/no-array-index-key
+          key={ridx}
           columns={cols}
           row={r}
           ridx={ridx}
+          q={q}
+          isMobile={props.isMobile}
+          columnStatus={props.columnStatus}
           showRowDropdown={showRowDropdown}
         />
       ))}

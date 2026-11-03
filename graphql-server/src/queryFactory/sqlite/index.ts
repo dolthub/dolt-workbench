@@ -7,6 +7,7 @@ import { TableDetails } from "../../tables/table.model";
 import { MySQLQueryFactory } from "../mysql";
 import { getTableInfo, getTablePKColumns, getTables } from "../mysql/utils";
 import * as t from "../types";
+import { CursorSource, materializedSource } from "../cursor";
 import { classifySqliteResult } from "./classifyResult";
 import * as qh from "./queries";
 
@@ -113,6 +114,12 @@ export class SqliteQueryFactory
       args.databaseName,
       args.refName,
     );
+  }
+
+  protected async createCursorSource(
+    args: t.RefMaybeSchemaArgs & { queryString: string },
+  ): Promise<CursorSource | undefined> {
+    return materializedSource(async () => this.getSqlSelect(args));
   }
 
   async getSqlSelect(

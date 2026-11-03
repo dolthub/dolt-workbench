@@ -7,7 +7,7 @@ import {
   RowForDataTableFragment,
 } from "@gen/graphql-types";
 import { ColumnStatus } from "@lib/tableTypes";
-import { useState } from "react";
+import { memo, useState } from "react";
 import Cell from "./Cell";
 import css from "./index.module.css";
 import { getDiffTypeClassNameForRow } from "./utils";
@@ -20,9 +20,10 @@ type Props = {
   isMobile?: boolean;
   columnStatus: ColumnStatus;
   workingDiffType?: string | undefined;
+  q?: string | string[];
 };
 
-export default function Row(props: Props) {
+function Row(props: Props) {
   const [showDropdown, setShowDropdown] = useState(false);
 
   if (props.row.columnValues.length !== props.columns.length) {
@@ -59,3 +60,5 @@ export default function Row(props: Props) {
     </tr>
   );
 }
+
+export default memo(Row);

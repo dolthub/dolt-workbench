@@ -7,8 +7,7 @@ import {
 } from "@gen/graphql-types";
 import { CellStatusActionType, ColumnStatus } from "@lib/tableTypes";
 import cx from "classnames";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import { memo, useState } from "react";
 import CreateTableCell from "./AceCell";
 import CellDropdown from "./CellDropdown";
 import css from "./index.module.css";
@@ -23,10 +22,10 @@ type Props = {
   columns: ColumnForDataTableFragment[];
   columnStatus: ColumnStatus;
   isMobile?: boolean;
+  q?: string | string[];
 };
 
-export default function Cell(props: Props): JSX.Element {
-  const router = useRouter();
+function Cell(props: Props): JSX.Element {
   const [showDropdown, setShowDropdown] = useState(false);
   const [editing, setEditing] = useState(false);
   const rawVal = props.cell.displayValue;
@@ -38,7 +37,7 @@ export default function Cell(props: Props): JSX.Element {
     props.row,
     currentCol,
   );
-  const showAceCell = getShowAceEditorForCell(currentCol, router.query.q);
+  const showAceCell = getShowAceEditorForCell(currentCol, props.q);
   const dataCy = `${props.isMobile ? "mobile-" : "desktop-"}db-data-table-row-${
     props.ridx
   }-col-${props.cidx}`;
@@ -109,3 +108,5 @@ export default function Cell(props: Props): JSX.Element {
     </td>
   );
 }
+
+export default memo(Cell);

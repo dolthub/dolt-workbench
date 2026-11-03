@@ -17,8 +17,10 @@ type ReturnType = {
 export default function useGetBranchOptionsForSelect(
   params: DatabaseParams,
 ): ReturnType {
+  // Only declared variables: page params carry `q` and `active`, which would
+  // refetch on every query run.
   const branchRes = useBranchesForSelectorQuery({
-    variables: params,
+    variables: { databaseName: params.databaseName },
     fetchPolicy: "cache-and-network",
   });
 

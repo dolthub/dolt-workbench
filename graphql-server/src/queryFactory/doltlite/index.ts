@@ -191,6 +191,7 @@ export class DoltLiteQueryFactory
   }
 
   async destroy(): Promise<void> {
+    await super.destroy();
     const source = this.revisionSource;
     this.revisionSource = undefined;
     if (!source) return;
