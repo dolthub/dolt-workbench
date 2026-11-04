@@ -41,6 +41,7 @@ export const twoDotDoltLogsQuery = `SELECT l.*, ${parentsSelect} FROM dolt_log(?
 // DIFFS
 
 export const hashOf = `SELECT dolt_hashof(?)`;
+export const branchExists = `SELECT 1 FROM dolt_branches WHERE name = ?`;
 export const mergeBase = `SELECT dolt_merge_base(?, ?)`;
 
 export const getDiffStatQuery = (hasTableName?: boolean): string =>
