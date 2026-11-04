@@ -2,7 +2,7 @@ name: Update Yarn
 
 on:
   schedule:
-    - cron: '0 10 15 * *' # Runs every 15th of the month
+    - cron: "0 10 15 * *" # Runs every 15th of the month
   workflow_dispatch:
 
 jobs:
@@ -15,7 +15,7 @@ jobs:
           token: ${{ secrets.REPO_ACCESS_TOKEN }}
       - uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: "24"
       - name: Enable Corepack
         run: corepack enable
 
@@ -46,14 +46,14 @@ jobs:
 
       - name: Create and Push new branch
         run: |
-          git config --global --add user.name "tbantle22"
-          git config --global --add user.email "taylor@dolthub.com"
+          git config --global --add user.name "eric-richardson1"
+          git config --global --add user.email "eric@dolthub.com"
           branchname=${{ format('update-yarn-{0}', steps.short-sha.outputs.short) }}
           git checkout -b "$branchname"
           git add .
           git commit -m "Update yarn"
           git push origin "$branchname"
-          
+
       - name: Create pull request
         uses: repo-sync/pull-request@v2
         id: latest-pr
