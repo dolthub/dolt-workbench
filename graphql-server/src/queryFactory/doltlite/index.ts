@@ -141,8 +141,9 @@ export class DoltLiteQueryFactory
     );
   }
 
-  // checkoutDatabase runs before any work in a unit, so a "no such branch"
-  // failure means the work has not started and can safely run detached.
+  // checkoutDatabase runs before any work in a unit and always fails for a
+  // ref that isn't a branch, so for such a ref the work has not started and
+  // can safely run detached.
   private async withDetachedFallback<T>(
     refName: string | undefined,
     dbName: string | undefined,
@@ -152,10 +153,7 @@ export class DoltLiteQueryFactory
     try {
       return await attempt();
     } catch (err) {
-      if (
-        !refName ||
-        !err.message.includes(`no such branch or table: ${refName}`)
-      ) {
+      if (!refName || (await this.isBranch(refName, dbName))) {
         throw err;
       }
       // Resolve symbolic refs before caching so a moved/recreated tag or
@@ -181,6 +179,15 @@ export class DoltLiteQueryFactory
         void destroyIfRetired(source);
       }
     }
+  }
+
+  private async isBranch(refName: string, dbName?: string): Promise<boolean> {
+    const rows = await super.query<t.RawRows>(
+      qh.branchExists,
+      [refName],
+      dbName,
+    );
+    return rows.length > 0;
   }
 
   async destroy(): Promise<void> {
