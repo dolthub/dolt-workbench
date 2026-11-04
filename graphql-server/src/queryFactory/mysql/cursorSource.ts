@@ -1,16 +1,10 @@
 import type { FieldPacket, PoolConnection, ResultSetHeader } from "mysql2";
-import { clearTimeout, setTimeout } from "timers";
 import { CursorSink, CursorSource, ResultSet } from "../cursor";
 import { RawRow } from "../types";
 import { ClassifiedResult, classifyMysqlResult } from "./classifyResult";
 
-// MySQL streams a CALL's result sets while the procedure runs, so pausing a
-// reader holds back writes queued after the current result set, and killing
-// it skips them. MySQL statements therefore finish before their first page
-// (later pages are served from memory), and one abandoned before that is
-// drained; the budget bounds how long a runaway read holds a connection.
-const DRAIN_BUDGET_MS = 30_000;
-const DESTROY_AFTER_KILL_MS = 5_000;
+const READ_ONLY = "SET SESSION TRANSACTION READ ONLY";
+const READ_WRITE = "SET SESSION TRANSACTION READ WRITE";
 
 type QueryEvents = {
   on(event: "fields", cb: (f: FieldPacket[] | undefined) => void): QueryEvents;
@@ -33,10 +27,14 @@ async function run(
 
 export type MysqlCursorOptions = {
   setup: string[];
-  // Dolt finishes a statement's writes (procedures, RETURNING) before it
-  // streams rows, so its reads can pause between pages and an abandoned
-  // statement can be killed right away.
-  writesCompleteBeforeRows: boolean;
+  // MySQL streams a CALL's result sets while the procedure runs, and nothing
+  // short of the statement finishing says whether it was a CALL. So MySQL
+  // statements finish before their first page, in a read-only session that
+  // rejects writes before they start: a write re-runs on the normal path, and
+  // a statement killed for buffering too much has changed nothing. Dolt
+  // doesn't enforce read-only sessions, but finishes a statement's writes
+  // before it streams rows, so its rows can stream from the start.
+  mode: "readOnly" | "writesCompleteBeforeRows";
 };
 
 export async function createMysqlCursorSource(
@@ -46,45 +44,37 @@ export async function createMysqlCursorSource(
   opts: MysqlCursorOptions,
 ): Promise<CursorSource> {
   const conn = await getConn();
+  const readOnly = opts.mode === "readOnly";
   try {
-    for (const s of opts.setup) {
+    for (const s of readOnly ? [...opts.setup, READ_ONLY] : opts.setup) {
       // eslint-disable-next-line no-await-in-loop
       await run(conn, s);
     }
   } catch (e) {
-    conn.release();
+    conn.destroy();
     throw e;
   }
-  return new MysqlCursorSource(
-    conn,
-    getConn,
-    sql,
-    params,
-    opts.writesCompleteBeforeRows,
-  );
+  return new MysqlCursorSource(conn, getConn, sql, params, readOnly);
 }
 
 class MysqlCursorSource implements CursorSource {
-  readonly retryOnEarlyError = false;
+  readonly writesNothing: boolean;
 
   readonly completeBeforeFirstPage: boolean;
 
   private ended = false;
 
-  private abandoned = false;
-
   private released = false;
-
-  private timers: Array<ReturnType<typeof setTimeout>> = [];
 
   constructor(
     private readonly conn: PoolConnection,
     private readonly getConn: () => Promise<PoolConnection>,
     private readonly sql: string,
     private readonly params: unknown,
-    private readonly writesCompleteBeforeRows: boolean,
+    private readonly readOnly: boolean,
   ) {
-    this.completeBeforeFirstPage = !writesCompleteBeforeRows;
+    this.writesNothing = readOnly;
+    this.completeBeforeFirstPage = readOnly;
   }
 
   start(sink: CursorSink) {
@@ -125,36 +115,26 @@ class MysqlCursorSource implements CursorSource {
   }
 
   async finish(): Promise<string[]> {
+    let warnings: string[] = [];
     try {
       this.conn.resume();
       const res: RawRow[] = await run(this.conn, "SHOW WARNINGS");
-      return res.map(w => w.Message);
+      warnings = res.map(w => w.Message);
     } catch {
-      return [];
-    } finally {
-      this.release();
+      // Warnings are best effort.
     }
+    await this.release();
+    return warnings;
   }
 
+  // The connection is destroyed rather than pooled, so a KILL that arrives
+  // late can't interrupt whoever uses it next.
   abandon() {
-    this.abandoned = true;
-    this.conn.resume();
-    const budget = setTimeout(
-      () => {
-        if (this.ended) return;
-        void this.killQuery();
-        const destroy = setTimeout(() => {
-          if (this.released) return;
-          this.released = true;
-          this.conn.destroy();
-        }, DESTROY_AFTER_KILL_MS);
-        destroy.unref();
-        this.timers.push(destroy);
-      },
-      this.writesCompleteBeforeRows ? 0 : DRAIN_BUDGET_MS,
-    );
-    budget.unref();
-    this.timers.push(budget);
+    if (this.released) return;
+    this.released = true;
+    const { threadId } = this.conn;
+    this.conn.destroy();
+    if (!this.ended && threadId) void this.killQuery(threadId);
   }
 
   classify(sets: ResultSet[]): ClassifiedResult {
@@ -173,20 +153,25 @@ class MysqlCursorSource implements CursorSource {
 
   private onEnded() {
     this.ended = true;
-    if (!this.abandoned) return;
-    this.timers.forEach(t => clearTimeout(t));
-    this.release();
   }
 
-  private release() {
+  private async release() {
     if (this.released) return;
     this.released = true;
-    this.conn.release();
+    if (!this.readOnly) {
+      this.conn.release();
+      return;
+    }
+    try {
+      await run(this.conn, READ_WRITE);
+      this.conn.release();
+    } catch {
+      // Never return a connection that may still be read-only to the pool.
+      this.conn.destroy();
+    }
   }
 
-  private async killQuery(): Promise<void> {
-    const { threadId } = this.conn;
-    if (!threadId) return;
+  private async killQuery(threadId: number): Promise<void> {
     try {
       const killer = await this.getConn();
       try {

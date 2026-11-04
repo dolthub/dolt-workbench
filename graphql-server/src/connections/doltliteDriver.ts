@@ -67,6 +67,10 @@ class DoltLiteConnection {
     this.db.exec(sql);
   }
 
+  get inTransaction(): boolean {
+    return this.db.inTransaction;
+  }
+
   close(): void {
     this.db.close();
   }

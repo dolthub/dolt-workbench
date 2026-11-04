@@ -91,24 +91,27 @@ describe("SQL cursor paging against doltlite", () => {
     ).toBeUndefined();
   });
 
-  it("runs writes exactly once", async () => {
+  it("leaves writes to the normal path without running them", async () => {
     const page = await qf.getSqlSelectPage(
       { ...main, queryString: "INSERT INTO t VALUES (9001, 'cursor')" },
       0,
       ROW_LIMIT,
     );
-    expect(page?.isMutation).toBe(true);
-    expect(page?.executionMessage).toMatch(/1 row affected/);
+    expect(page).toBeUndefined();
     const rows: t.RawRows = await ds.query(
       "SELECT count(*) AS n FROM t WHERE id = 9001",
     );
-    expect(rows[0].n).toBe(1);
+    expect(rows[0].n).toBe(0);
   });
 
-  it("reports errors from the normal path", async () => {
-    await expect(
-      qf.getSqlSelectPage({ ...main, queryString: "SELEC nope" }, 0, ROW_LIMIT),
-    ).rejects.toThrow(/syntax error/);
+  it("leaves errors to the normal path", async () => {
+    expect(
+      await qf.getSqlSelectPage(
+        { ...main, queryString: "SELEC nope" },
+        0,
+        ROW_LIMIT,
+      ),
+    ).toBeUndefined();
   });
 
   it("serves later pages without re-executing the query", async () => {
@@ -163,6 +166,64 @@ describe("SQL cursor paging against doltlite", () => {
     expect(page?.rows).toEqual([{ n: TOTAL }]);
   });
 
+  it("serves the first page without reading the whole result", async () => {
+    const page = await qf.getSqlSelectPage(
+      {
+        ...main,
+        queryString:
+          "WITH RECURSIVE n(i) AS (SELECT 1 UNION ALL SELECT i + 1 FROM n) SELECT i FROM n",
+      },
+      0,
+      ROW_LIMIT,
+    );
+    expect(page?.rows).toHaveLength(ROW_LIMIT + 1);
+  });
+
+  it("runs RETURNING writes once through the normal path", async () => {
+    const page = await qf.getSqlSelectPage(
+      {
+        ...main,
+        queryString: "UPDATE t SET v = v || '!' WHERE id = 7 RETURNING v",
+      },
+      0,
+      ROW_LIMIT,
+    );
+    expect(page).toBeUndefined();
+    const res = await qf.getSqlSelect({
+      ...main,
+      queryString: "UPDATE t SET v = v || '!' WHERE id = 7 RETURNING v",
+    });
+    expect(res.rows).toEqual([{ v: "v7!" }]);
+  });
+
+  it("runs Dolt procedures through the normal path", async () => {
+    const page = await qf.getSqlSelectPage(
+      { ...main, queryString: "SELECT dolt_branch('from-cursor')" },
+      0,
+      ROW_LIMIT,
+    );
+    expect(page).toBeUndefined();
+    const rows: t.RawRows = await ds.query(
+      "SELECT count(*) AS n FROM dolt_branches WHERE name = 'from-cursor'",
+    );
+    expect(rows[0].n).toBe(0);
+  });
+
+  it("reads HEAD as the commit, not the working set", async () => {
+    await ds.query("INSERT INTO t VALUES (7000, 'uncommitted')");
+    const head = { databaseName: "testdb", refName: "HEAD" };
+    const queryString = "SELECT count(*) AS n FROM t WHERE id = 7000";
+    const page = await qf.getSqlSelectPage(
+      { ...head, queryString },
+      0,
+      ROW_LIMIT,
+    );
+    const normal = await qf.getSqlSelect({ ...head, queryString });
+    expect(page?.rows).toEqual(normal.rows);
+    expect(page?.rows).toEqual([{ n: 0 }]);
+    await ds.query("DELETE FROM t WHERE id = 7000");
+  });
+
   it("lets the shared connection write while a cursor is open", async () => {
     const queryString = "SELECT id FROM t WHERE id < 200 ORDER BY id";
     const first = await qf.getSqlSelectPage(
@@ -208,18 +269,25 @@ describe("SqlSelectResolver with cursor paging", () => {
     expect(ids[TOTAL - 1]).toBe(120);
   });
 
-  it("runs writes through the normal path", async () => {
+  it("runs writes through the normal path exactly once", async () => {
     const res = await resolver.sqlSelect({
       ...main,
       queryString: "INSERT INTO t VALUES (9002, 'resolver')",
     });
     expect(res.isMutation).toBe(true);
     expect(res.queryExecutionMessage).toMatch(/1 row affected/);
+    const rows: t.RawRows = await ds.query(
+      "SELECT count(*) AS n FROM t WHERE id = 9002",
+    );
+    expect(rows[0].n).toBe(1);
   });
 
   it("reports errors from the normal path", async () => {
     await expect(
       resolver.sqlSelect({ ...main, queryString: "SELECT * FROM missing" }),
     ).rejects.toThrow(/missing/);
+    await expect(
+      resolver.sqlSelect({ ...main, queryString: "SELEC nope" }),
+    ).rejects.toThrow(/syntax error/);
   });
 });

@@ -190,6 +190,25 @@ export class DoltLiteQueryFactory
     return rows.length > 0;
   }
 
+  // Opens what the normal path reads: a branch's working set, or for any
+  // other ref the commit it resolves to (see withDetachedFallback).
+  protected async cursorPath(args: t.RefArgs): Promise<string | undefined> {
+    const db = String(this.getDS().options.database);
+    try {
+      if (await this.isBranch(args.refName, args.databaseName)) {
+        return `${db}@${args.refName}`;
+      }
+      const hash = await super.query<t.RawRows>(
+        qh.hashOf,
+        [args.refName],
+        args.databaseName,
+      );
+      return `${db}@${String(Object.values(hash[0])[0])}`;
+    } catch {
+      return undefined;
+    }
+  }
+
   async destroy(): Promise<void> {
     await super.destroy();
     const source = this.revisionSource;

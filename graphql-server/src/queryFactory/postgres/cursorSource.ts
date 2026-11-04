@@ -17,7 +17,11 @@ type PgQuery = {
 
 type PgClient = {
   processID?: number;
-  connection: { stream: { pause(): void; resume(): void } };
+  connection: {
+    stream: { pause(): void; resume(): void };
+    once(event: "parseComplete", cb: () => void): void;
+    removeListener(event: "parseComplete", cb: () => void): void;
+  };
   query(q: unknown, values?: unknown[]): Promise<{ rows: RawRow[] }>;
 };
 
@@ -26,10 +30,13 @@ export type PgConnection = [PgClient, (err?: unknown) => void];
 export type PgCursorOptions = {
   // Statements run before the cursor's statement (USE, search_path).
   setup: string[];
-  // The server enforces read-only sessions, so writes are rejected before
-  // they start and re-run on the normal path; abandoned reads can be
-  // cancelled safely. Doltgres supports neither, but commits writes before
-  // streaming their rows, so it drains abandoned statements instead.
+  // Postgres enforces read-only sessions, so writes are rejected before they
+  // start and re-run on the normal path, and abandoned reads can be
+  // cancelled. Doltgres enforces neither read-only sessions (it still runs
+  // DDL and dolt functions in one) nor cancellation, and streams an
+  // INSERT ... RETURNING's rows before committing it. So its statements
+  // finish before their first page, and only those it rejected before
+  // executing (parse errors, such as multi-statement strings) re-run.
   readOnly: boolean;
 };
 
@@ -55,19 +62,13 @@ export async function createPgCursorSource(
 }
 
 class PgCursorSource implements CursorSource {
-  // Extended protocol rejects multi-statement strings at Parse, and the
-  // read-only session rejects writes, so an early error means "run this the
-  // normal way", which reports the real error if there is one.
-  readonly retryOnEarlyError = true;
+  readonly writesNothing: boolean;
 
-  // Postgres sessions are read-only; Doltgres commits writes before rows.
-  readonly completeBeforeFirstPage = false;
+  readonly completeBeforeFirstPage: boolean;
 
   private result: PgResult | undefined;
 
   private ended = false;
-
-  private abandoned = false;
 
   private released = false;
 
@@ -77,10 +78,18 @@ class PgCursorSource implements CursorSource {
     private readonly getConn: () => Promise<PgConnection>,
     private readonly sql: string,
     private readonly readOnly: boolean,
-  ) {}
+  ) {
+    this.writesNothing = readOnly;
+    this.completeBeforeFirstPage = !readOnly;
+  }
 
   start(sink: CursorSink) {
     let sawRow = false;
+    let parsed = false;
+    const onParsed = () => {
+      parsed = true;
+    };
+    this.client.connection.once("parseComplete", onParsed);
     const q: PgQuery = new Query({ text: this.sql, queryMode: "extended" });
     q.on("row", row => {
       if (!sawRow) {
@@ -90,12 +99,13 @@ class PgCursorSource implements CursorSource {
       sink.row(row);
     })
       .on("error", e => {
-        this.onEnded();
-        sink.error(e);
+        this.ended = true;
+        this.client.connection.removeListener("parseComplete", onParsed);
+        sink.error(e, !parsed);
       })
       .on("end", res => {
         this.result = res;
-        this.onEnded();
+        this.ended = true;
         if (!sawRow) sink.status(res);
         sink.end();
       });
@@ -115,10 +125,14 @@ class PgCursorSource implements CursorSource {
     return [];
   }
 
+  // The connection is destroyed rather than pooled, so a cancel that arrives
+  // late can't interrupt whoever uses it next.
   abandon() {
-    this.abandoned = true;
-    this.resume();
-    if (this.readOnly) void this.cancel();
+    if (this.released) return;
+    this.released = true;
+    const pid = this.client.processID;
+    this.releaseClient(new Error("cursor abandoned"));
+    if (this.readOnly && !this.ended && pid) void this.cancel(pid);
   }
 
   classify(sets: ResultSet[]): ClassifiedResult {
@@ -129,11 +143,6 @@ class PgCursorSource implements CursorSource {
       rows: set && "rows" in set ? set.rows : [],
     };
     return classifyPgResult(res);
-  }
-
-  private onEnded() {
-    this.ended = true;
-    if (this.abandoned) void this.release();
   }
 
   private async release() {
@@ -149,9 +158,7 @@ class PgCursorSource implements CursorSource {
     }
   }
 
-  private async cancel(): Promise<void> {
-    const pid = this.client.processID;
-    if (!pid || this.ended) return;
+  private async cancel(pid: number): Promise<void> {
     try {
       const [killer, release] = await this.getConn();
       try {

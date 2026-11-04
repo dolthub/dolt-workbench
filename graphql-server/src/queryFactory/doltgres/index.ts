@@ -64,6 +64,11 @@ export class DoltgresQueryFactory
   // Doltgres doesn't support read-only sessions or cancellation.
   protected cursorReadOnly = false;
 
+  // The cursor's setup runs the same USE as checkoutDatabase.
+  protected cursorMatchesDatabase(): boolean {
+    return true;
+  }
+
   async getTableNames(
     args: t.RefMaybeSchemaArgs,
     filterSystemTables?: boolean,

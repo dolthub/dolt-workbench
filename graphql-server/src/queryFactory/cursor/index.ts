@@ -1,8 +1,26 @@
+import { clearTimeout, setTimeout } from "timers";
 import { ClassifiedResult } from "../mysql/classifyResult";
-import { RawRow, SqlSelectResult } from "../types";
+import { RawRow } from "../types";
 
-const MAX_OPEN_CURSORS = 2;
-const IDLE_TTL_MS = 5 * 60 * 1000;
+// An open cursor holds a connection and, on some engines, locks on the tables
+// it reads, so one left behind by a closed tab shouldn't outlive a short pause.
+export const IDLE_TTL_MS = 60 * 1000;
+
+// Bounds what a cursor holds of a statement that must finish before its first
+// page. Past it, a cursor that can hand the query back to the normal path
+// does (see writesNothing); one that can't serves the first page and then
+// lets later pages re-run the query rather than keep holding the result.
+export const MAX_BUFFERED_BYTES = 64 * 1024 * 1024;
+
+function approxBytes(row: RawRow): number {
+  let n = 0;
+  Object.values(row).forEach(v => {
+    if (typeof v === "string") n += v.length * 2;
+    else if (Buffer.isBuffer(v)) n += v.byteLength;
+    else n += 8;
+  });
+  return n;
+}
 
 export type CursorPage = ClassifiedResult & {
   // Includes one lookahead row past pageSize when more rows exist, matching
@@ -20,7 +38,9 @@ export type CursorSink = {
   rowSet(): void;
   status(meta: unknown): void;
   row(r: RawRow): void;
-  error(e: Error): void;
+  // `notStarted` marks an error raised before the statement began executing
+  // (e.g. a parse error), which the normal path can safely run again.
+  error(e: Error, notStarted?: boolean): void;
   end(): void;
 };
 
@@ -32,16 +52,17 @@ export type CursorSource = {
   resume(): void;
   // The statement completed: release the resource and return its warnings.
   finish(): Promise<string[]>;
-  // The cursor was dropped mid-statement: stop or drain the statement and
-  // release the resource. Rows delivered afterwards are ignored.
+  // The cursor was dropped mid-statement: stop the statement and release the
+  // resource. Only called once the statement can no longer be writing: before
+  // the first page only when writesNothing, otherwise after it.
   abandon(): void;
   // Classifies a statement that ran to completion exactly as the
   // non-cursor path does.
   classify(sets: ResultSet[]): ClassifiedResult;
-  // True when the cursor ran the statement under restrictions the normal
-  // path doesn't have (read-only, single statement), so an error before the
-  // first page means "run it the normal way" rather than a user error.
-  readonly retryOnEarlyError: boolean;
+  // True when the cursor's connection can't write (a read-only session or
+  // handle), so a statement it errored on, or that was stopped before its
+  // first page, changed nothing and can run again on the normal path.
+  readonly writesNothing: boolean;
   // True when the statement may still be writing while its rows stream, so
   // the first page must wait for it to finish to keep the normal path's
   // guarantee that a query's effects are visible once it returns.
@@ -52,8 +73,6 @@ export type CursorSource = {
 // re-executing the query.
 export class SqlCursor {
   position = 0;
-
-  lastUsed = Date.now();
 
   private sets: ResultSet[] = [];
 
@@ -73,6 +92,16 @@ export class SqlCursor {
 
   private finishing: Promise<string[]> | undefined;
 
+  private bufferedBytes = 0;
+
+  private retryable = false;
+
+  private firstPageServed = false;
+
+  private retiring = false;
+
+  private warningsSent = false;
+
   constructor(private readonly source: CursorSource) {
     source.start({
       rowSet: () => {
@@ -84,8 +113,9 @@ export class SqlCursor {
         this.notify();
       },
       row: r => this.onRow(r),
-      error: e => {
+      error: (e, notStarted) => {
         this.error = e;
+        this.retryable = this.source.writesNothing || !!notStarted;
         this.complete();
       },
       end: () => this.complete(),
@@ -97,12 +127,30 @@ export class SqlCursor {
     offset: number,
     pageSize: number,
   ): Promise<CursorPage | undefined> {
-    const next = this.lock.then(async () => this.readPage(offset, pageSize));
+    const next = this.lock.then(async () => {
+      try {
+        return await this.readPage(offset, pageSize);
+      } finally {
+        if (offset === 0) this.firstPageServed = true;
+        if (this.retiring) this.close();
+      }
+    });
     this.lock = next.catch(() => undefined);
     return next;
   }
 
-  close() {
+  // Stops holding the statement for later pages. A first page still in
+  // flight on a connection that can write is let finish, since the
+  // statement may already have written and must not be re-run.
+  retire() {
+    if (!this.firstPageServed && !this.source.writesNothing) {
+      this.retiring = true;
+      return;
+    }
+    this.close();
+  }
+
+  private close() {
     if (this.closed) return;
     this.closed = true;
     this.notify();
@@ -114,6 +162,16 @@ export class SqlCursor {
     const last = this.sets[this.sets.length - 1] as ResultSet | undefined;
     if (!last || !("rows" in last)) return;
     last.rows.push(r);
+    if (this.position === 0) {
+      this.bufferedBytes += approxBytes(r);
+      if (
+        this.source.writesNothing &&
+        this.bufferedBytes > MAX_BUFFERED_BYTES
+      ) {
+        this.close();
+        return;
+      }
+    }
     if (this.sets.length === 1 && this.buffered() >= this.target) {
       this.source.pause();
       this.notify();
@@ -132,7 +190,6 @@ export class SqlCursor {
     pageSize: number,
   ): Promise<CursorPage | undefined> {
     if (this.closed || offset !== this.position) return undefined;
-    this.lastUsed = Date.now();
 
     await this.waitFor(
       pageSize + 1,
@@ -147,7 +204,7 @@ export class SqlCursor {
     if (this.isClosed()) return undefined;
 
     if (this.error) {
-      const retry = this.position === 0 && this.source.retryOnEarlyError;
+      const retry = this.position === 0 && this.retryable;
       this.close();
       await this.finishing;
       if (retry) return undefined;
@@ -170,16 +227,18 @@ export class SqlCursor {
       this.consumed,
       this.consumed + pageSize + 1,
     );
+    if (this.position === 0 && this.bufferedBytes > MAX_BUFFERED_BYTES) {
+      this.close();
+    }
     const served = Math.min(rows.length, pageSize);
     this.consumed += served;
     this.position += served;
     this.compact();
-    const hasMore = rows.length > pageSize;
     return {
       rows,
       isMutation: false,
       executionMessage: "",
-      warnings: !hasMore && this.done ? await this.getWarnings() : [],
+      warnings: this.done ? await this.getWarnings() : [],
     };
   }
 
@@ -199,12 +258,10 @@ export class SqlCursor {
     );
   }
 
-  // Drops already-served rows so a long scroll doesn't retain them.
+  // Drops served rows, so a cursor never holds more than the next page.
   private compact() {
-    if (this.consumed > 1000) {
-      this.firstRows().splice(0, this.consumed);
-      this.consumed = 0;
-    }
+    this.firstRows().splice(0, this.consumed);
+    this.consumed = 0;
   }
 
   private async waitFor(target: number, ready: () => boolean): Promise<void> {
@@ -231,13 +288,22 @@ export class SqlCursor {
     w?.();
   }
 
+  // Each execution's warnings go out once, with the first page served after
+  // the statement finishes.
   private async getWarnings(): Promise<string[]> {
+    if (this.warningsSent) return [];
+    this.warningsSent = true;
     return (await this.finishing) ?? [];
   }
 }
 
+// Holds at most one open cursor. Starting a new query closes it first: the
+// new statement may be DDL that would otherwise wait on the open cursor's
+// table locks, and telling the two apart would mean parsing SQL.
 export class SqlCursorStore {
-  private cursors = new Map<string, SqlCursor>();
+  private current: { key: string; cursor: SqlCursor } | undefined;
+
+  private idleTimer: ReturnType<typeof setTimeout> | undefined;
 
   static key(args: {
     databaseName: string;
@@ -262,79 +328,48 @@ export class SqlCursorStore {
     pageSize: number,
     createSource: () => Promise<CursorSource | undefined>,
   ): Promise<CursorPage | undefined> {
-    if (offset !== 0) return this.cursors.get(key)?.page(offset, pageSize);
-
-    this.cursors.get(key)?.close();
-    this.cursors.delete(key);
-    this.evict();
+    if (offset !== 0) {
+      if (this.current?.key !== key) return undefined;
+      return this.track(this.current.cursor.page(offset, pageSize));
+    }
+    this.closeAll();
     const source = await createSource();
     if (!source) return undefined;
     const cursor = new SqlCursor(source);
-    this.cursors.set(key, cursor);
-    return cursor.page(0, pageSize);
+    this.closeAll();
+    this.current = { key, cursor };
+    return this.track(cursor.page(0, pageSize));
   }
 
   closeAll() {
-    this.cursors.forEach(c => c.close());
-    this.cursors.clear();
+    this.clearIdleTimer();
+    this.current?.cursor.retire();
+    this.current = undefined;
   }
 
-  private evict() {
-    const now = Date.now();
-    [...this.cursors.entries()].forEach(([k, c]) => {
-      if (now - c.lastUsed > IDLE_TTL_MS) {
-        c.close();
-        this.cursors.delete(k);
-      }
-    });
-    while (this.cursors.size >= MAX_OPEN_CURSORS) {
-      const [oldestKey, oldest] = [...this.cursors.entries()].sort(
-        ([, a], [, b]) => a.lastUsed - b.lastUsed,
-      )[0];
-      oldest.close();
-      this.cursors.delete(oldestKey);
+  private async track(
+    page: Promise<CursorPage | undefined>,
+  ): Promise<CursorPage | undefined> {
+    this.clearIdleTimer();
+    try {
+      return await page;
+    } finally {
+      this.armIdleTimer();
     }
   }
-}
 
-// Runs the statement through the factory's normal path and pages the complete
-// result from memory: later pages stop re-executing the query, and results
-// and errors are exactly the normal path's. For drivers that can't stream rows
-// lazily, such as DoltLite, whose iterate() materializes every row up front.
-export function materializedSource(
-  run: () => Promise<SqlSelectResult>,
-): CursorSource {
-  let result: SqlSelectResult | undefined;
-  return {
-    retryOnEarlyError: false,
-    completeBeforeFirstPage: true,
-    start(sink) {
-      run().then(
-        res => {
-          result = res;
-          if (res.isMutation) {
-            sink.status(res);
-          } else {
-            sink.rowSet();
-            res.rows.forEach(r => sink.row(r));
-          }
-          sink.end();
-        },
-        (e: Error) => sink.error(e),
-      );
-    },
-    pause() {},
-    resume() {},
-    async finish() {
-      return result?.warnings ?? [];
-    },
-    abandon() {},
-    classify() {
-      return {
-        rows: result?.rows ?? [],
-        isMutation: result?.isMutation ?? false,
-        executionMessage: result?.executionMessage ?? "",
-      };
-    },
-  };
+  private clearIdleTimer() {
+    if (this.idleTimer) clearTimeout(this.idleTimer);
+    this.idleTimer = undefined;
+  }
+
+  private armIdleTimer() {
+    this.clearIdleTimer();
+    const open = this.current;
+    if (!open) return;
+    this.idleTimer = setTimeout(() => {
+      if (this.current === open) this.closeAll();
+    }, IDLE_TTL_MS);
+    this.idleTimer.unref();
+  }
 }

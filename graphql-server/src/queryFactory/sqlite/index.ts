@@ -1,4 +1,5 @@
 import { QueryRunner } from "typeorm";
+import { BetterSqlite3Driver } from "typeorm/driver/better-sqlite3/BetterSqlite3Driver";
 import { QueryFactory } from "..";
 import { dbNameFromFilePath } from "../../connections/util";
 import { SchemaType } from "../../schemas/schema.enums";
@@ -7,8 +8,9 @@ import { TableDetails } from "../../tables/table.model";
 import { MySQLQueryFactory } from "../mysql";
 import { getTableInfo, getTablePKColumns, getTables } from "../mysql/utils";
 import * as t from "../types";
-import { CursorSource, materializedSource } from "../cursor";
+import { CursorSource } from "../cursor";
 import { classifySqliteResult } from "./classifyResult";
+import { createSqliteCursorSource } from "./cursorSource";
 import * as qh from "./queries";
 
 export class SqliteQueryFactory
@@ -116,10 +118,28 @@ export class SqliteQueryFactory
     );
   }
 
+  // The cursor reads on its own connection, which can't see this one's open
+  // transaction, temp tables or attached databases, so while any exist
+  // queries stay on the normal path.
   protected async createCursorSource(
     args: t.RefMaybeSchemaArgs & { queryString: string },
   ): Promise<CursorSource | undefined> {
-    return materializedSource(async () => this.getSqlSelect(args));
+    const isolated = await this.handleAsyncQuery(async qr => {
+      const conn = (this.getDS().driver as BetterSqlite3Driver)
+        .databaseConnection as { inTransaction: boolean };
+      if (conn.inTransaction) return false;
+      const rows: t.RawRows = await qr.query(qh.connectionLocalObjectsQuery);
+      return Number(rows[0].n) === 0;
+    });
+    if (!isolated) return undefined;
+    const path = await this.cursorPath(args);
+    return path === undefined
+      ? undefined
+      : createSqliteCursorSource(path, args.queryString);
+  }
+
+  protected async cursorPath(_args: t.RefArgs): Promise<string | undefined> {
+    return String(this.getDS().options.database);
   }
 
   async getSqlSelect(

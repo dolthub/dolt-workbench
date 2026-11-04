@@ -358,9 +358,18 @@ export class PostgresQueryFactory
 
   protected cursorReadOnly = true;
 
+  // The cursor's connection skips checkoutDatabase, so a query for another
+  // database is left to the normal path, which rejects it.
+  protected cursorMatchesDatabase(args: t.RefMaybeSchemaArgs): boolean {
+    return (
+      args.databaseName === (this.getDS().driver as PostgresDriver).database
+    );
+  }
+
   protected async createCursorSource(
     args: t.RefMaybeSchemaArgs & { queryString: string },
   ): Promise<CursorSource | undefined> {
+    if (!this.cursorMatchesDatabase(args)) return undefined;
     const driver = this.getDS().driver as PostgresDriver;
     return createPgCursorSource(
       async () => driver.obtainMasterConnection() as Promise<PgConnection>,

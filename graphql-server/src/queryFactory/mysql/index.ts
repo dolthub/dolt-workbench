@@ -41,6 +41,10 @@ export class MySQLQueryFactory
   protected cursors = new SqlCursorStore();
 
   async destroy(): Promise<void> {
+    this.closeCursors();
+  }
+
+  closeCursors() {
     this.cursors.closeAll();
   }
 
@@ -369,7 +373,7 @@ export class MySQLQueryFactory
         setup: args.databaseName
           ? [qh.useDB(args.databaseName, args.refName, this.isDolt)]
           : [],
-        writesCompleteBeforeRows: this.isDolt,
+        mode: this.isDolt ? "writesCompleteBeforeRows" : "readOnly",
       },
     );
   }

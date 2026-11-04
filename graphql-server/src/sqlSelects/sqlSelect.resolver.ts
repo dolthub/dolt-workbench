@@ -44,7 +44,12 @@ export class SqlSelectResolver {
     offset: number,
   ): Promise<SqlSelectResult> {
     const res = await this.conn.connection().getSqlSelect(args);
-    return { ...res, rows: res.rows.slice(offset, offset + ROW_LIMIT + 1) };
+    return {
+      ...res,
+      rows: res.rows.slice(offset, offset + ROW_LIMIT + 1),
+      // Re-running a later page would repeat warnings already shown.
+      warnings: offset ? [] : res.warnings,
+    };
   }
 
   @Query(_returns => String)
