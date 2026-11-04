@@ -468,7 +468,13 @@ export class DoltLiteQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
+      async em =>
+        dem.getTableRowsWithDiff(
+          em,
+          dem.workingDiffSystemTable(args.tableName),
+          rows,
+          page,
+        ),
       args.databaseName,
       args.refName,
     );
@@ -479,7 +485,12 @@ export class DoltLiteQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getWorkingDiffRows(em, args.tableName, page),
+      async em =>
+        dem.getWorkingDiffRows(
+          em,
+          dem.workingDiffSystemTable(args.tableName),
+          page,
+        ),
       args.databaseName,
       args.refName,
     );
