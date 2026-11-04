@@ -81,16 +81,25 @@ export class DoltQueryFactory
   async getTables(args: t.RefArgs, tns: string[]): Promise<TableDetails[]> {
     return this.queryMultiple(
       async query => {
-        const tableInfos = await Promise.all(
-          tns.map(async name => {
-            const tableInfo = await getTableInfoWithQR(query, {
-              ...args,
-              tableName: name,
-            });
-            return tableInfo;
+        const revDb = `${args.databaseName}/${args.refName}`;
+        const columns = groupByTable(await query(qh.allColumnsQuery, [revDb]));
+        const fks = groupByTable(await query(qh.allForeignKeysQuery, [revDb]));
+        const idxs = groupByTable(await query(qh.allIndexesQuery, [revDb]));
+        return Promise.all(
+          tns.map(async tableName => {
+            const cols = columns.get(tableName);
+            // information_schema leaves out Dolt's system tables.
+            if (!cols) {
+              return getTableInfoWithQR(query, { ...args, tableName });
+            }
+            return {
+              tableName,
+              columns: cols.map(c => column.fromDoltRowRes(c, tableName)),
+              foreignKeys: foreignKey.fromDoltRowsRes(fks.get(tableName) ?? []),
+              indexes: index.fromDoltRowsRes(idxs.get(tableName) ?? []),
+            };
           }),
         );
-        return tableInfos;
       },
       args.databaseName,
       args.refName,
@@ -790,6 +799,16 @@ export class DoltQueryFactory
       args.refName,
     );
   }
+}
+
+function groupByTable(rows: RawRows): Map<string, RawRows> {
+  const byTable = new Map<string, RawRows>();
+  rows.forEach(r => {
+    const rs = byTable.get(r.TABLE_NAME) ?? [];
+    rs.push(r);
+    byTable.set(r.TABLE_NAME, rs);
+  });
+  return byTable;
 }
 
 async function getTableInfoWithQR(
