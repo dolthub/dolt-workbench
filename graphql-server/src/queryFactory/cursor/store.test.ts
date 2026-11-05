@@ -40,10 +40,6 @@ function fakeSource(total = Infinity, opts: FakeOptions = {}): FakeSource {
   let sink: CursorSink | undefined;
   let paused = true;
   let open = !opts.gate;
-  void opts.gate?.then(() => {
-    open = true;
-    if (!paused) source.resume();
-  });
   // A function so the loop re-reads it after the sink pauses the source.
   const isPaused = () => paused;
   const source: FakeSource = {
@@ -87,7 +83,18 @@ function fakeSource(total = Infinity, opts: FakeOptions = {}): FakeSource {
       };
     },
   };
+  void opts.gate?.then(() => {
+    open = true;
+    if (!paused) source.resume();
+  });
   return source;
+}
+
+// Lets the store start the first page before the test acts.
+async function settle(): Promise<void> {
+  return new Promise(r => {
+    globalThis.setTimeout(r, 0);
+  });
 }
 
 const PAGE = 10;
@@ -181,7 +188,7 @@ describe("SqlCursorStore", () => {
     });
     const src = fakeSource(Infinity, { gate });
     const first = store.page("q", 0, PAGE, async () => src);
-    await new Promise(r => setImmediate(r));
+    await settle();
     store.closeAll();
     expect(src.abandoned).toBe(false);
     openGate();
@@ -196,7 +203,7 @@ describe("SqlCursorStore", () => {
       gate: new Promise(() => {}),
     });
     const first = store.page("q", 0, PAGE, async () => src);
-    await new Promise(r => setImmediate(r));
+    await settle();
     store.closeAll();
     expect(await first).toBeUndefined();
     expect(src.abandoned).toBe(true);
