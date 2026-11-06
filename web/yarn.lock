@@ -10112,7 +10112,7 @@ __metadata:
     classnames: "npm:^2.3.2"
     cssnano: "npm:^7.0.7"
     diff: "npm:^5.2.2"
-    electron: "npm:^42.11.10"
+    electron: "npm:^44.9.0"
     electron-builder: "npm:^26.15.3"
     electron-builder-squirrel-windows: "npm:^26.15.3"
     electron-serve: "npm:^3.0.1"
@@ -10421,9 +10421,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron@npm:^42.11.10":
-  version: 42.11.10
-  resolution: "electron@npm:42.11.10"
+"electron@npm:^44.9.0":
+  version: 44.9.0
+  resolution: "electron@npm:44.9.0"
   dependencies:
     "@electron-internal/extract-zip": "npm:^1.0.1"
     "@electron/get": "npm:^5.0.0"
@@ -10431,7 +10431,7 @@ __metadata:
   bin:
     electron: cli.js
     install-electron: install.js
-  checksum: 10c0/b5a8e10546bdeef0d80aa0fa615c3aec20500b0d5638349da4bfc50274866f150fa1ab96d03c38b5c1f6d27bd4d1ddc7a4fbde51b0932fa4cd1711847475ec20
+  checksum: 10c0/f8f226fcc4d72bfedf78bd5ac8989cd94ab9b276016c657bc06ddad8e3e35edb06f0797971313db3d9f0e8f5c766d772b2d974fe8b6247aba5842f5f59b5bdf4
   languageName: node
   linkType: hard
 
