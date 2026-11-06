@@ -8,8 +8,9 @@ export const IDLE_TTL_MS = 60 * 1000;
 
 // Bounds what a cursor holds of a statement that must finish before its first
 // page. Past it, a cursor that can hand the query back to the normal path
-// does (see writesNothing); one that can't serves the first page and then
-// lets later pages re-run the query rather than keep holding the result.
+// does (see writesNothing); one that can't keeps only each result's first
+// page while the statement finishes, serves it, and then lets later pages
+// re-run the query rather than keep holding the result.
 export const MAX_BUFFERED_BYTES = 64 * 1024 * 1024;
 
 function approxBytes(row: RawRow): number {
@@ -83,6 +84,10 @@ export class SqlCursor {
   private error: Error | undefined;
 
   private target = 1;
+
+  private firstPageRows: number | undefined;
+
+  private overCap = false;
 
   private wake: (() => void) | undefined;
 
@@ -161,21 +166,34 @@ export class SqlCursor {
     if (this.closed) return;
     const last = this.sets[this.sets.length - 1] as ResultSet | undefined;
     if (!last || !("rows" in last)) return;
+    if (this.overCap) {
+      if (last.rows.length < (this.firstPageRows ?? 0)) last.rows.push(r);
+      return;
+    }
     last.rows.push(r);
     if (this.position === 0) {
       this.bufferedBytes += approxBytes(r);
-      if (
-        this.source.writesNothing &&
-        this.bufferedBytes > MAX_BUFFERED_BYTES
-      ) {
-        this.close();
-        return;
+      if (this.bufferedBytes > MAX_BUFFERED_BYTES) {
+        if (this.source.writesNothing) {
+          this.close();
+          return;
+        }
+        this.keepFirstPages();
       }
     }
     if (this.sets.length === 1 && this.buffered() >= this.target) {
       this.source.pause();
       this.notify();
     }
+  }
+
+  private keepFirstPages() {
+    if (this.firstPageRows === undefined) return;
+    this.overCap = true;
+    this.sets.forEach(set => {
+      if ("rows" in set)
+        set.rows.length = Math.min(set.rows.length, this.firstPageRows ?? 0);
+    });
   }
 
   private complete() {
@@ -190,6 +208,7 @@ export class SqlCursor {
     pageSize: number,
   ): Promise<CursorPage | undefined> {
     if (this.closed || offset !== this.position) return undefined;
+    if (offset === 0) this.firstPageRows = pageSize + 1;
 
     await this.waitFor(
       pageSize + 1,

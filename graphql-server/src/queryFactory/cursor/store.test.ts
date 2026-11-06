@@ -171,6 +171,23 @@ describe("SqlCursorStore", () => {
     expect(await store.page("q", PAGE, PAGE, async () => src)).toBeUndefined();
   });
 
+  it("keeps only the first page of a large result while it finishes", async () => {
+    const store = new SqlCursorStore();
+    const payload = "x".repeat(1024 * 1024);
+    const total = 2 * (MAX_BUFFERED_BYTES / (payload.length * 2));
+    const src = fakeSource(total, {
+      mustFinish: true,
+      writesNothing: false,
+      payload,
+    });
+    const first = await store.page("q", 0, PAGE, async () => src);
+    expect(src.produced).toBe(total);
+    expect(src.abandoned).toBe(false);
+    expect(first?.rows.map(r => r.n)).toEqual(
+      Array.from({ length: PAGE + 1 }, (_, i) => i),
+    );
+  });
+
   it("serves a result that finishes within the buffer limit", async () => {
     const store = new SqlCursorStore();
     const src = fakeSource(3 * PAGE, { mustFinish: true });

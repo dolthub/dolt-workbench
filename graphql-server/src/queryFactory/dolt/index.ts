@@ -139,12 +139,14 @@ export class DoltQueryFactory
   ): t.PR {
     return this.queryForBuilder(
       async em =>
-        dem.getTableRowsWithDiff(
-          em,
-          dem.workingDiffTableFunction(args.tableName),
-          rows,
-          page,
-        ),
+        (await dem.onBranch(em))
+          ? dem.getTableRowsWithDiff(
+              em,
+              dem.workingDiffTableFunction(args.tableName),
+              rows,
+              page,
+            )
+          : [],
       args.databaseName,
       args.refName,
     );
@@ -156,11 +158,13 @@ export class DoltQueryFactory
   ): t.PR {
     return this.queryForBuilder(
       async em =>
-        dem.getWorkingDiffRows(
-          em,
-          dem.workingDiffTableFunction(args.tableName),
-          page,
-        ),
+        (await dem.onBranch(em))
+          ? dem.getWorkingDiffRows(
+              em,
+              dem.workingDiffTableFunction(args.tableName),
+              page,
+            )
+          : [],
       args.databaseName,
       args.refName,
     );

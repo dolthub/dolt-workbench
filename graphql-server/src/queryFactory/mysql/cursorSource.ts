@@ -16,35 +16,32 @@ type QueryEvents = {
 async function run(
   conn: PoolConnection,
   sql: string,
-  params?: unknown,
+  params?: unknown[],
 ): Promise<any> {
-  return new Promise((resolve, reject) => {
-    conn.query(sql, params as any, (err, res) =>
-      err ? reject(err) : resolve(res),
-    );
-  });
+  const [res] = await conn.promise().query(sql, params);
+  return res;
 }
 
 export type MysqlCursorOptions = {
   setup: string[];
-  // MySQL streams a CALL's result sets while the procedure runs, and nothing
-  // short of the statement finishing says whether it was a CALL. So MySQL
-  // statements finish before their first page, in a read-only session that
-  // rejects writes before they start: a write re-runs on the normal path, and
-  // a statement killed for buffering too much has changed nothing. Dolt
-  // doesn't enforce read-only sessions, but finishes a statement's writes
-  // before it streams rows, so its rows can stream from the start.
-  mode: "readOnly" | "writesCompleteBeforeRows";
+  // MySQL streams a CALL's result sets while the procedure runs, and Dolt
+  // commits an INSERT ... RETURNING only after its last row, so a statement
+  // stopped mid-stream may lose writes. Statements therefore finish before
+  // their first page. MySQL runs them in a read-only session that rejects
+  // writes before they start, so a write re-runs on the normal path, and a
+  // statement stopped for buffering too much has changed nothing. Dolt
+  // ignores read-only sessions, so it can't.
+  readOnly: boolean;
 };
 
 export async function createMysqlCursorSource(
   getConn: () => Promise<PoolConnection>,
   sql: string,
-  params: unknown,
+  params: unknown[],
   opts: MysqlCursorOptions,
 ): Promise<CursorSource> {
   const conn = await getConn();
-  const readOnly = opts.mode === "readOnly";
+  const { readOnly } = opts;
   try {
     for (const s of readOnly ? [...opts.setup, READ_ONLY] : opts.setup) {
       // eslint-disable-next-line no-await-in-loop
@@ -60,7 +57,7 @@ export async function createMysqlCursorSource(
 class MysqlCursorSource implements CursorSource {
   readonly writesNothing: boolean;
 
-  readonly completeBeforeFirstPage: boolean;
+  readonly completeBeforeFirstPage = true;
 
   private ended = false;
 
@@ -74,7 +71,6 @@ class MysqlCursorSource implements CursorSource {
     private readonly readOnly: boolean,
   ) {
     this.writesNothing = readOnly;
-    this.completeBeforeFirstPage = readOnly;
   }
 
   start(sink: CursorSink) {

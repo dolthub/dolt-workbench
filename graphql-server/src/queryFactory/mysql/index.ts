@@ -373,7 +373,7 @@ export class MySQLQueryFactory
         setup: args.databaseName
           ? [qh.useDB(args.databaseName, args.refName, this.isDolt)]
           : [],
-        mode: this.isDolt ? "writesCompleteBeforeRows" : "readOnly",
+        readOnly: !this.isDolt,
       },
     );
   }

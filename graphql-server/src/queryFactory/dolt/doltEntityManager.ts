@@ -87,6 +87,12 @@ export function workingDiffTableFunction(tableName: string): WorkingDiffSource {
       .setParameter("diffTableName", tableName);
 }
 
+// A tag or commit has no working set, and DOLT_DIFF can't resolve HEAD there.
+export async function onBranch(em: EntityManager): Promise<boolean> {
+  const res: RawRows = await em.query("SELECT active_branch() AS branch");
+  return res[0]?.branch != null;
+}
+
 export async function getTableRowsWithDiff(
   em: EntityManager,
   source: WorkingDiffSource,
