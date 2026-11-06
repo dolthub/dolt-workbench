@@ -1,3 +1,4 @@
+import { escapeLiteral } from "pg";
 import { InsertResult, QueryRunner } from "typeorm";
 import { QueryFactory } from "..";
 import * as column from "../../columns/column.model";
@@ -51,6 +52,21 @@ export class DoltgresQueryFactory
     refName?: string,
   ): Promise<void> {
     await qr.query(qh.useDB(dbName, refName, this.isDolt));
+  }
+
+  protected cursorSetup(args: t.RefMaybeSchemaArgs): string[] {
+    return [
+      qh.useDB(args.databaseName, args.refName, this.isDolt),
+      ...super.cursorSetup(args),
+    ];
+  }
+
+  // Doltgres doesn't support read-only sessions or cancellation.
+  protected cursorReadOnly = false;
+
+  // The cursor's setup runs the same USE as checkoutDatabase.
+  protected cursorMatchesDatabase(): boolean {
+    return true;
   }
 
   async getTableNames(
@@ -153,7 +169,13 @@ export class DoltgresQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
+      async em =>
+        dem.getTableRowsWithDiff(
+          em,
+          doltgresWorkingDiff(args.tableName),
+          rows,
+          page,
+        ),
       args.databaseName,
       args.refName,
     );
@@ -164,7 +186,8 @@ export class DoltgresQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getWorkingDiffRows(em, args.tableName, page),
+      async em =>
+        dem.getWorkingDiffRows(em, doltgresWorkingDiff(args.tableName), page),
       args.databaseName,
       args.refName,
     );
@@ -827,6 +850,18 @@ export class DoltgresQueryFactory
     const schemaName = await getSchema(qr, args);
     return { baseTableName: tableWithoutSchema(args.tableName), schemaName };
   }
+}
+
+// Doltgres rejects bind parameters as dolt_diff() arguments.
+function doltgresWorkingDiff(tableName: string): dem.WorkingDiffSource {
+  return em =>
+    em
+      .createQueryBuilder()
+      .select("*")
+      .from(
+        `(SELECT * FROM dolt_diff('HEAD', 'WORKING', ${escapeLiteral(tableName)}))`,
+        "working_diff",
+      );
 }
 
 async function getTableInfoWithQR(

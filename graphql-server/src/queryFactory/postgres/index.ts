@@ -1,4 +1,5 @@
 import { QueryRunner } from "typeorm";
+import { PostgresDriver } from "typeorm/driver/postgres/PostgresDriver";
 import { QueryFactory } from "..";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
@@ -26,7 +27,9 @@ import {
   DDL_EXECUTION_MESSAGE,
   mutationExecutionMessage,
 } from "../build/buildUtils";
+import { CursorSource } from "../cursor";
 import { classifyPgResult } from "./classifyResult";
+import { PgConnection, createPgCursorSource } from "./cursorSource";
 
 export class PostgresQueryFactory
   extends MySQLQueryFactory
@@ -345,6 +348,34 @@ export class PostgresQueryFactory
 
   protected catalogName(args: t.RefArgs): string {
     return args.databaseName;
+  }
+
+  // Statements that put a cursor's connection in the state the normal path
+  // gets from checkoutDatabase and changeSchema.
+  protected cursorSetup(args: t.RefMaybeSchemaArgs): string[] {
+    return args.schemaName ? [qh.setSearchPath(args.schemaName)] : [];
+  }
+
+  protected cursorReadOnly = true;
+
+  // The cursor's connection skips checkoutDatabase, so a query for another
+  // database is left to the normal path, which rejects it.
+  protected cursorMatchesDatabase(args: t.RefMaybeSchemaArgs): boolean {
+    return (
+      args.databaseName === (this.getDS().driver as PostgresDriver).database
+    );
+  }
+
+  protected async createCursorSource(
+    args: t.RefMaybeSchemaArgs & { queryString: string },
+  ): Promise<CursorSource | undefined> {
+    if (!this.cursorMatchesDatabase(args)) return undefined;
+    const driver = this.getDS().driver as PostgresDriver;
+    return createPgCursorSource(
+      async () => driver.obtainMasterConnection() as Promise<PgConnection>,
+      args.queryString,
+      { setup: this.cursorSetup(args), readOnly: this.cursorReadOnly },
+    );
   }
 
   // TODO: get warnings for postgres

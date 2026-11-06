@@ -77,6 +77,15 @@ export declare class QueryFactory {
     args: t.RefMaybeSchemaArgs & { queryString: string },
   ): Promise<t.SqlSelectResult>;
 
+  getSqlSelectPage?(
+    args: t.RefMaybeSchemaArgs & { queryString: string },
+    offset: number,
+    pageSize: number,
+  ): Promise<t.SqlSelectResult | undefined>;
+
+  // Releases statements held open for paging, and the locks they hold.
+  closeCursors?(): void;
+
   selectTableRows(args: t.SelectTableRowsArgs): Promise<t.SqlSelectResult>;
 
   deleteRow(args: t.DeleteRowArgs): Promise<t.MutationResult>;

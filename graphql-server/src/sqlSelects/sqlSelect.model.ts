@@ -82,10 +82,12 @@ export function fromServerPaginatedRows(
   };
 }
 
+// pageRows starts at `offset` and holds up to ROW_LIMIT + 1 rows; the extra
+// row only signals that another page exists.
 export function fromSqlSelectRow(
   databaseName: string,
   refName: string,
-  doltRows: RawRow[],
+  pageRows: RawRow[],
   isMutation: boolean,
   executionMessage: string,
   queryString: string,
@@ -105,14 +107,12 @@ export function fromSqlSelectRow(
     warnings,
   };
 
-  if (isMutation || doltRows.length === 0) {
+  if (isMutation || pageRows.length === 0) {
     return res;
   }
 
-  const rows: row.Row[] = doltRows
-    .slice(offset, offset + ROW_LIMIT)
-    .map(row.fromDoltRowRes);
-  const columns: column.Column[] = Object.keys(doltRows[0]).map(c => {
+  const rows: row.Row[] = pageRows.slice(0, ROW_LIMIT).map(row.fromDoltRowRes);
+  const columns: column.Column[] = Object.keys(pageRows[0]).map(c => {
     return { name: c, isPrimaryKey: false, type: "unknown" };
   });
 
@@ -121,7 +121,7 @@ export function fromSqlSelectRow(
     columns,
     rows: {
       list: rows,
-      nextOffset: getNextOffset(doltRows.length, offset),
+      nextOffset: getNextOffset(pageRows.length, offset),
     },
   };
 }

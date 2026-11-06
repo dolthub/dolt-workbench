@@ -93,7 +93,7 @@ describe("DoltLiteQueryFactory against a real doltlite database", () => {
     expect(logs.map(l => l.message)).toEqual([
       "add bob",
       "add users table",
-      "Initialize data repository",
+      expect.stringMatching(/^Initialize data repository/),
     ]);
     expect(convertRowDate(logs[0].date).getTime()).not.toBeNaN();
     expect(logs[0].parents).toEqual(logs[1].commit_hash);

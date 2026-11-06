@@ -28,6 +28,37 @@ FROM information_schema.statistics
 WHERE table_name=? AND table_schema=? AND index_name!="PRIMARY" 
 GROUP BY index_name;`;
 
+export const allColumnsQuery = `SELECT
+  TABLE_NAME,
+  COLUMN_NAME AS Field,
+  COLUMN_TYPE AS Type,
+  IS_NULLABLE AS \`Null\`,
+  COLUMN_KEY AS \`Key\`
+FROM information_schema.columns
+WHERE table_schema = ?
+ORDER BY TABLE_NAME, ORDINAL_POSITION`;
+
+export const allForeignKeysQuery = `SELECT
+  kcu.*,
+  cols.ORDINAL_POSITION
+FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE AS kcu
+JOIN INFORMATION_SCHEMA.COLUMNS AS cols
+  ON kcu.TABLE_SCHEMA = cols.TABLE_SCHEMA
+  AND kcu.TABLE_NAME = cols.TABLE_NAME
+  AND kcu.COLUMN_NAME = cols.COLUMN_NAME
+WHERE kcu.table_schema = ?
+  AND kcu.referenced_table_schema IS NOT NULL`;
+
+export const allIndexesQuery = `SELECT
+  table_name AS TABLE_NAME,
+  index_name,
+  GROUP_CONCAT(comment) as COMMENTS,
+  GROUP_CONCAT(non_unique) AS NON_UNIQUES,
+  GROUP_CONCAT(column_name ORDER BY seq_in_index) AS COLUMNS
+FROM information_schema.statistics
+WHERE table_schema=? AND index_name!="PRIMARY"
+GROUP BY table_name, index_name`;
+
 export const tableColsQuery = `SHOW FULL TABLES WHERE table_type = 'BASE TABLE'`;
 
 // BRANCHES

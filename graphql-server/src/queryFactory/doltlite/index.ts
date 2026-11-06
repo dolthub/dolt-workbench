@@ -190,7 +190,27 @@ export class DoltLiteQueryFactory
     return rows.length > 0;
   }
 
+  // Opens what the normal path reads: a branch's working set, or for any
+  // other ref the commit it resolves to (see withDetachedFallback).
+  protected async cursorPath(args: t.RefArgs): Promise<string | undefined> {
+    const db = String(this.getDS().options.database);
+    try {
+      if (await this.isBranch(args.refName, args.databaseName)) {
+        return `${db}@${args.refName}`;
+      }
+      const hash = await super.query<t.RawRows>(
+        qh.hashOf,
+        [args.refName],
+        args.databaseName,
+      );
+      return `${db}@${String(Object.values(hash[0])[0])}`;
+    } catch {
+      return undefined;
+    }
+  }
+
   async destroy(): Promise<void> {
+    await super.destroy();
     const source = this.revisionSource;
     this.revisionSource = undefined;
     if (!source) return;
@@ -467,7 +487,13 @@ export class DoltLiteQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getTableRowsWithDiff(em, args.tableName, rows, page),
+      async em =>
+        dem.getTableRowsWithDiff(
+          em,
+          dem.workingDiffSystemTable(args.tableName),
+          rows,
+          page,
+        ),
       args.databaseName,
       args.refName,
     );
@@ -478,7 +504,12 @@ export class DoltLiteQueryFactory
     page: t.TableRowPagination,
   ): t.PR {
     return this.queryForBuilder(
-      async em => dem.getWorkingDiffRows(em, args.tableName, page),
+      async em =>
+        dem.getWorkingDiffRows(
+          em,
+          dem.workingDiffSystemTable(args.tableName),
+          page,
+        ),
       args.databaseName,
       args.refName,
     );

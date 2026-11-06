@@ -1,4 +1,10 @@
-import { Brackets, EntityManager, InsertResult } from "typeorm";
+import {
+  Brackets,
+  EntityManager,
+  InsertResult,
+  ObjectLiteral,
+  SelectQueryBuilder,
+} from "typeorm";
 import { SchemaType } from "../../schemas/schema.enums";
 import { SchemaItem } from "../../schemas/schema.model";
 import { DoltSystemTable } from "../../systemTables/systemTable.enums";
@@ -54,19 +60,49 @@ export async function getDoltProcedures(
   });
 }
 
+export type WorkingDiffSource = (
+  em: EntityManager,
+) => SelectQueryBuilder<ObjectLiteral>;
+
+export function workingDiffSystemTable(tableName: string): WorkingDiffSource {
+  return em =>
+    em
+      .createQueryBuilder()
+      .select("*")
+      .from(`dolt_diff_${tableName}`, "")
+      .where("to_commit = :commit", { commit: "WORKING" });
+}
+
+// Filtering dolt_diff_<table> to WORKING walks the table's whole commit
+// history; the table function diffs HEAD against the working set directly.
+export function workingDiffTableFunction(tableName: string): WorkingDiffSource {
+  return em =>
+    em
+      .createQueryBuilder()
+      .select("*")
+      .from(
+        "(SELECT * FROM DOLT_DIFF('HEAD', 'WORKING', :diffTableName))",
+        "working_diff",
+      )
+      .setParameter("diffTableName", tableName);
+}
+
+// A tag or commit has no working set, and DOLT_DIFF can't resolve HEAD there.
+export async function onBranch(em: EntityManager): Promise<boolean> {
+  const res: RawRows = await em.query("SELECT active_branch() AS branch");
+  return res[0]?.branch != null;
+}
+
 export async function getTableRowsWithDiff(
   em: EntityManager,
-  tableName: string,
+  source: WorkingDiffSource,
   rows: RawRows,
   page: TableRowPagination,
 ): t.PR {
+  if (!rows.length) return [];
   const pkVals = rows.map(row => page.pkCols.map(pkCol => row[pkCol]));
 
-  const sel = em
-    .createQueryBuilder()
-    .select(`*`)
-    .from(`dolt_diff_${tableName}`, "")
-    .where("to_commit = :commit", { commit: "WORKING" });
+  const sel = source(em);
 
   if (page.pkCols.length === 1) {
     const pkCol = page.pkCols[0];
@@ -94,14 +130,10 @@ export async function getTableRowsWithDiff(
 
 export async function getWorkingDiffRows(
   em: EntityManager,
-  tableName: string,
+  source: WorkingDiffSource,
   page: TableRowPagination,
 ): t.PR {
-  const sel = em
-    .createQueryBuilder()
-    .select("*")
-    .from(`dolt_diff_${tableName}`, "")
-    .where("to_commit = :commit", { commit: "WORKING" });
+  const sel = source(em);
 
   page.pkCols.forEach(col => {
     sel.addOrderBy(`to_${col}`, "ASC");

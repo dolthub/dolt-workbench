@@ -225,11 +225,13 @@ function ProviderForTableName(props: TableProps) {
       },
     });
 
+    // Later pages may have been appended while this one's diff loaded.
     setRows(currentRows => {
       if (currentRows) {
         return [
           ...currentRows.slice(0, prevRowsLength),
           ...diffRes.data.rows.list,
+          ...currentRows.slice(prevRowsLength + newRows.length),
         ];
       } else {
         return diffRes.data.rows.list;
@@ -357,7 +359,11 @@ function ProviderForTableName(props: TableProps) {
 export function DataTableProvider({ params, children }: Props) {
   const router = useRouter();
   const tableShape = "tableName" in params;
-  const tableNames = tableShape ? [params.tableName] : [];
+  const tableName = tableShape ? params.tableName : undefined;
+  const tableNames = useMemo(
+    () => (tableName === undefined ? [] : [tableName]),
+    [tableName],
+  );
   const executedQueryString = executedSqlFromRouter(router.query.executedSql);
   const [isMutation, setIsMutation] = useState(false);
 

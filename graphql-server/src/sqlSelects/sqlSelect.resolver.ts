@@ -1,6 +1,7 @@
 import { Args, ArgsType, Field, Int, Query, Resolver } from "@nestjs/graphql";
 import { ConnectionProvider } from "../connections/connection.provider";
-import { RawRows } from "../queryFactory/types";
+import { RawRows, SqlSelectResult } from "../queryFactory/types";
+import { ROW_LIMIT } from "../utils";
 import { getCellValue } from "../rows/row.model";
 import { RefMaybeSchemaArgs } from "../utils/commonTypes";
 import { SqlSelect, fromSqlSelectRow } from "./sqlSelect.model";
@@ -22,7 +23,9 @@ export class SqlSelectResolver {
   async sqlSelect(@Args() args: SqlSelectArgs): Promise<SqlSelect> {
     const conn = this.conn.connection();
     const offset = args.offset ?? 0;
-    const res = await conn.getSqlSelect(args);
+    const res =
+      (await conn.getSqlSelectPage?.(args, offset, ROW_LIMIT)) ??
+      (await this.executeAndSlice(args, offset));
 
     return fromSqlSelectRow(
       args.databaseName,
@@ -34,6 +37,19 @@ export class SqlSelectResolver {
       offset,
       res.warnings,
     );
+  }
+
+  private async executeAndSlice(
+    args: SqlSelectArgs,
+    offset: number,
+  ): Promise<SqlSelectResult> {
+    const res = await this.conn.connection().getSqlSelect(args);
+    return {
+      ...res,
+      rows: res.rows.slice(offset, offset + ROW_LIMIT + 1),
+      // Re-running a later page would repeat warnings already shown.
+      warnings: offset ? [] : res.warnings,
+    };
   }
 
   @Query(_returns => String)

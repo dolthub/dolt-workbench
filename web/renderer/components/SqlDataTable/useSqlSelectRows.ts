@@ -126,7 +126,13 @@ export default function useSqlSelectRows(params: SqlQueryParams): ReturnType {
         variables: { ...variables, offset },
       });
       setRows(res.data.sqlSelect.rows.list);
-      setState({ offset: res.data.sqlSelect.rows.nextOffset });
+      // A streamed result's warnings arrive with the page served after it
+      // finishes.
+      const warnings = res.data.sqlSelect.warnings ?? [];
+      setState({
+        offset: res.data.sqlSelect.rows.nextOffset,
+        ...(warnings.length && { warnings: state.warnings.concat(warnings) }),
+      });
     } catch (er) {
       handleCaughtApolloError(er, setErr);
     }

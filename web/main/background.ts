@@ -134,8 +134,7 @@ async function isGraphQLServerReady(url: string): Promise<boolean> {
       body: JSON.stringify({ query: "{ __typename }" }),
     });
     return response.ok;
-  } catch (error) {
-    console.error("Error pinging GraphQL server:", error);
+  } catch {
     return false;
   }
 }
@@ -150,7 +149,7 @@ async function waitForGraphQLServer(
     if (isReady) {
       return;
     }
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 50));
   }
   throw new Error("Timed out starting GraphQL server");
 }

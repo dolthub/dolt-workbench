@@ -12,7 +12,9 @@ type ReturnType = {
 export default function useGetTagOptionsForSelect(
   params: DatabaseParams,
 ): ReturnType {
-  const tagRes = useTagListQuery({ variables: params });
+  const tagRes = useTagListQuery({
+    variables: { databaseName: params.databaseName },
+  });
 
   const tagOptions =
     tagRes.data?.tags.list.map(t => {

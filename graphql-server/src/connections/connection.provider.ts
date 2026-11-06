@@ -45,6 +45,10 @@ export class ConnectionProvider {
     return this.qf;
   }
 
+  closeCursors() {
+    this.qf?.closeCursors?.();
+  }
+
   // Used for file upload only, must destroy after using
   async mysqlConnection(): Promise<mysql.Connection> {
     const { workbenchConfig } = this;
