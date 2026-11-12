@@ -87,6 +87,8 @@ yarn build:linux
 
 ### Submit to MAC store
 
+Checking `submit-for-review` (and filling in `whats-new`) when running the `Release dolt-workbench` or `Build dolt-workbench for Mac App Store` workflow uploads the build and submits it for review automatically. Otherwise, submit manually:
+
 We will only use `mas-universal` folder for submitting to MAC store. There will be a `Dolt Workbench.app` application file in `dist` and a `DoltWorkbench-mac-universal.pkg` installer file inside it. These files cannot be used locally, they are for MAC store submission. When double clicking on them, it will show "could not be opened". This is expected because they are packed in sandbox and need to be signed by Apple before distribution.
 
 The preferred tool to submit is the [Transporter app](https://apps.apple.com/us/app/transporter/id1450874784), which can be downloaded free from the Mac App Store. It will check for errors. Open the Transporter app > Drag and drop `DoltWorkbench-mac-universal.pkg` file into the Transporter app. If no errors found click the Deliver button to send the app to your developer account.
@@ -102,6 +104,8 @@ To code sign this file, we will set `SIGNING_CERTIFICATE`, `TEAM_ID`, `APPLE_ID`
 Then run `yarn sign-dmg` from `web`. After this step finished, the dmg file is now fully signed and notarized, ready for distribution.
 
 ### Release the Windows App
+
+Checking `submit-for-review` (and filling in `whats-new`) when running the `Release dolt-workbench` or `Build dolt-workbench for Windows` workflow uploads the AppX and submits it for certification automatically. This requires the `MSSTORE_TENANT_ID`, `MSSTORE_SELLER_ID`, `MSSTORE_CLIENT_ID` and `MSSTORE_CLIENT_SECRET` secrets. Otherwise, submit manually:
 
 Submit the `AppX` file at `web/dist` to the store. To submit, choose DoltHub.Inc -> Apps and Games -> Dolt-Workbench. In Product Release, choose Start Update.
 

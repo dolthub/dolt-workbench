@@ -6,6 +6,15 @@ on:
       version:
         description: 'SemVer format release tag, i.e. 0.24.5'
         required: true
+      submit-for-review:
+        description: Submit Mac App Store and Microsoft Store builds for review
+        required: false
+        default: false
+        type: boolean
+      whats-new:
+        description: What's new in this version (required when submitting for review)
+        required: false
+        type: string
 
 jobs:
   format-version:
@@ -13,6 +22,12 @@ jobs:
     outputs:
       version: ${{ steps.format_version.outputs.version }}
     steps:
+      - name: Validate submit inputs
+        if: ${{ inputs.submit-for-review && inputs.whats-new == '' }}
+        run: |
+          echo "'whats-new' is required when 'submit-for-review' is checked." >&2
+          exit 1
+
       - name: Format Input
         id: format_version
         run: |
@@ -90,6 +105,8 @@ jobs:
     secrets: inherit
     with:
       release-version: ${{ needs.create-release.outputs.release_version }}
+      submit-for-review: ${{ inputs.submit-for-review }}
+      whats-new: ${{ inputs.whats-new }}
 
   build-dmg:
     needs: create-release
@@ -104,6 +121,8 @@ jobs:
     secrets: inherit
     with:
       release-version: ${{ needs.create-release.outputs.release_version }}
+      submit-for-review: ${{ inputs.submit-for-review }}
+      whats-new: ${{ inputs.whats-new }}
 
   build-linux:
     needs: create-release
