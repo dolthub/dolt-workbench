@@ -6,6 +6,15 @@ on:
         description: GitHub Release Version Number
         required: true
         type: string
+      submit-for-review:
+        description: Submit the build for store review
+        required: false
+        default: false
+        type: boolean
+      whats-new:
+        description: What's new in this version (required when submitting for review)
+        required: false
+        type: string
 
   workflow_call:
     inputs:
@@ -18,6 +27,15 @@ on:
         required: false
         default: true
         type: boolean
+      submit-for-review:
+        description: Submit the build for store review
+        required: false
+        default: false
+        type: boolean
+      whats-new:
+        description: What's new in this version (required when submitting for review)
+        required: false
+        type: string
 
 env:
   VIA_CALL: ${{ inputs.via-call || false }}
@@ -31,6 +49,13 @@ jobs:
         if: ${{ github.ref_name != 'main' }}
         run: |
           echo "This workflow can only run from 'main' (got '${{ github.ref_name }}')." >&2
+          exit 1
+
+      - name: Validate submit inputs
+        if: ${{ inputs.submit-for-review && inputs.whats-new == '' }}
+        shell: bash
+        run: |
+          echo "'whats-new' is required when 'submit-for-review' is checked." >&2
           exit 1
 
       - name: Checkout code for full release
@@ -96,6 +121,37 @@ jobs:
           retention-days: 90
           overwrite: true
           compression-level: 0
+
+      - uses: microsoft/microsoft-store-apppublisher@v1.1
+        if: ${{ inputs.submit-for-review }}
+
+      - name: Upload and submit for Microsoft Store review
+        if: ${{ inputs.submit-for-review }}
+        shell: pwsh
+        env:
+          PRODUCT_ID: 9NQ8LQPH9VVH
+          TENANT_ID: ${{ secrets.MSSTORE_TENANT_ID }}
+          SELLER_ID: ${{ secrets.MSSTORE_SELLER_ID }}
+          CLIENT_ID: ${{ secrets.MSSTORE_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.MSSTORE_CLIENT_SECRET }}
+          WHATS_NEW: ${{ inputs.whats-new }}
+          APPX: ${{ github.workspace }}/web/dist/Dolt-Workbench-win-x64.appx
+        run: |
+          $ErrorActionPreference = "Stop"
+          $PSNativeCommandUseErrorActionPreference = $true
+
+          msstore reconfigure --tenantId $env:TENANT_ID --sellerId $env:SELLER_ID --clientId $env:CLIENT_ID --clientSecret $env:CLIENT_SECRET
+
+          msstore publish $env:APPX --appId $env:PRODUCT_ID --noCommit
+
+          $submission = msstore submission get $env:PRODUCT_ID | Out-String | ConvertFrom-Json
+          foreach ($listing in $submission.listings.PSObject.Properties) {
+            $listing.Value.baseListing.releaseNotes = $env:WHATS_NEW
+          }
+          $json = $submission | ConvertTo-Json -Depth 100 -Compress
+          msstore submission update $env:PRODUCT_ID $json
+
+          msstore submission publish $env:PRODUCT_ID
 
   commit-build-version:
     name: Commit new build version
