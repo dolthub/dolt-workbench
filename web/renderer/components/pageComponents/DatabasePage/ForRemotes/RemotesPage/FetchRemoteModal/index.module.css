@@ -2,8 +2,24 @@
   @apply w-fit;
 }
 
+.tableContainer {
+  @apply my-10 max-h-[50vh] overflow-y-auto border border-stone-100 rounded-lg bg-white;
+  scrollbar-width: thin;
+  scrollbar-color: theme("colors.stone.100") transparent;
+
+  &::-webkit-scrollbar {
+    @apply w-2;
+  }
+  &::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    @apply bg-stone-100 rounded-full;
+  }
+}
+
 .table {
-  @apply border border-stone-100 border-separate rounded-lg mx-auto my-10 overflow-x-auto block;
+  @apply border-separate overflow-x-auto block w-full;
   border-spacing: 0;
 
   @screen lg {
@@ -16,29 +32,18 @@
     @apply px-6 text-left;
   }
 
+  td {
+    @apply border-t border-stone-100 py-3 text-sm;
+  }
+}
+
+.tableContainer .table {
+  thead {
+    @apply sticky top-0 z-10 bg-white;
+  }
+
   th {
     @apply pt-4 pb-2 bg-white;
-  }
-
-  td {
-    @apply border-t border-stone-100 py-3 text-sm bg-white;
-  }
-
-  tr:first-child {
-    th:first-child {
-      @apply rounded-tl-lg;
-    }
-    th:last-child {
-      @apply rounded-tr-lg;
-    }
-  }
-  tr:last-child {
-    td:first-child {
-      @apply rounded-bl-lg;
-    }
-    td:last-child {
-      @apply rounded-br-lg;
-    }
   }
 }
 

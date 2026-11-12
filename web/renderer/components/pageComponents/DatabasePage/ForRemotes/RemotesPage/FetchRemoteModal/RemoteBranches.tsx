@@ -21,21 +21,23 @@ type InnerProps = Props & {
 
 function Inner(props: InnerProps) {
   return (
-    <table className={css.table} data-cy="fetch-from-remote-table">
-      <thead>
-        <tr>
-          <th>Remote {pluralize(props.remoteBranches.length, "branch")}</th>
-          <th>Behind | Ahead</th>
-          <th>Sync</th>
-          <th>Diff</th>
-        </tr>
-      </thead>
-      <tbody>
-        {props.remoteBranches.map(rb => (
-          <RemoteBranchRow {...props} key={rb._id} branch={rb} />
-        ))}
-      </tbody>
-    </table>
+    <div className={css.tableContainer}>
+      <table className={css.table} data-cy="fetch-from-remote-table">
+        <thead>
+          <tr>
+            <th>Remote {pluralize(props.remoteBranches.length, "branch")}</th>
+            <th>Behind | Ahead</th>
+            <th>Sync</th>
+            <th>Diff</th>
+          </tr>
+        </thead>
+        <tbody>
+          {props.remoteBranches.map(rb => (
+            <RemoteBranchRow {...props} key={rb._id} branch={rb} />
+          ))}
+        </tbody>
+      </table>
+    </div>
   );
 }
 
